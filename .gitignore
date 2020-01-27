@@ -1,0 +1,9 @@
+/.classpath
+/.idea
+/.project
+
+/src/main/resources/static/bower_components/
+/target/
+
+doeweb.log.*
+/bin/

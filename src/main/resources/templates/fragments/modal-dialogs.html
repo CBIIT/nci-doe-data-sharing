@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="modal-dialogs">
+<div class="modal" id="download-modal" role="dialog" tabindex="-1" aria-hidden="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Download</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">          
+                <div class="col-md-12 col-sm-12">
+                    <div class="col-md-12 col-sm-12">
+					<input type="hidden" name="downloadType" id="downloadType"/>
+					<input type="hidden" name="transferType" id="transferType"/>
+					<input type="hidden" name="source" id="source"/>
+					   <form class="form-horizontal" id="downloadSyncForm" method="POST">
+					 <input type="hidden" name="destinationPath" id="destinationPathId"/>
+					 <input type="hidden" class="form-control" name="downloadFileName" id="downloadFileName" />
+               </form>
+                     <span style="margin-left: 285px;font-style: italic;font-weight: bold;">This page allows you to download the selected data file either synchronously to your computer or 
+                        asynchronously to Globus endpoint location or an S3 bucket.</span>
+                        
+					    
+					     <div class="clearfix errorBlock pull-left" id="message" style="display: none;float: left">
+                    <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
+                        <div class="alert alert-danger">
+                            <h6 class="downloadErrorMsg"></h6>
+                        </div>
+                    </div>
+                </div>
+                   
+                   <div class="selectedFilesDiv pull-left" style="display:none;border: 1px solid;font-size: 14px;margin-top: 10px;">
+                             <div class="col-md-12" style="padding-top: 10px;">
+                               <span style="font-weight: bold;">Selected Files:</span>
+							   <span class="selectedFilesListDisplay"></span>
+							   <input type="hidden" name="selectedFilesList" id="selectedFilesList"/>
+					       </div>
+					</div>	
+					    
+                       <div class="form-row col-md-9 col-sm-9 ml-auto">
+                             <div class="form-group" id="syncRadioSet">
+										<div class="pull-left">
+										<label class="radio-inline"><input type="radio" id="searchTypeSync" name="searchType" value="sync" onchange="display('sync')" checked="checked"> &nbsp;&nbsp; Synchronous</label>
+										</div>
+                              </div>
+                        <div class="form-group">
+										<div class="pull-left" style="margin-left: 15px">
+										<label class="radio-inline"><input type="radio" name="searchType" id="searchTypeAsync" value="async" onchange="display('async')">&nbsp;&nbsp; Asynchronous (Globus)</label>
+										</div>
+                         </div>
+                        <div class="form-group">
+										<div class="pull-left" style="margin-left: 15px">
+										<label class="radio-inline"><input type="radio" name="searchType" id="searchTypeS3" value="s3" onchange="display('s3')">&nbsp;&nbsp; Asynchronous (S3)</label>
+										</div>
+								</div>
+
+								<div class="form-group" id="AsyncDiv" style="display: none">
+								    <div class="col-sm-12 column">
+								   <span>
+                                    To download to Globus, DME should be provided write access to the targeted Globus endpoint. 
+                                     Refer to <a href="https://wiki.nci.nih.gov/display/DMEdoc/Preparing+to+Use+Globus+with+DME" 
+                                     target="_blank" title="Link to help document (opens in new tab or window)">Preparing to Use Globus with DME</a> 
+                                     for instructions.<span>
+										<label for="endPointName">Globus Endpoint UUID:</label> 
+										<!--  Optionally click 
+										<a id="downloadlinkGlobus" target="_blank" href="#">here </a>  to obtain from Globus-->
+										<input type="hidden" name="actionType" id="actionType" />
+										<input
+											type="text" class="form-control" name="endPointName"
+											id="endPointName" placeholder="Enter Globus Endpoint UUID" />
+									</div>
+									<div class="col-sm-12 column">
+										<label for="endPointLocation">Globus Endpoint (Destination) Path:</label> 
+										<input
+											type="text" class="form-control"
+											name="endPointLocation" id="endPointLocation"
+											placeholder="Enter Globus Endpoint Path" size="40" />
+									</div>
+								</div>
+
+								<div class="form-row col-md-9 col-sm-9 ml-auto" id="SyncDiv">
+									<div class="col-sm-12 column" style="margin-left: -380px;">
+										<label for="downloadFileNameVal">Download File name:</label> <input
+											type="text" class="form-control"
+											id="downloadFileNameVal" size="45" name="downloadFileNameVal"
+											placeholder="Enter Download file name" />
+									</div>
+								</div>
+								
+			          <div class="form-group" id="s3Div" style="display: none">
+									<div class="col-sm-12 column">
+									 <span>
+                                   To download to an S3 bucket, proper permissions should be set up.  
+                                   Refer to <a href="https://wiki.nci.nih.gov/display/DMEdoc/Preparing+to+use+Amazon+Web+Services+S3+with+DME" 
+                                   target="_blank" title="Link to help document (opens in new tab or window)">
+                                   Preparing to use Amazon Web Services S3 with DME</a> for instructions.<span>
+										<label for="bucketName">S3 Bucket:</label>
+										<input
+											type="text" class="form-control" name="bucketName" 
+											id="bucketName" placeholder="Enter S3 Bucket Name" />
+									</div>
+									<div class="col-sm-12 column">
+										<label for="s3Path">S3 (Destination) Path:</label> <input
+											type="text" class="form-control"
+											name="s3Path" id="s3Path"
+											placeholder="Enter S3 (Destination) Path" size="40" />
+									</div>
+									<div class="col-sm-12 column">
+										<label for="accessKey">Access Key:</label> <input
+											type="text" class="form-control"
+											name="accessKey" id="accessKey"
+											placeholder="Enter Access Key" size="40" />
+									</div>
+									<div class="col-sm-12 column">
+										<label for="secretKey">Secret Access Key:</label> <input
+											type="password" autocomplete="secret-access-key" class="form-control"
+											name="secretKey" id="secretKey"
+											placeholder="Enter Secret Access Key" size="40" />
+									</div>
+									<div class="col-sm-12 column">
+										<label for="region">Region:</label> <input
+											type="text" class="form-control"
+											name="region" id="region"
+											placeholder="Enter Region (for Example us-east-1)" size="40" />
+									</div>
+								</div>
+							</div>	
+                            
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group" style="margin-top:35px;margin-bottom:15px;padding: 5px;" id="buttonsRow">
+                                <input type="button" value="Cancel" style="margin-left: -12px;" class="btn btn-default float-right mr-4 mb-4" data-dismiss="modal">
+                                <input type="button" value="Download" class="btn btn-primary float-right mr-4 mb-4" id="download-btn">
+                            </div> 
+            
+        </div>
+    </div>
+</div>
+
+<div id="forgotPasswordLightbox" class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog" aria-hidden="false"
+aria-labelledby="forgotPasswordLabel">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="forgotPasswordLabel">
+                        Forgot Password</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div id="forgotPasswordContent" class="modal-body drilldown-content">
+                
+                   <div class="clearfix errorBlock" style="display: none;">
+                    <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
+                        <div class="alert alert-danger">
+                            <h6 class="errorMsg"></h6>
+                        </div>
+                    </div>
+                </div>
+                
+                  <div class="row row-buffer">
+                    <p id="forgotPasswordLightBoxPromptText">
+                       &nbsp;&nbsp; Please use this form to request password.
+                    </p>
+                  </div>
+                <p><span class="required">*</span> Required Field</p>
+                    <hr>
+                  <div class="row row-buffer">
+                      <div class="col-sm-3"> <label class="infoLabel" for="txtResetPswdLink">Email <span class="required">*</span></label></div>
+                      <div class="col-sm-9"> <input type="text" id="txtResetPswdLink" name="txtResetPswdLink" maxlength="50" class="form-control defaultFocus"> </div>
+                  </div>                  
+                    <div class="row row-buffer">
+                        <div class="col-sm-12"> <span class="errorMessage" id="forgotPasswordErrors"></span></div>
+                    </div>
+                  <div id="forgotPassword_DialogControls" class="row row-buffer" style="text-align: end;">
+                      <div class="col-sm-12" style="margin-bottom: 10px;">
+                         <button type="button" class="btn btn-default pull-right" data-dismiss="modal">
+                              Cancel
+                          </button>
+                          <button class="btn btn-primary pull-right" id="btnSubmitPswdLink">
+                              Submit
+                          </button>
+                          </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    
+    </div>
+</body>
+</html>

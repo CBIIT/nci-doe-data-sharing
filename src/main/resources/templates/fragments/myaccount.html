@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  
+        <div class="form-row jumbotron pt-2 pb-2 mb-2" id="myAccount" th:fragment="myaccount" style="display:none;">
+                 <form role="form" id="update-profile-form" style="width: 50%;">
+                        <h1>My Account</h1>
+                    <br>
+                        <p><span class="required">*</span> Required Field</p>
+                        <div class="row row-buffer">
+                            <div class="col-lg-4">
+                              <label class="infoLabel" for="firstNameTxt">First Name<span class="required">*</span></label>
+                            </div>
+                            <div class="col-lg-8">
+                              <input type="text" id="firstNameTxt" name="firstNameTxt" maxlength="50" class="form-control defaultFocus">
+                                
+                            </div>
+                        </div>
+                        
+                 <div class="row row-buffer">
+                            <div class="col-lg-4">
+                          <label class="infoLabel" for="lastNameTxt">Last Name <span class="required">*</span></label>
+                            </div>
+                            <div class="col-lg-8">
+                            <input type="text" id="lastNameTxt" name="lastNameTxt" maxlength="20" class="form-control defaultFocus">
+                                
+                            </div>
+                        </div>
+                         <div class="row row-buffer">
+                            <div class="col-lg-4">
+                          <label class="infoLabel" for="institutionTxt">Institution <span class="required">*</span></label>
+                            </div>
+                            <div class="col-lg-8">
+                          <input type="text" id="institutionTxt" name="institutionTxt" maxlength="20" class="form-control defaultFocus">
+                                
+                            </div>
+                        </div>
+                  
+                   <div class="row row-buffer">
+                            <div class="col-lg-4">
+                             <label class="infoLabel" for="emailAddrTxt">Email Address <span class="required">*</span></label>
+                            </div>
+                            <div class="col-lg-8">
+                             <span id="emailAddrTxt" th:text="${loggedOnUser}" class="form-control defaultFocus"></span>                       
+                                
+                            </div>
+                        </div>
+    
+                        <hr>
+                        <div class="row" style="justify-content: center;">                      
+                            <div class="col-xs-3 col-sm-3 col-md-3">
+                                <button class="btn btn-success btn-block" id="cancelAccntUpdate" name="cancel" value="Cancel">Cancel</button>
+                            </div>
+                            <div class="col-xs-3 col-sm-3 col-md-3">
+                                <a class="btn btn-primary btn-block" id="btnUpdateProfile" href="javascript:void(0);">Update</a>
+                            </div>
+                        </div>
+                </form>
+        </div>
+        <hr>
+
+</body>
+</html>

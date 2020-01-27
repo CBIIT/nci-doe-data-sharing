@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+     <div class="tab-pane fade M-4 p-4" id="loginTab" role="tabpanel" th:fragment="login">
+        <div class="form-row jumbotron pt-2 pb-2 mb-2" id="loginSubTab">
+                 <form role="form" id="userlogin">
+                        <h1>Please Sign In</h1>
+                        <div class="clearfix errorBlockLogin" style="display: none;">
+                    <div class="col-md-12" style="padding-left: 0px; Padding-right: 0px; border-radius: 0px;">
+                        <div class="alert alert-danger">
+                            <h6 class="errorMsgLogin"></h6>
+                        </div>
+                    </div>
+                </div>
+                        <hr>
+                    <div>
+                        <h2 style="width:100px;margin: auto">Notice</h2>
+                        <ul>
+                            <li>This warning banner provides privacy and security notices consistent with applicable federal laws, directives, and other federal guidance for accessing this Government system, which includes (1) this computer network, (2) all computers connected to this network, and (3) all devices and storage media attached to this network or to a computer on this network.</li>
+                            <li>This system is provided for Government-authorized use only.</li>
+                            <li>Unauthorized or improper use of this system is prohibited and may result in disciplinary action and/or civil and criminal penalties.</li>
+                            <li>Personal use of social media and networking sites on this system is limited as to not interfere with official work duties and is subject to monitoring.</li>
+                            <li>By using this system, you understand and consent to the following:
+                                <ul>
+                                    <li>The Government may monitor, record, and audit your system usage, including usage of personal devices and email systems for official duties or to conduct HHS business. Therefore, you have no reasonable expectation of privacy regarding any communication or data transiting or stored on this system. At any time, and for any lawful Government purpose, the government may monitor, intercept, and search and seize any communication or data transiting or stored on this system.</li>
+                                    <li>Any communication or data transiting or stored on this system may be disclosed or used for any lawful Government purpose.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <br>
+                        <p><span class="required">*</span> Required Field</p>
+                        <div class="row row-buffer">
+                            <div class="col-lg-2">
+                                <label for="email">Email Address <span class="required">*</span></label>
+                            </div>
+                            <div class="col-lg-10">
+                                <input class="form-control input-lg" id="username" maxlength="50" name="username" placeholder="Your Email" type="text">
+                                
+                            </div>
+                        </div>
+                        <div class="row row-buffer">
+                            <div class="col-lg-2">
+                                <label for="password">Password <span class="required">*</span></label>
+                            </div>
+                            <div class="col-lg-10">
+                                <input autocomplete="off" class="form-control input-lg" id="password" maxlength="20" name="password" placeholder="Your Password" type="password">
+                                
+                            </div>
+                        </div>
+                        <div class="row" style="justify-content: flex-end;margin-right: 10px;">
+                            <a href="javascript:void(0)" data-toggle="modal" data-target="#forgotPasswordLightbox" class="btn-link pull-right">Forgot Password?</a>
+                        </div>
+    
+                        <hr>
+                        <div class="row" style="justify-content: center;">
+                        
+                            <div class="col-xs-3 col-sm-3 col-md-3">
+                                <button class="btn btn-lg btn-success btn-block" id="loginButton" name="login" value="Sign In">Sign In</button>
+                            </div>
+                            <div class="col-xs-3 col-sm-3 col-md-3">
+                                <a class="btn btn-lg btn-primary btn-block" id="register-tab" href="javascript:void(0);">Register</a>
+                            </div>
+                        </div>
+                </form>
+        </div>
+        <hr>
+           <div th:replace="fragments/registration :: registration">Registration tab</div>
+    </div>
+</body>
+</html>

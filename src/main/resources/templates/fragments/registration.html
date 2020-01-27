@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+     <div class="form-row jumbotron pt-2 pb-2 mb-2" id="registrationTab" th:fragment="registration" style="display:none;">
+    <form role="form" id="register-form" autocomplete="off"  style="width: 50%;">
+        <h1>Registration</h1>
+         <div class="clearfix errorBlockRegister" style="display: none;">
+                    <div class="col-md-12" style="padding-left: 0px; Padding-right: 0px; border-radius: 0px;">
+                        <div class="alert alert-danger">
+                            <h6 class="errorMsgRegister"></h6>
+                        </div>
+                    </div>
+                </div>
+        <hr>
+        <p><span class="required">*</span> Required Field</p>
+            <div class="row row-buffer">
+                
+                <div class="col-lg-2">
+                    <label for="id_first_name">First name <span class="required">*</span></label>
+                </div>
+                <div class="col-lg-4">
+                     <input class="form-control" id="id_first_name" maxlength="50" name="id_first_name" type="text">
+                     
+                </div>
+                <div class="col-lg-2">
+                    <label for="id_last_name">Last name <span class="required">*</span></label>
+                </div>
+                <div class="col-lg-4">
+                    <input class="form-control" id="id_last_name" maxlength="50" name="id_last_name" type="text">
+                    
+                </div>
+            </div>
+            <div class="row row-buffer">
+                <div class="col-lg-2">
+                    <label for="id_institution">Institution <span class="required">*</span></label>
+                </div>
+                <div class="col-lg-10">
+                    <input class="form-control" autocomplete="off" id="id_institution" maxlength="80" name="id_institution" type="text">
+                    
+                </div>
+            </div>
+            <div class="row row-buffer">
+                <div class="col-lg-2">
+                    <label for="id_user_email">Email address <span class="required">*</span></label>
+                </div>
+                <div class="col-lg-10">
+                    <input class="form-control" autocomplete="off" id="id_user_email" maxlength="80" name="id_user_email" type="text">
+                    
+                </div>
+            </div>
+            <div class="row row-buffer">
+                <div class="col-lg-2">
+                    <label for="id_password">Password <i class="fa fa-question-circle" data-toggle="tooltip" 
+                    title="Password must be 8 to 14 characters and must contain at least one alpha numeric value and a special charcater." 
+                    style="font-size: 12px;"></i><span class="required"> *</span></label>
+                </div>
+                <div class="col-lg-4">
+                     <input autocomplete="off" class="form-control" id="id_password" maxlength="20" name="id_password" type="password">
+                     
+                </div>
+                <div class="col-lg-2">
+                    <label for="id_password_confirm">Confirm password <span class="required">*</span></label>
+                </div>
+                <div class="col-lg-4">
+                    <input autocomplete="off" class="form-control" id="id_password_confirm" maxlength="20" name="id_password_confirm" type="password">
+                    
+                </div>
+            </div>
+      
+        <hr>
+        
+        <div class="row" style="justify-content: center;">
+            <div class="col-xs-6 col-sm-3 col-md-3 pull-right" style="float: right;">
+           <a class="btn btn-default btn-block pull-right" id="returnToLoginForm" href="javascript:void(0);">Back to Login</a> 
+            </div>
+             <div class="col-xs-6 col-sm-6 col-md-6 pull-right">    
+                <button class=" btn btn-primary btn-block pull-right" id="btnRegister">Register</button>
+            </div>
+        </div>
+        
+        
+        <hr>
+    </form>
+</div>
+</body>
+</html>
