@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
 
-import gov.nih.nci.doe.web.DoeResponseErrorHandler;
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.AjaxResponseBody;
 import gov.nih.nci.hpc.domain.datamanagement.HpcPermission;
@@ -55,17 +54,10 @@ import gov.nih.nci.hpc.dto.security.HpcUserDTO;
 import gov.nih.nci.hpc.dto.security.HpcUserListDTO;
 import gov.nih.nci.hpc.dto.security.HpcUserRequestDTO;
 
-import java.io.FileInputStream;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
-import java.security.KeyManagementException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -77,19 +69,12 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.DatatypeConverter;
-import javax.xml.transform.Source;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.jaxrs.client.ClientConfiguration;
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -97,27 +82,11 @@ import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.ext.multipart.ContentDisposition;
 import org.apache.cxf.jaxrs.ext.multipart.MultipartBody;
 import org.apache.cxf.transport.http.HTTPConduit;
-import org.apache.http.client.HttpClient;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLContextBuilder;
-import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.converter.FormHttpMessageConverter;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.http.converter.xml.SourceHttpMessageConverter;
-import org.springframework.integration.http.converter.MultipartAwareFormHttpMessageConverter;
-import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -336,7 +305,7 @@ public class DoeClientUtil {
     HpcDataManagementModelDTO modelDTO =
         (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
     if (modelDTO == null) {
-      HpcUserDTO user = (HpcUserDTO) session.getAttribute("hpcUser");
+      //HpcUserDTO user = (HpcUserDTO) session.getAttribute("hpcUser");
       modelDTO = DoeClientUtil.getDOCModel(token, hpcModelURL, hpcCertPath, hpcCertPassword);
       if (modelDTO != null)
         session.setAttribute("userDOCModel", modelDTO);
@@ -885,7 +854,7 @@ public class DoeClientUtil {
 
   public static boolean deleteGroup(String token, String hpcUserURL, String groupName,
       String hpcCertPath, String hpcCertPassword) {
-    HpcGroupMembersResponseDTO response = null;
+    //HpcGroupMembersResponseDTO response = null;
     try {
       WebClient client = DoeClientUtil.getWebClient(UriComponentsBuilder
         .fromHttpUrl(hpcUserURL).pathSegment(groupName).build().encode().toUri()
@@ -1577,8 +1546,10 @@ public class DoeClientUtil {
       String taskId = "Unknown";
       if (downloadDTO != null)
         taskId = downloadDTO.getTaskId();
-      result.setMessage(
-              "Asynchronous download request is submitted successfully! Task Id: <a href='downloadtask?type=" + downloadType + "&taskId=" + taskId +"'>"+taskId+"</a>");
+     // result.setMessage(
+         //     "Asynchronous download request is submitted successfully! Task Id: <a href='downloadtask?type=" + downloadType + "&taskId=" + taskId +"'>"+taskId+"</a>");
+     
+      result.setMessage(taskId);
       return result;
     } else {
       ObjectMapper mapper = new ObjectMapper();
@@ -1765,112 +1736,7 @@ public class DoeClientUtil {
     }
   }
 
-  public static RestTemplate getRestTemplate(String hpcCertPath, String hpcCertPassword) {
 
-    RestTemplate restTemplate = null;
-    FileInputStream fis = null;
-    try {
-      if (hpcCertPath != null && hpcCertPassword != null) {
-        fis = new java.io.FileInputStream(hpcCertPath);
-        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-        keyStore.load(fis, hpcCertPassword.toCharArray());
-        KeyManagerFactory kmf =
-            KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-        kmf.init(keyStore, hpcCertPassword.toCharArray());
-        KeyManager[] keyManagers = kmf.getKeyManagers();
-
-        TrustManagerFactory tmf =
-            TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-        tmf.init(keyStore);
-        TrustManager[] trustManagers = tmf.getTrustManagers();
-
-        SSLContext sslContext = SSLContext.getInstance("TLS");
-        sslContext.init(keyManagers, trustManagers, null);
-
-        CloseableHttpClient httpClient = HttpClients.custom()
-            .setSSLHostnameVerifier(new NoopHostnameVerifier()).setSSLContext(sslContext).build();
-
-        HttpComponentsClientHttpRequestFactory requestFactory =
-            new HttpComponentsClientHttpRequestFactory();
-        requestFactory.setHttpClient(httpClient);
-        restTemplate = new RestTemplate(requestFactory);
-      } else {
-        @SuppressWarnings("deprecation")
-        SSLContextBuilder builder = new SSLContextBuilder();
-        builder.loadTrustMaterial(null, new TrustStrategy() {
-          @Override
-          public boolean isTrusted(X509Certificate[] chain, String authType)
-              throws CertificateException {
-            return true;
-          }
-        });
-
-        SSLConnectionSocketFactory sslSF = new SSLConnectionSocketFactory(builder.build(),
-            SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-        HttpClient httpClient = HttpClients.custom().setSSLSocketFactory(sslSF).build();
-        HttpComponentsClientHttpRequestFactory requestFactory =
-            new HttpComponentsClientHttpRequestFactory(httpClient);
-        restTemplate = new RestTemplate(requestFactory);
-      }
-      List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
-      messageConverters.add(new FormHttpMessageConverter());
-      messageConverters.add(new SourceHttpMessageConverter<Source>());
-      messageConverters.add(new StringHttpMessageConverter());
-      messageConverters.add(new MappingJackson2HttpMessageConverter());
-      messageConverters.add(new MultipartAwareFormHttpMessageConverter());
-      restTemplate.setMessageConverters(messageConverters);
-
-      restTemplate.setErrorHandler(new DoeResponseErrorHandler());
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    } catch (CertificateException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    } catch (KeyStoreException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    } catch (NoSuchAlgorithmException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    } catch (UnrecoverableKeyException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    } catch (KeyManagementException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    } finally {
-      if (fis != null) {
-        try {
-          fis.close();
-        } catch (IOException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-      }
-    }
-
-    return restTemplate;
-  }
-
-  private static void enableSSL() {
-    TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
-      public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-        return null;
-      }
-
-      public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {}
-
-      public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {}
-    }};
-
-    try {
-      SSLContext sc = SSLContext.getInstance("SSL");
-      sc.init(null, trustAllCerts, new java.security.SecureRandom());
-      HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-    } catch (Exception e) {
-    }
-  }
 
   public static String encode(String strVal) {
     if (strVal == null)
@@ -1911,7 +1777,7 @@ public class DoeClientUtil {
     }
   }
 
-  public static void populateBasePaths(HttpSession session, Model model,
+  public static void populateBasePaths(HttpSession session,
       HpcDataManagementModelDTO modelDTO, String authToken, String userId, String collectionURL,
       String sslCertPath, String sslCertPassword) throws DoeWebException {
 
@@ -1969,11 +1835,7 @@ public class DoeClientUtil {
     return hpcExceptionDto;
   }
 
-  private static String prependLeadingForwardSlashIfNeeded(String argInputStr) {
-    return (null == argInputStr || argInputStr.isEmpty()) ? "/" :
-      argInputStr.startsWith("/") ? argInputStr : "/".concat(argInputStr);
-  }
-
+ 
 
   private static Properties appProperties;
 

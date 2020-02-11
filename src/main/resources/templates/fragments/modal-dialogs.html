@@ -31,7 +31,7 @@
                         asynchronously to Globus endpoint location or an S3 bucket.</span>
                         
 					    
-					     <div class="clearfix errorBlock pull-left" id="message" style="display: none;float: left">
+					     <div class="clearfix errorBlock pull-left" id="message" style="display: none;">
                     <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
                         <div class="alert alert-danger">
                             <h6 class="downloadErrorMsg"></h6>
@@ -173,7 +173,7 @@ aria-labelledby="forgotPasswordLabel">
                        &nbsp;&nbsp; Please use this form to request password.
                     </p>
                   </div>
-                <p><span class="required">*</span> Required Field</p>
+               
                     <hr>
                   <div class="row row-buffer">
                       <div class="col-sm-3"> <label class="infoLabel" for="txtResetPswdLink">Email <span class="required">*</span></label></div>
@@ -198,7 +198,132 @@ aria-labelledby="forgotPasswordLabel">
     </div>
     
 
-    
+    <div class="modal" id="registerCollectionModal" role="dialog" tabindex="-1" aria-hidden="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Register Collection</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+             <form class="form-horizontal" id="registerCollectionForm"  method="POST"> 
+            <div class="modal-body">   
+            <div class="clearfix registerMsgBlock" style="display: none;">
+                    <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
+                        <div class="alert alert-danger">
+                            <h6 class="registerMsg"></h6>
+                        </div>
+                    </div>
+                </div>  
+                 
+                 <input type="hidden" name="path" id="newCollectionPath"/>   
+                <div class="col-md-12 col-sm-12">
+                    <div class="col-md-12 col-sm-12">
+                        <div class="form-row jumbotron" style=" margin-top: 20px;">
+                             <div class="form-group col-lg-4 col-md-12">
+                                <label for="collectionType">Collection Type</label>
+                                <select class="simple-select2"  id="collectionType" name="zAttrStr_collection_type" style="width:70%" 
+                                onchange="retrieveCollectionList(this, this.options[this.selectedIndex]);">
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-4 col-md-12">
+                            <label for="collectionPath">Parent Collection Path</label>
+                               <input type="text" disabled id="collectionPath" style="width:90%;"/>
+                            </div>
+                            
+                            <div class="form-group col-lg-4 col-md-12">
+                            <label for="collectionName">Collection Name</label>
+                               <input type="text" id="collectionName" style="width:70%;"/>
+                            </div>
+                        </div>
+                    </div> 
+                    
+                     <div class="col-md-12 col-sm-12">
+                      <div class="col-lg-12 col-md-12 col-sm-12 float-left" style="margin-top:20px;"><h4>Collection MetaData</h4></div>
+                      
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                        <button id="addNewMetaData" type="button" class="btn btn-primary float-right mb-2 mr-2" onclick="addNewMetaDataCollection()">Add MetaData</button>
+                               <table id="newMetaDataTable" class="table table-stripped table-bordered display dt-responsive wrap" style="width:100%">
+                      <thead>
+							<tr>
+                                <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col">Attribute Name</th>
+                                 <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>                      
+                        </tbody>
+                    </table> 
+                        </div>
+               
+                    </div>
+                </div>
+          
+            </div>
+            <div class="form-group" style="margin-top:35px;margin-bottom:15px;padding: 5px;">
+                                <input type="button" value="Cancel" style="margin-left: -12px;" class="btn btn-default float-right mr-4 mb-4" data-dismiss="modal">
+                                <input type="button" value="Register" class="btn btn-primary float-right mr-4 mb-4" id="registerCollectionBtn">
+           </div> 
+             </form>
+        </div>
+    </div>
+</div>
+
+    <div class="modal" id="registerDataFileModal" role="dialog" tabindex="-1" aria-hidden="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Register Data File(s)</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+             <form class="form-horizontal" id="registerDataFileForm" enctype="multipart/form-data" method="POST"> 
+             <input type="hidden" id="dataFilePathCollection"/>
+            <div class="modal-body">
+            
+             <div class="clearfix registerDataFileSuccess" style="display: none;">
+                    <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
+                        <div class="alert alert-danger">
+                            <h6 class="registerDataFile"></h6>
+                        </div>
+                    </div>
+                </div> 
+                     
+                <div class="col-md-12 col-sm-12">
+                    <div class="col-md-12 col-sm-12">
+                        <div class="form-row jumbotron" style=" margin-top: 20px;">
+                             
+                            <div class="form-group col-lg-12 col-md-12">
+                            <label for="collectionPath">Data File Path</label>
+                               <input type="text" id="dataFilePath" disabled name="path" style="width:70%;"/>
+                            </div>
+                             <div class="form-group col-lg-4 col-md-12">
+                            <label for="checksum">Check Sum</label>
+                            <input type="text" name="checksum" id="checksum">
+                            </div>
+                             <div class="form-group col-lg-8 col-md-12">
+                            <label for="collectionPath">Data Source</label>
+                            <input type="file" name="doeDataFile" id="doeDataFile">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+          
+            </div>
+            <div class="form-group" style="margin-top:35px;margin-bottom:15px;padding: 5px;">
+                                <input type="button" value="Cancel" style="margin-left: -12px;" class="btn btn-default float-right mr-4 mb-4" data-dismiss="modal">
+                                <input type="button" value="Register" class="btn btn-primary float-right mr-4 mb-4" id="registerDataFileBtn">
+           </div> 
+             </form>
+        </div>
+    </div>
+</div>
+
     </div>
 </body>
 </html>

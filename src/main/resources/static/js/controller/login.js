@@ -94,3 +94,7 @@ function postGetUserInfoFunction (data,status) {
 	$("#lastNameTxt").val(data.lastName);
 	$("#institutionTxt").val(data.institution);
 }
+
+function postUpdateUserFunction(data,status) {
+	location.reload();
+}

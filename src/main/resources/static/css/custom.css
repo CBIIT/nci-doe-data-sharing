@@ -55,6 +55,7 @@
 .card-body{padding:0px;}
 
 .dataTables_length{margin-top:0px;padding:5px;}
+
 /*-- navlink --*/
 #pills{border-bottom:1px solid #e6e6e6}
 .nav-pills a.nav-link {color:#000!important;}
@@ -62,6 +63,12 @@
     color:#fff!important;
     background-color:#616A70;
     border-radius:0px;
+}
+
+.nav-link.active {
+    background-color: transparent!important;
+    border-color: transparent !important;
+    color: #fff !important;
 }
 
 /*--wizard--*/
@@ -528,10 +535,11 @@ h3.table-title{font-size:1rem;}
 .b-4{border-top: 8px solid #7f8990!important;}
 .card-heading{width:100%;background: #00467f;}
 .card-header a {
-    color: #212529;
-    background: #e5e5e5;
+    /*color: #212529;*/
+    /* background: #e5e5e5; */
     margin-right: 5px;
-    /*    margin-bottom: -12px;*/
+    /* margin-bottom: -12px; */
+    color: #fff;
 }
 /* collapse history */
 .card-header .fa {

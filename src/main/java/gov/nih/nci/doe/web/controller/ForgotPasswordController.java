@@ -28,14 +28,14 @@ import gov.nih.nci.doe.web.util.PasswordStatusCode;
 @Controller
 @EnableAutoConfiguration
 @RequestMapping("/forgotPassword")
-public class ForgotPasswordController extends AbstractHpcController {
+public class ForgotPasswordController extends AbstractDoeController {
 
 	 @Autowired
 	 AuthenticateService authService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<?> forgotPassword(HttpSession session,@RequestHeader HttpHeaders headers, ForgotPassword forgotPassword) throws Exception {
-		log.info("resetting the password...");
+		log.info("forgot password");
 		
 		if(forgotPassword.getEmailAddrr() == null || StringUtils.isEmpty(forgotPassword.getEmailAddrr())) {
 			log.error("User ID is required.");

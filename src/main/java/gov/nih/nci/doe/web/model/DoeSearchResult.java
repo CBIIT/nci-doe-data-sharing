@@ -10,6 +10,8 @@ public class DoeSearchResult {
     private String dataSetPath;
     private String studyName;
     private String instituteName;
+    private String studyPath;
+    private String institutePath;
     private List<KeyValueBean> selfMetadata;
     private List<KeyValueBean> studyUserMetadata;
     private List<KeyValueBean> instituteUserMetadata;
@@ -70,6 +72,18 @@ public class DoeSearchResult {
 	}
 	public void setDataSetPath(String dataSetPath) {
 		this.dataSetPath = dataSetPath;
+	}
+	public String getStudyPath() {
+		return studyPath;
+	}
+	public void setStudyPath(String studyPath) {
+		this.studyPath = studyPath;
+	}
+	public String getInstitutePath() {
+		return institutePath;
+	}
+	public void setInstitutePath(String institutePath) {
+		this.institutePath = institutePath;
 	}
 	
     

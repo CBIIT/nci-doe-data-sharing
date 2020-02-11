@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
@@ -28,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import gov.nih.nci.doe.web.model.AjaxResponseBody;
 import gov.nih.nci.doe.web.model.DoeDownloadDatafile;
 import gov.nih.nci.doe.web.model.Views;
+import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.datatransfer.HpcDownloadTaskType;
 import gov.nih.nci.hpc.domain.datatransfer.HpcFileLocation;
@@ -39,17 +41,12 @@ import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO;
 import org.springframework.web.util.UriComponentsBuilder;
 
 
-/**
- * <p>
- * Controller to support asynchronous download of a data file or collection
- * </p>
- *
- */
+
 
 @Controller
 @EnableAutoConfiguration
 @RequestMapping("/download")
-public class DoeDownloadController extends AbstractHpcController {
+public class DoeDownloadController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.v2.dataObject}")
 	private String dataObjectServiceURL;
 	@Value("${gov.nih.nci.hpc.server.v2.collection}")
@@ -57,6 +54,9 @@ public class DoeDownloadController extends AbstractHpcController {
 	@Value("${gov.nih.nci.hpc.web.server}")
 	private String webServerName;
 
+	
+    @Autowired
+    TaskManagerService taskManagerService;
 	
 	/**
 	 * POST action to initiate asynchronous download.
@@ -112,7 +112,13 @@ public class DoeDownloadController extends AbstractHpcController {
             final String downloadTaskType = "collection".equals(downloadFile.
                     getDownloadType()) ? HpcDownloadTaskType.COLLECTION.name() :
                         HpcDownloadTaskType.DATA_OBJECT.name();
-			return DoeClientUtil.downloadDataFile(authToken, serviceURL, dto, downloadTaskType, sslCertPath, sslCertPassword);
+              result = DoeClientUtil.downloadDataFile(authToken, serviceURL, dto, downloadTaskType, sslCertPath, sslCertPassword);
+              
+              //store the task ID in DB
+              
+              taskManagerService.saveTransfer(result.getMessage(),"download",getLoggedOnUserInfo());
+              
+              return result;
 		} catch (HttpStatusCodeException e) {
 			result.setMessage("Download request is not successful: " + e.getMessage());
 			return result;

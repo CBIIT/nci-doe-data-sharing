@@ -13,6 +13,8 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -37,7 +39,7 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 	@Value("${doe.ncidoesvct1.password}")
 	private String readOnlyUserPassword;
 	
-	@Value("${doe.ncidoesvct1.password}")
+	@Value("${doe.ncidoesvct2.password}")
 	private String writeAccessUserPassword;
 	/*
 	 * (non-Javadoc)
@@ -52,11 +54,25 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 			throws Exception {
 
 		HttpSession session = request.getSession();
-		String userToken = (String) session.getAttribute("hpcUserToken");
+		String userToken = (String) session.getAttribute("hpcUserToken");		
+		String writeAccessToken = (String) session.getAttribute("writeAccessUserToken");
+		
+		/*if(StringUtils.isBlank(writeAccessToken)) {
+		 try {
+		   Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		   Boolean isAnonymousUSer = auth.getAuthorities().stream().filter(o -> o.getAuthority().equals("ROLE_ANONYMOUS")).findFirst().isPresent();
+			 if(auth != null && auth.isAuthenticated() && !isAnonymousUSer) {
+				String authToken = DoeClientUtil.getAuthenticationToken("ncidoesvct2", writeAccessUserPassword,authenticateURL);
+				session.setAttribute("writeAccessUserToken", authToken);
+			 }
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}*/
 		
 		if(StringUtils.isBlank(userToken)) {
 		 try {
-			String authToken = DoeClientUtil.getAuthenticationToken("gantam2", "#",authenticateURL);
+			String authToken = DoeClientUtil.getAuthenticationToken("ncidoesvct1", readOnlyUserPassword,authenticateURL);
 			session.setAttribute("hpcUserToken", authToken);
             log.debug("authentication successfull");
 		 } catch (Exception e) {

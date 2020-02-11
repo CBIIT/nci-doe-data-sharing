@@ -1,0 +1,76 @@
+function refreshTaskManagerDataTable() {
+    console.log("refresh datatable");
+    if (!$.fn.DataTable.isDataTable('#manageTasksTable')) {
+    	dataTableInitTaskManager();
+    } else {
+        var t = $('#manageTasksTable').DataTable();
+        console.log(t);
+        t.ajax.reload(null, false);
+    }
+}
+
+function dataTableInitTaskManager() {
+    $('#manageTasksTable').DataTable({
+        "paging": true,
+        "ordering": false,
+        "info": true,
+        "pageLength": 25,
+        oLanguage: {
+            "sSearch": "Filter:"
+        },
+        "ajax": {
+            "url": "/tasks",
+            "type": "GET",
+            "data": {userId:loggedOnUserInfo},
+            "dataSrc": function (data) {
+                return data;
+            },
+            "error": function (xhr, error, thrown) {
+                console.log("Response status: " + xhr.status + " (" + xhr.statusText + ")");
+                console.log(error + ": " + thrown + " [" + xhr.status + " (" + xhr.statusText + ")]");
+                console.log(xhr.responseText);
+                console.log(xhr);
+                $("#spinner").hide();
+                $("#dimmer").hide();
+            },
+
+            "beforeSend": function () {
+                $("#spinner").show();
+                $("#dimmer").show();
+            },
+
+            "complete": function () {
+                $("#spinner").hide();
+                $("#dimmer").hide();
+            }
+        },
+
+        "initComplete": function (settings, json) {
+
+        },
+
+        "drawCallback": function (settings) {
+        },
+
+        "columns": [
+        	
+        {"data": "taskId", "defaultContent": ""},
+        {"data": "taskName", "defaultContent": ""},
+        {"data": "taskDate", "defaultContent": ""},
+        {"data": "taskType", "defaultContent": ""},
+        {"data": "transferStatus", "defaultContent": ""},
+        
+        ],
+        "dom": '<"top"lip>rt<"bottom"p>',
+
+        "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
+
+        "language": {
+            "zeroRecords": "Nothing found to display",
+            "info": "&nbsp; (Displaying _START_ to _END_ of _TOTAL_ )",
+            sLengthMenu: "_MENU_",
+            "infoEmpty": " No records to display"
+        }
+    });
+}
+

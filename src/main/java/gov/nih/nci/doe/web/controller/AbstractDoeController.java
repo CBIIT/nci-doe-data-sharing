@@ -5,23 +5,23 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
 import gov.nih.nci.doe.web.model.DoeResponse;
 
-public abstract class AbstractHpcController {
+public abstract class AbstractDoeController {
+	
 	@Value("${gov.nih.nci.hpc.ssl.cert}")
 	protected String sslCertPath;
 	@Value("${gov.nih.nci.hpc.ssl.cert.password}")
 	protected String sslCertPassword;
-	@Value("${hpc.SYSTEM_ADMIN}")
-	protected String SYSTEM_ADMIN;
-	@Value("${hpc.GROUP_ADMIN}")
-	protected String GROUP_ADMIN;
-	@Value("${hpc.USER}")
-	protected String USER;
+	
+	
 
 	protected Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -44,4 +44,14 @@ public abstract class AbstractHpcController {
 		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		return new DoeResponse("Error occurred", ex.toString());
 	}
+	
+	  @ModelAttribute("loggedOnUser")
+	    public String getLoggedOnUserInfo() {
+		  Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		  Boolean isAnonymousUSer = auth.getAuthorities().stream().filter(o -> o.getAuthority().equals("ROLE_ANONYMOUS")).findFirst().isPresent();
+			if(auth != null && auth.isAuthenticated() && !isAnonymousUSer) {
+				return auth.getName().trim();
+			}
+			return null;
+	    }
 }

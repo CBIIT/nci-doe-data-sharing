@@ -6,13 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -36,7 +32,7 @@ import gov.nih.nci.doe.web.service.AuthenticateService;
 @Controller
 @EnableAutoConfiguration
 @RequestMapping("/")
-public class HomeController extends AbstractHpcController {
+public class HomeController extends AbstractDoeController {
 
 
 	 @Autowired
@@ -44,45 +40,42 @@ public class HomeController extends AbstractHpcController {
 	 
 	@RequestMapping(method = RequestMethod.GET)
 	public String index() {
+		log.info("home page");
 		return "home";
 		
 	}
 	
-	  @ModelAttribute("loggedOnUser")
-	    public String getLoggedOnUserInfo() {
-		  Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		  Boolean isAnonymousUSer = auth.getAuthorities().stream().filter(o -> o.getAuthority().equals("ROLE_ANONYMOUS")).findFirst().isPresent();
-			if(auth != null && auth.isAuthenticated() && !isAnonymousUSer) {
-				return auth.getName().trim();
-			}
-			return null;
-	    }
+
 	  
 	    /**
 	     * @param headers
 	     * @return
 	     */
 	    @GetMapping(value = "user-info")
-	    public ResponseEntity<?> getActiveReferralCaAssignRules(HttpSession session,@RequestHeader HttpHeaders headers,
+	    public ResponseEntity<?> getUserInfo(HttpSession session,@RequestHeader HttpHeaders headers,
 	    		@RequestParam(value = "emailAddr") String emailAddr) {
-	        log.info("getting user info");
+	        log.info("getting user info with email address" +emailAddr);
 	        try {
 	        	DoeUsersModel user = authService.getUserInfo(emailAddr);
 	            return new ResponseEntity<>(user, headers, HttpStatus.OK);
 	        } catch (Exception e) {
-	            log.error(e.getMessage(), e);
-	           
+	            log.error(e.getMessage(), e);	           
 	            return new ResponseEntity<>(null, headers, HttpStatus.SERVICE_UNAVAILABLE);
 	        }
 	    }
 	    
-	    @PostMapping(value = "user-info",consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE})
-	    public void updateUserInfo(@RequestBody DoeUsersModel doeModel) {
-	        log.debug("update user info");
+
+		@PostMapping(value = "user-info")
+	    public ResponseEntity<?> updateUserInfo(@RequestBody DoeUsersModel doeModel,@RequestHeader HttpHeaders headers) {
+	        log.debug("update user info for user " + doeModel.getEmailAddrr());
 	        try {
-	        	authService.saveUserInfo(doeModel);
+	        	if(doeModel.getEmailAddrr() != null) {
+	        		authService.saveUserInfo(doeModel);
+	        	}
+	        	 return new ResponseEntity<>("SUCCESS", headers, HttpStatus.OK);
 	        } catch (Exception e) {
 	            log.error(e.getMessage(), e);
+	            return new ResponseEntity<>(null, headers, HttpStatus.SERVICE_UNAVAILABLE);
 	        }
 
 	    }

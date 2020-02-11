@@ -18,12 +18,12 @@ public interface DoeUserRepository extends JpaRepository<DoeUsers, String> {
 	 * @param password
 	 */
 	@Modifying
-	@Query(value = "update public.DOE_USER set PASSWORD = ?1 where EMAIL_ADDR = ?2", nativeQuery = true)
+	@Query(value = "update NCI_DOE_DB.DOE_USER_T set PASSWORD = ?1 where EMAIL_ADDR = ?2", nativeQuery = true)
 	public void updatePasswordByUsername(String password, String emailAddrr);
 	
 		
 	@Modifying
-	@Query(value = "update public.DOE_USER set LOCKOUT_COUNTER = ?1 where EMAIL_ADDR = ?2", nativeQuery = true)
+	@Query(value = "update NCI_DOE_DB.DOE_USER_T set LOCKOUT_COUNTER = ?1 where EMAIL_ADDR = ?2", nativeQuery = true)
 	public void updateCounterInfo(Integer counter, String emailAddrr);
 	
 	
@@ -36,6 +36,6 @@ public interface DoeUserRepository extends JpaRepository<DoeUsers, String> {
      
 
  	@Modifying
- 	@Query(value = "update public.DOE_USER set FIRST_NAME = ?1,LAST_NAME = ?2,INSTITUTION = ?3 where EMAIL_ADDR = ?4", nativeQuery = true)
+ 	@Query(value = "update NCI_DOE_DB.DOE_USER_T set FIRST_NAME = ?1,LAST_NAME = ?2,INSTITUTION = ?3 where EMAIL_ADDR = ?4", nativeQuery = true)
  	public void updateUserInfo(String firstName, String lastName, String institution, String emailAddrr);
 }

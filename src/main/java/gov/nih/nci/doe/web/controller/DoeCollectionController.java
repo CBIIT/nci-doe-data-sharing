@@ -1,0 +1,126 @@
+
+package gov.nih.nci.doe.web.controller;
+
+
+import java.util.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import gov.nih.nci.doe.web.DoeWebException;
+import gov.nih.nci.doe.web.model.DoeCollectionModel;
+import gov.nih.nci.doe.web.util.DoeClientUtil;
+import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
+import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
+
+
+/**
+ * <p>
+ * Collection controller. Gets selected collection details. Updates collection
+ * metadata.
+ * </p>
+ *
+ */
+
+@Controller
+@EnableAutoConfiguration
+@RequestMapping("/collection")
+public class DoeCollectionController extends AbstractDoeController {
+   
+	@Value("${gov.nih.nci.hpc.server.collection}")
+	private String serviceURL;
+	@Value("${gov.nih.nci.hpc.server.model}")
+	private String hpcModelURL;
+
+
+	/**
+	 * Update collection
+	 *
+	 * @param hpcCollection
+	 * @param model
+	 * @param bindingResult
+	 * @param session
+	 * @param request
+	 * @param response
+	 * @param redirectAttributes
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.POST)
+	public @ResponseBody String updateCollection(@Valid DoeCollectionModel doeCollection, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+
+		String authToken = (String) session.getAttribute("hpcUserToken");
+		try {
+			String[] path = request.getParameterValues("path");
+			if(path[0] != null) {
+				doeCollection.setPath(path[0].trim());
+			}
+			
+			if (doeCollection.getPath() == null || doeCollection.getPath().trim().length() == 0) {
+			  return "Invalid collection path";
+			}
+
+			HpcCollectionRegistrationDTO registrationDTO = constructRequest(request, session);
+
+			boolean updated = DoeClientUtil.updateCollection(authToken, serviceURL, registrationDTO,
+					doeCollection.getPath(), sslCertPath, sslCertPassword);
+			if (updated) {
+				session.removeAttribute("selectedUsers");
+				return "Collection " + doeCollection.getPath() + " is Updated!";
+				
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			return e.getMessage();
+		}
+		final Map<String, String> paramsMap = new HashMap<>();
+		paramsMap.put("path", doeCollection.getPath());		
+		return "ERROR";
+		
+	}
+
+
+	private HpcCollectionRegistrationDTO constructRequest(HttpServletRequest request, HttpSession session)
+			throws DoeWebException {
+		Enumeration<String> params = request.getParameterNames();
+		HpcCollectionRegistrationDTO dto = new HpcCollectionRegistrationDTO();
+		List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
+
+		while (params.hasMoreElements()) {
+			String paramName = params.nextElement();
+			if (paramName.startsWith("zAttrStr_")) {
+				HpcMetadataEntry entry = new HpcMetadataEntry();
+				String attrName = paramName.substring("zAttrStr_".length());
+				String[] attrValue = request.getParameterValues(paramName);
+				entry.setAttribute(attrName);
+				entry.setValue(attrValue[0]);
+				metadataEntries.add(entry);
+			} else if (paramName.startsWith("_addAttrName")) {
+				HpcMetadataEntry entry = new HpcMetadataEntry();
+				String attrId = paramName.substring("_addAttrName".length());
+				String[] attrName = request.getParameterValues(paramName);
+				String[] attrValue = request.getParameterValues("_addAttrValue" + attrId);
+				if (attrName.length > 0 && !attrName[0].isEmpty())
+					entry.setAttribute(attrName[0]);
+				else
+					throw new DoeWebException("Invalid metadata attribute name. Empty value is not valid!");
+				if (attrValue.length > 0 && !attrValue[0].isEmpty())
+					entry.setValue(attrValue[0]);
+				else
+					throw new DoeWebException("Invalid metadata attribute value. Empty value is not valid!");
+				metadataEntries.add(entry);
+			}
+		}
+		dto.getMetadataEntries().addAll(metadataEntries);
+		return dto;
+	}
+
+}

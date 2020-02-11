@@ -18,11 +18,11 @@
 <div class="wrapper">
 
     <!-- HEADER -->
-    <div th:replace="fragments/header :: header">Header goes here</div>
+    <div th:replace="fragments/header :: header">Header and nav goes here</div>
     <!-- END HEADER -->
     
     <!-- GLOBAL NAV -->
-    <div th:replace="fragments/navbar:: navbar">Navbar goes here</div>
+   <!--  <div th:replace="fragments/navbar:: navbar">Navbar goes here</div>-->
     <!-- END GLOBAL NAV -->
     
  <!-- Content -->
@@ -31,7 +31,13 @@
             <div th:replace="fragments/landing :: landing">Header goes here</div>
             <div th:replace="fragments/search :: search">Header goes here</div>
             <div th:replace="fragments/login :: login">Header goes here</div>
+             <div th:replace="fragments/manageTasks :: manageTasks">Header goes here</div>
+             <div th:replace="fragments/uploadFragment :: uploadFragment">Header goes here</div>
             <div th:replace="fragments/modal-dialogs :: modal-dialogs">modal dialogs</div>
+             <div id="spinner" class="spinner" style="text-align: center; display: none;">
+                <img id="img-spinner" th:src="@{/images/giphy.gif}" alt="Loading"/>
+             </div>
+           <div id="dimmer" style="display: none;"></div> 
         </div>
     </div>    
  <!-- End content -->
@@ -52,6 +58,7 @@
     var advancedSearchHiddenOptions = {};
     var studyMetadata ;
     var instituteMetaData;
+    var selfMetadata;
     var loggedOnUserInfo = /*[[${loggedOnUser}]]*/ 'undefined';
     /*]]>*/
 
@@ -77,6 +84,8 @@
 <script src="js/controller/login.js" th:src="@{/js/controller/login.js}"></script>
 <script src="js/controller/doe.js" th:src="@{/js/controller/doe.js}"></script>
 <script src="js/controller/dataset.js" th:src="@{/js/controller/dataset.js}"></script>
-
+<script src="js/controller/taskManager.js" th:src="@{/js/controller/taskManager.js}"></script>
+<script src="js/controller/editCollection.js" th:src="@{/js/controller/editCollection.js}"></script>
+<script src="js/controller/upload.js" th:src="@{/js/controller/upload.js}"></script>
 </body>
 </html>

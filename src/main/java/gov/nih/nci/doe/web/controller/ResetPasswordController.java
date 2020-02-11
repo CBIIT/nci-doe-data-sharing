@@ -35,7 +35,7 @@ import gov.nih.nci.doe.web.service.MailService;
 @Controller
 @EnableAutoConfiguration
 @RequestMapping("/resetPasswordLink")
-public class ResetPasswordController extends AbstractHpcController {
+public class ResetPasswordController extends AbstractDoeController {
 
 	 @Autowired
 	 AuthenticateService authService;
@@ -47,7 +47,7 @@ public class ResetPasswordController extends AbstractHpcController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<?> forgotPassword(HttpSession session,@RequestHeader HttpHeaders headers,
 			@RequestParam(value = "emailAddr") String emailAddr) throws Exception {
-		log.info("resetting the password...");
+		log.info("resetting the password");
 		
 		if(emailAddr == null || StringUtils.isEmpty(emailAddr)) {
 			log.error("User ID is required.");
@@ -56,12 +56,6 @@ public class ResetPasswordController extends AbstractHpcController {
 		} 
 
 		log.info("About to send a reset link for user ID {}", emailAddr);
-		/*List<CharacterRule> rules = Arrays.asList(new CharacterRule(EnglishCharacterData.UpperCase, 1),
-				new CharacterRule(EnglishCharacterData.LowerCase, 5),
-				new CharacterRule(EnglishCharacterData.Digit, 1),new CharacterRule(EnglishCharacterData.Special, 1));
-
-		PasswordGenerator generator = new PasswordGenerator();
-		String password = generator.generatePassword(8, rules);*/
 	   
 		String password = generatePassayPassword();
 		authService.saveUserPassword(password,emailAddr);

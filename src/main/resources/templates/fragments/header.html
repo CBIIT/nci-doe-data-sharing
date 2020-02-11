@@ -9,20 +9,39 @@
     <nav id="nci-brand" class="navbar navbar-expand-lg navbar-dark bg-default ml-auto">
     <!--app title-->
     <div class="col justify-content=center appnameWrapper">
-        <div class="appName"><h1 style="font-size:24px">NCI DOE Data Clearing House</h1></div>
+        <div class="appName"><h1 style="font-size:20px">NCI DOE Data Clearing House</h1></div>
     </div>
     <!--on small media collapse icon-->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNav" aria-controls="topNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
+<div id="globalNav" class="collapse navbar-collapse justify-content-end col order-last bordered">
+            <div id="subNav" class="card-header">
+        <ul class="nav nav-tabs card-header-tabs" id="subTab" role="tablist" style="margin-right: -59px;font-size:18px;">
+            <li class="nav-item" role="tab">
+                <a class="nav-link active" id="landing-tab" data-toggle="tab" href="#landingTab" role="tab">Home</a>
+            </li>
+            <li class="nav-item" role="tab">
+                <a class="nav-link" id="search-tab" data-toggle="tab" href="#searchTab" role="tab">Search</a>
+            </li>
+           
+            <li class="nav-item" role="tab" th:if="${loggedOnUser != null}">
+                <a class="nav-link" id="manageTasks-tab" data-toggle="tab" href="#manageTasks" role="tab">Status</a>
+            </li>
+            <li class="nav-item" role="tab" th:if="${loggedOnUser != null}">
+                <a class="nav-link" id="upload-tab" data-toggle="tab" href="#uploadTab" role="tab">Uploads</a>
+            </li>
+        </ul>
+    </div> 
+                </div>
     <!--top right navigation-->
     <div id="topNav" class="collapse navbar-collapse justify-content-end col order-last bordered">
         <ul class="navbar-nav navbar-dark text-white justify-content-end">
              
-                <li  th:if= "${loggedOnUser != null}" class="nav-item dropdown">
+                <li th:if= "${loggedOnUser != null}" class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" aria-label="Help"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                       <span class="topNav-item" th:text="${loggedOnUser}"></span>
+                       <span class="topNav-item" th:text="${loggedOnUser}"> &nbsp;<i aria-hidden="true" class="fa fa-caret-down pull-right"></i></span>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" id="myaccountTab" data-toggle="tab" href="#landingTab">My Account</a>
@@ -31,6 +50,9 @@
 
                 </li>
                 
+                <li class="nav-item" role="tab" th:if="${loggedOnUser == null}">
+                <a class="nav-link" id="login-tab" data-toggle="tab" href="#loginTab" role="tab">Login</a>
+              </li>
                   
                 <!--Users Guide-->
                 <li class="nav-item">

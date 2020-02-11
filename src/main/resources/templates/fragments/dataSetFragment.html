@@ -9,11 +9,27 @@
      
      <div class="col-lg-12 col-md-12 col-sm-12 float-right">
        <div class="controls controls-row mt-4">
-         <button id="backToSearch" type="button" class="btn btn-primary float-left mb-2 mr-2">Back to Search Results</button>
-       <button id="downloadSelectedDataSet" type="button" class="btn btn-primary float-right mb-2 mr-2" disabled>Download Selected Data Sets</button>
+         <button type="button" class="btn btn-primary float-left mb-2 mr-2 backToSearch">Back to Search Results</button>
        </div>
      </div>
      
+    
+     <table id="dataSetMetaData" class="table table-stripped table-bordered display dt-responsive wrap" style="width:100%">
+                      <thead>
+							<tr>
+                                <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col">Attribute</th>
+                                 <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>                      
+                        </tbody>
+       </table> 
+            
+        <div class="col-lg-12 col-md-12 col-sm-12 float-right">
+       <div class="controls controls-row mt-4">
+       <button id="downloadSelectedDataSet" type="button" class="btn btn-primary float-right mb-2 mr-2" disabled>Download Selected Data Sets</button>
+       </div>
+     </div>
       <table id="dataSetTable" class="table table-stripped table-bordered display dt-responsive wrap"  role="grid" style="width:100%" aria-label="data set table">
                       <thead>
 							<tr>

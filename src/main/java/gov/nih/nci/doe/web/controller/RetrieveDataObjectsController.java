@@ -10,6 +10,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -36,6 +37,7 @@ import gov.nih.nci.doe.web.model.HpcDatafileSearchResultDetailed;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntries;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
+import gov.nih.nci.hpc.domain.metadata.HpcMetadataQuery;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
 import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
@@ -54,7 +56,7 @@ import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
 @Controller
 @EnableAutoConfiguration
 @RequestMapping("/getDataObjects")
-public class RetrieveDataObjectsController extends AbstractHpcController {
+public class RetrieveDataObjectsController extends AbstractDoeController {
 
 
 	@Value("${gov.nih.nci.hpc.server.search.dataobject.compound}")
@@ -63,11 +65,19 @@ public class RetrieveDataObjectsController extends AbstractHpcController {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	    public ResponseEntity<?> search(HttpSession session,@RequestHeader HttpHeaders headers, DoeSearch search,
-	    		@RequestParam(value = "path") String path ) {
+	    		@RequestParam(value = "path") String path) {
 		
 		String authToken = (String) session.getAttribute("hpcUserToken");
 		HpcCompoundMetadataQueryDTO compoundQuery  = (HpcCompoundMetadataQueryDTO) session.getAttribute("compoundQuery");
-
+		
+		if(compoundQuery != null && compoundQuery.getCompoundQuery() !=null && !CollectionUtils.isEmpty(compoundQuery.getCompoundQuery().getQueries())) {
+		
+			List<HpcMetadataQuery> queries = compoundQuery.getCompoundQuery().getQueries();		
+            for(HpcMetadataQuery a : queries) {
+            	a.setLevelFilter(null);
+             }           
+		}
+		
 		List<HpcDatafileSearchResultDetailed> dataResults = new ArrayList<HpcDatafileSearchResultDetailed>();		
 
 		try {	
@@ -77,11 +87,10 @@ public class RetrieveDataObjectsController extends AbstractHpcController {
 		      return null;
 		    }
 
-		    ucBuilder.pathSegment(path);
+		    ucBuilder.pathSegment(path.substring(1, path.length()));
 		    final String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
 		    WebClient client = DoeClientUtil.getWebClient(requestURL, sslCertPath, sslCertPassword);
-			client.header("Authorization", "Bearer " + authToken);						
-			compoundQuery.setDetailedResponse(true);				
+			client.header("Authorization", "Bearer " + authToken);		
 			Response restResponse = client.invoke("POST", compoundQuery);			
 			
 			if (restResponse.getStatus() == 200) {

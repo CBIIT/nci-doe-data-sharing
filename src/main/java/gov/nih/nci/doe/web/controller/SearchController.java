@@ -76,7 +76,7 @@ import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
 @Controller
 @EnableAutoConfiguration
 @RequestMapping("/search")
-public class SearchController extends AbstractHpcController {
+public class SearchController extends AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	private String collectionServiceURL;
@@ -102,7 +102,7 @@ public class SearchController extends AbstractHpcController {
 	 LookUpService lookUpService;
 	
 	@RequestMapping(method = RequestMethod.GET)
-	    public ResponseEntity<?> search(HttpSession session,@RequestHeader HttpHeaders headers, DoeSearch search ) {
+	    public ResponseEntity<?> search(HttpSession session,@RequestHeader HttpHeaders headers,HttpServletRequest request, DoeSearch search ) {
 		
 		String authToken = (String) session.getAttribute("hpcUserToken");
 		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
@@ -218,6 +218,7 @@ public class SearchController extends AbstractHpcController {
 			returnResult.setDataSetPath(result.getCollection().getCollectionName());
             returnResult.setDataSetName(getAttributeValue("name", result.getMetadataEntries()));
             returnResult.setDataSetDescription(getAttributeValue("description", result.getMetadataEntries()));
+            returnResult.setStudyPath(result.getCollection().getCollectionParentName());
             returnResult.setNumOfDataSets(3);
             returnResult.setSelfMetadata(getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),"Data_Set", systemAttrs));
 			returnResult.setStudyUserMetadata(getUserMetadata(result.getMetadataEntries().getParentMetadataEntries(),"Study", systemAttrs));
@@ -422,6 +423,7 @@ public class SearchController extends AbstractHpcController {
 				// Get collection
 				HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL, path, false,
 						false, true, sslCertPath, sslCertPassword);
+			
 				if (collections != null && collections.getCollections() != null
 						&& collections.getCollections().size() > 0) {
 					

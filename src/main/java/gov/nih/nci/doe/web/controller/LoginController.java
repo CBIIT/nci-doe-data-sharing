@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @EnableAutoConfiguration
 @RequestMapping("/login")
-public class LoginController extends AbstractHpcController {
+public class LoginController extends AbstractDoeController {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<?> loginPage(HttpServletRequest request, HttpServletResponse response, 

@@ -1,5 +1,6 @@
 $(document).ready(function () {
 	
+	var uploadtabIniatialize = false;
 	    console.log("initialize dirty checking");
 	    $('form.dirty-check').areYouSure();
 	    
@@ -44,22 +45,6 @@ $("#searchBtn").click(function(e){
 	$("#searchResultsDiv").show();
 	 populateSearchCriteria('simpleSearch');
 	refreshDataTable();
-
-	   /* var eGridDiv = document.querySelector('#myGrid');
-	    new agGrid.Grid(eGridDiv, gridOptions);
-	  
-		$.ajax({
-			type : "GET",
-		     url : "/search",
-		     data: search_criteria_json,
-			 success : function(data) {
-				 console.log('SUCCESS: ', data);
-				 gridOptions.api.setRowData(data);
-			 },
-			error : function(e) {
-				 console.log('ERROR: ', e);
-			}
-		});*/
 	
 });
 
@@ -83,15 +68,20 @@ $("#downloadSelected").click(function(e){
 	    $("#searchResultTable tbody input[type=checkbox]:checked").each(function () {
 	    	selectedPaths.push($(this).attr('id'));
 	    });
-	    $("#download-modal").find(".selectedFilesList").val(selectedPaths);
+	    $("#download-modal").find("#selectedFilesList").val(selectedPaths);
 	    
 	    $.each(selectedPaths, function(index, value) {
 	    	$("#download-modal").find(".selectedFilesListDisplay").append("<p>"+value+"</p>");
 	    });
 	    
+	    if(selectedPaths.length == 1) {
+	    	  $("#download-modal").find("#destinationPathId").val(selectedPaths);
+	    	  $("#download-modal").find("#downloadType").val("collection");
+	    } else  {
+	    	$("#download-modal").find("#downloadType").val("collectionfiles");
+	    }
 	    $("#download-modal").find("#SyncDiv").hide();
-		$("#download-modal").find("#syncRadioSet").hide();
-		$("#download-modal").find("#downloadType").val("collectionfiles");
+		$("#download-modal").find("#syncRadioSet").hide();		
 		$("#download-modal").find(".selectedFilesDiv").show();
 	    $("#download-modal").modal('show');
 });
@@ -118,11 +108,12 @@ $("#download-btn").click(function(e){
 	    d.endPointName = $("#endPointName").val();
 		d.endPointLocation = $("#endPointLocation").val();
 		var url;
-		if(selectedFiles) {
+		if(selectedFiles && selectedFiles.len > 1) {
 			url = "/downloadfiles/download";
 			d.selectedFiles = selectedFiles;
 		} else {
 			url = "/download";
+			
 		}
 				   								
 			$.ajax({
@@ -130,10 +121,16 @@ $("#download-btn").click(function(e){
 			     url : url,
 			     contentType : 'application/json',
 				 data : JSON.stringify(d),
+				 beforeSend: function () {
+			    	   $("#spinner").show();
+			           $("#dimmer").show();
+			       },
 				 success : function(msg) {
+					 $("#spinner").hide();
+			         $("#dimmer").hide();
 					 console.log('SUCCESS: ', msg);
-					 $('#downloadErrorMsg').html(msg.message);
-					 $("#message").show();
+					 $("#download-modal").find('.downloadErrorMsg').html(msg.message);
+					 $("#download-modal").find("#message").show();
 				 },
 				error : function(e) {
 					 console.log('ERROR: ', e);
@@ -204,6 +201,8 @@ $("#changePswdTab").click(function(e){
 	$("#landingDiv").hide();
 	$("#myAccount").hide();
 	$("#changePassword").show();
+	$(".successBlock").hide();
+	$(".errorBlock").hide();
 });
 
 $("#landing-tab").click(function(e){
@@ -227,7 +226,7 @@ $("#btnUpdateProfile").click(function(e){
 	d.institution = $("#institutionTxt").val();
 	d.emailAddrr = $("#emailAddrTxt").text();
 	
-	invokeAjax('/user-info','POST',JSON.stringify(d),null,null,null,null);
+	invokeAjax('/user-info','POST',JSON.stringify(d),postUpdateUserFunction,null,null,'text');
 });
 
 
@@ -244,10 +243,13 @@ $("#resetBtn").click(function(e){
 
 });
 	
-$("#backToSearch").click(function(e){
+$(".backToSearch").click(function(e){
 	$("#searchFragmentDiv").show();
     $("#dataSetFragment").hide();
+	$("#editCollectionFragment").hide();
 });
+
+
 
 
 $('body').on('click', 'a.button.closeBtn', function () {
@@ -263,62 +265,63 @@ $('body').on('click', function (e) {
     });
 });
 
+$("#manageTasks-tab").click(function(e){
+	refreshTaskManagerDataTable();
 });
 
-var gridOptions = {
-	    columnDefs: [
-	        {headerName:'Path', width: 300,cellRenderer: 'medalCellRenderer'	            
-	         },
-	        {headerName: 'download', field: 'download'},
-	    ],
-
-	    defaultColDef: {
-	        width: 300
-	    },
-	    defaultColGroupDef: {
-	        marryChildren: true
-	    },
-	    components: {
-	        'medalCellRenderer': MedalCellRenderer
-	    },
-	    columnTypes: {
-	        numberColumn: {width: 300}
-	    },
-
-	    rowData: null
-	};
-
-function MedalCellRenderer() {}
+$("#addMetaData").click(function(e){
+	addCollectionMetaDataRows();
+});
 
 
-MedalCellRenderer.prototype.init = function(params) {
-    
-	var html = "";
-	var metadata = params.data.metadataEntries;
-		var parentData = metadata.parentMetadataEntries;
-		var selfMetadata = metadata.selfMetadataEntries;
-		
-		html += "<input type='checkbox' name='selectCheckboxForPath'/><label>Institue</label><br/>";
+$("#updateMetaData").click(function(e){
+	updateMetaDataCollection();
+});
 
-		$.each(parentData, function( key, value ) {
-			
-				html += "<div><span>" + value.attribute +"</span> - <span>" + value.value +"</span></div>";
-			
-		});
-		
-		html += "<input type='checkbox' name='selectCheckboxForPath'/><label>Study</label><br/>";
-		$.each(selfMetadata, function( key, value ) {
-			html += "<div><span>" + value.attribute +"</span> - <span>" + value.value +"</span></div>";
-		});
+$("#upload-tab").click(function(e){
+	if(!uploadtabIniatialize) {
+		uploadtabIniatialize = true;
+		loadUploadTab();
+	}
+});
 
-		html += "<div><a href='#' class='dataSetFragment'>Data Set</a></div>";
-	
-		this.eGui.innerHTML = html;
-};
+$("#registerCollectionBtn").click(function(e){
+	registerCollection();
+});
 
-MedalCellRenderer.prototype.getGui = function() {
-    return this.eGui;
-};
+
+$("#registerDataFileBtn").click(function(e){
+	registerDataFile();
+});
+
+
+$("#doeDataFile").change(function (e) {	
+	appendFileName($(this));
+
+});
+
+$("#addBulkDataFiles").click(function(e){
+	$("#uploadDataFilesTab").show();
+	$("#uploadSubFragmentTab").hide();
+	openBulkDataRegistration();
+});
+
+$("#cancelBulkRegister").click(function(e){
+	$("#uploadDataFilesTab").hide();
+	$("#uploadSubFragmentTab").show();
+});
+
+$("#registerBulkDataFileBtn").click(function(e){
+	registerBulkDataFile();
+});
+
+$("#bulkDoeDataFile").change(function (e) {	
+	appendBulkFileName($(this));
+
+});
+
+
+});
 
 
 function populateSearchCriteria(searchType) {
@@ -437,16 +440,19 @@ function dataTableInit(isVisible) {
         "drawCallback": function (settings) {
         	$("#searchResultTable thead").remove();
         	
-           $(".downloadLink").click(function(e){
+           /*$(".downloadLink").click(function(e){
         	   var path = $(this).attr('data-path');
         	   var fileName = $(this).attr('data-fileName');  
         	   $("#download-modal").find(".selectedFilesDiv").hide();
                downloadFunction(path,fileName);
-             });
+             });*/
+        	
            $(".dataSetFragment").click(function(e) {
         	   $("#searchFragmentDiv").hide();
         	   $("#dataSetFragment").show();
+        	   $("#editCollectionFragment").hide();
         	   var datsetPath = $(this).attr('data_set_path');
+        	   var metadata = $(this).attr('metadata_type');
         	  /* dataset_criteria_json.searchType = "data_Set";
         	   dataset_criteria_json.detailed = true;        	   
         	   dataset_criteria_json.attrName = 'ANY';
@@ -455,7 +461,16 @@ function dataTableInit(isVisible) {
         	   dataset_criteria_json.level = 'Data_Set';
         	   dataset_criteria_json.isExcludeParentMetadata = false;
         	   dataset_criteria_json.operator = 'LIKE';*/
-        		refreshDataSetDataTable(datsetPath);
+        		refreshDataSetDataTable(datsetPath,metadata);
+           });
+           
+           $(".editCollectionMetadata").click(function(e){
+        	   $("#searchFragmentDiv").hide();
+        	   $("#dataSetFragment").hide();
+        	   $("#editCollectionFragment").show();
+        	   var metaData = $(this).attr('metadata_set');
+        	   var metaDataPath = $(this).attr('metadata_path');
+        	   constructCollectionMetData(metaData,metaDataPath);
            });
            
            $(".selectCheckboxForIns").click(function(e){
@@ -511,71 +526,38 @@ function dataTableInit(isVisible) {
 
 function renderPath(data, type, row) {
 	var html = "";
-	html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'><input type='checkbox' id=" + row.dataSetPath + " class='selectCheckboxForIns'/>&nbsp;&nbsp;&nbsp;<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span>" +
-			"</div><div class='col-md-12'></div><div class='col-md-12' style='margin-left:22px;'><a href='#' class='dataSetFragment' data_set_path = " + row.dataSetPath + "><span class='cil_12_bold_no_color'>" + row.dataSetDescription + "</span>" +
+	
+	var study;
+	var ins;
+	var data;
+	
+	study = JSON.stringify(row.studyUserMetadata);
+	ins = JSON.stringify(row.instituteUserMetadata);
+	data = JSON.stringify(row.selfMetadata);
+	
+	html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'><input type='checkbox' id=" + row.dataSetPath + " " +
+			"class='selectCheckboxForIns'/>&nbsp;&nbsp;&nbsp;<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span>" +
+			"&nbsp&nbsp;<span class='editCollectionMetadata' metadata_path  = '" + row.dataSetPath+ "' metadata_set = '" + data  + "'><i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Data Set Metadata'></i></span></div><div class='col-md-12'></div>" +
+			"<div class='col-md-12' style='margin-left:22px;'><a href='#' class='dataSetFragment' metadata_type = '" + data  + "' data_set_path = " + row.dataSetPath + ">" +
+					"<span class='cil_12_bold_no_color'>" + row.dataSetDescription + "</span>" +
 			"</a><br></div><div class='col-md-12'><br></div><div class='col-md-12' style='margin-left:22px;'>" +
-			"<span class='cil_12_bold_no_color'>Study: </span><a class='cil_12_no_color button2a' metadata_type = 'Study' tabindex='0'" +
-			" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' data-popover-content='#a01'>" + row.studyName + "</a></div>" +
+			"<span class='cil_12_bold_no_color'>Study: </span><a class='cil_12_no_color button2a' metadata_type = '" + study  + "' tabindex='0'" +
+			" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' data-popover-content='#a01'>" + row.studyName + "</a>" +
+					"&nbsp&nbsp;<span class='editCollectionMetadata' metadata_path  = '" + row.studyPath+ "'  metadata_set = '" + study  + "'><i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Study Metadata'></i></span></div>" +
 			"<div class='col-md-12 top-buffer' style='margin-left:22px;'>" +
-			"<span class='cil_12_bold_no_color'>Institute: </span><a class='cil_12_no_color button2a' metadata_type = 'Institute' tabindex='0'" +
-			" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' data-popover-content='#a01'>" + row.instituteName + "</a></div></div></div>" +
+			"<span class='cil_12_bold_no_color'>Institute: </span><a class='cil_12_no_color button2a' metadata_type = '" + ins  + "' tabindex='0'" +
+			" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' data-popover-content='#a01'>" + row.instituteName + "</a>" +
+					"&nbsp&nbsp;<span class='editCollectionMetadata' metadata_path  = '" + row.institutePath+ "' metadata_set = '" + ins  + "'><i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Institute Metadata'></i></span></div></div></div>" +
 			"<div class='row' style='margin-left: 25px;margin-bottom:10px;'><div class='col-sm-1 resultsStatsContainer' title='Number of Files'>" +
 			"<i class='fas fa-folder-open' title='Number of Files' style='font-size: 18px;'></i>" +
 			"<span class='resultsStatsText'> &nbsp;&nbsp;" + row.numOfDataSets + " </span></div></div>";
        
-	studyMetadata = row.studyUserMetadata;
-	instituteMetaData = row.instituteUserMetadata;
+	//studyMetadata = row.studyUserMetadata;
+	//instituteMetaData = row.instituteUserMetadata;
+	//selfMetadata = row.selfMetadata;
 	
     return html;
 }
-/*function renderPath(data, type, row) {
-	
-	var html = "";
-	var downdloadFileName = null;
-	var path = row.path;
-	if(search_criteria_json.searchType != 'collection') {
-		var n = path.lastIndexOf("/");
-		downdloadFileName = path.substring(n+1);		
-	}
-	
-	var data = row.metadataEntries;
-		var parentData = data.parentMetadataEntries;
-		var selfMetadata = data.selfMetadataEntries;
-		
-       html += "<label style='color: #00458F;'><input type='checkbox' class='selectCheckboxForIns'> &nbsp;&nbsp;Institute <a id='downloadlink' class='btn btn-link btn-sm downloadLink' " +
-       		"href='javascript:void(0);' data-toggle='modal' data-backdrop='static' data-keyboard='false' " +
-       		"data-filename=" + downdloadFileName + " data-path=" + row.download + " data-target='#download-modal'" +
-       		" style=''><i class='fa fa-download' aria-hidden='true'></i></a></label><br/><div class='divTable' style='margin-left: 71px; " +
-       		"width: 50%; border: 1px solid #000; display: table;'><div class='divTableBody'>";
-		
-       
-       $.each(parentData, function( key, value ) {	
-			html += "<div class='divTableRow'><div class='divTableHead'><span>" + value.attribute +"</span> " +
-					"</div> <div class='divTableHead'> <span>" + value.value +"</span></div></div>";
-		
-		});
-		
-       html += "</div></div>";
-       
-		html += "<label style='margin-left: 91px;color: #00458F;'><input type='checkbox' class='selectCheckBoxForStudy'> &nbsp;&nbsp; Study <a id='downloadlink' " +
-				"class='btn btn-link btn-sm downloadLink' " +
-       		"href='javascript:void(0);' data-toggle='modal' data-backdrop='static' data-keyboard='false' " +
-       		"data-filename=" + downdloadFileName + " data-path=" + row.download + " data-target='#download-modal'" +
-       		" style=''><i class='fa fa-download' aria-hidden='true'></i></a></label><br/><div class='divTable'" +
-				"style='margin-left: 143px;width: 50%; border: 1px solid #000; display: table;'><div class='divTableBody'>";
-		
-		$.each(selfMetadata, function( key, value ) {
-			html += "<div class='divTableRow'><div class='divTableHead'><span>" + value.attribute +"</span>" +
-					" </div> <div class='divTableHead'> <span>" + value.value +"</span></div></div>";
-		});
-
-		 html += "</div></div>";
-		 
-		html += "<div style='margin-left:30px;margin-top:10px;'><a href='#' class='dataSetFragment'>Data Set</a></div>";
-	
-	return html;
-}*/
-
 
 
 function display(value) {
@@ -597,27 +579,6 @@ function display(value) {
 	}
 }
 
-function downloadFunction(path,fileName) {
-	
-	$("#download-modal").find("#destinationPathId").val(path);	
-	$("#download-modal").find("#message").hide();
-	
-	if(fileName && fileName != "null") {
-		$("#download-modal").find("#syncRadioSet").show();
-		$("#download-modal").find("#SyncDiv").show();
-		$("#download-modal").find("#searchTypeSync").click();
-		$("#download-modal").find("#downloadType").val("data_object");
-		$("#download-modal").find("#downloadFileNameVal").val(fileName);
-		$("#download-modal").find("#downloadFileName").val(fileName);
-	} else {
-		$("#download-modal").find("#SyncDiv").hide();
-		$("#download-modal").find("#syncRadioSet").hide();
-		$("#download-modal").find("#downloadType").val("collection");
-	}
-	
-	$("#download-modal").find("#transferType").val("globus");
-	$("#download-modal").find("#source").val("");
-}
 
 
 
@@ -732,13 +693,16 @@ function displayPopover() {
 function openPopOver($this) {
     var pop = $this;
     $('.button2a').not($this).popover('hide'); 
-    var type = $this.attr('metadata_type');
-    var list = "";
+    var metadata = $this.attr('metadata_type');
+    
+    /*var list = "";
     if(type == 'Study') {
     	list = studyMetadata;
     } else {
     	list = instituteMetaData;
-    }
+    }*/
+    var list = JSON.parse(metadata);
+    
       var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\">" +
                 "User MetaData <a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a> </div>" +
                 "<div class='popover-body'> <div class='divTable' style='width: 100%;border: 1px solid #000;'>" +

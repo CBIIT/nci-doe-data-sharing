@@ -159,7 +159,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		 user.setLastName(register.getLastName());
 		 user.setInstitution(register.getInstitution());
 		 user.setEmailAddrr(register.getEmailAddress());
-		 
+		 user.setLockoutCounter(0);
 		 doeUserRepository.saveAndFlush(user);
 		 
 		 String encodedPassword = passwordEncoder.encode(register.getPassword());
@@ -208,7 +208,11 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 	@Override
 	@Transactional(readOnly = true)
 	public boolean doesUsernameExist(String username) throws Exception {
-		return doeUserRepository.doesUsernameExist(username);
+		DoeUsers user = doeUserRepository.getUserInfo(username);
+		 if(user != null) {
+			 return true;
+		 }
+		 return false;
 	}
 	
 	@Override

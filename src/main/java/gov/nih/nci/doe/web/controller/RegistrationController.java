@@ -39,7 +39,7 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @EnableAutoConfiguration
 @RequestMapping("/register")
-public class RegistrationController extends AbstractHpcController {
+public class RegistrationController extends AbstractDoeController {
 	
 	
 	
@@ -58,9 +58,10 @@ public class RegistrationController extends AbstractHpcController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<?> register(HttpSession session,@RequestHeader HttpHeaders headers, 
 			HttpServletRequest request, DoeRegistration register) throws Exception {
-
     	
+		log.info("register user");
 		PasswordStatusCode status = authService.validatePassword(register.getPassword(), null);
+		
 		if(!status.equals(PasswordStatusCode.SUCCESS)) {
 			log.info("Password validation failed...");
 			return new ResponseEntity<>("Enter a valid password.", HttpStatus.OK);
@@ -71,6 +72,8 @@ public class RegistrationController extends AbstractHpcController {
 			authService.register(register);
             try {
                 authenticateUserAndSetSession(register.getEmailAddress(), register.getPassword(),request);
+                
+                //send a  confirmation email after register and successful login
                 mailService.sendEmail(register.getEmailAddress());
              } catch (Exception e) {
             e.printStackTrace();

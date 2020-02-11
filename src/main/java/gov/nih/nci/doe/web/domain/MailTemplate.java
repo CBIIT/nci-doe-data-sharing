@@ -14,7 +14,7 @@ import javax.persistence.TemporalType;
 
 
 @Entity
-@Table(name = "MAIL_TEMPLATE_T",schema = "public")
+@Table(name = "MAIL_TEMPLATE_T",schema = "NCI_DOE_DB")
 public class MailTemplate implements Serializable {
 
 	private static final long serialVersionUID = 3092597482427044459L;

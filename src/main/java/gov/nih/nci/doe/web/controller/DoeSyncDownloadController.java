@@ -56,7 +56,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Controller
 @EnableAutoConfiguration
 @RequestMapping("/downloadsync")
-public class DoeSyncDownloadController extends AbstractHpcController {
+public class DoeSyncDownloadController extends AbstractDoeController {
   @Value("${gov.nih.nci.hpc.server.dataObject}")
   private String dataObjectServiceURL;
 

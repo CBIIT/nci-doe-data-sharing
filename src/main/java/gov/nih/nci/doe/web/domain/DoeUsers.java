@@ -7,11 +7,12 @@ import javax.persistence.*;
 
 
 
+
 @Entity
-@Table(name = "DOE_USER",schema = "public")
+@Table(name = "DOE_USER_T",schema = "NCI_DOE_DB")
 public class DoeUsers {
 
-	private String id;
+	private Integer id;
 	private String firstName;
 	private String lastName;
 	private String emailAddrr;
@@ -51,12 +52,15 @@ public class DoeUsers {
 
     }
     
+    
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	public String getId() {
+    @Column(name = "ID", nullable = false, precision = 0)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "doe_user_seq")
+    @SequenceGenerator(name = "doe_user_seq", sequenceName = "doe_user_seq", allocationSize = 1)
+	public Integer getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	

@@ -97,10 +97,7 @@ function postRegistrationFailure(url, params, status, error, data) {
 function validateForgotPassword () {
 	jQuery.validator.addMethod("isPswdEqual", checkPasswordEquality);
 	$("#forgot-password-form").validate({
-		  rules: {
-			  txtforgotPasswordEmail: {				  
-				  required: true,
-			  },
+		  rules: {			  
 			  forgot_password: {
 				  required: true
 			  },
@@ -131,12 +128,16 @@ function validateForgotPassword () {
 
 
 function postForgotPassword(data,status) {
+	$('#btnforgotPassword').prop('disabled',false);
 	if(data == 'SUCCESS') {
-		$("#successMsg").html("Password reset Successful.")
+		$(".successMsg").html("Password reset successful.");
+		$(".successBlock").show();
+		$(".errorBlock").hide();
 	} else {
 		$('#btnforgotPassword').prop('disabled',false);
 		$(".errorMsg").html(data);
 		$(".errorBlock").show();
+		$(".successBlock").hide();
 	}
 	
 }

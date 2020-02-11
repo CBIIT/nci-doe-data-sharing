@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 	@Controller
 	@EnableAutoConfiguration
 	@RequestMapping("/logOut")
-	public class LogOutController extends AbstractHpcController {
+	public class LogOutController extends AbstractDoeController {
 
 		@RequestMapping(method = RequestMethod.POST)
 		public ResponseEntity<?> logOut(HttpServletRequest request,HttpServletResponse response) {
-			 doCommonLogout( request,  response);
-			 
+			log.info("log out");
+			 doCommonLogout( request,  response);			 
 			 return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
 		}
 
@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 		    SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
 		    cookieClearingLogoutHandler.logout(request, response, null);
 		    securityContextLogoutHandler.logout(request, response, null);
+		    request.getSession().removeAttribute("writeAccessUserToken");
 		    log.info("User successfully logged out through hyperlink.");
 		}
 }

@@ -36,7 +36,7 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectDownloadResponseDTO;
 @Controller
 @EnableAutoConfiguration
 @RequestMapping("/downloadfiles")
-public class DoeDownnloadFilesController extends AbstractHpcController {
+public class DoeDownnloadFilesController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.v2.download}")
 	private String downloadServiceURL;
 	
