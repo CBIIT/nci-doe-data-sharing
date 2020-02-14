@@ -2,6 +2,7 @@ package gov.nih.nci.doe.web.controller;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -67,8 +68,11 @@ public class TaskManagerCotroller extends AbstractDoeController {
     					sslCertPassword);
     			
     			List<HpcUserDownloadRequest> downloadResults = new ArrayList<HpcUserDownloadRequest>();
-    			downloadResults.addAll(downloads.getActiveTasks());
-    			downloadResults.addAll(downloads.getCompletedTasks());    			
+    			if(downloads != null) {
+    				downloadResults.addAll(downloads.getActiveTasks());
+        			downloadResults.addAll(downloads.getCompletedTasks());  
+    			}
+    			  			
     			
     			 List<HpcUserDownloadRequest> finalTaskIds = LambdaUtils.filter(downloadResults, (HpcUserDownloadRequest n) ->
     			 taskIds.contains(n.getTaskId()));
@@ -86,11 +90,11 @@ public class TaskManagerCotroller extends AbstractDoeController {
     					task.setUserId(t.getUserId());
     					task.setTaskType(t.getTaskType());
     					if(download.getResult()) {
-    						task.setTransferStatus("COMPLETED");
+    						task.setTransferStatus("Completed");
     					} else if(!download.getResult()){
-    						task.setTransferStatus("FAILED");
+    						task.setTransferStatus("Failed");
     					} else {
-    						task.setTransferStatus("IN PROGRESS");
+    						task.setTransferStatus("In Progress");
     					}
     					
     					taskResults.add(task);

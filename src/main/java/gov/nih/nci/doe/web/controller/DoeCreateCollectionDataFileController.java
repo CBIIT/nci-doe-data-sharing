@@ -13,13 +13,13 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Set;
-import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.ui.Model;
 
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.DoeCollectionModel;
@@ -28,7 +28,6 @@ import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.datamanagement.HpcDataHierarchy;
 import gov.nih.nci.hpc.domain.datamanagement.HpcDirectoryScanPathMap;
 import gov.nih.nci.hpc.domain.datatransfer.HpcFileLocation;
-import gov.nih.nci.hpc.domain.datatransfer.HpcPatternType;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataValidationRule;
 import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectRegistrationRequestDTO;
@@ -102,70 +101,58 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void setInputParameters(HttpServletRequest request, HttpSession session, String path,
-			String parent, String source, boolean refresh) {
-		String endPoint = request.getParameter("endpoint_id");
-		String globusPath = request.getParameter("path");
-		List<String> fileNames = new ArrayList<String>();
-		List<String> folderNames = new ArrayList<String>();
-		Enumeration<String> names = request.getParameterNames();
-		while (names.hasMoreElements()) {
-			String paramName = names.nextElement();
-			if (paramName.startsWith("file"))
-				fileNames.add(request.getParameter(paramName));
-			else if (paramName.startsWith("folder"))
-				folderNames.add(request.getParameter(paramName));
-		}
-		if (endPoint == null)
-			endPoint = (String) session.getAttribute("GlobusEndpoint");
-		else
-			session.setAttribute("GlobusEndpoint", endPoint);
+	protected void setInputParameters(HttpServletRequest request, HttpSession session,Model model) {
+			String endPoint = request.getParameter("endpoint_id");
+			String globusPath = request.getParameter("path");
+			List<String> fileNames = new ArrayList<String>();
+			List<String> folderNames = new ArrayList<String>();
+			Enumeration<String> names = request.getParameterNames();
+			while (names.hasMoreElements()) {
+				String paramName = names.nextElement();
+				if (paramName.startsWith("file"))
+					fileNames.add(request.getParameter(paramName));
+				else if (paramName.startsWith("folder"))
+					folderNames.add(request.getParameter(paramName));
+			}
+			if (endPoint == null)
+				endPoint = (String) session.getAttribute("GlobusEndpoint");
+			else
+				session.setAttribute("GlobusEndpoint", endPoint);
 
-		
+			model.addAttribute("endpoint_id", endPoint);
 
-		if (refresh || globusPath == null)
-			globusPath = (String) session.getAttribute("GlobusEndpointPath");
-		else
-			session.setAttribute("GlobusEndpointPath", globusPath);
+			if (globusPath == null)
+				globusPath = (String) session.getAttribute("GlobusEndpointPath");
+			else
+				session.setAttribute("GlobusEndpointPath", globusPath);
 
+			model.addAttribute("endpoint_path", globusPath);
 
-		if (fileNames.isEmpty())
-			fileNames = (List<String>) session.getAttribute("GlobusEndpointFiles");
-		else
-			session.setAttribute("GlobusEndpointFiles", fileNames);
+			if (fileNames.isEmpty())
+				fileNames = (List<String>) session.getAttribute("GlobusEndpointFiles");
+			else
+				session.setAttribute("GlobusEndpointFiles", fileNames);
 
-		if (folderNames.isEmpty())
-			folderNames = (List<String>) session.getAttribute("GlobusEndpointFolders");
-		else
-			session.setAttribute("GlobusEndpointFolders", folderNames);
+			if (folderNames.isEmpty())
+				folderNames = (List<String>) session.getAttribute("GlobusEndpointFolders");
+			else
+				session.setAttribute("GlobusEndpointFolders", folderNames);
 
-		setCriteria(request, session);
+			if (endPoint != null)
+				model.addAttribute("async", true);
 
+			if (fileNames != null && !fileNames.isEmpty())
+				model.addAttribute("fileNames", fileNames);
+
+			if (folderNames != null && !folderNames.isEmpty())
+				model.addAttribute("folderNames", folderNames);
+			
+			model.addAttribute("datafilePath",session.getAttribute("datafilePath"));
+			model.addAttribute("institutePath",session.getAttribute("institutePath"));
+			model.addAttribute("studyPath",session.getAttribute("studyPath"));
 
 	}
 
-	protected void setCriteria(HttpServletRequest request, HttpSession session)
-	{
-		String includeCriteria = request.getParameter("includeCriteria");
-		String excludeCriteria = request.getParameter("excludeCriteria");
-		String dryRun = request.getParameter("dryrun");
-
-		if (includeCriteria == null)
-			includeCriteria = (String) session.getAttribute("includeCriteria");
-		else
-			session.setAttribute("includeCriteria", includeCriteria);
-
-		if (excludeCriteria == null)
-			excludeCriteria = (String) session.getAttribute("excludeCriteria");
-		else
-			session.setAttribute("excludeCriteria", excludeCriteria);	
-
-		if (dryRun == null)
-			dryRun = (String) session.getAttribute("dryRun");
-		else
-			session.setAttribute("dryRun", dryRun);
-	
-	}
 	
 	@SuppressWarnings("unchecked")
 	protected HpcBulkDataObjectRegistrationRequestDTO constructBulkRequest(HttpServletRequest request,
@@ -175,10 +162,6 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		String globusEndpoint = (String) session.getAttribute("GlobusEndpoint");
 		//String selectedBasePath = (String) session.getAttribute("basePathSelected");
 		String globusEndpointPath = (String) session.getAttribute("GlobusEndpointPath");
-		String includeCriteria = (String) session.getAttribute("includeCriteria");
-		String excludeCriteria = (String) session.getAttribute("excludeCriteria");
-		String dryRun = (String) request.getParameter("dryrun");
-		String criteriaType = (String)request.getParameter("criteriaType");
 		List<String> globusEndpointFiles = (List<String>) session.getAttribute("GlobusEndpointFiles");
 		List<String> globusEndpointFolders = (List<String>) session.getAttribute("GlobusEndpointFolders");
 
@@ -193,26 +176,9 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				file.setCreateParentCollections(true);
 				file.setPath(path + "/" + fileName);
 				System.out.println(path + "/" + fileName);
-				// file.getParentCollectionMetadataEntries().addAll(metadataEntries);
 				files.add(file);
 			}
 			dto.getDataObjectRegistrationItems().addAll(files);
-		}
-
-		List<String> include = new ArrayList<String>();
-		if(includeCriteria != null && !includeCriteria.isEmpty())
-		{
-			StringTokenizer tokens = new StringTokenizer(includeCriteria, "\r\n");
-			while(tokens.hasMoreTokens())
-				include.add(tokens.nextToken());
-		}
-		
-		List<String> exclude = new ArrayList<String>();
-		if(excludeCriteria != null && !excludeCriteria.isEmpty())
-		{
-			StringTokenizer tokens = new StringTokenizer(excludeCriteria, "\r\n");
-			while(tokens.hasMoreTokens())
-				exclude.add(tokens.nextToken());
 		}
 
 		if (globusEndpointFolders != null) {
@@ -233,18 +199,11 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 					pathDTO.setToPath(toPath);
 					folder.setPathMap(pathDTO);
 				}
-				if(criteriaType != null && criteriaType.equals("Simple"))
-					folder.setPatternType(HpcPatternType.SIMPLE);
-				else
-					folder.setPatternType(HpcPatternType.REGEX);
-				if(exclude.size() > 0)
-					folder.getExcludePatterns().addAll(exclude);
-				if(include.size() > 0)
-					folder.getIncludePatterns().addAll(include);
+				
 			}
 			dto.getDirectoryScanRegistrationItems().addAll(folders);
 		}
-		dto.setDryRun(dryRun != null && dryRun.equals("on"));
+		
 		return dto;
 	}
 

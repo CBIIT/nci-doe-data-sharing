@@ -5,8 +5,9 @@
     <title>Title</title>
 </head>
 <body>
-     <div class="tab-pane fade M-4 p-4" id="uploadTab" role="tabpanel" th:fragment="uploadFragment">
-          <div class="form-row jumbotron pt-2 pb-2 mb-2" id="uploadSubFragmentTab">
+     <div class="M-4 p-4" id="uploadTab" role="tabpanel" th:fragment="uploadFragment">
+     <div class="form-row jumbotron pt-2 pb-2 mb-2" >
+          <div class="form-row col-md-12 col-sm-12" id="uploadSubFragmentTab">
                 <div class="col-md-12 col-sm-12 p-0 m-0">
                     <div class="col-lg-2 col-md-2 col-sm-12" style="z-index:1010;">
                         <button type="button" class="float-left btn btn-link" 
@@ -17,74 +18,63 @@
                 </div>
 
 <input type="hidden" value="/DOE_TEST_Archive" id="basePath"/>
-                <div class="col-md-12 col-sm-12 collapse show">
-                    <div class="col-md-12 col-sm-12">
+<input type="hidden" th:value="${datafilePath}"  id="datafilePath"/>
+<input type="hidden" th:value="${institutePath}"  id="institutePath"/>
+<input type="hidden" th:value="${studyPath}" id="studyPath"/>
+
+
+      <div  class="col-md-12 col-sm-12 collapse show">
+          <div class="col-md-12 col-sm-12">
+                     <div class="col-md-12 col-sm-12 p-0 m-0 clearfix registerBulkDataFileSuccess" style="display: none;">
+                        <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
+                           <div class="alert alert-success">
+                            <h6 class="registerBulkDataFile"></h6>
+                           </div>
+                          </div>
+                      </div> 
+                
                         <div class="form-row">
-                             <div class="form-group col-lg-10 col-md-12">
-                                <label for="attributeVal">Institutes</label>
-                                <select class="simple-select2"  id="instituteList" name="instituteList" style="width:100%" 
+                             <div class="form-group col-lg-6 col-md-6">
+                               <label for="attributeVal">Select Institute &nbsp;&nbsp;<a href="#" id="addNewInstitute" 
+                               onclick="openUploadModal('basePath')" data-backdrop="static" data-keyboard="false" >
+                               <i class="fal fa-plus-circle"></i> Add new institute</a></label>
+                                <select class="simple-select2"  id="instituteList" name="instituteList" style="width:70%" 
                                 onchange="retrieveCollections(this, this.options[this.selectedIndex]);">
                                 </select>
                             </div>
-                            <div class="form-group col-lg-2 col-md-12" style="margin-top: 32px;">
-                               <input type="button" id="addNewInstitute" class=" btn btn-primary float-right" value="Add new Institute" onclick="openUploadModal('basePath')" 
-                                    data-backdrop="static" data-keyboard="false">
-                            </div>
-                        </div>
-                    </div>  
-                    
-                     <div class="col-md-12 col-sm-12" id="studyListDiv" style="display:none;">
-                        <div class="form-row">
-                             <div class="form-group col-lg-10 col-md-12">
-                                <label for="attributeVal">Studies</label>
-                                <select class="simple-select2"  id="studyList" name="studyList" style="width:100%"
+                            <div class="form-group col-lg-6 col-md-6" id="studyListDiv" style="display:none;">
+                                <label for="attributeVal">Select Study &nbsp;&nbsp;<a href="#" id="addNewStudy" onclick="openUploadModal('instituteList')" data-backdrop="static" data-keyboard="false"><i class="fal fa-plus-circle"></i> Add new study</a></label>
+                                <select class="simple-select2"  id="studyList" name="studyList" style="width:70%"
                                 onchange="retrieveCollections(this, this.options[this.selectedIndex]);">
                                 </select>
                             </div>
-                            <div class="form-group col-lg-2 col-md-12" style="margin-top: 32px;">
-                               <input type="button" id="addNewStudy" class=" btn btn-primary float-right" value="Add new Study" onclick="openUploadModal('instituteList')" 
-                                    data-backdrop="static" data-keyboard="false">
-                            </div>
-                        </div>
-                    </div> 
-                    
-                     <div class="col-md-12 col-sm-12" id="dataSetListDiv" style="display:none;">
-                        <div class="form-row">
-                             <div class="form-group col-lg-8 col-md-12">
-                                <label for="attributeVal">Data Set</label>
-                                <select class="simple-select2"  id="dataList" name="dataList" style="width:100%"
+                            
+                             <div class="form-group col-lg-6 col-md-12" id="dataSetListDiv" style="display:none;">
+                          <label for="attributeVal">Select Data Set &nbsp;&nbsp;<a href="#" id="addNewDataSet" onclick="openUploadModal('studyList')" data-backdrop="static" data-keyboard="false"><i class="fal fa-plus-circle"></i> Add new data set</a></label>
+                                <select class="simple-select2"  id="dataList" name="dataList" style="width:70%"
                                 onchange="retrieveCollections(this, this.options[this.selectedIndex]);">
                                 </select>
                             </div>
-                            <div class="form-group col-lg-4 col-md-12" style="margin-top: 32px;">
-                           
-                            <input type="button" id="addBulkDataFiles" class=" btn btn-primary float-right" value="Add Bulk Data files" style="margin-left:15px;">
-                             
-                             <input type="button" id="addDataFiles" class=" btn btn-primary float-right" data-toggle="modal" data-target="#registerDataFileModal" 
-                             data-backdrop="static" data-keyboard="false" value="Add Data file(s)" onclick="openRegisterDataFileModal()" >
-                             
-                               <input type="button" id="addNewDataSet" onclick="openUploadModal('studyList')" 
-                                    data-backdrop="static" data-keyboard="false" class=" btn btn-primary float-right" value="Add new Data Set" style="margin-right:15px;">
+                            <div class="form-group col-lg-6 col-md-12" style="margin-top: 32px;">                          
+                            <input type="button" id="addBulkDataFiles" class=" btn btn-primary float-left" value="Add Data file(s)" style="display:none;margin-left:15px;">
                             </div>
-                        </div>
-                    </div>      
-                    
-                    
-                         
-                     <div class="col-md-12 col-sm-12" id="dataListDiv" style="display:none;margin-top:30px;">
-                        <div class="form-row">
-                             <div class="form-group col-lg-8 col-md-12" style="background-color: #fff;">
-                            <p style=" margin-top: 4px; margin-left: 10px;"><b>Data Files</b></p>
-                                <ul id="dataListing">
-                                </ul>
+                            <div class="col-md-12 col-sm-12" id="dataListDiv" style="display:none;margin-top:30px;">
+                              <div class="form-row" style="height:190px;position:relative;">
+                             <div class="form-group col-lg-8 col-md-12" style="background-color: #fff;max-height:100%;overflow:auto;">
+                               <p style=" margin-top: 4px; margin-left: 10px;"><b>Data Objects for the selected Data Set</b></p>
+                                <ol id="dataListing">
+                                </ol>
                             </div>
                             
                         </div>
-                    </div>              
+                    </div> 
+                        </div>
+                    </div>
                 </div>
             </div>
             
             <div th:replace="fragments/uploadDataFiles :: uploadDataFiles">Upload Data files</div>
+            </div>
     </div>
 </body>
 </html>

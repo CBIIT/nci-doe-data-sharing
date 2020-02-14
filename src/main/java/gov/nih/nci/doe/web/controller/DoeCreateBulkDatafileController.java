@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,7 +21,6 @@ import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.DoeDatafileModel;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.doe.web.util.DoeExcelUtil;
-import gov.nih.nci.doe.web.util.MiscUtil;
 import gov.nih.nci.hpc.domain.metadata.HpcBulkMetadataEntries;
 import gov.nih.nci.hpc.domain.metadata.HpcBulkMetadataEntry;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
@@ -56,6 +56,16 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	@Value("${doe.basePath}")
 	private String basePath;
 	
+	
+	
+	
+	@RequestMapping(method = RequestMethod.GET)
+	public String home(Model model, HttpSession session, HttpServletRequest request) {
+
+		setInputParameters(request, session,model);
+		return "upload";
+	}
+	
 
 	/**
 	 * Post operation to update metadata
@@ -76,8 +86,6 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			 @RequestParam("dataFilePath") String  dataFilePath, HttpServletRequest request, HttpServletResponse response) {
 		
 		String authToken = (String) session.getAttribute("hpcUserToken");
-		String action = request.getParameter("actionType");
-		
 		String checksum = request.getParameter("checksum");
 		if (checksum == null || checksum.isEmpty())
 			checksum = (String) request.getAttribute("checksum");
@@ -87,24 +95,6 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			doeDataFileModel.setPath(dataFilePath.trim());
 		}
 		
-		
-		 if (action != null  && action.equals("Globus")) {
-			session.setAttribute("datafilePath", doeDataFileModel.getPath());
-			session.setAttribute("basePathSelected", basePath);
-			session.removeAttribute("GlobusEndpoint");
-			session.removeAttribute("GlobusEndpointPath");
-			session.removeAttribute("GlobusEndpointFiles");
-			session.removeAttribute("GlobusEndpointFolders");
-			setCriteria(request, session);
-			populateFormAttributes(request, session, basePath, getParentCollectionType(request, session), true,
-					false);
-			
-			final String percentEncodedReturnURL = MiscUtil.performUrlEncoding(
-					this.webServerName + "/addbulk");
-			return "redirect:https://app.globus.org/file-manager?method=GET&" +
-	        "action=" + percentEncodedReturnURL;
-			
-		}
 
 		try {
 			if (doeDataFileModel.getPath() == null || doeDataFileModel.getPath().trim().length() == 0)
@@ -167,26 +157,15 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			HpcBulkDataObjectRegistrationResponseDTO responseDTO = DoeClientUtil.registerBulkDatafiles(authToken,
 					bulkRegistrationURL, registrationDTO, sslCertPath, sslCertPassword);
 			
-			if (responseDTO != null) {
-				
+			if (responseDTO != null) {				
 				StringBuffer info = new StringBuffer();
 				   for (HpcDataObjectRegistrationItemDTO responseItem : responseDTO.getDataObjectRegistrationItems()) {
 					info.append(responseItem.getPath()).append("<br/>");
 				   }
-				   
-				if (registrationDTO.getDryRun()) {
-					if(info.toString().isEmpty()) {
-						return "No files found! ";
-					  } else {
-						return "Here are the dry run list of files: <br/> " + info.toString();
-					  }
-				}
-				else {	
-					session.removeAttribute("dryRun");
 				    String taskId = responseDTO.getTaskId();
-					return "Bulk Data file registration request is submitted! Task Id: <a href='uploadtask?type=&taskId=" + taskId +"'>"+taskId+"</a>";			
+					return "Bulk Data file registration request is submitted! Task Id: " +taskId;			
 		
-				}
+				
 			}
 		} catch (Exception e) {
 		   log.error("failed to create data file: " + e.getMessage(), e);

@@ -35,9 +35,8 @@ import org.springframework.http.HttpStatus;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.HpcDatafileSearchResultDetailed;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
-import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntries;
-import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataQuery;
+import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
 import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
@@ -61,8 +60,11 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.search.dataobject.compound}")
 	private String compoundDataObjectSearchServiceURL;
-
 	
+	@Value("${gov.nih.nci.hpc.server.model}")
+	private String hpcModelURL;
+
+
 	@RequestMapping(method = RequestMethod.GET)
 	    public ResponseEntity<?> search(HttpSession session,@RequestHeader HttpHeaders headers, DoeSearch search,
 	    		@RequestParam(value = "path") String path) {
@@ -77,6 +79,20 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
             	a.setLevelFilter(null);
              }           
 		}
+		
+		List<String> systemAttrs = new ArrayList<>();
+		
+		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
+		
+		if(modelDTO != null) {
+			systemAttrs = modelDTO.getDataObjectSystemGeneratedMetadataAttributeNames();
+		} else  {
+			modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL, sslCertPath, sslCertPassword);
+			session.setAttribute("userDOCModel", modelDTO);
+			
+			systemAttrs = modelDTO.getDataObjectSystemGeneratedMetadataAttributeNames();
+		}
+		
 		
 		List<HpcDatafileSearchResultDetailed> dataResults = new ArrayList<HpcDatafileSearchResultDetailed>();		
 
@@ -95,7 +111,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 			
 			if (restResponse.getStatus() == 200) {
 				session.setAttribute("compoundQuery", compoundQuery);				
-				dataResults = processDataObjectResponseResults(restResponse);
+				dataResults = processDataObjectResponseResults(restResponse,systemAttrs);
 			    return new ResponseEntity<>(dataResults, HttpStatus.OK);
 			} else if(restResponse.getStatus() == 204) {
 				return new ResponseEntity<>(dataResults, HttpStatus.OK);
@@ -117,17 +133,17 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 		
 	}
 			
-	private List<HpcDatafileSearchResultDetailed> processDataObjectResponseResults(Response restResponse) throws JsonParseException, IOException {
+	private List<HpcDatafileSearchResultDetailed> processDataObjectResponseResults(Response restResponse,List<String> systemAttrs) throws JsonParseException, IOException {
 		
 		List<HpcDatafileSearchResultDetailed> returnResults = new ArrayList<HpcDatafileSearchResultDetailed>();
 
-		returnResults = processDataObjectResults(restResponse);
+		returnResults = processDataObjectResults(restResponse,systemAttrs);
 
 		return returnResults;
 			
 	}
 	
-	private List<HpcDatafileSearchResultDetailed> processDataObjectResults(Response restResponse) throws JsonParseException, IOException {
+	private List<HpcDatafileSearchResultDetailed> processDataObjectResults(Response restResponse,List<String> systemAttrs) throws JsonParseException, IOException {
 		MappingJsonFactory factory = new MappingJsonFactory();
 		JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 		HpcDataObjectListDTO dataObjects = parser.readValueAs(HpcDataObjectListDTO.class);
@@ -136,13 +152,13 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 			List<HpcDatafileSearchResultDetailed> returnResults = new ArrayList<HpcDatafileSearchResultDetailed>();
 			for (HpcDataObjectDTO result : searchResults) {
 				HpcDatafileSearchResultDetailed returnResult = new HpcDatafileSearchResultDetailed();
+				String name = result.getDataObject().getAbsolutePath().substring(result.getDataObject().getAbsolutePath().lastIndexOf('/') + 1);
+				returnResult.setName(name);
 				returnResult.setPath(result.getDataObject().getAbsolutePath());
 				returnResult.setDownload(result.getDataObject().getAbsolutePath());
 				returnResult.setPermission(result.getDataObject().getAbsolutePath());
 				returnResult.setCreatedOn(format.format(result.getDataObject().getCreatedAt().getTime()));
-				returnResult.setMetadataEntries(new HpcMetadataEntries());
-				returnResult.getMetadataEntries().getSelfMetadataEntries().addAll(new ArrayList<HpcMetadataEntry>(result.getMetadataEntries().getSelfMetadataEntries()));
-				returnResult.getMetadataEntries().getParentMetadataEntries().addAll(new ArrayList<HpcMetadataEntry>(result.getMetadataEntries().getParentMetadataEntries()));
+				returnResult.setSelfMetadata(getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),"DataObject", systemAttrs));
 				returnResults.add(returnResult);
 			}
 			

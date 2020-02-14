@@ -21,6 +21,7 @@ import gov.nih.nci.doe.web.model.DoeCollectionModel;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectRegistrationRequestDTO;
 
 
 /**
@@ -41,7 +42,8 @@ public class DoeCollectionController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.model}")
 	private String hpcModelURL;
 
-
+	@Value("${gov.nih.nci.hpc.server.dataObject}")
+	private String serviceDataURL;
 	/**
 	 * Update collection
 	 *
@@ -60,6 +62,9 @@ public class DoeCollectionController extends AbstractDoeController {
 		String authToken = (String) session.getAttribute("hpcUserToken");
 		try {
 			String[] path = request.getParameterValues("path");
+			String isDataObject = request.getParameter("isDataObject");
+			
+			
 			if(path[0] != null) {
 				doeCollection.setPath(path[0].trim());
 			}
@@ -68,15 +73,27 @@ public class DoeCollectionController extends AbstractDoeController {
 			  return "Invalid collection path";
 			}
 
-			HpcCollectionRegistrationDTO registrationDTO = constructRequest(request, session);
-
-			boolean updated = DoeClientUtil.updateCollection(authToken, serviceURL, registrationDTO,
-					doeCollection.getPath(), sslCertPath, sslCertPassword);
-			if (updated) {
-				session.removeAttribute("selectedUsers");
-				return "Collection " + doeCollection.getPath() + " is Updated!";
+			if(isDataObject != null && isDataObject.equalsIgnoreCase("true")) {
+				HpcDataObjectRegistrationRequestDTO registrationDTO = constructDataRequest(request, session);
+				boolean updated = DoeClientUtil.updateDatafile(authToken, serviceDataURL, registrationDTO,
+						doeCollection.getPath(), sslCertPath, sslCertPassword);
+				if (updated) {
+					session.removeAttribute("selectedUsers");
+					return  "Data file " + doeCollection.getPath() + " is Updated!";
+					
+				}
 				
+			} else {
+				HpcCollectionRegistrationDTO registrationDTO = constructRequest(request, session);
+				boolean updated = DoeClientUtil.updateCollection(authToken, serviceURL, registrationDTO,
+						doeCollection.getPath(), sslCertPath, sslCertPassword);
+				if (updated) {
+					session.removeAttribute("selectedUsers");
+					return "Collection " + doeCollection.getPath() + " is Updated!";
+					
+				}
 			}
+			
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return e.getMessage();
@@ -123,4 +140,38 @@ public class DoeCollectionController extends AbstractDoeController {
 		return dto;
 	}
 
+	
+    private HpcDataObjectRegistrationRequestDTO constructDataRequest(HttpServletRequest request, HttpSession session) {
+		Enumeration<String> params = request.getParameterNames();
+		HpcDataObjectRegistrationRequestDTO dto = new HpcDataObjectRegistrationRequestDTO();
+		List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
+
+		while (params.hasMoreElements()) {
+			String paramName = params.nextElement();
+			if (paramName.startsWith("zAttrStr_")) {
+				HpcMetadataEntry entry = new HpcMetadataEntry();
+				String attrName = paramName.substring("zAttrStr_".length());
+				String[] attrValue = request.getParameterValues(paramName);
+				entry.setAttribute(attrName);
+				entry.setValue(attrValue[0]);
+				metadataEntries.add(entry);
+			} else if (paramName.startsWith("addAttrName")) {
+				HpcMetadataEntry entry = new HpcMetadataEntry();
+				String attrId = paramName.substring("addAttrName".length());
+				String[] attrName = request.getParameterValues(paramName);
+				String[] attrValue = request.getParameterValues("addAttrValue" + attrId);
+				if (attrName.length > 0 && !attrName[0].isEmpty())
+					entry.setAttribute(attrName[0]);
+				else
+					throw new DoeWebException("Invalid metadata attribute name. Empty value is not valid!");
+				if (attrValue.length > 0 && !attrValue[0].isEmpty())
+					entry.setValue(attrValue[0]);
+				else
+					throw new DoeWebException("Invalid metadata attribute value. Empty value is not valid!");
+				metadataEntries.add(entry);
+			}
+		}
+		dto.getMetadataEntries().addAll(metadataEntries);
+		return dto;
+	}
 }

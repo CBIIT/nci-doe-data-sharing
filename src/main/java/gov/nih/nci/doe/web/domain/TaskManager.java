@@ -19,6 +19,8 @@ public class TaskManager {
 	private String userId;
 	private Date taskDate;
 	
+	//file size
+	
 
     public boolean equals(Object object) {
         if (this == object) {

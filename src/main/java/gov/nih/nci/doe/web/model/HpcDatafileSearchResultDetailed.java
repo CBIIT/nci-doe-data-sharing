@@ -1,5 +1,7 @@
 package gov.nih.nci.doe.web.model;
 
+import java.util.List;
+
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntries;
 
 public class HpcDatafileSearchResultDetailed {
@@ -11,7 +13,12 @@ public class HpcDatafileSearchResultDetailed {
 	private String checksum;
 	private String download;
 	private String permission;
+	private String name;
+	private List<KeyValueBean> selfMetadata;
 	HpcMetadataEntries metadataEntries;
+	
+	 
+	 
 
 	public String getPermission() {
 		return permission;
@@ -84,6 +91,23 @@ public class HpcDatafileSearchResultDetailed {
 	public void setMetadataEntries(HpcMetadataEntries metadataEntries) {
 		this.metadataEntries = metadataEntries;
 	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public List<KeyValueBean> getSelfMetadata() {
+		return selfMetadata;
+	}
+
+	public void setSelfMetadata(List<KeyValueBean> selfMetadata) {
+		this.selfMetadata = selfMetadata;
+	}
+	
 
 }
 

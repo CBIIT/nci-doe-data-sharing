@@ -1,5 +1,8 @@
 package gov.nih.nci.doe.web.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -13,6 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
 import gov.nih.nci.doe.web.model.DoeResponse;
+import gov.nih.nci.doe.web.model.KeyValueBean;
+import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 
 public abstract class AbstractDoeController {
 	
@@ -54,4 +59,23 @@ public abstract class AbstractDoeController {
 			}
 			return null;
 	    }
+	  
+		public List<KeyValueBean> getUserMetadata(List<HpcMetadataEntry> list,String levelName, List<String> systemAttrs) {
+			if (list == null)
+				return null;
+
+			List<KeyValueBean> entryList = new ArrayList<KeyValueBean>();
+			
+			for (HpcMetadataEntry entry : list) {
+				
+				//LookUp val = lookUpService.getLookUpByAttrName(entry.getAttribute());
+				if (systemAttrs != null && !systemAttrs.contains(entry.getAttribute()) && levelName.equalsIgnoreCase(entry.getLevelLabel())) {
+					KeyValueBean k = new KeyValueBean(entry.getAttribute(), entry.getValue());			
+					entryList.add(k);
+				}
+				
+			}
+
+			return entryList;
+		}
 }

@@ -7,8 +7,8 @@
 <body>
      <div class="tab-pane fade M-4 p-4" id="loginTab" role="tabpanel" th:fragment="login">
         <div class="form-row jumbotron pt-2 pb-2 mb-2" id="loginSubTab">
-                 <form role="form" id="userlogin">
-                        <h1>Please Sign In</h1>
+                 <form role="form" id="userlogin" style="width:50%;">
+                        <h2>Please Sign In</h2>
                         <div class="clearfix errorBlockLogin" style="display: none;">
                     <div class="col-md-12" style="padding-left: 0px; Padding-right: 0px; border-radius: 0px;">
                         <div class="alert alert-danger">
@@ -17,32 +17,10 @@
                     </div>
                 </div>
                         <hr>
-                    <div>
-                        <h2 style="width:100px;margin: auto">Notice</h2><br/>
-                        <p>
- This warning banner provides privacy and security notices consistent with
-  applicable federal laws, directives, and other federal guidance for accessing
-  this Government system, which includes (1) this computer network, (2) all
-  computers connected to this network, and (3) all devices and storage media
-  attached to this network or to a computer on this network.
- This system is provided for Government-authorized use only.
- Unauthorized or improper use of this system is prohibited and may result in
-  disciplinary action and/or civil and criminal penalties.
- Personal use of social media and networking sites on this system is limited as
-  to not interfere with official work duties and is subject to monitoring.
-  By using this system, you understand and consent to the following:
-   The Government may monitor, record, and audit your system usage, including
-    usage of personal devices and email systems for official duties or to
-    conduct HHS business. Therefore, you have no reasonable expectation of
-    privacy regarding any communication or data transiting or stored on this
-    system. At any time, and for any lawful Government purpose, the government
-    may monitor, intercept, and search and seize any communication or data
-    transiting or stored on this system.
-   Any communication or data transiting or stored on this system may be
-    disclosed or used for any lawful Government purpose.</p>
-                    </div>
-                    <br>
-                      <p style="text-align: center;font-size: 18px;:;color: #00579e!important;"><b>Click <a id="register-tab" href="javascript:void(0);">here</a> to register as a new user</b></p>
+                    <br>                 
+                       <p style="text-align: left;font-size: 18px;color: #00579e!important;">Click <b><a id="register-tab" 
+                       href="javascript:void(0);" style="text-decoration: underline;">here</a> </b>to register as a new user</p>
+                       
                         <div class="row row-buffer">
                             <div class="col-lg-2">
                                 <label for="email">Email Address <span class="required">*</span></label>

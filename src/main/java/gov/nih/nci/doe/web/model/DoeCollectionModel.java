@@ -11,6 +11,8 @@ import gov.nih.nci.hpc.domain.datamanagement.HpcCollection;
 
 public class DoeCollectionModel {
 	private String path;
+	private String isDataObject;
+
 	private HpcCollection collection;
 	private List<DoeMetadataAttrEntry> selfMetadataEntries;
 	private List<DoeMetadataAttrEntry> parentMetadataEntries;
@@ -97,4 +99,13 @@ public class DoeCollectionModel {
 	public void setParentMetadataEntries(List<DoeMetadataAttrEntry> parentMetadataEntries) {
 		this.parentMetadataEntries = parentMetadataEntries;
 	}
+	
+	public String isDataObject() {
+		return isDataObject;
+	}
+
+	public void setDataObject(String isDataObject) {
+		this.isDataObject = isDataObject;
+	}
+
 }

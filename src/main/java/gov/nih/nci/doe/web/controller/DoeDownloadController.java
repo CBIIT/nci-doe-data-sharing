@@ -116,7 +116,7 @@ public class DoeDownloadController extends AbstractDoeController {
               
               //store the task ID in DB
               
-              taskManagerService.saveTransfer(result.getMessage(),"download",getLoggedOnUserInfo());
+              taskManagerService.saveTransfer(result.getMessage(),"Download",getLoggedOnUserInfo());
               
               return result;
 		} catch (HttpStatusCodeException e) {

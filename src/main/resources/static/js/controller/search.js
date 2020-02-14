@@ -35,6 +35,8 @@ $(document).ready(function () {
 	        allowClear: false,
 	    });
 	    
+	    $('[data-toggle="tooltip"]').tooltip();
+	    
 	    loadJsonData('/search/adv-search-list', $("#metadatalist"), true, null, null, null, "displayName", "displayName");
 	   
 
@@ -278,12 +280,12 @@ $("#updateMetaData").click(function(e){
 	updateMetaDataCollection();
 });
 
-$("#upload-tab").click(function(e){
+/*$("#upload-tab").click(function(e){
 	if(!uploadtabIniatialize) {
 		uploadtabIniatialize = true;
 		loadUploadTab();
 	}
-});
+});*/
 
 $("#registerCollectionBtn").click(function(e){
 	registerCollection();
@@ -302,13 +304,14 @@ $("#doeDataFile").change(function (e) {
 
 $("#addBulkDataFiles").click(function(e){
 	$("#uploadDataFilesTab").show();
-	$("#uploadSubFragmentTab").hide();
+	//$("#uploadSubFragmentTab").hide();
 	openBulkDataRegistration();
 });
 
 $("#cancelBulkRegister").click(function(e){
 	$("#uploadDataFilesTab").hide();
 	$("#uploadSubFragmentTab").show();
+		cancelAndReturnToUploadTab();
 });
 
 $("#registerBulkDataFileBtn").click(function(e){
@@ -320,7 +323,21 @@ $("#bulkDoeDataFile").change(function (e) {
 
 });
 
+$("#primaryGlobusButton").click(function(e){
+	
+	var d = {};
+	d.institutionPath =$("#instituteList").val();
+	d.studyPath = $("#studyList").val();
+	d.dataSetPath = $("#dataList").val();
 
+	 invokeAjax('/upload','GET',d,null,null,null,null);
+});
+
+$(".addNewMetaDataForDataFiles").click(function(e){
+	addNewMetaDataRowsForDataFile($(this));
+});
+
+loadUploadTab();
 });
 
 
@@ -453,14 +470,6 @@ function dataTableInit(isVisible) {
         	   $("#editCollectionFragment").hide();
         	   var datsetPath = $(this).attr('data_set_path');
         	   var metadata = $(this).attr('metadata_type');
-        	  /* dataset_criteria_json.searchType = "data_Set";
-        	   dataset_criteria_json.detailed = true;        	   
-        	   dataset_criteria_json.attrName = 'ANY';
-        	   dataset_criteria_json.attrValue = '%';
-        	   dataset_criteria_json.rowId = 1;
-        	   dataset_criteria_json.level = 'Data_Set';
-        	   dataset_criteria_json.isExcludeParentMetadata = false;
-        	   dataset_criteria_json.operator = 'LIKE';*/
         		refreshDataSetDataTable(datsetPath,metadata);
            });
            
@@ -470,7 +479,7 @@ function dataTableInit(isVisible) {
         	   $("#editCollectionFragment").show();
         	   var metaData = $(this).attr('metadata_set');
         	   var metaDataPath = $(this).attr('metadata_path');
-        	   constructCollectionMetData(metaData,metaDataPath);
+        	   constructCollectionMetData(metaData,metaDataPath,false);
            });
            
            $(".selectCheckboxForIns").click(function(e){
@@ -551,10 +560,7 @@ function renderPath(data, type, row) {
 			"<div class='row' style='margin-left: 25px;margin-bottom:10px;'><div class='col-sm-1 resultsStatsContainer' title='Number of Files'>" +
 			"<i class='fas fa-folder-open' title='Number of Files' style='font-size: 18px;'></i>" +
 			"<span class='resultsStatsText'> &nbsp;&nbsp;" + row.numOfDataSets + " </span></div></div>";
-       
-	//studyMetadata = row.studyUserMetadata;
-	//instituteMetaData = row.instituteUserMetadata;
-	//selfMetadata = row.selfMetadata;
+
 	
     return html;
 }
@@ -695,12 +701,6 @@ function openPopOver($this) {
     $('.button2a').not($this).popover('hide'); 
     var metadata = $this.attr('metadata_type');
     
-    /*var list = "";
-    if(type == 'Study') {
-    	list = studyMetadata;
-    } else {
-    	list = instituteMetaData;
-    }*/
     var list = JSON.parse(metadata);
     
       var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\">" +

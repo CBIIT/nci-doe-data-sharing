@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,6 +64,8 @@ public class DoeBrowseController extends AbstractDoeController {
 	@Value("${doe.basePath}")
 	private String basePath;
 	
+	  
+	
 	/**
 	 * POST Action. This AJAX action is invoked when:
 	 * - A tree node is expanded, 
@@ -98,7 +101,7 @@ public class DoeBrowseController extends AbstractDoeController {
 				browserEntry.setName(name);
 				List<DoeBrowserEntry> children = browserEntry.getChildren(); 
 				
-				children.stream().forEach(e -> results.add(new KeyValueBean(e.getFullPath(), e.getName()))); 
+				children.stream().forEach(e -> {if(e.getFullPath() != null && StringUtils.isNotEmpty(e.getFullPath())) {results.add(new KeyValueBean(e.getFullPath(), e.getName()));}}); 
 			}
 		} catch (Exception e) {
 			String errMsg = "Failed to browse: " + e.getMessage();

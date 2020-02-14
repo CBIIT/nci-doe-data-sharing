@@ -108,6 +108,20 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata) {
            $("#downloadSelectedDataSet").click(function(e){
         	   onClickOfBulkDownloadBtn();
            });
+           
+           $(".editDataFileCollectionMetadata").click(function(e){
+        	   $("#searchFragmentDiv").hide();
+        	   $("#dataSetFragment").hide();
+        	   $("#editCollectionFragment").show();
+        	   var metaData = $(this).attr('metadata_set');
+        	   var metaDataPath = $(this).attr('metadata_path');
+        	   constructCollectionMetData(metaData,metaDataPath,true);
+           });
+           
+           
+           initializeToolTips();
+           initializePopover();
+           displayPopover();
         },
 
         "columns": [
@@ -117,7 +131,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata) {
             responsivePriority: 2
         },
         
-            {"data": "path", "render": function (data, type, row) {
+            {"data": "name", "render": function (data, type, row) {
                     return renderDataSetPath(data, type, row);
                 },
                 responsivePriority: 1
@@ -158,20 +172,40 @@ function renderSelect(data, type, row) {
 
 function renderDataSetPath(data, type, row) {
 	
-	return row.path;
+	
+	if(row.selfMetadata && row.selfMetadata.length > 0) {
+		var metadata = JSON.stringify(row.selfMetadata);
+		var html = "<a class='cil_12_no_color button2a' metadata_type = '" + metadata  + "' tabindex='0'" +
+		" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' data-popover-content='#a01'>" + row.name + "</a>"
+	} else {
+		return row.name;
+	}
+	
+	return html;
 }
 
 function renderDownload(data, type, row) {
 	var downdloadFileName = null;
 	var path = row.path;
+	var html = "";
 	if(search_criteria_json.searchType != 'collection') {
 		var n = path.lastIndexOf("/");
 		downdloadFileName = path.substring(n+1);		
 	}
 	
-	return "<a id='downloadlink' class='btn btn-link btn-sm downloadLink' href='javascript:void(0);' " +
-			"data-toggle='modal' data-backdrop='static' data-keyboard='false' data-fileName = " + downdloadFileName + " data-path=" + row.download + " " +
-			"data-target='#download-modal'><i class='fa fa-download' aria-hidden='true'></i></a>";
+	
+	html += "<a id='downloadlink' class='btn btn-link btn-sm downloadLink' href='javascript:void(0);' " +
+	       "data-toggle='modal' data-backdrop='static' data-keyboard='false' data-fileName = " + downdloadFileName + " data-path=" + row.download + " " +
+	        "data-target='#download-modal'><i class='fa fa-download' aria-hidden='true'></i></a>";
+
+	if(row.selfMetadata && row.selfMetadata.length > 0) {
+		var metadata = JSON.stringify(row.selfMetadata);
+		
+		html += "<span class='btn btn-link btn-sm editDataFileCollectionMetadata'  metadata_path  = '" + path + "' metadata_set = '" + metadata  + "' ><i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Data Object Metadata'></i></span>";
+	}
+	
+	return html;
+
 }
 
 
@@ -188,13 +222,6 @@ function downloadFunction(path,fileName) {
 		$("#download-modal").find("#downloadFileNameVal").val(fileName);
 		$("#download-modal").find("#downloadFileName").val(fileName);
 	} 
-	/*else {
-		$("#download-modal").find("#SyncDiv").hide();
-		$("#download-modal").find("#syncRadioSet").hide();
-		$("#download-modal").find("#downloadType").val("collection");
-	}*/
-	
-	//$("#download-modal").find("#transferType").val("globus");
 }
 
 function onClickOfBulkDownloadBtn() {

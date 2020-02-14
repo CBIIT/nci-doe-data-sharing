@@ -1,10 +1,54 @@
-function  loadUploadTab() {	 
-	 
-		 loadJsonData('/browse', $("#instituteList"), true, null, null, null, "key", "value"); 
-		
-	 	 
 
+function loadUploadTab() {	 
+	 
+	var ins = $("#institutePath").val();
+	var stu= $("#studyPath").val();
+	var data = $("#datafilePath").val();
+	
+	if(ins){
+		loadJsonData('/browse', $("#instituteList"), true, null, postSuccessInsInitialize, null, "key", "value"); 
+		loadJsonData('/browse/collection', $("#studyList"), true, {selectedPath:ins}, postSuccessStudyInitialize, null, "key", "value");
+		if(stu) {
+			loadJsonData('/browse/collection', $("#dataList"), true, {selectedPath:stu}, postSuccessDataSetInitialize, null, "key", "value");
+			if(data) {
+				invokeAjax('/browse/collection','GET',{selectedPath:data},contructDataListDiv,null,null,null);		
+				$("#studyListDiv").show();
+				$("#dataSetListDiv").show();
+			    $("#dataListDiv").hide();
+				$("#addBulkDataFiles").show();
+				$("#uploadDataFilesTab").show();
+				$('input[name=datafileTypeUpload]:checked').val();
+				$("#datafileTypeBulk").prop("checked", true);
+				$("#singleFileDataUploadSection").hide();
+				$("#bulkFileUploadSection").show();
+				$("#registerFileBtnsDiv").show();		
+				$(".registerBulkDataFileSuccess").hide();
+				$(".registerBulkDataFile").html("");
+			}
+			
+		}
+		
+		
+	} else {
+		 loadJsonData('/browse', $("#instituteList"), true, null, null, null, "key", "value"); 
+	}
+  
 }
+
+function postSuccessInsInitialize(data,status) {
+	$("#instituteList").val($("#institutePath").val());
+}
+
+function postSuccessStudyInitialize(data,status) {
+	$("#studyList").val($("#studyPath").val());
+}
+
+function postSuccessDataSetInitialize(data,status) {
+	$("#dataList").val($("#datafilePath").val());
+	$("#bulkDataFilePathCollection").val($("#datafilePath").val());
+	
+}
+
 
 function retrieveCollections($this, selectedIndex) {
 	
@@ -12,7 +56,8 @@ function retrieveCollections($this, selectedIndex) {
 	var params= {selectedPath:selectedIndex.value};
 	
 	if(selectTarget == 'instituteList') {
-		
+		$("#uploadDataFilesTab").hide();
+		$("#addBulkDataFiles").hide();
 		if(selectedIndex && selectedIndex.value != 'ANY') {
 			loadJsonData('/browse/collection', $("#studyList"), true, params, null, null, "key", "value");
 			$("#studyListDiv").show();
@@ -26,12 +71,13 @@ function retrieveCollections($this, selectedIndex) {
 		
 		
 	} else if(selectTarget == 'studyList') {
-		$("#addDataFiles").prop('disabled',true);
+		$("#addBulkDataFiles").hide();
+		$("#uploadDataFilesTab").hide();
+		 $("#dataListDiv").hide();
 		if(selectedIndex && selectedIndex.value != 'ANY') {
 		  loadJsonData('/browse/collection', $("#dataList"), true, params, null, null, "key", "value");
 		  $("#studyListDiv").show();
 		  $("#dataSetListDiv").show();
-		  $("#dataListDiv").hide();
 		} else {
 			$("#studyListDiv").show();
 			  $("#dataSetListDiv").hide();
@@ -39,12 +85,14 @@ function retrieveCollections($this, selectedIndex) {
 		
 	} else if(selectTarget == 'dataList') {	
 		$("#studyListDiv").show();
+		$("#uploadDataFilesTab").hide();
 		if(selectedIndex && selectedIndex.value != 'ANY') {
 			invokeAjax('/browse/collection','GET',params,contructDataListDiv,null,null,null);		
-			$("#addDataFiles").prop('disabled',false);
+			$("#addBulkDataFiles").show();
 		} else {
 			$("#dataListDiv").hide();
-			$("#addDataFiles").prop('disabled',true);
+			$("#addBulkDataFiles").hide()
+			
 		}
 		
 	}
@@ -69,27 +117,38 @@ function constructNewCollectionMetaDataSet(data,status) {
 	
 }
 
-function addNewMetaDataCollection() {
-	var rowId =  $("#newMetaDataTable tbody").length;
+function addNewMetaDataCollection(tableName) {
+	var rowId =  $("#"+tableName + " tbody").length;
 	rowId = rowId +1; 
-	 $("#newMetaDataTable tbody").append('<tr id="addRow'+rowId+'"><td><input type="text" style="width:70%;" ' +
+	$("#"+tableName + " tbody").append('<tr id="addRow'+rowId+'"><td><input type="text" style="width:70%;" ' +
 			 'name="_addAttrName'+rowId+'" id="_addAttrName'+rowId+'"></td><td><input type="text" style="width:70%;" id="_addAttrValue'+rowId+'" name="_addAttrValue'+rowId+'" >' +
 	 		'&nbsp;&nbsp;<input class="btn btn-primary pull-right" type="button" value="X" onclick="removeCollectionRow(\'addRow' + rowId + '\')"></td></tr>');
 	 
 	
 }
 
+function addNewMetaDataRowsForDataFile($this) {
+	var rowId =  $this.parent().find('div').length;
+	rowId = rowId +1; 
+	
+	$this.parent().append('&nbsp;&nbsp;<div id="addDataRow'+rowId+'"><input type="text" style="width:40%;" ' +
+			 'name="_addAttrName'+rowId+'" id="_addAttrName'+rowId+'">&nbsp;<input type="text" style="width:40%;" id="_addAttrValue'+rowId+'" name="_addAttrValue'+rowId+'" >' +
+	 		'&nbsp;&nbsp;<input class="btn btn-primary pull-right" type="button" value="X" onclick="removeCollectionRow(\'addDataRow' + rowId + '\')"></div>');
+	
+}
 
-function retrieveCollectionList($this, selectedIndex) {
-	
-	var selectTarget = $this.name;
-	var collectionPath = $("#registerCollectionModal").find("#collectionPath").val();
-	
-		if(selectedIndex && selectedIndex.value != 'ANY') {
-			var params= {selectedPath:collectionPath,collectionType:selectedIndex.value};
-			invokeAjax('/addCollection','GET',params,constructNewCollectionMetaDataSet,null,null,null);		
-		} 		
+
+function retrieveCollectionList(data,status) {		
+		var selectTarget = $("#registerCollectionModal").find("#collectionType").val();
+		var collectionPath = $("#registerCollectionModal").find("#collectionPath").val();
+		
+			if(selectTarget && collectionPath) {
+				var params1= {selectedPath:collectionPath,collectionType:selectTarget};
+				invokeAjax('/addCollection','GET',params1,constructNewCollectionMetaDataSet,null,null,null);		
+			} 	
 } 
+
+
 
 
 function openUploadModal(selectTarget) {
@@ -98,10 +157,12 @@ function openUploadModal(selectTarget) {
 	$("#registerCollectionModal").find("#collectionPath").val(selectedIndexPathVal);
 	$("#newMetaDataTable tbody").html("");
 	$("#registerCollectionModal").find(".registerMsg").html("");
+	$("#registerCollectionModal").find("#newMetaDataTable tbody").html("");
 	$("#registerCollectionModal").find(".registerMsgBlock").hide();
 	var params= {parent:selectedIndexPathVal};		
-	loadJsonData('/addCollection/collectionTypes', $("#registerCollectionModal").find("#collectionType"), true, params, null, null, "key", "value");
-	$("#registerCollectionModal").modal('show');
+	loadJsonData('/addCollection/collectionTypes', $("#registerCollectionModal").find("#collectionType"), false, params, retrieveCollectionList, null, "key", "value");
+	
+   $("#registerCollectionModal").modal('show');
 	
 }
 
@@ -109,8 +170,9 @@ function openUploadModal(selectTarget) {
 function registerCollection() {
 	
 	var collectionPath = $("#registerCollectionModal").find("#collectionPath").val();
-
 	var collectionName = $("#registerCollectionModal").find("#collectionName").val();
+	
+	var collectionType = $("#registerCollectionModal").find("#collectionType").val();
 	
 	var newCollectionPath;
 	if(collectionPath && collectionName) {
@@ -132,7 +194,7 @@ function registerCollection() {
 				 $("#spinner").hide();
 		         $("#dimmer").hide();
 				 console.log('SUCCESS: ', msg);
-				 postSuccessRegisterCollection(msg);
+				 postSuccessRegisterCollection(msg,collectionType);
 				 
 			 },
 			error : function(e) {
@@ -143,20 +205,22 @@ function registerCollection() {
 	
 }
 
-function postSuccessRegisterCollection(data) {
+function postSuccessRegisterCollection(data,collectionType) {
 	$("#registerCollectionModal").find(".registerMsg").html(data);
 	$("#registerCollectionModal").find(".registerMsgBlock").show();
+	
+	
+	if(collectionType  == 'Institute') {		
+		loadJsonData('/browse', $("#instituteList"), true, null, null, null, "key", "value"); 
+	} else if(collectionType == 'Study') {
+		var params= {selectedPath:$("#instituteList").val()};
+		loadJsonData('/browse/collection', $("#studyList"), true, params, null, null, "key", "value");
+		
+	} else if(collectionType == 'Data_Set') {
+		var params= {selectedPath:$("#studyList").val()};
+		 loadJsonData('/browse/collection', $("#dataList"), true, params, null, null, "key", "value");
+	}
 }
-
-
-function openRegisterDataFileModal() {
-	var datafilePath = $("#dataList").val();
-	$("#registerDataFileModal").find("#dataFilePath").val(datafilePath);
-	$("#registerDataFileModal").find("#dataFilePathCollection").val(datafilePath);
-	$("#registerDataFileModal").find(".registerDataFile").html("");
-	$("#registerDataFileModal").find(".registerDataFileSuccess").hide();
-}
-
 
 function openBulkDataRegistration() {
 	var datafilePath = $("#dataList").val();
@@ -166,92 +230,108 @@ function openBulkDataRegistration() {
 	$(".registerBulkDataFile").html("");
 }
 
-function registerDataFile() {
-	var dataFilePath = $("#registerDataFileModal").find("#dataFilePath").val();
-	
-	var file = $("#doeDataFile").val();
-	
-	if(dataFilePath && file) {	
-	$("#registerDataFileForm").attr('dataFilePath', dataFilePath);	 
-		var form = $('#registerDataFileForm')[0];		 
-       var data = new FormData(form);
-      data.append('dataFilePath', dataFilePath);
-		$.ajax({
-			type : "POST",
-			enctype: "multipart/form-data",
-		     url : "/addDatafile",
-			 data : data,
-			 processData: false, 
-             contentType: false,
-			 beforeSend: function () {
-		    	   $("#spinner").show();
-		           $("#dimmer").show();
-		       },
-			 success : function(msg) {
-				 $("#spinner").hide();
-		         $("#dimmer").hide();
-				 console.log('SUCCESS: ', msg);
-				 $("#registerDataFileModal").find(".registerDataFile").html(msg);
-				 $("#registerDataFileModal").find(".registerDataFileSuccess").show();
-				
-				 
-			 },
-			error : function(e) {
-				 console.log('ERROR: ', e);				 
-			}
-		});
-	}
+function cancelAndReturnToUploadTab() {
+	var params= {selectedPath:$("#dataList").val()};
+	 invokeAjax('/browse/collection','GET',params,contructDataListDiv,null,null,null);
 }
 
-
 function registerBulkDataFile() {
-	var dataFilePath = $("#bulkDataFilePath").val();
+	var uploadType = $('input[name=datafileTypeUpload]:checked').val();
 	
-	var file = $("#bulkDoeDataFile").val();
-	
-	if(dataFilePath && file) {	
-	$("#registerBulkDataForm").attr('dataFilePath', dataFilePath);	 
-		var form = $('#registerBulkDataForm')[0];		 
-       var data = new FormData(form);
-      data.append('dataFilePath', dataFilePath);
-		$.ajax({
-			type : "POST",
-			enctype: "multipart/form-data",
-		     url : "/addbulk",
-			 data : data,
-			 processData: false, 
-             contentType: false,
-			 beforeSend: function () {
-		    	   $("#spinner").show();
-		           $("#dimmer").show();
-		       },
-			 success : function(msg) {
-				 $("#spinner").hide();
-		         $("#dimmer").hide();
-				 console.log('SUCCESS: ', msg);
-				 $(".registerBulkDataFile").html(msg);
-				 $(".registerBulkDataFileSuccess").show();
-				
-				 
-			 },
-			error : function(e) {
-				 console.log('ERROR: ', e);				 
+	if(uploadType == 'singleData') {
+		var file = $("#doeDataFile").val();
+		var dataFilePath = $("#dataFilePath").val();
+		
+		if(dataFilePath && file) {	
+			$("#registerDataFileForm").attr('dataFilePath', dataFilePath);	 
+				var form = $('#registerDataFileForm')[0];		 
+		       var data = new FormData(form);
+		      data.append('dataFilePath', dataFilePath);
+				$.ajax({
+					type : "POST",
+					enctype: "multipart/form-data",
+				     url : "/addDatafile",
+					 data : data,
+					 processData: false, 
+		             contentType: false,
+					 beforeSend: function () {
+				    	   $("#spinner").show();
+				           $("#dimmer").show();
+				       },
+					 success : function(msg) {
+						 $("#spinner").hide();
+				         $("#dimmer").hide();
+						 console.log('SUCCESS: ', msg);
+						 $(".registerBulkDataFile").html(msg);
+						 $(".registerBulkDataFileSuccess").show();
+						 cancelAndReturnToUploadTab();
+						 
+					 },
+					error : function(e) {
+						 console.log('ERROR: ', e);				 
+					}
+				});
 			}
-		});
+		
+		
+	} else {
+		var dataFilePath = $("#bulkDataFilePath").val();		
+		if(dataFilePath) {	
+		$("#registerBulkDataForm").attr('dataFilePath', dataFilePath);	 
+			var form = $('#registerBulkDataForm')[0];		 
+	       var data = new FormData(form);
+	      data.append('dataFilePath', dataFilePath);
+			$.ajax({
+				type : "POST",
+				enctype: "multipart/form-data",
+			     url : "/addbulk",
+				 data : data,
+				 processData: false, 
+	             contentType: false,
+				 beforeSend: function () {
+			    	   $("#spinner").show();
+			           $("#dimmer").show();
+			       },
+				 success : function(msg) {
+					 $("#spinner").hide();
+			         $("#dimmer").hide();
+					 console.log('SUCCESS: ', msg);
+					 $(".registerBulkDataFile").html(msg);
+					 $(".registerBulkDataFileSuccess").show();
+					
+					 
+				 },
+				error : function(e) {
+					 console.log('ERROR: ', e);				 
+				}
+			});
+		}
 	}
+
 }
 
 function appendFileName($this) {
     //Append the file name to the data file path
     var filename = $this.val().replace(/^C:\\fakepath\\/, "")
-    var value = $("#registerDataFileModal").find("#dataFilePathCollection").val() + "/" + filename;
-    $("#registerDataFileModal").find("#dataFilePath").val(value);
+    var value = $("#bulkDataFilePathCollection").val() + "/" + filename;
+    $("#dataFilePath").val(value);
     
 }
 
-function appendBulkFileName($this) {
-	//Append the file name to the data file path
-    var filename = $this.val().replace(/^C:\\fakepath\\/, "")
-    var value = $("#bulkDataFilePathCollection").val() + "/" + filename;
-    $("#bulkDataFilePath").val(value);
+function displayDataFileSection(value) {
+	var datafilePath = $("#dataList").val();
+	$("#registerFileBtnsDiv").show();
+	$("#bulkDataFilePathCollection").val(datafilePath);
+	$(".registerBulkDataFileSuccess").hide();
+	$(".registerBulkDataFile").html("");
+	
+	if(value == 'singleData') {
+		$("#singleFileDataUploadSection").show();
+		$("#bulkFileUploadSection").hide();					
+	    $("#dataFilePath").val(datafilePath);				
+		
+	} else if(value == 'bulkData'){
+		$("#singleFileDataUploadSection").hide();
+		$("#bulkFileUploadSection").show();
+	}
 }

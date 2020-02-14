@@ -90,8 +90,6 @@ public class DoeCreateDatafileController extends DoeCreateCollectionDataFileCont
 			} catch (DoeWebException e) {
 				return "Invalid parent collection: " + e.getMessage();
 			}
-			
-			//String trimmedPath = doeDataFileModel.getPath().substring(1,doeDataFileModel.getPath().length());
 
 			HpcDataObjectRegistrationRequestDTO registrationDTO = constructSyncRequest(request, session, path);
 

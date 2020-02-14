@@ -3,7 +3,6 @@ package gov.nih.nci.doe.web.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,8 +39,6 @@ import org.springframework.http.HttpStatus;
 import gov.nih.nci.doe.web.domain.LookUp;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.DoeSearchResult;
-import gov.nih.nci.doe.web.model.HpcDatafileSearchResultDetailed;
-import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.service.LookUpService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
@@ -57,8 +54,6 @@ import gov.nih.nci.hpc.domain.metadata.HpcMetadataQueryOperator;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcMetadataAttributesListDTO;
 import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
 
@@ -113,9 +108,9 @@ public class SearchController extends AbstractDoeController {
 		
 		
 		List<String> systemAttrs = modelDTO.getCollectionSystemGeneratedMetadataAttributeNames();
+		session.setAttribute("systemAttrs", systemAttrs);
 		
 		List<DoeSearchResult> results = new ArrayList<DoeSearchResult>();	
-		List<HpcDatafileSearchResultDetailed> dataResults = new ArrayList<HpcDatafileSearchResultDetailed>();
 		
 
 		try {			
@@ -138,10 +133,7 @@ public class SearchController extends AbstractDoeController {
 				if (search.getSearchType() != null && search.getSearchType().equals("collection")) {
 					results = processResponseResults(search, systemAttrs, restResponse);
 					return new ResponseEntity<>(results, HttpStatus.OK);
-				} else {
-					dataResults = processDataObjectResponseResults(search, restResponse);
-					return new ResponseEntity<>(dataResults, HttpStatus.OK);
-				}
+				} 
 				
 			} else if(restResponse.getStatus() == 204) {
 				return new ResponseEntity<>(results, HttpStatus.OK);
@@ -172,39 +164,8 @@ public class SearchController extends AbstractDoeController {
 		return returnResults;
 			
 	}
-	
-	private List<HpcDatafileSearchResultDetailed> processDataObjectResponseResults(DoeSearch search, Response restResponse) throws JsonParseException, IOException {
-		
-		List<HpcDatafileSearchResultDetailed> returnResults = new ArrayList<HpcDatafileSearchResultDetailed>();
 
-		returnResults = processDataObjectResults(search, restResponse);
 
-		return returnResults;
-			
-	}
-	
-	private List<HpcDatafileSearchResultDetailed> processDataObjectResults(DoeSearch search, Response restResponse) throws JsonParseException, IOException {
-		MappingJsonFactory factory = new MappingJsonFactory();
-		JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-		HpcDataObjectListDTO dataObjects = parser.readValueAs(HpcDataObjectListDTO.class);
-			SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy hh:mm");
-			List<HpcDataObjectDTO> searchResults = dataObjects.getDataObjects();
-			List<HpcDatafileSearchResultDetailed> returnResults = new ArrayList<HpcDatafileSearchResultDetailed>();
-			for (HpcDataObjectDTO result : searchResults) {
-				HpcDatafileSearchResultDetailed returnResult = new HpcDatafileSearchResultDetailed();
-				returnResult.setPath(result.getDataObject().getAbsolutePath());
-				returnResult.setDownload(result.getDataObject().getAbsolutePath());
-				returnResult.setPermission(result.getDataObject().getAbsolutePath());
-				returnResult.setCreatedOn(format.format(result.getDataObject().getCreatedAt().getTime()));
-				returnResult.setMetadataEntries(new HpcMetadataEntries());
-				returnResult.getMetadataEntries().getSelfMetadataEntries().addAll(new ArrayList<HpcMetadataEntry>(result.getMetadataEntries().getSelfMetadataEntries()));
-				returnResult.getMetadataEntries().getParentMetadataEntries().addAll(new ArrayList<HpcMetadataEntry>(result.getMetadataEntries().getParentMetadataEntries()));
-				returnResults.add(returnResult);
-			}
-			
-			return returnResults;
-		
-	}
 
 	private List<DoeSearchResult>  processCollectionResults(DoeSearch search,List<String> systemAttrs, Response restResponse) throws JsonParseException, IOException {
 		MappingJsonFactory factory = new MappingJsonFactory();
@@ -231,24 +192,7 @@ public class SearchController extends AbstractDoeController {
 		return returnResults;
 	}
 	
-	private List<KeyValueBean> getUserMetadata(List<HpcMetadataEntry> list,String levelName, List<String> systemAttrs) {
-		if (list == null)
-			return null;
 
-		List<KeyValueBean> entryList = new ArrayList<KeyValueBean>();
-		
-		for (HpcMetadataEntry entry : list) {
-			
-			//LookUp val = lookUpService.getLookUpByAttrName(entry.getAttribute());
-			if (systemAttrs != null && !systemAttrs.contains(entry.getAttribute()) && levelName.equalsIgnoreCase(entry.getLevelLabel())) {
-				KeyValueBean k = new KeyValueBean(entry.getAttribute(), entry.getValue());			
-				entryList.add(k);
-			}
-			
-		}
-
-		return entryList;
-	}
 	
 	private String getAttributeValue(String attrName, HpcMetadataEntries entries) {
 		if (entries == null)

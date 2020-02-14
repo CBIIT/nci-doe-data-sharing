@@ -1,8 +1,9 @@
-function constructCollectionMetData(metadata,metaDataPath) {
+function constructCollectionMetData(metadata,metaDataPath,isDataObject) {
 	$("#userMetaData tbody").html("");
 	$("#path").val(metaDataPath);
 	 $(".editCollectionSuccess").hide();
 	 $(".editCollectionMsg").html("");
+	 $("#isDataObject").val(isDataObject);
 	var data = JSON.parse(metadata);
 	$.each(data, function(key, value) {	
         $("#userMetaData tbody").append('<tr><td>' + value.key + '</td><td><input type="text"  name="zAttrStr_'+value.key+'" style="width:70%;" value="' + value.value + '"></td></tr>');
@@ -22,9 +23,7 @@ function addCollectionMetaDataRows() {
 }
 
 function updateMetaDataCollection() {
-	//$('#collectionForm').attr('action', '/collection');
-	//$("#collectionForm").submit();
-	
+
 	if(newCollectionPath) {
 		var data = $('#collectionForm').serialize();
 		$.ajax({
