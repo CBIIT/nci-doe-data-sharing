@@ -1,5 +1,6 @@
 package gov.nih.nci.doe.web.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,4 +80,24 @@ public class HomeController extends AbstractDoeController {
 	        }
 
 	    }
+		
+		
+		 @RequestMapping(value = "/searchTab", method = RequestMethod.GET)
+		 public String getSearchTab(HttpSession session, HttpServletRequest request)  { 
+			 
+			return "searchTab";
+		 }
+		 
+		 @RequestMapping(value = "/tasksTab", method = RequestMethod.GET)
+		 public String getTasksTab(HttpSession session, HttpServletRequest request)  { 
+			 
+			return "tasksTab";
+		 }
+		 
+		 
+		 @RequestMapping(value = "/loginTab", method = RequestMethod.GET)
+		 public String getLoginTab(HttpSession session, HttpServletRequest request)  { 
+			 
+			return "loginTab";
+		 }
 }

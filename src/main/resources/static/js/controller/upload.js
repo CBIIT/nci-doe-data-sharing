@@ -18,12 +18,16 @@ function loadUploadTab() {
 				$("#addBulkDataFiles").show();
 				$("#uploadDataFilesTab").show();
 				$('input[name=datafileTypeUpload]:checked').val();
+				$('input[name=uploadTypeGlobus]:checked').val();
 				$("#datafileTypeBulk").prop("checked", true);
 				$("#singleFileDataUploadSection").hide();
 				$("#bulkFileUploadSection").show();
 				$("#registerFileBtnsDiv").show();		
 				$(".registerBulkDataFileSuccess").hide();
 				$(".registerBulkDataFile").html("");
+				$("#registerBulkDataForm").show();
+				$("#displayGlobusUploadDiv").show();
+				$("#displayS3UploadDiv").hide();
 			}
 			
 		}
@@ -275,9 +279,9 @@ function registerBulkDataFile() {
 		
 		
 	} else {
-		var dataFilePath = $("#bulkDataFilePath").val();		
+		var dataFilePath = $("#bulkDataFilePathCollection").val();		
 		if(dataFilePath) {	
-		$("#registerBulkDataForm").attr('dataFilePath', dataFilePath);	 
+		$("#registerBulkDataForm").attr('datafilePath', dataFilePath);	 
 			var form = $('#registerBulkDataForm')[0];		 
 	       var data = new FormData(form);
 	      data.append('dataFilePath', dataFilePath);
@@ -319,8 +323,7 @@ function appendFileName($this) {
 }
 
 function displayDataFileSection(value) {
-	var datafilePath = $("#dataList").val();
-	$("#registerFileBtnsDiv").show();
+	var datafilePath = $("#dataList").val();	
 	$("#bulkDataFilePathCollection").val(datafilePath);
 	$(".registerBulkDataFileSuccess").hide();
 	$(".registerBulkDataFile").html("");
@@ -333,5 +336,21 @@ function displayDataFileSection(value) {
 	} else if(value == 'bulkData'){
 		$("#singleFileDataUploadSection").hide();
 		$("#bulkFileUploadSection").show();
+	}
+}
+
+
+function displayUploadTypeDiv(value){
+	$("#registerFileBtnsDiv").show();
+	$(".registerBulkDataFileSuccess").hide();
+	$(".registerBulkDataFile").html("");
+	$("#registerBulkDataForm").show();
+	if(value == 'globus') {
+		$("#displayGlobusUploadDiv").show();
+		$("#displayS3UploadDiv").hide();								
+		
+	} else if(value == 's3'){
+		$("#displayGlobusUploadDiv").hide();
+		$("#displayS3UploadDiv").show();
 	}
 }

@@ -74,10 +74,28 @@
                 </div>
           
            <div class="col-md-12 col-sm-12" id="bulkFileUploadSection" style="display:none;">
-                 <form class="form-horizontal" id="registerBulkDataForm" enctype="multipart/form-data" method="POST"> 
+           
+            <div class="form-row col-md-9 col-sm-9" id="bulkTypeUploadDiv" style="margin-left:20px;">
+                             <div class="form-group">
+										<div class="pull-left">
+										<label class="radio-inline"><input type="radio" id="uploadTypeGlobus" name="uploadTypeGlobus" value="globus" 
+										onchange="displayUploadTypeDiv('globus')"> &nbsp;&nbsp; Globus</label>
+										</div>
+                              </div>
+                        <div class="form-group">
+										<div class="pull-left" style="margin-left: 15px">
+										<label class="radio-inline"><input type="radio" name="uploadTypeS3" id="uploadTypeS3" value="s3" 
+										onchange="displayUploadTypeDiv('s3')">&nbsp;&nbsp; S3</label>
+										</div>
+                         </div>
+                         
+               </div>
+               
+               
+                 <form class="form-horizontal" id="registerBulkDataForm" enctype="multipart/form-data" method="POST" style="display:none;"> 
                     <div class="col-md-12 col-sm-12">
                         <div class="form-row" style=" margin-top: 20px;">
-                             
+                             <div class="form-group col-lg-12 col-md-12" id="displayGlobusUploadDiv" style="display:none;">
                                <div class="form-group col-lg-12 col-md-12">
                             <input type="button" class="btn btn-md btn-link" id="primaryGlobusButton" value="Select Data from Globus Endpoint"/>
                             </div>
@@ -88,7 +106,46 @@
 									<label for="Name">Globus Endpoint Path: 
 									<label for="${endpoint_path}" th:text="${endpoint_path}"></label></label><br />
 							</div>
-															
+							</div>	
+							
+							   <div class="form-group col-lg-12 col-md-12" id="displayS3UploadDiv" style="display:none;">
+                               <div class="form-group col-lg-12 col-md-12">
+                          <label for="bucketName">S3 Bucket:</label>
+										<input
+											type="text" class="form-control" name="bucketName" 
+											id="bucketName" placeholder="Enter S3 Bucket Name" />
+									</div>
+									<div class="col-sm-12 column">
+										<label for="s3Path">S3 (Destination) Path:</label> <input
+											type="text" class="form-control"
+											name="s3Path" id="s3Path"
+											placeholder="Enter S3 (Destination) Path" size="40" />
+									</div>
+									<div class="col-sm-12 column">
+										<label for="accessKey">Access Key:</label> <input
+											type="text" class="form-control"
+											name="accessKey" id="accessKey"
+											placeholder="Enter Access Key" size="40" />
+									</div>
+									<div class="col-sm-12 column">
+										<label for="secretKey">Secret Access Key:</label> <input
+											type="password" autocomplete="secret-access-key" class="form-control"
+											name="secretKey" id="secretKey"
+											placeholder="Enter Secret Access Key" size="40" />
+									</div>
+									<div class="col-sm-12 column">
+										<label for="region">Region:</label> <input
+											type="text" class="form-control"
+											name="region" id="region"
+											placeholder="Enter Region (for Example us-east-1)" size="40" />
+									</div>
+                          
+                            </div>
+                            
+                           
+							</div>
+							
+														
                              <div th:if="${fileNames != null}"  class="form-group col-lg-12 col-md-12">
                              <label for="fileName">Selected Files:</label>
                              <table id="newMetaDataTableForSingleFile" class="table table-stripped table-bordered display dt-responsive wrap" style="width:120%">
@@ -106,8 +163,6 @@
                             </tr>
                             </tbody>
                          </table>
-                              <!-- <label th:text="${fileName}" th:each="fileName : ${fileNames}"><br /></label> -->
-                             
                              </div>
                              
                               <div th:if="${folderNames != null}"  class="form-group col-lg-12 col-md-12">
@@ -127,20 +182,17 @@
                             </tr>
                             </tbody>
                          </table>
-                         
-                             <!-- <label th:text="${folderName}" th:each="folderName : ${folderNames}"><br /></label> -->
                              </div>
                             
                         </div>
+                        </form>
                     </div>
-                    </form>
+                    
                 </div>
            
             <div class="col-md-12 col-sm-12 form-group" id="registerFileBtnsDiv" style="display:none;margin-top:35px;margin-bottom:15px;padding: 5px;">
-            <!--   <input type="button" value="Cancel" class="btn btn-default  float-right mr-4 mb-4" id="cancelBulkRegister">-->
              <input type="button" value="Register" class="btn btn-primary float-right mr-4 mb-4" id="registerBulkDataFileBtn">
-           </div> 
-             
+           </div>             
           
     </div>
 </body>

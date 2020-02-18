@@ -74,7 +74,7 @@ function postLoginFunction(data,status) {
 		$(".errorMsgLogin").html("Maximum attempts of login Exceeded. Please request a password resend link via forgot password.");
 		
 	} else {
-		location.reload();
+		location.replace("/");
 	}
 	
 }
@@ -86,7 +86,7 @@ function loginFailureFunction(data,status) {
 
 function postLogOutFunction(data, status) {
 	//$('.nav-tabs a[href="#' + landingTab + '"]').tab('show');
-	location.reload();
+	location.replace("/");
 }
 
 function postGetUserInfoFunction (data,status) {
