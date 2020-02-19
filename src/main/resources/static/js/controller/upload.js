@@ -18,8 +18,9 @@ function loadUploadTab() {
 				$("#addBulkDataFiles").show();
 				$("#uploadDataFilesTab").show();
 				$('input[name=datafileTypeUpload]:checked').val();
-				$('input[name=uploadTypeGlobus]:checked').val();
+				$('input[name=uploadType]:checked').val();
 				$("#datafileTypeBulk").prop("checked", true);
+				$("#uploadTypeGlobus").prop("checked", true);
 				$("#singleFileDataUploadSection").hide();
 				$("#bulkFileUploadSection").show();
 				$("#registerFileBtnsDiv").show();		
@@ -353,4 +354,9 @@ function displayUploadTypeDiv(value){
 		$("#displayGlobusUploadDiv").hide();
 		$("#displayS3UploadDiv").show();
 	}
+}
+
+
+function postUploadGlobusFunction(data,status) {
+	location.replace(data);
 }

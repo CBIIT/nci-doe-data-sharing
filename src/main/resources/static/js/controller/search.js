@@ -188,7 +188,7 @@ $("#myaccountTab").click(function(e){
 	$("#myAccount").show();
 	$("#changePassword").hide();
 	var params= {emailAddr:$("#emailAddrTxt").text()};
-	invokeAjax('/user-info','GET',params,postGetUserInfoFunction,null,null,null);
+	invokeAjax('/user-info','GET',params,postGetUserInfoFunction,null,null,'text');
 	
 });
 
@@ -330,7 +330,7 @@ $("#primaryGlobusButton").click(function(e){
 	d.studyPath = $("#studyList").val();
 	d.dataSetPath = $("#dataList").val();
 
-	 invokeAjax('/upload','GET',d,null,null,null,null);
+	 invokeAjax('/upload','GET',d,postUploadGlobusFunction,null,null,null);
 });
 
 $(".addNewMetaDataForDataFiles").click(function(e){
