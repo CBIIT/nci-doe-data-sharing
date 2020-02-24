@@ -2,7 +2,6 @@ package gov.nih.nci.doe.web.controller;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -89,13 +88,13 @@ public class TaskManagerCotroller extends AbstractDoeController {
     					task.setTaskName(t.getTaskName());
     					task.setUserId(t.getUserId());
     					task.setTaskType(t.getTaskType());
-    					if(download.getResult()) {
+    					/*if(download.getResult()) {
     						task.setTransferStatus("Completed");
     					} else if(!download.getResult()){
     						task.setTransferStatus("Failed");
     					} else {
     						task.setTransferStatus("In Progress");
-    					}
+    					}*/
     					
     					taskResults.add(task);
     			}
