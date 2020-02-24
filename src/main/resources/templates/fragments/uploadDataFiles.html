@@ -101,10 +101,16 @@
                             </div>
                             
                             <div class="form-group col-lg-12 col-md-12" th:if="${endpoint_id != null}">
-									<label for="Name">Globus Endpoint ID:
-									<label for="${endpoint_id}" th:text="${endpoint_id}"></label></label> <br />
-									<label for="Name">Globus Endpoint Path: 
-									<label for="${endpoint_path}" th:text="${endpoint_path}"></label></label><br />
+									
+									
+									<label for="${endpoint_id}">Globus Endpoint ID:
+									<span id="${endpoint_id}" th:text="${endpoint_id}" style="font-weight: normal;"></span></label>
+									
+									<br />
+									
+									<label for="${endpoint_path}">Globus Endpoint Path:
+									<span id="${endpoint_path}" th:text="${endpoint_path}" style="font-weight: normal;"></span></label>
+									<br />
 							</div>
 							</div>	
 							
@@ -138,54 +144,29 @@
 											type="text" class="form-control"
 											name="region" id="region"
 											placeholder="Enter Region (for Example us-east-1)" size="40" />
-									</div>
-                          
-                            </div>
-                            
-                           
+									</div>         
+                            </div>                                                       
 							</div>
 							
 														
                              <div th:if="${fileNames != null}"  class="form-group col-lg-12 col-md-12">
                              <label for="fileName">Selected Files:</label>
-                             <table id="newMetaDataTableForSingleFile" class="table table-stripped table-bordered display dt-responsive wrap" style="width:120%">
-                          <thead>
-							<tr>
-                                <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col">Selected File</th>
-                                 <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col">MetaData</th>
-                            </tr>
-                        </thead>
-                        <tbody>                      
-                            <tr th:each="fileName : ${fileNames}">
-                            <td th:text="${fileName}"></td>
-                            <td> <a href="javascript:void(0);" class="addNewMetaDataForDataFiles" style="float:left;">
-                              <i class="fal fa-plus-circle"></i> Add new MetaData</a> </td>
-                            </tr>
-                            </tbody>
-                         </table>
-                             </div>
-                             
-                              <div th:if="${folderNames != null}"  class="form-group col-lg-12 col-md-12">
-                             <label for="folderName">Selected Folders:</label> 
-                               <table id="newMetaDataTableForSingleFolder" class="table table-stripped table-bordered display dt-responsive wrap" style="width:120%">
-                          <thead>
-							<tr>
-                                <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col">Selected Folder</th>
-                                 <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col">MetaData</th>
-                            </tr>
-                        </thead>
-                        <tbody>                      
-                            <tr th:each="folderName : ${folderNames}">
-                            <td th:text="${folderName}"></td>
-                            <td> <a href="javascript:void(0);" class="addNewMetaDataForDataFiles" style="float:left;">
-                              <i class="fal fa-plus-circle"></i> Add new MetaData</a> </td>
-                            </tr>
-                            </tbody>
-                         </table>
-                             </div>
-                            
+                            <div class="form-group col-lg-12 col-md-12">
+                              
+                             <ul> 
+                                <li th:each="fileName:${fileNames}" th:text="${fileName}"></li>
+                              </ul>
+                          </div>                        
                         </div>
-                        </form>
+                             
+                    <div th:if="${folderNames != null}"  class="form-group col-lg-12 col-md-12">
+                       <label for="folderName">Selected Folders:</label>                          
+                          <ul> 
+                               <li th:each="folderName:${folderNames}" th:text="${folderName}"></li>
+                          </ul>
+                    </div>     
+                     </div>
+                 </form>
                     </div>
                     
                 </div>

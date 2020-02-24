@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
@@ -15,14 +15,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.DoeDatafileModel;
+import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
-import gov.nih.nci.doe.web.util.DoeExcelUtil;
-import gov.nih.nci.hpc.domain.metadata.HpcBulkMetadataEntries;
-import gov.nih.nci.hpc.domain.metadata.HpcBulkMetadataEntry;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectRegistrationRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectRegistrationResponseDTO;
@@ -30,7 +27,6 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectRegistrationItemDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcDirectoryScanRegistrationItemDTO;
 
 /**
  * <p>
@@ -55,6 +51,9 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	private String webServerName;	
 	@Value("${doe.basePath}")
 	private String basePath;
+	
+	@Autowired
+	TaskManagerService taskManagerService;
 	
 	
 	
@@ -81,8 +80,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(method = RequestMethod.POST)
-	public String createDatafile(@Valid DoeDatafileModel doeDataFileModel,
-			 HttpSession session, @RequestParam(value = "doeDataFile", required = false) MultipartFile doeDataFile,
+	public String createDatafile(@Valid DoeDatafileModel doeDataFileModel, HttpSession session,
 			 @RequestParam("dataFilePath") String  dataFilePath, HttpServletRequest request, HttpServletResponse response) {
 		
 		String authToken = (String) session.getAttribute("hpcUserToken");
@@ -104,15 +102,15 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			HpcBulkDataObjectRegistrationRequestDTO registrationDTO = constructBulkRequest(request, session,
 					doeDataFileModel.getPath().trim());
 			
-			HpcBulkMetadataEntries hpcBulkMetadataEntries = DoeExcelUtil.parseBulkMatadataEntries(doeDataFile, doeDataFileModel.getPath().trim());
+			//HpcBulkMetadataEntries hpcBulkMetadataEntries = DoeExcelUtil.parseBulkMatadataEntries(doeDataFile, doeDataFileModel.getPath().trim());
 			
-			if(hpcBulkMetadataEntries != null) {
+			/*if(hpcBulkMetadataEntries != null) {
 				for(HpcDirectoryScanRegistrationItemDTO itemDTO : registrationDTO.getDirectoryScanRegistrationItems()) {
 					itemDTO.setBulkMetadataEntries(hpcBulkMetadataEntries);
 				}
-			}
+			}*/
 
-			if(registrationDTO.getDataObjectRegistrationItems() != null && !registrationDTO.getDataObjectRegistrationItems().isEmpty()) {
+			/*if(registrationDTO.getDataObjectRegistrationItems() != null && !registrationDTO.getDataObjectRegistrationItems().isEmpty()) {
 				for(HpcDataObjectRegistrationItemDTO dto : registrationDTO.getDataObjectRegistrationItems()) {
 					if(hpcBulkMetadataEntries != null && !hpcBulkMetadataEntries.getPathsMetadataEntries().isEmpty()) {
 						for(HpcBulkMetadataEntry bulkMeta : hpcBulkMetadataEntries.getPathsMetadataEntries()) {
@@ -122,7 +120,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 						}
 					}
 				}
-			}
+			}*/
 			
 			if(registrationDTO.getDataObjectRegistrationItems().size() == 0 && registrationDTO.getDirectoryScanRegistrationItems().size() == 0)
 				throw new DoeWebException("No input file(s) / folder(s) are selected");
@@ -163,6 +161,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 					info.append(responseItem.getPath()).append("<br/>");
 				   }
 				    String taskId = responseDTO.getTaskId();
+				    taskManagerService.saveTransfer(taskId,"Upload",getLoggedOnUserInfo());
 					return "Bulk Data file registration request is submitted! Task Id: " +taskId;			
 		
 				

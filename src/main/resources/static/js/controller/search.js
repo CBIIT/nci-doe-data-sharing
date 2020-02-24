@@ -330,7 +330,7 @@ $("#primaryGlobusButton").click(function(e){
 	d.studyPath = $("#studyList").val();
 	d.dataSetPath = $("#dataList").val();
 
-	 invokeAjax('/upload','GET',d,postUploadGlobusFunction,null,null,null);
+	 invokeAjax('/upload','GET',d,postUploadGlobusFunction,null,null,'text');
 });
 
 $(".addNewMetaDataForDataFiles").click(function(e){
