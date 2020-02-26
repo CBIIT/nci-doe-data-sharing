@@ -225,10 +225,17 @@
 		<version>11.2.0.4</version>
         <configuration>
           <additionalClasspathElements>
-            <additionalClasspathElement>/home/NCIF-HPCDM-SVC/.m2/repository/com/oracle/ojdbc6/11.2.0.4/ojdbc6-11.2.0.4.jar</additionalClasspathElement>
-            
+            <additionalClasspathElement>/home/NCIF-HPCDM-SVC/.m2/repository/com/oracle/ojdbc6/11.2.0.4</additionalClasspathElement>  
           </additionalClasspathElements>
         </configuration>
+        
+        <!--  <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+            </manifest>
+          </archive>
+        </configuration>-->
       </plugin>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
