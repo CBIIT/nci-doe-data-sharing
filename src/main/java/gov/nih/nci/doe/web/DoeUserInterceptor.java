@@ -57,7 +57,7 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 		String userToken = (String) session.getAttribute("hpcUserToken");		
 		String writeAccessToken = (String) session.getAttribute("writeAccessUserToken");
 		
-		/*if(StringUtils.isBlank(writeAccessToken)) {
+		if(StringUtils.isBlank(writeAccessToken)) {
 		 try {
 		   Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		   Boolean isAnonymousUSer = auth.getAuthorities().stream().filter(o -> o.getAuthority().equals("ROLE_ANONYMOUS")).findFirst().isPresent();
@@ -68,7 +68,7 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
-		}*/
+		}
 		
 		if(StringUtils.isBlank(userToken)) {
 		 try {

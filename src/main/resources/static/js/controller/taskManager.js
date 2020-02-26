@@ -1,3 +1,7 @@
+$(document).ready(function () {
+	refreshTaskManagerDataTable();
+});
+
 function refreshTaskManagerDataTable() {
     console.log("refresh datatable");
     if (!$.fn.DataTable.isDataTable('#manageTasksTable')) {

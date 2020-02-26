@@ -269,6 +269,7 @@ function registerBulkDataFile() {
 						 console.log('SUCCESS: ', msg);
 						 $(".registerBulkDataFile").html(msg);
 						 $(".registerBulkDataFileSuccess").show();
+						 window.scrollTo(0,0);
 						 cancelAndReturnToUploadTab();
 						 
 					 },
@@ -282,17 +283,19 @@ function registerBulkDataFile() {
 	} else {
 		var dataFilePath = $("#bulkDataFilePathCollection").val();		
 		if(dataFilePath) {	
-		$("#registerBulkDataForm").attr('datafilePath', dataFilePath);	 
-			var form = $('#registerBulkDataForm')[0];		 
-	       var data = new FormData(form);
-	      data.append('dataFilePath', dataFilePath);
+			$("#bulkDatafilePath").val(dataFilePath);
+		//$("#registerBulkDataForm").attr('datafilePath', dataFilePath);	 
+			//var form = $('#registerBulkDataForm')[0];		 
+	       //var data = new FormData(form);
+	      //data.append('dataFilePath', dataFilePath);
+	      var data = $('#registerBulkDataForm').serialize();
 			$.ajax({
 				type : "POST",
-				enctype: "multipart/form-data",
+				//enctype: "multipart/form-data",
 			     url : "/addbulk",
 				 data : data,
-				 processData: false, 
-	             contentType: false,
+				// processData: false, 
+	             //contentType: false,
 				 beforeSend: function () {
 			    	   $("#spinner").show();
 			           $("#dimmer").show();
@@ -303,6 +306,8 @@ function registerBulkDataFile() {
 					 console.log('SUCCESS: ', msg);
 					 $(".registerBulkDataFile").html(msg);
 					 $(".registerBulkDataFileSuccess").show();
+					 cancelAndReturnToUploadTab();
+					 window.scrollTo(0,0);
 					
 					 
 				 },

@@ -14,17 +14,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.DoeDatafileModel;
 import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
-import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectRegistrationRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectRegistrationResponseDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectRegistrationItemDTO;
 
@@ -54,9 +51,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	
 	@Autowired
 	TaskManagerService taskManagerService;
-	
-	
-	
+		
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public String home(Model model, HttpSession session, HttpServletRequest request) {
@@ -80,19 +75,20 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(method = RequestMethod.POST)
-	public String createDatafile(@Valid DoeDatafileModel doeDataFileModel, HttpSession session,
-			 @RequestParam("dataFilePath") String  dataFilePath, HttpServletRequest request, HttpServletResponse response) {
+	@ResponseBody
+	public String createDatafile(@Valid DoeDatafileModel doeDataFileModel, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
 		
 		String authToken = (String) session.getAttribute("hpcUserToken");
 		String checksum = request.getParameter("checksum");
 		if (checksum == null || checksum.isEmpty())
 			checksum = (String) request.getAttribute("checksum");
 
-		
-		if(dataFilePath != null) {
+
+			String dataFilePath = request.getParameter("bulkDatafilePath");
+			if(dataFilePath != null) {
 			doeDataFileModel.setPath(dataFilePath.trim());
-		}
-		
+			}
+			
 
 		try {
 			if (doeDataFileModel.getPath() == null || doeDataFileModel.getPath().trim().length() == 0)
@@ -102,13 +98,6 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			HpcBulkDataObjectRegistrationRequestDTO registrationDTO = constructBulkRequest(request, session,
 					doeDataFileModel.getPath().trim());
 			
-			//HpcBulkMetadataEntries hpcBulkMetadataEntries = DoeExcelUtil.parseBulkMatadataEntries(doeDataFile, doeDataFileModel.getPath().trim());
-			
-			/*if(hpcBulkMetadataEntries != null) {
-				for(HpcDirectoryScanRegistrationItemDTO itemDTO : registrationDTO.getDirectoryScanRegistrationItems()) {
-					itemDTO.setBulkMetadataEntries(hpcBulkMetadataEntries);
-				}
-			}*/
 
 			/*if(registrationDTO.getDataObjectRegistrationItems() != null && !registrationDTO.getDataObjectRegistrationItems().isEmpty()) {
 				for(HpcDataObjectRegistrationItemDTO dto : registrationDTO.getDataObjectRegistrationItems()) {
@@ -138,7 +127,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 				basePaths = (Set<String>) session.getAttribute("basePaths");
 			}
 			
-			if (!registrationDTO.getDryRun() && !basePaths.contains(doeDataFileModel.getPath().trim())) {
+			/*if (!registrationDTO.getDryRun() && !basePaths.contains(doeDataFileModel.getPath().trim())) {
 				HpcCollectionRegistrationDTO collectionRegistrationDTO = constructRequest(request, session, null);
 
 				if (collectionRegistrationDTO.getMetadataEntries().isEmpty()) {
@@ -150,7 +139,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 				}
 				DoeClientUtil.updateCollection(authToken, collectionServiceURL, collectionRegistrationDTO,
 						doeDataFileModel.getPath().trim(), sslCertPath, sslCertPassword);
-			}
+			}*/
 			
 			HpcBulkDataObjectRegistrationResponseDTO responseDTO = DoeClientUtil.registerBulkDatafiles(authToken,
 					bulkRegistrationURL, registrationDTO, sslCertPath, sslCertPassword);
@@ -174,39 +163,6 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 		} 
 
 		return null;
-	}
-
-
-
-	private String getParentCollectionType(HttpServletRequest request, HttpSession session) {
-		String collectionType = getFormAttributeValue(request, "zAttrStr_collection_type");
-		if (collectionType != null) {
-			session.setAttribute("collection_type", collectionType);
-			return collectionType;
-		} else
-			collectionType = (String) session.getAttribute("collection_type");
-
-		if (collectionType != null)
-			return collectionType;
-
-		HpcCollectionDTO collection = (HpcCollectionDTO) session.getAttribute("parentCollection");
-		if (collection != null && collection.getMetadataEntries() != null
-				&& collection.getMetadataEntries().getSelfMetadataEntries() != null) {
-			for (HpcMetadataEntry entry : collection.getMetadataEntries().getSelfMetadataEntries()) {
-				if (entry.getAttribute().equals("collection_type"))
-					return entry.getValue();
-			}
-		}
-		return null;
-	}
-
-
-	private String getFormAttributeValue(HttpServletRequest request, String attributeName) {
-		String attrValue = request.getParameter(attributeName);
-		if (attrValue != null)
-			return attrValue;
-		else
-			return (String) request.getAttribute(attributeName);
 	}
 
 }

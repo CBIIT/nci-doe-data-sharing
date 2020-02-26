@@ -9,6 +9,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,7 +22,9 @@ import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.doe.web.util.LambdaUtils;
 import gov.nih.nci.hpc.domain.datatransfer.HpcUserDownloadRequest;
+import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectRegistrationTaskDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDownloadSummaryDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcRegistrationSummaryDTO;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,9 +51,13 @@ public class TaskManagerCotroller extends AbstractDoeController {
 	
 	@Value("${gov.nih.nci.hpc.server.download}")
 	private String queryServiceURL;
+	
+	@Value("${gov.nih.nci.hpc.server.bulkregistration}")
+	private String registrationServiceUrl;
 
 	SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
 	
+	@SuppressWarnings("null")
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<?> register(HttpSession session,@RequestHeader HttpHeaders headers, 
 			HttpServletRequest request, @RequestParam(value = "userId") String userId) throws Exception {
@@ -66,10 +74,22 @@ public class TaskManagerCotroller extends AbstractDoeController {
     			HpcDownloadSummaryDTO downloads = DoeClientUtil.getDownloadSummary(authToken, serviceURL, sslCertPath,
     					sslCertPassword);
     			
+    			final MultiValueMap<String,String> paramsMap = new LinkedMultiValueMap<>();
+    		      paramsMap.set("totalCount", Boolean.TRUE.toString());
+    			HpcRegistrationSummaryDTO registrations = DoeClientUtil.getRegistrationSummary(authToken, registrationServiceUrl, paramsMap,
+    		        sslCertPath, sslCertPassword);
+
+    			
     			List<HpcUserDownloadRequest> downloadResults = new ArrayList<HpcUserDownloadRequest>();
     			if(downloads != null) {
     				downloadResults.addAll(downloads.getActiveTasks());
         			downloadResults.addAll(downloads.getCompletedTasks());  
+    			}
+    			
+    			List<HpcBulkDataObjectRegistrationTaskDTO> uploadResults = new ArrayList<HpcBulkDataObjectRegistrationTaskDTO>();
+    			if(registrations != null) {
+    				uploadResults.addAll(registrations.getActiveTasks());
+    				uploadResults.addAll(registrations.getCompletedTasks());  
     			}
     			  			
     			
@@ -88,6 +108,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
     					task.setTaskName(t.getTaskName());
     					task.setUserId(t.getUserId());
     					task.setTaskType(t.getTaskType());
+    					
     					/*if(download.getResult()) {
     						task.setTransferStatus("Completed");
     					} else if(!download.getResult()){
@@ -98,6 +119,39 @@ public class TaskManagerCotroller extends AbstractDoeController {
     					
     					taskResults.add(task);
     			}
+    		    
+    		    
+    		    //same for uploads
+    		    
+    			 List<HpcBulkDataObjectRegistrationTaskDTO> finalTaskUploadIds = LambdaUtils.filter(uploadResults, (HpcBulkDataObjectRegistrationTaskDTO n) ->
+    			 taskIds.contains(n.getTaskId()));
+    			
+    			 List<TaskManagerDto> uploadTaskResults = new ArrayList<TaskManagerDto>();
+                 
+    			
+    		    for (HpcBulkDataObjectRegistrationTaskDTO download : finalTaskUploadIds) {
+    					TaskManagerDto task = new TaskManagerDto();
+    					TaskManager t = results.stream().filter(x -> download.getTaskId().equals(x.getTaskId())).findAny().orElse(null);
+    					
+    	    			task.setTaskId(download.getTaskId());
+    					task.setTaskDate(t.getTaskDate()!= null ? format.format(t.getTaskDate()) : "");
+    					task.setTaskName(t.getTaskName());
+    					task.setUserId(t.getUserId());
+    					task.setTaskType(t.getTaskType());
+    					if(download.getResult()) {
+    						task.setTransferStatus("Completed");
+    					} else if(!download.getResult()) {
+    						List<String> message = new ArrayList<String>();
+    						download.getFailedItems().stream().forEach(x -> message.add(x.getMessage()));
+    						
+    						task.setTransferStatus("Failed (" + String.join(",", message) + ")");
+    					} else {
+    						task.setTransferStatus("In Progress");
+    					}
+    					uploadTaskResults.add(task);
+    			}
+    		    
+    		    taskResults.addAll(uploadTaskResults);
     			
     			return new ResponseEntity<>(taskResults, headers, HttpStatus.OK);
     			

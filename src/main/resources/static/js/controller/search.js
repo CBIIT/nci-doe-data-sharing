@@ -252,8 +252,6 @@ $(".backToSearch").click(function(e){
 });
 
 
-
-
 $('body').on('click', 'a.button.closeBtn', function () {
     $(this).closest('div.popover').popover('hide');
 });
@@ -267,10 +265,6 @@ $('body').on('click', function (e) {
     });
 });
 
-$("#manageTasks-tab").click(function(e){
-	refreshTaskManagerDataTable();
-});
-
 $("#addMetaData").click(function(e){
 	addCollectionMetaDataRows();
 });
@@ -279,13 +273,6 @@ $("#addMetaData").click(function(e){
 $("#updateMetaData").click(function(e){
 	updateMetaDataCollection();
 });
-
-/*$("#upload-tab").click(function(e){
-	if(!uploadtabIniatialize) {
-		uploadtabIniatialize = true;
-		loadUploadTab();
-	}
-});*/
 
 $("#registerCollectionBtn").click(function(e){
 	registerCollection();
@@ -304,7 +291,6 @@ $("#doeDataFile").change(function (e) {
 
 $("#addBulkDataFiles").click(function(e){
 	$("#uploadDataFilesTab").show();
-	//$("#uploadSubFragmentTab").hide();
 	openBulkDataRegistration();
 });
 

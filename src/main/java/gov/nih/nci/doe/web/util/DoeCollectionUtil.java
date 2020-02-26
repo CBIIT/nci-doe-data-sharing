@@ -28,41 +28,7 @@ public class DoeCollectionUtil {
         PROP_KEY__$SSL_CERT = "gov.nih.nci.hpc.ssl.cert",
         PROP_KEY__$SSL_CERT_PASSWORD = "gov.nih.nci.hpc.ssl.cert.password";
 
-    /**
-     * Check if current (authenticated) User is owner of given Collection.
-     *
-     * @param session  The HTTP session
-     * @param someCollection  The Collection
-     * @return  true if User is owner of Collection, false otherwise
-     */
-    public static boolean isUserCollectionOwner(
-                    HttpSession session, HpcCollectionDTO collection)
-    {
-        boolean retVal = false;
-        if (null != session &&
-            session.getAttribute("hpcUserToken") instanceof String &&
-            session.getAttribute("hpcUserId") instanceof String &&
-            null != collection &&
-            null != collection.getCollection() &&
-            null != collection.getCollection().getAbsolutePath())
-        {
-            final String[] collOwnChkProps =
-              fetchAppPropertiesForCollectionOwnershipCheck();
-            HpcUserPermissionDTO permDto = DoeClientUtil.getPermissionForUser(
-              (String) session.getAttribute("hpcUserToken"),
-              collection.getCollection().getAbsolutePath(),
-              (String) session.getAttribute("hpcUserId"),
-              collOwnChkProps[0],
-              collOwnChkProps[1],
-              collOwnChkProps[2]
-            );
-            if (null != permDto)
-            {
-                retVal = HpcPermission.OWN.equals(permDto.getPermission());
-            }
-        }
-        return retVal;
-    }
+ 
 
 
     /**

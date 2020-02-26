@@ -61,7 +61,6 @@
 		<groupId>com.oracle</groupId>
 		<artifactId>ojdbc6</artifactId>
 		<version>11.2.0.4</version>
-		<scope>provided</scope>
 	</dependency>
         <!-- Spring Security -->
 		<dependency>

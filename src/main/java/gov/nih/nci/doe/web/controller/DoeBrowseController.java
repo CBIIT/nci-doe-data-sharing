@@ -84,12 +84,13 @@ public class DoeBrowseController extends AbstractDoeController {
 	@RequestMapping(value = "/collection", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> browseCollection(@RequestParam(value = "selectedPath") String selectedPath, HttpSession session, 
 			HttpServletRequest request, HttpServletResponse response) {
-		String authToken = (String) session.getAttribute("hpcUserToken");
+		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		DoeBrowserEntry browserEntry = (DoeBrowserEntry) session.getAttribute("browserEntry");
 		   List<KeyValueBean> results = new ArrayList<>();
 		boolean getChildren = false;
 		boolean refresh = false;
 
+		
 		try {
 			if (selectedPath!= null) {
 				browserEntry = getTreeNodes(selectedPath.trim(), browserEntry,
@@ -129,7 +130,7 @@ public class DoeBrowseController extends AbstractDoeController {
   public ResponseEntity<?> get(HttpSession session, HttpServletRequest request) {
 
     // Verify User session
-    String authToken = (String) session.getAttribute("hpcUserToken");
+    String authToken = (String) session.getAttribute("writeAccessUserToken");
     if (authToken == null) {
       return null;
     }
