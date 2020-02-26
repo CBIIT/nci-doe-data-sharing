@@ -16,8 +16,6 @@ import gov.nih.nci.doe.web.model.AjaxResponseBody;
 import gov.nih.nci.hpc.domain.datamanagement.HpcPermission;
 import gov.nih.nci.hpc.domain.datamanagement.HpcPermissionForCollection;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
-import gov.nih.nci.hpc.dto.databrowse.HpcBookmarkListDTO;
-import gov.nih.nci.hpc.dto.databrowse.HpcBookmarkRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectDownloadRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectDownloadResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectRegistrationRequestDTO;
@@ -36,42 +34,24 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectRegistrationRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDocDataManagementRulesDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDownloadSummaryDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcEntityPermissionsDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcMetadataAttributesListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcRegistrationSummaryDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcUserPermissionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcUserPermsForCollectionsDTO;
-import gov.nih.nci.hpc.dto.datasearch.HpcNamedCompoundMetadataQueryDTO;
-import gov.nih.nci.hpc.dto.datasearch.HpcNamedCompoundMetadataQueryListDTO;
 import gov.nih.nci.hpc.dto.error.HpcExceptionDTO;
-import gov.nih.nci.hpc.dto.notification.HpcNotificationDeliveryReceiptListDTO;
-import gov.nih.nci.hpc.dto.notification.HpcNotificationSubscriptionListDTO;
 import gov.nih.nci.hpc.dto.security.HpcAuthenticationResponseDTO;
-import gov.nih.nci.hpc.dto.security.HpcGroupListDTO;
-import gov.nih.nci.hpc.dto.security.HpcGroupMembersRequestDTO;
-import gov.nih.nci.hpc.dto.security.HpcGroupMembersResponseDTO;
-import gov.nih.nci.hpc.dto.security.HpcUserDTO;
-import gov.nih.nci.hpc.dto.security.HpcUserListDTO;
-import gov.nih.nci.hpc.dto.security.HpcUserRequestDTO;
 
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.TreeSet;
 import javax.net.ssl.TrustManager;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.DatatypeConverter;
@@ -83,25 +63,12 @@ import org.apache.cxf.jaxrs.ext.multipart.ContentDisposition;
 import org.apache.cxf.jaxrs.ext.multipart.MultipartBody;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 public class DoeClientUtil {
-
-  private static final String ERR_MSG_TEMPLATE__FAILED_GET_PATH_ELEM_TYPE =
-    "Failed to determine type of DME entity at path, %s." +
-    "  Exception message: %s.";
-
-  private static final String JSON_RESPONSE_ATTRIB__ELEMENT_TYPE =
-      "elementType";
-  
-  //The logger instance.
-  private final static Logger logger = LoggerFactory.getLogger(DoeClientUtil.class);
-
 
   public static WebClient getWebClient(String url, String hpcCertPath,
     String hpcCertPassword) {
@@ -1052,10 +1019,6 @@ public class DoeClientUtil {
     }
     session.setAttribute("basePaths", basePaths);
   }
-
-
-
-
 
   private static Properties appProperties;
 

@@ -12,7 +12,7 @@
                  generated in support of cancer research funded or supported by the NCI" width="100%"></a>
             </div>
             <div class="col-md-3 buttoncontainer">
-                <a data-toggle="tab" href="#searchTab" class="bigbutton" id="btnSearchHomeTab">
+                <a th:href="@{/searchTab}"class="bigbutton" id="btnSearchHomeTab">
                     <div class="bigbutton searchbutton">
                         <h2> Search </h2>
                         <p>
@@ -21,7 +21,7 @@
                     </div>
                 </a>
                  <br>
-                  <a data-toggle="tab" href="#manageTasks" class="bigbutton" id="btnStatusHomeTab" th:if="${loggedOnUser != null}">
+                  <a th:href="@{/tasksTab}"class="bigbutton" id="btnStatusHomeTab" th:if="${loggedOnUser != null}">
                     <div class="bigbutton">
                         <h2> Status </h2>
                         <p>
@@ -30,7 +30,7 @@
                     </div>
                 </a>
                 <br/>
-                 <a data-toggle="tab" href="#uploadTab" class="bigbutton" id="btnUploadHomeTab" th:if="${loggedOnUser != null}">
+                 <a  th:href="@{/addbulk}" class="bigbutton" id="btnUploadHomeTab" th:if="${loggedOnUser != null}">
                     <div class="bigbutton">
                         <h2> Uploads </h2>
                         <p>
