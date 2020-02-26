@@ -61,9 +61,13 @@
 		<groupId>com.oracle</groupId>
 		<artifactId>ojdbc6</artifactId>
 		<version>11.2.0.4</version>
-		<scope>system</scope>
-		<systemPath>/home/NCIF-HPCDM-SVC/.m2/repository/com/oracle/ojdbc6/11.2.0.4/ojdbc6-11.2.0.4.jar</systemPath>
+		<!--  <scope>system</scope>
+		<systemPath>/home/NCIF-HPCDM-SVC/.m2/repository/com/oracle/ojdbc6/11.2.0.4/ojdbc6-11.2.0.4.jar</systemPath>-->
 	</dependency>
+	<dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            </dependency>
         <!-- Spring Security -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
