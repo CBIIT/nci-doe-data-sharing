@@ -9,6 +9,8 @@
  */
 package gov.nih.nci.doe.web.controller;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.ui.Model;
@@ -28,16 +31,18 @@ import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.datamanagement.HpcDataHierarchy;
 import gov.nih.nci.hpc.domain.datamanagement.HpcDirectoryScanPathMap;
 import gov.nih.nci.hpc.domain.datatransfer.HpcFileLocation;
+import gov.nih.nci.hpc.domain.datatransfer.HpcGlobusScanDirectory;
+import gov.nih.nci.hpc.domain.datatransfer.HpcGlobusUploadSource;
+import gov.nih.nci.hpc.domain.datatransfer.HpcS3Account;
+import gov.nih.nci.hpc.domain.datatransfer.HpcS3ScanDirectory;
+import gov.nih.nci.hpc.domain.datatransfer.HpcS3UploadSource;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataValidationRule;
-import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectRegistrationRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementRulesDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectRegistrationItemDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcDirectoryScanRegistrationItemDTO;
 
 /**
  * <p>
@@ -155,24 +160,36 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 
 	
 	@SuppressWarnings("unchecked")
-	protected HpcBulkDataObjectRegistrationRequestDTO constructBulkRequest(HttpServletRequest request,
+	protected gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO constructV2BulkRequest(HttpServletRequest request,
 			HttpSession session, String path) {
-		HpcBulkDataObjectRegistrationRequestDTO dto = new HpcBulkDataObjectRegistrationRequestDTO();
+		gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO dto = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO();
+		
 		String datafilePath = (String) session.getAttribute("datafilePath");
 		String globusEndpoint = (String) session.getAttribute("GlobusEndpoint");
-		//String selectedBasePath = (String) session.getAttribute("basePathSelected");
 		String globusEndpointPath = (String) session.getAttribute("GlobusEndpointPath");
 		List<String> globusEndpointFiles = (List<String>) session.getAttribute("GlobusEndpointFiles");
 		List<String> globusEndpointFolders = (List<String>) session.getAttribute("GlobusEndpointFolders");
 
-		if (globusEndpointFiles != null) {
-			List<HpcDataObjectRegistrationItemDTO> files = new ArrayList<HpcDataObjectRegistrationItemDTO>();
+		
+		String bulkType = (String)request.getParameter("uploadType");
+		String bucketName = (String)request.getParameter("bucketName");
+		String s3Path = (String)request.getParameter("s3Path");
+		String accessKey = (String)request.getParameter("accessKey");
+		String secretKey = (String)request.getParameter("secretKey");
+		String region = (String)request.getParameter("region");
+		String s3File = (String)request.getParameter("s3File");
+		boolean isS3File = s3File != null && s3File.equals("on");
+
+		if (StringUtils.equals(bulkType, "globus") && globusEndpointFiles != null) {
+			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO> files = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO>();
 			for (String fileName : globusEndpointFiles) {
-				HpcDataObjectRegistrationItemDTO file = new HpcDataObjectRegistrationItemDTO();
+				gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO file = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO();
 				HpcFileLocation source = new HpcFileLocation();
 				source.setFileContainerId(globusEndpoint);
 				source.setFileId(globusEndpointPath + fileName);
-				file.setSource(source);
+				HpcGlobusUploadSource globusSource = new HpcGlobusUploadSource();
+				globusSource.setSourceLocation(source);
+				file.setGlobusUploadSource(globusSource);
 				file.setCreateParentCollections(true);
 				file.setPath(path + "/" + fileName);
 				System.out.println(path + "/" + fileName);
@@ -181,17 +198,19 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			dto.getDataObjectRegistrationItems().addAll(files);
 		}
 
-		if (globusEndpointFolders != null) {
-			List<HpcDirectoryScanRegistrationItemDTO> folders = new ArrayList<HpcDirectoryScanRegistrationItemDTO>();
+		if (StringUtils.equals(bulkType, "globus") && globusEndpointFolders != null) {
+			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO> folders = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO>();
 			for (String folderName : globusEndpointFolders) {
-				HpcDirectoryScanRegistrationItemDTO folder = new HpcDirectoryScanRegistrationItemDTO();
+				gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO folder = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO();
 				HpcFileLocation source = new HpcFileLocation();
 				source.setFileContainerId(globusEndpoint);
 				String fromPath = globusEndpointPath.endsWith("/") ?  globusEndpointPath + folderName : globusEndpointPath + "/" + folderName;
 				String toPath = "/" + folderName;
 				source.setFileId(fromPath);
 				folder.setBasePath(datafilePath);
-				folder.setScanDirectoryLocation(source);
+				HpcGlobusScanDirectory globusDirectory = new HpcGlobusScanDirectory();
+				globusDirectory.setDirectoryLocation(source);
+				folder.setGlobusScanDirectory(globusDirectory);
 				folders.add(folder);
 				if(!fromPath.equals(toPath)) {
 					HpcDirectoryScanPathMap pathDTO = new HpcDirectoryScanPathMap();
@@ -199,10 +218,50 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 					pathDTO.setToPath(toPath);
 					folder.setPathMap(pathDTO);
 				}
-				
 			}
 			dto.getDirectoryScanRegistrationItems().addAll(folders);
 		}
+		if (StringUtils.equals(bulkType, "s3") && s3Path != null && isS3File) {
+			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO> files = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO>();
+			gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO file = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO();
+			HpcFileLocation source = new HpcFileLocation();
+			source.setFileContainerId(bucketName);
+			source.setFileId(s3Path);
+			HpcS3UploadSource s3UploadSource = new HpcS3UploadSource();
+			HpcS3Account s3Account = new HpcS3Account();
+			s3Account.setAccessKey(accessKey);
+			s3Account.setSecretKey(secretKey);
+			s3Account.setRegion(region);
+			s3UploadSource.setAccount(s3Account);
+			s3UploadSource.setSourceLocation(source);
+			file.setS3UploadSource(s3UploadSource);
+			file.setCreateParentCollections(true);
+			Path s3FilePath = Paths.get(s3Path);
+			file.setPath(path + "/" + s3FilePath.getFileName());
+			System.out.println(path + "/" + s3FilePath.getFileName());
+			files.add(file);
+			dto.getDataObjectRegistrationItems().addAll(files);
+		}
+		else if (StringUtils.equals(bulkType, "s3") && s3Path != null) {
+			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO> folders = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO>();
+			gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO folder = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO();
+			HpcFileLocation source = new HpcFileLocation();
+			source.setFileContainerId(bucketName);
+			source.setFileId(s3Path);
+			folder.setBasePath(datafilePath);
+			HpcS3ScanDirectory s3Directory = new HpcS3ScanDirectory();
+			s3Directory.setDirectoryLocation(source);
+			HpcS3Account s3Account = new HpcS3Account();
+			s3Account.setAccessKey(accessKey);
+			s3Account.setSecretKey(secretKey);
+			s3Account.setRegion(region);
+			s3Directory.setAccount(s3Account);
+			folder.setS3ScanDirectory(s3Directory);
+			folders.add(folder);
+
+			dto.getDirectoryScanRegistrationItems().addAll(folders);
+		}
+		
 		
 		return dto;
 	}

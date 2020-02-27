@@ -20,11 +20,10 @@ import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.DoeDatafileModel;
 import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
-import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectRegistrationRequestDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectRegistrationResponseDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectRegistrationItemDTO;
-
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO;
 /**
  * <p>
  * Add data file controller.
@@ -95,21 +94,8 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 				return "Invalid Data file path";
 			
 			doeDataFileModel.setPath(doeDataFileModel.getPath().trim());
-			HpcBulkDataObjectRegistrationRequestDTO registrationDTO = constructBulkRequest(request, session,
+			HpcBulkDataObjectRegistrationRequestDTO registrationDTO = constructV2BulkRequest(request, session,
 					doeDataFileModel.getPath().trim());
-			
-
-			/*if(registrationDTO.getDataObjectRegistrationItems() != null && !registrationDTO.getDataObjectRegistrationItems().isEmpty()) {
-				for(HpcDataObjectRegistrationItemDTO dto : registrationDTO.getDataObjectRegistrationItems()) {
-					if(hpcBulkMetadataEntries != null && !hpcBulkMetadataEntries.getPathsMetadataEntries().isEmpty()) {
-						for(HpcBulkMetadataEntry bulkMeta : hpcBulkMetadataEntries.getPathsMetadataEntries()) {
-							if(dto.getPath().equals(bulkMeta.getPath())) {
-								dto.getDataObjectMetadataEntries().addAll(bulkMeta.getPathMetadataEntries());
-							}
-						}
-					}
-				}
-			}*/
 			
 			if(registrationDTO.getDataObjectRegistrationItems().size() == 0 && registrationDTO.getDirectoryScanRegistrationItems().size() == 0)
 				throw new DoeWebException("No input file(s) / folder(s) are selected");
@@ -126,20 +112,6 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 						sslCertPassword);
 				basePaths = (Set<String>) session.getAttribute("basePaths");
 			}
-			
-			/*if (!registrationDTO.getDryRun() && !basePaths.contains(doeDataFileModel.getPath().trim())) {
-				HpcCollectionRegistrationDTO collectionRegistrationDTO = constructRequest(request, session, null);
-
-				if (collectionRegistrationDTO.getMetadataEntries().isEmpty()) {
-					String collectionType = getParentCollectionType(request, session);
-					HpcMetadataEntry entry = new HpcMetadataEntry();
-					entry.setAttribute("collection_type");
-					entry.setValue(collectionType);
-					collectionRegistrationDTO.getMetadataEntries().add(entry);
-				}
-				DoeClientUtil.updateCollection(authToken, collectionServiceURL, collectionRegistrationDTO,
-						doeDataFileModel.getPath().trim(), sslCertPath, sslCertPassword);
-			}*/
 			
 			HpcBulkDataObjectRegistrationResponseDTO responseDTO = DoeClientUtil.registerBulkDatafiles(authToken,
 					bulkRegistrationURL, registrationDTO, sslCertPath, sslCertPassword);

@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
@@ -22,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import gov.nih.nci.doe.web.model.AjaxResponseBody;
 import gov.nih.nci.doe.web.model.DoeDownloadDatafile;
 import gov.nih.nci.doe.web.model.Views;
+import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.datatransfer.HpcDownloadTaskType;
 import gov.nih.nci.hpc.domain.datatransfer.HpcFileLocation;
@@ -36,12 +39,15 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectDownloadResponseDTO;
 @Controller
 @EnableAutoConfiguration
 @RequestMapping("/downloadfiles")
-public class DoeDownnloadFilesController extends AbstractDoeController {
+public class DoeDownloadFilesController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.v2.download}")
 	private String downloadServiceURL;
 	
 	@Value("${gov.nih.nci.hpc.web.server}")
 	private String webServerName;
+	
+	 @Autowired
+	 TaskManagerService taskManagerService;
 
 
 	/**
@@ -69,9 +75,7 @@ public class DoeDownnloadFilesController extends AbstractDoeController {
 			}
 
 			HpcBulkDataObjectDownloadRequestDTO dto = new HpcBulkDataObjectDownloadRequestDTO();
-			//String selectedPathsStr = request.getParameter("selectedFilePaths");
 			String selectedPathsStr = String.join("  ", downloadFile.getSelectedPaths());
-			//String downloadType = request.getParameter("downloadType");
 			String downloadType = downloadFile.getDownloadType();
 			if (selectedPathsStr.isEmpty()) {
 				result.setMessage("Data file list is missing!");
@@ -115,6 +119,8 @@ public class DoeDownnloadFilesController extends AbstractDoeController {
 				if (downloadDTO != null) {
 					String taskType = downloadType.equals("datafiles") ? HpcDownloadTaskType.DATA_OBJECT_LIST.name(): HpcDownloadTaskType.COLLECTION_LIST.name();
 					result.setMessage("Download request successful. Task Id: <a href='downloadtask?type="+ taskType +"&taskId=" + downloadDTO.getTaskId()+"'>"+downloadDTO.getTaskId()+"</a>");
+					 
+		              taskManagerService.saveTransfer(downloadDTO.getTaskId(),"Download",getLoggedOnUserInfo());
 				}
 				return result;
 			} catch (Exception e) {

@@ -40,7 +40,6 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcUserPermsForCollectionsDTO;
 import gov.nih.nci.hpc.dto.error.HpcExceptionDTO;
 import gov.nih.nci.hpc.dto.security.HpcAuthenticationResponseDTO;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -563,37 +562,70 @@ public class DoeClientUtil {
   }
 
   public static HpcBulkDataObjectRegistrationResponseDTO registerBulkDatafiles(String token,
-      String hpcDatafileURL, HpcBulkDataObjectRegistrationRequestDTO datafileDTO,
-      String hpcCertPath, String hpcCertPassword) {
-    try {
-      WebClient client = DoeClientUtil.getWebClient(hpcDatafileURL, hpcCertPath, hpcCertPassword);
-      client.header("Authorization", "Bearer " + token);
+	      String hpcDatafileURL, HpcBulkDataObjectRegistrationRequestDTO datafileDTO,
+	      String hpcCertPath, String hpcCertPassword) {
+	    try {
+	      WebClient client = DoeClientUtil.getWebClient(hpcDatafileURL, hpcCertPath, hpcCertPassword);
+	      client.header("Authorization", "Bearer " + token);
 
-      Response restResponse = client.invoke("PUT", datafileDTO);
-      if (restResponse.getStatus() == 201 || restResponse.getStatus() == 200) {
-        return (HpcBulkDataObjectRegistrationResponseDTO) DoeClientUtil.getObject(restResponse,
-            HpcBulkDataObjectRegistrationResponseDTO.class);
-      } else {
-        ObjectMapper mapper = new ObjectMapper();
-        AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
-            new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
-            new JacksonAnnotationIntrospector());
-        mapper.setAnnotationIntrospector(intr);
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+	      Response restResponse = client.invoke("PUT", datafileDTO);
+	      if (restResponse.getStatus() == 201 || restResponse.getStatus() == 200) {
+	        return (HpcBulkDataObjectRegistrationResponseDTO) DoeClientUtil.getObject(restResponse,
+	            HpcBulkDataObjectRegistrationResponseDTO.class);
+	      } else {
+	        ObjectMapper mapper = new ObjectMapper();
+	        AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
+	            new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
+	            new JacksonAnnotationIntrospector());
+	        mapper.setAnnotationIntrospector(intr);
+	        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        MappingJsonFactory factory = new MappingJsonFactory(mapper);
-        JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+	        MappingJsonFactory factory = new MappingJsonFactory(mapper);
+	        JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 
-        HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
-        throw new DoeWebException("Failed to bulk register data files: " + exception.getMessage());
-      }
-    } catch (DoeWebException e) {
-      throw e;
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new DoeWebException("Failed to bulk register data files due to: " + e.getMessage());
-    }
-  }
+	        HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
+	        throw new DoeWebException("Failed to bulk register data files: " + exception.getMessage());
+	      }
+	    } catch (DoeWebException e) {
+	      throw e;
+	    } catch (Exception e) {
+	      e.printStackTrace();
+	      throw new DoeWebException("Failed to bulk register data files due to: " + e.getMessage());
+	    }
+	  }
+  
+  public static gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationResponseDTO registerBulkDatafiles(String token,
+	      String hpcDatafileURL, gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO datafileDTO,
+	      String hpcCertPath, String hpcCertPassword) {
+	    try {
+	      WebClient client = DoeClientUtil.getWebClient(hpcDatafileURL, hpcCertPath, hpcCertPassword);
+	      client.header("Authorization", "Bearer " + token);
+
+	      Response restResponse = client.invoke("PUT", datafileDTO);
+	      if (restResponse.getStatus() == 201 || restResponse.getStatus() == 200) {
+	        return (gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationResponseDTO) DoeClientUtil.getObject(restResponse,
+	        		gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationResponseDTO.class);
+	      } else {
+	        ObjectMapper mapper = new ObjectMapper();
+	        AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
+	            new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
+	            new JacksonAnnotationIntrospector());
+	        mapper.setAnnotationIntrospector(intr);
+	        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+	        MappingJsonFactory factory = new MappingJsonFactory(mapper);
+	        JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+
+	        HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
+	        throw new DoeWebException("Failed to bulk register data files: " + exception.getMessage());
+	      }
+	    } catch (DoeWebException e) {
+	      throw e;
+	    } catch (Exception e) {
+	      e.printStackTrace();
+	      throw new DoeWebException("Failed to bulk register data files due to: " + e.getMessage());
+	    }
+	  }
 
   public static boolean updateDatafile(String token, String hpcDatafileURL,
       HpcDataObjectRegistrationRequestDTO datafileDTO, String path, String hpcCertPath,

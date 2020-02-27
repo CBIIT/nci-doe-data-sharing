@@ -57,7 +57,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
 
 	SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
 	
-	@SuppressWarnings("null")
+
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<?> register(HttpSession session,@RequestHeader HttpHeaders headers, 
 			HttpServletRequest request, @RequestParam(value = "userId") String userId) throws Exception {
@@ -138,16 +138,16 @@ public class TaskManagerCotroller extends AbstractDoeController {
     					task.setTaskName(t.getTaskName());
     					task.setUserId(t.getUserId());
     					task.setTaskType(t.getTaskType());
-    					if(download.getResult()) {
+    					if(download.getResult() == null) {
+    						task.setTransferStatus("In Progress");
+    					} else if(download.getResult()) {
     						task.setTransferStatus("Completed");
     					} else if(!download.getResult()) {
     						List<String> message = new ArrayList<String>();
     						download.getFailedItems().stream().forEach(x -> message.add(x.getMessage()));
     						
     						task.setTransferStatus("Failed (" + String.join(",", message) + ")");
-    					} else {
-    						task.setTransferStatus("In Progress");
-    					}
+    					} 
     					uploadTaskResults.add(task);
     			}
     		    

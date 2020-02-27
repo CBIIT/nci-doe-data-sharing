@@ -123,10 +123,13 @@
 											id="bucketName" placeholder="Enter S3 Bucket Name" />
 									</div>
 									<div class="col-sm-12 column">
-										<label for="s3Path">S3 (Destination) Path:</label> <input
+										<label for="s3Path">S3 (Source) Path:</label> <input
 											type="text" class="form-control"
 											name="s3Path" id="s3Path"
 											placeholder="Enter S3 (Destination) Path" size="40" />
+											<input type="checkbox" name="s3File" id="s3File">
+											Check this if the source path is a file and not a folder.
+															
 									</div>
 									<div class="col-sm-12 column">
 										<label for="accessKey">Access Key:</label> <input
