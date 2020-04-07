@@ -39,6 +39,7 @@ import org.springframework.http.HttpStatus;
 import gov.nih.nci.doe.web.domain.LookUp;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.DoeSearchResult;
+import gov.nih.nci.doe.web.service.ConsortiumService;
 import gov.nih.nci.doe.web.service.LookUpService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
@@ -95,6 +96,9 @@ public class SearchController extends AbstractDoeController {
 
 	 @Autowired
 	 LookUpService lookUpService;
+	 
+	 @Autowired
+	 ConsortiumService consortiumService;
 	
 	@RequestMapping(method = RequestMethod.GET)
 	    public ResponseEntity<?> search(HttpSession session,@RequestHeader HttpHeaders headers,HttpServletRequest request, DoeSearch search ) {
@@ -247,9 +251,16 @@ public class SearchController extends AbstractDoeController {
 			String attrValue = search.getAttrValue()[i];
 			String operator = search.getOperator()[i];
 			String level = null;
+			String grpName = null;
 			boolean selfMetadata = search.getIsExcludeParentMetadata()[i]; 
 				
 			 LookUp val = lookUpService.getLookUpByDisplayName(attrName);
+			 
+			 String userName = getLoggedOnUserInfo();
+			 
+			 if(StringUtils.isNotEmpty(userName)) {
+				  grpName = consortiumService.getConsortitumGroupByUserId(userName);				 
+			 }
 			 
 			 if(val != null) {
 				 level = val.getLevelName();
@@ -272,6 +283,11 @@ public class SearchController extends AbstractDoeController {
 				criteria.setValue(attrValue);
 				criteria.setOperator(HpcMetadataQueryOperator.fromValue(operator));
 				
+				if(StringUtils.isNotEmpty(grpName)) {
+					criteria.setAttribute(attrName);
+					criteria.setValue(grpName);
+					criteria.setOperator(HpcMetadataQueryOperator.EQUAL);
+				 }
 				
 				if (level != null) {
 					HpcMetadataQueryLevelFilter levelFilter = new HpcMetadataQueryLevelFilter();
