@@ -60,6 +60,8 @@ public class RegistrationController extends AbstractDoeController {
 			HttpServletRequest request, DoeRegistration register) throws Exception {
     	
 		log.info("register user");
+		
+		//validate the password first
 		PasswordStatusCode status = authService.validatePassword(register.getPassword(), null);
 		
 		if(!status.equals(PasswordStatusCode.SUCCESS)) {
@@ -69,8 +71,10 @@ public class RegistrationController extends AbstractDoeController {
 			log.info("Email already found in the system...");
 			return new ResponseEntity<>("Email address already exists.", HttpStatus.OK);
 		} else {
+			//register the user in the system			
 			authService.register(register);
             try {
+            	//after successful registration,log the user to the app
                 authenticateUserAndSetSession(register.getEmailAddress(), register.getPassword(),request);
                 
                 //send a  confirmation email after register and successful login

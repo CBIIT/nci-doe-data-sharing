@@ -40,6 +40,7 @@ public class AuthenticationProvider implements org.springframework.security.auth
             	log.info(username  + ": is authenticated!");
             	String storedP = authService.getPassword(username);
             	List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+            	//spring security requires to grant some authority role to the logged on user.
             	authorities.add(new SimpleGrantedAuthority("PUBLIC_USER"));
                 final Authentication auth = new UsernamePasswordAuthenticationToken(username, storedP,authorities);
                 return auth;

@@ -2,13 +2,9 @@ package gov.nih.nci.doe.web.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
 import gov.nih.nci.doe.web.repository.ConsortiumRepository;
 import gov.nih.nci.doe.web.service.ConsortiumService;
 
-import java.util.Date;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

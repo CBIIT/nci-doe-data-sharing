@@ -55,7 +55,7 @@ public class HomeController extends AbstractDoeController {
 	    @GetMapping(value = "user-info")
 	    public ResponseEntity<?> getUserInfo(HttpSession session,@RequestHeader HttpHeaders headers,
 	    		@RequestParam(value = "emailAddr") String emailAddr) {
-	        log.info("getting user info with email address" +emailAddr);
+	        log.info("getting user info with email address " +emailAddr);
 	        try {
 	        	DoeUsersModel user = authService.getUserInfo(emailAddr);
 	            return new ResponseEntity<>(user, headers, HttpStatus.OK);

@@ -24,18 +24,18 @@ import org.slf4j.LoggerFactory;
 @Component
 public class AuthenticateServiceImpl implements AuthenticateService {
 
-	  private static final Logger log = LoggerFactory.getLogger(AuthenticateServiceImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(AuthenticateServiceImpl.class);
 	  
-	    @Autowired
-		@Qualifier("passwordEncoder")
-		private PasswordEncoder passwordEncoder;
+	@Autowired
+	@Qualifier("passwordEncoder")
+	private PasswordEncoder passwordEncoder;
 	    
-	    @Autowired
-	    private DoeUserRepository doeUserRepository;
+	@Autowired
+	private DoeUserRepository doeUserRepository;
 	
-		private static final int PASSWORD_MIN_LENGTH = 8;
-		private static final int PASSWORD_MAX_LENGTH = 14;
-		private static final Integer MAXIM_LOGIN_ATTEMPTS = 3;
+    private static final int PASSWORD_MIN_LENGTH = 8;
+	private static final int PASSWORD_MAX_LENGTH = 14;
+	private static final Integer MAXIM_LOGIN_ATTEMPTS = 3;
 		
 	@Override
 	@Transactional(readOnly = false)
@@ -152,7 +152,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 	@Override
 	@Transactional(readOnly = false)
 	public void register(DoeRegistration register) {
-		 
+		 log.info(" register user " +register.getEmailAddress());
 		DoeUsers user = new DoeUsers();
 		 user.setFirstName(register.getFirstName());
 		 user.setPassword(register.getPassword());
@@ -210,6 +210,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 	public boolean doesUsernameExist(String username) throws Exception {
 		DoeUsers user = doeUserRepository.getUserInfo(username);
 		 if(user != null) {
+			 log.info("user exists" + username);
 			 return true;
 		 }
 		 return false;
@@ -241,6 +242,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 
 	@Override
 	public DoeUsersModel getUserInfo(String emailAddr) {
+		log.debug("get user for " + emailAddr);
 		DoeUsers d =  doeUserRepository.getUserInfo(emailAddr);
 		if(d != null) {
 			DoeUsersModel userModel = new DoeUsersModel();
@@ -257,6 +259,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 	@Override
 	@Transactional(readOnly = false)
 	public void saveUserInfo(DoeUsersModel doeModel) {
+		log.info("save user " + doeModel.getEmailAddrr());
 		DoeUsers d =  doeUserRepository.getUserInfo(doeModel.getEmailAddrr());
 		if( d != null && doeModel != null) {
 			doeUserRepository.updateUserInfo(doeModel.getFirstName(),doeModel.getLastName(),doeModel.getInstitution(),doeModel.getEmailAddrr());
