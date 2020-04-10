@@ -66,7 +66,7 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 				session.setAttribute("writeAccessUserToken", authToken);
 			 }
 			} catch(Exception e) {
-				e.printStackTrace();
+				log.error(e.getMessage(), e);
 			}
 		}
 		
@@ -76,7 +76,7 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 			session.setAttribute("hpcUserToken", authToken);
             log.debug("authentication successfull");
 		 } catch (Exception e) {
-			e.printStackTrace();
+			 log.error(e.getMessage(), e);
 		 }
 		}
 		return super.preHandle(request, response, handler);

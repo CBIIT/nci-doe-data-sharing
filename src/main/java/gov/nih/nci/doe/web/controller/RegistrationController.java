@@ -80,7 +80,8 @@ public class RegistrationController extends AbstractDoeController {
                 //send a  confirmation email after register and successful login
                 mailService.sendEmail(register.getEmailAddress());
              } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            log.error(e.getMessage());
            }
 		}
         log.info("Ending of the method register");

@@ -156,7 +156,8 @@ public class TaskManagerCotroller extends AbstractDoeController {
     			return new ResponseEntity<>(taskResults, headers, HttpStatus.OK);
     			
              } catch (Exception e) {
-                e.printStackTrace();
+                //e.printStackTrace();
+            	 log.error(e.getMessage(), e);
            }
 		
          return new ResponseEntity<>(null, headers, HttpStatus.SERVICE_UNAVAILABLE);

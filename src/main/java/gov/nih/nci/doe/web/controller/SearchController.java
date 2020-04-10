@@ -145,11 +145,14 @@ public class SearchController extends AbstractDoeController {
 		} catch (com.fasterxml.jackson.databind.JsonMappingException e) {
 			log.error(e.getMessage(), e);
 		} catch (HttpStatusCodeException e) {
-			e.printStackTrace();		
+			//e.printStackTrace();	
+			log.error(e.getMessage(), e);
 		} catch (RestClientException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			log.error(e.getMessage(), e);
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			log.error(e.getMessage(), e);
 			
 		} finally {
 

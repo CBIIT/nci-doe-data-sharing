@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
 
+
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.AjaxResponseBody;
 import gov.nih.nci.hpc.domain.datamanagement.HpcPermission;
@@ -62,12 +63,16 @@ import org.apache.cxf.jaxrs.ext.multipart.ContentDisposition;
 import org.apache.cxf.jaxrs.ext.multipart.MultipartBody;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 public class DoeClientUtil {
+	
+	private static final Logger log = LoggerFactory.getLogger(DoeClientUtil.class);
 
   public static WebClient getWebClient(String url, String hpcCertPath,
     String hpcCertPassword) {
@@ -163,10 +168,10 @@ public class DoeClientUtil {
       HpcAuthenticationResponseDTO dto = parser.readValueAs(HpcAuthenticationResponseDTO.class);
       return dto.getToken();
     } catch (IllegalStateException e1) {
-      e1.printStackTrace();
+    	log.error(e1.getMessage(), e1);
       throw new DoeWebException("Failed to get auth token: " + e1.getMessage());
     } catch (IOException e) {
-      e.printStackTrace();
+    	log.error(e.getMessage(), e);
       throw new DoeWebException("Failed to get auth token: " + e.getMessage());
     }
   }
@@ -198,10 +203,10 @@ public class DoeClientUtil {
 	      HpcAuthenticationResponseDTO dto = parser.readValueAs(HpcAuthenticationResponseDTO.class);
 	      return dto.getToken();
 	    } catch (IllegalStateException e1) {
-	      e1.printStackTrace();
+	    	log.error(e1.getMessage(), e1);
 	      throw new DoeWebException("Failed to get auth token: " + e1.getMessage());
 	    } catch (IOException e) {
-	      e.printStackTrace();
+	    	log.error(e.getMessage(), e);
 	      throw new DoeWebException("Failed to get auth token: " + e.getMessage());
 	    }
 	  }
@@ -248,19 +253,19 @@ public class DoeClientUtil {
     try {
       parser = factory.createParser((InputStream) restResponse.getEntity());
     } catch (IllegalStateException | IOException e) {
-      e.printStackTrace();
+    	log.error(e.getMessage(), e);
       throw new DoeWebException("Failed to get DOC Model due to: " + e.getMessage());
     }
     try {
       return parser.readValueAs(HpcDataManagementModelDTO.class);
     } catch (com.fasterxml.jackson.databind.JsonMappingException e) {
-      e.printStackTrace();
+    	log.error(e.getMessage(), e);
       throw new DoeWebException("Failed to get DOC Model due to: " + e.getMessage());
     } catch (JsonProcessingException e) {
-      e.printStackTrace();
+    	log.error(e.getMessage(), e);
       throw new DoeWebException("Failed to get DOC Model due to: " + e.getMessage());
     } catch (IOException e) {
-      e.printStackTrace();
+    	log.error(e.getMessage(), e);
       throw new DoeWebException("Failed to get DOC Model due to: " + e.getMessage());
     }
   }
@@ -343,7 +348,7 @@ public class DoeClientUtil {
       }
 
     } catch (Exception e) {
-      e.printStackTrace();
+    	 log.error(e.getMessage(), e);
       throw new DoeWebException(path + ": " + e.getMessage());
     }
   }
@@ -389,7 +394,7 @@ public class DoeClientUtil {
       }
 
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
       throw new DoeWebException(path + " : " + e.getMessage());
     }
   }
@@ -431,7 +436,7 @@ public class DoeClientUtil {
     } catch (DoeWebException e) {
       throw e;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
       throw new DoeWebException("Failed to create collection due to: " + e.getMessage());
     }
   }
@@ -466,7 +471,7 @@ public class DoeClientUtil {
     } catch (DoeWebException e) {
       throw e;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
       throw new DoeWebException(e.getMessage());
     }
   }
@@ -500,7 +505,7 @@ public class DoeClientUtil {
     } catch (DoeWebException e) {
       throw e;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
       throw new DoeWebException("Failed to delete collection due to: " + e.getMessage());
     }
   }
@@ -556,7 +561,7 @@ public class DoeClientUtil {
     } catch (DoeWebException e) {
       throw e;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
       throw new DoeWebException(e.getMessage());
     }
   }
@@ -589,7 +594,7 @@ public class DoeClientUtil {
 	    } catch (DoeWebException e) {
 	      throw e;
 	    } catch (Exception e) {
-	      e.printStackTrace();
+	      log.error(e.getMessage(), e);
 	      throw new DoeWebException("Failed to bulk register data files due to: " + e.getMessage());
 	    }
 	  }
@@ -622,7 +627,7 @@ public class DoeClientUtil {
 	    } catch (DoeWebException e) {
 	      throw e;
 	    } catch (Exception e) {
-	      e.printStackTrace();
+	      log.error(e.getMessage(), e);
 	      throw new DoeWebException("Failed to bulk register data files due to: " + e.getMessage());
 	    }
 	  }
@@ -662,7 +667,7 @@ public class DoeClientUtil {
     } catch (DoeWebException e) {
       throw e;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
       throw new DoeWebException("Failed to update data file due to: " + e.getMessage());
     }
   }
@@ -690,7 +695,7 @@ public class DoeClientUtil {
       }
       return retVal;
     } catch (IllegalStateException | IOException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
       throw new DoeWebException("Failed to get permission due to: " +
         e.getMessage());
     }
@@ -721,7 +726,7 @@ public class DoeClientUtil {
 
       return parser.readValueAs(HpcDownloadSummaryDTO.class);
     } catch (IllegalStateException | IOException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
       throw new DoeWebException("Failed to get download tasks list due to: " + e.getMessage());
     }
   }
@@ -752,7 +757,7 @@ public class DoeClientUtil {
         .getEntity());
       return parser.readValueAs(HpcRegistrationSummaryDTO.class);
     } catch (IllegalStateException | IOException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
       throw new DoeWebException("Failed to get registration tasks list due to: " + e.getMessage());
     }
   }
@@ -792,7 +797,7 @@ public class DoeClientUtil {
     } catch (DoeWebException e) {
       throw e;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
       throw new DoeWebException("Failed to submit download request: " + e.getMessage());
     }
     return response;
@@ -872,7 +877,7 @@ public class DoeClientUtil {
 //        restResponse.getEntity());
 //      return parser.readValueAs(HpcBulkDataObjectRegistrationStatusDTO.class);
     } catch (IllegalStateException | IOException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
       throw new DoeWebException(
           "Failed to get data object registration tasks details due to: " + e.getMessage());
     }
@@ -902,22 +907,22 @@ public class DoeClientUtil {
     try {
       parser = factory.createParser((InputStream) restResponse.getEntity());
     } catch (IllegalStateException | IOException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
       throw new DoeWebException(
           "Failed to get data object download tasks details due to: " + e.getMessage());
     }
     try {
       return parser.readValueAs(HpcDataObjectDownloadStatusDTO.class);
     } catch (com.fasterxml.jackson.databind.JsonMappingException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
       throw new DoeWebException(
           "Failed to get data object download tasks details due to: " + e.getMessage());
     } catch (JsonProcessingException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
       throw new DoeWebException(
           "Failed to get data object download tasks details due to: " + e.getMessage());
     } catch (IOException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
       throw new DoeWebException(
           "Failed to get data object download tasks details due to: " + e.getMessage());
     }
@@ -947,22 +952,22 @@ public class DoeClientUtil {
     try {
       parser = factory.createParser((InputStream) restResponse.getEntity());
     } catch (IllegalStateException | IOException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
       throw new DoeWebException(
           "Failed to get data objects download tasks details due to: " + e.getMessage());
     }
     try {
       return parser.readValueAs(HpcCollectionDownloadStatusDTO.class);
     } catch (com.fasterxml.jackson.databind.JsonMappingException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
       throw new DoeWebException(
           "Failed to get data objects download tasks details due to: " + e.getMessage());
     } catch (JsonProcessingException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
       throw new DoeWebException(
           "Failed to get data objects download tasks details due to: " + e.getMessage());
     } catch (IOException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
       throw new DoeWebException(
           "Failed to get data objects download tasks details due to: " + e.getMessage());
     }
@@ -986,19 +991,19 @@ public class DoeClientUtil {
     try {
       parser = factory.createParser((InputStream) restResponse.getEntity());
     } catch (IllegalStateException | IOException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
       throw new DoeWebException("Failed to get Metadata attributes: due to: " + e.getMessage());
     }
     try {
       return parser.readValueAs(HpcMetadataAttributesListDTO.class);
     } catch (com.fasterxml.jackson.databind.JsonMappingException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
       throw new DoeWebException("Failed to get Metadata attributes: due to: " + e.getMessage());
     } catch (JsonProcessingException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
       throw new DoeWebException("Failed to get Metadata attributes: due to: " + e.getMessage());
     } catch (IOException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
       throw new DoeWebException("Failed to get Metadata attributes: due to: " + e.getMessage());
     }
   }
