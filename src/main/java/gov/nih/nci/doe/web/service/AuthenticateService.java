@@ -2,10 +2,10 @@ package gov.nih.nci.doe.web.service;
 
 
 
+import gov.nih.nci.doe.web.constants.LoginStatusCode;
+import gov.nih.nci.doe.web.constants.PasswordStatusCode;
 import gov.nih.nci.doe.web.model.DoeRegistration;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
-import gov.nih.nci.doe.web.util.LoginStatusCode;
-import gov.nih.nci.doe.web.util.PasswordStatusCode;
 
 
 public interface AuthenticateService {

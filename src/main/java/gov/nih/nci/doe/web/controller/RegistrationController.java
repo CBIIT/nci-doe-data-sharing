@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import gov.nih.nci.doe.web.AuthenticationProvider;
+import gov.nih.nci.doe.web.constants.PasswordStatusCode;
 import gov.nih.nci.doe.web.model.DoeRegistration;
 import gov.nih.nci.doe.web.service.AuthenticateService;
 import gov.nih.nci.doe.web.service.MailService;
-import gov.nih.nci.doe.web.util.PasswordStatusCode;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

@@ -1,4 +1,4 @@
-package gov.nih.nci.doe.web.util;
+package gov.nih.nci.doe.web.constants;
 
 public enum LoginStatusCode {
 	// statuses for login

@@ -6,14 +6,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-
+import gov.nih.nci.doe.web.constants.LoginStatusCode;
+import gov.nih.nci.doe.web.constants.PasswordStatusCode;
 import gov.nih.nci.doe.web.domain.DoeUsers;
 import gov.nih.nci.doe.web.model.DoeRegistration;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.repository.DoeUserRepository;
 import gov.nih.nci.doe.web.service.AuthenticateService;
-import gov.nih.nci.doe.web.util.LoginStatusCode;
-import gov.nih.nci.doe.web.util.PasswordStatusCode;
 
 import java.util.regex.Pattern;
 

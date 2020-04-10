@@ -13,8 +13,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import gov.nih.nci.doe.web.constants.LoginStatusCode;
 import gov.nih.nci.doe.web.service.AuthenticateService;
-import gov.nih.nci.doe.web.util.LoginStatusCode;
 
 
 

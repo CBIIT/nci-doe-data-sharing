@@ -47,7 +47,7 @@ public class ResetPasswordController extends AbstractDoeController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<?> forgotPassword(HttpSession session,@RequestHeader HttpHeaders headers,
 			@RequestParam(value = "emailAddr") String emailAddr) throws Exception {
-		log.info("resetting the password");
+		log.info("resetting the password for user " + emailAddr);
 		
 		if(emailAddr == null || StringUtils.isEmpty(emailAddr)) {
 			log.error("User ID is required.");
