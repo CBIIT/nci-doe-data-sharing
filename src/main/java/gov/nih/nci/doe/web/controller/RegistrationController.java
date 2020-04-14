@@ -78,9 +78,8 @@ public class RegistrationController extends AbstractDoeController {
                 authenticateUserAndSetSession(register.getEmailAddress(), register.getPassword(),request);
                 
                 //send a  confirmation email after register and successful login
-                mailService.sendEmail(register.getEmailAddress());
+                mailService.sendRegistrationEmail(register.getEmailAddress());
              } catch (Exception e) {
-            //e.printStackTrace();
             log.error(e.getMessage());
            }
 		}

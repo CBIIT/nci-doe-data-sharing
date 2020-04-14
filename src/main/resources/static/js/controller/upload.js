@@ -164,6 +164,8 @@ function openUploadModal(selectTarget) {
 	$("#registerCollectionModal").find(".registerMsg").html("");
 	$("#registerCollectionModal").find("#newMetaDataTable tbody").html("");
 	$("#registerCollectionModal").find(".registerMsgBlock").hide();
+	$("#registerCollectionModal").find(".registerMsgErrorBlock").hide();
+	$("#registerCollectionModal").find(".registerErrorMsg").html("");
 	var params= {parent:selectedIndexPathVal};		
 	loadJsonData('/addCollection/collectionTypes', $("#registerCollectionModal").find("#collectionType"), false, params, retrieveCollectionList, null, "key", "value");
 	
@@ -174,18 +176,32 @@ function openUploadModal(selectTarget) {
 
 function registerCollection() {
 	
+	$("#registerCollectionModal").find(".registerErrorMsg").html("");
 	var collectionPath = $("#registerCollectionModal").find("#collectionPath").val();
 	var collectionName = $("#registerCollectionModal").find("#collectionName").val();
 	
 	var collectionType = $("#registerCollectionModal").find("#collectionType").val();
 	
 	var newCollectionPath;
-	if(collectionPath && collectionName) {
+	var validate = true;
+	
+	if(!collectionPath) {
+		validate = false;
+		$("#registerCollectionModal").find(".registerErrorMsg").append("Enter collection path.");
+		$("#registerCollectionModal").find(".registerMsgErrorBlock").show();
+		
+	} else if(!collectionName) {
+		validate = false;
+		$("#registerCollectionModal").find(".registerErrorMsg").append("Enter collection name.");
+		$("#registerCollectionModal").find(".registerMsgErrorBlock").show();
+		
+	} else if(collectionPath && collectionName) {
+		$("#registerCollectionModal").find(".registerMsgErrorBlock").hide();
 		newCollectionPath = collectionPath + "/" + collectionName.trim();
 		$("#registerCollectionModal").find("#newCollectionPath").val(newCollectionPath);
 	}
 
-	if(newCollectionPath) {
+	if(validate && newCollectionPath) {
 		var data = $('#registerCollectionForm').serialize();
 		$.ajax({
 			type : "POST",
@@ -215,7 +231,7 @@ function postSuccessRegisterCollection(data,collectionType) {
 	$("#registerCollectionModal").find(".registerMsgBlock").show();
 	
 	
-	if(collectionType  == 'Institute') {		
+	if(collectionType  == 'Program') {		
 		loadJsonData('/browse', $("#instituteList"), true, null, null, null, "key", "value"); 
 	} else if(collectionType == 'Study') {
 		var params= {selectedPath:$("#instituteList").val()};
@@ -284,18 +300,11 @@ function registerBulkDataFile() {
 		var dataFilePath = $("#bulkDataFilePathCollection").val();		
 		if(dataFilePath) {	
 			$("#bulkDatafilePath").val(dataFilePath);
-		//$("#registerBulkDataForm").attr('datafilePath', dataFilePath);	 
-			//var form = $('#registerBulkDataForm')[0];		 
-	       //var data = new FormData(form);
-	      //data.append('dataFilePath', dataFilePath);
-	      var data = $('#registerBulkDataForm').serialize();
+	        var data = $('#registerBulkDataForm').serialize();
 			$.ajax({
 				type : "POST",
-				//enctype: "multipart/form-data",
 			     url : "/addbulk",
 				 data : data,
-				// processData: false, 
-	             //contentType: false,
 				 beforeSend: function () {
 			    	   $("#spinner").show();
 			           $("#dimmer").show();

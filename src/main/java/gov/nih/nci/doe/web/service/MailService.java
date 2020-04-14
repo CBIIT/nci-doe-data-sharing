@@ -8,7 +8,7 @@ public interface MailService {
 	public static final String BCC = "bcc";
 	public static final String FROM = "from";
 	
-	public void sendEmail(String email) throws Exception;
+	public void sendRegistrationEmail(String email) throws Exception;
 	
 	public void sendResetPasswordEmail(String password,String email) throws Exception;
 }

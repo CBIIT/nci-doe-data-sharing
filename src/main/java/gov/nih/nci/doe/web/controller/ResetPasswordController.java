@@ -58,7 +58,7 @@ public class ResetPasswordController extends AbstractDoeController {
 		log.info("About to send a reset link for user ID {}", emailAddr);
 	   
 		//generate a random password for the user and store in db
-		String password = generatePassayPassword();
+		String password = generateTempPassword();
 		authService.saveUserPassword(password,emailAddr);
 		
 		//send reset email link
@@ -67,7 +67,7 @@ public class ResetPasswordController extends AbstractDoeController {
 		return new ResponseEntity<>("SUCCESS", HttpStatus.OK);		
 	}
 	
-	public String generatePassayPassword() {
+	private String generateTempPassword() {
 	    PasswordGenerator gen = new PasswordGenerator();
 	    EnglishCharacterData lowerCaseChars = EnglishCharacterData.LowerCase;
 	    CharacterRule lowerCaseRule = new CharacterRule(lowerCaseChars);
