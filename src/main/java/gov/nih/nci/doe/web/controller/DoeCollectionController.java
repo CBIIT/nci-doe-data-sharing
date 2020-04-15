@@ -59,7 +59,7 @@ public class DoeCollectionController extends AbstractDoeController {
 	@RequestMapping(method = RequestMethod.POST)
 	public @ResponseBody String updateCollection(@Valid DoeCollectionModel doeCollection, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
 
-		String authToken = (String) session.getAttribute("hpcUserToken");
+		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		try {
 			String[] path = request.getParameterValues("path");
 			String isDataObject = request.getParameter("isDataObject");

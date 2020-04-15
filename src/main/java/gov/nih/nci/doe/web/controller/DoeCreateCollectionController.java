@@ -194,7 +194,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 	@ResponseBody
 	public String createCollection(@Valid DoeCollectionModel doeCollection, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
 		
-		String authToken = (String) session.getAttribute("hpcUserToken");	
+		String authToken = (String) session.getAttribute("writeAccessUserToken");	
 		String[] path = request.getParameterValues("path");
 		if(path[0] != null) {
 			doeCollection.setPath(path[0].trim());
@@ -248,6 +248,8 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 					doeCollection.getPath(), sslCertPath, sslCertPassword);
 			if (created) {
 				return doeCollection.getPath() + " Collection is created!";
+			} else {
+				return "Error in update collection";
 			}
 		} catch (Exception e) {
 			log.debug("Error in update collection" + e.getMessage());

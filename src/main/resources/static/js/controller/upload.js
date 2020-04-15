@@ -184,7 +184,15 @@ function registerCollection() {
 	
 	var newCollectionPath;
 	var validate = true;
+	var usermetaDataEntered = true;
 	
+		$("#newMetaDataTable tbody tr").find('text').each(function () { 
+		    if(!$(this).val()) {
+		    	usermetaDataEntered = false;
+		    	
+		    }
+		});
+		
 	if(!collectionPath) {
 		validate = false;
 		$("#registerCollectionModal").find(".registerErrorMsg").append("Enter collection path.");
@@ -195,7 +203,15 @@ function registerCollection() {
 		$("#registerCollectionModal").find(".registerErrorMsg").append("Enter collection name.");
 		$("#registerCollectionModal").find(".registerMsgErrorBlock").show();
 		
-	} else if(collectionPath && collectionName) {
+	} 
+	
+	if(!usermetaDataEntered) {
+		validate = false;
+		$("#registerCollectionModal").find(".registerErrorMsg").append("Enter the values for all collection MetaData.");
+		$("#registerCollectionModal").find(".registerMsgErrorBlock").show();
+	}
+	
+	if(collectionPath && collectionName) {
 		$("#registerCollectionModal").find(".registerMsgErrorBlock").hide();
 		newCollectionPath = collectionPath + "/" + collectionName.trim();
 		$("#registerCollectionModal").find("#newCollectionPath").val(newCollectionPath);
@@ -227,10 +243,15 @@ function registerCollection() {
 }
 
 function postSuccessRegisterCollection(data,collectionType) {
-	$("#registerCollectionModal").find(".registerMsg").html(data);
-	$("#registerCollectionModal").find(".registerMsgBlock").show();
-	
-	
+	if(data.indexOf("Collection is created") != -1) {
+		
+		$("#registerCollectionModal").find(".registerMsg").html(data);
+		$("#registerCollectionModal").find(".registerMsgBlock").show();
+	} else {
+		$("#registerCollectionModal").find(".registerErrorMsg").html("Enter in create collection.");
+		$("#registerCollectionModal").find(".registerMsgErrorBlock").show();
+	}
+
 	if(collectionType  == 'Program') {		
 		loadJsonData('/browse', $("#instituteList"), true, null, null, null, "key", "value"); 
 	} else if(collectionType == 'Study') {
