@@ -109,6 +109,13 @@ public class TaskManagerCotroller extends AbstractDoeController {
     					task.setTaskName(t.getTaskName());
     					task.setUserId(t.getUserId());
     					task.setTaskType(t.getTaskType());
+    					if(download.getResult() != null && download.getResult().value() == "FAILED") {
+    						task.setTransferStatus("Failed");
+    					} else if(download.getResult() != null && download.getResult().value() == "COMPLETED") {
+    						task.setTransferStatus("Completed");
+    					} else {
+    						task.setTransferStatus("In Progress");
+    					}
     					
     					taskResults.add(task);
     			}
