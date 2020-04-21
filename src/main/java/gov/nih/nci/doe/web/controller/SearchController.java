@@ -190,8 +190,8 @@ public class SearchController extends AbstractDoeController {
             returnResult.setNumOfDataSets(3);
             returnResult.setSelfMetadata(getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),"Data_Set", systemAttrs));
 			returnResult.setStudyUserMetadata(getUserMetadata(result.getMetadataEntries().getParentMetadataEntries(),"Study", systemAttrs));
-			returnResult.setInstituteUserMetadata(getUserMetadata(result.getMetadataEntries().getParentMetadataEntries(),"Institute", systemAttrs));
-			returnResult.setInstituteName(getAttributeValue("institute_name", result.getMetadataEntries()));
+			returnResult.setInstituteUserMetadata(getUserMetadata(result.getMetadataEntries().getParentMetadataEntries(),"Program", systemAttrs));
+			returnResult.setProgramName(getAttributeValue("program_name", result.getMetadataEntries()));
             returnResult.setStudyName(getAttributeValue("study_name", result.getMetadataEntries()));
 			returnResults.add(returnResult);
 		}
@@ -291,6 +291,9 @@ public class SearchController extends AbstractDoeController {
 					criteria.setValue(grpName);
 					criteria.setOperator(HpcMetadataQueryOperator.EQUAL);
 				 }
+				//criteria.setAttribute(attrName);
+				//criteria.setValue("public");
+				//criteria.setOperator(HpcMetadataQueryOperator.EQUAL);
 				
 				if (level != null) {
 					HpcMetadataQueryLevelFilter levelFilter = new HpcMetadataQueryLevelFilter();

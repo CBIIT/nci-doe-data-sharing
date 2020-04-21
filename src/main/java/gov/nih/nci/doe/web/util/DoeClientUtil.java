@@ -395,7 +395,7 @@ public class DoeClientUtil {
 
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new DoeWebException(path + " : " + e.getMessage());
+      throw new DoeWebException(e);
     }
   }
  

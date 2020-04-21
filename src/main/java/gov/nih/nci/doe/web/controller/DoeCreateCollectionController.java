@@ -248,9 +248,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 					doeCollection.getPath(), sslCertPath, sslCertPassword);
 			if (created) {
 				return doeCollection.getPath() + " Collection is created!";
-			} else {
-				return "Error in update collection";
-			}
+			} 
 		} catch (Exception e) {
 			log.debug("Error in update collection" + e.getMessage());
 		} 

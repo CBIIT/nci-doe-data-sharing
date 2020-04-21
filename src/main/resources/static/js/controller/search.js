@@ -212,7 +212,7 @@ function renderPath(data, type, row) {
 					"&nbsp&nbsp;<span class='editCollectionMetadata' metadata_path  = '" + row.studyPath+ "'  metadata_set = '" + study  + "'><i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Study Metadata'></i></span></div>" +
 			"<div class='col-md-12 top-buffer' style='margin-left:22px;'>" +
 			"<span class='cil_12_bold_no_color'>Program: </span><a class='cil_12_no_color button2a' metadata_type = '" + ins  + "' tabindex='0'" +
-			" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' data-popover-content='#a01'>" + row.instituteName + "</a>" +
+			" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' data-popover-content='#a01'>" + row.programName + "</a>" +
 					"&nbsp&nbsp;<span class='editCollectionMetadata' metadata_path  = '" + row.institutePath+ "' metadata_set = '" + ins  + "'><i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Institute Metadata'></i></span></div></div></div>" +
 			"<div class='row' style='margin-left: 25px;margin-bottom:10px;'><div class='col-sm-1 resultsStatsContainer' title='Number of Files'>" +
 			"<i class='fas fa-folder-open' title='Number of Files' style='font-size: 18px;'></i>" +

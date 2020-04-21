@@ -90,9 +90,10 @@ function postLogOutFunction(data, status) {
 }
 
 function postGetUserInfoFunction (data,status) {
-	$("#firstNameTxt").val(data.firstName);
-	$("#lastNameTxt").val(data.lastName);
-	$("#institutionTxt").val(data.institution);
+	var userData = JSON.parse(data);
+	$("#firstNameTxt").val(userData.firstName);
+	$("#lastNameTxt").val(userData.lastName);
+	$("#institutionTxt").val(userData.institution);
 }
 
 function postUpdateUserFunction(data,status) {

@@ -9,7 +9,7 @@ public class DoeSearchResult {
     private Integer numOfDataSets;
     private String dataSetPath;
     private String studyName;
-    private String instituteName;
+    private String programName;
     private String studyPath;
     private String institutePath;
     private List<KeyValueBean> selfMetadata;
@@ -43,11 +43,12 @@ public class DoeSearchResult {
 		this.studyName = studyName;
 	}
 	
-	public String getInstituteName() {
-		return instituteName;
+	
+	public String getProgramName() {
+		return programName;
 	}
-	public void setInstituteName(String instituteName) {
-		this.instituteName = instituteName;
+	public void setProgramName(String programName) {
+		this.programName = programName;
 	}
 	public List<KeyValueBean> getSelfMetadata() {
 		return selfMetadata;

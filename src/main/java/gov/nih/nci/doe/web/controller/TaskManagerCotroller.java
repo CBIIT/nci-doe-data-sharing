@@ -59,7 +59,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
 	
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<?> register(HttpSession session,@RequestHeader HttpHeaders headers, 
+	public ResponseEntity<?> getStatus(HttpSession session,@RequestHeader HttpHeaders headers, 
 			HttpServletRequest request, @RequestParam(value = "userId") String userId) throws Exception {
 		
 		  log.info("get all tasks by user Id");
@@ -78,7 +78,8 @@ public class TaskManagerCotroller extends AbstractDoeController {
     		      paramsMap.set("totalCount", Boolean.TRUE.toString());
     			HpcRegistrationSummaryDTO registrations = DoeClientUtil.getRegistrationSummary(authToken, registrationServiceUrl, paramsMap,
     		        sslCertPath, sslCertPassword);
-
+  
+    			// get the task end date
     			
     			List<HpcUserDownloadRequest> downloadResults = new ArrayList<HpcUserDownloadRequest>();
     			if(downloads != null) {
@@ -109,14 +110,6 @@ public class TaskManagerCotroller extends AbstractDoeController {
     					task.setUserId(t.getUserId());
     					task.setTaskType(t.getTaskType());
     					
-    					/*if(download.getResult()) {
-    						task.setTransferStatus("Completed");
-    					} else if(!download.getResult()){
-    						task.setTransferStatus("Failed");
-    					} else {
-    						task.setTransferStatus("In Progress");
-    					}*/
-    					
     					taskResults.add(task);
     			}
     		    
@@ -129,22 +122,22 @@ public class TaskManagerCotroller extends AbstractDoeController {
     			 List<TaskManagerDto> uploadTaskResults = new ArrayList<TaskManagerDto>();
                  
     			
-    		    for (HpcBulkDataObjectRegistrationTaskDTO download : finalTaskUploadIds) {
+    		    for (HpcBulkDataObjectRegistrationTaskDTO upload : finalTaskUploadIds) {
     					TaskManagerDto task = new TaskManagerDto();
-    					TaskManager t = results.stream().filter(x -> download.getTaskId().equals(x.getTaskId())).findAny().orElse(null);
+    					TaskManager t = results.stream().filter(x -> upload.getTaskId().equals(x.getTaskId())).findAny().orElse(null);
     					
-    	    			task.setTaskId(download.getTaskId());
+    	    			task.setTaskId(upload.getTaskId());
     					task.setTaskDate(t.getTaskDate()!= null ? format.format(t.getTaskDate()) : "");
     					task.setTaskName(t.getTaskName());
     					task.setUserId(t.getUserId());
     					task.setTaskType(t.getTaskType());
-    					if(download.getResult() == null) {
+    					if(upload.getResult() == null) {
     						task.setTransferStatus("In Progress");
-    					} else if(download.getResult()) {
+    					} else if(upload.getResult()) {
     						task.setTransferStatus("Completed");
-    					} else if(!download.getResult()) {
+    					} else if(!upload.getResult()) {
     						List<String> message = new ArrayList<String>();
-    						download.getFailedItems().stream().forEach(x -> message.add(x.getMessage()));
+    						upload.getFailedItems().stream().forEach(x -> message.add(x.getMessage()));
     						
     						task.setTransferStatus("Failed (" + String.join(",", message) + ")");
     					} 
@@ -156,7 +149,6 @@ public class TaskManagerCotroller extends AbstractDoeController {
     			return new ResponseEntity<>(taskResults, headers, HttpStatus.OK);
     			
              } catch (Exception e) {
-                //e.printStackTrace();
             	 log.error(e.getMessage(), e);
            }
 		
