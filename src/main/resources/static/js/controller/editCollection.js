@@ -3,6 +3,8 @@ function constructCollectionMetData(metadata,metaDataPath,isDataObject) {
 	$("#path").val(metaDataPath);
 	 $(".editCollectionSuccess").hide();
 	 $(".editCollectionMsg").html("");
+	 $(".editCollectionError").hide();
+	 $(".editCollectionErrorMsg").html("");
 	 $("#isDataObject").val(isDataObject);
 	var data = JSON.parse(metadata);
 	$.each(data, function(key, value) {	
@@ -24,8 +26,18 @@ function addCollectionMetaDataRows() {
 
 function updateMetaDataCollection() {
 
-	if(newCollectionPath) {
+	var validate = true;
 		var data = $('#collectionForm').serialize();
+		$('form#collectionForm input[type="text"]').each(function(){
+	        if(!$(this).val()){
+	        	validate = false;
+	        }          
+	});
+		
+		if(!validate) {
+			$(".editCollectionError").show();
+			$(".editCollectionErrorMsg").html("Enter all the required metdata.");
+		} else {
 		$.ajax({
 			type : "POST",
 		     url : "/collection",
