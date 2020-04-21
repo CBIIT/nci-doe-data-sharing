@@ -73,10 +73,10 @@ public class HomeController extends AbstractDoeController {
 	        	if(doeModel.getEmailAddrr() != null) {
 	        		authService.saveUserInfo(doeModel);
 	        	}
-	        	 return new ResponseEntity<>("SUCCESS", headers, HttpStatus.OK);
+	        	return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
 	        } catch (Exception e) {
 	            log.error(e.getMessage(), e);
-	            return new ResponseEntity<>(null, headers, HttpStatus.SERVICE_UNAVAILABLE);
+	            return new ResponseEntity<>(e.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
 	        }
 
 	    }
