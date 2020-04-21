@@ -26,7 +26,6 @@ import gov.nih.nci.doe.web.model.DoeDownloadDatafile;
 import gov.nih.nci.doe.web.model.Views;
 import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
-import gov.nih.nci.hpc.domain.datatransfer.HpcDownloadTaskType;
 import gov.nih.nci.hpc.domain.datatransfer.HpcFileLocation;
 import gov.nih.nci.hpc.domain.datatransfer.HpcGlobusDownloadDestination;
 import gov.nih.nci.hpc.domain.datatransfer.HpcS3Account;
@@ -117,10 +116,15 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 				downloadDTO = (HpcBulkDataObjectDownloadResponseDTO) DoeClientUtil
 					.downloadFiles(authToken, downloadServiceURL, dto, sslCertPath, sslCertPassword);
 				if (downloadDTO != null) {
-					String taskType = downloadType.equals("datafiles") ? HpcDownloadTaskType.DATA_OBJECT_LIST.name(): HpcDownloadTaskType.COLLECTION_LIST.name();
-					result.setMessage("Download request successful. Task Id: <a href='downloadtask?type="+ taskType +"&taskId=" + downloadDTO.getTaskId()+"'>"+downloadDTO.getTaskId()+"</a>");
+					String taskId = downloadDTO.getTaskId();
+					//String taskType = downloadType.equals("datafiles") ? HpcDownloadTaskType.DATA_OBJECT_LIST.name(): HpcDownloadTaskType.COLLECTION_LIST.name();
+					result.setMessage("Download request successful. Task Id: " +taskId);
 					 
-		              taskManagerService.saveTransfer(downloadDTO.getTaskId(),"Download",getLoggedOnUserInfo());
+					//downloadFile.getSelectedPaths().stream().forEach(
+					//		c ->  taskManagerService.saveTransfer(taskId,"Download",c.substring(c.lastIndexOf('/') + 1),
+					//				getLoggedOnUserInfo()));
+					 
+				     taskManagerService.saveTransfer(taskId,"Download","Bulk Download Files",getLoggedOnUserInfo());
 				}
 				return result;
 			} catch (Exception e) {

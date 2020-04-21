@@ -25,13 +25,13 @@ public class TaskManagerServiceImpl implements TaskManagerService {
 	  
 	@Override
     @Transactional(readOnly = false)
-	public void saveTransfer(String taskId, String transferType, String userId) {
+	public void saveTransfer(String taskId, String transferType, String name, String userId) {
 		log.info("saving task for user " + userId + " with task id: " + taskId + " and transfer type: " +  transferType);
 		
 		 TaskManager task = new TaskManager();
 		 task.setTaskDate(new Date());
 		 task.setTaskId(taskId);
-		 task.setTaskName("TEST");
+		 task.setTaskName(name);
 		 task.setUserId(userId);
 		 task.setTaskType(transferType);
 		 taskManagerRepository.saveAndFlush(task);

@@ -100,8 +100,14 @@ $("#download-btn").click(function(e){
 	d.downloadType = $("#downloadType").val();
 	d.downloadFileName = $("#downloadFileNameVal").val();
 	$("#message").hide();
+	var validate = true;
 	
-	if(searchType == 's3' || searchType == 'async' || selectedFiles) {
+	if(!searchType) {
+		 $("#download-modal").find('.downloadErrorMsg').html("Enter the download type.");
+		 $("#download-modal").find("#message").show();
+	}
+	
+	else if(searchType == 's3' || searchType == 'async' || selectedFiles) {
 		d.bucketName = $("#bucketName").val();
 		d.s3Path = $("#s3Path").val();
 	    d.accessKey = $("#accessKey").val();
@@ -109,6 +115,7 @@ $("#download-btn").click(function(e){
 	    d.region = 	$("#region").val();	
 	    d.endPointName = $("#endPointName").val();
 		d.endPointLocation = $("#endPointLocation").val();
+		
 		var url;
 		if(selectedFiles && selectedFiles.len > 1) {
 			url = "/downloadfiles/download";
@@ -117,7 +124,25 @@ $("#download-btn").click(function(e){
 			url = "/download";
 			
 		}
-				   								
+		if(searchType == 'async') {
+			$('div#AsyncDiv input[type="text"]').each(function(){
+		        if(!$(this).val()){
+		        	validate = false;
+		        }          
+		    });
+		} else if(searchType == 's3') {
+			$('div#s3Div input[type="text"]').each(function(){
+		        if(!$(this).val()){
+		        	validate = false;
+		        }          
+		    });
+		}
+	
+		if(!validate) {
+			 $("#download-modal").find('.downloadErrorMsg').html("Enter all the criteria.");
+			 $("#download-modal").find("#message").show();
+		} else {
+					   								
 			$.ajax({
 				type : "POST",
 			     url : url,
@@ -140,9 +165,20 @@ $("#download-btn").click(function(e){
 					 $("#message").show();
 				}
 			});
+	   }
 	} else {
-		$('#downloadSyncForm').attr('action', '/downloadsync');
-		$("#downloadSyncForm").submit();
+		$('div#SyncDiv input[type="text"]').each(function(){
+	        if(!$(this).val()){
+	        	validate = false;
+	        }          
+	    });
+		if(!validate) {
+			 $("#download-modal").find('.downloadErrorMsg').html("Enter all the criteria.");
+			 $("#download-modal").find("#message").show();
+		} else {
+		  $('#downloadSyncForm').attr('action', '/downloadsync');
+		  $("#downloadSyncForm").submit();
+		}
 	}
 		
 	

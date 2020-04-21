@@ -114,10 +114,11 @@ public class DoeDownloadController extends AbstractDoeController {
                         HpcDownloadTaskType.DATA_OBJECT.name();
               result = DoeClientUtil.downloadDataFile(authToken, serviceURL, dto, downloadTaskType, sslCertPath, sslCertPassword);
               
+              String taskId = result.getMessage();
               //store the task ID in DB
-              
-              taskManagerService.saveTransfer(result.getMessage(),"Download",getLoggedOnUserInfo());
-              result.setMessage("Task Id" + result);
+              String name = downloadFile.getDestinationPath().substring(downloadFile.getDestinationPath().lastIndexOf('/') + 1);
+              taskManagerService.saveTransfer(taskId,"Download",name,getLoggedOnUserInfo());
+              result.setMessage("Asynchronous download request is submitted successfully! Task Id: " + taskId);
               return result;
 		} catch (HttpStatusCodeException e) {
 			result.setMessage("Download request is not successful: " + e.getMessage());

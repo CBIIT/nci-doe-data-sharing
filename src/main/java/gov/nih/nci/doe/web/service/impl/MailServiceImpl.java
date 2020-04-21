@@ -189,7 +189,7 @@ public class MailServiceImpl implements MailService {
 	@Override
 	@Transactional(readOnly = true)
 	public void sendRegistrationEmail(String email) throws Exception {
-		log.info("Sending an email on TEST");
+		log.info("Sending an email for registration");
 		final Map<String, Object> params = new HashMap<String, Object>();
 		final List<String> to = new ArrayList<String>();
 		to.add(email);

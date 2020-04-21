@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  *
- * DOE register Controller
+ * DOE Task Manager Controller
  *
  *
  */

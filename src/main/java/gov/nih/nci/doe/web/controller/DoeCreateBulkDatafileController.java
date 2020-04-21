@@ -122,7 +122,8 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 					info.append(responseItem.getPath()).append("<br/>");
 				   }
 				    String taskId = responseDTO.getTaskId();
-				    taskManagerService.saveTransfer(taskId,"Upload",getLoggedOnUserInfo());
+				    String name = doeDataFileModel.getPath().substring(doeDataFileModel.getPath().lastIndexOf('/') + 1);
+				    taskManagerService.saveTransfer(taskId,"Upload",name,getLoggedOnUserInfo());
 					return "Bulk Data file registration request is submitted! Task Id: " +taskId;			
 		
 				

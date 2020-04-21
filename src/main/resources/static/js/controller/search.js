@@ -114,13 +114,7 @@ function dataTableInit(isVisible) {
         "drawCallback": function (settings) {
         	$("#searchResultTable thead").remove();
         	
-           /*$(".downloadLink").click(function(e){
-        	   var path = $(this).attr('data-path');
-        	   var fileName = $(this).attr('data-fileName');  
-        	   $("#download-modal").find(".selectedFilesDiv").hide();
-               downloadFunction(path,fileName);
-             });*/
-        	
+
            $(".dataSetFragment").click(function(e) {
         	   $("#searchFragmentDiv").hide();
         	   $("#dataSetFragment").show();
@@ -347,7 +341,7 @@ function displayPopover() {
         openPopOver($(this));
     });
     $('.button2a').on('keypress', function (e) {
-        if (e.which == 13 || e.keyCode == 13) {//Enter key pressed
+        if (e.which == 13 || e.keyCode == 13) {
             openPopOver($(this));
         }
     });
