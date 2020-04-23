@@ -116,10 +116,12 @@ function contructDataListDiv(data,status) {
 function constructNewCollectionMetaDataSet(data,status) {
 	$("#newMetaDataTable tbody").html("");
 	$.each(data, function(key, value) {	
-        $("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '</td><td><input type="text"  name="zAttrStr_'+value.attrName+'" style="width:70%;"></td></tr>');
-	});
-	
-	
+        if(value.attrName == 'consortium_name') {
+        	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '</td><td><input type="text"  name="zAttrStr_'+value.attrName+'" value="public" style="width:70%;"></td></tr>');
+        } else {
+        	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '</td><td><input type="text"  name="zAttrStr_'+value.attrName+'" style="width:70%;"></td></tr>');
+        }
+	});	
 }
 
 function addNewMetaDataCollection(tableName) {
@@ -186,11 +188,10 @@ function registerCollection() {
 	var validate = true;
 	var usermetaDataEntered = true;
 	
-		$("#newMetaDataTable tbody tr").find('text').each(function () { 
-		    if(!$(this).val()) {
-		    	usermetaDataEntered = false;
-		    	
-		    }
+		$('form#registerCollectionForm input[type="text"]').each(function(){
+	        if(!$(this).val()){
+	        	usermetaDataEntered = false;
+	        } 
 		});
 		
 	if(!collectionPath) {
