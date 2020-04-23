@@ -7,6 +7,11 @@
 <body>
       <div class="form-row jumbotron col-md-10 col-sm-10" id="uploadDataFilesTab" th:fragment="uploadDataFiles" style="display:none;margin-top:40px;margin-left:25px;">
                 <div class="col-md-12 col-sm-12 p-0 m-0">
+                 <div class="alert alert-danger uploadBulkDataError" role="alert" style="display:none;margin-bottom:10px;">
+           <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
+                            <h6 class="uploadBulkDataErrorMsg"></h6>                       
+                    </div>
+        </div>
                     <div class="col-lg-2 col-md-2 col-sm-12" style="z-index:1010;">
                         <button type="button" class="float-left btn btn-link" 
                                 style="background-color:transparent; border:0px;color: #00467f;">
@@ -101,7 +106,7 @@
                             <input type="button" class="btn btn-md btn-link" id="primaryGlobusButton" value="Select Data from Globus Endpoint"/>
                             </div>
                             
-                            <div class="form-group col-lg-12 col-md-12" th:if="${endpoint_id != null}">
+                            <div class="form-group col-lg-12 col-md-12" id="globusEndPointInformation" th:if="${endpoint_id != null}">
 									
 									
 									<label for="${endpoint_id}">Globus Endpoint ID:

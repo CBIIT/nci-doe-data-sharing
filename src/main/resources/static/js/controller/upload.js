@@ -271,6 +271,8 @@ function openBulkDataRegistration() {
 	$("#bulkDataFilePathCollection").val(datafilePath);
 	$(".registerBulkDataFileSuccess").hide();
 	$(".registerBulkDataFile").html("");
+	$(".uploadBulkDataError").hide();
+	$(".uploadBulkDataErrorMsg").html("");
 }
 
 function cancelAndReturnToUploadTab() {
@@ -285,7 +287,11 @@ function registerBulkDataFile() {
 		var file = $("#doeDataFile").val();
 		var dataFilePath = $("#dataFilePath").val();
 		
-		if(dataFilePath && file) {	
+		if(!file || !dataFilePath) {
+			$(".uploadBulkDataError").show();
+			$(".uploadBulkDataErrorMsg").html("upload data source file.")
+		}
+		else if(dataFilePath && file) {	
 			$("#registerDataFileForm").attr('dataFilePath', dataFilePath);	 
 				var form = $('#registerDataFileForm')[0];		 
 		       var data = new FormData(form);
@@ -319,8 +325,23 @@ function registerBulkDataFile() {
 		
 		
 	} else {
-		var dataFilePath = $("#bulkDataFilePathCollection").val();		
-		if(dataFilePath) {	
+		var dataFilePath = $("#bulkDataFilePathCollection").val();
+		var bulkUploadType = $('input[name=uploadType]:checked').val();
+		var validate = true;
+		$('form#registerBulkDataForm input[type="text"]').each(function(){
+	        if(!$(this).val()){
+	        	validate = false;
+	        }          
+	     });
+		
+		if(bulkUploadType == 's3' && !validate) {
+			$(".uploadBulkDataError").show();
+			$(".uploadBulkDataErrorMsg").html("Enter all the required fields.")
+		} else if(bulkUploadType == 'globus' && $("#globusEndPointInformation").length) {
+			$(".uploadBulkDataError").show();
+			$(".uploadBulkDataErrorMsg").html("Select Globus End point information.")
+		}
+		else if(dataFilePath) {	
 			$("#bulkDatafilePath").val(dataFilePath);
 	        var data = $('#registerBulkDataForm').serialize();
 			$.ajax({
@@ -368,11 +389,13 @@ function displayDataFileSection(value) {
 	if(value == 'singleData') {
 		$("#singleFileDataUploadSection").show();
 		$("#bulkFileUploadSection").hide();					
-	    $("#dataFilePath").val(datafilePath);				
+	    $("#dataFilePath").val(datafilePath);	
+	    $("#registerFileBtnsDiv").show();
 		
 	} else if(value == 'bulkData'){
 		$("#singleFileDataUploadSection").hide();
 		$("#bulkFileUploadSection").show();
+		$("#registerFileBtnsDiv").hide();
 	}
 }
 
