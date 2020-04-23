@@ -105,7 +105,11 @@ public class TaskManagerCotroller extends AbstractDoeController {
     					TaskManager t = results.stream().filter(x -> download.getTaskId().equals(x.getTaskId())).findAny().orElse(null);
     					
     	    			task.setTaskId(download.getTaskId());
-    					task.setTaskDate(t.getTaskDate()!= null ? format.format(t.getTaskDate()) : "");
+    					//task.setTaskDate(t.getTaskDate()!= null ? format.format(t.getTaskDate()) : "");
+    					
+    					task.setTaskDate((download.getCreated() != null && download.getCompleted() != null) ? t.getTaskDate()!= null?
+    							(format.format(download.getCreated().getTime()) + " - " +
+    							 format.format(download.getCompleted().getTime())) :format.format(t.getTaskDate()): "");
     					task.setTaskName(t.getTaskName());
     					task.setUserId(t.getUserId());
     					task.setTaskType(t.getTaskType());
@@ -134,7 +138,10 @@ public class TaskManagerCotroller extends AbstractDoeController {
     					TaskManager t = results.stream().filter(x -> upload.getTaskId().equals(x.getTaskId())).findAny().orElse(null);
     					
     	    			task.setTaskId(upload.getTaskId());
-    					task.setTaskDate(t.getTaskDate()!= null ? format.format(t.getTaskDate()) : "");
+    					//task.setTaskDate(t.getTaskDate()!= null ? format.format(t.getTaskDate()) : "");
+    					task.setTaskDate((upload.getCreated() != null && upload.getCompleted() != null) ? t.getTaskDate()!= null?
+    							(format.format(upload.getCreated().getTime()) + " - " +
+    							 format.format(upload.getCompleted().getTime())) :format.format(t.getTaskDate()): "");
     					task.setTaskName(t.getTaskName());
     					task.setUserId(t.getUserId());
     					task.setTaskType(t.getTaskType());

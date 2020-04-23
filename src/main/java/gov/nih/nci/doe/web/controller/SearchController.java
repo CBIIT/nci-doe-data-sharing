@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
@@ -100,7 +99,7 @@ public class SearchController extends AbstractDoeController {
 	 @Autowired
 	 ConsortiumService consortiumService;
 	
-	@RequestMapping(method = RequestMethod.GET)
+	    @GetMapping
 	    public ResponseEntity<?> search(HttpSession session,@RequestHeader HttpHeaders headers,HttpServletRequest request, DoeSearch search ) {
 		
 		String authToken = (String) session.getAttribute("hpcUserToken");
@@ -114,13 +113,12 @@ public class SearchController extends AbstractDoeController {
 		List<String> systemAttrs = modelDTO.getCollectionSystemGeneratedMetadataAttributeNames();
 		session.setAttribute("systemAttrs", systemAttrs);
 		
-		List<DoeSearchResult> results = new ArrayList<DoeSearchResult>();	
+		List<DoeSearchResult> results = new ArrayList<>();	
 		
 
 		try {			
 			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search);
 			compoundQuery.setDetailedResponse(true);
-			String serviceURL = compoundDataObjectSearchServiceURL;
 			if (search.getSearchType() != null && search.getSearchType().equals("collection")) {
 				serviceURL = compoundCollectionSearchServiceURL;
 			} else {
@@ -135,7 +133,7 @@ public class SearchController extends AbstractDoeController {
 				session.setAttribute("compoundQuery", compoundQuery);
 				session.setAttribute("hpcSearch", search);
 				if (search.getSearchType() != null && search.getSearchType().equals("collection")) {
-					results = processResponseResults(search, systemAttrs, restResponse);
+					results = processResponseResults(systemAttrs, restResponse);
 					return new ResponseEntity<>(results, HttpStatus.OK);
 				} 
 				
@@ -145,28 +143,22 @@ public class SearchController extends AbstractDoeController {
 		} catch (com.fasterxml.jackson.databind.JsonMappingException e) {
 			log.error(e.getMessage(), e);
 		} catch (HttpStatusCodeException e) {
-			//e.printStackTrace();	
 			log.error(e.getMessage(), e);
 		} catch (RestClientException e) {
-			//e.printStackTrace();
 			log.error(e.getMessage(), e);
 		} catch (Exception e) {
-			//e.printStackTrace();
 			log.error(e.getMessage(), e);
 			
-		} finally {
-
-		}
-
+		} 
 		return new ResponseEntity<>(results, HttpStatus.NO_CONTENT);
 		
 	}
 	
-	private List<DoeSearchResult> processResponseResults(DoeSearch search,List<String> systemAttrs, Response restResponse) throws JsonParseException, IOException {
+	private List<DoeSearchResult> processResponseResults(List<String> systemAttrs, Response restResponse) throws  IOException {
 		
 		List<DoeSearchResult> returnResults = new ArrayList<DoeSearchResult>();
 
-		returnResults = processCollectionResults(search, systemAttrs, restResponse);
+		returnResults = processCollectionResults(systemAttrs, restResponse);
 		
 		return returnResults;
 			
@@ -174,7 +166,7 @@ public class SearchController extends AbstractDoeController {
 
 
 
-	private List<DoeSearchResult>  processCollectionResults(DoeSearch search,List<String> systemAttrs, Response restResponse) throws JsonParseException, IOException {
+	private List<DoeSearchResult>  processCollectionResults(List<String> systemAttrs, Response restResponse) throws JsonParseException, IOException {
 		MappingJsonFactory factory = new MappingJsonFactory();
 		JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 		HpcCollectionListDTO collections = parser.readValueAs(HpcCollectionListDTO.class);
@@ -285,15 +277,25 @@ public class SearchController extends AbstractDoeController {
 				}
 				criteria.setValue(attrValue);
 				criteria.setOperator(HpcMetadataQueryOperator.fromValue(operator));
-				
+				//If its a timestamp operator, specify the format
+				if (operator.startsWith("TIMESTAMP_GREATER")) {
+					criteria.setValue(attrValue.concat(" 00:00:00").replace("/", "-"));
+					criteria.setFormat("MM-DD-YYYY HH24:MI:SS");
+				}
+				if (operator.startsWith("TIMESTAMP_LESS")) {
+					criteria.setValue(attrValue.concat(" 23:59:59").replace("/", "-"));
+					criteria.setFormat("MM-DD-YYYY HH24:MI:SS");
+				}
 				if(StringUtils.isNotEmpty(grpName)) {
 					criteria.setAttribute(attrName);
 					criteria.setValue(grpName);
-					criteria.setOperator(HpcMetadataQueryOperator.EQUAL);
+					criteria.setOperator(HpcMetadataQueryOperator.EQUAL);					
+				 } else {
+						criteria.setAttribute(attrName);
+						criteria.setValue("public");
+						criteria.setOperator(HpcMetadataQueryOperator.EQUAL);
 				 }
-				//criteria.setAttribute(attrName);
-				//criteria.setValue("public");
-				//criteria.setOperator(HpcMetadataQueryOperator.EQUAL);
+			
 				
 				if (level != null) {
 					HpcMetadataQueryLevelFilter levelFilter = new HpcMetadataQueryLevelFilter();
@@ -311,6 +313,7 @@ public class SearchController extends AbstractDoeController {
 							levelFilter.setLabel(level);
 						levelFilter.setOperator(HpcMetadataQueryOperator.EQUAL);
 					}
+					
 					criteria.setLevelFilter(levelFilter);
 				}
 				queries.put(rowId, criteria);
@@ -392,14 +395,12 @@ public class SearchController extends AbstractDoeController {
 			
 				if (collections != null && collections.getCollections() != null
 						&& collections.getCollections().size() > 0) {
-					
-					HpcCollectionDTO collection = collections.getCollections().get(0);
-					return collection;
+
+					return collections.getCollections().get(0);
 	           
 			     } 
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error("error in get collection" + e);
 			}
 			
 			return null;

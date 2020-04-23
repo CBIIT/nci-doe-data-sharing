@@ -18,9 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
@@ -70,7 +70,7 @@ public class DoeDownloadController extends AbstractDoeController {
 	 * @return
 	 */
 	@JsonView(Views.Public.class)
-	@RequestMapping(method = RequestMethod.POST)
+	@PostMapping
 	@ResponseBody
 	public AjaxResponseBody download(@RequestBody @Valid DoeDownloadDatafile downloadFile, 
 			HttpSession session, HttpServletRequest request,
