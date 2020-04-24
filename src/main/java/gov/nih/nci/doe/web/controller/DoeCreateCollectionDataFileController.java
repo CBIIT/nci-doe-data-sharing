@@ -249,7 +249,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			HpcFileLocation source = new HpcFileLocation();
 			source.setFileContainerId(bucketName);
 			source.setFileId(s3Path);
-			folder.setBasePath(datafilePath);
+			folder.setBasePath(path);
 			HpcS3ScanDirectory s3Directory = new HpcS3ScanDirectory();
 			s3Directory.setDirectoryLocation(source);
 			HpcS3Account s3Account = new HpcS3Account();

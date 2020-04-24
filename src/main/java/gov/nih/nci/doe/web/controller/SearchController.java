@@ -286,7 +286,7 @@ public class SearchController extends AbstractDoeController {
 					criteria.setValue(attrValue.concat(" 23:59:59").replace("/", "-"));
 					criteria.setFormat("MM-DD-YYYY HH24:MI:SS");
 				}
-				if(StringUtils.isNotEmpty(grpName)) {
+				/*if(StringUtils.isNotEmpty(grpName)) {
 					criteria.setAttribute(attrName);
 					criteria.setValue(grpName);
 					criteria.setOperator(HpcMetadataQueryOperator.EQUAL);					
@@ -294,7 +294,7 @@ public class SearchController extends AbstractDoeController {
 						criteria.setAttribute(attrName);
 						criteria.setValue("public");
 						criteria.setOperator(HpcMetadataQueryOperator.EQUAL);
-				 }
+				 }*/
 			
 				
 				if (level != null) {

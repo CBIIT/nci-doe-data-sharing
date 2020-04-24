@@ -314,6 +314,7 @@ function registerBulkDataFile() {
 						 $(".registerBulkDataFile").html(msg);
 						 $(".registerBulkDataFileSuccess").show();
 						 window.scrollTo(0,0);
+						 $('body,html').animate({scrollTop: 0 }, 500);
 						 cancelAndReturnToUploadTab();
 						 
 					 },
@@ -363,8 +364,8 @@ function registerBulkDataFile() {
 					 $(".registerBulkDataFileSuccess").show();
 					 cancelAndReturnToUploadTab();
 					 window.scrollTo(0,0);
-					
-					 
+					 $('body,html').animate({scrollTop: 0 }, 500);
+							 
 				 },
 				error : function(e) {
 					 console.log('ERROR: ', e);				 
