@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -67,7 +68,13 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 	    HttpSession session, HttpServletRequest request, HttpServletResponse response) {
 		AjaxResponseBody result = new AjaxResponseBody();
 		try {
-			String authToken = (String) session.getAttribute("hpcUserToken");
+			String authToken = null;
+			String loggedOnUser = getLoggedOnUserInfo();
+			if(loggedOnUser != null && !StringUtils.isEmpty(loggedOnUser) && !StringUtils.isBlank(loggedOnUser)) {
+				 authToken = (String) session.getAttribute("writeAccessUserToken");
+			} else {
+				 authToken = (String) session.getAttribute("hpcUserToken");
+			}
 			if (authToken == null) {
 				result.setMessage("Invalid user session, expired. Please login again.");
 				return result;
@@ -118,9 +125,11 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 				if (downloadDTO != null) {
 					String taskId = downloadDTO.getTaskId();
 					result.setMessage("Download request successful. Task Id: " +taskId);
+					 if(loggedOnUser != null) {
 				     taskManagerService.saveTransfer(taskId,"Download","Bulk Download Files",getLoggedOnUserInfo());
+					 }
 				}
-				return result;
+				return result; 
 			} catch (Exception e) {
 				result.setMessage("Download request is not successful: " + e.getMessage());
 				return result;
