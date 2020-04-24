@@ -87,8 +87,8 @@ public class DoeBrowseController extends AbstractDoeController {
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		DoeBrowserEntry browserEntry = (DoeBrowserEntry) session.getAttribute("browserEntry");
 		   List<KeyValueBean> results = new ArrayList<>();
-		boolean getChildren = false;
-		boolean refresh = false;
+		boolean getChildren = true;
+		boolean refresh = true;
 
 		
 		try {
