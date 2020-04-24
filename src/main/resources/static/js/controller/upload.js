@@ -18,7 +18,7 @@ function loadUploadTab() {
 				$("#addBulkDataFiles").show();
 				$("#uploadDataFilesTab").show();
 				$('input[name=datafileTypeUpload]:checked').val();
-				$('input[name=uploadType]:checked').val();
+				$('input[name=bulkUploadType]:checked').val();
 				$("#datafileTypeBulk").prop("checked", true);
 				$("#uploadTypeGlobus").prop("checked", true);
 				$("#singleFileDataUploadSection").hide();
@@ -326,7 +326,7 @@ function registerBulkDataFile() {
 		
 	} else {
 		var dataFilePath = $("#bulkDataFilePathCollection").val();
-		var bulkUploadType = $('input[name=uploadType]:checked').val();
+		var bulkUploadType = $('input[name=bulkUploadType]:checked').val();
 		var validate = true;
 		$('form#registerBulkDataForm input[type="text"]').each(function(){
 	        if(!$(this).val()){
@@ -337,11 +337,12 @@ function registerBulkDataFile() {
 		if(bulkUploadType == 's3' && !validate) {
 			$(".uploadBulkDataError").show();
 			$(".uploadBulkDataErrorMsg").html("Enter all the required fields.")
-		} else if(bulkUploadType == 'globus' && $("#globusEndPointInformation").length) {
+		} else if(bulkUploadType == 'globus' && !$("#globusEndPointInformation").length) {
 			$(".uploadBulkDataError").show();
 			$(".uploadBulkDataErrorMsg").html("Select Globus End point information.")
 		}
 		else if(dataFilePath) {	
+			$("#uploadType").val(bulkUploadType);
 			$("#bulkDatafilePath").val(dataFilePath);
 	        var data = $('#registerBulkDataForm').serialize();
 			$.ajax({
@@ -356,6 +357,8 @@ function registerBulkDataFile() {
 					 $("#spinner").hide();
 			         $("#dimmer").hide();
 					 console.log('SUCCESS: ', msg);
+					 $(".uploadBulkDataError").hide();
+						$(".uploadBulkDataErrorMsg").html("");
 					 $(".registerBulkDataFile").html(msg);
 					 $(".registerBulkDataFileSuccess").show();
 					 cancelAndReturnToUploadTab();

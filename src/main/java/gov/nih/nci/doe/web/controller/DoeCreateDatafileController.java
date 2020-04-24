@@ -63,7 +63,7 @@ public class DoeCreateDatafileController extends DoeCreateCollectionDataFileCont
 	public String createDatafile(@Valid DoeDatafileModel doeDataFileModel,@RequestParam("doeDataFile") MultipartFile doeDataFile,
 			@RequestParam("dataFilePath") String  dataFilePath,HttpSession session, HttpServletRequest request, HttpServletResponse response) {
 		
-		String authToken = (String) session.getAttribute("hpcUserToken");
+		String authToken = (String) session.getAttribute("writeAccessUserToken");
 
 		String checksum = request.getParameter("checksum");
 		if (checksum == null || checksum.isEmpty())

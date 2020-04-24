@@ -83,13 +83,13 @@
             <div class="form-row col-md-9 col-sm-9" id="bulkTypeUploadDiv" style="margin-left:20px;">
                              <div class="form-group">
 										<div class="pull-left">
-										<label class="radio-inline"><input type="radio" id="uploadTypeGlobus" name="uploadType" value="globus" 
+										<label class="radio-inline"><input type="radio" id="uploadTypeGlobus" name="bulkUploadType" value="globus" 
 										onchange="displayUploadTypeDiv('globus')"> &nbsp;&nbsp; Globus</label>
 										</div>
                               </div>
                         <div class="form-group">
 										<div class="pull-left" style="margin-left: 15px">
-										<label class="radio-inline"><input type="radio" name="uploadType" id="uploadTypeS3" value="s3" 
+										<label class="radio-inline"><input type="radio" name="bulkUploadType" id="uploadTypeS3" value="s3" 
 										onchange="displayUploadTypeDiv('s3')">&nbsp;&nbsp; S3</label>
 										</div>
                          </div>
@@ -99,6 +99,7 @@
                
                  <form class="form-horizontal" id="registerBulkDataForm" enctype="multipart/form-data" method="POST" style="display:none;"> 
                     <input type="hidden" id="bulkDatafilePath" name="bulkDatafilePath"/>
+                    <input type="hidden" id="uploadType" name="uploadType"/>
                     <div class="col-md-12 col-sm-12">
                         <div class="form-row" style=" margin-top: 20px;">
                              <div class="form-group col-lg-12 col-md-12" id="displayGlobusUploadDiv" style="display:none;">

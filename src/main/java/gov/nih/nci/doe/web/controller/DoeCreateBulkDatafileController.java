@@ -40,8 +40,8 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	private String collectionServiceURL;
 	@Value("${gov.nih.nci.hpc.server.model}")
-	private String hpcModelURL;	
-	@Value("${gov.nih.nci.hpc.server.bulkregistration}")
+	private String hpcModelURL;
+	@Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
 	private String bulkRegistrationURL;
 	@Value("${gov.nih.nci.hpc.web.server}")
 	private String webServerName;	
@@ -77,7 +77,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	@ResponseBody
 	public String createDatafile(@Valid DoeDatafileModel doeDataFileModel, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
 		
-		String authToken = (String) session.getAttribute("hpcUserToken");
+		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		String checksum = request.getParameter("checksum");
 		if (checksum == null || checksum.isEmpty())
 			checksum = (String) request.getAttribute("checksum");

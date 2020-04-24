@@ -63,7 +63,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
 			HttpServletRequest request, @RequestParam(value = "userId") String userId) throws Exception {
 		
 		  log.info("get all tasks by user Id");
-		  String authToken = (String) session.getAttribute("hpcUserToken");
+		  String authToken = (String) session.getAttribute("writeAccessUserToken");
 		  try {
             	List<TaskManager> results = new ArrayList<TaskManager>();
             	results = taskManagerService.getAllByUserId(userId);            	
@@ -138,10 +138,9 @@ public class TaskManagerCotroller extends AbstractDoeController {
     					TaskManager t = results.stream().filter(x -> upload.getTaskId().equals(x.getTaskId())).findAny().orElse(null);
     					
     	    			task.setTaskId(upload.getTaskId());
-    					//task.setTaskDate(t.getTaskDate()!= null ? format.format(t.getTaskDate()) : "");
-    					task.setTaskDate((upload.getCreated() != null && upload.getCompleted() != null) ? t.getTaskDate()!= null?
+    					task.setTaskDate((upload.getCreated() != null && upload.getCompleted() != null) ? upload.getCreated() != null?
     							(format.format(upload.getCreated().getTime()) + " - " +
-    							 format.format(upload.getCompleted().getTime())) :format.format(t.getTaskDate()): "");
+    							 format.format(upload.getCompleted().getTime())) :format.format(upload.getCreated() != null): "");
     					task.setTaskName(t.getTaskName());
     					task.setUserId(t.getUserId());
     					task.setTaskType(t.getTaskType());

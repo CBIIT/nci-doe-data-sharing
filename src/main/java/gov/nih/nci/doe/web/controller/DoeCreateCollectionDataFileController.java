@@ -1,5 +1,5 @@
 /**
- * HpcCollectionController.java
+ * DoeCollectionController.java
  *
  * Copyright SVG, Inc.
  * Copyright Leidos Biomedical Research, Inc
@@ -180,6 +180,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		String s3File = (String)request.getParameter("s3File");
 		boolean isS3File = s3File != null && s3File.equals("on");
 
+		
 		if (StringUtils.equals(bulkType, "globus") && globusEndpointFiles != null) {
 			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO> files = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO>();
 			for (String fileName : globusEndpointFiles) {
