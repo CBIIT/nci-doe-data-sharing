@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -77,7 +78,14 @@ public class DoeDownloadController extends AbstractDoeController {
 			HttpServletResponse response) {
 		AjaxResponseBody result = new AjaxResponseBody();
 		try {
-			String authToken = (String) session.getAttribute("hpcUserToken");
+			String authToken = null;
+			String loggedOnUser = getLoggedOnUserInfo();
+			if(loggedOnUser != null && !StringUtils.isEmpty(loggedOnUser) && !StringUtils.isBlank(loggedOnUser)) {
+				 authToken = (String) session.getAttribute("writeAccessUserToken");
+			} else {
+				 authToken = (String) session.getAttribute("hpcUserToken");
+			}
+			
 			if (authToken == null) {
 				result.setMessage("Invalid user session, expired. Please login again.");
 				return result;
@@ -115,9 +123,12 @@ public class DoeDownloadController extends AbstractDoeController {
               result = DoeClientUtil.downloadDataFile(authToken, serviceURL, dto, downloadTaskType, sslCertPath, sslCertPassword);
               
               String taskId = result.getMessage();
-              //store the task ID in DB
-              String name = downloadFile.getDestinationPath().substring(downloadFile.getDestinationPath().lastIndexOf('/') + 1);
-              taskManagerService.saveTransfer(taskId,"Download",name,getLoggedOnUserInfo());
+              //store the task ID in DB if logged on user exists
+              if(loggedOnUser != null) {
+            	  String name = downloadFile.getDestinationPath().substring(downloadFile.getDestinationPath().lastIndexOf('/') + 1);
+                  taskManagerService.saveTransfer(taskId,"Download",name,getLoggedOnUserInfo());  
+              }
+              
               result.setMessage("Asynchronous download request is submitted successfully! Task Id: " + taskId);
               return result;
 		} catch (HttpStatusCodeException e) {
