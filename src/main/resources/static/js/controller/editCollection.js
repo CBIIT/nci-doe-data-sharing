@@ -15,7 +15,7 @@ function constructCollectionMetData(metadata,metaDataPath,isDataObject) {
 }
 
 function addCollectionMetaDataRows() {
-	var rowId =  $("#userMetaData tbody").length;
+	var rowId =  $("#userMetaData tbody tr").length;
 	rowId = rowId +1; 
 	 $("#userMetaData tbody").append('<tr id="addRow'+rowId+'"><td><input type="text" style="width:70%;" ' +
 			 'name="_addAttrName'+rowId+'" id="_addAttrName'+rowId+'"></td><td><input type="text" style="width:70%;" id="_addAttrValue'+rowId+'" name="_addAttrValue'+rowId+'" >' +
