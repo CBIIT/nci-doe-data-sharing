@@ -16,8 +16,8 @@ function validateUserLogin() {
 			},
 			password: {
 		        required: true,
-		        minlength: 8,
-		        maxlength: 14
+		        //minlength: 8,
+		        //maxlength: 14
 		    }
 		},
 		messages: {
@@ -26,8 +26,8 @@ function validateUserLogin() {
 			    },
 			password: {
 		        required: "Password is required.",
-		        minlength: "Password must be at least eight (8) characters in length and no more than 14 characters.",
-		        maxlength: "Password must be at least eight (8) characters in length and no more than 14 characters."
+		        //minlength: "Password must be at least eight (8) characters in length and no more than 14 characters.",
+		       // maxlength: "Password must be at least eight (8) characters in length and no more than 14 characters."
 		    },
 		   
 		},
@@ -71,7 +71,7 @@ function postLoginFunction(data,status) {
 	} else if("loginlocked" == data) {
 		
 		$(".errorBlockLogin").show();
-		$(".errorMsgLogin").html("Maximum attempts of login Exceeded. Please request a password resend link via forgot password.");
+		$(".errorMsgLogin").html("Maximum attempts of login Exceeded. Please request a password via forgot password.");
 		
 	} else {
 		location.replace("/");

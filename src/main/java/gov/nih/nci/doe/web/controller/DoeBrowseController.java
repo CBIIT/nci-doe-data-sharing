@@ -102,7 +102,7 @@ public class DoeBrowseController extends AbstractDoeController {
 				browserEntry.setName(name);
 				List<DoeBrowserEntry> children = browserEntry.getChildren(); 
 				
-				children.stream().forEach(e -> {if(e.getFullPath() != null && StringUtils.isNotEmpty(e.getFullPath())) {results.add(new KeyValueBean(e.getFullPath(), e.getName()));}}); 
+				children.stream().forEach(e -> {if(e.getFullPath() != null && StringUtils.isNotEmpty(e.getFullPath().trim())) {results.add(new KeyValueBean(e.getFullPath(), e.getName()));}}); 
 			}
 		} catch (Exception e) {
 			String errMsg = "Failed to browse: " + e.getMessage();

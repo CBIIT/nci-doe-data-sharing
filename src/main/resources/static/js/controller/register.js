@@ -130,7 +130,7 @@ function validateForgotPassword () {
 function postForgotPassword(data,status) {
 	$('#btnforgotPassword').prop('disabled',false);
 	if(data == 'SUCCESS') {
-		$(".successMsg").html("Password reset successful.");
+		$(".successMsg").html("Password change successful.");
 		$(".successBlock").show();
 		$(".errorBlock").hide();
 	} else {

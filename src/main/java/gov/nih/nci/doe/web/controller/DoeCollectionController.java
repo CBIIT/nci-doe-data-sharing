@@ -79,7 +79,8 @@ public class DoeCollectionController extends AbstractDoeController {
 						doeCollection.getPath(), sslCertPath, sslCertPassword);
 				if (updated) {
 					session.removeAttribute("selectedUsers");
-					return  "Data file " + doeCollection.getPath() + " is Updated!";
+					//return  "Data file " + doeCollection.getPath() + " is Updated!";
+					return "The metadata was successfully updated.";
 					
 				}
 				
@@ -89,8 +90,8 @@ public class DoeCollectionController extends AbstractDoeController {
 						doeCollection.getPath(), sslCertPath, sslCertPassword);
 				if (updated) {
 					session.removeAttribute("selectedUsers");
-					return "Collection " + doeCollection.getPath() + " is Updated!";
-					
+					//return "Collection " + doeCollection.getPath() + " is Updated!";
+					return "The metadata was successfully updated.";
 				}
 			}
 			

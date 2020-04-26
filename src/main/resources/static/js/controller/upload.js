@@ -107,8 +107,9 @@ function retrieveCollections($this, selectedIndex) {
 
 function contructDataListDiv(data,status) {
 	$("#dataListing").html("");
-	$("#dataListDiv").show();
+	
 	$.each(data, function(key, value) {	
+		$("#dataListDiv").show();
 		$("#dataListing").append('<li>'+value.value+'</li>');
 	});
 }
@@ -253,8 +254,9 @@ function postSuccessRegisterCollection(data,collectionType) {
 		$("#registerCollectionModal").find(".registerMsgErrorBlock").show();
 	}
 
-	if(collectionType  == 'Program') {		
-		loadJsonData('/browse', $("#instituteList"), true, null, null, null, "key", "value"); 
+	if(collectionType  == 'Program') {
+		var params= {selectedPath:'/DOE_TEST_Archive'};
+		loadJsonData('/browse/collection', $("#instituteList"), true, params, null, null, "key", "value"); 
 	} else if(collectionType == 'Study') {
 		var params= {selectedPath:$("#instituteList").val()};
 		loadJsonData('/browse/collection', $("#studyList"), true, params, null, null, "key", "value");
