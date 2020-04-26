@@ -82,7 +82,7 @@ function callRegisterFormValidation() {
 
 function postRegisterFunction(data, status) {
 	if(data == 'SUCCESS') {
-		location.reload();
+		location.replace("/");
 	} else  {
 		$('#btnRegister').prop('disabled',false);
 		$(".errorBlockRegister").show();
