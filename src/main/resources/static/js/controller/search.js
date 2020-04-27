@@ -190,26 +190,45 @@ function renderPath(data, type, row) {
 	var study;
 	var ins;
 	var data;
+	var isLoggedOnuserExists = (loggedOnUserInfo ? true:false);
 	
 	study = JSON.stringify(row.studyUserMetadata);
 	ins = JSON.stringify(row.instituteUserMetadata);
 	data = JSON.stringify(row.selfMetadata);
 	
+	if(isLoggedOnuserExists) {
 	html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'><input type='checkbox' id=" + row.dataSetPath + " " +
 			"class='selectCheckboxForIns'/>&nbsp;&nbsp;&nbsp;<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span>" +
-			"&nbsp&nbsp;<span class='editCollectionMetadata' metadata_path  = '" + row.dataSetPath+ "' metadata_set = '" + data  + "'><i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Data Set Metadata'></i></span></div><div class='col-md-12'></div>" +
+			"&nbsp&nbsp;<span class='editCollectionMetadata' metadata_path  = '" + row.dataSetPath+ "' metadata_set = '" + data  + "'>" +
+		"<i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Data Set Metadata'></i></span></div><div class='col-md-12'></div>" +
 			"<div class='col-md-12' style='margin-left:22px;'><a href='#' class='dataSetFragment' metadata_type = '" + data  + "' data_set_path = " + row.dataSetPath + ">" +
 					"<span class='cil_12_bold_no_color'>" + row.dataSetDescription + "</span>" +
 			"</a><br></div><div class='col-md-12'><br></div><div class='col-md-12' style='margin-left:22px;'>" +
 			"<span class='cil_12_bold_no_color'>Study: </span><a class='cil_12_no_color button2a' metadata_type = '" + study  + "' tabindex='0'" +
 			" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' data-popover-content='#a01'>" + row.studyName + "</a>" +
-					"&nbsp&nbsp;<span class='editCollectionMetadata' metadata_path  = '" + row.studyPath+ "'  metadata_set = '" + study  + "'><i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Study Metadata'></i></span></div>" +
+					"&nbsp&nbsp;<span class='editCollectionMetadata' metadata_path  = '" + row.studyPath+ "'  metadata_set = '" + study  + "'>" +
+			"<i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Study Metadata'></i></span></div>" +
 			"<div class='col-md-12 top-buffer' style='margin-left:22px;'>" +
 			"<span class='cil_12_bold_no_color'>Program: </span><a class='cil_12_no_color button2a' metadata_type = '" + ins  + "' tabindex='0'" +
 			" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' data-popover-content='#a01'>" + row.programName + "</a>" +
-					"&nbsp&nbsp;<span class='editCollectionMetadata' metadata_path  = '" + row.institutePath+ "' metadata_set = '" + ins  + "'><i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Institute Metadata'></i></span></div></div></div>";
+					"&nbsp&nbsp;<span class='editCollectionMetadata' metadata_path  = '" + row.institutePath+ "' metadata_set = '" + ins  + "'>" +
+			"<i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Institute Metadata'></i></span></div></div></div>";
 
-	
+	} else {
+		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'><input type='checkbox' id=" + row.dataSetPath + " " +
+		"class='selectCheckboxForIns'/>&nbsp;&nbsp;&nbsp;<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span>" +
+		"&nbsp&nbsp;</div><div class='col-md-12'></div>" +
+		"<div class='col-md-12' style='margin-left:22px;'><a href='#' class='dataSetFragment' metadata_type = '" + data  + "' data_set_path = " + row.dataSetPath + ">" +
+				"<span class='cil_12_bold_no_color'>" + row.dataSetDescription + "</span>" +
+		"</a><br></div><div class='col-md-12'><br></div><div class='col-md-12' style='margin-left:22px;'>" +
+		"<span class='cil_12_bold_no_color'>Study: </span><a class='cil_12_no_color button2a' metadata_type = '" + study  + "' tabindex='0'" +
+		" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' data-popover-content='#a01'>" + row.studyName + "</a>" +
+				"&nbsp&nbsp;</div>" +
+		"<div class='col-md-12 top-buffer' style='margin-left:22px;'>" +
+		"<span class='cil_12_bold_no_color'>Program: </span><a class='cil_12_no_color button2a' metadata_type = '" + ins  + "' tabindex='0'" +
+		" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' data-popover-content='#a01'>" + row.programName + "</a>" +
+				"&nbsp&nbsp;</div></div></div>";
+	}
     return html;
 }
 

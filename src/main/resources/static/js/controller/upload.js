@@ -118,9 +118,9 @@ function constructNewCollectionMetaDataSet(data,status) {
 	$("#newMetaDataTable tbody").html("");
 	$.each(data, function(key, value) {	
         if(value.attrName == 'consortium_name') {
-        	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '</td><td><input type="text"  name="zAttrStr_'+value.attrName+'" value="public" style="width:70%;"></td></tr>');
+        	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '</td><td><input type="text"  placeholder="Required" name="zAttrStr_'+value.attrName+'" value="public" style="width:70%;"></td></tr>');
         } else {
-        	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '</td><td><input type="text"  name="zAttrStr_'+value.attrName+'" style="width:70%;"></td></tr>');
+        	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '</td><td><input type="text"  placeholder="Required" name="zAttrStr_'+value.attrName+'" style="width:70%;"></td></tr>');
         }
 	});	
 }
@@ -128,8 +128,8 @@ function constructNewCollectionMetaDataSet(data,status) {
 function addNewMetaDataCollection(tableName) {
 	var rowId =  $("#"+tableName + " tbody").length;
 	rowId = rowId +1; 
-	$("#"+tableName + " tbody").append('<tr id="addRow'+rowId+'"><td><input type="text" style="width:70%;" ' +
-			 'name="_addAttrName'+rowId+'" id="_addAttrName'+rowId+'"></td><td><input type="text" style="width:70%;" id="_addAttrValue'+rowId+'" name="_addAttrValue'+rowId+'" >' +
+	$("#"+tableName + " tbody").append('<tr id="addRow'+rowId+'"><td><input type="text" placeholder="Required" style="width:70%;" ' +
+			 'name="_addAttrName'+rowId+'" id="_addAttrName'+rowId+'"></td><td><input type="text" placeholder="Required" style="width:70%;" id="_addAttrValue'+rowId+'" name="_addAttrValue'+rowId+'" >' +
 	 		'&nbsp;&nbsp;<input class="btn btn-primary pull-right" type="button" value="X" onclick="removeCollectionRow(\'addRow' + rowId + '\')"></td></tr>');
 	 
 	
@@ -162,7 +162,14 @@ function retrieveCollectionList(data,status) {
 function openUploadModal(selectTarget) {
 	
 	var selectedIndexPathVal = $("#" + selectTarget).val();
-	$("#registerCollectionModal").find("#collectionPath").val(selectedIndexPathVal);
+	var parentName = $( "#" +selectTarget+ " option:selected" ).text();
+	if(selectTarget == 'basePath') {
+		$("#registerCollectionModal").find(".parentCollectionDiv").hide();
+	} else {
+		$("#registerCollectionModal").find(".parentCollectionDiv").show();
+		$("#registerCollectionModal").find("#parentCollectionName").val(parentName);
+	}
+	$("#registerCollectionModal").find("#collectionPath").val(selectedIndexPathVal);	
 	$("#newMetaDataTable tbody").html("");
 	$("#registerCollectionModal").find(".registerMsg").html("");
 	$("#registerCollectionModal").find("#newMetaDataTable tbody").html("");

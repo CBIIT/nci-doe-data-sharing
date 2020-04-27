@@ -190,7 +190,8 @@ function renderDownload(data, type, row) {
 	var html = "";
 	var metadata = "";
 	var n = path.lastIndexOf("/");
-	downdloadFileName = path.substring(n+1);		
+	downdloadFileName = path.substring(n+1);	
+	var isLoggedOnUser = (loggedOnUserInfo ? true:false);
 	
 	html += "<a id='downloadlink' class='btn btn-link btn-sm downloadLink' href='javascript:void(0);' " +
 	       "data-toggle='modal' data-backdrop='static' data-keyboard='false' data-fileName = " + downdloadFileName + " data-path=" + row.download + " " +
@@ -199,8 +200,9 @@ function renderDownload(data, type, row) {
 	if(row.selfMetadata && row.selfMetadata.length > 0) {
 		var metadata = JSON.stringify(row.selfMetadata);
 	}	
+	if(isLoggedOnUser) {
 		html += "<span class='btn btn-link btn-sm editDataFileCollectionMetadata'  metadata_path  = '" + path + "' metadata_set = '" + metadata  + "' ><i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Data Object Metadata'></i></span>";
-	
+	}
 	
 	return html;
 
