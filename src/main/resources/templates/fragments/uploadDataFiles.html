@@ -156,7 +156,7 @@
 							</div>
 							
 														
-                             <div th:if="${fileNames != null}"  class="form-group col-lg-12 col-md-12">
+                             <div th:if="${fileNames != null}"  id="selectedFilesDiv" class="form-group col-lg-12 col-md-12">
                              <label for="fileName">Selected Files:</label>
                             <div class="form-group col-lg-12 col-md-12">
                               
@@ -166,7 +166,7 @@
                           </div>                        
                         </div>
                              
-                    <div th:if="${folderNames != null}"  class="form-group col-lg-12 col-md-12">
+                    <div th:if="${folderNames != null}"  id="selectedFoldersDiv" class="form-group col-lg-12 col-md-12">
                        <label for="folderName">Selected Folders:</label>                          
                           <ul> 
                                <li th:each="folderName:${folderNames}" th:text="${folderName}"></li>

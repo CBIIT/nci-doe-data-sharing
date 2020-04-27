@@ -104,6 +104,20 @@ function retrieveCollections($this, selectedIndex) {
 	
 }
 
+function clearRegisterDataDiv() {
+	$('input[name=datafileTypeUpload]').prop('checked', false);
+	$('input[name=bulkUploadType]').prop('checked', false);
+	$("#singleFileDataUploadSection").hide();
+	$("#bulkFileUploadSection").hide();
+	$("#registerFileBtnsDiv").hide();			
+	$("#registerBulkDataForm").hide();
+	$("#displayGlobusUploadDiv").hide();
+	$("#displayS3UploadDiv").hide();
+	$("#selectedFoldersDiv").html("");
+	$("#selectedFilesDiv").html("");
+	$("#globusEndPointInformation").html("");
+}
+
 
 function contructDataListDiv(data,status) {
 	$("#dataListing").html("");
@@ -169,7 +183,8 @@ function openUploadModal(selectTarget) {
 		$("#registerCollectionModal").find(".parentCollectionDiv").show();
 		$("#registerCollectionModal").find("#parentCollectionName").val(parentName);
 	}
-	$("#registerCollectionModal").find("#collectionPath").val(selectedIndexPathVal);	
+	$("#registerCollectionModal").find("#collectionPath").val(selectedIndexPathVal);
+	$("#registerCollectionModal").find("#collectionName").val("");
 	$("#newMetaDataTable tbody").html("");
 	$("#registerCollectionModal").find(".registerMsg").html("");
 	$("#registerCollectionModal").find("#newMetaDataTable tbody").html("");
@@ -254,10 +269,10 @@ function registerCollection() {
 function postSuccessRegisterCollection(data,collectionType) {
 	if(data.indexOf("Collection is created") != -1) {
 		
-		$("#registerCollectionModal").find(".registerMsg").html(data);
+		$("#registerCollectionModal").find(".registerMsg").html("Collection created successfully.");
 		$("#registerCollectionModal").find(".registerMsgBlock").show();
 	} else {
-		$("#registerCollectionModal").find(".registerErrorMsg").html("Enter in create collection.");
+		$("#registerCollectionModal").find(".registerErrorMsg").html("Error in create collection: " + data);
 		$("#registerCollectionModal").find(".registerMsgErrorBlock").show();
 	}
 
@@ -282,6 +297,7 @@ function openBulkDataRegistration() {
 	$(".registerBulkDataFile").html("");
 	$(".uploadBulkDataError").hide();
 	$(".uploadBulkDataErrorMsg").html("");
+	clearRegisterDataDiv();
 }
 
 function cancelAndReturnToUploadTab() {

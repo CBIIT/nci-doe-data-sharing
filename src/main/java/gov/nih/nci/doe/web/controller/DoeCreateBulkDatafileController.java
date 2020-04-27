@@ -55,7 +55,12 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	@RequestMapping(method = RequestMethod.GET)
 	public String home(Model model, HttpSession session, HttpServletRequest request) {
 
-		setInputParameters(request, session,model);
+		
+		if(request.getParameterNames().hasMoreElements()) {
+		  setInputParameters(request, session,model);
+		} else {
+			clearSessionAttrs(session);
+		}
 		return "upload";
 	}
 	
@@ -121,6 +126,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 				   for (HpcDataObjectRegistrationItemDTO responseItem : responseDTO.getDataObjectRegistrationItems()) {
 					info.append(responseItem.getPath()).append("<br/>");
 				   }
+				   clearSessionAttrs(session);
 				    String taskId = responseDTO.getTaskId();
 				    String name = doeDataFileModel.getPath().substring(doeDataFileModel.getPath().lastIndexOf('/') + 1);
 				    taskManagerService.saveTransfer(taskId,"Upload",name,getLoggedOnUserInfo());

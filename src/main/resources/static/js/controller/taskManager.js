@@ -16,7 +16,7 @@ function refreshTaskManagerDataTable() {
 function dataTableInitTaskManager() {
     $('#manageTasksTable').DataTable({
         "paging": true,
-        "ordering": false,
+        "ordering": true,
         "info": true,
         "pageLength": 25,
         oLanguage: {

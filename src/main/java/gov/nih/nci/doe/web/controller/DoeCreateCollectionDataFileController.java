@@ -74,9 +74,8 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		session.removeAttribute("metadataEntries");
 		session.removeAttribute("userMetadataEntries");
 		session.removeAttribute("parent");
-		session.removeAttribute("includeCriteria");
-		session.removeAttribute("excludeCriteria");
-		session.removeAttribute("dryRun");
+		session.removeAttribute("institutePath");
+		session.removeAttribute("studyPath");
 	}
 
 	@SuppressWarnings("unchecked")
