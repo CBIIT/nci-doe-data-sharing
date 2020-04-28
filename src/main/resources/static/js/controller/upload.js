@@ -80,7 +80,8 @@ function retrieveCollections($this, selectedIndex) {
 		$("#uploadDataFilesTab").hide();
 		 $("#dataListDiv").hide();
 		if(selectedIndex && selectedIndex.value != 'ANY') {
-		  loadJsonData('/browse/collection', $("#dataList"), true, params, null, null, "key", "value");
+			var params1= {selectedPath:selectedIndex.value,refreshNode:'true'};			
+		  loadJsonData('/browse/collection', $("#dataList"), true, params1, null, null, "key", "value");
 		  $("#studyListDiv").show();
 		  $("#dataSetListDiv").show();
 		} else {
