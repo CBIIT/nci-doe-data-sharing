@@ -202,33 +202,27 @@ function openUploadModal(selectTarget) {
 function registerCollection() {
 	
 	$("#registerCollectionModal").find(".registerErrorMsg").html("");
+	$("#registerCollectionModal").find(".registerMsgErrorBlock").hide();
 	var collectionPath = $("#registerCollectionModal").find("#collectionPath").val();
-	var collectionName = $("#registerCollectionModal").find("#collectionName").val();
-	
+	var collectionName = $("#registerCollectionModal").find("#collectionName").val();	
 	var collectionType = $("#registerCollectionModal").find("#collectionType").val();
 	
 	var newCollectionPath;
 	var validate = true;
 	var usermetaDataEntered = true;
 	
-		$('form#registerCollectionForm input[type="text"]').each(function(){
+	$('table#newMetaDataTable input[type="text"]').each(function(){
 	        if(!$(this).val()){
 	        	usermetaDataEntered = false;
 	        } 
 		});
 		
-	if(!collectionPath) {
-		validate = false;
-		$("#registerCollectionModal").find(".registerErrorMsg").append("Enter collection path.");
-		$("#registerCollectionModal").find(".registerMsgErrorBlock").show();
-		
-	} else if(!collectionName) {
+	 if(!collectionName) {
 		validate = false;
 		$("#registerCollectionModal").find(".registerErrorMsg").append("Enter collection name.");
 		$("#registerCollectionModal").find(".registerMsgErrorBlock").show();
 		
-	} 
-	
+	} 	
 	if(!usermetaDataEntered) {
 		validate = false;
 		$("#registerCollectionModal").find(".registerErrorMsg").append("Enter the values for all collection MetaData.");
@@ -236,7 +230,6 @@ function registerCollection() {
 	}
 	
 	if(collectionPath && collectionName) {
-		$("#registerCollectionModal").find(".registerMsgErrorBlock").hide();
 		newCollectionPath = collectionPath + "/" + collectionName.trim();
 		$("#registerCollectionModal").find("#newCollectionPath").val(newCollectionPath);
 	}
@@ -270,21 +263,21 @@ function postSuccessRegisterCollection(data,collectionType) {
 	if(data.indexOf("Collection is created") != -1) {
 		
 		$("#registerCollectionModal").find(".registerMsg").html("Collection created successfully.");
-		$("#registerCollectionModal").find(".registerMsgBlock").show();
+		$("#registerCollectionModal").find(".registerMsgBlock").show();		
 	} else {
-		$("#registerCollectionModal").find(".registerErrorMsg").html("Error in create collection: " + data);
+		$("#registerCollectionModal").find(".registerErrorMsg").html("Error in create collection.");
 		$("#registerCollectionModal").find(".registerMsgErrorBlock").show();
 	}
 
 	if(collectionType  == 'Program') {
-		var params= {selectedPath:'/DOE_TEST_Archive'};
+		var params= {selectedPath:'/DOE_TEST_Archive',refreshNode:'true'};
 		loadJsonData('/browse/collection', $("#instituteList"), true, params, null, null, "key", "value"); 
 	} else if(collectionType == 'Study') {
-		var params= {selectedPath:$("#instituteList").val()};
+		var params= {selectedPath:$("#instituteList").val(),refreshNode:'true'};
 		loadJsonData('/browse/collection', $("#studyList"), true, params, null, null, "key", "value");
 		
 	} else if(collectionType == 'Data_Set') {
-		var params= {selectedPath:$("#studyList").val()};
+		var params= {selectedPath:$("#studyList").val(),refreshNode:'true'};
 		 loadJsonData('/browse/collection', $("#dataList"), true, params, null, null, "key", "value");
 	}
 }
@@ -301,7 +294,7 @@ function openBulkDataRegistration() {
 }
 
 function cancelAndReturnToUploadTab() {
-	var params= {selectedPath:$("#dataList").val()};
+	var params= {selectedPath:$("#dataList").val(),refreshNode:'true'};
 	 invokeAjax('/browse/collection','GET',params,contructDataListDiv,null,null,null);
 }
 
@@ -338,8 +331,9 @@ function registerBulkDataFile() {
 						 console.log('SUCCESS: ', msg);
 						 $(".registerBulkDataFile").html(msg);
 						 $(".registerBulkDataFileSuccess").show();
-						 window.scrollTo(0,0);
-						 $('body,html').animate({scrollTop: 0 }, 500);
+						 $('body,html').animate({scrollTop: 0 }, 500); 
+						 $("#uploadDataFilesTab").hide();
+						 clearRegisterDataDiv();
 						 cancelAndReturnToUploadTab();
 						 
 					 },
@@ -383,14 +377,14 @@ function registerBulkDataFile() {
 					 $("#spinner").hide();
 			         $("#dimmer").hide();
 					 console.log('SUCCESS: ', msg);
+					 $('body,html').animate({scrollTop: 0 }, 500);
 					 $(".uploadBulkDataError").hide();
-						$(".uploadBulkDataErrorMsg").html("");
+					 $(".uploadBulkDataErrorMsg").html("");
 					 $(".registerBulkDataFile").html(msg);
 					 $(".registerBulkDataFileSuccess").show();
-					 cancelAndReturnToUploadTab();
-					 window.scrollTo(0,0);
-					 $('body,html').animate({scrollTop: 0 }, 500);
-							 
+					 $("#uploadDataFilesTab").hide();
+					 clearRegisterDataDiv();
+					 cancelAndReturnToUploadTab();		 
 				 },
 				error : function(e) {
 					 console.log('ERROR: ', e);				 
@@ -425,6 +419,11 @@ function displayDataFileSection(value) {
 		$("#singleFileDataUploadSection").hide();
 		$("#bulkFileUploadSection").show();
 		$("#registerFileBtnsDiv").hide();
+		
+		//hide the globus and s3 radio buttons and  dic
+		$('input[name=bulkUploadType]').prop('checked', false);
+		$("#registerFileBtnsDiv").hide();			
+		$("#registerBulkDataForm").hide();
 	}
 }
 
