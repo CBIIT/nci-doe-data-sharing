@@ -133,7 +133,7 @@ function constructNewCollectionMetaDataSet(data,status) {
 	$("#newMetaDataTable tbody").html("");
 	$.each(data, function(key, value) {	
         if(value.attrName == 'consortium_name') {
-        	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '</td><td><input type="text"  placeholder="Required" name="zAttrStr_'+value.attrName+'" value="public" style="width:70%;"></td></tr>');
+        	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '</td><td><input type="text"  placeholder="Required" name="zAttrStr_'+value.attrName+'"  style="width:70%;"></td></tr>');
         } else {
         	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '</td><td><input type="text"  placeholder="Required" name="zAttrStr_'+value.attrName+'" style="width:70%;"></td></tr>');
         }

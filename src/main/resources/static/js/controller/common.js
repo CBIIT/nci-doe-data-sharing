@@ -65,8 +65,15 @@ $("#advSearchBtn").click(function(e){
 });
 
 $("#downloadSelected").click(function(e){
+	$("#download-modal").find("input[type=radio]").prop("checked", "").end();
 	$("#download-modal").find(".selectedFilesListDisplay").html("");
-	 var selectedPaths = [];
+	$("#download-modal").find('.downloadErrorMsg').html("");
+	$("#download-modal").find("#message").hide();
+	$("#download-modal").find("#AsyncDiv").hide();
+	$("#download-modal").find("#s3Div").hide();
+    $("#download-modal").find("div#AsyncDiv input[type='text']").val("");
+    $("#download-modal").find("div#s3Div input[type='text']").val("");
+	var selectedPaths = [];
 	    $("#searchResultTable tbody input[type=checkbox]:checked").each(function () {
 	    	selectedPaths.push($(this).attr('id'));
 	    });

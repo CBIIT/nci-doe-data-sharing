@@ -213,6 +213,7 @@ function downloadFunction(path,fileName) {
 	
 	$("#download-modal").find("#destinationPathId").val(path);	
 	$("#download-modal").find("#message").hide();
+	$("#download-modal").find('.downloadErrorMsg').html("");
 	
 	if(fileName && fileName != "null") {
 		$("#download-modal").find("#syncRadioSet").show();
@@ -221,11 +222,15 @@ function downloadFunction(path,fileName) {
 		$("#download-modal").find("#downloadType").val("data_object");
 		$("#download-modal").find("#downloadFileNameVal").val(fileName);
 		$("#download-modal").find("#downloadFileName").val(fileName);
+	    $("#download-modal").find("div#AsyncDiv input[type='text']").val("");
+	    $("#download-modal").find("div#s3Div input[type='text']").val("");
 	} 
 }
 
 function onClickOfBulkDownloadBtn() {
 	$("#download-modal").find(".selectedFilesListDisplay").html("");
+	$("#download-modal").find("#message").hide();
+	$("#download-modal").find('.downloadErrorMsg').html("");
 	 var selectedPaths = [];
 	    $("#dataSetTable tbody input[type=checkbox]:checked").each(function () {
 	    	selectedPaths.push($(this).attr('id'));
@@ -242,7 +247,8 @@ function onClickOfBulkDownloadBtn() {
 	    } else  {
 	    	$("#download-modal").find("#downloadType").val("datafiles");
 	    }
-	    
+	    $("#download-modal").find("div#AsyncDiv input[type='text']").val("");
+	    $("#download-modal").find("div#s3Div input[type='text']").val("");
 	    $("#download-modal").find("#SyncDiv").hide();
 		$("#download-modal").find("#syncRadioSet").hide();
 		$("#download-modal").find(".selectedFilesDiv").show();
