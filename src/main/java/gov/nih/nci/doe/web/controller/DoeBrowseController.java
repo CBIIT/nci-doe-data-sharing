@@ -84,21 +84,21 @@ public class DoeBrowseController extends AbstractDoeController {
 	@RequestMapping(value = "/collection", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> browseCollection(@RequestParam(value = "selectedPath") String selectedPath, 
 			@RequestParam(required = false) String refreshNode, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+		
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		DoeBrowserEntry browserEntry = (DoeBrowserEntry) session.getAttribute("browserEntry");
-		   List<KeyValueBean> results = new ArrayList<>();
+		List<KeyValueBean> results = new ArrayList<>();
 		boolean getChildren = false;
 		boolean refresh = false;
-   if(!StringUtils.isEmpty(refreshNode)) {
-	   getChildren = true;
-	   refresh = true;
-   }
+           
+		if(!StringUtils.isEmpty(refreshNode)) {
+	          getChildren = true;
+	          refresh = true;
+        }
 		
 		try {
 			if (selectedPath!= null) {
-				browserEntry = getTreeNodes(selectedPath.trim(), browserEntry,
-						authToken,
-						getChildren, true, refresh);
+				browserEntry = getTreeNodes(selectedPath.trim(), browserEntry,authToken,getChildren, true, refresh);
 
 				browserEntry = trimPath(browserEntry, browserEntry.getName());
 				String name = browserEntry.getName().substring(browserEntry.getName().lastIndexOf('/') + 1);

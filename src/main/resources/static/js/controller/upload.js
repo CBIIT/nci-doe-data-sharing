@@ -132,11 +132,11 @@ function contructDataListDiv(data,status) {
 function constructNewCollectionMetaDataSet(data,status) {
 	$("#newMetaDataTable tbody").html("");
 	$.each(data, function(key, value) {	
-        if(value.attrName == 'consortium_name') {
-        	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '</td><td><input type="text"  placeholder="Required" name="zAttrStr_'+value.attrName+'"  style="width:70%;"></td></tr>');
-        } else {
-        	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '</td><td><input type="text"  placeholder="Required" name="zAttrStr_'+value.attrName+'" style="width:70%;"></td></tr>');
-        }
+        	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+        			'data-placement="right" title="'+value.description+'"></i></td><td>'+
+        			'<input type="text" placeholder="Required" name="zAttrStr_'+value.attrName+'"' +
+        			'style="width:70%;"></td></tr>');
+        
 	});	
 }
 
@@ -161,12 +161,22 @@ function addNewMetaDataRowsForDataFile($this) {
 }
 
 
-function retrieveCollectionList(data,status) {		
-		var selectTarget = $("#registerCollectionModal").find("#collectionType").val();
+function retrieveCollectionList(data,status) {	
+	 var collectionType = data[0].key;
+	 var parent = data[0].value;
+	 $("#registerCollectionModal").find('label[for="parentCollectionName"]').text(parent + " Collection Name");
+	 $("#registerCollectionModal").find("#parentCollectionType").val(parent);
+	 $("#registerCollectionModal").find("#collectionType").val(collectionType);
+	$("#registerCollectionModal").find("#registerCollectionBtn").val("Register " + collectionType);
+	$("#registerCollectionModal").find("#collectionMetaDataLabel").text(collectionType + " MetaData");
+	$("#registerCollectionModal").find("#registerModalTitle").html("Register " + collectionType + " Collection");
+	$("#registerCollectionModal").find("#addNewMetaData").html("Add " + collectionType + " MetaData");
+	$("#registerCollectionModal").modal('show');
+		//var selectTarget = $("#registerCollectionModal").find("#collectionType").val();
 		var collectionPath = $("#registerCollectionModal").find("#collectionPath").val();
 		
-			if(selectTarget && collectionPath) {
-				var params1= {selectedPath:collectionPath,collectionType:selectTarget};
+			if(collectionType && collectionPath) {
+				var params1= {selectedPath:collectionPath,collectionType:collectionType};
 				invokeAjax('/addCollection','GET',params1,constructNewCollectionMetaDataSet,null,null,null);		
 			} 	
 } 
@@ -193,10 +203,8 @@ function openUploadModal(selectTarget) {
 	$("#registerCollectionModal").find(".registerMsgErrorBlock").hide();
 	$("#registerCollectionModal").find(".registerErrorMsg").html("");
 	var params= {parent:selectedIndexPathVal};		
-	loadJsonData('/addCollection/collectionTypes', $("#registerCollectionModal").find("#collectionType"), false, params, retrieveCollectionList, null, "key", "value");
-	
-   $("#registerCollectionModal").modal('show');
-	
+	//loadJsonData('/addCollection/collectionTypes', $("#registerCollectionModal").find("#collectionType"), false, params, retrieveCollectionList, null, "key", "value");
+	invokeAjax('/addCollection/collectionTypes','GET',params,retrieveCollectionList,null,null,null);
 }
 
 

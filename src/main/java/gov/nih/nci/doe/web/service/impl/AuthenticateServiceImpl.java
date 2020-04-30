@@ -217,25 +217,29 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 	
 	@Override
 	@Transactional(readOnly = false)
-	public PasswordStatusCode saveUserPassword(String rawPassword, String userid) throws Exception {
+	public PasswordStatusCode saveUserPassword(String rawPassword, String userid, Boolean validatePswd) throws Exception {
 		log.info("Updating password for user ID: {}", userid);		
 		//sanity check
 		if(userid == null || rawPassword == null) {
 			throw new IllegalArgumentException("User ID and password are required");
 		}
-		
-		// validate password
-		log.info("Validating password for user ID: {}", userid );
-		PasswordStatusCode status = validatePassword(rawPassword, userid);
+		PasswordStatusCode status = null;
+		if(Boolean.TRUE.equals(validatePswd)) {
+		  // validate password
+		  log.info("Validating password for user ID: {}", userid );
+		  status = validatePassword(rawPassword, userid);
+		} else {
+			status = PasswordStatusCode.SUCCESS;
+		}
 		if(PasswordStatusCode.SUCCESS == status) {
 			 String encodedPassword = passwordEncoder.encode(rawPassword);
-			 doeUserRepository.updatePasswordByUsername(encodedPassword, userid);
-			 
-				log.info("Attempt to unlock account for user ID: {}");
-				// reset counter
-				doeUserRepository.updateCounterInfo(0, userid);
+			 doeUserRepository.updatePasswordByUsername(encodedPassword, userid);			 
+			 log.info("Attempt to unlock account for user ID: " + userid);
+			 // reset counter
+			 doeUserRepository.updateCounterInfo(0, userid);
 			
 		}
+		
 		return status;
 	}
 

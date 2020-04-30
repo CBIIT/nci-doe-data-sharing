@@ -56,7 +56,7 @@ public class ForgotPasswordController extends AbstractDoeController {
 		log.info("About to set a new password for user ID {}", forgotPassword.getEmailAddrr());
 		
 		// validate the user's email address and password.
-		PasswordStatusCode status = authService.saveUserPassword(forgotPassword.getPassword(), forgotPassword.getEmailAddrr());
+		PasswordStatusCode status = authService.saveUserPassword(forgotPassword.getPassword(), forgotPassword.getEmailAddrr(),true);
 		
 		if(PasswordStatusCode.SUCCESS == status) {
 			

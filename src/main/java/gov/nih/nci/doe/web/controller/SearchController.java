@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
 
@@ -36,11 +36,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import gov.nih.nci.doe.web.domain.LookUp;
+import gov.nih.nci.doe.web.domain.TaskManager;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.DoeSearchResult;
+import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.service.ConsortiumService;
 import gov.nih.nci.doe.web.service.LookUpService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
+import gov.nih.nci.doe.web.util.LambdaUtils;
+import gov.nih.nci.hpc.domain.datatransfer.HpcUserDownloadRequest;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQueryOperator;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQueryType;
@@ -324,12 +328,13 @@ public class SearchController extends AbstractDoeController {
 	
 	
 	    @GetMapping(value = "/search-list")
-	    public ResponseEntity<?> getLevelList(HttpSession session,@RequestHeader HttpHeaders headers,@RequestParam(value = "levelAttr", required = false) String levelAttr) {
+	    public ResponseEntity<?> getLevelList(HttpSession session,@RequestHeader HttpHeaders headers) {
 	        log.info("getting search list");
 	        try {
-	        	List<String> collectionLevels = new ArrayList<String>();
-	        	List<String> attrList = new ArrayList<String>();
 	        	
+	            List<KeyValueBean> keyValueBeanResults = new ArrayList<>();
+	        	List<String> collectionLevels = new ArrayList<String>();
+	        	List<String> attrNamesList = new ArrayList<String>();
 	        	String authToken = (String) session.getAttribute("hpcUserToken");
 	        	
 	  		  HpcMetadataAttributesListDTO dto = DoeClientUtil.getMetadataAttrNames(authToken, hpcMetadataAttrsURL,
@@ -340,20 +345,39 @@ public class SearchController extends AbstractDoeController {
 					String label = levelAttrs.getLevelLabel();
 					if (label == null)
 						continue;
-					collectionLevels.add(label);
-					
-					if(StringUtils.isNotEmpty(levelAttr) && label.equalsIgnoreCase(levelAttr)) {
-						attrList.addAll(levelAttrs.getMetadataAttributes());
-					}
+					collectionLevels.addAll(levelAttrs.getMetadataAttributes());
 					
 				}
 			}
-	  		
-	  		if(StringUtils.isNotEmpty(levelAttr) && StringUtils.isNotBlank(levelAttr)) {
-	  			return new ResponseEntity<>(attrList, headers, HttpStatus.OK);
-	  		} else {
-	  			return new ResponseEntity<>(collectionLevels, headers, HttpStatus.OK);
-	  		}
+
+			if(CollectionUtils.isNotEmpty(collectionLevels)) {
+				
+				HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
+				if (modelDTO == null) {
+					modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL, sslCertPath, sslCertPassword);
+					session.setAttribute("userDOCModel", modelDTO);
+				}
+				
+				
+				List<String> systemAttrs = modelDTO.getCollectionSystemGeneratedMetadataAttributeNames();
+				session.setAttribute("systemAttrs", systemAttrs);
+				
+				List<String> userList = LambdaUtils.filter(collectionLevels, (String n) ->!systemAttrs.contains(n));
+				
+				List<LookUp> results = lookUpService.getAllDisplayNames();	
+		     	List<String> lookUpList = LambdaUtils.map(results,LookUp::getDisplayName);
+		    	List<String> lookUpAttrnamesList = LambdaUtils.map(results,LookUp::getAttrName);
+		     	attrNamesList.addAll(lookUpList);
+		     	
+		     	List<String> userDefinedMetadaList = LambdaUtils.filter(userList, (String n) ->!lookUpAttrnamesList.contains(n));
+		     	
+		     	attrNamesList.addAll(userDefinedMetadaList);
+		     	
+		     	attrNamesList.stream().forEach(e -> keyValueBeanResults.add(new KeyValueBean(e, e))); 
+		     	
+				
+			}
+	  			return new ResponseEntity<>(keyValueBeanResults, headers, HttpStatus.OK);
 	            
 	        } catch (Exception e) {
 	            log.error(e.getMessage(), e);
@@ -380,33 +404,4 @@ public class SearchController extends AbstractDoeController {
 	        }
 	    }
 	    
-		public HpcCollectionDTO getCollection(String path, HttpSession session, HttpServletRequest request) {
-			log.info("get collection for path" + path);
-			try {
-				// User Session validation				
-				String authToken = (String) session.getAttribute("hpcUserToken");
-				if ( authToken == null || path ==null) {
-					return null;
-				}
-
-				// Get collection
-				HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL, path, false,
-						false, true, sslCertPath, sslCertPassword);
-			
-				if (collections != null && collections.getCollections() != null
-						&& collections.getCollections().size() > 0) {
-
-					return collections.getCollections().get(0);
-	           
-			     } 
-			} catch (Exception e) {
-				log.error("error in get collection" + e);
-			}
-			
-			return null;
-		}
-		
-
-
-
 }

@@ -128,20 +128,8 @@ public class MailServiceImpl implements MailService {
 						if (bcc != null) {
 							helper.setBcc(bcc);
 						}
-					} else if(!override) {
-						helper.setTo(to);
+					}  else {
 
-						if (cc != null) {
-							helper.setCc(cc);
-						}
-						if (bcc != null) {
-							helper.setBcc(bcc);
-						}
-						
-						
-					} else {
-						
-						
 						helper.setTo(overrideAddressesToList);
 
 						if (vc.get(TO) != null) {
@@ -195,6 +183,7 @@ public class MailServiceImpl implements MailService {
 		to.add(email);
 		
 		params.put(TO, to.toArray(new String[0]));
+		params.put(BCC, overrideAddresses);
 		send("REGISTRATION_EMAIL", params);
 	}
 

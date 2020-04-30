@@ -59,7 +59,7 @@ public class ResetPasswordController extends AbstractDoeController {
 	   
 		//generate a random password for the user and store in db
 		String password = generateTempPassword();
-		authService.saveUserPassword(password,emailAddr);
+		authService.saveUserPassword(password,emailAddr,false);
 		
 		//send reset email link
 		mailService.sendResetPasswordEmail(password,emailAddr);

@@ -37,7 +37,7 @@ $(document).ready(function () {
 	    
 	    $('[data-toggle="tooltip"]').tooltip();
 	    
-	    loadJsonData('/search/adv-search-list', $("#metadatalist"), true, null, null, null, "displayName", "displayName");
+	    loadJsonData('/search/search-list', $("#metadatalist"), true, null, null, null, "key", "value");
 	   
 
 

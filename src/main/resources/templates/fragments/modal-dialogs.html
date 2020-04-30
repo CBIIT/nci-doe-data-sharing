@@ -200,7 +200,7 @@ aria-labelledby="forgotPasswordLabel">
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 class="modal-title">Register Collection</h4>
+                <h4 class="modal-title" id="registerModalTitle">Register Collection</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
@@ -224,13 +224,14 @@ aria-labelledby="forgotPasswordLabel">
                 </div>  
                  
                  <input type="hidden" name="path" id="newCollectionPath"/>   
+                  <input type="hidden" id="parentCollectionType"/>   
                 <div class="col-md-12 col-sm-12">
                     <div class="col-md-12 col-sm-12">
                         <div class="form-row jumbotron" style=" margin-top: 20px;">
                              <div class="form-group col-lg-4 col-md-12" style="display:none;">
                                 <label for="collectionType">Collection Type</label>
-                                <select class="simple-select2"  id="collectionType" name="zAttrStr_collection_type" style="width:70%">
-                                </select>
+                                <input type="text" id="collectionType" name="zAttrStr_collection_type">
+                               
                             </div>
                             <div class="form-group col-lg-4 col-md-12 parentCollectionDiv">
                             <label for="parentCollectionName">Parent Collection Name</label>
@@ -249,7 +250,7 @@ aria-labelledby="forgotPasswordLabel">
                     
                      <div class="col-md-12 col-sm-12">
                       <div class="col-lg-12 col-md-12 col-sm-12 float-left" style="margin-top:20px;">
-                      <h4>Collection MetaData</h4>
+                      <h4 id="collectionMetaDataLabel">Collection MetaData</h4>
                       </div>
                       
                         <div class="col-lg-12 col-md-12 col-sm-12">

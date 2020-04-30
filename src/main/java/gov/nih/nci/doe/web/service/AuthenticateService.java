@@ -21,7 +21,7 @@ public interface AuthenticateService {
 	
 	boolean doesUsernameExist(String username) throws Exception;
 	
-	PasswordStatusCode saveUserPassword(String rawPassword, String userid) throws Exception;
+	PasswordStatusCode saveUserPassword(String rawPassword, String userid,Boolean validatePswd) throws Exception;
 	
 	DoeUsersModel getUserInfo(String emailAddr);
 	

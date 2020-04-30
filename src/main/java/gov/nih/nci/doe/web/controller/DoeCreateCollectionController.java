@@ -101,14 +101,12 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 					} else {
 						for (HpcMetadataEntry entry : collection.getMetadataEntries().getSelfMetadataEntries()) {
 							if (entry.getAttribute().equals("collection_type")) {
-								collectionType = entry.getValue();
+								 collectionType = entry.getValue();
 								break;
 							}
 						}
 					}
 				} else {
-					// Collection not found
-					// Populate all collection types
 					for (String type : getCollectionTypes(rules))
 						collectionTypesSet.add(type);
 				}
@@ -135,7 +133,8 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 		if (collectionTypesSet.isEmpty())
 			collectionTypesSet.add("Folder");
 		
-		  collectionTypesSet.stream().forEach(e -> results.add(new KeyValueBean(e, e))); 
+		final String collectionTypeVal = collectionType;
+		  collectionTypesSet.stream().forEach(e -> results.add(new KeyValueBean(e, collectionTypeVal))); 
 		
 		 return new ResponseEntity<>(results, HttpStatus.OK);
 	}
