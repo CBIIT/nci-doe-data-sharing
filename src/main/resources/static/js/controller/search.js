@@ -1,6 +1,6 @@
 function populateSearchCriteria(searchType) {
 	
-	
+	$("#searchResultsDiv").show();
 	search_criteria_json.detailed = true;
 	search_criteria_json.searchType = "collection";	
 	
@@ -48,6 +48,7 @@ function populateSearchCriteria(searchType) {
 		search_criteria_json.level = levelValues.join();
 		search_criteria_json.isExcludeParentMetadata = isExcludeParentMetadata.join();
 		search_criteria_json.operator = operators.join();
+		refreshDataTable();
 }
 
 function refreshDataTable() {
@@ -256,7 +257,7 @@ function display(value) {
 
 
 function addValueToSelected(optionVal) {
-    if (($(optionVal).attr('value')) === '')
+    if ($(optionVal).attr('value') === '' || $(optionVal).attr('value') === 'ANY')
         return;
     var $metadatalist = $('#metadatalisting');
     var fieldPath = $(optionVal).attr('value');
@@ -314,7 +315,7 @@ $.fn.sortOptions = function () {
                 return -1;
             if (b.value === '')
                 return 1;
-            return a.text > b.text ? 1 : -1;
+            return a.value > b.value ? 1 : -1;
         })
         return $(this).empty().append(op);
     });

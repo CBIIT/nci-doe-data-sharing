@@ -43,25 +43,33 @@ $(document).ready(function () {
 
 	    
 $("#searchBtn").click(function(e){
-	e.preventDefault();
-	$("#searchResultsDiv").show();
-	 populateSearchCriteria('simpleSearch');
-	refreshDataTable();
-	
+	e.preventDefault();	
+	$(".errorFilterCriteria").hide();
+	if(!$("#attributeVal").val()) {
+		$(".keywordError").show();
+	} else {
+		$(".keywordError").hide();
+		populateSearchCriteria('simpleSearch');
+	}
 });
 
 $("#displayAllResults").click(function(e){
 	e.preventDefault();
-	$("#searchResultsDiv").show();
-	 populateSearchCriteria('displayAllResults');
-	refreshDataTable();
+	$(".keywordError").hide();
+	$(".errorFilterCriteria").hide();
+   populateSearchCriteria('displayAllResults');
 });
 
 $("#advSearchBtn").click(function(e){
 	e.preventDefault();
-	$("#searchResultsDiv").show();
-	 populateSearchCriteria('advSearchBtn');
-	refreshDataTable();
+	$(".keywordError").hide();
+	var advLength = $("div#metadatalisting .filteritem").length;
+		   if (advLength == 0){
+			$(".errorFilterCriteria").show();
+		} else { 
+			 $(".errorFilterCriteria").hide();
+			 populateSearchCriteria('advSearchBtn');
+		}		
 });
 
 $("#downloadSelected").click(function(e){
@@ -276,12 +284,16 @@ $("#btnUpdateProfile").click(function(e){
 
 
 $("#resetAdvSearchBtn").click(function(e){
+	$(".keywordError").hide();
+	$(".errorFilterCriteria").hide();
 	 $('#metadatalisting').empty();
 	 $("#searchResultsDiv").hide();
 	 
 });
 
 $("#resetBtn").click(function(e){
+	$(".keywordError").hide();
+	$(".errorFilterCriteria").hide();
 	$("#attributeVal").val("");
 	 $("#searchResultsDiv").hide();
 	$('#metadatalisting').empty();
