@@ -115,6 +115,7 @@ public class SearchController extends AbstractDoeController {
 		
 		
 		List<String> systemAttrs = modelDTO.getCollectionSystemGeneratedMetadataAttributeNames();
+		systemAttrs.add("collection_type");
 		session.setAttribute("systemAttrs", systemAttrs);
 		
 		List<DoeSearchResult> results = new ArrayList<>();	
@@ -360,6 +361,7 @@ public class SearchController extends AbstractDoeController {
 				
 				
 				List<String> systemAttrs = modelDTO.getCollectionSystemGeneratedMetadataAttributeNames();
+				systemAttrs.add("collection_type");
 				session.setAttribute("systemAttrs", systemAttrs);
 				
 				List<String> userList = LambdaUtils.filter(collectionLevels, (String n) ->!systemAttrs.contains(n));

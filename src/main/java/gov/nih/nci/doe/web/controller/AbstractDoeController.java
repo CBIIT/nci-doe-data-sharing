@@ -67,7 +67,7 @@ public abstract class AbstractDoeController {
 			List<KeyValueBean> entryList = new ArrayList<KeyValueBean>();
 			
 			for (HpcMetadataEntry entry : list) {
-				if (!"collection_type".equalsIgnoreCase(entry.getAttribute()) && systemAttrs != null && !systemAttrs.contains(entry.getAttribute()) && levelName.equalsIgnoreCase(entry.getLevelLabel())) {
+				if (systemAttrs != null && !systemAttrs.contains(entry.getAttribute()) && levelName.equalsIgnoreCase(entry.getLevelLabel())) {
 					KeyValueBean k = new KeyValueBean(entry.getAttribute(), entry.getValue());			
 					entryList.add(k);
 				}
