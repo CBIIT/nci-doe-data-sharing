@@ -167,18 +167,17 @@ function retrieveCollectionList(data,status) {
 	 $("#registerCollectionModal").find('label[for="parentCollectionName"]').text(parent + " Collection Name");
 	 $("#registerCollectionModal").find("#parentCollectionType").val(parent);
 	 $("#registerCollectionModal").find("#collectionType").val(collectionType);
-	$("#registerCollectionModal").find("#registerCollectionBtn").val("Register " + collectionType);
-	$("#registerCollectionModal").find("#collectionMetaDataLabel").text(collectionType + " MetaData");
-	$("#registerCollectionModal").find("#registerModalTitle").html("Register " + collectionType + " Collection");
-	$("#registerCollectionModal").find("#addNewMetaData").html("Add " + collectionType + " MetaData");
-	$("#registerCollectionModal").modal('show');
-		//var selectTarget = $("#registerCollectionModal").find("#collectionType").val();
-		var collectionPath = $("#registerCollectionModal").find("#collectionPath").val();
+	 $("#registerCollectionModal").find("#registerCollectionBtn").val("Register " + collectionType);
+	 $("#registerCollectionModal").find("#collectionMetaDataLabel").text(collectionType + " MetaData");
+	 $("#registerCollectionModal").find("#registerModalTitle").html("Register " + collectionType + " Collection");
+	 $("#registerCollectionModal").find("#addNewMetaData").html("Add " + collectionType + " MetaData");
+	 $("#registerCollectionModal").modal('show');
+	 var collectionPath = $("#registerCollectionModal").find("#collectionPath").val();
 		
-			if(collectionType && collectionPath) {
-				var params1= {selectedPath:collectionPath,collectionType:collectionType};
-				invokeAjax('/addCollection','GET',params1,constructNewCollectionMetaDataSet,null,null,null);		
-			} 	
+	 if(collectionType && collectionPath) {
+		var params1= {selectedPath:collectionPath,collectionType:collectionType};
+		invokeAjax('/addCollection','GET',params1,constructNewCollectionMetaDataSet,null,null,null);		
+	} 	
 } 
 
 
@@ -195,15 +194,14 @@ function openUploadModal(selectTarget) {
 		$("#registerCollectionModal").find("#parentCollectionName").val(parentName);
 	}
 	$("#registerCollectionModal").find("#collectionPath").val(selectedIndexPathVal);
-	$("#registerCollectionModal").find("#collectionName").val("");
+	//$("#registerCollectionModal").find("#collectionName").val("");
 	$("#newMetaDataTable tbody").html("");
 	$("#registerCollectionModal").find(".registerMsg").html("");
 	$("#registerCollectionModal").find("#newMetaDataTable tbody").html("");
 	$("#registerCollectionModal").find(".registerMsgBlock").hide();
 	$("#registerCollectionModal").find(".registerMsgErrorBlock").hide();
 	$("#registerCollectionModal").find(".registerErrorMsg").html("");
-	var params= {parent:selectedIndexPathVal};		
-	//loadJsonData('/addCollection/collectionTypes', $("#registerCollectionModal").find("#collectionType"), false, params, retrieveCollectionList, null, "key", "value");
+	var params= {parent:selectedIndexPathVal};
 	invokeAjax('/addCollection/collectionTypes','GET',params,retrieveCollectionList,null,null,null);
 }
 
@@ -213,25 +211,31 @@ function registerCollection() {
 	$("#registerCollectionModal").find(".registerErrorMsg").html("");
 	$("#registerCollectionModal").find(".registerMsgErrorBlock").hide();
 	var collectionPath = $("#registerCollectionModal").find("#collectionPath").val();
-	var collectionName = $("#registerCollectionModal").find("#collectionName").val();	
+	//var collectionName = $("#registerCollectionModal").find("#collectionName").val();	
 	var collectionType = $("#registerCollectionModal").find("#collectionType").val();
 	
 	var newCollectionPath;
+	var collectionName;
 	var validate = true;
 	var usermetaDataEntered = true;
 	
 	$('table#newMetaDataTable input[type="text"]').each(function(){
-	        if(!$(this).val()){
+		var name = $(this).val();
+	        if(!name){
 	        	usermetaDataEntered = false;
 	        } 
+	        if(name && ($(this).attr('name') == ('zAttrStr_' + collectionType.toLowerCase() + '_' + 'name'))) {
+	        	var modifiedName = name.replace(/ /g,"_");
+	        	collectionName = collectionType + "_" + modifiedName;
+	        }
 		});
-		
-	 if(!collectionName) {
+	
+	 /*if(!collectionName) {
 		validate = false;
 		$("#registerCollectionModal").find(".registerErrorMsg").append("Enter collection name.");
 		$("#registerCollectionModal").find(".registerMsgErrorBlock").show();
 		
-	} 	
+	} */	
 	if(!usermetaDataEntered) {
 		validate = false;
 		$("#registerCollectionModal").find(".registerErrorMsg").append("Enter the values for all collection MetaData.");
