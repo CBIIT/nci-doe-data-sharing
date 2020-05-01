@@ -194,7 +194,6 @@ function openUploadModal(selectTarget) {
 		$("#registerCollectionModal").find("#parentCollectionName").val(parentName);
 	}
 	$("#registerCollectionModal").find("#collectionPath").val(selectedIndexPathVal);
-	//$("#registerCollectionModal").find("#collectionName").val("");
 	$("#newMetaDataTable tbody").html("");
 	$("#registerCollectionModal").find(".registerMsg").html("");
 	$("#registerCollectionModal").find("#newMetaDataTable tbody").html("");
@@ -211,7 +210,6 @@ function registerCollection() {
 	$("#registerCollectionModal").find(".registerErrorMsg").html("");
 	$("#registerCollectionModal").find(".registerMsgErrorBlock").hide();
 	var collectionPath = $("#registerCollectionModal").find("#collectionPath").val();
-	//var collectionName = $("#registerCollectionModal").find("#collectionName").val();	
 	var collectionType = $("#registerCollectionModal").find("#collectionType").val();
 	
 	var newCollectionPath;
@@ -230,12 +228,6 @@ function registerCollection() {
 	        }
 		});
 	
-	 /*if(!collectionName) {
-		validate = false;
-		$("#registerCollectionModal").find(".registerErrorMsg").append("Enter collection name.");
-		$("#registerCollectionModal").find(".registerMsgErrorBlock").show();
-		
-	} */	
 	if(!usermetaDataEntered) {
 		validate = false;
 		$("#registerCollectionModal").find(".registerErrorMsg").append("Enter the values for all collection MetaData.");

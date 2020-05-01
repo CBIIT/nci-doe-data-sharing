@@ -13,6 +13,49 @@ function refreshTaskManagerDataTable() {
     }
 }
 
+function retryUpload(taskId,taskName) {
+	var params= {taskId:taskId,taskName:taskName};
+	$.ajax({
+		type : "POST",
+	     url : "/uploadtask",
+		 data : params,
+		 beforeSend: function () {
+	    	   $("#spinner").show();
+	           $("#dimmer").show();
+	       },
+		 success : function(msg) {
+			 $("#spinner").hide();
+	         $("#dimmer").hide();
+	         refreshTaskManagerDataTable();		 
+		 },
+		error : function(e) {
+			 console.log('ERROR: ', e);				 
+		}
+	});
+}
+
+function retryDownload(taskId,taskName) {
+	var params= {taskId:taskId,taskName:taskName};
+	//invokeAjax('/downloadtask','POST',params,postSuccessRetry,null,null,null);
+	$.ajax({
+		type : "POST",
+	     url : "/downloadtask",
+		 data : params,
+		 beforeSend: function () {
+	    	   $("#spinner").show();
+	           $("#dimmer").show();
+	       },
+		 success : function(msg) {
+			 $("#spinner").hide();
+	         $("#dimmer").hide();
+	         refreshTaskManagerDataTable();		 
+		 },
+		error : function(e) {
+			 console.log('ERROR: ', e);				 
+		}
+	});
+}
+
 function dataTableInitTaskManager() {
     $('#manageTasksTable').DataTable({
         "paging": true,

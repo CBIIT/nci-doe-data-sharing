@@ -36,7 +36,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import gov.nih.nci.doe.web.domain.LookUp;
-import gov.nih.nci.doe.web.domain.TaskManager;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.DoeSearchResult;
 import gov.nih.nci.doe.web.model.KeyValueBean;
@@ -44,7 +43,6 @@ import gov.nih.nci.doe.web.service.ConsortiumService;
 import gov.nih.nci.doe.web.service.LookUpService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.doe.web.util.LambdaUtils;
-import gov.nih.nci.hpc.domain.datatransfer.HpcUserDownloadRequest;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQueryOperator;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQueryType;

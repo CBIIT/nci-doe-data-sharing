@@ -111,9 +111,11 @@ public class TaskManagerCotroller extends AbstractDoeController {
     					task.setTaskName(t.getTaskName());
     					task.setUserId(t.getUserId());
     					task.setTaskType(t.getTaskType());
-    					if(download.getResult() != null && download.getResult().value() == "FAILED") {
-    						task.setTransferStatus("Failed");
-    					} else if(download.getResult() != null && download.getResult().value() == "COMPLETED") {
+    					if(download.getResult() != null && download.getResult().value().equals("FAILED")) {
+    						task.setTransferStatus("Failed" + "<strong><a class='btn btn-link btn-sm' href='#' "
+    								+ "onclick='retryDownload(\"" + download.getTaskId() + "\" ,\"" + t.getTaskName() + "\")'>"
+    										+ "<i class='fa fa-repeat' title='Retry' aria-hidden='true'></i></a></strong>");
+    					} else if(download.getResult() != null && download.getResult().value().equals("COMPLETED")) {
     						task.setTransferStatus("Completed");
     					} else {
     						task.setTransferStatus("In Progress");
@@ -144,13 +146,16 @@ public class TaskManagerCotroller extends AbstractDoeController {
     					task.setTaskType(t.getTaskType());
     					if(upload.getResult() == null) {
     						task.setTransferStatus("In Progress");
-    					} else if(upload.getResult()) {
+    					} else if(Boolean.TRUE.equals(upload.getResult())) {
     						task.setTransferStatus("Completed");
-    					} else if(!upload.getResult()) {
+    					} else if(Boolean.FALSE.equals(upload.getResult())) {
     						List<String> message = new ArrayList<String>();
     						upload.getFailedItems().stream().forEach(x -> message.add(x.getMessage()));
     						
-    						task.setTransferStatus("Failed (" + String.join(",", message) + ")");
+    						task.setTransferStatus("Failed (" + String.join(",", message) + ")" + 
+    								"<strong><a class='btn btn-link btn-sm' href='#'"
+    								+ "onclick='retryUpload(\"" + upload.getTaskId() + "\" ,\"" + t.getTaskName() + "\")'>"
+    								+ "<i class='fa fa-repeat' title='Retry' aria-hidden='true'></i></a></strong>");
     					} 
     					uploadTaskResults.add(task);
     			}
