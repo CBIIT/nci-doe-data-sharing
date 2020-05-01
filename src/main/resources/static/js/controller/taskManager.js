@@ -34,9 +34,8 @@ function retryUpload(taskId,taskName) {
 	});
 }
 
-function retryDownload(taskId,taskName) {
-	var params= {taskId:taskId,taskName:taskName};
-	//invokeAjax('/downloadtask','POST',params,postSuccessRetry,null,null,null);
+function retryDownload(taskId,taskName,taskType) {
+	var params= {taskId:taskId,taskName:taskName,taskType:taskType};
 	$.ajax({
 		type : "POST",
 	     url : "/downloadtask",

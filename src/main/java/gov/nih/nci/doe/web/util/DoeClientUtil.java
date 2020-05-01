@@ -822,9 +822,6 @@ public class DoeClientUtil {
       String taskId = "Unknown";
       if (downloadDTO != null)
         taskId = downloadDTO.getTaskId();
-     // result.setMessage(
-         //     "Asynchronous download request is submitted successfully! Task Id: <a href='downloadtask?type=" + downloadType + "&taskId=" + taskId +"'>"+taskId+"</a>");
-     
       result.setMessage(taskId);
       return result;
     } else {

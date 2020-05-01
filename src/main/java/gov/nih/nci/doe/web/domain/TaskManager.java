@@ -18,6 +18,7 @@ public class TaskManager {
 	private String taskType;
 	private String userId;
 	private Date taskDate;
+	private String downloadType;
 	
 	
 
@@ -44,6 +45,10 @@ public class TaskManager {
         if (taskType != null ? !taskType.equals(that.taskType) : that.taskType != null) {
             return false;
         }
+        if (downloadType != null ? !downloadType.equals(that.downloadType) : that.downloadType != null) {
+            return false;
+        }
+
 
         return taskDate != null ? taskDate.equals(that.taskDate) : that.taskDate == null;
 
@@ -120,6 +125,17 @@ public class TaskManager {
 		this.userId = userId;
 	}
 
+	@Basic
+    @Column(name = "DOWNLOAD_TYPE")
+	public String getDownloadType() {
+		return downloadType;
+	}
+
+
+	public void setDownloadType(String downloadType) {
+		this.downloadType = downloadType;
+	}
+
 
 	@Override
     public String toString() {
@@ -129,6 +145,7 @@ public class TaskManager {
               ", taskDate=" + taskDate +
                ", taskId=" + taskId +
                ", userId=" + userId +
+                  ", downloadType=" + downloadType +
             '}';
     }
 }

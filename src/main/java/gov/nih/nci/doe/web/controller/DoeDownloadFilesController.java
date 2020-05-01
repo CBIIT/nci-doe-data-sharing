@@ -126,7 +126,7 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 					String taskId = downloadDTO.getTaskId();
 					result.setMessage("Download request successful. Task Id: " +taskId);
 					 if(loggedOnUser != null) {
-				     taskManagerService.saveTransfer(taskId,"Download","Bulk Download Files",getLoggedOnUserInfo());
+				     taskManagerService.saveTransfer(taskId,"Download","Bulk Download Files",downloadType, getLoggedOnUserInfo());
 					 }
 				}
 				return result; 

@@ -112,8 +112,11 @@ public class TaskManagerCotroller extends AbstractDoeController {
     					task.setUserId(t.getUserId());
     					task.setTaskType(t.getTaskType());
     					if(download.getResult() != null && download.getResult().value().equals("FAILED")) {
-    						task.setTransferStatus("Failed" + "<strong><a class='btn btn-link btn-sm' href='#' "
-    								+ "onclick='retryDownload(\"" + download.getTaskId() + "\" ,\"" + t.getTaskName() + "\")'>"
+    						List<String> message = new ArrayList<String>();
+    						download.getItems().stream().forEach(x -> message.add(x.getMessage()));    						
+    						task.setTransferStatus("Failed (" + String.join(",", message) + ")" + 
+    					"<strong><a class='btn btn-link btn-sm' href='#' "
+    								+ "onclick='retryDownload(\"" + download.getTaskId() + "\" ,\"" + t.getTaskName() + "\", \"" + t.getDownloadType() + "\")'>"
     										+ "<i class='fa fa-repeat' title='Retry' aria-hidden='true'></i></a></strong>");
     					} else if(download.getResult() != null && download.getResult().value().equals("COMPLETED")) {
     						task.setTransferStatus("Completed");

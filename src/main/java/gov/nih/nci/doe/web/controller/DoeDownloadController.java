@@ -126,7 +126,7 @@ public class DoeDownloadController extends AbstractDoeController {
               //store the task ID in DB if logged on user exists
               if(loggedOnUser != null) {
             	  String name = downloadFile.getDestinationPath().substring(downloadFile.getDestinationPath().lastIndexOf('/') + 1);
-                  taskManagerService.saveTransfer(taskId,"Download",name,getLoggedOnUserInfo());  
+                  taskManagerService.saveTransfer(taskId,"Download",downloadFile.getDownloadType(),name,getLoggedOnUserInfo());  
               }
               
               result.setMessage("Asynchronous download request is submitted successfully! Task Id: " + taskId);
