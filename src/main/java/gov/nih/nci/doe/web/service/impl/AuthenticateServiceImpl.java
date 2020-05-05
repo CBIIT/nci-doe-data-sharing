@@ -253,6 +253,8 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 			userModel.setFirstName(d.getFirstName());
 			userModel.setLastName(d.getLastName());
 			userModel.setInstitution(d.getInstitution());
+			userModel.setIsWrite(d.getIsWrite());
+			userModel.setProgramName(d.getProgramName());
 			return userModel;
 		}
 		

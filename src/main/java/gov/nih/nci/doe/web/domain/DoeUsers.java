@@ -4,6 +4,9 @@ import java.util.Date;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Type;
+
+
 
 
 
@@ -20,6 +23,8 @@ public class DoeUsers {
 	private String institution;
 	private Date lockoutDate;
 	private Integer lockoutCounter;
+	private Boolean isWrite;
+	private String programName;
 	
 
     public boolean equals(Object object) {
@@ -128,7 +133,32 @@ public class DoeUsers {
 		this.lockoutCounter = lockoutCounter;
 	}
 	
-    @Override
+	
+	@Basic
+	@Column(name = "IS_WRITE", nullable = true, length = 1)
+	@Type(type = "yes_no")
+    public Boolean getIsWrite() {
+		return isWrite;
+	}
+
+
+	public void setIsWrite(Boolean isWrite) {
+		this.isWrite = isWrite;
+	}
+
+	@Basic
+    @Column(name = "PROGRAM_NAME")
+	public String getProgramName() {
+		return programName;
+	}
+
+
+	public void setProgramName(String programName) {
+		this.programName = programName;
+	}
+
+
+	@Override
     public String toString() {
         return "DoeUsers{" +
             ", firstName='" + firstName + '\'' +

@@ -10,6 +10,8 @@ public class DoeUsersModel {
 	private String institution;
 	private Date lockoutDate;
 	private Integer lockoutCounter;
+	private Boolean isWrite;
+	private String programName;
 
 	public String getFirstName() {
 		return firstName;
@@ -49,6 +51,18 @@ public class DoeUsersModel {
 	}
 	public void setLockoutCounter(Integer lockoutCounter) {
 		this.lockoutCounter = lockoutCounter;
+	}
+	public Boolean getIsWrite() {
+		return isWrite;
+	}
+	public void setIsWrite(Boolean isWrite) {
+		this.isWrite = isWrite;
+	}
+	public String getProgramName() {
+		return programName;
+	}
+	public void setProgramName(String programName) {
+		this.programName = programName;
 	}
 	
 	

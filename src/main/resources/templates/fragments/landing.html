@@ -11,6 +11,7 @@
                 <a><img  src="images/Molecules.jpg" th:src="@{/images/Molecules.jpg}" alt="A flexible data coordination framework housing multiple types of biologic data
                  generated in support of cancer research funded or supported by the NCI" width="100%"></a>
             </div>
+            <input type="hidden" id="uploader" value="${isUploader}"/>
             <div class="col-md-3 buttoncontainer">
                 <a th:href="@{/searchTab}"class="bigbutton" id="btnSearchHomeTab">
                     <div class="bigbutton searchbutton">
@@ -30,7 +31,7 @@
                     </div>
                 </a>
                 <br/>
-                 <a  th:href="@{/addbulk}" class="bigbutton" id="btnUploadHomeTab" th:if="${loggedOnUser != null}">
+                 <a  th:href="@{/addbulk}" class="bigbutton" id="btnUploadHomeTab" th:if="${loggedOnUser != null && isUploader eq true}">
                     <div class="bigbutton">
                         <h2> Uploads </h2>
                         <p>

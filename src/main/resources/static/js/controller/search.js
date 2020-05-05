@@ -114,7 +114,11 @@ function dataTableInit(isVisible) {
 
         "drawCallback": function (settings) {
         	$("#searchResultTable thead").remove();
-        	
+        	if(isVisible) {
+        		$("#downloadSelected").show();
+        	} else {
+        		$("#downloadSelected").hide();
+        	}
 
            $(".dataSetFragment").click(function(e) {
         	   $("#searchFragmentDiv").hide();
@@ -216,8 +220,8 @@ function renderPath(data, type, row) {
 			"<i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Institute Metadata'></i></span></div></div></div>";
 
 	} else {
-		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'><input type='checkbox' id=" + row.dataSetPath + " " +
-		"class='selectCheckboxForIns'/>&nbsp;&nbsp;&nbsp;<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span>" +
+		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'>"+
+		"&nbsp;&nbsp;&nbsp;<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span>" +
 		"&nbsp&nbsp;</div><div class='col-md-12'></div>" +
 		"<div class='col-md-12' style='margin-left:22px;'><a href='#' class='dataSetFragment' metadata_type = '" + data  + "' data_set_path = " + row.dataSetPath + ">" +
 				"<span class='cil_12_bold_no_color'>" + row.dataSetDescription + "</span>" +

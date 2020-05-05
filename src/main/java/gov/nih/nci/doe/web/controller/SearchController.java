@@ -179,7 +179,7 @@ public class SearchController extends AbstractDoeController {
 		for (HpcCollectionDTO result : searchResults) {
 			DoeSearchResult returnResult = new DoeSearchResult();
 			returnResult.setDataSetPath(result.getCollection().getCollectionName());
-            returnResult.setDataSetName(getAttributeValue("name", result.getMetadataEntries()));
+            returnResult.setDataSetName(getAttributeValue("data_set_name", result.getMetadataEntries()));
             returnResult.setDataSetDescription(getAttributeValue("description", result.getMetadataEntries()));
             returnResult.setStudyPath(result.getCollection().getCollectionParentName());
             returnResult.setNumOfDataSets(3);

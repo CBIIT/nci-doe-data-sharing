@@ -5,8 +5,10 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,8 +17,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
+import gov.nih.nci.doe.web.domain.DoeUsers;
 import gov.nih.nci.doe.web.model.DoeResponse;
+import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.model.KeyValueBean;
+import gov.nih.nci.doe.web.repository.DoeUserRepository;
+import gov.nih.nci.doe.web.service.AuthenticateService;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 
 public abstract class AbstractDoeController {
@@ -26,7 +32,8 @@ public abstract class AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.ssl.cert.password}")
 	protected String sslCertPassword;
 	
-	
+	@Autowired
+	private AuthenticateService authenticateService;
 
 	protected Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -58,6 +65,19 @@ public abstract class AbstractDoeController {
 				return auth.getName().trim();
 			}
 			return null;
+	    }
+	  
+	  @ModelAttribute("isUploader")
+	    public Boolean getIsUploader() {
+		  String emailAddr = getLoggedOnUserInfo();
+		  if(!StringUtils.isEmpty(emailAddr)) {
+			  DoeUsersModel user =  authenticateService.getUserInfo(emailAddr);
+			  if(user.getIsWrite() != null && user.getIsWrite()) {
+				return true;  
+			  }
+		  }
+		  
+	      return false;
 	    }
 	  
 		public List<KeyValueBean> getUserMetadata(List<HpcMetadataEntry> list,String levelName, List<String> systemAttrs) {

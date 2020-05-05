@@ -28,7 +28,7 @@
             <li class="nav-item" role="tab" th:if="${loggedOnUser != null}">
                 <a class="nav-link" id="manageTasks-tab" th:href="@{/tasksTab}" role="tab">Status</a>
             </li>
-            <li class="nav-item" role="tab" th:if="${loggedOnUser != null}">
+            <li class="nav-item" role="tab" th:if="${loggedOnUser != null && isUploader eq true}">
                 <a class="nav-link" id="upload-tab" th:href="@{/addbulk}" role="tab" >Uploads</a>
             </li>
         </ul>

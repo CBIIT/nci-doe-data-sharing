@@ -52,6 +52,13 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata) {
         },
 
         "drawCallback": function (settings) {
+        	
+        	if(isVisible) {
+        		$("#downloadSelectedDataSet").show();
+        	} else {
+        		$("#downloadSelectedDataSet").hide();
+        	}
+        	
         	$("#dataSetMetaData tbody").html("");
         	
         	var selfMetadata = JSON.parse(metadata);
@@ -150,7 +157,9 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata) {
                 headerHtml: 'batch select',
                 blurable: true,
                 targets: 0,
-            },],
+                "visible": isVisible,
+            },
+            { "visible": isVisible, "targets": 2}],
         "dom": '<"top"lip>rt<"bottom"p>',
 
         "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
