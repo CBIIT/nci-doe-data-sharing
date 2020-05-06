@@ -378,5 +378,12 @@ $(".addNewMetaDataForDataFiles").click(function(e){
 	addNewMetaDataRowsForDataFile($(this));
 });
 
+$("#updatePermissions").click(function(e){
+	editPermissionsOpenModal();
+});
+
+$("#btnUpdatePermissions").click(function(e)) {
+	updatePermissionsFunction();
+});
 loadUploadTab();
 });

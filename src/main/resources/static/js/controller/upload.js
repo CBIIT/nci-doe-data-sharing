@@ -202,6 +202,8 @@ function openUploadModal(selectTarget) {
 	$("#registerCollectionModal").find(".registerErrorMsg").html("");
 	var params= {parent:selectedIndexPathVal};
 	invokeAjax('/addCollection/collectionTypes','GET',params,retrieveCollectionList,null,null,null);
+	//loadJson for permissions list
+	loadJsonData('/metaDataPermissionsList', $("#registerCollectionModal").find("#metaDataPermissionsList"), false, null, null, null, "key", "value"); 
 }
 
 

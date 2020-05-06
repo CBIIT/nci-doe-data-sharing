@@ -193,7 +193,32 @@ aria-labelledby="forgotPasswordLabel">
         </div>
     </div>
     
-
+<div id="updatePermissionModal" class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog" aria-hidden="false"
+aria-labelledby="updatePermissionModallabel">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Update Permissions</h3>
+                       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div id="updatePermissionsContent" class="modal-body drilldown-content">               
+                  <div class="row row-buffer">
+                      <label for="updateMetaDataPermissionsList">MetaData Permissions</label>
+                          <select class="simple-select2" multiple="multiple" id="updateMetaDataPermissionsList" name="updateMetaDataPermissionsList" style="width:100%">
+                           </select>
+                  </div>                    
+                  <div class="row row-buffer" style="text-align: end;">
+                      <div class="col-sm-12" style="margin-bottom: 10px;">
+                        <button type="button" class="btn btn-default pull-right" data-dismiss="modal"> Cancel</button>
+                          <button class="btn btn-primary pull-right" id="btnUpdatePermissions"> Update</button>
+                          </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
     <div class="modal" id="registerCollectionModal" role="dialog" tabindex="-1" aria-hidden="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -228,6 +253,11 @@ aria-labelledby="forgotPasswordLabel">
                 <div class="col-md-12 col-sm-12">
                     <div class="col-md-12 col-sm-12">
                         <div class="form-row jumbotron" style=" margin-top: 20px;">
+                        <div class="form-group col-lg-4 col-md-12">
+                            <label for="metaDataPermissionsList">MetaData Permissions</label>
+                                <select class="simple-select2" multiple="multiple" id="metaDataPermissionsList" name="metaDataPermissionsList" style="width:100%">
+                                </select>
+                            </div>
                              <div class="form-group col-lg-4 col-md-12" style="display:none;">
                                 <label for="collectionType">Collection Type</label>
                                 <input type="text" id="collectionType" name="zAttrStr_collection_type">     
@@ -240,6 +270,8 @@ aria-labelledby="forgotPasswordLabel">
                             <label for="collectionPath">Parent Collection Path</label>
                                <input type="text" disabled id="collectionPath" style="width:90%;"/>
                             </div>
+                            
+                            
                         </div>
                     </div> 
                     

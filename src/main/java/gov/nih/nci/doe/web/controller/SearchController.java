@@ -36,6 +36,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import gov.nih.nci.doe.web.domain.LookUp;
+import gov.nih.nci.doe.web.domain.MetaDataPermissions;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.DoeSearchResult;
 import gov.nih.nci.doe.web.model.KeyValueBean;
@@ -178,6 +179,7 @@ public class SearchController extends AbstractDoeController {
 		List<DoeSearchResult> returnResults = new ArrayList<DoeSearchResult>();
 		for (HpcCollectionDTO result : searchResults) {
 			DoeSearchResult returnResult = new DoeSearchResult();
+			returnResult.setDataSetPermissionRole(getPermissionRole(result.getCollection().getCollectionId()));
 			returnResult.setDataSetPath(result.getCollection().getCollectionName());
             returnResult.setDataSetName(getAttributeValue("data_set_name", result.getMetadataEntries()));
             returnResult.setDataSetDescription(getAttributeValue("description", result.getMetadataEntries()));
@@ -194,6 +196,32 @@ public class SearchController extends AbstractDoeController {
 		return returnResults;
 	}
 	
+	
+	@SuppressWarnings("unchecked")
+	private String getPermissionRole(Integer collectionId) {
+		String user = getLoggedOnUserInfo();
+		if(!StringUtils.isEmpty(user)) {
+			List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList().getBody();
+			List<String> loggedOnUserPermList = new ArrayList<String>();		
+			loggedOnUserPermissions.stream().forEach(e -> loggedOnUserPermList.add(e.getKey()));
+			
+			if(!CollectionUtils.isEmpty(loggedOnUserPermList)) {
+				List<MetaDataPermissions> permissionList =  metaDataPermissionService.getAllMetaDataPermissionsByCollectionId(collectionId);
+				for(MetaDataPermissions perm : permissionList) {
+					
+					if(Boolean.TRUE.equals(perm.getIsOwner()) && perm.getUserGroupId().equals(getLoggedOnUserInfo())) {
+						return "Owner";
+					} else if(Boolean.TRUE.equals(perm.getIsGroup()) && loggedOnUserPermList.contains(perm.getUserGroupId())) {
+						return "Group User";
+					}
+				}
+			}
+			
+		}
+		
+		
+		return "No Permissions";
+	}
 
 	
 	private String getAttributeValue(String attrName, HpcMetadataEntries entries) {

@@ -1,6 +1,7 @@
 package gov.nih.nci.doe.web.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -10,19 +11,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
-import gov.nih.nci.doe.web.domain.DoeUsers;
 import gov.nih.nci.doe.web.model.DoeResponse;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.model.KeyValueBean;
-import gov.nih.nci.doe.web.repository.DoeUserRepository;
 import gov.nih.nci.doe.web.service.AuthenticateService;
+import gov.nih.nci.doe.web.service.MetaDataPermissionsService;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 
 public abstract class AbstractDoeController {
@@ -34,6 +37,9 @@ public abstract class AbstractDoeController {
 	
 	@Autowired
 	private AuthenticateService authenticateService;
+	
+	@Autowired
+	public MetaDataPermissionsService metaDataPermissionService;
 
 	protected Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -96,4 +102,19 @@ public abstract class AbstractDoeController {
 
 			return entryList;
 		}
+		
+		 @GetMapping(value = "/metaDataPermissionsList")
+		 public ResponseEntity<?>  getMetaDataPermissionsList()  { 
+			 log.info("get meta data permissions list");
+			 String loggedOnUser = getLoggedOnUserInfo();
+			 List<KeyValueBean> keyValueBeanResults = new ArrayList<>();
+			 if(!StringUtils.isEmpty(loggedOnUser)) {
+				 DoeUsersModel user = authenticateService.getUserInfo(loggedOnUser);
+				 if(user != null && !StringUtils.isEmpty(user.getProgramName())) {
+					 List<String> progList = Arrays.asList(user.getProgramName().split(","));
+					 progList.stream().forEach(e -> keyValueBeanResults.add(new KeyValueBean(e, e))); 
+				 }
+			 }
+			 return new ResponseEntity<>(keyValueBeanResults, null, HttpStatus.OK);
+		 }
 }

@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
@@ -25,6 +28,7 @@ import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.DoeCollectionModel;
 import gov.nih.nci.doe.web.model.DoeMetadataAttrEntry;
 import gov.nih.nci.doe.web.model.KeyValueBean;
+import gov.nih.nci.doe.web.service.MetaDataPermissionsService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataValidationRule;
@@ -54,7 +58,8 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 	@Value("${doe.basePath}")
 	private String basePath;
 
-
+	 @Autowired
+	 MetaDataPermissionsService metaDataPermissionService;
 	
 	@RequestMapping(value = "/collectionTypes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> populateCollectionTypes(HttpSession session,@RequestParam(value = "parent") String parent)
@@ -83,7 +88,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 				collections = DoeClientUtil.getCollection(authToken, serviceURL, parent, false, sslCertPath,
 						sslCertPassword);
 				if (collections != null && collections.getCollections() != null
-						&& collections.getCollections().size() > 0) {
+						&& !CollectionUtils.isEmpty(collections.getCollections())) {
 					collection = collections.getCollections().get(0);
 				}
 			}
@@ -246,7 +251,25 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 			boolean created = DoeClientUtil.updateCollection(authToken, serviceURL, registrationDTO,
 					doeCollection.getPath(), sslCertPath, sslCertPassword);
 			if (created) {
-				return doeCollection.getPath() + " Collection is created!";
+				
+				//after collection is created, store the permissions.
+				String progList = request.getParameter("metaDataPermissionsList");
+				if(!StringUtils.isEmpty(progList)) {
+					log.info("selected permissions" + progList);
+					
+					HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL, 
+							doeCollection.getPath(), false, sslCertPath,sslCertPassword);
+					if (collections != null && collections.getCollections() != null
+							&& !CollectionUtils.isEmpty(collections.getCollections())) {
+						HpcCollectionDTO collection = collections.getCollections().get(0);
+						metaDataPermissionService.savePermissionsList(getLoggedOnUserInfo(),progList,collection.getCollection().getCollectionId());
+					}
+					
+					
+					
+				}
+				
+				return  "Collection is created!";
 			} 
 		} catch (Exception e) {
 			log.debug("Error in update collection" + e.getMessage());

@@ -1,8 +1,13 @@
 package gov.nih.nci.doe.web.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpHeaders;
@@ -14,10 +19,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import gov.nih.nci.doe.web.model.DoeUsersModel;
+import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.service.AuthenticateService;
 
 
@@ -39,7 +44,7 @@ public class HomeController extends AbstractDoeController {
 	 @Autowired
 	 AuthenticateService authService;
 	 
-	@RequestMapping(method = RequestMethod.GET)
+	@GetMapping
 	public String index() {
 		log.info("home page");
 		return "home";
@@ -68,7 +73,7 @@ public class HomeController extends AbstractDoeController {
 
 		@PostMapping(value = "user-info")
 	    public ResponseEntity<?> updateUserInfo(@RequestBody DoeUsersModel doeModel,@RequestHeader HttpHeaders headers) {
-	        log.debug("update user info for user " + doeModel.getEmailAddrr());
+	        log.info("update user info for user " + doeModel.getEmailAddrr());
 	        try {
 	        	if(doeModel.getEmailAddrr() != null) {
 	        		authService.saveUserInfo(doeModel);
@@ -82,22 +87,22 @@ public class HomeController extends AbstractDoeController {
 	    }
 		
 		
-		 @RequestMapping(value = "/searchTab", method = RequestMethod.GET)
-		 public String getSearchTab(HttpSession session, HttpServletRequest request)  { 
-			 
+		 @GetMapping(value = "/searchTab")
+		 public String getSearchTab(HttpSession session, HttpServletRequest request)  { 			 
 			return "searchTab";
 		 }
 		 
-		 @RequestMapping(value = "/tasksTab", method = RequestMethod.GET)
-		 public String getTasksTab(HttpSession session, HttpServletRequest request)  { 
-			 
+		 @GetMapping(value = "/tasksTab")
+		 public String getTasksTab(HttpSession session, HttpServletRequest request)  { 			 
 			return "tasksTab";
 		 }
 		 
 		 
-		 @RequestMapping(value = "/loginTab", method = RequestMethod.GET)
-		 public String getLoginTab(HttpSession session, HttpServletRequest request)  { 
-			 
+		 @GetMapping(value = "/loginTab")
+		 public String getLoginTab(HttpSession session, HttpServletRequest request)  { 			 
 			return "loginTab";
 		 }
+		 
+		 
+	
 }

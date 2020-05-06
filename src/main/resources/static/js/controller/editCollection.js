@@ -1,4 +1,4 @@
-function constructCollectionMetData(metadata,metaDataPath,isDataObject) {
+function constructCollectionMetData(metadata,metaDataPath,isDataObject,permissionrole) {
 	$("#userMetaData tbody").html("");
 	$("#path").val(metaDataPath);
 	 $(".editCollectionSuccess").hide();
@@ -10,7 +10,11 @@ function constructCollectionMetData(metadata,metaDataPath,isDataObject) {
 	$.each(data, function(key, value) {	
         $("#userMetaData tbody").append('<tr><td>' + value.key + '</td><td><input type="text"  name="zAttrStr_'+value.key+'" style="width:70%;" value="' + value.value + '"></td></tr>');
 	});
-	
+	if(permissionrole && permissionrole == 'Owner') {
+		$("#updatePermissions").show();
+	} else {
+		$("#updatePermissions").hide();
+	}
 	
 }
 
@@ -24,6 +28,21 @@ function addCollectionMetaDataRows() {
 	
 }
 
+function editPermissionsOpenModal() {
+	$("#updatePermissionModal").modal('show');	
+	loadJsonData('/metaDataPermissionsList', $("#updatePermissionModal").find("#updateMetaDataPermissionsList"),
+			false, null, postSuccessEditPermissions, null, "key", "value"); 
+}
+
+function postSuccessEditPermissions(data,status) {
+	//pre select the permissions here.
+}
+
+function updatePermissionsFunction() {
+	var selectedPermissions = $("#updatePermissionModal").find("#updateMetaDataPermissionsList").val();
+	var params = {selectedPermissions:selectedPermissions};
+	//invokeAjax('/editPermissions','POST',params,null,null,null,null);
+}
 function updateMetaDataCollection() {
 
 	var validate = true;

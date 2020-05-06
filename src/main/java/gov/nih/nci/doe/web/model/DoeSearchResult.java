@@ -15,6 +15,9 @@ public class DoeSearchResult {
     private List<KeyValueBean> selfMetadata;
     private List<KeyValueBean> studyUserMetadata;
     private List<KeyValueBean> instituteUserMetadata;
+    private String dataSetPermissionRole;
+    private String studyPermissionRole;
+    private String programPermissionRole;
     
     
     
@@ -86,8 +89,25 @@ public class DoeSearchResult {
 	public void setInstitutePath(String institutePath) {
 		this.institutePath = institutePath;
 	}
-	
-    
+	public String getDataSetPermissionRole() {
+		return dataSetPermissionRole;
+	}
+	public void setDataSetPermissionRole(String dataSetPermissionRole) {
+		this.dataSetPermissionRole = dataSetPermissionRole;
+	}
+	public String getStudyPermissionRole() {
+		return studyPermissionRole;
+	}
+	public void setStudyPermissionRole(String studyPermissionRole) {
+		this.studyPermissionRole = studyPermissionRole;
+	}
+	public String getProgramPermissionRole() {
+		return programPermissionRole;
+	}
+	public void setProgramPermissionRole(String programPermissionRole) {
+		this.programPermissionRole = programPermissionRole;
+	}
+
     
     
 }
