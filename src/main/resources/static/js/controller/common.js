@@ -382,7 +382,7 @@ $("#updatePermissions").click(function(e){
 	editPermissionsOpenModal();
 });
 
-$("#btnUpdatePermissions").click(function(e)) {
+$("#btnUpdatePermissions").click(function(e) {
 	updatePermissionsFunction();
 });
 loadUploadTab();

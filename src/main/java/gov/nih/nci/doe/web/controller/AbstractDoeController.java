@@ -24,6 +24,7 @@ import org.springframework.web.context.request.WebRequest;
 import gov.nih.nci.doe.web.model.DoeResponse;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.model.KeyValueBean;
+import gov.nih.nci.doe.web.service.AuditingService;
 import gov.nih.nci.doe.web.service.AuthenticateService;
 import gov.nih.nci.doe.web.service.MetaDataPermissionsService;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
@@ -39,7 +40,10 @@ public abstract class AbstractDoeController {
 	private AuthenticateService authenticateService;
 	
 	@Autowired
-	public MetaDataPermissionsService metaDataPermissionService;
+	MetaDataPermissionsService metaDataPermissionService;
+	
+    @Autowired
+    AuditingService auditingService;
 
 	protected Logger log = LoggerFactory.getLogger(this.getClass());
 

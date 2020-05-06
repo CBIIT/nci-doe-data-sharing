@@ -1,6 +1,7 @@
 package gov.nih.nci.doe.web.controller;
 
 
+import java.util.Date;
 import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ import org.springframework.web.client.RestClientException;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import gov.nih.nci.doe.web.model.AjaxResponseBody;
+import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeDownloadDatafile;
 import gov.nih.nci.doe.web.model.Views;
 import gov.nih.nci.doe.web.service.TaskManagerService;
@@ -127,6 +129,17 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 					result.setMessage("Download request successful. Task Id: " +taskId);
 					 if(loggedOnUser != null) {
 				     taskManagerService.saveTransfer(taskId,"Download","Bulk Download Files",downloadType, getLoggedOnUserInfo());
+				     String transferType = downloadFile.getSearchType().equals("async") ? "Globus":"S3";
+				     //store the auditing info
+	                  AuditingModel audit = new AuditingModel();
+	                  audit.setName(loggedOnUser);
+	                  audit.setOperation("Download Bulk");
+	                  audit.setStartTime(new Date());
+	                  audit.setTransferType(transferType);
+	                  audit.setPath(String.join(",  ", downloadFile.getSelectedPaths()));
+	                  audit.setTaskId(taskId);
+	                  auditingService.saveAuditInfo(audit);
+	                  
 					 }
 				}
 				return result; 

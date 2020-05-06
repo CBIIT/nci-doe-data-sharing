@@ -1,5 +1,6 @@
 package gov.nih.nci.doe.web.controller;
 
+import java.util.Date;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import gov.nih.nci.doe.web.DoeWebException;
+import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeDatafileModel;
 import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
@@ -84,6 +86,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 		
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		String checksum = request.getParameter("checksum");
+		String user = getLoggedOnUserInfo();
 		if (checksum == null || checksum.isEmpty())
 			checksum = (String) request.getAttribute("checksum");
 
@@ -101,6 +104,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			doeDataFileModel.setPath(doeDataFileModel.getPath().trim());
 			HpcBulkDataObjectRegistrationRequestDTO registrationDTO = constructV2BulkRequest(request, session,
 					doeDataFileModel.getPath().trim());
+			String bulkType = (String)request.getParameter("uploadType");
 			
 			if(registrationDTO.getDataObjectRegistrationItems().size() == 0 && registrationDTO.getDirectoryScanRegistrationItems().size() == 0)
 				throw new DoeWebException("No input file(s) / folder(s) are selected");
@@ -129,7 +133,18 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 				   clearSessionAttrs(session);
 				    String taskId = responseDTO.getTaskId();
 				    String name = doeDataFileModel.getPath().substring(doeDataFileModel.getPath().lastIndexOf('/') + 1);
-				    taskManagerService.saveTransfer(taskId,"Upload",null,name,getLoggedOnUserInfo());
+				    taskManagerService.saveTransfer(taskId,"Upload",null,name,user);
+				    
+				    //store the auditing info
+	                  AuditingModel audit = new AuditingModel();
+	                  audit.setName(user);
+	                  audit.setOperation("Upload");
+	                  audit.setStartTime(new Date());
+	                  audit.setTransferType(bulkType);
+	                  audit.setPath(doeDataFileModel.getPath());
+	                  audit.setTaskId(taskId);
+	                  auditingService.saveAuditInfo(audit);
+	                  
 					return "Bulk Data file registration request is submitted! Task Id: " +taskId;			
 		
 				

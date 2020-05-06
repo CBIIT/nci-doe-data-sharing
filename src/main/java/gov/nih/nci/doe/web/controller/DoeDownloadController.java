@@ -9,6 +9,8 @@
  */
 package gov.nih.nci.doe.web.controller;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -28,6 +30,7 @@ import org.springframework.web.client.RestClientException;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import gov.nih.nci.doe.web.model.AjaxResponseBody;
+import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeDownloadDatafile;
 import gov.nih.nci.doe.web.model.Views;
 import gov.nih.nci.doe.web.service.TaskManagerService;
@@ -58,6 +61,8 @@ public class DoeDownloadController extends AbstractDoeController {
 	
     @Autowired
     TaskManagerService taskManagerService;
+    
+
 	
 	/**
 	 * POST action to initiate asynchronous download.
@@ -127,6 +132,17 @@ public class DoeDownloadController extends AbstractDoeController {
               if(loggedOnUser != null) {
             	  String name = downloadFile.getDestinationPath().substring(downloadFile.getDestinationPath().lastIndexOf('/') + 1);
                   taskManagerService.saveTransfer(taskId,"Download",downloadFile.getDownloadType(),name,getLoggedOnUserInfo());  
+                String transferType = downloadFile.getSearchType().equals("async") ? "Globus":"S3";
+                  //store the auditing info
+                  AuditingModel audit = new AuditingModel();
+                  audit.setName(loggedOnUser);
+                  audit.setOperation("Download");
+                  audit.setStartTime(new Date());
+                  audit.setTransferType(transferType);
+                  audit.setPath(downloadFile.getDestinationPath());
+                  audit.setTaskId(taskId);
+                  auditingService.saveAuditInfo(audit);
+                  
               }
               
               result.setMessage("Asynchronous download request is submitted successfully! Task Id: " + taskId);
