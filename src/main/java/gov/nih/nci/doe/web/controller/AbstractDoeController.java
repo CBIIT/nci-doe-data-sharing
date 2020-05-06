@@ -43,7 +43,7 @@ public abstract class AbstractDoeController {
 	MetaDataPermissionsService metaDataPermissionService;
 	
     @Autowired
-    AuditingService auditingService;
+    public AuditingService auditingService;
 
 	protected Logger log = LoggerFactory.getLogger(this.getClass());
 

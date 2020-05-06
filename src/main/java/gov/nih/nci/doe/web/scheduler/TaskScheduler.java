@@ -1,0 +1,103 @@
+package gov.nih.nci.doe.web.scheduler;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+
+import gov.nih.nci.doe.web.controller.AbstractDoeController;
+import gov.nih.nci.doe.web.domain.Auditing;
+import gov.nih.nci.doe.web.repository.AuditingRepository;
+import gov.nih.nci.doe.web.util.DoeClientUtil;
+import gov.nih.nci.hpc.domain.datatransfer.HpcUserDownloadRequest;
+import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectRegistrationTaskDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcDownloadSummaryDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcRegistrationSummaryDTO;
+
+public class TaskScheduler extends AbstractDoeController {
+	
+	@Value("${gov.nih.nci.hpc.server.download}")
+	private String queryServiceURL;
+	
+	@Value("${gov.nih.nci.hpc.server.user.authenticate}")
+	private String authenticateURL;
+	
+	@Value("${doe.ncidoesvct2.password}")
+	private String writeAccessUserPassword;
+	
+	@Value("${gov.nih.nci.hpc.server.bulkregistration}")
+	private String registrationServiceUrl;
+	
+	@Autowired
+	AuditingRepository auditingRepository;
+	
+	  @Scheduled(cron = "${doe.scheduler.cron.auditing}")
+	  private void updateAuditingService() {
+		  
+		  String authToken = DoeClientUtil.getAuthenticationToken("ncidoesvct2", writeAccessUserPassword,authenticateURL);
+		  
+		  String serviceURL = queryServiceURL + "?page=" + 1 + "&totalCount=true";
+			HpcDownloadSummaryDTO downloads = DoeClientUtil.getDownloadSummary(authToken, serviceURL, sslCertPath,
+					sslCertPassword);
+			
+			final MultiValueMap<String,String> paramsMap = new LinkedMultiValueMap<>();
+		      paramsMap.set("totalCount", Boolean.TRUE.toString());
+			HpcRegistrationSummaryDTO registrations = DoeClientUtil.getRegistrationSummary(authToken, registrationServiceUrl, paramsMap,
+		        sslCertPath, sslCertPassword);
+			
+			List<HpcUserDownloadRequest> downloadResults = new ArrayList<HpcUserDownloadRequest>();
+			if(downloads != null) {
+				downloadResults.addAll(downloads.getActiveTasks());
+    			downloadResults.addAll(downloads.getCompletedTasks());  
+			}
+			
+			List<HpcBulkDataObjectRegistrationTaskDTO> uploadResults = new ArrayList<HpcBulkDataObjectRegistrationTaskDTO>();
+			if(registrations != null) {
+				uploadResults.addAll(registrations.getActiveTasks());
+				uploadResults.addAll(registrations.getCompletedTasks());  
+			}
+			  	
+			
+			List<Auditing> auditingTaskIds = auditingService.getAllTaskIds();
+			
+			if(CollectionUtils.isNotEmpty(auditingTaskIds)) {
+				for(Auditing audit : auditingTaskIds) {
+					if(audit.getOperation().equalsIgnoreCase("Upload")) {
+						HpcBulkDataObjectRegistrationTaskDTO upload = uploadResults.stream().filter(x -> audit.getTaskId().equals(x.getTaskId())).findAny().orElse(null);
+					    audit.setCompletionTime((upload != null && upload.getCompleted() != null) ? upload.getCompleted().getTime(): null);
+					    if(upload.getResult() == null) {
+					    	audit.setStatus("In progress");
+    					} else if(Boolean.TRUE.equals(upload.getResult())) {
+    						audit.setStatus("Completed");
+    					} else if(Boolean.FALSE.equals(upload.getResult())) {
+    						audit.setStatus("Failed");
+    						List<String> message = new ArrayList<String>();
+    						upload.getFailedItems().stream().forEach(x -> message.add(x.getMessage()));
+    						audit.setErrorMsg(message.get(0));
+    					}
+					} else {
+						HpcUserDownloadRequest download = downloadResults.stream().filter(x -> audit.getTaskId().equals(x.getTaskId())).findAny().orElse(null);
+					       audit.setCompletionTime((download != null && download.getCompleted() != null)? download.getCompleted().getTime(): null);
+					       if(download.getResult() != null && download.getResult().value().equals("FAILED")) {
+	    						List<String> message = new ArrayList<String>();
+	    						download.getItems().stream().forEach(x -> message.add(x.getMessage()));    						
+	    						audit.setStatus("Failed");
+	    						audit.setErrorMsg(message.get(0));
+	    										
+	    					} else if(download.getResult() != null && download.getResult().value().equals("COMPLETED")) {
+	    						audit.setStatus("Completed");
+	    					} else {
+	    						audit.setStatus("In Progress");
+	    					}
+					}
+					   auditingRepository.saveAndFlush(audit);
+				}
+			}
+	  }
+
+}

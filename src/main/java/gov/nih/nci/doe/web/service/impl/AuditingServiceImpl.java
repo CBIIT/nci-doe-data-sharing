@@ -9,6 +9,7 @@ import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.repository.AuditingRepository;
 import gov.nih.nci.doe.web.service.AuditingService;
 
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,11 @@ public class AuditingServiceImpl implements AuditingService {
 		Auditing audit = new Auditing();
 		BeanUtils.copyProperties(model, audit);
 		auditingRepository.saveAndFlush(audit);		
+	}
+
+	@Override
+	public List<Auditing> getAllTaskIds() {
+		return auditingRepository.findAllTaksIds();
 	}
 
 
