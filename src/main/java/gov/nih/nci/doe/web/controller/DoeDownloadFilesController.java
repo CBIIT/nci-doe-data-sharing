@@ -133,7 +133,7 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 				     //store the auditing info
 	                  AuditingModel audit = new AuditingModel();
 	                  audit.setName(loggedOnUser);
-	                  audit.setOperation("Download Bulk");
+	                  audit.setOperation("Download");
 	                  audit.setStartTime(new Date());
 	                  audit.setTransferType(transferType);
 	                  audit.setPath(String.join(",  ", downloadFile.getSelectedPaths()));
