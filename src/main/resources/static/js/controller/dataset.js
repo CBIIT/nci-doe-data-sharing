@@ -122,7 +122,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata) {
         	   $("#editCollectionFragment").show();
         	   var metaData = $(this).attr('metadata_set');
         	   var metaDataPath = $(this).attr('metadata_path');
-        	   constructCollectionMetData(metaData,metaDataPath,true,null);
+        	   constructCollectionMetData(metaData,metaDataPath,true,null,null);
            });
            
            

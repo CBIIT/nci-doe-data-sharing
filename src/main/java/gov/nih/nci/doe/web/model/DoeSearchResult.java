@@ -18,6 +18,9 @@ public class DoeSearchResult {
     private String dataSetPermissionRole;
     private String studyPermissionRole;
     private String programPermissionRole;
+    private Integer dataSetCollectionId;
+    private Integer studyCollectionId;
+    private Integer programCollectionId;
     
     
     
@@ -106,6 +109,24 @@ public class DoeSearchResult {
 	}
 	public void setProgramPermissionRole(String programPermissionRole) {
 		this.programPermissionRole = programPermissionRole;
+	}
+	public Integer getDataSetCollectionId() {
+		return dataSetCollectionId;
+	}
+	public void setDataSetCollectionId(Integer dataSetCollectionId) {
+		this.dataSetCollectionId = dataSetCollectionId;
+	}
+	public Integer getStudyCollectionId() {
+		return studyCollectionId;
+	}
+	public void setStudyCollectionId(Integer studyCollectionId) {
+		this.studyCollectionId = studyCollectionId;
+	}
+	public Integer getProgramCollectionId() {
+		return programCollectionId;
+	}
+	public void setProgramCollectionId(Integer programCollectionId) {
+		this.programCollectionId = programCollectionId;
 	}
 
     

@@ -136,7 +136,8 @@ function dataTableInit(isVisible) {
         	   var metaData = $(this).attr('metadata_set');
         	   var metaDataPath = $(this).attr('metadata_path');
         	   var permissionsRole = $(this).attr('permissions_role');
-        	   constructCollectionMetData(metaData,metaDataPath,false,permissionsRole);
+        	   var collectionId = $(this).attr('collectionId');
+        	   constructCollectionMetData(metaData,metaDataPath,false,permissionsRole,collectionId);
            });
            
            $(".selectCheckboxForIns").click(function(e){
@@ -205,7 +206,7 @@ function renderPath(data, type, row) {
 	if(isLoggedOnuserExists) {
 	html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'><input type='checkbox' id=" + row.dataSetPath + " " +
 			"class='selectCheckboxForIns'/>&nbsp;&nbsp;&nbsp;<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span>" +
-			"&nbsp&nbsp;<span class='editCollectionMetadata' permissions_role = '" + row.dataSetPermissionRole + "' metadata_path  = '" + row.dataSetPath+ "' metadata_set = '" + data  + "'>" +
+			"&nbsp&nbsp;<span class='editCollectionMetadata' collectionId  = '" + row.dataSetCollectionId + "' permissions_role = '" + row.dataSetPermissionRole + "' metadata_path  = '" + row.dataSetPath+ "' metadata_set = '" + data  + "'>" +
 		"<i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Data Set Metadata'></i></span></div><div class='col-md-12'></div>" +
 			"<div class='col-md-12' style='margin-left:22px;'><a href='#' class='dataSetFragment' metadata_type = '" + data  + "' data_set_path = " + row.dataSetPath + ">" +
 					"<span class='cil_12_bold_no_color'>" + row.dataSetDescription + "</span>" +

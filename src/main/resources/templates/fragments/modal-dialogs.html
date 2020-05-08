@@ -201,10 +201,18 @@ aria-labelledby="updatePermissionModallabel">
                     <h3 class="modal-title">Update Permissions</h3>
                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
+                <div class="clearfix updatePermissionsSuccessBlock" style="display: none;margin-left:10px;width:90%;">
+                    <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
+                        <div class="alert alert-success">
+                            <h6 class="updatePermMsg"></h6>
+                        </div>
+                    </div>
+                </div> 
+                <input type="hidden" id="hiddenCollectionId"/>
                 <div id="updatePermissionsContent" class="modal-body drilldown-content">               
                   <div class="row row-buffer">
                       <label for="updateMetaDataPermissionsList">MetaData Permissions</label>
-                          <select class="simple-select2" multiple="multiple" id="updateMetaDataPermissionsList" name="updateMetaDataPermissionsList" style="width:100%">
+                          <select class="simple-select2" multiple="multiple" id="updateMetaDataPermissionsList" name="updateMetaDataPermissionsList" style="width:70%">
                            </select>
                   </div>                    
                   <div class="row row-buffer" style="text-align: end;">

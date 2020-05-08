@@ -70,4 +70,10 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 		return metaDataPermissionsRepository.getAllMetaDataPermissionsByCollectionId(collectionId);
 	}
 
+	@Override
+	public List<MetaDataPermissions> getAllGroupMetaDataPermissionsByCollectionId(Integer collectionId) {
+		log.info("get all permissions by collection Id " + collectionId);
+		return metaDataPermissionsRepository.getAllGroupMetaDataPermissionsByCollectionId(collectionId);
+	}
+
 }

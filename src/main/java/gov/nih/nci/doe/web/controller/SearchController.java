@@ -135,7 +135,6 @@ public class SearchController extends AbstractDoeController {
 			Response restResponse = client.invoke("POST", compoundQuery);
 			if (restResponse.getStatus() == 200) {
 				session.setAttribute("compoundQuery", compoundQuery);
-				session.setAttribute("hpcSearch", search);
 				if (search.getSearchType() != null && search.getSearchType().equals("collection")) {
 					results = processResponseResults(systemAttrs, restResponse);
 					return new ResponseEntity<>(results, HttpStatus.OK);
@@ -170,7 +169,7 @@ public class SearchController extends AbstractDoeController {
 
 
 
-	private List<DoeSearchResult>  processCollectionResults(List<String> systemAttrs, Response restResponse) throws JsonParseException, IOException {
+	private List<DoeSearchResult>  processCollectionResults(List<String> systemAttrs, Response restResponse) throws IOException {
 		MappingJsonFactory factory = new MappingJsonFactory();
 		JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 		HpcCollectionListDTO collections = parser.readValueAs(HpcCollectionListDTO.class);
@@ -179,12 +178,12 @@ public class SearchController extends AbstractDoeController {
 		List<DoeSearchResult> returnResults = new ArrayList<DoeSearchResult>();
 		for (HpcCollectionDTO result : searchResults) {
 			DoeSearchResult returnResult = new DoeSearchResult();
+			returnResult.setDataSetCollectionId(result.getCollection().getCollectionId());
 			returnResult.setDataSetPermissionRole(getPermissionRole(result.getCollection().getCollectionId()));
 			returnResult.setDataSetPath(result.getCollection().getCollectionName());
             returnResult.setDataSetName(getAttributeValue("data_set_name", result.getMetadataEntries()));
             returnResult.setDataSetDescription(getAttributeValue("description", result.getMetadataEntries()));
             returnResult.setStudyPath(result.getCollection().getCollectionParentName());
-            returnResult.setNumOfDataSets(3);
             returnResult.setSelfMetadata(getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),"Data_Set", systemAttrs));
 			returnResult.setStudyUserMetadata(getUserMetadata(result.getMetadataEntries().getParentMetadataEntries(),"Study", systemAttrs));
 			returnResult.setInstituteUserMetadata(getUserMetadata(result.getMetadataEntries().getParentMetadataEntries(),"Program", systemAttrs));
@@ -207,14 +206,14 @@ public class SearchController extends AbstractDoeController {
 			
 			if(!CollectionUtils.isEmpty(loggedOnUserPermList)) {
 				List<MetaDataPermissions> permissionList =  metaDataPermissionService.getAllMetaDataPermissionsByCollectionId(collectionId);
-				for(MetaDataPermissions perm : permissionList) {
-					
-					if(Boolean.TRUE.equals(perm.getIsOwner()) && perm.getUserGroupId().equals(getLoggedOnUserInfo())) {
+				Boolean isOwner = permissionList.stream().anyMatch(o -> (user.equalsIgnoreCase(o.getUserGroupId()) && o.getIsOwner()));
+				Boolean isGroupUser = permissionList.stream().anyMatch(o -> (loggedOnUserPermList.contains(o.getUserGroupId()) && o.getIsGroup()));
+					if(Boolean.TRUE.equals(isOwner)) {
 						return "Owner";
-					} else if(Boolean.TRUE.equals(perm.getIsGroup()) && loggedOnUserPermList.contains(perm.getUserGroupId())) {
+						
+					} else if(Boolean.TRUE.equals(isGroupUser)) {
 						return "Group User";
 					}
-				}
 			}
 			
 		}
@@ -277,16 +276,16 @@ public class SearchController extends AbstractDoeController {
 			String attrValue = search.getAttrValue()[i];
 			String operator = search.getOperator()[i];
 			String level = null;
-			String grpName = null;
+			//String grpName = null;
 			boolean selfMetadata = search.getIsExcludeParentMetadata()[i]; 
 				
 			 LookUp val = lookUpService.getLookUpByDisplayName(attrName);
 			 
-			 String userName = getLoggedOnUserInfo();
+			 //String userName = getLoggedOnUserInfo();
 			 
-			 if(StringUtils.isNotEmpty(userName)) {
+			/* if(StringUtils.isNotEmpty(userName)) {
 				  grpName = consortiumService.getConsortitumGroupByUserId(userName);				 
-			 }
+			 }*/
 			 
 			 if(val != null) {
 				 level = val.getLevelName();

@@ -1,10 +1,11 @@
-function constructCollectionMetData(metadata,metaDataPath,isDataObject,permissionrole) {
+function constructCollectionMetData(metadata,metaDataPath,isDataObject,permissionrole,collectionId) {
 	$("#userMetaData tbody").html("");
 	$("#path").val(metaDataPath);
 	 $(".editCollectionSuccess").hide();
 	 $(".editCollectionMsg").html("");
 	 $(".editCollectionError").hide();
 	 $(".editCollectionErrorMsg").html("");
+	 $("#collectionId").val(collectionId);
 	 $("#isDataObject").val(isDataObject);
 	var data = JSON.parse(metadata);
 	$.each(data, function(key, value) {	
@@ -29,19 +30,35 @@ function addCollectionMetaDataRows() {
 }
 
 function editPermissionsOpenModal() {
+	$("#updatePermissionModal").find("#updatePermMsg").html("");
+	$("#updatePermissionModal").find("#updatePermissionsSuccessBlock").hide()
 	$("#updatePermissionModal").modal('show');	
 	loadJsonData('/metaDataPermissionsList', $("#updatePermissionModal").find("#updateMetaDataPermissionsList"),
 			false, null, postSuccessEditPermissions, null, "key", "value"); 
 }
 
 function postSuccessEditPermissions(data,status) {
-	//pre select the permissions here.
+	var params = {collectionId:$("#collectionId").val()};
+	invokeAjax('/getPermissionByCollectionId','GET',params,postSuccessGetPermissions,null,null,null);
+}
+
+function postSuccessGetPermissions(data,status) {
+    for (var i = 0; i < data.length; i++) {
+        $("#updateMetaDataPermissionsList option[value='" + data[i].key + "']").prop("selected", true);
+        $("#updatePermissionModal").find("#updateMetaDataPermissionsList").trigger('change');
+    }
 }
 
 function updatePermissionsFunction() {
 	var selectedPermissions = $("#updatePermissionModal").find("#updateMetaDataPermissionsList").val();
-	var params = {selectedPermissions:selectedPermissions};
-	//invokeAjax('/editPermissions','POST',params,null,null,null,null);
+	var params = {selectedPermissions:selectedPermissions,collectionId:$("#collectionId").val()};
+	invokeAjax('/metaDataPermissionsList','POST',params,postSuccessUpdatePermissions,null,null,null);
+}
+
+function postSuccessUpdatePermissions() {
+	$("#updatePermissionModal").find("#updatePermMsg").html("Permissions Updated");
+	$("#updatePermissionModal").find("#updatePermissionsSuccessBlock").show()
+	
 }
 function updateMetaDataCollection() {
 

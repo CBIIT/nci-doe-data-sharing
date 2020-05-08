@@ -13,5 +13,8 @@ public interface MetaDataPermissionsService {
     public void savePermissionsList(String user,String progList,Integer collectionId);
     
     public List<MetaDataPermissions> getAllMetaDataPermissionsByCollectionId(Integer collectionId);
+    
+    
+    public List<MetaDataPermissions> getAllGroupMetaDataPermissionsByCollectionId(Integer collectionId);
 
 }

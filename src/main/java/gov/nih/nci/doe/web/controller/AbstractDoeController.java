@@ -5,12 +5,15 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -18,9 +21,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
+import gov.nih.nci.doe.web.domain.MetaDataPermissions;
 import gov.nih.nci.doe.web.model.DoeResponse;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.model.KeyValueBean;
@@ -70,8 +77,8 @@ public abstract class AbstractDoeController {
 	  @ModelAttribute("loggedOnUser")
 	    public String getLoggedOnUserInfo() {
 		  Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		  Boolean isAnonymousUSer = auth.getAuthorities().stream().filter(o -> o.getAuthority().equals("ROLE_ANONYMOUS")).findFirst().isPresent();
-			if(auth != null && auth.isAuthenticated() && !isAnonymousUSer) {
+		  Boolean isAnonymousUSer = auth.getAuthorities().stream().anyMatch(o -> o.getAuthority().equals("ROLE_ANONYMOUS"));
+			if(auth.isAuthenticated() && Boolean.FALSE.equals(isAnonymousUSer)) {
 				return auth.getName().trim();
 			}
 			return null;
@@ -119,6 +126,32 @@ public abstract class AbstractDoeController {
 					 progList.stream().forEach(e -> keyValueBeanResults.add(new KeyValueBean(e, e))); 
 				 }
 			 }
+			 return new ResponseEntity<>(keyValueBeanResults, null, HttpStatus.OK);
+		 }
+		 
+		 @PostMapping(value = "/metaDataPermissionsList")
+		 @ResponseBody
+		 public String savePermissionsList(HttpSession session,@RequestHeader HttpHeaders headers,
+					@RequestParam(value = "collectionId") String collectionId, @RequestParam String groupsList)  { 
+			 log.info("get meta data permissions list");
+			 List<MetaDataPermissions> permissionsList = metaDataPermissionService.getAllGroupMetaDataPermissionsByCollectionId(Integer.valueOf(collectionId));
+
+
+			 
+			 return "SUCCESS";
+		 }
+		 
+		 
+		 @GetMapping(value = "/getPermissionByCollectionId")
+		 public ResponseEntity<?>  getPermissionsByCollectionId(HttpSession session,@RequestHeader HttpHeaders headers,
+					@RequestParam(value = "collectionId") String collectionId)  { 
+			 log.info("get meta data permissions list by collection id");
+			 List<KeyValueBean> keyValueBeanResults = new ArrayList<>();
+			
+			 List<MetaDataPermissions> permissionsList = metaDataPermissionService.getAllGroupMetaDataPermissionsByCollectionId(Integer.valueOf(collectionId));
+				 if(CollectionUtils.isNotEmpty(permissionsList)) {
+					 permissionsList.stream().forEach(e -> keyValueBeanResults.add(new KeyValueBean(e.getUserGroupId(), e.getUserGroupId()))); 
+				 }
 			 return new ResponseEntity<>(keyValueBeanResults, null, HttpStatus.OK);
 		 }
 }

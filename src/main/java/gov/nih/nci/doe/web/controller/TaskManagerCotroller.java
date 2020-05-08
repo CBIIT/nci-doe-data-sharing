@@ -11,9 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import gov.nih.nci.doe.web.domain.TaskManager;
@@ -58,9 +58,9 @@ public class TaskManagerCotroller extends AbstractDoeController {
 	SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
 	
 
-	@RequestMapping(method = RequestMethod.GET)
+	@GetMapping
 	public ResponseEntity<?> getStatus(HttpSession session,@RequestHeader HttpHeaders headers, 
-			HttpServletRequest request, @RequestParam(value = "userId") String userId) throws Exception {
+			HttpServletRequest request, @RequestParam(value = "userId") String userId) {
 		
 		  log.info("get all tasks by user Id");
 		  String authToken = (String) session.getAttribute("writeAccessUserToken");
@@ -144,9 +144,9 @@ public class TaskManagerCotroller extends AbstractDoeController {
     					task.setTaskDate((upload.getCreated() != null && upload.getCompleted() != null) ? upload.getCreated() != null?
     							(format.format(upload.getCreated().getTime()) + " - " +
     							 format.format(upload.getCompleted().getTime())) :format.format(upload.getCreated() != null): "");
-    					task.setTaskName(t.getTaskName());
-    					task.setUserId(t.getUserId());
-    					task.setTaskType(t.getTaskType());
+    					task.setTaskName(t != null ? t.getTaskName(): "");
+    					task.setUserId(t != null ? t.getUserId() : "");
+    					task.setTaskType(t != null ? t.getTaskType() :"");
     					if(upload.getResult() == null) {
     						task.setTransferStatus("In Progress");
     					} else if(Boolean.TRUE.equals(upload.getResult())) {
