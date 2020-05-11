@@ -100,7 +100,7 @@ text-align: left;
 width: 100%;
 margin-bottom: 21px;
 text-shadow: 2px 2px #333;
-text-transform: uppercase;
+/*text-transform: uppercase;*/
 
     }
 .versionNumber{font-size: 12px;float: right;12px;float: right;}
@@ -232,7 +232,7 @@ ul.footer li{float:left; display:inline;justify-content: center; text-align: cen
         margin-top: 10px;
         margin-bottom:10px;
         text-shadow:2px 2px #333;
-        text-transform: uppercase;
+        /*text-transform: uppercase;*/
         white-space: nowrap;
     }
     .navbar-dark .navbar-toggler{background-color:#00467f;}

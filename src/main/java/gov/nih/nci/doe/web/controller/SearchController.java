@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
 
@@ -276,17 +275,10 @@ public class SearchController extends AbstractDoeController {
 			String attrValue = search.getAttrValue()[i];
 			String operator = search.getOperator()[i];
 			String level = null;
-			//String grpName = null;
 			boolean selfMetadata = search.getIsExcludeParentMetadata()[i]; 
 				
 			 LookUp val = lookUpService.getLookUpByDisplayName(attrName);
-			 
-			 //String userName = getLoggedOnUserInfo();
-			 
-			/* if(StringUtils.isNotEmpty(userName)) {
-				  grpName = consortiumService.getConsortitumGroupByUserId(userName);				 
-			 }*/
-			 
+
 			 if(val != null) {
 				 level = val.getLevelName();
 			 } else {
