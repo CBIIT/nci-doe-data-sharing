@@ -107,7 +107,7 @@ function loadJsonData(url, selectTarget, emptyOption, params, successCallback, f
 
                 $select.append($('<option></option>').attr('value', data[i][valueField]).text(data[i][textField]));
             }
-
+            $select.select2();
             if (successCallback) {
                 successCallback(data, status);
             }

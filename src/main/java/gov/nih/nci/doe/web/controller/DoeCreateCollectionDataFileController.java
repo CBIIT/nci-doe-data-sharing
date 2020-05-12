@@ -486,11 +486,20 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				DoeMetadataAttrEntry attrEntry = new DoeMetadataAttrEntry();
 				String attrName = paramName.substring("zAttrStr_".length());
 				String[] attrValue = request.getParameterValues(paramName);
-				entry.setAttribute(attrName);
-				entry.setValue(attrValue[0]);
+				entry.setAttribute(attrName);				
+				if("zAttrStr_access_group".equalsIgnoreCase(paramName)) {
+					entry.setValue(String.join(",", attrValue));
+				} else {
+					entry.setValue(attrValue[0]);
+				}
 				metadataEntries.add(entry);
+				
 				attrEntry.setAttrName(attrName);
+				if("zAttrStr_access_group".equalsIgnoreCase(paramName)) {
+					attrEntry.setAttrValue(String.join(",", attrValue));
+				} else {
 				attrEntry.setAttrValue(attrValue[0]);
+				}
 				attrEntry.setSystemAttr(false);
 				selfMetadataEntries.add(attrEntry);
 			} else if (paramName.startsWith("_addAttrName")) {

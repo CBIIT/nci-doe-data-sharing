@@ -176,9 +176,16 @@ public class SearchController extends AbstractDoeController {
 		List<HpcCollectionDTO> searchResults = collections.getCollections();
 		List<DoeSearchResult> returnResults = new ArrayList<DoeSearchResult>();
 		for (HpcCollectionDTO result : searchResults) {
+			
 			DoeSearchResult returnResult = new DoeSearchResult();
+			Integer studyCollectionId = getCollectionId(result.getMetadataEntries().getParentMetadataEntries(),"Study");
+			Integer programCollectionId  = getCollectionId(result.getMetadataEntries().getParentMetadataEntries(),"Program");
 			returnResult.setDataSetCollectionId(result.getCollection().getCollectionId());
 			returnResult.setDataSetPermissionRole(getPermissionRole(result.getCollection().getCollectionId()));
+			returnResult.setStudyCollectionId(studyCollectionId);
+			returnResult.setProgramCollectionId(programCollectionId);
+			returnResult.setStudyPermissionRole(getPermissionRole(studyCollectionId));
+			returnResult.setProgramPermissionRole(getPermissionRole(programCollectionId));
 			returnResult.setDataSetPath(result.getCollection().getCollectionName());
             returnResult.setDataSetName(getAttributeValue("data_set_name", result.getMetadataEntries()));
             returnResult.setDataSetDescription(getAttributeValue("description", result.getMetadataEntries()));
@@ -241,6 +248,19 @@ public class SearchController extends AbstractDoeController {
 		return null;
 	}
 	
+	
+	private Integer getCollectionId(List<HpcMetadataEntry> list,String levelName) {
+		if (list == null)
+			return null;
+		
+		for (HpcMetadataEntry entry : list) {
+			if (levelName.equalsIgnoreCase(entry.getLevelLabel())) {
+				return entry.getCollectionId();
+			}
+			
+		}
+		return null;
+	}
 
 	private HpcCompoundMetadataQueryDTO constructCriteria(DoeSearch search) {
 		HpcCompoundMetadataQueryDTO dto = new HpcCompoundMetadataQueryDTO();

@@ -2,7 +2,6 @@ package gov.nih.nci.doe.web.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import gov.nih.nci.doe.web.domain.MetaDataPermissions;
 import gov.nih.nci.doe.web.repository.MetaDataPermissionsRepository;
 import gov.nih.nci.doe.web.service.MetaDataPermissionsService;
@@ -74,6 +73,19 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 	public List<MetaDataPermissions> getAllGroupMetaDataPermissionsByCollectionId(Integer collectionId) {
 		log.info("get all permissions by collection Id " + collectionId);
 		return metaDataPermissionsRepository.getAllGroupMetaDataPermissionsByCollectionId(collectionId);
+	}
+
+	@Override
+	public void deletePermissionsList(String user, List<String> deletedList, Integer collectionId) {
+        Iterator permissionListIterator = deletedList.iterator();
+        while (permissionListIterator.hasNext()) {
+            String permission = permissionListIterator.next().toString();
+            if (permission != null) {
+            	MetaDataPermissions p = metaDataPermissionsRepository.findPermissionByGroupNameAndCollectionId(permission,collectionId);
+            	metaDataPermissionsRepository.delete(p);
+            } 
+        }
+		
 	}
 
 }

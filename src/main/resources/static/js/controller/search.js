@@ -204,22 +204,60 @@ function renderPath(data, type, row) {
 	data = JSON.stringify(row.selfMetadata);
 	
 	if(isLoggedOnuserExists) {
-	html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'><input type='checkbox' id=" + row.dataSetPath + " " +
+		var editDataSetHtml = "";
+		var editStudySetHtml = "";
+		var editProgramSetHtml = "";
+		
+		if(row.dataSetPermissionRole && row.dataSetPermissionRole != 'No Permissions') {
+			editDataSetHtml = "<span class='editCollectionMetadata' collectionId  = '" + row.dataSetCollectionId + "' " +
+			"permissions_role = '" + row.dataSetPermissionRole + "'" +
+			" metadata_path  = '" + row.dataSetPath+ "' metadata_set = '" + data  + "'>" +
+           "<i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Data Set Metadata'></i></span>";
+			if(row.dataSetPermissionRole == 'Owner') {
+				editDataSetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collectionId  = '" + row.dataSetCollectionId + "' " +
+			    " metadata_path  = '" + row.dataSetPath+ "'>" +
+                 "<i class='fa fa-users' data-toggle='tooltip' data-content='Edit Data Set Access Permissions'></i></span>";
+			}
+		}
+		
+		if(row.dataSetPermissionRole && row.dataSetPermissionRole != 'No Permissions') {
+			editStudySetHtml = "<span class='editCollectionMetadata' collectionId  = '" + row.studyCollectionId + "'" +
+							" permissions_role = '" + row.studyPermissionRole + "' metadata_path  = '" + row.studyPath+ "' " +
+									" metadata_set = '" + study  + "'>" +
+			"<i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Study Metadata'></i></span>";
+			if(row.studyPermissionRole == 'Owner') {
+				editStudySetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collectionId  = '" + row.studyCollectionId + "' " +
+			    " metadata_path  = '" + row.studyPath+ "'>" +
+                 "<i class='fa fa-users' data-toggle='tooltip' data-content='Edit Study Access Permissions'></i></span>";
+			}
+		}
+		
+		if(row.programPermissionRole && row.programPermissionRole != 'No Permissions') {
+			editProgramSetHtml = "<span class='editCollectionMetadata' collectionId  = '" + row.programCollectionId + "'" +
+							" permissions_role = '" + row.programPermissionRole + "' metadata_path  = '" + row.institutePath+ "' " +
+									"metadata_set = '" + ins  + "'>" +
+			"<i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Program Metadata'></i></span>"; 
+			
+			if(row.programPermissionRole == 'Owner') {
+				editProgramSetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collectionId  = '" + row.programCollectionId + "' " +
+			    " metadata_path  = '" + row.institutePath+ "'>" +
+                 "<i class='fa fa-users' data-toggle='tooltip' data-content='Edit Program Access Permissions'></i></span>";
+			}
+		}
+	
+		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'><input type='checkbox' id=" + row.dataSetPath + " " +
 			"class='selectCheckboxForIns'/>&nbsp;&nbsp;&nbsp;<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span>" +
-			"&nbsp&nbsp;<span class='editCollectionMetadata' collectionId  = '" + row.dataSetCollectionId + "' permissions_role = '" + row.dataSetPermissionRole + "' metadata_path  = '" + row.dataSetPath+ "' metadata_set = '" + data  + "'>" +
-		"<i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Data Set Metadata'></i></span></div><div class='col-md-12'></div>" +
+			"&nbsp&nbsp;" + editDataSetHtml + "</div><div class='col-md-12'></div>" +
 			"<div class='col-md-12' style='margin-left:22px;'><a href='#' class='dataSetFragment' metadata_type = '" + data  + "' data_set_path = " + row.dataSetPath + ">" +
 					"<span class='cil_12_bold_no_color'>" + row.dataSetDescription + "</span>" +
 			"</a><br></div><div class='col-md-12'><br></div><div class='col-md-12' style='margin-left:22px;'>" +
 			"<span class='cil_12_bold_no_color'>Study: </span><a class='cil_12_no_color button2a' metadata_type = '" + study  + "' tabindex='0'" +
 			" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' data-popover-content='#a01'>" + row.studyName + "</a>" +
-					"&nbsp&nbsp;<span class='editCollectionMetadata' metadata_path  = '" + row.studyPath+ "'  metadata_set = '" + study  + "'>" +
-			"<i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Study Metadata'></i></span></div>" +
+					"&nbsp&nbsp;"+editStudySetHtml+"</div>" +
 			"<div class='col-md-12 top-buffer' style='margin-left:22px;'>" +
 			"<span class='cil_12_bold_no_color'>Program: </span><a class='cil_12_no_color button2a' metadata_type = '" + ins  + "' tabindex='0'" +
 			" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' data-popover-content='#a01'>" + row.programName + "</a>" +
-					"&nbsp&nbsp;<span class='editCollectionMetadata' metadata_path  = '" + row.institutePath+ "' metadata_set = '" + ins  + "'>" +
-			"<i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Institute Metadata'></i></span></div></div></div>";
+					"&nbsp&nbsp;"+editProgramSetHtml+"</div></div></div>";
 
 	} else {
 		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'>"+

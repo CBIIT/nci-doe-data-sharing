@@ -3,6 +3,7 @@ package gov.nih.nci.doe.web.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -34,6 +35,7 @@ import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.service.AuditingService;
 import gov.nih.nci.doe.web.service.AuthenticateService;
 import gov.nih.nci.doe.web.service.MetaDataPermissionsService;
+import gov.nih.nci.doe.web.util.LambdaUtils;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 
 public abstract class AbstractDoeController {
@@ -132,12 +134,35 @@ public abstract class AbstractDoeController {
 		 @PostMapping(value = "/metaDataPermissionsList")
 		 @ResponseBody
 		 public String savePermissionsList(HttpSession session,@RequestHeader HttpHeaders headers,
-					@RequestParam(value = "collectionId") String collectionId, @RequestParam String groupsList)  { 
+					@RequestParam(value = "collectionId") String collectionId,
+					  @RequestParam(value = "selectedPermissions[]", required = false) String[] selectedPermissions)  { 
 			 log.info("get meta data permissions list");
-			 List<MetaDataPermissions> permissionsList = metaDataPermissionService.getAllGroupMetaDataPermissionsByCollectionId(Integer.valueOf(collectionId));
-
-
+			 String loggedOnUser = getLoggedOnUserInfo();
 			 
+			 List<String> newSelectedPermissionList = selectedPermissions == null ? new ArrayList<String>() : Arrays.asList(selectedPermissions);
+			 List<MetaDataPermissions> existingPermissionsList = metaDataPermissionService.getAllGroupMetaDataPermissionsByCollectionId(Integer.valueOf(collectionId));
+		     List<String> oldPermissionsList = LambdaUtils.map(existingPermissionsList, MetaDataPermissions::getUserGroupId);
+		            
+		     if (CollectionUtils.isEmpty(oldPermissionsList) && !CollectionUtils.isEmpty(newSelectedPermissionList) && 
+		    		 StringUtils.isNotBlank(collectionId)) {
+		                // save the new set of permissions
+		    	 metaDataPermissionService.savePermissionsList(loggedOnUser, String.join(",", newSelectedPermissionList), Integer.valueOf(collectionId));
+		     } else {
+		                List<String> deletedPermissions = new ArrayList<String>();
+		                List<String> addedPermissions = new ArrayList<String>();
+
+		                deletedPermissions = oldPermissionsList.stream()
+		                    .filter(e -> !newSelectedPermissionList.contains(e)).filter(value -> value != null)
+		                    .collect(Collectors.toList());
+
+		                addedPermissions = newSelectedPermissionList.stream()
+		                    .filter(e -> !oldPermissionsList.contains(e))
+		                    .collect(Collectors.toList());  
+				
+				metaDataPermissionService.deletePermissionsList(loggedOnUser, deletedPermissions, Integer.valueOf(collectionId));  
+		        metaDataPermissionService.savePermissionsList(loggedOnUser, String.join(",", addedPermissions), Integer.valueOf(collectionId));
+
+		     }			 
 			 return "SUCCESS";
 		 }
 		 

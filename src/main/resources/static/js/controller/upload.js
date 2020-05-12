@@ -132,12 +132,22 @@ function contructDataListDiv(data,status) {
 function constructNewCollectionMetaDataSet(data,status) {
 	$("#newMetaDataTable tbody").html("");
 	$.each(data, function(key, value) {	
-        	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+		if(value.attrName  =='access_group') {
+		 	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+        			'data-placement="right" title="'+value.description+'"></i></td><td>'+
+        			'<select class="simple-select2" multiple="multiple" id="accessGroupSelect" name="zAttrStr_'+value.attrName+'"' +
+        			'style="width:70%;"></select> &nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+        			'data-placement="right" title="Leave this field empty for public access."></i></td></tr>');
+		 	
+		} else {
+		 	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
         			'data-placement="right" title="'+value.description+'"></i></td><td>'+
         			'<input type="text" placeholder="Required" name="zAttrStr_'+value.attrName+'"' +
         			'style="width:70%;"></td></tr>');
-        
+		}       
 	});	
+	
+	loadJsonData('/metaDataPermissionsList', $("#registerCollectionModal").find("#accessGroupSelect"), false, null, null, null, "key", "value"); 
 }
 
 function addNewMetaDataCollection(tableName) {

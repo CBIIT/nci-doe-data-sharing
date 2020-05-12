@@ -30,8 +30,8 @@ function addCollectionMetaDataRows() {
 }
 
 function editPermissionsOpenModal() {
-	$("#updatePermissionModal").find("#updatePermMsg").html("");
-	$("#updatePermissionModal").find("#updatePermissionsSuccessBlock").hide()
+	$("#updatePermissionModal").find(".updatePermMsg").html("");
+	$("#updatePermissionModal").find(".updatePermissionsSuccessBlock").hide()
 	$("#updatePermissionModal").modal('show');	
 	loadJsonData('/metaDataPermissionsList', $("#updatePermissionModal").find("#updateMetaDataPermissionsList"),
 			false, null, postSuccessEditPermissions, null, "key", "value"); 
@@ -52,12 +52,12 @@ function postSuccessGetPermissions(data,status) {
 function updatePermissionsFunction() {
 	var selectedPermissions = $("#updatePermissionModal").find("#updateMetaDataPermissionsList").val();
 	var params = {selectedPermissions:selectedPermissions,collectionId:$("#collectionId").val()};
-	invokeAjax('/metaDataPermissionsList','POST',params,postSuccessUpdatePermissions,null,null,null);
+	invokeAjax('/metaDataPermissionsList','POST',params,postSuccessUpdatePermissions,null,'application/x-www-form-urlencoded; charset=UTF-8','text');
 }
 
 function postSuccessUpdatePermissions() {
-	$("#updatePermissionModal").find("#updatePermMsg").html("Permissions Updated");
-	$("#updatePermissionModal").find("#updatePermissionsSuccessBlock").show()
+	$("#updatePermissionModal").find(".updatePermMsg").html("Permissions Updated");
+	$("#updatePermissionModal").find(".updatePermissionsSuccessBlock").show()
 	
 }
 function updateMetaDataCollection() {
