@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import gov.nih.nci.doe.web.DoeWebException;
+import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeCollectionModel;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
@@ -61,6 +62,7 @@ public class DoeCollectionController extends AbstractDoeController {
 
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		try {
+			String loggedOnUser = getLoggedOnUserInfo();
 			String[] path = request.getParameterValues("path");
 			String isDataObject = request.getParameter("isDataObject");
 			
@@ -90,7 +92,13 @@ public class DoeCollectionController extends AbstractDoeController {
 						doeCollection.getPath(), sslCertPath, sslCertPassword);
 				if (updated) {
 					session.removeAttribute("selectedUsers");
-					//return "Collection " + doeCollection.getPath() + " is Updated!";
+					 //store the auditing info
+	                  AuditingModel audit = new AuditingModel();
+	                  audit.setName(loggedOnUser);
+	                  audit.setOperation("Edit Meta Data");
+	                  audit.setStartTime(new Date());
+	                  audit.setPath(doeCollection.getPath());
+	                  auditingService.saveAuditInfo(audit);
 					return "The metadata was successfully updated.";
 				}
 			}
