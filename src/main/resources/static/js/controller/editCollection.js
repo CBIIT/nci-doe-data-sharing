@@ -78,7 +78,7 @@ function postSuccessAccessPermissions(data,status) {
 	var accessGrpList = accessGrp.split(",");
 	
 	 for (var i = 0; i < accessGrpList.length; i++) {
-	        $("#updateAccessGroupsList option[value='" + accessGrpList[i].key + "']").prop("selected", true);
+	        $("#updateAccessGroupsList option[value='" + accessGrpList[i] + "']").prop("selected", true);
 	        $("#updateAccessPermissionsModal").find("#updateAccessGroupsList").trigger('change');
 	 }
 }
