@@ -46,7 +46,6 @@ import gov.nih.nci.doe.web.util.LambdaUtils;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQueryOperator;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQueryType;
-import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntries;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataLevelAttributes;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataQuery;
@@ -114,6 +113,7 @@ public class SearchController extends AbstractDoeController {
 		
 		List<String> systemAttrs = modelDTO.getCollectionSystemGeneratedMetadataAttributeNames();
 		systemAttrs.add("collection_type");
+		systemAttrs.add("access_group");
 		session.setAttribute("systemAttrs", systemAttrs);
 		
 		List<DoeSearchResult> results = new ArrayList<>();	
@@ -187,15 +187,18 @@ public class SearchController extends AbstractDoeController {
 			returnResult.setStudyPermissionRole(getPermissionRole(studyCollectionId));
 			returnResult.setProgramPermissionRole(getPermissionRole(programCollectionId));
 			returnResult.setDataSetPath(result.getCollection().getCollectionName());
-            returnResult.setDataSetName(getAttributeValue("data_set_name", result.getMetadataEntries()));
-            returnResult.setDataSetDescription(getAttributeValue("description", result.getMetadataEntries()));
+            returnResult.setDataSetName(getAttributeValue("data_set_name", result.getMetadataEntries().getSelfMetadataEntries(),"Data_Set"));
+            returnResult.setDataSetDescription(getAttributeValue("description", result.getMetadataEntries().getSelfMetadataEntries(),"Data_Set"));
             returnResult.setStudyPath(result.getCollection().getCollectionParentName());
             returnResult.setSelfMetadata(getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),"Data_Set", systemAttrs));
 			returnResult.setStudyUserMetadata(getUserMetadata(result.getMetadataEntries().getParentMetadataEntries(),"Study", systemAttrs));
 			returnResult.setInstituteUserMetadata(getUserMetadata(result.getMetadataEntries().getParentMetadataEntries(),"Program", systemAttrs));
-			returnResult.setProgramName(getAttributeValue("program_name", result.getMetadataEntries()));
-            returnResult.setStudyName(getAttributeValue("study_name", result.getMetadataEntries()));
-			returnResults.add(returnResult);
+			returnResult.setProgramName(getAttributeValue("program_name", result.getMetadataEntries().getParentMetadataEntries(),"Program"));
+            returnResult.setStudyName(getAttributeValue("study_name", result.getMetadataEntries().getParentMetadataEntries(),"Study"));
+			returnResult.setDataLevelAccessGroups(getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries(),"Data_Set"));
+			returnResult.setStudyLevelAccessGroups(getAttributeValue("access_group", result.getMetadataEntries().getParentMetadataEntries(),"Study"));
+			returnResult.setProgramLevelAccessGroups(getAttributeValue("access_group", result.getMetadataEntries().getParentMetadataEntries(),"Program"));
+            returnResults.add(returnResult);
 		}
 		
 		return returnResults;
@@ -215,34 +218,21 @@ public class SearchController extends AbstractDoeController {
 				Boolean isOwner = permissionList.stream().anyMatch(o -> (user.equalsIgnoreCase(o.getUserGroupId()) && o.getIsOwner()));
 				Boolean isGroupUser = permissionList.stream().anyMatch(o -> (loggedOnUserPermList.contains(o.getUserGroupId()) && o.getIsGroup()));
 					if(Boolean.TRUE.equals(isOwner)) {
-						return "Owner";
-						
+						return "Owner";						
 					} else if(Boolean.TRUE.equals(isGroupUser)) {
 						return "Group User";
 					}
-			}
-			
+			}			
 		}
-		
-		
 		return "No Permissions";
 	}
 
 	
-	private String getAttributeValue(String attrName, HpcMetadataEntries entries) {
-		if (entries == null)
+	private String getAttributeValue(String attrName, List<HpcMetadataEntry> list,String levelName) {
+		if (list == null)
 			return null;
-
-		List<HpcMetadataEntry> selfEntries = entries.getSelfMetadataEntries();
-		for (HpcMetadataEntry entry : selfEntries) {
-			
-			if (entry.getAttribute().equals(attrName))
-				return entry.getValue();
-		}
-
-		List<HpcMetadataEntry> parentEntries = entries.getParentMetadataEntries();
-		for (HpcMetadataEntry entry : parentEntries) {
-			if (StringUtils.equals(entry.getAttribute(), attrName))
+		for (HpcMetadataEntry entry : list) {
+			if (entry.getAttribute().equals(attrName) && levelName.equalsIgnoreCase(entry.getLevelLabel()))
 				return entry.getValue();
 		}
 		return null;
@@ -399,6 +389,7 @@ public class SearchController extends AbstractDoeController {
 				
 				List<String> systemAttrs = modelDTO.getCollectionSystemGeneratedMetadataAttributeNames();
 				systemAttrs.add("collection_type");
+				systemAttrs.add("access_group");
 				session.setAttribute("systemAttrs", systemAttrs);
 				
 				List<String> userList = LambdaUtils.filter(collectionLevels, (String n) ->!systemAttrs.contains(n));

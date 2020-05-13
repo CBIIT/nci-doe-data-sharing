@@ -55,11 +55,46 @@ function updatePermissionsFunction() {
 	invokeAjax('/metaDataPermissionsList','POST',params,postSuccessUpdatePermissions,null,'application/x-www-form-urlencoded; charset=UTF-8','text');
 }
 
-function postSuccessUpdatePermissions() {
+function postSuccessUpdatePermissions(data,status) {
 	$("#updatePermissionModal").find(".updatePermMsg").html("Permissions Updated");
-	$("#updatePermissionModal").find(".updatePermissionsSuccessBlock").show()
+	$("#updatePermissionModal").find(".updatePermissionsSuccessBlock").show();
 	
 }
+
+function editAccessPermissions(collectionId,access_groups,metadata_path) {
+	$("#updateAccessPermissionsModal").find(".updateAccessMsg").html("");
+	$("#updateAccessPermissionsModal").find(".updateAccessGroupsBlock").hide();
+	
+	$("#updateAccessPermissionsModal").find("#updateCollectionId").val(collectionId);
+	$("#updateAccessPermissionsModal").find("#accessGroups").val(access_groups);
+	$("#updateAccessPermissionsModal").find("#metadata_path").val(metadata_path);
+	$("#updateAccessPermissionsModal").modal('show');	
+	loadJsonData('/metaDataPermissionsList', $("#updateAccessPermissionsModal").find("#updateAccessGroupsList"),
+			false, null, postSuccessAccessPermissions, null, "key", "value"); 
+}
+
+function postSuccessAccessPermissions(data,status) {
+	var accessGrp = $("#updateAccessPermissionsModal").find("#accessGroups").val();
+	var accessGrpList = accessGrp.split(",");
+	
+	 for (var i = 0; i < accessGrpList.length; i++) {
+	        $("#updateAccessGroupsList option[value='" + accessGrpList[i].key + "']").prop("selected", true);
+	        $("#updateAccessPermissionsModal").find("#updateAccessGroupsList").trigger('change');
+	 }
+}
+
+function updateAccessGroupsFunction() {
+	var selectedAccessGroups = $("#updateAccessPermissionsModal").find("#updateAccessGroupsList").val();
+	var path = $("#updateAccessPermissionsModal").find("#metadata_path").val();
+	var params = {selectedAccessGroups:selectedAccessGroups,path:path};
+	invokeAjax('/updateAccessGroupMetaData','POST',params,postSuccessUpdateAccessgroups,null,'application/x-www-form-urlencoded; charset=UTF-8','text');
+}
+
+function postSuccessUpdateAccessgroups(data,status){
+	$("#updateAccessPermissionsModal").find(".updateAccessMsg").html("Access group Updated");
+	$("#updateAccessPermissionsModal").find(".updateAccessGroupsBlock").show();
+}
+
 function updateMetaDataCollection() {
 
 	var validate = true;

@@ -2,9 +2,11 @@ package gov.nih.nci.doe.web.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -29,14 +31,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
 import gov.nih.nci.doe.web.domain.MetaDataPermissions;
+import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeResponse;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.service.AuditingService;
 import gov.nih.nci.doe.web.service.AuthenticateService;
 import gov.nih.nci.doe.web.service.MetaDataPermissionsService;
+import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.doe.web.util.LambdaUtils;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
+import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 
 public abstract class AbstractDoeController {
 	
@@ -53,6 +58,9 @@ public abstract class AbstractDoeController {
 	
     @Autowired
     public AuditingService auditingService;
+    
+    @Value("${gov.nih.nci.hpc.server.collection}")
+	private String serviceURL;
 
 	protected Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -178,5 +186,35 @@ public abstract class AbstractDoeController {
 					 permissionsList.stream().forEach(e -> keyValueBeanResults.add(new KeyValueBean(e.getUserGroupId(), e.getUserGroupId()))); 
 				 }
 			 return new ResponseEntity<>(keyValueBeanResults, null, HttpStatus.OK);
+		 }
+		 
+		 
+		 @PostMapping(value = "/updateAccessGroupMetaData")
+		 @ResponseBody
+		 public String saveAccessGroup(HttpSession session,@RequestHeader HttpHeaders headers, HttpServletRequest request,
+					@RequestParam(value = "path") String path,
+					  @RequestParam(value = "selectedAccessGroups[]", required = false) String[] selectedAccessGroups)  { 
+			 log.info("get meta data permissions list");
+			 String loggedOnUser = getLoggedOnUserInfo();
+			 String authToken = (String) session.getAttribute("writeAccessUserToken");
+			 HpcCollectionRegistrationDTO dto = new HpcCollectionRegistrationDTO();
+			 List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
+			 HpcMetadataEntry entry = new HpcMetadataEntry();
+				entry.setAttribute("access_group");
+				entry.setValue(String.join(",", selectedAccessGroups));
+				metadataEntries.add(entry);
+			 dto.getMetadataEntries().addAll(metadataEntries);
+				boolean updated = DoeClientUtil.updateCollection(authToken, serviceURL, dto,
+						path, sslCertPath, sslCertPassword);
+				if (updated) {
+					 //store the auditing info
+	                  AuditingModel audit = new AuditingModel();
+	                  audit.setName(loggedOnUser);
+	                  audit.setOperation("Edit Meta Data");
+	                  audit.setStartTime(new Date());
+	                  audit.setPath(path);
+	                  auditingService.saveAuditInfo(audit);
+				}
+			 return "SUCCESS";
 		 }
 }

@@ -140,6 +140,13 @@ function dataTableInit(isVisible) {
         	   constructCollectionMetData(metaData,metaDataPath,false,permissionsRole,collectionId);
            });
            
+           $(".editAccessGroupPermissions").click(function(e){
+         	   var collectionId = $(this).attr('collectionId');
+         	  var access_groups = $(this).attr('access_groups');
+         	 var metaDataPath = $(this).attr('metadata_path');
+        	   editAccessPermissions(collectionId,access_groups,metaDataPath);
+           });
+           
            $(".selectCheckboxForIns").click(function(e){
         	   var table = $(e.target).closest('table').attr('id');
         	   var len = $('#' + table).find("input[type=checkbox]:checked").length;
@@ -215,7 +222,7 @@ function renderPath(data, type, row) {
            "<i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Data Set Metadata'></i></span>";
 			if(row.dataSetPermissionRole == 'Owner') {
 				editDataSetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collectionId  = '" + row.dataSetCollectionId + "' " +
-			    " metadata_path  = '" + row.dataSetPath+ "'>" +
+			    " access_groups  = '" + row.dataLevelAccessGroups+ "' metadata_path  = '" + row.dataSetPath+ "'>" +
                  "<i class='fa fa-users' data-toggle='tooltip' data-content='Edit Data Set Access Permissions'></i></span>";
 			}
 		}
@@ -227,7 +234,7 @@ function renderPath(data, type, row) {
 			"<i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Study Metadata'></i></span>";
 			if(row.studyPermissionRole == 'Owner') {
 				editStudySetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collectionId  = '" + row.studyCollectionId + "' " +
-			    " metadata_path  = '" + row.studyPath+ "'>" +
+			    " access_groups  = '" + row.studyLevelAccessGroups+ "' metadata_path  = '" + row.studyPath+ "'>" +
                  "<i class='fa fa-users' data-toggle='tooltip' data-content='Edit Study Access Permissions'></i></span>";
 			}
 		}
@@ -240,7 +247,7 @@ function renderPath(data, type, row) {
 			
 			if(row.programPermissionRole == 'Owner') {
 				editProgramSetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collectionId  = '" + row.programCollectionId + "' " +
-			    " metadata_path  = '" + row.institutePath+ "'>" +
+			    " access_groups  = '" + row.programLevelAccessGroups+ "' metadata_path  = '" + row.institutePath+ "'>" +
                  "<i class='fa fa-users' data-toggle='tooltip' data-content='Edit Program Access Permissions'></i></span>";
 			}
 		}

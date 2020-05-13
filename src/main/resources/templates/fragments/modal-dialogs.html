@@ -193,6 +193,43 @@ aria-labelledby="forgotPasswordLabel">
         </div>
     </div>
     
+    
+    <div id="updateAccessPermissionsModal" class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog" aria-hidden="false"
+aria-labelledby="updateAccessPermissionsModallabel">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Update Access Groups</h3>
+                       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="clearfix updateAccessGroupsBlock" style="display: none;margin-left:10px;width:90%;">
+                    <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
+                        <div class="alert alert-success">
+                            <h6 class="updateAccessMsg"></h6>
+                        </div>
+                    </div>
+                </div> 
+                <input type="hidden" id="updateCollectionId"/>
+                <input type="hidden" id="accessGroups"/>
+                <input type="hidden" id="metadata_path"/>
+                
+                <div class="modal-body drilldown-content">               
+                  <div class="row row-buffer">
+                      <label for="updateAccessGroupsList">Access Groups Permissions</label>
+                          <select class="simple-select2" multiple="multiple" id="updateAccessGroupsList" name="updateAccessGroupsList" style="width:70%">
+                           </select>
+                  </div>                    
+                  <div class="row row-buffer" style="text-align: end;">
+                      <div class="col-sm-12" style="margin-bottom: 10px;">
+                        <button type="button" class="btn btn-default pull-right" data-dismiss="modal"> Cancel</button>
+                          <button class="btn btn-primary pull-right" id="btnUpdateAccessGroup"> Update</button>
+                          </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 <div id="updatePermissionModal" class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog" aria-hidden="false"
 aria-labelledby="updatePermissionModallabel">
         <div class="modal-dialog modal-md" role="document">

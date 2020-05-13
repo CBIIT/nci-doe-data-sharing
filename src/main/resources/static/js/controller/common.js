@@ -385,5 +385,9 @@ $("#updatePermissions").click(function(e){
 $("#btnUpdatePermissions").click(function(e) {
 	updatePermissionsFunction();
 });
+$("#btnUpdateAccessGroup").click(function(e){
+	updateAccessGroupsFunction();
+});
+
 loadUploadTab();
 });
