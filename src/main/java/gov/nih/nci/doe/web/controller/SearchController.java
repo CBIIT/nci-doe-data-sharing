@@ -122,12 +122,8 @@ public class SearchController extends AbstractDoeController {
 		try {			
 			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search);
 			compoundQuery.setDetailedResponse(true);
-			if (search.getSearchType() != null && search.getSearchType().equals("collection")) {
-				serviceURL = compoundCollectionSearchServiceURL;
-			} else {
-				serviceURL =  compoundDataObjectSearchServiceURL;
-			}
-			
+			serviceURL = compoundCollectionSearchServiceURL;
+
 			WebClient client = DoeClientUtil.getWebClient(serviceURL, sslCertPath, sslCertPassword);
 			client.header("Authorization", "Bearer " + authToken);
 
@@ -168,6 +164,7 @@ public class SearchController extends AbstractDoeController {
 
 
 
+	@SuppressWarnings("unchecked")
 	private List<DoeSearchResult>  processCollectionResults(List<String> systemAttrs, Response restResponse) throws IOException {
 		MappingJsonFactory factory = new MappingJsonFactory();
 		JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
@@ -175,17 +172,19 @@ public class SearchController extends AbstractDoeController {
 
 		List<HpcCollectionDTO> searchResults = collections.getCollections();
 		List<DoeSearchResult> returnResults = new ArrayList<DoeSearchResult>();
+		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList().getBody();
+		String user = getLoggedOnUserInfo();
 		for (HpcCollectionDTO result : searchResults) {
 			
 			DoeSearchResult returnResult = new DoeSearchResult();
 			Integer studyCollectionId = getCollectionId(result.getMetadataEntries().getParentMetadataEntries(),"Study");
 			Integer programCollectionId  = getCollectionId(result.getMetadataEntries().getParentMetadataEntries(),"Program");
 			returnResult.setDataSetCollectionId(result.getCollection().getCollectionId());
-			returnResult.setDataSetPermissionRole(getPermissionRole(result.getCollection().getCollectionId()));
+			returnResult.setDataSetPermissionRole(getPermissionRole(user,result.getCollection().getCollectionId(),loggedOnUserPermissions));
 			returnResult.setStudyCollectionId(studyCollectionId);
 			returnResult.setProgramCollectionId(programCollectionId);
-			returnResult.setStudyPermissionRole(getPermissionRole(studyCollectionId));
-			returnResult.setProgramPermissionRole(getPermissionRole(programCollectionId));
+			returnResult.setStudyPermissionRole(getPermissionRole(user,studyCollectionId,loggedOnUserPermissions));
+			returnResult.setProgramPermissionRole(getPermissionRole(user,programCollectionId,loggedOnUserPermissions));
 			returnResult.setDataSetPath(result.getCollection().getCollectionName());
             returnResult.setDataSetName(getAttributeValue("data_set_name", result.getMetadataEntries().getSelfMetadataEntries(),"Data_Set"));
             returnResult.setDataSetDescription(getAttributeValue("description", result.getMetadataEntries().getSelfMetadataEntries(),"Data_Set"));
@@ -205,11 +204,9 @@ public class SearchController extends AbstractDoeController {
 	}
 	
 	
-	@SuppressWarnings("unchecked")
-	private String getPermissionRole(Integer collectionId) {
-		String user = getLoggedOnUserInfo();
-		if(!StringUtils.isEmpty(user)) {
-			List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList().getBody();
+	private String getPermissionRole(String user,Integer collectionId,List<KeyValueBean> loggedOnUserPermissions) {
+
+		if(!StringUtils.isEmpty(user)) {			
 			List<String> loggedOnUserPermList = new ArrayList<String>();		
 			loggedOnUserPermissions.stream().forEach(e -> loggedOnUserPermList.add(e.getKey()));
 			
@@ -228,26 +225,17 @@ public class SearchController extends AbstractDoeController {
 	}
 
 	
-	private String getAttributeValue(String attrName, List<HpcMetadataEntry> list,String levelName) {
-		if (list == null)
-			return null;
-		for (HpcMetadataEntry entry : list) {
-			if (entry.getAttribute().equals(attrName) && levelName.equalsIgnoreCase(entry.getLevelLabel()))
-				return entry.getValue();
-		}
-		return null;
-	}
+
 	
 	
 	private Integer getCollectionId(List<HpcMetadataEntry> list,String levelName) {
 		if (list == null)
 			return null;
 		
-		for (HpcMetadataEntry entry : list) {
-			if (levelName.equalsIgnoreCase(entry.getLevelLabel())) {
-				return entry.getCollectionId();
-			}
-			
+		HpcMetadataEntry entry =  list.stream().filter(e -> levelName.equalsIgnoreCase(e.getLevelLabel())).
+				findAny().orElse(null);
+		if(entry !=null) {
+			return entry.getCollectionId();
 		}
 		return null;
 	}
@@ -265,6 +253,7 @@ public class SearchController extends AbstractDoeController {
 	}
 
 	private HpcCompoundMetadataQuery buildSimpleSearch(DoeSearch search) {
+		
 		HpcCompoundMetadataQuery query = new HpcCompoundMetadataQuery();
 		query.setOperator(HpcCompoundMetadataQueryOperator.AND);
 		Map<String, HpcMetadataQuery> queriesMap = getQueries(search);
@@ -275,10 +264,16 @@ public class SearchController extends AbstractDoeController {
 
 		query.getQueries().addAll(queries);
 		return query;
+		
+
 	}
 
 	private Map<String, HpcMetadataQuery> getQueries(DoeSearch search) {
 		Map<String, HpcMetadataQuery> queries = new HashMap<String, HpcMetadataQuery>();
+
+
+
+		
 		for (int i = 0; i < search.getAttrName().length; i++) {
 			String rowId = search.getRowId()[i];
 			String attrName = search.getAttrName()[i];
@@ -318,17 +313,6 @@ public class SearchController extends AbstractDoeController {
 					criteria.setValue(attrValue.concat(" 23:59:59").replace("/", "-"));
 					criteria.setFormat("MM-DD-YYYY HH24:MI:SS");
 				}
-				/*if(StringUtils.isNotEmpty(grpName)) {
-					criteria.setAttribute(attrName);
-					criteria.setValue(grpName);
-					criteria.setOperator(HpcMetadataQueryOperator.EQUAL);					
-				 } else {
-						criteria.setAttribute(attrName);
-						criteria.setValue("public");
-						criteria.setOperator(HpcMetadataQueryOperator.EQUAL);
-				 }*/
-			
-				
 				if (level != null) {
 					HpcMetadataQueryLevelFilter levelFilter = new HpcMetadataQueryLevelFilter();
 					if (selfMetadata) {

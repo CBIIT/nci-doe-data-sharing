@@ -131,15 +131,25 @@ function contructDataListDiv(data,status) {
 
 function constructNewCollectionMetaDataSet(data,status) {
 	$("#newMetaDataTable tbody").html("");
+	var parentAccessgrp = $("#parentAccessGroup").val();
 	$.each(data, function(key, value) {	
 		if(value.attrName  =='access_group') {
+			if(parentAccessgrp && parentAccessgrp == "public") {	
 		 	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
         			'data-placement="right" title="'+value.description+'"></i></td><td>'+
         			'<select class="simple-select2" multiple="multiple" id="accessGroupSelect" name="zAttrStr_'+value.attrName+'"' +
         			'style="width:70%;"></select> &nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
         			'data-placement="right" title="Leave this field empty for public access."></i></td></tr>');
-		 	
-		} else {
+		 	loadJsonData('/metaDataPermissionsList', $("#registerCollectionModal").find("#accessGroupSelect"), false, null, null, null, "key", "value"); 
+		
+			} else {
+				$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+	        			'data-placement="right" title="'+value.description+'"></i></td><td>'+
+	        			'<input type="text" placeholder="Required" name="zAttrStr_'+value.attrName+'" value ="'+ parentAccessgrp+'"' +
+	        			"disabled='disabled' style='width:70%;'> &nbsp;&nbsp;<i class='fas fa-question-circle' data-toggle='tooltip'"+
+	        			'data-placement="right" title="Access group inherited from parent."></i></td></tr>'); 
+			}
+	   } else {
 		 	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
         			'data-placement="right" title="'+value.description+'"></i></td><td>'+
         			'<input type="text" placeholder="Required" name="zAttrStr_'+value.attrName+'"' +
@@ -147,7 +157,7 @@ function constructNewCollectionMetaDataSet(data,status) {
 		}       
 	});	
 	
-	loadJsonData('/metaDataPermissionsList', $("#registerCollectionModal").find("#accessGroupSelect"), false, null, null, null, "key", "value"); 
+	
 }
 
 function addNewMetaDataCollection(tableName) {

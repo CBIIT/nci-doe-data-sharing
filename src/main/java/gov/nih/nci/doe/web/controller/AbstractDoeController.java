@@ -217,4 +217,18 @@ public abstract class AbstractDoeController {
 				}
 			 return "SUCCESS";
 		 }
+		 
+		 
+			public String getAttributeValue(String attrName, List<HpcMetadataEntry> list,String levelName) {
+				if (list == null)
+					return null;
+				
+				HpcMetadataEntry entry =  list.stream().filter(e -> e.getAttribute().equalsIgnoreCase(attrName) && 
+						levelName.equalsIgnoreCase(e.getLevelLabel())).
+						findAny().orElse(null);
+				if(entry !=null) {
+					return entry.getValue();
+				}
+				return null;
+			}
 }

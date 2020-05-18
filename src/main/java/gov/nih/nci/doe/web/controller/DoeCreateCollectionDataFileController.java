@@ -39,7 +39,6 @@ import gov.nih.nci.hpc.domain.datatransfer.HpcS3UploadSource;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataValidationRule;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementRulesDTO;
@@ -300,16 +299,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 
 
 
-	protected void checkParent(String parent, HttpSession session) {
-		String authToken = (String) session.getAttribute("hpcUserToken");
-		if (parent != null && !parent.isEmpty()) {
-			HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL, parent, false,
-					sslCertPath, sslCertPassword);
-			if (collections != null && collections.getCollections() != null && collections.getCollections().size() > 0)
-				session.setAttribute("parentCollection", collections.getCollections().get(0));
-		}
-
-	}
+	
 
 	protected List<String> getCollectionTypes(List<HpcMetadataValidationRule> rules) {
 		List<String> collectionTypesSet = new ArrayList<String>();

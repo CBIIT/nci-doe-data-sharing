@@ -12,15 +12,16 @@ import javax.validation.Valid;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -28,7 +29,6 @@ import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.DoeCollectionModel;
 import gov.nih.nci.doe.web.model.DoeMetadataAttrEntry;
 import gov.nih.nci.doe.web.model.KeyValueBean;
-import gov.nih.nci.doe.web.service.MetaDataPermissionsService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataValidationRule;
@@ -58,13 +58,11 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 	@Value("${doe.basePath}")
 	private String basePath;
 
-	 @Autowired
-	 MetaDataPermissionsService metaDataPermissionService;
 	
-	@RequestMapping(value = "/collectionTypes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> populateCollectionTypes(HttpSession session,@RequestParam(value = "parent") String parent)
-			throws DoeWebException {
-		String authToken = (String) session.getAttribute("hpcUserToken");
+	@GetMapping(value = "/collectionTypes", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> populateCollectionTypes(HttpSession session,@RequestParam(value = "parent") String parent, Model model) {
+		
+		String authToken = (String) session.getAttribute("writeAccessUserToken");
 
 		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
 		if (modelDTO == null) {
@@ -83,15 +81,12 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 			parent = basePath;
 		}
 		if (parent != null && !parent.isEmpty()) {
-			collection = (HpcCollectionDTO) session.getAttribute("parentCollection");
-			if (collection == null) {
 				collections = DoeClientUtil.getCollection(authToken, serviceURL, parent, false, sslCertPath,
 						sslCertPassword);
 				if (collections != null && collections.getCollections() != null
 						&& !CollectionUtils.isEmpty(collections.getCollections())) {
 					collection = collections.getCollections().get(0);
-				}
-			}
+				}			
 		}
 		if (basePathRules != null) {
 			List<HpcMetadataValidationRule> rules = basePathRules.getCollectionMetadataValidationRules();
@@ -135,11 +130,12 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 				}
 			}
 		}
-		if (collectionTypesSet.isEmpty())
-			collectionTypesSet.add("Folder");
-		
 		final String collectionTypeVal = collectionType;
-		  collectionTypesSet.stream().forEach(e -> results.add(new KeyValueBean(e, collectionTypeVal))); 
+		HpcMetadataEntry entry = (collection != null && collection.getMetadataEntries() != null)?
+				collection.getMetadataEntries().getSelfMetadataEntries().stream().
+				filter(e -> e.getAttribute().equalsIgnoreCase("access_group")).findAny().orElse(null):null;
+		 model.addAttribute("parentAccessGroup", entry != null ? entry.getValue(): "");
+	     collectionTypesSet.stream().forEach(e -> results.add(new KeyValueBean(e, collectionTypeVal))); 
 		
 		 return new ResponseEntity<>(results, HttpStatus.OK);
 	}
@@ -157,8 +153,8 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(method = RequestMethod.GET)
-	 public ResponseEntity<?> getCollectionAttributes(@RequestParam(value = "selectedPath") String selectedPath,@RequestParam(value = "collectionType") String collectionType,
+	@GetMapping
+	 public ResponseEntity<List<DoeMetadataAttrEntry>> getCollectionAttributes(@RequestParam(value = "selectedPath") String selectedPath,@RequestParam(value = "collectionType") String collectionType,
 			HttpSession session, HttpServletRequest request, HttpServletResponse response) {
 		
 		
@@ -194,7 +190,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 	 * @param redirectAttributes
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.POST)
+	@PostMapping
 	@ResponseBody
 	public String createCollection(@Valid DoeCollectionModel doeCollection, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
 		
@@ -221,8 +217,8 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 		// Validate parent path
 		String parentPath = null;
 		try {
-			if (doeCollection.getPath().lastIndexOf("/") != -1)
-				parentPath = doeCollection.getPath().substring(0, doeCollection.getPath().lastIndexOf("/"));
+			if (doeCollection.getPath().lastIndexOf('/') != -1)
+				parentPath = doeCollection.getPath().substring(0, doeCollection.getPath().lastIndexOf('/'));
 			else
 				parentPath = doeCollection.getPath();
 			if (!parentPath.isEmpty()) {
@@ -239,14 +235,12 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 		try {
 			HpcCollectionListDTO collection = DoeClientUtil.getCollection(authToken, serviceURL,
 					doeCollection.getPath(), false, true, sslCertPath, sslCertPassword);
-			if (collection != null && collection.getCollections() != null && collection.getCollections().size() > 0) {
+			if (collection != null && collection.getCollections() != null && CollectionUtils.isNotEmpty(collection.getCollections())) {
 				 return "Collection already exists: " + doeCollection.getPath();
 			}
 		} catch (DoeWebException e) {
-			log.debug("Error in validating collection path" + e.getMessage());
-			
+			log.debug("Error in validating collection path" + e.getMessage());	
 		}
-
 		try {
 			boolean created = DoeClientUtil.updateCollection(authToken, serviceURL, registrationDTO,
 					doeCollection.getPath(), sslCertPath, sslCertPassword);
@@ -263,18 +257,13 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 							&& !CollectionUtils.isEmpty(collections.getCollections())) {
 						HpcCollectionDTO collection = collections.getCollections().get(0);
 						metaDataPermissionService.savePermissionsList(getLoggedOnUserInfo(),progList,collection.getCollection().getCollectionId());
-					}
-					
-					
-					
-				}
-				
+					}	
+				}				
 				return  "Collection is created!";
 			} 
 		} catch (Exception e) {
 			log.debug("Error in update collection" + e.getMessage());
-		} 
-		
+		} 		
 		return null;
 	}
 	

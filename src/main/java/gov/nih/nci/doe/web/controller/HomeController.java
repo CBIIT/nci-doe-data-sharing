@@ -1,13 +1,9 @@
 package gov.nih.nci.doe.web.controller;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpHeaders;
@@ -22,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import gov.nih.nci.doe.web.model.DoeUsersModel;
-import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.service.AuthenticateService;
 
 
@@ -50,9 +45,7 @@ public class HomeController extends AbstractDoeController {
 		return "home";
 		
 	}
-	
-
-	  
+		  
 	    /**
 	     * @param headers
 	     * @return
