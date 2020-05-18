@@ -131,10 +131,10 @@ function contructDataListDiv(data,status) {
 
 function constructNewCollectionMetaDataSet(data,status) {
 	$("#newMetaDataTable tbody").html("");
-	var parentAccessgrp = $("#parentAccessGroup").val();
+	var parentAccessgrp = $("#registerCollectionModal").find("#parentAccessGroup").val();
 	$.each(data, function(key, value) {	
 		if(value.attrName  =='access_group') {
-			if(parentAccessgrp && parentAccessgrp == "public") {	
+			if(!parentAccessgrp || (parentAccessgrp && parentAccessgrp == "public")) {	
 		 	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
         			'data-placement="right" title="'+value.description+'"></i></td><td>'+
         			'<select class="simple-select2" multiple="multiple" id="accessGroupSelect" name="zAttrStr_'+value.attrName+'"' +
@@ -184,8 +184,10 @@ function addNewMetaDataRowsForDataFile($this) {
 function retrieveCollectionList(data,status) {	
 	 var collectionType = data[0].key;
 	 var parent = data[0].value;
+	 var parentAccessGrp = data[1].value;
 	 $("#registerCollectionModal").find('label[for="parentCollectionName"]').text(parent + " Collection Name");
 	 $("#registerCollectionModal").find("#parentCollectionType").val(parent);
+	 $("#registerCollectionModal").find("#parentAccessGroup").val(parentAccessGrp);
 	 $("#registerCollectionModal").find("#collectionType").val(collectionType);
 	 $("#registerCollectionModal").find("#registerCollectionBtn").val("Register " + collectionType);
 	 $("#registerCollectionModal").find("#collectionMetaDataLabel").text(collectionType + " MetaData");

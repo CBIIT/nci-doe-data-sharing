@@ -134,8 +134,8 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 		HpcMetadataEntry entry = (collection != null && collection.getMetadataEntries() != null)?
 				collection.getMetadataEntries().getSelfMetadataEntries().stream().
 				filter(e -> e.getAttribute().equalsIgnoreCase("access_group")).findAny().orElse(null):null;
-		 model.addAttribute("parentAccessGroup", entry != null ? entry.getValue(): "");
-	     collectionTypesSet.stream().forEach(e -> results.add(new KeyValueBean(e, collectionTypeVal))); 
+		 collectionTypesSet.stream().forEach(e -> results.add(new KeyValueBean(e, collectionTypeVal))); 
+		 results.add(new KeyValueBean("parentAccessGroup",entry != null ? entry.getValue(): ""));
 		
 		 return new ResponseEntity<>(results, HttpStatus.OK);
 	}
