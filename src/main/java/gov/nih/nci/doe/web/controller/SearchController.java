@@ -138,13 +138,7 @@ public class SearchController extends AbstractDoeController {
 			} else if(restResponse.getStatus() == 204) {
 				return new ResponseEntity<>(results, HttpStatus.OK);
 			}
-		} catch (com.fasterxml.jackson.databind.JsonMappingException e) {
-			log.error(e.getMessage(), e);
-		} catch (HttpStatusCodeException e) {
-			log.error(e.getMessage(), e);
-		} catch (RestClientException e) {
-			log.error(e.getMessage(), e);
-		} catch (Exception e) {
+		}  catch (Exception e) {
 			log.error(e.getMessage(), e);
 			
 		} 
