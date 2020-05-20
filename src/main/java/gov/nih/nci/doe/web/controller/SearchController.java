@@ -244,6 +244,7 @@ public class SearchController extends AbstractDoeController {
 		return dto;
 	}
 
+	@SuppressWarnings("unchecked")
 	private HpcCompoundMetadataQuery buildSimpleSearch(DoeSearch search) {
 		
 		HpcCompoundMetadataQuery query = new HpcCompoundMetadataQuery();

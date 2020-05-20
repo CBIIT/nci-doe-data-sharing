@@ -25,11 +25,9 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestClientException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
@@ -71,7 +69,7 @@ public class DoeSyncDownloadController extends AbstractDoeController {
    * @param response
    * @return
    */
-  @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE) 
+  @PostMapping(produces = MediaType.APPLICATION_OCTET_STREAM_VALUE) 
   public @ResponseBody Resource download(
 		   @Valid DoeDownloadDatafile downloadFile, HttpSession session, HttpServletRequest request,
       HttpServletResponse response) {
@@ -118,7 +116,7 @@ public class DoeSyncDownloadController extends AbstractDoeController {
 
 
   public void downloadToUrl(String urlStr, int bufferSize, String fileName,
-      HttpServletResponse response) throws DoeWebException {
+      HttpServletResponse response) {
     try {
       WebClient client = DoeClientUtil.getWebClient(urlStr, null, null);
       Response restResponse = client.invoke("GET", null);

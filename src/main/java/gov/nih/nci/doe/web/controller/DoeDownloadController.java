@@ -25,8 +25,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestClientException;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import gov.nih.nci.doe.web.model.AjaxResponseBody;
@@ -147,13 +145,7 @@ public class DoeDownloadController extends AbstractDoeController {
               
               result.setMessage("Asynchronous download request is submitted successfully! Task Id: " + taskId);
               return result;
-		} catch (HttpStatusCodeException e) {
-			result.setMessage("Download request is not successful: " + e.getMessage());
-			return result;
-		} catch (RestClientException e) {
-			result.setMessage("Download request is not successful: " + e.getMessage());
-			return result;
-		} catch (Exception e) {
+		}  catch (Exception e) {
 			result.setMessage("Download request is not successful: " + e.getMessage());
 			return result;
 		}

@@ -16,16 +16,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
 
@@ -65,7 +60,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 	private String hpcModelURL;
 
 
-	@RequestMapping(method = RequestMethod.GET)
+	@GetMapping
 	    public ResponseEntity<?> search(HttpSession session,@RequestHeader HttpHeaders headers, DoeSearch search,
 	    		@RequestParam(value = "path") String path) {
 		
@@ -99,7 +94,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 		try {	
 		    UriComponentsBuilder ucBuilder  = UriComponentsBuilder.fromHttpUrl(compoundDataObjectSearchServiceURL);		     		    
 		    
-		    if (null == ucBuilder) {
+		    if (ucBuilder == null) {
 		      return null;
 		    }
 
@@ -116,27 +111,15 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 			} else if(restResponse.getStatus() == 204) {
 				return new ResponseEntity<>(dataResults, HttpStatus.OK);
 			}
-		} catch (com.fasterxml.jackson.databind.JsonMappingException e) {
-			log.error(e.getMessage(), e);
-		} catch (HttpStatusCodeException e) {
-			//e.printStackTrace();	
-			log.error(e.getMessage(), e);
-		} catch (RestClientException e) {
-			//e.printStackTrace();
-			log.error(e.getMessage(), e);
-		} catch (Exception e) {
-			//e.printStackTrace();
+		}  catch (Exception e) {
 			log.error(e.getMessage(), e);
 			
-		} finally {
-
-		}
-
+		} 
 		return new ResponseEntity<>(dataResults, HttpStatus.NO_CONTENT);
 		
 	}
 			
-	private List<HpcDatafileSearchResultDetailed> processDataObjectResponseResults(Response restResponse,List<String> systemAttrs) throws JsonParseException, IOException {
+	private List<HpcDatafileSearchResultDetailed> processDataObjectResponseResults(Response restResponse,List<String> systemAttrs) throws IOException {
 		
 		List<HpcDatafileSearchResultDetailed> returnResults = new ArrayList<HpcDatafileSearchResultDetailed>();
 
@@ -146,7 +129,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 			
 	}
 	
-	private List<HpcDatafileSearchResultDetailed> processDataObjectResults(Response restResponse,List<String> systemAttrs) throws JsonParseException, IOException {
+	private List<HpcDatafileSearchResultDetailed> processDataObjectResults(Response restResponse,List<String> systemAttrs) throws IOException {
 		MappingJsonFactory factory = new MappingJsonFactory();
 		JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 		HpcDataObjectListDTO dataObjects = parser.readValueAs(HpcDataObjectListDTO.class);
