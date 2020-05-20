@@ -12,7 +12,7 @@ import org.hibernate.annotations.Type;
 
 
 @Entity
-@Table(name = "DOE_USER_T",schema = "NCI_DOE_DB")
+@Table(name = "DOE_USER_T")
 public class DoeUsers {
 
 	private Integer id;

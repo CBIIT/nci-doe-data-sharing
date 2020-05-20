@@ -109,14 +109,6 @@ public class DoeSyncDownloadController extends AbstractDoeController {
       } else {
         return handleDownloadProblem(restResponse);
       }
-    } catch (HttpStatusCodeException e) {
-     
-      return new ByteArrayResource(("Failed to download: " +
-        e.getMessage()).getBytes());
-    } catch (RestClientException e) {
-     
-      return new ByteArrayResource(("Failed to download: " +
-        e.getMessage()).getBytes());
     } catch (Exception e) {
       return new ByteArrayResource(("Failed to download: " +
         e.getMessage()).getBytes());

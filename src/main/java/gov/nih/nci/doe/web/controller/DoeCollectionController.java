@@ -12,8 +12,8 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import gov.nih.nci.doe.web.DoeWebException;
@@ -58,11 +58,10 @@ public class DoeCollectionController extends AbstractDoeController {
 	 * @param redirectAttributes
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.POST)
+	@PostMapping
 	public @ResponseBody String updateCollection(@Valid DoeCollectionModel doeCollection, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
 
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
-		try {
 			String loggedOnUser = getLoggedOnUserInfo();
 			String[] path = request.getParameterValues("path");
 			String isDataObject = request.getParameter("isDataObject");
@@ -77,18 +76,17 @@ public class DoeCollectionController extends AbstractDoeController {
 			}
 
 			if(isDataObject != null && isDataObject.equalsIgnoreCase("true")) {
-				HpcDataObjectRegistrationRequestDTO registrationDTO = constructDataRequest(request, session);
+				HpcDataObjectRegistrationRequestDTO registrationDTO = constructDataRequest(request);
 				boolean updated = DoeClientUtil.updateDatafile(authToken, serviceDataURL, registrationDTO,
 						doeCollection.getPath(), sslCertPath, sslCertPassword);
 				if (updated) {
 					session.removeAttribute("selectedUsers");
-					//return  "Data file " + doeCollection.getPath() + " is Updated!";
 					return "The metadata was successfully updated.";
 					
 				}
 				
 			} else {
-				HpcCollectionRegistrationDTO registrationDTO = constructRequest(request, session);
+				HpcCollectionRegistrationDTO registrationDTO = constructRequest(request);
 				boolean updated = DoeClientUtil.updateCollection(authToken, serviceURL, registrationDTO,
 						doeCollection.getPath(), sslCertPath, sslCertPassword);
 				if (updated) {
@@ -104,10 +102,7 @@ public class DoeCollectionController extends AbstractDoeController {
 				}
 			}
 			
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			return e.getMessage();
-		}
+		
 		final Map<String, String> paramsMap = new HashMap<>();
 		paramsMap.put("path", doeCollection.getPath());		
 		return "ERROR";
@@ -115,8 +110,7 @@ public class DoeCollectionController extends AbstractDoeController {
 	}
 
 
-	private HpcCollectionRegistrationDTO constructRequest(HttpServletRequest request, HttpSession session)
-			throws DoeWebException {
+	private HpcCollectionRegistrationDTO constructRequest(HttpServletRequest request) {
 		Enumeration<String> params = request.getParameterNames();
 		HpcCollectionRegistrationDTO dto = new HpcCollectionRegistrationDTO();
 		List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
@@ -151,7 +145,7 @@ public class DoeCollectionController extends AbstractDoeController {
 	}
 
 	
-    private HpcDataObjectRegistrationRequestDTO constructDataRequest(HttpServletRequest request, HttpSession session) {
+    private HpcDataObjectRegistrationRequestDTO constructDataRequest(HttpServletRequest request) {
 		Enumeration<String> params = request.getParameterNames();
 		HpcDataObjectRegistrationRequestDTO dto = new HpcDataObjectRegistrationRequestDTO();
 		List<HpcMetadataEntry> metadataEntries = new ArrayList<>();

@@ -246,19 +246,8 @@ public class DoeBrowseController extends AbstractDoeController {
 			boolean getChildren, boolean partial, boolean refresh) {
 
 		path = path.trim();
-		//HpcBrowserEntry selectedEntry = null;
-		
-		//If partial is true, it means we came here from browse dialog,
-		//while building the initial tree, from bookmark, or browse
-		//icon in detail view, so no relative selected entry 
-		//will be found anyways, so skip this. 
-		//If node refresh is true, then we will be re-populating 
-		//selectEntry from irods anyways, so skip this.
-		//if(!partial && !refresh) {		
 		DoeBrowserEntry selectedEntry = getSelectedEntry(path, browserEntry);
-		//}
-
-		if(refresh & selectedEntry != null) {
+		if(refresh && selectedEntry != null) {
 			selectedEntry.setPopulated(false);
 		}
 
@@ -271,9 +260,6 @@ public class DoeBrowseController extends AbstractDoeController {
 			selectedEntry = new DoeBrowserEntry();
 			selectedEntry.setName(path);
 		}
-
-		try
-		{
 			//If partial is true or refresh is true, then it means we need to
 			//retrieve info on the selectedEntry also along with it's child list
 			//Else, we only get the child list, since we already have the
@@ -335,11 +321,8 @@ public class DoeBrowseController extends AbstractDoeController {
 					selectedEntry.getChildren().add(listChildEntry);
 				}
 			}
-		}
-		catch(DoeWebException e)
-		{
-			logger.error(e.getMessage(), e);
-		}
+		
+		
 		return partial ? selectedEntry : browserEntry;
 	}
 

@@ -18,13 +18,12 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.DoeDatafileModel;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectRegistrationRequestDTO;
@@ -58,7 +57,7 @@ public class DoeCreateDatafileController extends DoeCreateCollectionDataFileCont
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.POST)
+	@PostMapping
 	@ResponseBody
 	public String createDatafile(@Valid DoeDatafileModel doeDataFileModel,@RequestParam("doeDataFile") MultipartFile doeDataFile,
 			@RequestParam("dataFilePath") String  dataFilePath,HttpSession session, HttpServletRequest request, HttpServletResponse response) {
@@ -74,22 +73,16 @@ public class DoeCreateDatafileController extends DoeCreateCollectionDataFileCont
 			doeDataFileModel.setPath(path.trim());
 		}
 
-
-		try {
 			if (doeDataFileModel.getPath() == null || doeDataFileModel.getPath().trim().length() == 0)
 				return  "Invald Data file path";
 			// Validate parent path
 			String parentPath = null;
 			doeDataFileModel.setPath(doeDataFileModel.getPath().trim());
-			try {
-				
-				parentPath = doeDataFileModel.getPath().substring(0, doeDataFileModel.getPath().lastIndexOf("/"));
+
+				parentPath = doeDataFileModel.getPath().substring(0, doeDataFileModel.getPath().lastIndexOf('/'));
 				if (!parentPath.isEmpty())
 					DoeClientUtil.getCollection(authToken, collectionServiceURL, parentPath, true, sslCertPath,
 							sslCertPassword);
-			} catch (DoeWebException e) {
-				return "Invalid parent collection: " + e.getMessage();
-			}
 
 			HpcDataObjectRegistrationRequestDTO registrationDTO = constructSyncRequest(request, session, path);
 
@@ -101,11 +94,6 @@ public class DoeCreateDatafileController extends DoeCreateCollectionDataFileCont
 			}
 
 			clearSessionAttrs(session);
-			
-		} catch (Exception e) {
-			log.debug(e.getMessage());
-			return "Failure to register Data File";
-		} 
 		
 		
         return null;

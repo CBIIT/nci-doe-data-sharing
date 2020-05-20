@@ -25,8 +25,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestClientException;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
@@ -257,16 +255,55 @@ public class SearchController extends AbstractDoeController {
 			queries.add(queriesMap.get(iter.next()));
 
 		query.getQueries().addAll(queries);
-		return query;
+		
+		
+	// add criteria for access group public and other prog names for logged on user.
+	  List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList().getBody();
+		
+		HpcCompoundMetadataQuery query1 = new HpcCompoundMetadataQuery();
+		query1.setOperator(HpcCompoundMetadataQueryOperator.OR);
+		List<HpcMetadataQuery> queries1 = new ArrayList<HpcMetadataQuery>();
+		
+		
+		HpcMetadataQuery q = new HpcMetadataQuery();
+		HpcMetadataQueryLevelFilter levelFilter = new HpcMetadataQueryLevelFilter();
+		levelFilter.setLabel("Data_Set");
+		levelFilter.setOperator(HpcMetadataQueryOperator.EQUAL);
+		q.setLevelFilter(levelFilter);
+		q.setAttribute("access_group");
+		q.setValue("public");
+		q.setOperator(HpcMetadataQueryOperator.EQUAL);
+		queries1.add(q);
+		
+		for(KeyValueBean x :loggedOnUserPermissions) {
+			HpcMetadataQuery q1 = new HpcMetadataQuery();
+			HpcMetadataQueryLevelFilter levelFilter1 = new HpcMetadataQueryLevelFilter();
+			levelFilter1.setLabel("Data_Set");
+		    levelFilter1.setOperator(HpcMetadataQueryOperator.EQUAL);
+			q1.setAttribute("access_group");
+			q1.setValue("%"+x+"%");
+			q1.setLevelFilter(levelFilter1);
+			q1.setOperator(HpcMetadataQueryOperator.LIKE);
+			queries1.add(q1);
+		}
+
+		query1.getQueries().addAll(queries1);
+		
+		
+		//perform and of query and query1
+		HpcCompoundMetadataQuery query2 = new HpcCompoundMetadataQuery();
+		query2.setOperator(HpcCompoundMetadataQueryOperator.AND);
+		query2.getCompoundQueries().add(query1);
+		query2.getCompoundQueries().add(query);
+		
+		
+		return query2;
 		
 
 	}
 
 	private Map<String, HpcMetadataQuery> getQueries(DoeSearch search) {
 		Map<String, HpcMetadataQuery> queries = new HashMap<String, HpcMetadataQuery>();
-
-
-
 		
 		for (int i = 0; i < search.getAttrName().length; i++) {
 			String rowId = search.getRowId()[i];

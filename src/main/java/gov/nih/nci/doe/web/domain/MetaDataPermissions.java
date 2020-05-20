@@ -12,7 +12,7 @@ import org.hibernate.annotations.Type;
 
 
 @Entity
-@Table(name = "METADATA_PERMISSIONS_T",schema = "NCI_DOE_DB")
+@Table(name = "METADATA_PERMISSIONS_T")
 public class MetaDataPermissions {
 
 	private Integer id;

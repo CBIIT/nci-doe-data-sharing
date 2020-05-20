@@ -5,7 +5,7 @@ import javax.persistence.*;
 
 
 @Entity
-@Table(name = "AUDITING_T",schema = "NCI_DOE_DB")
+@Table(name = "AUDITING_T")
 public class Auditing {
 
 	private Integer id;

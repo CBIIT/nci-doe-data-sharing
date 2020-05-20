@@ -5,7 +5,7 @@ import javax.persistence.*;
 
 
 @Entity
-@Table(name = "CONSORTIUM_T",schema = "NCI_DOE_DB")
+@Table(name = "CONSORTIUM_T")
 public class Consortium {
 
 	private Integer id;

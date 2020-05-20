@@ -9,7 +9,7 @@ import javax.persistence.*;
 
 
 @Entity
-@Table(name = "TASK_MANAGER_T",schema = "NCI_DOE_DB")
+@Table(name = "TASK_MANAGER_T")
 public class TaskManager {
 
 	private Integer id;

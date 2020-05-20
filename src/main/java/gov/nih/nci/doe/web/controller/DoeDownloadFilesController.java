@@ -120,7 +120,6 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 				dto.setS3DownloadDestination(destination);
 			}
 
-			try {
 				HpcBulkDataObjectDownloadResponseDTO downloadDTO = null;
 				downloadDTO = DoeClientUtil
 					.downloadFiles(authToken, downloadServiceURL, dto, sslCertPath, sslCertPassword);
@@ -143,17 +142,7 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 					 }
 				}
 				return result; 
-			} catch (Exception e) {
-				result.setMessage("Download request is not successful: " + e.getMessage());
-				return result;
-			}
-		} catch (HttpStatusCodeException e) {
-			result.setMessage("Download request is not successful: " + e.getMessage());
-			return result;
-		} catch (RestClientException e) {
-			result.setMessage("Download request is not successful: " + e.getMessage());
-			return result;
-		} catch (Exception e) {
+		}  catch (Exception e) {
 			result.setMessage("Download request is not successful: " + e.getMessage());
 			return result;
 		}

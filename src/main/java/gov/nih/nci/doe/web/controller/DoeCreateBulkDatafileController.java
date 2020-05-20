@@ -8,13 +8,15 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import gov.nih.nci.doe.web.DoeWebException;
@@ -25,7 +27,6 @@ import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
-import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO;
 /**
  * <p>
  * Add data file controller.
@@ -54,7 +55,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	TaskManagerService taskManagerService;
 		
 	
-	@RequestMapping(method = RequestMethod.GET)
+	@GetMapping
 	public String home(Model model, HttpSession session, HttpServletRequest request) {
 
 		
@@ -80,33 +81,26 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(method = RequestMethod.POST)
+	@PostMapping
 	@ResponseBody
 	public String createDatafile(@Valid DoeDatafileModel doeDataFileModel, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
 		
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
-		String checksum = request.getParameter("checksum");
 		String user = getLoggedOnUserInfo();
-		if (checksum == null || checksum.isEmpty())
-			checksum = (String) request.getAttribute("checksum");
-
-
 			String dataFilePath = request.getParameter("bulkDatafilePath");
 			if(dataFilePath != null) {
 			doeDataFileModel.setPath(dataFilePath.trim());
 			}
-			
-
-		try {
 			if (doeDataFileModel.getPath() == null || doeDataFileModel.getPath().trim().length() == 0)
 				return "Invalid Data file path";
 			
 			doeDataFileModel.setPath(doeDataFileModel.getPath().trim());
 			HpcBulkDataObjectRegistrationRequestDTO registrationDTO = constructV2BulkRequest(request, session,
 					doeDataFileModel.getPath().trim());
-			String bulkType = (String)request.getParameter("uploadType");
+			String bulkType = request.getParameter("uploadType");
 			
-			if(registrationDTO.getDataObjectRegistrationItems().size() == 0 && registrationDTO.getDirectoryScanRegistrationItems().size() == 0)
+			if( CollectionUtils.isEmpty(registrationDTO.getDataObjectRegistrationItems()) &&
+					CollectionUtils.isEmpty(registrationDTO.getDirectoryScanRegistrationItems()))
 				throw new DoeWebException("No input file(s) / folder(s) are selected");
 			Set<String> basePaths = (Set<String>) session.getAttribute("basePaths");
 			
@@ -126,10 +120,6 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 					bulkRegistrationURL, registrationDTO, sslCertPath, sslCertPassword);
 			
 			if (responseDTO != null) {				
-				StringBuffer info = new StringBuffer();
-				   for (HpcDataObjectRegistrationItemDTO responseItem : responseDTO.getDataObjectRegistrationItems()) {
-					info.append(responseItem.getPath()).append("<br/>");
-				   }
 				   clearSessionAttrs(session);
 				    String taskId = responseDTO.getTaskId();
 				    String name = doeDataFileModel.getPath().substring(doeDataFileModel.getPath().lastIndexOf('/') + 1);
@@ -149,12 +139,6 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 		
 				
 			}
-		} catch (Exception e) {
-		   log.error("failed to create data file: " + e.getMessage(), e);
-		   String msg = e.getMessage().replace("\n", "<br/>");
-		   return "Failed to create data file:" + msg;
-     
-		} 
 
 		return null;
 	}

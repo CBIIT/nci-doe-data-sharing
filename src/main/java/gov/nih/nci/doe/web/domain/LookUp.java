@@ -14,7 +14,7 @@ import javax.persistence.TemporalType;
 
 
 @Entity
-@Table(name = "lookup_t",schema = "NCI_DOE_DB")
+@Table(name = "lookup_t")
 public class LookUp implements Serializable {
 
 	private static final long serialVersionUID = 3092597482427044459L;
