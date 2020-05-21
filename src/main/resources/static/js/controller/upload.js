@@ -299,7 +299,7 @@ function postSuccessRegisterCollection(data,collectionType) {
 	}
 
 	if(collectionType  == 'Program') {
-		var params= {selectedPath:'/DOE_TEST_Archive',refreshNode:'true'};
+		var params= {selectedPath:$("#basePath").val(),refreshNode:'true'};
 		loadJsonData('/browse/collection', $("#instituteList"), true, params, null, null, "key", "value"); 
 	} else if(collectionType == 'Study') {
 		var params= {selectedPath:$("#instituteList").val(),refreshNode:'true'};
