@@ -282,7 +282,7 @@ public class SearchController extends AbstractDoeController {
 			levelFilter1.setLabel("Data_Set");
 		    levelFilter1.setOperator(HpcMetadataQueryOperator.EQUAL);
 			q1.setAttribute("access_group");
-			q1.setValue("%"+x+"%");
+			q1.setValue("%"+x.getValue()+"%");
 			q1.setLevelFilter(levelFilter1);
 			q1.setOperator(HpcMetadataQueryOperator.LIKE);
 			queries1.add(q1);
