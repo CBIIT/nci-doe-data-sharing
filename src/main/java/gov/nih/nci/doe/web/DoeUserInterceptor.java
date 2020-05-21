@@ -36,11 +36,18 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 	@Value("${gov.nih.nci.hpc.server.user.authenticate}")
 	private String authenticateURL;
 	
-	@Value("${doe.ncidoesvct1.password}")
+	@Value("${doe.readonly.password}")
 	private String readOnlyUserPassword;
 	
-	@Value("${doe.ncidoesvct2.password}")
+	@Value("${doe.writeaccount.password}")
 	private String writeAccessUserPassword;
+	
+	@Value("${doe.readonlyaccount.username}")
+	private String readOnlyUserName;
+	
+	@Value("${doe.writeaccount.username}")
+	private String writeAccessUserName;
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -64,7 +71,7 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 			 if(auth != null && auth.isAuthenticated()) {
 				 Boolean isAnonymousUSer = auth.getAuthorities().stream().filter(o -> o.getAuthority().equals("ROLE_ANONYMOUS")).findFirst().isPresent();			
 				 if(!isAnonymousUSer) {
-				   String authToken = DoeClientUtil.getAuthenticationToken("ncidoesvct2", writeAccessUserPassword,authenticateURL);
+				   String authToken = DoeClientUtil.getAuthenticationToken(writeAccessUserName, writeAccessUserPassword,authenticateURL);
 				   session.setAttribute("writeAccessUserToken", authToken);
 			     }
 			 }
@@ -75,7 +82,7 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 		
 		if(StringUtils.isBlank(userToken)) {
 		 try {
-			String authToken = DoeClientUtil.getAuthenticationToken("ncidoesvct1", readOnlyUserPassword,authenticateURL);
+			String authToken = DoeClientUtil.getAuthenticationToken(readOnlyUserName, readOnlyUserPassword,authenticateURL);
 			session.setAttribute("hpcUserToken", authToken);
             log.debug("authentication successfull");
 		 } catch (Exception e) {
