@@ -64,6 +64,8 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 		} else {
 			clearSessionAttrs(session);
 		}
+		
+		model.addAttribute("basePathSelected", basePath);
 		return "upload";
 	}
 	
