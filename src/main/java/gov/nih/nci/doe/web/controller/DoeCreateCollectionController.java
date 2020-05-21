@@ -216,6 +216,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 
 		// Validate parent path
 		String parentPath = null;
+		try {
 			if (doeCollection.getPath().lastIndexOf('/') != -1)
 				parentPath = doeCollection.getPath().substring(0, doeCollection.getPath().lastIndexOf('/'));
 			else
@@ -226,18 +227,25 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 					return "Invalid parent in Collection Path";
 			}
 			
-		
+		} catch (DoeWebException e) {
+			log.debug("Invalid parent in Collection Path:" + e.getMessage());
+		}
 
 		// Validate Collection path
+		try {
 			HpcCollectionListDTO collection = DoeClientUtil.getCollection(authToken, serviceURL,
 					doeCollection.getPath(), false, true, sslCertPath, sslCertPassword);
 			if (collection != null && collection.getCollections() != null && CollectionUtils.isNotEmpty(collection.getCollections())) {
 				 return "Collection already exists: " + doeCollection.getPath();
 			}
-
+		} catch (DoeWebException e) {
+			log.debug("Error in validating collection path" + e.getMessage());	
+		}
+		try {
 			boolean created = DoeClientUtil.updateCollection(authToken, serviceURL, registrationDTO,
 					doeCollection.getPath(), sslCertPath, sslCertPassword);
-			if (created) {				
+			if (created) {
+				
 				//after collection is created, store the permissions.
 				String progList = request.getParameter("metaDataPermissionsList");
 				if(!StringUtils.isEmpty(progList)) {
@@ -247,11 +255,15 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 							doeCollection.getPath(), false, sslCertPath,sslCertPassword);
 					if (collections != null && collections.getCollections() != null
 							&& !CollectionUtils.isEmpty(collections.getCollections())) {
-						metaDataPermissionService.savePermissionsList(getLoggedOnUserInfo(),progList,collections.getCollections().get(0).getCollection().getCollectionId());
+						HpcCollectionDTO collection = collections.getCollections().get(0);
+						metaDataPermissionService.savePermissionsList(getLoggedOnUserInfo(),progList,collection.getCollection().getCollectionId());
 					}	
 				}				
 				return  "Collection is created!";
-			} 		
+			} 
+		} catch (Exception e) {
+			log.debug("Error in update collection" + e.getMessage());
+		} 		
 		return null;
 	}
 	
