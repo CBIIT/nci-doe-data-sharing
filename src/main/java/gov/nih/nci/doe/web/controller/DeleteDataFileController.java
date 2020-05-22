@@ -1,6 +1,8 @@
 package gov.nih.nci.doe.web.controller;
 
 import javax.servlet.http.HttpSession;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpHeaders;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 
 
@@ -29,13 +32,14 @@ public class DeleteDataFileController extends AbstractDoeController{
 		
 		   String authToken = (String) session.getAttribute("writeAccessUserToken");
           			if (deletepath == null) {
-				return "Invaliad Data object path!";
+				return "Invalid Data object path!";
 			}
-			boolean deleted = DoeClientUtil.deleteDatafile(authToken, serviceURL, deletepath, sslCertPath, sslCertPassword);
-			if (deleted) {
-				return "Data object deleted!";
+			String deleted = DoeClientUtil.deleteDatafile(authToken, serviceURL, deletepath, sslCertPath, sslCertPassword);
+			if (StringUtils.isNotEmpty(deleted) && deleted.equalsIgnoreCase("true")) {
+				return "SUCCESS";
+			} else {
+				return "Failed to delete data file.";
 			}
-		return null;
 	}
 
 }

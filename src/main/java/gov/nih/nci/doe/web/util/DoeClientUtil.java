@@ -663,7 +663,7 @@ public class DoeClientUtil {
     }
   }
 
-  public static boolean deleteDatafile(String token, String hpcDatafileURL, String path,
+  public static String deleteDatafile(String token, String hpcDatafileURL, String path,
 	      String hpcCertPath, String hpcCertPassword) {
 	    try {
 	      WebClient client = DoeClientUtil.getWebClient(UriComponentsBuilder
@@ -673,7 +673,7 @@ public class DoeClientUtil {
 
 	      Response restResponse = client.delete();
 	      if (restResponse.getStatus() == 200) {
-	        return true;
+	        return "true";
 	      } else {
 	        ObjectMapper mapper = new ObjectMapper();
 	        AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
@@ -686,7 +686,7 @@ public class DoeClientUtil {
 	        JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 
 	        HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
-	        throw new DoeWebException(exception.getMessage());
+	        return exception.getMessage();
 	      }
 	    } catch (Exception e) {
 	    	log.error("failed to delete data file" + e);

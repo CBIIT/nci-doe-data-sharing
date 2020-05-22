@@ -126,7 +126,8 @@ function dataTableInit(isVisible) {
         	   $("#editCollectionFragment").hide();
         	   var datsetPath = $(this).attr('data_set_path');
         	   var metadata = $(this).attr('metadata_type');
-        		refreshDataSetDataTable(datsetPath,metadata);
+        	   var acessGrps = $(this).attr('access_grp');
+        		refreshDataSetDataTable(datsetPath,metadata,acessGrps);
            });
            
            $(".editCollectionMetadata").click(function(e){
@@ -255,7 +256,7 @@ function renderPath(data, type, row) {
 		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'><input type='checkbox' id=" + row.dataSetPath + " " +
 			"class='selectCheckboxForIns'/>&nbsp;&nbsp;&nbsp;<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span>" +
 			"&nbsp&nbsp;" + editDataSetHtml + "</div><div class='col-md-12'></div>" +
-			"<div class='col-md-12' style='margin-left:22px;'><a href='#' class='dataSetFragment' metadata_type = '" + data  + "' data_set_path = " + row.dataSetPath + ">" +
+			"<div class='col-md-12' style='margin-left:22px;'><a href='#' class='dataSetFragment' access_grp ='"+row.dataLevelAccessGroups +"' metadata_type = '" + data  + "' data_set_path = " + row.dataSetPath + ">" +
 					"<span class='cil_12_bold_no_color'>" + row.dataSetDescription + "</span>" +
 			"</a><br></div><div class='col-md-12'><br></div><div class='col-md-12' style='margin-left:22px;'>" +
 			"<span class='cil_12_bold_no_color'>Study: </span><a class='cil_12_no_color button2a' metadata_type = '" + study  + "' tabindex='0'" +
@@ -270,7 +271,7 @@ function renderPath(data, type, row) {
 		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'>"+
 		"&nbsp;&nbsp;&nbsp;<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span>" +
 		"&nbsp&nbsp;</div><div class='col-md-12'></div>" +
-		"<div class='col-md-12' style='margin-left:22px;'><a href='#' class='dataSetFragment' metadata_type = '" + data  + "' data_set_path = " + row.dataSetPath + ">" +
+		"<div class='col-md-12' style='margin-left:22px;'><a href='#' class='dataSetFragment' access_grp ='"+row.dataLevelAccessGroups +"' metadata_type = '" + data  + "' data_set_path = " + row.dataSetPath + ">" +
 				"<span class='cil_12_bold_no_color'>" + row.dataSetDescription + "</span>" +
 		"</a><br></div><div class='col-md-12'><br></div><div class='col-md-12' style='margin-left:22px;'>" +
 		"<span class='cil_12_bold_no_color'>Study: </span><a class='cil_12_no_color button2a' metadata_type = '" + study  + "' tabindex='0'" +

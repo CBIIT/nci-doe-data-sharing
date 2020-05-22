@@ -1,9 +1,9 @@
-function refreshDataSetDataTable(dataSetPath,metadata) {
+function refreshDataSetDataTable(dataSetPath,metadata,accessgroups) {
 	var isVisible = (loggedOnUserInfo ? true:false);
     console.log("refresh datatable");
     $("#dataSetTable").dataTable().fnDestroy();
     if (!$.fn.DataTable.isDataTable('#dataSetTable')) {
-    	dataTableInitDataSet(isVisible,dataSetPath,metadata);
+    	dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups);
     } else {
         var t = $('#dataSetTable').DataTable();
         console.log(t);
@@ -11,7 +11,7 @@ function refreshDataSetDataTable(dataSetPath,metadata) {
     }
 }
 
-function dataTableInitDataSet(isVisible,dataSetPath,metadata) {
+function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups) {
     $('#dataSetTable').DataTable({
         "paging": true,
         "ordering": false,
@@ -141,8 +141,9 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata) {
         		    },
         		    callback: function (result) {
         		    	if(result == true) {
-        		        	   var params = {deletepath:path};
-        		        		invokeAjax('/delete/datafile','POST',params,null,null,'application/x-www-form-urlencoded; charset=UTF-8','text');
+        		           var params = {deletepath:path};
+        		           invokeAjax('/delete/datafile','POST',params,postSuccessDelete,postFailureDeleteFunction,
+        		        	'application/x-www-form-urlencoded; charset=UTF-8','text');
         		    	}   
         		    }
         		});
@@ -168,7 +169,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata) {
                 responsivePriority: 1
             },
             {"data": "download", "render": function (data, type, row) {
-                return renderDownload(data, type, row);
+                return renderDownload(data, type, row,accessgroups);
             },
             responsivePriority: 3
         },
@@ -217,7 +218,7 @@ function renderDataSetPath(data, type, row) {
 	return html;
 }
 
-function renderDownload(data, type, row) {
+function renderDownload(data, type, row,accessgroups) {
 	var downdloadFileName = null;
 	var path = row.path;
 	var html = "";
@@ -235,9 +236,12 @@ function renderDownload(data, type, row) {
    
 	html += "<span class='btn btn-link btn-sm editDataFileCollectionMetadata'  metadata_path  = '" + path + "'" +
 				" metadata_set = '" + metadata  + "' ><i class='fa fa-edit' data-toggle='tooltip'" +
-				" data-content='Edit Data Object Metadata'></i></span>&nbsp;&nbsp;<span data-filePath = '" + path + "' class='btn btn-link btn-sm deleteDataFileBtn'><i class='fas fa-trash'></i></span>";
+				" data-content='Edit Data Object Metadata'></i></span>";
+				
+	if(accessgroups && accessgroups.indexOf("public") == -1) {		
+	 html+="&nbsp;&nbsp;<span data-filePath = '" + path + "' class='btn btn-link btn-sm deleteDataFileBtn'><i class='fas fa-trash'></i></span>";
 
-	
+	}
 	return html;
 
 }
@@ -292,5 +296,11 @@ function onClickOfBulkDownloadBtn() {
 
 
 function postSuccessDelete(data,status) {
+	if(data != "SUCCESS") {
+		return bootbox.alert("Failed to delete data file.");
+	}
+}
+
+function postFailureDeleteFunction() {
 	
 }
