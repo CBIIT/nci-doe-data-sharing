@@ -125,7 +125,31 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata) {
         	   constructCollectionMetData(metaData,metaDataPath,true,null,null);
            });
            
-           
+           $(".deleteDataFileBtn").click(function(e){
+        	   var path = $(this).attr('data-filePath');
+        	   bootbox.confirm({
+        		    message: "Are you sure you want to delete this?",
+        		    buttons: {
+        		        confirm: {
+        		            label: 'Yes',
+        		            className: 'btn-success'
+        		        },
+        		        cancel: {
+        		            label: 'No',
+        		            className: 'btn-danger'
+        		        }
+        		    },
+        		    callback: function (result) {
+        		    	if(result == true) {
+        		        	   var params = {deletepath:path};
+        		        		invokeAjax('/delete/datafile','POST',params,null,null,'application/x-www-form-urlencoded; charset=UTF-8','text');
+        		    	}   
+        		    }
+        		});
+        	   
+        	  
+        	   
+           });
            initializeToolTips();
            initializePopover();
            displayPopover();
@@ -200,7 +224,6 @@ function renderDownload(data, type, row) {
 	var metadata = "";
 	var n = path.lastIndexOf("/");
 	downdloadFileName = path.substring(n+1);	
-	var isLoggedOnUser = (loggedOnUserInfo ? true:false);
 	
 	html += "<a id='downloadlink' class='btn btn-link btn-sm downloadLink' href='javascript:void(0);' " +
 	       "data-toggle='modal' data-backdrop='static' data-keyboard='false' data-fileName = " + downdloadFileName + " data-path=" + row.download + " " +
@@ -209,9 +232,11 @@ function renderDownload(data, type, row) {
 	if(row.selfMetadata && row.selfMetadata.length > 0) {
 		var metadata = JSON.stringify(row.selfMetadata);
 	}	
-	if(isLoggedOnUser) {
-		html += "<span class='btn btn-link btn-sm editDataFileCollectionMetadata'  metadata_path  = '" + path + "' metadata_set = '" + metadata  + "' ><i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Data Object Metadata'></i></span>";
-	}
+   
+	html += "<span class='btn btn-link btn-sm editDataFileCollectionMetadata'  metadata_path  = '" + path + "'" +
+				" metadata_set = '" + metadata  + "' ><i class='fa fa-edit' data-toggle='tooltip'" +
+				" data-content='Edit Data Object Metadata'></i></span>&nbsp;&nbsp;<span data-filePath = '" + path + "' class='btn btn-link btn-sm deleteDataFileBtn'><i class='fas fa-trash'></i></span>";
+
 	
 	return html;
 
@@ -263,4 +288,9 @@ function onClickOfBulkDownloadBtn() {
 		$("#download-modal").find(".selectedFilesDiv").show();
 	    $("#download-modal").modal('show');
 	    
+}
+
+
+function postSuccessDelete(data,status) {
+	
 }

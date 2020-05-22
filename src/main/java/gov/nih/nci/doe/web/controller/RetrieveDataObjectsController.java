@@ -31,7 +31,6 @@ import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.HpcDatafileSearchResultDetailed;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
-import gov.nih.nci.hpc.domain.metadata.HpcMetadataQuery;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
@@ -72,7 +71,6 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 		
 			List<HpcCompoundMetadataQuery> queries = compoundQuery.getCompoundQuery().getCompoundQueries();	
             for(HpcCompoundMetadataQuery a : queries) {
-            	//a.setLevelFilter(null);
             	a.getQueries().stream().forEach(x-> x.setLevelFilter(null));
              }           
 		}

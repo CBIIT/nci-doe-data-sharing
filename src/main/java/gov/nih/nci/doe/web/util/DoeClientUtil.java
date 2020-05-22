@@ -663,7 +663,36 @@ public class DoeClientUtil {
     }
   }
 
+  public static boolean deleteDatafile(String token, String hpcDatafileURL, String path,
+	      String hpcCertPath, String hpcCertPassword) {
+	    try {
+	      WebClient client = DoeClientUtil.getWebClient(UriComponentsBuilder
+	        .fromHttpUrl(hpcDatafileURL).path("/{dme-archive-path}").buildAndExpand(
+	        path).encode().toUri().toURL().toExternalForm(), hpcCertPath, hpcCertPassword);
+	      client.header("Authorization", "Bearer " + token);
 
+	      Response restResponse = client.delete();
+	      if (restResponse.getStatus() == 200) {
+	        return true;
+	      } else {
+	        ObjectMapper mapper = new ObjectMapper();
+	        AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
+	            new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
+	            new JacksonAnnotationIntrospector());
+	        mapper.setAnnotationIntrospector(intr);
+	        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+	        MappingJsonFactory factory = new MappingJsonFactory(mapper);
+	        JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+
+	        HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
+	        throw new DoeWebException(exception.getMessage());
+	      }
+	    } catch (Exception e) {
+	    	log.error("failed to delete data file" + e);
+	      throw new DoeWebException(e.getMessage());
+	    }
+	  }
 
   public static HpcDownloadSummaryDTO getDownloadSummary(String token, String hpcQueryURL,
       String hpcCertPath, String hpcCertPassword) {
