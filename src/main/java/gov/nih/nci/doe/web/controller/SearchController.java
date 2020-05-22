@@ -265,7 +265,7 @@ public class SearchController extends AbstractDoeController {
 		query1.setOperator(HpcCompoundMetadataQueryOperator.OR);
 		List<HpcMetadataQuery> queries1 = new ArrayList<HpcMetadataQuery>();
 		
-		
+		// perform OR operation of public access and logged on users access groups 
 		HpcMetadataQuery q = new HpcMetadataQuery();
 		HpcMetadataQueryLevelFilter levelFilter = new HpcMetadataQueryLevelFilter();
 		levelFilter.setLabel("Data_Set");
@@ -275,7 +275,7 @@ public class SearchController extends AbstractDoeController {
 		q.setValue("public");
 		q.setOperator(HpcMetadataQueryOperator.EQUAL);
 		queries1.add(q);
-		
+
 		for(KeyValueBean x :loggedOnUserPermissions) {
 			HpcMetadataQuery q1 = new HpcMetadataQuery();
 			HpcMetadataQueryLevelFilter levelFilter1 = new HpcMetadataQueryLevelFilter();
@@ -291,7 +291,7 @@ public class SearchController extends AbstractDoeController {
 		query1.getQueries().addAll(queries1);
 		
 		
-		//perform and of query and query1
+		//perform and operation of query and query1
 		HpcCompoundMetadataQuery query2 = new HpcCompoundMetadataQuery();
 		query2.setOperator(HpcCompoundMetadataQueryOperator.AND);
 		query2.getCompoundQueries().add(query1);

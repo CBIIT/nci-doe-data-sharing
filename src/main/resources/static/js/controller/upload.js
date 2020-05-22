@@ -138,16 +138,14 @@ function constructNewCollectionMetaDataSet(data,status) {
 		 	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
         			'data-placement="right" title="'+value.description+'"></i></td><td>'+
         			'<select class="simple-select2" multiple="multiple" id="accessGroupSelect" name="zAttrStr_'+value.attrName+'"' +
-        			'style="width:70%;"></select> &nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
-        			'data-placement="right" title="Leave this field empty for public access."></i></td></tr>');
+        			'style="width:70%;"></select> &nbsp;&nbsp;<i class="fas fa-question-circle"><span>Leave this field empty for public access.</span></i></td></tr>');
 		 	loadJsonData('/metaDataPermissionsList', $("#registerCollectionModal").find("#accessGroupSelect"), false, null, null, null, "key", "value"); 
 		
 			} else {
 				$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
 	        			'data-placement="right" title="'+value.description+'"></i></td><td>'+
 	        			'<input type="text" placeholder="Required" name="zAttrStr_'+value.attrName+'" value ="'+ parentAccessgrp+'"' +
-	        			"disabled='disabled' style='width:70%;'> &nbsp;&nbsp;<i class='fas fa-question-circle' data-toggle='tooltip'"+
-	        			'data-placement="right" title="Access group inherited from parent."></i></td></tr>'); 
+	        			'disabled="disabled" style="width:70%;"> &nbsp;&nbsp;<i class="fas fa-question-circle"><span>Access group inherited from parent.</span></i></td></tr>'); 
 			}
 	   } else {
 		 	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+

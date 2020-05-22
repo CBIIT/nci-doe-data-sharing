@@ -30,6 +30,7 @@ import org.springframework.http.HttpStatus;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.HpcDatafileSearchResultDetailed;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
+import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataQuery;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDTO;
@@ -67,11 +68,12 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 		String authToken = (String) session.getAttribute("hpcUserToken");
 		HpcCompoundMetadataQueryDTO compoundQuery  = (HpcCompoundMetadataQueryDTO) session.getAttribute("compoundQuery");
 		
-		if(compoundQuery != null && compoundQuery.getCompoundQuery() !=null && !CollectionUtils.isEmpty(compoundQuery.getCompoundQuery().getQueries())) {
+		if(compoundQuery != null && compoundQuery.getCompoundQuery() !=null && !CollectionUtils.isEmpty(compoundQuery.getCompoundQuery().getCompoundQueries())) {
 		
-			List<HpcMetadataQuery> queries = compoundQuery.getCompoundQuery().getQueries();		
-            for(HpcMetadataQuery a : queries) {
-            	a.setLevelFilter(null);
+			List<HpcCompoundMetadataQuery> queries = compoundQuery.getCompoundQuery().getCompoundQueries();	
+            for(HpcCompoundMetadataQuery a : queries) {
+            	//a.setLevelFilter(null);
+            	a.getQueries().stream().forEach(x-> x.setLevelFilter(null));
              }           
 		}
 		
@@ -95,8 +97,8 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 		    UriComponentsBuilder ucBuilder  = UriComponentsBuilder.fromHttpUrl(compoundDataObjectSearchServiceURL);		     		    
 		    
 		    if (ucBuilder == null) {
-		      return null;
-		    }
+			      return null;
+			    }
 
 		    ucBuilder.pathSegment(path.substring(1, path.length()));
 		    final String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
