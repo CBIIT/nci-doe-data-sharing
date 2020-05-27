@@ -6,39 +6,57 @@
 </head>
 <body>
     <div class="tab-pane fade show active M-4 p-4" th:fragment="landing" id="landingTab" role="tabpanel">
-             <div class="row" id="landingDiv">
-            <div class="col-md-9">
-                <a><img  src="images/Molecules.jpg" th:src="@{/images/Molecules.jpg}" alt="A flexible data coordination framework housing multiple types of biologic data
-                 generated in support of cancer research funded or supported by the NCI" width="100%"></a>
-            </div>
+             <div class="row" id="landingDiv" style="background-image:url(/images/brain-scan.png);">
             <input type="hidden" id="uploader" value="${isUploader}"/>
-            <div class="col-md-3 buttoncontainer">
+            <div class="col-md-12 buttoncontainer" style="margin-bottom:110px;">
+            <div class="col-md-12" style="text-align:center;margin-top:20px;margin-bottom: 50px;"><h1 style="color:#0A3F7F;">
+            How NCI-DOE supports your research
+        </h1></div>
+            <div class="col-md-12 form-row">
+             <div class="col-md-4 form-group">
+            <a href="/loginTab" class="bigbutton" th:if="${loggedOnUser == null}">
+                    <div class="bigbutton">
+                        <h2> <i class="fas fa-user"></i>&nbsp;Already a member?</h2>
+                        <p>
+                          Sign In.
+                        </p>
+                    </div>
+                </a>
+                </div>
+            <div class="col-md-4 form-group">
                 <a th:href="@{/searchTab}"class="bigbutton" id="btnSearchHomeTab">
                     <div class="bigbutton searchbutton">
-                        <h2> Search </h2>
+                        <h2> <i class="fas fa-search"></i> Search </h2>
                         <p>
                             Search investigations, studies or data sets using any keyword.
                         </p>
                     </div>
                 </a>
+                </div>
                  <br>
+                 <div class="col-md-4 form-group">
                   <a th:href="@{/tasksTab}"class="bigbutton" id="btnStatusHomeTab" th:if="${loggedOnUser != null}">
                     <div class="bigbutton">
-                        <h2> Status </h2>
+                        <h2> <i class="fas fa-chart-area"></i>  Status </h2>
                         <p>
                            View Status of downloads and uploads.
                         </p>
                     </div>
                 </a>
+                </div>
                 <br/>
+                <div class="col-md-4 form-group">
                  <a  th:href="@{/addbulk}" class="bigbutton" id="btnUploadHomeTab" th:if="${loggedOnUser != null && isUploader eq true}">
                     <div class="bigbutton">
-                        <h2> Uploads </h2>
+                        <h2> <i class="fas fa-upload"></i> Uploads </h2>
                         <p>
                            Add collections and upload bulk or single files.
                         </p>
                     </div>
                 </a>
+                </div>
+                </div>
+                
             </div>
         </div>
         <hr>

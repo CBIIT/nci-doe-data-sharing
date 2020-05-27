@@ -195,7 +195,8 @@ BRANDING
 background-image: url(../images/tempate-bg-blue-02.png);
 background-repeat: no-repeat;
 background-size: cover;
-border-bottom: 8px solid rgb(3, 158, 31);
+/*border-bottom: 8px solid rgb(3, 158, 31);*/
+    border-bottom: 20px solid rgba(0,0,0,.4);
 background-color:#01223e;
 }
 
@@ -699,16 +700,16 @@ th.active .arrow {
 	}
 	
 	.bigbutton div {
-    border: 2px solid #0A3F7F;
+    /*border: 2px solid #0A3F7F;*/
     border-radius: 10px;
     text-align: center;
     width: 100%;
     max-width: 300px;
     margin: 10px auto 10px auto;
     padding: 5px;
-    -webkit-box-shadow: 7px 6px 20px 0px rgba(0,0,0,0.75);
+    /*-webkit-box-shadow: 7px 6px 20px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: 7px 6px 20px 0px rgba(0,0,0,0.75);
-    box-shadow: 7px 6px 20px 0px rgba(0,0,0,0.75);
+    box-shadow: 7px 6px 20px 0px rgba(0,0,0,0.75);*/
 }
 
 .searchbutton {
