@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -35,8 +34,10 @@ import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeResponse;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.model.KeyValueBean;
+import gov.nih.nci.doe.web.model.PermissionsModel;
 import gov.nih.nci.doe.web.service.AuditingService;
 import gov.nih.nci.doe.web.service.AuthenticateService;
+import gov.nih.nci.doe.web.service.MailService;
 import gov.nih.nci.doe.web.service.MetaDataPermissionsService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.doe.web.util.LambdaUtils;
@@ -58,6 +59,9 @@ public abstract class AbstractDoeController {
 	
     @Autowired
     public AuditingService auditingService;
+    
+	 @Autowired
+	 MailService mailService;
     
     @Value("${gov.nih.nci.hpc.server.collection}")
 	private String serviceURL;
@@ -188,34 +192,55 @@ public abstract class AbstractDoeController {
 			 return new ResponseEntity<>(keyValueBeanResults, null, HttpStatus.OK);
 		 }
 		 
+		 @GetMapping(value = "/notifyUsers")
+		 public String notifyUsersForUpdateAccessDicp(HttpSession session,@RequestHeader HttpHeaders headers, 
+				 PermissionsModel permissionGroups) throws Exception  { 
+			 log.info("notify users");
+			 log.info("permissionGroups" + permissionGroups.getDataLevelAccessGroups());
+			 //notify users
+			 MetaDataPermissions perm = metaDataPermissionService.getMetaDataPermissionsOwnerByCollectionId
+					 (Integer.valueOf(permissionGroups.getStudyCollectionId()));
+			 
+			 mailService.sendNotifyUsersForAccessGroups(perm.getUserGroupId());
+
+			 return "SUCCESS";
+		 }
 		 
-		 @PostMapping(value = "/updateAccessGroupMetaData")
-		 @ResponseBody
-		 public String saveAccessGroup(HttpSession session,@RequestHeader HttpHeaders headers, HttpServletRequest request,
-					@RequestParam(value = "path") String path,
-					  @RequestParam(value = "selectedAccessGroups[]", required = false) String[] selectedAccessGroups)  { 
+		 
+		 @GetMapping(value = "/updateAccessGroupMetaData")
+		 public ResponseEntity<?> saveAccessGroup(HttpSession session,@RequestHeader HttpHeaders headers,
+					 PermissionsModel permissionGroups)  { 
 			 log.info("get meta data permissions list");
+			 
+			 //validate if the edit can be done
+			 if(permissionGroups.getDataLevelAccessGroups().contains(permissionGroups.getProgramLevelAccessGroups())
+					 && permissionGroups.getDataLevelAccessGroups().contains(permissionGroups.getStudyLevelAccessGroups())
+					 && permissionGroups.getStudyLevelAccessGroups().contains(permissionGroups.getProgramLevelAccessGroups())) {
 			 String loggedOnUser = getLoggedOnUserInfo();
 			 String authToken = (String) session.getAttribute("writeAccessUserToken");
 			 HpcCollectionRegistrationDTO dto = new HpcCollectionRegistrationDTO();
 			 List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
 			 HpcMetadataEntry entry = new HpcMetadataEntry();
 				entry.setAttribute("access_group");
-				entry.setValue(String.join(",", selectedAccessGroups));
+				entry.setValue(permissionGroups.getSelectedAccessGroups());
 				metadataEntries.add(entry);
 			 dto.getMetadataEntries().addAll(metadataEntries);
 				boolean updated = DoeClientUtil.updateCollection(authToken, serviceURL, dto,
-						path, sslCertPath, sslCertPassword);
+						permissionGroups.getPath(), sslCertPath, sslCertPassword);
 				if (updated) {
 					 //store the auditing info
 	                  AuditingModel audit = new AuditingModel();
 	                  audit.setName(loggedOnUser);
 	                  audit.setOperation("Edit Meta Data");
 	                  audit.setStartTime(new Date());
-	                  audit.setPath(path);
+	                  audit.setPath(permissionGroups.getPath());
 	                  auditingService.saveAuditInfo(audit);
 				}
-			 return "SUCCESS";
+				
+			 } else {
+				 return new ResponseEntity<>("Permission group cannot be updated", HttpStatus.OK);
+			 }
+			 return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
 		 }
 		 
 		 

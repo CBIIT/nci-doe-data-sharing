@@ -61,12 +61,13 @@ function postSuccessUpdatePermissions(data,status) {
 	
 }
 
-function editAccessPermissions(collectionId,access_groups,metadata_path) {
+function editAccessPermissions(collectionId,access_groups,metadata_path,permissions) {
 	$("#updateAccessPermissionsModal").find(".updateAccessMsg").html("");
 	$("#updateAccessPermissionsModal").find(".updateAccessGroupsBlock").hide();
 	
 	$("#updateAccessPermissionsModal").find("#updateCollectionId").val(collectionId);
-	$("#updateAccessPermissionsModal").find("#accessGroups").val(access_groups);
+	$("#updateAccessPermissionsModal").find("#accessGroups").val(access_groups);	
+	$("#updateAccessPermissionsModal").find("#permissionGroups").val(permissions);
 	$("#updateAccessPermissionsModal").find("#metadata_path").val(metadata_path);
 	$("#updateAccessPermissionsModal").modal('show');	
 	loadJsonData('/metaDataPermissionsList', $("#updateAccessPermissionsModal").find("#updateAccessGroupsList"),
@@ -85,14 +86,34 @@ function postSuccessAccessPermissions(data,status) {
 
 function updateAccessGroupsFunction() {
 	var selectedAccessGroups = $("#updateAccessPermissionsModal").find("#updateAccessGroupsList").val();
+	var json = $("#updateAccessPermissionsModal").find("#permissionGroups").val();
 	var path = $("#updateAccessPermissionsModal").find("#metadata_path").val();
-	var params = {selectedAccessGroups:selectedAccessGroups,path:path};
-	invokeAjax('/updateAccessGroupMetaData','POST',params,postSuccessUpdateAccessgroups,null,'application/x-www-form-urlencoded; charset=UTF-8','text');
+	var permissionGroups = JSON.parse(json);
+	permissionGroups.path = path;
+	permissionGroups.selectedAccessGroups = selectedAccessGroups.join();
+	invokeAjax('/updateAccessGroupMetaData','GET',permissionGroups,postSuccessUpdateAccessgroups,null,null,'text');
 }
 
 function postSuccessUpdateAccessgroups(data,status){
-	$("#updateAccessPermissionsModal").find(".updateAccessMsg").html("Access group Updated");
-	$("#updateAccessPermissionsModal").find(".updateAccessGroupsBlock").show();
+	if(data == 'SUCCESS') {
+		$("#updateAccessPermissionsModal").find(".updateAccessMsg").html("Access group Updated");
+		$("#updateAccessPermissionsModal").find(".updateAccessGroupsBlock").show();
+	} else if(data == 'Permission group cannot be updated') {
+		var json = $("#updateAccessPermissionsModal").find("#permissionGroups").val();
+		$("#updateAccessPermissionsModal").find(".updateAccessMsg").html(
+				"Access group cannot be updated.Click <a class='notifyUsersLink' notify_permissions = '" + json + "' href='#'>here</a> to notify the users to change permissions.");
+		$("#updateAccessPermissionsModal").find(".updateAccessGroupsBlock").show();
+	}
+
+}
+
+function notifyUsersFunction(permissions) {
+	//var params = {permissions:JSON.parse(permissions)};
+	invokeAjax('/notifyUsers','GET',JSON.parse(permissions),postSuccessNotifyUsers,null,null,'text');
+}
+
+function postSuccessNotifyUsers(data,status) {
+	bootbox.alert("the users have been notified.")
 }
 
 function updateMetaDataCollection() {

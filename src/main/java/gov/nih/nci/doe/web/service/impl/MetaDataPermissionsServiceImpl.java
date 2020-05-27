@@ -88,4 +88,9 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 		
 	}
 
+	@Override
+	public MetaDataPermissions getMetaDataPermissionsOwnerByCollectionId(Integer collectionId) {
+		return metaDataPermissionsRepository.getMetaDataPermissionsOwnerByCollectionId(collectionId);
+	}
+
 }

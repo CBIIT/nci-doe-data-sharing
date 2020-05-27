@@ -18,5 +18,7 @@ public interface MetaDataPermissionsService {
     
     
     public List<MetaDataPermissions> getAllGroupMetaDataPermissionsByCollectionId(Integer collectionId);
+    
+    public MetaDataPermissions getMetaDataPermissionsOwnerByCollectionId(Integer collectionId);
 
 }

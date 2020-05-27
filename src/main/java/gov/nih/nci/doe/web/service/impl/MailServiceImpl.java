@@ -193,14 +193,22 @@ public class MailServiceImpl implements MailService {
 		
 		final Map<String, Object> params = new HashMap<String, Object>();
 		final List<String> to = new ArrayList<String>();
-		
-
-		 
 		to.add(email);		
 		params.put(TO, to.toArray(new String[0]));
 		params.put("TEMP_PSWD", password);
 		send("RESET_PASSWORD_EMAIL", params);
 		
+	}
+
+	@Override
+	public void sendNotifyUsersForAccessGroups(String email) throws Exception {
+        log.info("Sending an email for access group change");
+		
+		final Map<String, Object> params = new HashMap<String, Object>();
+		final List<String> to = new ArrayList<String>();
+		to.add(email);		
+		params.put(TO, to.toArray(new String[0]));
+		send("ACCESS_GROUP_EMAIL", params);
 	}	
 	
 		

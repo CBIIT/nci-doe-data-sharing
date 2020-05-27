@@ -389,5 +389,8 @@ $("#btnUpdateAccessGroup").click(function(e){
 	updateAccessGroupsFunction();
 });
 
+$("#updateAccessPermissionsModal").find(".notifyUsersLink").off("click").on("click", function (e) {	
+	notifyUsersFunction($(this).attr('notify_permissions'));
+});
 loadUploadTab();
 });

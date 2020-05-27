@@ -99,7 +99,8 @@ public class SearchController extends AbstractDoeController {
 	 ConsortiumService consortiumService;
 	
 	    @GetMapping
-	    public ResponseEntity<?> search(HttpSession session,@RequestHeader HttpHeaders headers,HttpServletRequest request, DoeSearch search ) {
+	    public ResponseEntity<?> search(HttpSession session,@RequestHeader HttpHeaders headers,
+	    		HttpServletRequest request, DoeSearch search ) {
 		
 		String authToken = (String) session.getAttribute("hpcUserToken");
 		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");

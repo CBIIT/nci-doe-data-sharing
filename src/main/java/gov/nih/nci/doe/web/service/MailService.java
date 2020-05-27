@@ -11,4 +11,6 @@ public interface MailService {
 	public void sendRegistrationEmail(String email) throws Exception;
 	
 	public void sendResetPasswordEmail(String password,String email) throws Exception;
+	
+	public void sendNotifyUsersForAccessGroups(String email) throws Exception;
 }
