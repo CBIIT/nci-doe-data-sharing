@@ -10,6 +10,8 @@
 package gov.nih.nci.doe.web.controller;
 
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeDatafileModel;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectRegistrationRequestDTO;
@@ -63,6 +66,7 @@ public class DoeCreateDatafileController extends DoeCreateCollectionDataFileCont
 			@RequestParam("dataFilePath") String  dataFilePath,HttpSession session, HttpServletRequest request, HttpServletResponse response) {
 		
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		String user = getLoggedOnUserInfo();
 
 		String checksum = request.getParameter("checksum");
 		if (checksum == null || checksum.isEmpty())
@@ -90,6 +94,15 @@ public class DoeCreateDatafileController extends DoeCreateCollectionDataFileCont
 			boolean created =  DoeClientUtil.registerDatafile(authToken, doeDataFile, serviceURL, registrationDTO,
 					path, sslCertPath, sslCertPassword);
 			if(created) {
+				
+				//store the auditing info
+                AuditingModel audit = new AuditingModel();
+                audit.setName(user);
+                audit.setOperation("Upload Single File");
+                audit.setStartTime(new Date());
+                audit.setPath(doeDataFileModel.getPath());
+                auditingService.saveAuditInfo(audit);
+                
 				return "Data File registered";
 			}
 

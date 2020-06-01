@@ -38,7 +38,7 @@ public class DeleteDataFileController extends AbstractDoeController{
 			if (StringUtils.isNotEmpty(deleted) && deleted.equalsIgnoreCase("true")) {
 				return "SUCCESS";
 			} else {
-				return "Failed to delete data file.";
+				return "Failed to delete data file." + deleted;
 			}
 	}
 
