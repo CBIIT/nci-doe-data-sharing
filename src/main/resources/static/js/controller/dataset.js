@@ -1,9 +1,9 @@
-function refreshDataSetDataTable(dataSetPath,metadata,accessgroups) {
+function refreshDataSetDataTable(dataSetPath,metadata,accessgroups,permissions) {
 	var isVisible = (loggedOnUserInfo ? true:false);
     console.log("refresh datatable");
     $("#dataSetTable").dataTable().fnDestroy();
     if (!$.fn.DataTable.isDataTable('#dataSetTable')) {
-    	dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups);
+    	dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permissions);
     } else {
         var t = $('#dataSetTable').DataTable();
         console.log(t);
@@ -11,7 +11,7 @@ function refreshDataSetDataTable(dataSetPath,metadata,accessgroups) {
     }
 }
 
-function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups) {
+function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permissions) {
     $('#dataSetTable').DataTable({
         "paging": true,
         "ordering": false,
@@ -169,7 +169,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups) {
                 responsivePriority: 1
             },
             {"data": "download", "render": function (data, type, row) {
-                return renderDownload(data, type, row,accessgroups);
+                return renderDownload(data, type, row,accessgroups,permissions);
             },
             responsivePriority: 3
         },
@@ -218,7 +218,7 @@ function renderDataSetPath(data, type, row) {
 	return html;
 }
 
-function renderDownload(data, type, row,accessgroups) {
+function renderDownload(data, type, row,accessgroups,permissions) {
 	var downdloadFileName = null;
 	var path = row.path;
 	var html = "";
@@ -238,7 +238,7 @@ function renderDownload(data, type, row,accessgroups) {
 				" metadata_set = '" + metadata  + "' ><i class='fa fa-edit' data-toggle='tooltip'" +
 				" data-content='Edit Data Object Metadata'></i></span>";
 				
-	if(accessgroups && accessgroups.indexOf("public") == -1) {		
+	if(accessgroups && accessgroups.indexOf("public") == -1 && permissions && permissions == 'Owner') {		
 	 html+="&nbsp;&nbsp;<span data-filePath = '" + path + "' class='btn btn-link btn-sm deleteDataFileBtn'><i class='fas fa-trash'></i></span>";
 
 	}
