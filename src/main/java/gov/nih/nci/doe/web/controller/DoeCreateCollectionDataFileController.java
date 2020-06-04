@@ -71,7 +71,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		session.removeAttribute("GlobusEndpointFolders");
 		session.removeAttribute("parentCollection");
 		session.removeAttribute("metadataEntries");
-		session.removeAttribute("userMetadataEntries");
+		//session.removeAttribute("userMetadataEntries");
 		session.removeAttribute("parent");
 		session.removeAttribute("institutePath");
 		session.removeAttribute("studyPath");
@@ -327,23 +327,11 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		return types;
 	}
 	
-	private boolean isDataObjectContainer(String collectionType, HpcDataHierarchy dataHierarchy) {
-		if (dataHierarchy == null)
-			return true;
-		if (dataHierarchy.getCollectionType().equals(collectionType))
-			return dataHierarchy.getIsDataObjectContainer();
-		else {
-			List<HpcDataHierarchy> subs = dataHierarchy.getSubCollectionsHierarchies();
-			for (HpcDataHierarchy sub : subs)
-				return isDataObjectContainer(collectionType, sub);
-		}
-		return false;
-	}
 
 	@SuppressWarnings("unchecked")
-	protected void populateFormAttributes(HttpServletRequest request, HttpSession session,
-			 String basePath, String collectionType, boolean refresh, boolean datafile) {
-		String authToken = (String) session.getAttribute("hpcUserToken");
+	protected List<DoeMetadataAttrEntry> populateFormAttributes(HttpServletRequest request, HttpSession session,
+			 String basePath, String collectionType, boolean refresh) {
+		String authToken = (String) session.getAttribute("writeAccessUserToken");
 
 		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
 		if (modelDTO == null) {
@@ -354,21 +342,15 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		HpcDataManagementRulesDTO basePathRules = DoeClientUtil.getBasePathManagementRules(modelDTO, basePath);
 		if (basePathRules != null) {
 			HpcDataHierarchy dataHierarchy = basePathRules.getDataHierarchy();
-			if(dataHierarchy != null)
-				
-			if (datafile) {
-				if(!refresh && !isDataObjectContainer(collectionType, dataHierarchy))
-					throw new DoeWebException("Adding a data file is not allowed under collection type: " + collectionType);
-				rules = basePathRules.getDataObjectMetadataValidationRules();
-			}
-			else
+			if(dataHierarchy != null) {
 				rules = basePathRules.getCollectionMetadataValidationRules();
+			
+		  }
 		}
 
 		HpcCollectionDTO collectionDTO = (HpcCollectionDTO) session.getAttribute("parentCollection");
 		List<DoeMetadataAttrEntry> cachedEntries = (List<DoeMetadataAttrEntry>) session.getAttribute("metadataEntries");
 		List<DoeMetadataAttrEntry> metadataEntries = new ArrayList<DoeMetadataAttrEntry>();
-		List<DoeMetadataAttrEntry> userMetadataEntries = new ArrayList<DoeMetadataAttrEntry>();
 		List<String> attributeNames = new ArrayList<String>();
 		if (rules != null && !rules.isEmpty()) {
 			for (HpcMetadataValidationRule rule : rules) {
@@ -397,26 +379,9 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			}
 		}
 
-		// Handle custom attributes. If refresh, ignore them
-		if (!refresh) {
-			Enumeration<String> params = request.getParameterNames();
-			while (params.hasMoreElements()) {
-				String paramName = params.nextElement();
-				if (paramName.startsWith("_addAttrName")) {
-					DoeMetadataAttrEntry entry = new DoeMetadataAttrEntry();
-					String[] attrName = request.getParameterValues(paramName);
-					String attrId = paramName.substring("_addAttrName".length());
-					String attrValue = getFormAttributeValue(request, "_addAttrValue" + attrId, cachedEntries, "_addAttrValue"); 
-					if (attrName.length > 0 && !attrName[0].isEmpty())
-						entry.setAttrName(attrName[0]);
-					entry.setAttrValue(attrValue);
-					userMetadataEntries.add(entry);
-				}
-			}
-		}
-	
 		session.setAttribute("metadataEntries", metadataEntries);
-		session.setAttribute("userMetadataEntries", userMetadataEntries);
+		return metadataEntries;
+		
 
 	}
 

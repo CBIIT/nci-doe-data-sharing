@@ -152,7 +152,6 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 	 * @param redirectAttributes
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	@GetMapping
 	 public ResponseEntity<List<DoeMetadataAttrEntry>> getCollectionAttributes(@RequestParam(value = "selectedPath") String selectedPath,@RequestParam(value = "collectionType") String collectionType,
 			HttpSession session, HttpServletRequest request, HttpServletResponse response) {
@@ -162,8 +161,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 		
 		try {   	   
     	   if(selectedPath != null) {
-    		    populateFormAttributes(request, session, basePath, collectionType, true, false);
-    		    metadataEntries = (List<DoeMetadataAttrEntry>) session.getAttribute("metadataEntries");
+    		   metadataEntries =  populateFormAttributes(request, session, basePath, collectionType, true);
     		    
     		    return new ResponseEntity<>(metadataEntries, HttpStatus.OK);
     	   }

@@ -37,6 +37,7 @@ import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.model.PermissionsModel;
 import gov.nih.nci.doe.web.service.AuditingService;
 import gov.nih.nci.doe.web.service.AuthenticateService;
+import gov.nih.nci.doe.web.service.LookUpService;
 import gov.nih.nci.doe.web.service.MailService;
 import gov.nih.nci.doe.web.service.MetaDataPermissionsService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
@@ -59,6 +60,9 @@ public abstract class AbstractDoeController {
 	
     @Autowired
     public AuditingService auditingService;
+    
+	 @Autowired
+	 LookUpService lookUpService;
     
 	 @Autowired
 	 MailService mailService;
