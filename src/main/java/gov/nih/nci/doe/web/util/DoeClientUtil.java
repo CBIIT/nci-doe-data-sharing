@@ -450,7 +450,7 @@ public class DoeClientUtil {
     }
   }
 
-  public static boolean deleteCollection(String token, String hpcCollectionURL,
+  public static String deleteCollection(String token, String hpcCollectionURL,
       String collectionPath, String hpcCertPath, String hpcCertPassword) {
     try {
       WebClient client = DoeClientUtil.getWebClient(UriComponentsBuilder
@@ -461,7 +461,7 @@ public class DoeClientUtil {
 
       Response restResponse = client.delete();
       if (restResponse.getStatus() == 200) {
-        return true;
+        return "SUCCESS";
       } else {
         ObjectMapper mapper = new ObjectMapper();
         AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
@@ -474,7 +474,7 @@ public class DoeClientUtil {
         JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 
         HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
-        throw new DoeWebException("Failed to delete collection: " + exception.getMessage());
+        return  exception.getMessage();
       }
     } catch (Exception e) {
       log.error("Failed to delete collection due to: "+ e);

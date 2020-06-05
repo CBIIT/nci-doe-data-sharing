@@ -60,7 +60,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 
 	
 	@GetMapping(value = "/collectionTypes", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> populateCollectionTypes(HttpSession session,@RequestParam(value = "parent") String parent, Model model) {
+	public ResponseEntity<List<KeyValueBean>> populateCollectionTypes(HttpSession session,@RequestParam(value = "parent") String parent, Model model) {
 		
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 
