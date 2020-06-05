@@ -90,7 +90,7 @@ public class DoeDownloadController extends AbstractDoeController {
 			}
 			
 			if (authToken == null) {
-				result.setMessage("Invalid user session, expired. Please login again.");
+				result.setMessage("Invalid user session, expired. Login again.");
 				return result;
 			}
 			final String basisURL = "collection".equals(downloadFile

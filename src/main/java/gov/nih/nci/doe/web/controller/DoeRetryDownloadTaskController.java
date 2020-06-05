@@ -72,7 +72,7 @@ public class DoeRetryDownloadTaskController extends AbstractDoeController {
 				 authToken = (String) session.getAttribute("hpcUserToken");
 			}
 			if (authToken == null) {
-				result.setMessage("Invalid user session, expired. Please login again.");
+				result.setMessage("Invalid user session, expired. Login again.");
 				return result.getMessage();
 			}
 	      HpcBulkDataObjectDownloadRequestDTO dto = new HpcBulkDataObjectDownloadRequestDTO();

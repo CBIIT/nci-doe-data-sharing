@@ -71,7 +71,7 @@ function postLoginFunction(data,status) {
 	} else if("loginlocked" == data) {
 		
 		$(".errorBlockLogin").show();
-		$(".errorMsgLogin").html("Maximum attempts of login Exceeded. Please request a password via forgot password.");
+		$(".errorMsgLogin").html("Maximum attempts of login Exceeded. Request a password via forgot password.");
 		
 	} else {
 		location.replace("/");

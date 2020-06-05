@@ -70,7 +70,7 @@ public class ForgotPasswordController extends AbstractDoeController {
 			if(PasswordStatusCode.INVALID_FORMAT == status || PasswordStatusCode.INVALID_LENGTH == status) { 
 				return new ResponseEntity<>("Password is in invalid length or format", HttpStatus.OK);
 			} if(PasswordStatusCode.NEW_PASSWD_SAME_AS_PREV_PASSWD == status) { 
-				return new ResponseEntity<>("Password is same as current one. Please enter a new password", HttpStatus.OK);
+				return new ResponseEntity<>("Password is same as current one. Enter a new password", HttpStatus.OK);
 			}   else {
 				return new ResponseEntity<>(status, HttpStatus.OK);
 			}
