@@ -189,7 +189,7 @@ public class MailServiceImpl implements MailService {
 
 	@Override
 	public void sendResetPasswordEmail(String password, String email) throws Exception {
-		log.info("Sending an email for password reset");
+		log.info("Sending an email for password reset" + email);
 		
 		final Map<String, Object> params = new HashMap<String, Object>();
 		final List<String> to = new ArrayList<String>();

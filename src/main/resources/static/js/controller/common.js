@@ -288,6 +288,7 @@ $("#resetAdvSearchBtn").click(function(e){
 	$(".errorFilterCriteria").hide();
 	 $('#metadatalisting').empty();
 	 $("#searchResultsDiv").hide();
+	  loadJsonData('/search/search-list', $("#metadatalist"), true, null, null, null, "key", "value");
 	 
 });
 
