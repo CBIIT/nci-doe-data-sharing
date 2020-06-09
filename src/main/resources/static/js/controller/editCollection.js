@@ -108,11 +108,11 @@ function postSuccessUpdateAccessgroups(data,status){
 }
 
 function notifyUsersFunction(permissions) {
-	//var params = {permissions:JSON.parse(permissions)};
 	invokeAjax('/notifyUsers','GET',JSON.parse(permissions),postSuccessNotifyUsers,null,null,'text');
 }
 
 function postSuccessNotifyUsers(data,status) {
+	$("#updatePermissionModal").modal('hide');
 	bootbox.alert("the users have been notified.")
 }
 

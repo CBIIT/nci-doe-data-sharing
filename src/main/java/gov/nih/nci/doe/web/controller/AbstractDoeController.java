@@ -195,8 +195,9 @@ public abstract class AbstractDoeController {
 				 }
 			 return new ResponseEntity<>(keyValueBeanResults, null, HttpStatus.OK);
 		 }
-		 
+		
 		 @GetMapping(value = "/notifyUsers")
+		 @ResponseBody
 		 public String notifyUsersForUpdateAccessDicp(HttpSession session,@RequestHeader HttpHeaders headers, 
 				 PermissionsModel permissionGroups) throws Exception  { 
 			 log.info("notify users");

@@ -389,11 +389,8 @@ $("#btnUpdatePermissions").click(function(e) {
 $("#btnUpdateAccessGroup").click(function(e){
 	updateAccessGroupsFunction();
 });
-
-$("#updateAccessPermissionsModal").find(".notifyUsersLink").off("click").on("click", function (e) {	
-	notifyUsersFunction($(this).attr('notify_permissions'));
-});
 loadUploadTab();
+
 $(".select2-selection").removeAttr("role");
 $(".select2-search__field").removeAttr("role");
 $(".select2-search__field").attr("aria-label", "textbox");
@@ -406,4 +403,9 @@ $(document).ajaxStop(function () {
 	   $(".select2-search__field").attr("aria-label", "textbox");
 	   $(".select2-search__field").attr("type", "text");
 });
+
+});
+
+$(document).on('click', '.notifyUsersLink', function(){
+	notifyUsersFunction($(this).attr('notify_permissions'));
 });
