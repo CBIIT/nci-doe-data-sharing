@@ -39,22 +39,35 @@
                              <div class="form-group col-lg-6 col-md-6">
                                <label for="attributeVal">Select Program &nbsp;&nbsp;<a href="#" id="addNewInstitute" 
                                onclick="openUploadModal('basePath')" data-backdrop="static" data-keyboard="false" >
-                               <i class="fal fa-plus-circle"></i> Add new program</a></label>
+                               <i class="fal fa-plus-circle"></i> Add new program</a> &nbsp;&nbsp;
+                               <a href="#" style="display:none;" id="deleteProgram" onclick="functionDelete('instituteList','Program')">
+                               <i class="fal fa-minus-circle"></i> Delete Program</a>
+                               </label>
                                 <select class="simple-select2"  id="instituteList" name="instituteList" style="width:70%" 
-                                onchange="retrieveCollections(this, this.options[this.selectedIndex]);">
+                                onchange="retrieveCollections('instituteList', this.options[this.selectedIndex],'onChange');">
                                 </select>
                             </div>
                             <div class="form-group col-lg-6 col-md-6" id="studyListDiv" style="display:none;">
-                                <label for="attributeVal">Select Study &nbsp;&nbsp;<a href="#" id="addNewStudy" onclick="openUploadModal('instituteList')" data-backdrop="static" data-keyboard="false"><i class="fal fa-plus-circle"></i> Add new study</a></label>
+                                <label for="attributeVal">Select Study &nbsp;&nbsp;<a href="#" id="addNewStudy" 
+                                onclick="openUploadModal('instituteList')" data-backdrop="static" data-keyboard="false">
+                                <i class="fal fa-plus-circle"></i> Add new study</a>
+                                <a href="#" style="display:none;" id="deleteStudy" onclick="functionDelete('studyList','Study')">
+                               <i class="fal fa-minus-circle"></i> Delete Study</a>
+                                </label>
                                 <select class="simple-select2"  id="studyList" name="studyList" style="width:70%"
-                                onchange="retrieveCollections(this, this.options[this.selectedIndex]);">
+                                onchange="retrieveCollections('studyList', this.options[this.selectedIndex],'onChange');">
                                 </select>
                             </div>
                             
                              <div class="form-group col-lg-6 col-md-12" id="dataSetListDiv" style="display:none;">
-                          <label for="attributeVal">Select Data Set &nbsp;&nbsp;<a href="#" id="addNewDataSet" onclick="openUploadModal('studyList')" data-backdrop="static" data-keyboard="false"><i class="fal fa-plus-circle"></i> Add new data set</a></label>
+                          <label for="attributeVal">Select Data Set &nbsp;&nbsp;<a href="#" id="addNewDataSet" 
+                          onclick="openUploadModal('studyList')" data-backdrop="static" data-keyboard="false">
+                          <i class="fal fa-plus-circle"></i> Add new data set</a>
+                             <a href="#" style="display:none;" id="deleteDataSet" onclick="functionDelete('dataList','Data_Set')">
+                               <i class="fal fa-minus-circle"></i> Delete Data Set</a>
+                          </label>
                                 <select class="simple-select2"  id="dataList" name="dataList" style="width:70%"
-                                onchange="retrieveCollections(this, this.options[this.selectedIndex]);">
+                                onchange="retrieveCollections('dataList', this.options[this.selectedIndex],'onChange');">
                                 </select>
                             </div>
                             <div class="form-group col-lg-6 col-md-12" style="margin-top: 32px;">                          

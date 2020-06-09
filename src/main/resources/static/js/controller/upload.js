@@ -54,24 +54,100 @@ function postSuccessDataSetInitialize(data,status) {
 	
 }
 
+function functionDelete($this,collectionType) {
+	var selectedValue = $( "#" +$this+ " option:selected" ).text();
+	var textvalue = $( "#" +$this+ " option:selected" ).val();
+	   bootbox.confirm({
+		    message: "Are you sure you want to delete " + selectedValue + "?",
+		    buttons: {
+		        confirm: {
+		            label: 'Yes',
+		            className: 'btn-success'
+		        },
+		        cancel: {
+		            label: 'No',
+		            className: 'btn-danger'
+		        }
+		    },
+		    callback: function (result) {
+		    	if(result == true) {
+		           var params = {collPath:textvalue};
+		       	$.ajax({
+					 type : "POST",
+				     url : "/deleteCollection",
+				     contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+				     dataType: 'text',
+					 data : params,
+					 beforeSend: function () {
+				    	   $("#spinner").show();
+				           $("#dimmer").show();
+				       },
+					 success : function(msg) {
+						 $("#spinner").hide();
+				         $("#dimmer").hide();
+						 console.log('SUCCESS: ', msg);
+						 postSuccessDeleteCollection(msg,collectionType);
+						 
+					 },
+					error : function(e) {
+						 console.log('ERROR: ', e);				 
+					}
+				});
+		    	}   
+		    }
+		});
+}
 
-function retrieveCollections($this, selectedIndex) {
+function postSuccessDeleteCollection(data,collectionType) {
+	if(data && data != "SUCCESS") {
+		return bootbox.alert(data);
+	} else if(data == 'SUCCESS'){
+		// refresh select drop down
+		if(collectionType  == 'Program') {
+			var params= {selectedPath:$("#basePath").val(),refreshNode:'true'};
+			loadJsonData('/browse/collection', $("#instituteList"), true, params, null, null, "key", "value");
+			retrieveCollections('instituteList','ANY','deleteAction');
+		} else if(collectionType == 'Study') {
+			var params= {selectedPath:$("#instituteList").val(),refreshNode:'true'};
+			loadJsonData('/browse/collection', $("#studyList"), true, params, null, null, "key", "value");
+			retrieveCollections('studyList','ANY','deleteAction');
+			
+		} else if(collectionType == 'Data_Set') {
+			var params= {selectedPath:$("#studyList").val(),refreshNode:'true'};
+			 loadJsonData('/browse/collection', $("#dataList"), true, params, null, null, "key", "value");
+				retrieveCollections('dataList','ANY','deleteAction');
+		}
+	}
+}
+
+function retrieveCollections($this, selectedIndex,action) {
 	
-	var selectTarget = $this.name;
-	var params= {selectedPath:selectedIndex.value};
+	var selectTarget = $this;
+	var params;
+	var selectedValue;
+	if(action  == 'onChange') {
+		 selectedValue = selectedIndex.value;
+		 params = {selectedPath:selectedIndex.value};
+	} else {
+		 selectedValue = selectedIndex;
+		 params= {selectedPath:selectedIndex};
+	}
+	
 	
 	if(selectTarget == 'instituteList') {
 		$("#uploadDataFilesTab").hide();
 		$("#addBulkDataFiles").hide();
-		if(selectedIndex && selectedIndex.value != 'ANY') {
+		if(selectedValue && selectedValue != 'ANY') {
 			loadJsonData('/browse/collection', $("#studyList"), true, params, null, null, "key", "value");
 			$("#studyListDiv").show();
+			$("#deleteProgram").show();
 			$("#dataSetListDiv").hide();
 			$("#dataListDiv").hide();
 		} else {
 			$("#studyListDiv").hide();
 			$("#dataSetListDiv").hide();
 			$("#dataListDiv").hide();
+			$("#deleteProgram").hide();
 		}
 		
 		
@@ -79,25 +155,30 @@ function retrieveCollections($this, selectedIndex) {
 		$("#addBulkDataFiles").hide();
 		$("#uploadDataFilesTab").hide();
 		 $("#dataListDiv").hide();
-		if(selectedIndex && selectedIndex.value != 'ANY') {
-			var params1= {selectedPath:selectedIndex.value,refreshNode:'true'};			
+		if(selectedValue && selectedValue != 'ANY') {
+			var params1= {selectedPath:selectedValue,refreshNode:'true'};			
 		  loadJsonData('/browse/collection', $("#dataList"), true, params1, null, null, "key", "value");
 		  $("#studyListDiv").show();
 		  $("#dataSetListDiv").show();
+		  $("#deleteStudy").show();
 		} else {
 			$("#studyListDiv").show();
 			  $("#dataSetListDiv").hide();
+			  $("#deleteStudy").hide();
 		}
 		
 	} else if(selectTarget == 'dataList') {	
 		$("#studyListDiv").show();
 		$("#uploadDataFilesTab").hide();
-		if(selectedIndex && selectedIndex.value != 'ANY') {
-			invokeAjax('/browse/collection','GET',params,contructDataListDiv,null,null,null);		
+		if(selectedValue && selectedValue != 'ANY') {
+			var params1= {selectedPath:selectedValue,refreshNode:'true'};	
+			invokeAjax('/browse/collection','GET',params1,contructDataListDiv,null,null,null);		
 			$("#addBulkDataFiles").show();
+			$("#deleteDataSet").show();
 		} else {
 			$("#dataListDiv").hide();
-			$("#addBulkDataFiles").hide()
+			$("#addBulkDataFiles").hide();
+			$("#deleteDataSet").hide();
 			
 		}
 		

@@ -58,7 +58,7 @@ public class DeleteCollectionController extends AbstractDoeController{
 				if(perm != null && perm.getUserGroupId().equalsIgnoreCase(userInfo)) {
 					
 			    	String deleted = DoeClientUtil.deleteCollection(authToken, serviceURL, collPath,sslCertPath, sslCertPassword);
-					if (StringUtils.isNotEmpty(deleted) && deleted.equalsIgnoreCase("true")) {
+					if (StringUtils.isNotEmpty(deleted) && deleted.equalsIgnoreCase("SUCCESS")) {
 						return "SUCCESS";
 					} else {
 						return "Failed to delete collection." + deleted;
