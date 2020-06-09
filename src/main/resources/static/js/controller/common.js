@@ -394,4 +394,16 @@ $("#updateAccessPermissionsModal").find(".notifyUsersLink").off("click").on("cli
 	notifyUsersFunction($(this).attr('notify_permissions'));
 });
 loadUploadTab();
+$(".select2-selection").removeAttr("role");
+$(".select2-search__field").removeAttr("role");
+$(".select2-search__field").attr("aria-label", "textbox");
+$(".select2-search__field").attr("type", "text");
+
+$(document).ajaxStop(function () {
+	   console.log("Last ajax call completed");
+	   $(".select2-selection").removeAttr("role");
+	   $(".select2-search__field").removeAttr("role");
+	   $(".select2-search__field").attr("aria-label", "textbox");
+	   $(".select2-search__field").attr("type", "text");
+});
 });
