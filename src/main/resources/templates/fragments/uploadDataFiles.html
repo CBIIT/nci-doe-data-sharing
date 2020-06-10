@@ -49,7 +49,7 @@
                             </div>
                              
                              <div class="form-group col-lg-8 col-md-12">
-                            <label for="collectionPath">Data Source &nbsp;&nbsp; <span><i class="fas fa-info-circle"></i> File Size should not exceed 15KB</span></label>
+                            <label for="collectionPath">Data Source &nbsp;&nbsp; <span><i class="fas fa-info-circle"></i>Max File Size: 15 KB</span></label>
                             <input type="file" name="doeDataFile" id="doeDataFile">
                             </div>
                         </div>
@@ -158,8 +158,7 @@
 														
                              <div th:if="${fileNames != null}"  id="selectedFilesDiv" class="form-group col-lg-12 col-md-12">
                              <label for="fileName">Selected Files:</label>
-                            <div class="form-group col-lg-12 col-md-12">
-                              
+                            <div class="form-group col-lg-12 col-md-12">                             
                              <ul> 
                                 <li th:each="fileName:${fileNames}" th:text="${fileName}"></li>
                               </ul>

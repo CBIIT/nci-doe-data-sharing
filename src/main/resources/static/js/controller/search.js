@@ -433,7 +433,7 @@ function openPopOver($this) {
     var list = JSON.parse(metadata);
     
       var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\">" +
-                "User MetaData <a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a> </div>" +
+                "User Metadata <a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a> </div>" +
                 "<div class='popover-body'> <div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
                 "<div class='divTableBody'><div class='divTableRow'>" +
                 "<div class='divTableHead'>Attribute</div>" + 

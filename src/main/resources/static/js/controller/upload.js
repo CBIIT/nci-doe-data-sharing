@@ -543,11 +543,15 @@ function displayUploadTypeDiv(value){
 	$("#registerBulkDataForm").show();
 	if(value == 'globus') {
 		$("#displayGlobusUploadDiv").show();
-		$("#displayS3UploadDiv").hide();								
+		$("#displayS3UploadDiv").hide();	
+		$("#selectedFilesDiv").show();
+		$("#selectedFoldersDiv").show();
 		
 	} else if(value == 's3'){
 		$("#displayGlobusUploadDiv").hide();
 		$("#displayS3UploadDiv").show();
+		$("#selectedFilesDiv").hide();
+		$("#selectedFoldersDiv").hide();
 	}
 }
 
