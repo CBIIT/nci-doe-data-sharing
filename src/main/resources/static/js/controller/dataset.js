@@ -226,7 +226,7 @@ function renderDownload(data, type, row,accessgroups,permissions) {
 	var n = path.lastIndexOf("/");
 	downdloadFileName = path.substring(n+1);	
 	
-	html += "<a id='downloadlink' class='btn btn-link btn-sm downloadLink' href='javascript:void(0);' " +
+	html += "<a aria-label='download link' class='btn btn-link btn-sm downloadLink' href='javascript:void(0);' " +
 	       "data-toggle='modal' data-backdrop='static' data-keyboard='false' data-fileName = " + downdloadFileName + " data-path=" + row.download + " " +
 	        "data-target='#download-modal'><i class='fa fa-download' aria-hidden='true'></i></a>";
 

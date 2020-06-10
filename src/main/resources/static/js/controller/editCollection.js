@@ -9,7 +9,7 @@ function constructCollectionMetData(metadata,metaDataPath,isDataObject,permissio
 	 $("#isDataObject").val(isDataObject);
 	var data = JSON.parse(metadata);
 	$.each(data, function(key, value) {	
-        $("#userMetaData tbody").append('<tr><td>' + value.key + '</td><td><input type="text"  name="zAttrStr_'+value.key+'" style="width:70%;" value="' + value.value + '"></td></tr>');
+        $("#userMetaData tbody").append('<tr><td>' + value.key + '</td><td><input type="text" aria-label="value of meta data" name="zAttrStr_'+value.key+'" style="width:70%;" value="' + value.value + '"></td></tr>');
 	});
 	if(permissionrole && permissionrole == 'Owner') {
 		$("#updatePermissions").show();

@@ -115,7 +115,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
     						List<String> message = new ArrayList<String>();
     						download.getItems().stream().forEach(x -> message.add(x.getMessage()));    						
     						task.setTransferStatus("Failed (" + String.join(",", message) + ")" + 
-    					"<strong><a class='btn btn-link btn-sm' href='#' "
+    					"<strong><a class='btn btn-link btn-sm' aria-label='Retry download' href='#' "
     								+ "onclick='retryDownload(\"" + download.getTaskId() + "\" ,\"" + t.getTaskName() + "\", \"" + t.getDownloadType() + "\")'>"
     										+ "<i class='fa fa-repeat' title='Retry' aria-hidden='true'></i></a></strong>");
     					} else if(download.getResult() != null && download.getResult().value().equals("COMPLETED")) {
@@ -156,7 +156,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
     						upload.getFailedItems().stream().forEach(x -> message.add(x.getMessage()));
     						
     						task.setTransferStatus("Failed (" + String.join(",", message) + ")" + 
-    								"<strong><a class='btn btn-link btn-sm' href='#'"
+    								"<strong><a class='btn btn-link btn-sm' aria-label='Retry Upload' href='#'"
     								+ "onclick='retryUpload(\"" + upload.getTaskId() + "\" ,\"" + t.getTaskName() + "\")'>"
     								+ "<i class='fa fa-repeat' title='Retry' aria-hidden='true'></i></a></strong>");
     					} 

@@ -225,13 +225,13 @@ function constructNewCollectionMetaDataSet(data,status) {
 			} else {
 				$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
 	        			'data-placement="right" title="'+value.description+'"></i></td><td>'+
-	        			'<input type="text" placeholder="Required" name="zAttrStr_'+value.attrName+'" value ="'+ parentAccessgrp+'"' +
+	        			'<input type="text" placeholder="Required" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'" value ="'+ parentAccessgrp+'"' +
 	        			'disabled="disabled" style="width:70%;"> &nbsp;&nbsp;<i class="fas fa-question-circle"><span>Access group inherited from parent.</span></i></td></tr>'); 
 			}
 	   } else {
 		 	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
         			'data-placement="right" title="'+value.description+'"></i></td><td>'+
-        			'<input type="text" placeholder="Required" name="zAttrStr_'+value.attrName+'"' +
+        			'<input type="text" placeholder="Required" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
         			'style="width:70%;"></td></tr>');
 		}       
 	});	

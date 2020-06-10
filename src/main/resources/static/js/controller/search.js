@@ -262,7 +262,7 @@ function renderPath(data, type, row) {
 			}
 		}
 	
-		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'><input type='checkbox' id=" + row.dataSetPath + " " +
+		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'><input aria-label='checkbox' type='checkbox' id=" + row.dataSetPath + " " +
 			"class='selectCheckboxForIns'/>&nbsp;&nbsp;&nbsp;<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span>" +
 			"&nbsp&nbsp;" + editDataSetHtml + "</div><div class='col-md-12'></div>" +
 			"<div class='col-md-12' style='margin-left:22px;'><a href='#' class='dataSetFragment' permissions_role = '" + row.dataSetPermissionRole + "'  access_grp ='"+row.dataLevelAccessGroups +"' metadata_type = '" + data  + "' data_set_path = " + row.dataSetPath + ">" +
