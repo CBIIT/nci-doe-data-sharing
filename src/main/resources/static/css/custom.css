@@ -522,7 +522,11 @@ i.fas.fa-file-plus{font-size: 16px!important;}
 h1.modal-title{font-size:1.5rem;}
 h2.modal-title{font-size:1.5rem;}
 h3.table-title{font-size:1rem;}
-.modal-body{padding:0px;}
+/*.modal-body{padding:0px;}*/
+.modal-body {
+    max-height: 800px;
+    overflow: auto;
+}
 .jumbotron{border-radius:0px;}
 .modal-footer {width:100%}
 /* placeholder input */
