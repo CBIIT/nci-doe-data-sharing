@@ -125,7 +125,7 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 					.downloadFiles(authToken, downloadServiceURL, dto, sslCertPath, sslCertPassword);
 				if (downloadDTO != null) {
 					String taskId = downloadDTO.getTaskId();
-					result.setMessage("Download request successful. Task Id: " +taskId);
+					result.setMessage("Download request successful. Task ID: " +taskId);
 					 if(loggedOnUser != null) {
 				     taskManagerService.saveTransfer(taskId,"Download","Bulk Download Files",downloadType, getLoggedOnUserInfo());
 				     String transferType = downloadFile.getSearchType().equals("async") ? "Globus":"S3";

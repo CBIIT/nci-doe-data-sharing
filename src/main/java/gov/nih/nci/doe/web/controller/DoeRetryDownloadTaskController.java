@@ -113,7 +113,7 @@ public class DoeRetryDownloadTaskController extends AbstractDoeController {
 	        	  if(loggedOnUser != null) {
 	                  taskManagerService.saveTransfer(downloadDTO.getTaskId(),"Download",taskType,taskName,getLoggedOnUserInfo());  
 	              }
-	            result.setMessage("Download request successful. Task Id: " + downloadDTO.getTaskId());	            
+	            result.setMessage("Download request successful. Task ID: " + downloadDTO.getTaskId());	            
 	          }
 
 	        } catch (Exception e) {

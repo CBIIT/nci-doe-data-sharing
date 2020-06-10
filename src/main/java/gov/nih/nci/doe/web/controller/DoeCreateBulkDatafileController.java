@@ -137,7 +137,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	                  audit.setTaskId(taskId);
 	                  auditingService.saveAuditInfo(audit);
 	                  
-					return "Bulk Data file registration request is submitted! Task Id: " +taskId;			
+					return "Your bulk data file registration request has the following task ID: " +taskId;			
 		
 				
 			}

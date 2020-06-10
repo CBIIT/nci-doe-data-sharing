@@ -143,7 +143,7 @@ public class DoeDownloadController extends AbstractDoeController {
                   
               }
               
-              result.setMessage("Asynchronous download request is submitted successfully! Task Id: " + taskId);
+              result.setMessage("Asynchronous download request is submitted successfully! Task ID: " + taskId);
               return result;
 		}  catch (Exception e) {
 			result.setMessage("Download request is not successful: " + e.getMessage());

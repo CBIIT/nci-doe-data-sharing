@@ -103,7 +103,7 @@ public class DoeCreateDatafileController extends DoeCreateCollectionDataFileCont
                 audit.setPath(doeDataFileModel.getPath());
                 auditingService.saveAuditInfo(audit);
                 
-				return "Data File registered";
+				return "The system has registered your file.";
 			}
 
 			clearSessionAttrs(session);

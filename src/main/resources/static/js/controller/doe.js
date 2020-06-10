@@ -100,7 +100,7 @@ function loadJsonData(url, selectTarget, emptyOption, params, successCallback, f
            
             $select.empty();
             if (emptyOption) {
-                $select.append($('<option></option>').attr('value', "ANY").text("SELECT"));
+                $select.append($('<option></option>').attr('value', "ANY").text("Select"));
             }
 
             for (var i = 0; i < data.length; i++) {

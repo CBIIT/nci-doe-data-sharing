@@ -67,9 +67,9 @@
 								<div class="form-group" id="AsyncDiv" style="display: none">
 								    <div class="col-sm-12 column">
 								   <span>
-                                    To download to Globus, DME should be provided write access to the targeted Globus endpoint. 
+                                    To download to Globus, write access should be provided to the targeted Globus endpoint. 
                                      Refer to <a href="https://wiki.nci.nih.gov/display/DMEdoc/Preparing+to+Use+Globus+with+DME" 
-                                     target="_blank" title="Link to help document (opens in new tab or window)">Preparing to Use Globus with DME</a> 
+                                     target="_blank" title="Link to help document (opens in new tab or window)">Preparing to Use Globus</a> 
                                      for instructions.<span>
 										<label for="endPointName">Globus Endpoint UUID:</label> 
 										<input type="hidden" name="actionType" id="actionType" />
@@ -97,11 +97,6 @@
 								
 			          <div class="form-group" id="s3Div" style="display: none">
 									<div class="col-sm-12 column">
-									 <span>
-                                   To download to an S3 bucket, proper permissions should be set up.  
-                                   Refer to <a href="https://wiki.nci.nih.gov/display/DMEdoc/Preparing+to+use+Amazon+Web+Services+S3+with+DME" 
-                                   target="_blank" title="Link to help document (opens in new tab or window)">
-                                   Preparing to use Amazon Web Services S3 with DME</a> for instructions.<span>
 										<label for="bucketName">S3 Bucket:</label>
 										<input
 											type="text" class="form-control" name="bucketName" 
@@ -330,7 +325,7 @@ aria-labelledby="updatePermissionModallabel">
                       </div>
                       
                         <div class="col-lg-12 col-md-12 col-sm-12">
-                        <button id="addNewMetaData" type="button" class="btn btn-primary float-right mb-2 mr-2" onclick="addNewMetaDataCollection('newMetaDataTable')">Add MetaData</button>
+                        <button id="addNewMetaData" type="button" class="btn btn-primary float-right mb-2 mr-2" onclick="addNewMetaDataCollection('newMetaDataTable')">Add Metadata</button>
                                <table id="newMetaDataTable" class="table table-stripped table-bordered display dt-responsive wrap" style="width:100%">
                       <thead>
 							<tr>
