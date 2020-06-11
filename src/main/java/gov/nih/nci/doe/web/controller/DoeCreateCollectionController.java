@@ -54,9 +54,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 	private String hpcModelURL;
 	@Value("${dme.archive.naming.forbidden.chararacters}")
     private String forbiddenCharacters;
-	
-	@Value("${doe.basePath}")
-	private String basePath;
+
 
 	
 	@GetMapping(value = "/collectionTypes", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -212,13 +210,15 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 						parentPath = doeCollection.getPath().substring(0, doeCollection.getPath().lastIndexOf('/'));
 					else
 						parentPath = doeCollection.getPath();
-					if (!parentPath.isEmpty() && !parentPath.equalsIgnoreCase(basePath)) {
+					if (!parentPath.isEmpty()) {
+						 if(!parentPath.equalsIgnoreCase(basePath)) {
 						HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, 
 								serviceURL, parentPath, true, sslCertPath, sslCertPassword);
 						Boolean isValidPermissions = verifyCollectionPermissions(parentPath,parentCollectionDto);
 						if (Boolean.FALSE.equals(isValidPermissions)) {
 							return "Insufficient privileges to create collection";
 						}
+						 }
 					} else {				
 							return "Invalid parent in Collection Path";
 					}
