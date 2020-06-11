@@ -16,16 +16,16 @@ public class DoeDownloadDatafile {
 	private String region;
 	private String searchType;
 	private String downloadType;
-	private List<String> selectedPaths;
+	private String selectedPaths;
 
 	
-	public List<String> getSelectedPaths() {
-		if(selectedPaths == null)
-			selectedPaths = new ArrayList<String>();
+	
+
+	public String getSelectedPaths() {
 		return selectedPaths;
 	}
 
-	public void setSelectedPaths(List<String> selectedPaths) {
+	public void setSelectedPaths(String selectedPaths) {
 		this.selectedPaths = selectedPaths;
 	}
 

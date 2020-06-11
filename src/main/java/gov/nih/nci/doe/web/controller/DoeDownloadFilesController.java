@@ -14,12 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestClientException;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -64,7 +62,7 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 	 * @return
 	 */
 	@JsonView(Views.Public.class)
-	@RequestMapping(value = "/download", method = RequestMethod.POST)
+	@PostMapping(value = "/download")
 	@ResponseBody
 	public AjaxResponseBody download(@RequestBody @Valid DoeDownloadDatafile downloadFile, 
 	    HttpSession session, HttpServletRequest request, HttpServletResponse response) {
@@ -83,13 +81,12 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 			}
 
 			HpcBulkDataObjectDownloadRequestDTO dto = new HpcBulkDataObjectDownloadRequestDTO();
-			String selectedPathsStr = String.join("  ", downloadFile.getSelectedPaths());
 			String downloadType = downloadFile.getDownloadType();
-			if (selectedPathsStr.isEmpty()) {
+			
+			if (downloadFile.getSelectedPaths().isEmpty()) {
 				result.setMessage("Data file list is missing!");
 			} else {
-				selectedPathsStr = selectedPathsStr.substring(1, selectedPathsStr.length() - 1);
-				StringTokenizer tokens = new StringTokenizer(selectedPathsStr, ",");
+				StringTokenizer tokens = new StringTokenizer(downloadFile.getSelectedPaths(), ",");
 				while (tokens.hasMoreTokens()) {
 					if(downloadType.equals("datafiles"))
 						dto.getDataObjectPaths().add(tokens.nextToken().trim());

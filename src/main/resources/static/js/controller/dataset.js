@@ -273,7 +273,7 @@ function onClickOfBulkDownloadBtn() {
 	    $("#dataSetTable tbody input[type=checkbox]:checked").each(function () {
 	    	selectedPaths.push($(this).attr('id'));
 	    });
-	    $("#download-modal").find(".selectedFilesList").val(selectedPaths);
+	    $("#download-modal").find("#selectedFilesList").val(selectedPaths);
 	    
 	    $.each(selectedPaths, function(index, value) {
 	    	$("#download-modal").find(".selectedFilesListDisplay").append("<p>"+value+"</p>");

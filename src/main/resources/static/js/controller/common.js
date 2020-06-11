@@ -107,7 +107,7 @@ $("#downloadSelected").click(function(e){
 
 $("#download-btn").click(function(e){
 	e.preventDefault();
-	var selectedFiles = $(".selectedFilesList").val();
+	var selectedFiles = $("#selectedFilesList").val();
 	var searchType = $('input[name=searchType]:checked').val();
 	var d = {};
 	d.searchType = searchType;
@@ -132,9 +132,9 @@ $("#download-btn").click(function(e){
 		d.endPointLocation = $("#endPointLocation").val();
 		
 		var url;
-		if(selectedFiles && selectedFiles.len > 1) {
+		if(selectedFiles) {
 			url = "/downloadfiles/download";
-			d.selectedFiles = selectedFiles;
+			d.selectedPaths = selectedFiles;
 		} else {
 			url = "/download";
 			
