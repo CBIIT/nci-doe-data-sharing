@@ -212,7 +212,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 						parentPath = doeCollection.getPath().substring(0, doeCollection.getPath().lastIndexOf('/'));
 					else
 						parentPath = doeCollection.getPath();
-					if (!parentPath.isEmpty()) {
+					if (!parentPath.isEmpty() && !parentPath.equalsIgnoreCase(basePath)) {
 						HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, 
 								serviceURL, parentPath, true, sslCertPath, sslCertPassword);
 						Boolean isValidPermissions = verifyCollectionPermissions(parentPath,parentCollectionDto);
