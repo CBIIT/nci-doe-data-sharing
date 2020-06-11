@@ -394,14 +394,14 @@ loadUploadTab();
 $(".select2-selection").removeAttr("role");
 $(".select2-search__field").removeAttr("role");
 $(".select2-search__field").attr("aria-label", "textbox");
-$(".select2-search__field").attr("type", "text");
+$(".select2-search__field").attr("type", "textbox");
 
 $(document).ajaxStop(function () {
 	   console.log("Last ajax call completed");
 	   $(".select2-selection").removeAttr("role");
 	   $(".select2-search__field").removeAttr("role");
 	   $(".select2-search__field").attr("aria-label", "textbox");
-	   $(".select2-search__field").attr("type", "text");
+	   $(".select2-search__field").attr("type", "textbox");
 });
 
 });

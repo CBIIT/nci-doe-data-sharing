@@ -66,6 +66,9 @@ public abstract class AbstractDoeController {
     
 	 @Autowired
 	 MailService mailService;
+	 
+	@Value("${doe.basePath}")
+	String basePath;
     
     @Value("${gov.nih.nci.hpc.server.collection}")
 	private String serviceURL;
@@ -249,7 +252,7 @@ public abstract class AbstractDoeController {
 		 }
 		 
 		 
-			public String getAttributeValue(String attrName, List<HpcMetadataEntry> list,String levelName) {
+	public String getAttributeValue(String attrName, List<HpcMetadataEntry> list,String levelName) {
 				if (list == null)
 					return null;
 				
@@ -260,5 +263,28 @@ public abstract class AbstractDoeController {
 					return entry.getValue();
 				}
 				return null;
-			}
+	}
+			
+			
+			
+	public String getPermissionRole(String user,Integer collectionId,List<KeyValueBean> loggedOnUserPermissions) {
+
+				if(!StringUtils.isEmpty(user)) {			
+					List<String> loggedOnUserPermList = new ArrayList<String>();		
+					loggedOnUserPermissions.stream().forEach(e -> loggedOnUserPermList.add(e.getKey()));
+					
+					if(!CollectionUtils.isEmpty(loggedOnUserPermList)) {
+						List<MetaDataPermissions> permissionList =  metaDataPermissionService.getAllMetaDataPermissionsByCollectionId(collectionId);
+						Boolean isOwner = permissionList.stream().anyMatch(o -> (user.equalsIgnoreCase(o.getUserGroupId()) && o.getIsOwner()));
+						Boolean isGroupUser = permissionList.stream().anyMatch(o -> (loggedOnUserPermList.contains(o.getUserGroupId()) && o.getIsGroup()));
+							if(Boolean.TRUE.equals(isOwner)) {
+								return "Owner";						
+							} else if(Boolean.TRUE.equals(isGroupUser)) {
+								return "Group User";
+							}
+					}			
+				}
+				return "No Permissions";
+	}
+
 }

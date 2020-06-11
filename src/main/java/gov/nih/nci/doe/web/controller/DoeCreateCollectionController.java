@@ -188,6 +188,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 	 * @param redirectAttributes
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@PostMapping
 	@ResponseBody
 	public String createCollection(@Valid DoeCollectionModel doeCollection, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
@@ -204,6 +205,28 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 			session.setAttribute("userDOCModel", modelDTO);
 		}
 
+		// Validate parent path
+				String parentPath = null;
+				try {
+					if (doeCollection.getPath().lastIndexOf('/') != -1)
+						parentPath = doeCollection.getPath().substring(0, doeCollection.getPath().lastIndexOf('/'));
+					else
+						parentPath = doeCollection.getPath();
+					if (!parentPath.isEmpty()) {
+						HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, 
+								serviceURL, parentPath, true, sslCertPath, sslCertPassword);
+						Boolean isValidPermissions = verifyCollectionPermissions(parentPath,parentCollectionDto);
+						if (Boolean.FALSE.equals(isValidPermissions)) {
+							return "Insufficient privileges to create collection";
+						}
+					} else {				
+							return "Invalid parent in Collection Path";
+					}
+					
+				} catch (DoeWebException e) {
+					log.debug("Invalid parent in Collection Path:" + e.getMessage());
+				}
+				
 		HpcCollectionRegistrationDTO registrationDTO = null;
  
 		try {
@@ -212,22 +235,6 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 			log.debug("Error in construct request" + e.getMessage());
 		}
 
-		// Validate parent path
-		String parentPath = null;
-		try {
-			if (doeCollection.getPath().lastIndexOf('/') != -1)
-				parentPath = doeCollection.getPath().substring(0, doeCollection.getPath().lastIndexOf('/'));
-			else
-				parentPath = doeCollection.getPath();
-			if (!parentPath.isEmpty()) {
-				DoeClientUtil.getCollection(authToken, serviceURL, parentPath, true, sslCertPath, sslCertPassword);
-			} else {				
-					return "Invalid parent in Collection Path";
-			}
-			
-		} catch (DoeWebException e) {
-			log.debug("Invalid parent in Collection Path:" + e.getMessage());
-		}
 
 		// Validate Collection path
 		try {

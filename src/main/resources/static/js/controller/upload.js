@@ -371,23 +371,24 @@ function postSuccessRegisterCollection(data,collectionType) {
 	if(data.indexOf("Collection is created") != -1) {
 		
 		$("#registerCollectionModal").find(".registerMsg").html("Collection created successfully.");
-		$("#registerCollectionModal").find(".registerMsgBlock").show();		
+		$("#registerCollectionModal").find(".registerMsgBlock").show();	
+		if(collectionType  == 'Program') {
+			var params= {selectedPath:$("#basePath").val(),refreshNode:'true'};
+			loadJsonData('/browse/collection', $("#instituteList"), true, params, null, null, "key", "value"); 
+		} else if(collectionType == 'Study') {
+			var params= {selectedPath:$("#instituteList").val(),refreshNode:'true'};
+			loadJsonData('/browse/collection', $("#studyList"), true, params, null, null, "key", "value");
+			
+		} else if(collectionType == 'Data_Set') {
+			var params= {selectedPath:$("#studyList").val(),refreshNode:'true'};
+			 loadJsonData('/browse/collection', $("#dataList"), true, params, null, null, "key", "value");
+		}
 	} else {
 		$("#registerCollectionModal").find(".registerErrorMsg").html("Error in create collection.");
 		$("#registerCollectionModal").find(".registerMsgErrorBlock").show();
 	}
 
-	if(collectionType  == 'Program') {
-		var params= {selectedPath:$("#basePath").val(),refreshNode:'true'};
-		loadJsonData('/browse/collection', $("#instituteList"), true, params, null, null, "key", "value"); 
-	} else if(collectionType == 'Study') {
-		var params= {selectedPath:$("#instituteList").val(),refreshNode:'true'};
-		loadJsonData('/browse/collection', $("#studyList"), true, params, null, null, "key", "value");
-		
-	} else if(collectionType == 'Data_Set') {
-		var params= {selectedPath:$("#studyList").val(),refreshNode:'true'};
-		 loadJsonData('/browse/collection', $("#dataList"), true, params, null, null, "key", "value");
-	}
+	
 }
 
 function openBulkDataRegistration() {

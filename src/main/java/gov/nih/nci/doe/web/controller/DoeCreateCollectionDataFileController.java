@@ -19,7 +19,9 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.codec.binary.StringUtils;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.ui.Model;
@@ -27,6 +29,7 @@ import org.springframework.ui.Model;
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.DoeCollectionModel;
 import gov.nih.nci.doe.web.model.DoeMetadataAttrEntry;
+import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.datamanagement.HpcDataHierarchy;
 import gov.nih.nci.hpc.domain.datamanagement.HpcDirectoryScanPathMap;
@@ -39,6 +42,7 @@ import gov.nih.nci.hpc.domain.datatransfer.HpcS3UploadSource;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataValidationRule;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementRulesDTO;
@@ -71,7 +75,6 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		session.removeAttribute("GlobusEndpointFolders");
 		session.removeAttribute("parentCollection");
 		session.removeAttribute("metadataEntries");
-		//session.removeAttribute("userMetadataEntries");
 		session.removeAttribute("parent");
 		session.removeAttribute("institutePath");
 		session.removeAttribute("studyPath");
@@ -486,5 +489,20 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		dto.getMetadataEntries().addAll(metadataEntries);
 		return dto;
 	}
+
+	
+	@SuppressWarnings("unchecked")
+	public Boolean verifyCollectionPermissions(String parentPath, HpcCollectionListDTO parentCollectionDto) {
+		if (!parentPath.equalsIgnoreCase(basePath) && parentCollectionDto != null && parentCollectionDto.getCollections() != null
+				&& !CollectionUtils.isEmpty(parentCollectionDto.getCollections())) {
+			HpcCollectionDTO collection = parentCollectionDto.getCollections().get(0);
+			List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList().getBody();
+			String role = getPermissionRole(getLoggedOnUserInfo(),collection.getCollection().getCollectionId(),loggedOnUserPermissions);
+			if(StringUtils.isNotEmpty(role) && (role.equalsIgnoreCase("Owner")|| role.equalsIgnoreCase("Group User"))) {
+				return true;
+			} 
+	    }
+		return false;
+    }
 
 }

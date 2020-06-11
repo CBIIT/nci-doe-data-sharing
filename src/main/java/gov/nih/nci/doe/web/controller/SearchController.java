@@ -197,29 +197,6 @@ public class SearchController extends AbstractDoeController {
 	}
 	
 	
-	private String getPermissionRole(String user,Integer collectionId,List<KeyValueBean> loggedOnUserPermissions) {
-
-		if(!StringUtils.isEmpty(user)) {			
-			List<String> loggedOnUserPermList = new ArrayList<String>();		
-			loggedOnUserPermissions.stream().forEach(e -> loggedOnUserPermList.add(e.getKey()));
-			
-			if(!CollectionUtils.isEmpty(loggedOnUserPermList)) {
-				List<MetaDataPermissions> permissionList =  metaDataPermissionService.getAllMetaDataPermissionsByCollectionId(collectionId);
-				Boolean isOwner = permissionList.stream().anyMatch(o -> (user.equalsIgnoreCase(o.getUserGroupId()) && o.getIsOwner()));
-				Boolean isGroupUser = permissionList.stream().anyMatch(o -> (loggedOnUserPermList.contains(o.getUserGroupId()) && o.getIsGroup()));
-					if(Boolean.TRUE.equals(isOwner)) {
-						return "Owner";						
-					} else if(Boolean.TRUE.equals(isGroupUser)) {
-						return "Group User";
-					}
-			}			
-		}
-		return "No Permissions";
-	}
-
-	
-
-	
 	
 	private Integer getCollectionId(List<HpcMetadataEntry> list,String levelName) {
 		if (list == null)

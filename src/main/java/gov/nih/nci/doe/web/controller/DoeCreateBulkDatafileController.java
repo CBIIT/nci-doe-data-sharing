@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -26,6 +27,7 @@ import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationResponseDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 /**
  * <p>
@@ -97,6 +99,18 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 				return "Invalid Data file path";
 			
 			doeDataFileModel.setPath(doeDataFileModel.getPath().trim());
+			
+			// Validate parent path
+				
+				if (StringUtils.isNotEmpty(dataFilePath)) {
+					HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, collectionServiceURL, dataFilePath, true, sslCertPath,
+										sslCertPassword);
+					Boolean isValidPermissions = verifyCollectionPermissions(dataFilePath,parentCollectionDto);
+					if (Boolean.FALSE.equals(isValidPermissions)) {
+						return "Insufficient privileges to create collection";
+					}
+				}
+							
 			HpcBulkDataObjectRegistrationRequestDTO registrationDTO = constructV2BulkRequest(request, session,
 					doeDataFileModel.getPath().trim());
 			String bulkType = request.getParameter("uploadType");

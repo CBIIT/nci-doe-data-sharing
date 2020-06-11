@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeDatafileModel;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
+import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectRegistrationRequestDTO;
 
 /**
@@ -46,8 +47,7 @@ public class DoeCreateDatafileController extends DoeCreateCollectionDataFileCont
 	private String serviceURL;
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	private String collectionServiceURL;
-	@Value("${doe.basePath}")
-	private String basePath;
+
 
 
 
@@ -84,9 +84,15 @@ public class DoeCreateDatafileController extends DoeCreateCollectionDataFileCont
 			doeDataFileModel.setPath(doeDataFileModel.getPath().trim());
 
 				parentPath = doeDataFileModel.getPath().substring(0, doeDataFileModel.getPath().lastIndexOf('/'));
-				if (!parentPath.isEmpty())
-					DoeClientUtil.getCollection(authToken, collectionServiceURL, parentPath, true, sslCertPath,
+				if (!parentPath.isEmpty()) {
+					HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, collectionServiceURL, parentPath, true, sslCertPath,
 							sslCertPassword);
+					Boolean isValidPermissions = verifyCollectionPermissions(parentPath,parentCollectionDto);
+					if (Boolean.FALSE.equals(isValidPermissions)) {
+							return "Insufficient privileges to create collection";
+						}
+				   }
+				
 
 			HpcDataObjectRegistrationRequestDTO registrationDTO = constructSyncRequest(request, session, path);
 
