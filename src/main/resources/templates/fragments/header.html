@@ -36,14 +36,15 @@
                 </div>
     <!--top right navigation-->
     <div id="topNav" class="collapse navbar-collapse justify-content-end col order-last bordered">
-        <ul class="navbar-nav navbar-dark text-white justify-content-end">
+        <ul class="navbar-nav navbar-dark text-white justify-content-end" role="tablist">
              
-                <li th:if= "${loggedOnUser != null}" class="nav-item dropdown">
+                <li th:if= "${loggedOnUser != null}" class="nav-item dropdown" role="tab">
                     <a class="nav-link dropdown-toggle" href="#" role="button" aria-label="Help"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                       <span class="topNav-item" th:text="${loggedOnUser}"> &nbsp;<i aria-hidden="true" class="fa fa-caret-down pull-right"></i></span>
+                       <span class="topNav-item" th:text="${loggedOnUser}"> &nbsp;
+                       <i aria-hidden="true" class="fa fa-caret-down pull-right"></i></span>
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <div class="dropdown-menu">
                         <a class="dropdown-item" id="myaccountTab" data-toggle="tab" href="#landingTab">My Account</a>
                         <a class="dropdown-item" href="javascript:void(0)" id="changePswdTab" data-toggle="tab" data-target="#landingTab">Change Password</a>
                     </div>
@@ -55,19 +56,20 @@
               </li>
                   
                 <!--Users Guide-->
-                <li class="nav-item">
+                <li class="nav-item" role="tab">
                     <a class="nav-link" target="_blank" href="https://wiki.nci.nih.gov/display/MoDaCdoc">
                     <i class="fas fa-book"></i>
                         <span class="topNav-item">User Guide</span></a>
                 </li>
                 
                 <!--Help and contact-->
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="fas fa-question-circle"></i><span class="topNav-item"> Contact</span>
+                <li class="nav-item" role="tab">
+                    <a class="nav-link" href="#"><i class="fas fa-question-circle"></i>
+                    <span class="topNav-item"> Contact</span>
                     </a>
                 </li>
 			    	
-               <li class="nav-item" th:if= "${loggedOnUser != null}">
+               <li class="nav-item" th:if= "${loggedOnUser != null}" role="tab">
 			    	<a class="nav-link" href="#" id="logout">Log Out</a>
 			    	</li>
             </ul>

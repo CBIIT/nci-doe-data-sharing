@@ -19,16 +19,20 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectRegistrationTaskDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDownloadSummaryDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcRegistrationSummaryDTO;
 
-public class TaskScheduler extends AbstractDoeController {
+
+public class ManageTasksScheduler extends AbstractDoeController {
 	
 	@Value("${gov.nih.nci.hpc.server.download}")
 	private String queryServiceURL;
 	
 	@Value("${gov.nih.nci.hpc.server.user.authenticate}")
-	private String authenticateURL;
+	private String authenticateURL;	
 	
-	@Value("${doe.ncidoesvct2.password}")
+	@Value("${doe.writeaccount.password}")
 	private String writeAccessUserPassword;
+
+	@Value("${doe.writeaccount.username}")
+	private String writeAccessUserName;
 	
 	@Value("${gov.nih.nci.hpc.server.bulkregistration}")
 	private String registrationServiceUrl;
@@ -37,9 +41,9 @@ public class TaskScheduler extends AbstractDoeController {
 	AuditingRepository auditingRepository;
 	
 	  @Scheduled(cron = "${doe.scheduler.cron.auditing}")
-	  private void updateAuditingService() {
+	  public void updateAuditingService() {
 		  
-		  String authToken = DoeClientUtil.getAuthenticationToken("ncidoesvct2", writeAccessUserPassword,authenticateURL);
+		  String authToken = DoeClientUtil.getAuthenticationToken(writeAccessUserName, writeAccessUserPassword,authenticateURL);
 		  
 		  String serviceURL = queryServiceURL + "?page=" + 1 + "&totalCount=true";
 			HpcDownloadSummaryDTO downloads = DoeClientUtil.getDownloadSummary(authToken, serviceURL, sslCertPath,
