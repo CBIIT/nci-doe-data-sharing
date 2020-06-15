@@ -518,17 +518,22 @@ i.fas.fa-file-plus{font-size: 16px!important;}
 .input-group-text{padding:.3rem .75rem;}
 .input-group>.input-group-prepend:not(:first-child)>.input-group-text{border-top-right-radius:5px; border-bottom-right-radius: 5px;}
 
-/* mdoals */
+/* modals */
 h1.modal-title{font-size:1.5rem;}
 h2.modal-title{font-size:1.5rem;}
 h3.table-title{font-size:1rem;}
-/*.modal-body{padding:0px;}*/
+
+.modal-title  {
+	font-size:20px;
+	font-weight:500;
+}
 .modal-body {
     max-height: 800px;
     overflow: auto;
 }
 .jumbotron{border-radius:0px;}
 .modal-footer {width:100%}
+
 /* placeholder input */
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
     color: #e7e7e7;
@@ -622,6 +627,14 @@ return to the top
 	font-weight: normal !important;
 	margin-right:1rem;
 	color:#333;
+}
+
+.btn-link {
+    color: #004A9E !important;
+}
+
+.btn-success {
+    background-color: #218739 !important;
 }
 
 /*--===============================================================================

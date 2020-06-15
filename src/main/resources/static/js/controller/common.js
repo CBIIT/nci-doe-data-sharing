@@ -127,11 +127,11 @@ $("#download-btn").click(function(e){
 	}
 	
 	else if(searchType == 's3' || searchType == 'async' || selectedFiles) {
-		d.bucketName = $("#bucketName").val();
-		d.s3Path = $("#s3Path").val();
-	    d.accessKey = $("#accessKey").val();
-	    d.secretKey = $("#secretKey").val();
-	    d.region = 	$("#region").val();	
+		d.bucketName = $("#downloadBucketName").val();
+		d.s3Path = $("#downloadS3Path").val();
+	    d.accessKey = $("#downloadAccessKey").val();
+	    d.secretKey = $("#downloadSecretKey").val();
+	    d.region = 	$("#downloadRegion").val();	
 	    d.endPointName = $("#endPointName").val();
 		d.endPointLocation = $("#endPointLocation").val();
 		

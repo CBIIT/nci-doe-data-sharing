@@ -243,7 +243,7 @@ function addNewMetaDataCollection(tableName) {
 	var rowId =  $("#"+tableName + " tbody").length;
 	rowId = rowId +1; 
 	$("#"+tableName + " tbody").append('<tr id="addRow'+rowId+'"><td><input type="text" placeholder="Required" style="width:70%;" ' +
-			 'name="_addAttrName'+rowId+'" id="_addAttrName'+rowId+'"></td><td><input type="text" placeholder="Required" style="width:70%;" id="_addAttrValue'+rowId+'" name="_addAttrValue'+rowId+'" >' +
+			 'name="_addAttrName'+rowId+'" aria-label="add new row" id="_addAttrName'+rowId+'"></td><td><input type="text" placeholder="Required" style="width:70%;" id="_addAttrValue'+rowId+'" name="_addAttrValue'+rowId+'" >' +
 	 		'&nbsp;&nbsp;<input class="btn btn-primary pull-right" type="button" value="X" onclick="removeCollectionRow(\'addRow' + rowId + '\')"></td></tr>');
 	 
 	
@@ -254,7 +254,7 @@ function addNewMetaDataRowsForDataFile($this) {
 	rowId = rowId +1; 
 	
 	$this.parent().append('&nbsp;&nbsp;<div id="addDataRow'+rowId+'"><input type="text" style="width:40%;" ' +
-			 'name="_addAttrName'+rowId+'" id="_addAttrName'+rowId+'">&nbsp;<input type="text" style="width:40%;" id="_addAttrValue'+rowId+'" name="_addAttrValue'+rowId+'" >' +
+			 'name="_addAttrName'+rowId+'" aria-label="add new row" id="_addAttrName'+rowId+'">&nbsp;<input type="text" style="width:40%;" id="_addAttrValue'+rowId+'" name="_addAttrValue'+rowId+'" >' +
 	 		'&nbsp;&nbsp;<input class="btn btn-primary pull-right" type="button" value="X" onclick="removeCollectionRow(\'addDataRow' + rowId + '\')"></div>');
 	
 }
@@ -269,9 +269,9 @@ function retrieveCollectionList(data,status) {
 	 $("#registerCollectionModal").find("#parentAccessGroup").val(parentAccessGrp);
 	 $("#registerCollectionModal").find("#collectionType").val(collectionType);
 	 $("#registerCollectionModal").find("#registerCollectionBtn").val("Register " + collectionType);
-	 $("#registerCollectionModal").find("#collectionMetaDataLabel").text(collectionType + " MetaData");
+	 $("#registerCollectionModal").find("#collectionMetaDataLabel").text(collectionType + " Metadata");
 	 $("#registerCollectionModal").find("#registerModalTitle").html("Register " + collectionType + " Collection");
-	 $("#registerCollectionModal").find("#addNewMetaData").html("Add " + collectionType + " MetaData");
+	 $("#registerCollectionModal").find("#addNewMetaData").html("Add " + collectionType + " Metadata");
 	 $("#registerCollectionModal").modal('show');
 	 var collectionPath = $("#registerCollectionModal").find("#collectionPath").val();
 		

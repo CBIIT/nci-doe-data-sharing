@@ -12,7 +12,7 @@
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 class="modal-title">Download</h4>
+                <p class="modal-title">Download</p>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
@@ -97,33 +97,33 @@
 								
 			          <div class="form-row col-md-12 col-sm-12" id="s3Div" style="display: none">
 									<div class="col-sm-12 column">
-										<label for="bucketName">S3 Bucket:</label>
+										<label for="downloadBucketName">S3 Bucket:</label>
 										<input
-											type="text" class="form-control" name="bucketName" 
-											id="bucketName" placeholder="Enter S3 Bucket Name" />
+											type="text" class="form-control" name="downloadBucketName" 
+											id="downloadBucketName" placeholder="Enter S3 Bucket Name" />
 									</div>
 									<div class="col-sm-12 column">
-										<label for="s3Path">S3 (Destination) Path:</label> <input
+										<label for="downloadS3Path">S3 (Destination) Path:</label> <input
 											type="text" class="form-control"
-											name="s3Path" id="s3Path"
+											name="downloadS3Path" id="downloadS3Path"
 											placeholder="Enter S3 (Destination) Path" size="40" />
 									</div>
 									<div class="col-sm-12 column">
-										<label for="accessKey">Access Key:</label> <input
+										<label for="downloadAccessKey">Access Key:</label> <input
 											type="text" class="form-control"
-											name="accessKey" id="accessKey"
+											name="downloadAccessKey" id="downloadAccessKey"
 											placeholder="Enter Access Key" size="40" />
 									</div>
 									<div class="col-sm-12 column">
-										<label for="secretKey">Secret Access Key:</label> <input
+										<label for="downloadSecretKey">Secret Access Key:</label> <input
 											type="password" autocomplete="secret-access-key" class="form-control"
-											name="secretKey" id="secretKey"
+											name="downloadSecretKey" id="downloadSecretKey"
 											placeholder="Enter Secret Access Key" size="40" />
 									</div>
 									<div class="col-sm-12 column">
-										<label for="region">Region:</label> <input
+										<label for="downloadRegion">Region:</label> <input
 											type="text" class="form-control"
-											name="region" id="region"
+											name="downloadRegion" id="downloadRegion"
 											placeholder="Enter Region (for Example us-east-1)" size="40" />
 									</div>
 								</div>
@@ -133,7 +133,7 @@
                 </div>
 
             </div>
-            <div class="form-group" style="margin-top:35px;margin-bottom:15px;padding: 5px;" id="buttonsRow">
+            <div class="form-group" style="margin-top:35px;margin-bottom:15px;padding: 5px;">
                                 <input type="button" value="Cancel" style="margin-left: -12px;" class="btn btn-default float-right mr-4 mb-4" data-dismiss="modal">
                                 <input type="button" value="Download" class="btn btn-primary float-right mr-4 mb-4" id="download-btn">
                             </div> 
@@ -147,8 +147,8 @@ aria-labelledby="forgotPasswordLabel">
         <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title" id="forgotPasswordLabel">
-                        Forgot Password</h3>
+                    <p class="modal-title" id="forgotPasswordLabel">
+                        Forgot Password</p>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
                 <div id="forgotPasswordContent" class="modal-body drilldown-content">
@@ -189,12 +189,11 @@ aria-labelledby="forgotPasswordLabel">
     </div>
     
     
-    <div id="updateAccessPermissionsModal" class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog" aria-hidden="false"
-aria-labelledby="updateAccessPermissionsModallabel">
+    <div id="updateAccessPermissionsModal" class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog" aria-hidden="false">
         <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">Update Access Groups</h3>
+                    <p class="modal-title">Update Access Groups</p>
                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
                 <div class="clearfix updateAccessGroupsBlock" style="display: none;margin-left:10px;width:90%;">
@@ -226,12 +225,11 @@ aria-labelledby="updateAccessPermissionsModallabel">
         </div>
     </div>
     
-<div id="updatePermissionModal" class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog" aria-hidden="false"
-aria-labelledby="updatePermissionModallabel">
+<div id="updatePermissionModal" class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog" aria-hidden="false">
         <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">Update Permissions</h3>
+                    <p class="modal-title">Update Permissions</p>
                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
                 <div class="clearfix updatePermissionsSuccessBlock" style="display: none;margin-left:10px;width:90%;">
@@ -268,7 +266,7 @@ aria-labelledby="updatePermissionModallabel">
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 class="modal-title" id="registerModalTitle">Register Collection</h4>
+                <p class="modal-title" id="registerModalTitle">Register Collection</p>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
@@ -321,7 +319,7 @@ aria-labelledby="updatePermissionModallabel">
                     
                      <div class="col-md-12 col-sm-12">
                       <div class="col-lg-12 col-md-12 col-sm-12 float-left" style="margin-top:20px;">
-                      <h4 id="collectionMetaDataLabel">Collection MetaData</h4>
+                      <p style="font-size:22px;font-weight:500;" id="collectionMetaDataLabel">Collection Metadata</p>
                       </div>
                       
                         <div class="col-lg-12 col-md-12 col-sm-12">
