@@ -157,7 +157,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		 user.setPassword(register.getPassword());
 		 user.setLastName(register.getLastName());
 		 user.setInstitution(register.getInstitution());
-		 user.setEmailAddrr(register.getEmailAddress());
+		 user.setEmailAddrr(register.getEmailAddress().toLowerCase());
 		 user.setLockoutCounter(0);
 		 // for now, adding write permissions to everyone.
 		 user.setIsWrite(true);
@@ -251,7 +251,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		DoeUsers d =  doeUserRepository.getUserInfo(emailAddr);
 		if(d != null) {
 			DoeUsersModel userModel = new DoeUsersModel();
-			userModel.setEmailAddrr(d.getEmailAddrr());
+			userModel.setEmailAddrr(d.getEmailAddrr().toLowerCase());
 			userModel.setFirstName(d.getFirstName());
 			userModel.setLastName(d.getLastName());
 			userModel.setInstitution(d.getInstitution());

@@ -8,6 +8,10 @@ $(document).ready(function () {
 	    $('#username').blur(function() {
 	    	$(this).val($(this).val().trim().toLowerCase());
 	    });
+	    
+	    $("#id_user_email").blur(function() {
+	    	$(this).val($(this).val().trim().toLowerCase());
+	    });
 	   	    
 	    $(window).scroll(function () {
 	        if ($(this).scrollTop() >= 50) {        // If page is scrolled more than 50px
