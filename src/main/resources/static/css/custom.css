@@ -626,7 +626,7 @@ return to the top
 	content:'\f0c8';
 	font-weight: normal !important;
 	margin-right:1rem;
-	color:#333;
+	/*color:#333;*/
 }
 
 .btn-link {

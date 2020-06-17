@@ -61,7 +61,7 @@ function postSuccessUpdatePermissions(data,status) {
 	
 }
 
-function editAccessPermissions(collectionId,access_groups,metadata_path,permissions) {
+function editAccessPermissions(collectionId,access_groups,metadata_path,permissions,selectedCollection) {
 	$("#updateAccessPermissionsModal").find(".updateAccessMsg").html("");
 	$("#updateAccessPermissionsModal").find(".updateAccessGroupsBlock").hide();
 	
@@ -69,6 +69,7 @@ function editAccessPermissions(collectionId,access_groups,metadata_path,permissi
 	$("#updateAccessPermissionsModal").find("#accessGroups").val(access_groups);	
 	$("#updateAccessPermissionsModal").find("#permissionGroups").val(permissions);
 	$("#updateAccessPermissionsModal").find("#metadata_path").val(metadata_path);
+	$("#updateAccessPermissionsModal").find("#selectedCollection").val(selectedCollection);
 	$("#updateAccessPermissionsModal").modal('show');	
 	loadJsonData('/metaDataPermissionsList', $("#updateAccessPermissionsModal").find("#updateAccessGroupsList"),
 			false, null, postSuccessAccessPermissions, null, "key", "value"); 
@@ -88,8 +89,10 @@ function updateAccessGroupsFunction() {
 	var selectedAccessGroups = $("#updateAccessPermissionsModal").find("#updateAccessGroupsList").val();
 	var json = $("#updateAccessPermissionsModal").find("#permissionGroups").val();
 	var path = $("#updateAccessPermissionsModal").find("#metadata_path").val();
+	var selectedCollection = $("#updateAccessPermissionsModal").find("#selectedCollection").val();
 	var permissionGroups = JSON.parse(json);
 	permissionGroups.path = path;
+	permissionGroups.selectedCollection = selectedCollection;
 	permissionGroups.selectedAccessGroups = selectedAccessGroups.join();
 	invokeAjax('/updateAccessGroupMetaData','GET',permissionGroups,postSuccessUpdateAccessgroups,null,null,'text');
 }
@@ -108,6 +111,8 @@ function postSuccessUpdateAccessgroups(data,status){
 }
 
 function notifyUsersFunction(permissions) {
+	var selectedCollection = $("#updateAccessPermissionsModal").find("#selectedCollection").val()
+	permissionGroups.selectedCollection = selectedCollection;
 	invokeAjax('/notifyUsers','GET',JSON.parse(permissions),postSuccessNotifyUsers,null,null,'text');
 }
 

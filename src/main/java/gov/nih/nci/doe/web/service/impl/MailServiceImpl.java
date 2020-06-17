@@ -201,12 +201,12 @@ public class MailServiceImpl implements MailService {
 	}
 
 	@Override
-	public void sendNotifyUsersForAccessGroups(String email) throws Exception {
+	public void sendNotifyUsersForAccessGroups(List<String> email) throws Exception {
         log.info("Sending an email for access group change");
 		
 		final Map<String, Object> params = new HashMap<String, Object>();
 		final List<String> to = new ArrayList<String>();
-		to.add(email);		
+		to.addAll(email);		
 		params.put(TO, to.toArray(new String[0]));
 		send("ACCESS_GROUP_EMAIL", params);
 	}	

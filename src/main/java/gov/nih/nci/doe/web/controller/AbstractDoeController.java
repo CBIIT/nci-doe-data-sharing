@@ -204,12 +204,25 @@ public abstract class AbstractDoeController {
 		 public String notifyUsersForUpdateAccessDicp(HttpSession session,@RequestHeader HttpHeaders headers, 
 				 PermissionsModel permissionGroups) throws Exception  { 
 			 log.info("notify users");
-			 log.info("permissionGroups" + permissionGroups.getDataLevelAccessGroups());
+			 log.info("permissionGroups" + permissionGroups);
+			 List<String> collectionOwnersList = new ArrayList<String>();
 			 //notify users
-			 MetaDataPermissions perm = metaDataPermissionService.getMetaDataPermissionsOwnerByCollectionId
-					 (Integer.valueOf(permissionGroups.getStudyCollectionId()));
+			 MetaDataPermissions perm = null;
+			 if("study".equalsIgnoreCase(permissionGroups.getSelectedCollection())) {
+				  perm = metaDataPermissionService.getMetaDataPermissionsOwnerByCollectionId
+						 (Integer.valueOf(permissionGroups.getProgCollectionId()));
+				  collectionOwnersList.add(perm.getUserGroupId());
+			 } else if("data_set".equalsIgnoreCase(permissionGroups.getSelectedCollection())) {
+				 perm = metaDataPermissionService.getMetaDataPermissionsOwnerByCollectionId
+						 (Integer.valueOf(permissionGroups.getStudyCollectionId()));
+				 MetaDataPermissions progPermissions = metaDataPermissionService.getMetaDataPermissionsOwnerByCollectionId
+						 (Integer.valueOf(permissionGroups.getProgCollectionId()));
+				 collectionOwnersList.add(perm.getUserGroupId());
+				 collectionOwnersList.add(progPermissions.getUserGroupId());
+			 }
 			 
-			 mailService.sendNotifyUsersForAccessGroups(perm.getUserGroupId());
+			 
+			 mailService.sendNotifyUsersForAccessGroups(collectionOwnersList);
 
 			 return "SUCCESS";
 		 }
@@ -219,11 +232,26 @@ public abstract class AbstractDoeController {
 		 public ResponseEntity<?> saveAccessGroup(HttpSession session,@RequestHeader HttpHeaders headers,
 					 PermissionsModel permissionGroups)  { 
 			 log.info("get meta data permissions list");
-			 
-			 //validate if the edit can be done
-			 if(permissionGroups.getDataLevelAccessGroups().contains(permissionGroups.getProgramLevelAccessGroups())
-					 && permissionGroups.getDataLevelAccessGroups().contains(permissionGroups.getStudyLevelAccessGroups())
-					 && permissionGroups.getStudyLevelAccessGroups().contains(permissionGroups.getProgramLevelAccessGroups())) {
+			 Boolean isUpdate = false;
+			  if("program".equalsIgnoreCase(permissionGroups.getSelectedCollection())) {
+				 isUpdate = true;
+			 } else if("study".equalsIgnoreCase(permissionGroups.getSelectedCollection())) {
+				 if("public".equalsIgnoreCase(permissionGroups.getProgramLevelAccessGroups())) {
+					 isUpdate = true;
+				 } else if(!"public".equalsIgnoreCase(permissionGroups.getProgramLevelAccessGroups()) && 
+						 permissionGroups.getSelectedAccessGroups().contains(permissionGroups.getProgramLevelAccessGroups())) {
+					 isUpdate = true;
+				 }
+			 } else if("data_set".equalsIgnoreCase(permissionGroups.getSelectedCollection())) {
+				 if("public".equalsIgnoreCase(permissionGroups.getProgramLevelAccessGroups()) && 
+					"public".equalsIgnoreCase(permissionGroups.getStudyLevelAccessGroups())) {
+					 isUpdate = true;
+				 } else if(permissionGroups.getSelectedAccessGroups().contains(permissionGroups.getStudyLevelAccessGroups())) {
+					 isUpdate = true;
+				 }
+			 }
+			  
+			 if(Boolean.TRUE.equals(isUpdate)) {
 			 String loggedOnUser = getLoggedOnUserInfo();
 			 String authToken = (String) session.getAttribute("writeAccessUserToken");
 			 HpcCollectionRegistrationDTO dto = new HpcCollectionRegistrationDTO();

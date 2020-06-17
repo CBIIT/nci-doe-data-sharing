@@ -147,7 +147,8 @@ function dataTableInit(isVisible) {
          	   var permissions = $(this).attr('permissions_groups');
          	  var access_groups = $(this).attr('access_groups');
          	 var metaDataPath = $(this).attr('metadata_path');
-        	   editAccessPermissions(collectionId,access_groups,metaDataPath,permissions);
+         	var selectedCollection = $(this).attr('selectedCollection');
+        	   editAccessPermissions(collectionId,access_groups,metaDataPath,permissions,selectedCollection);
            });
            
            $(".selectCheckboxForIns").click(function(e){
@@ -232,7 +233,7 @@ function renderPath(data, type, row) {
            "<i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Data Set Metadata'></i></span>";
 			if(row.dataSetPermissionRole == 'Owner') {
 				editDataSetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collectionId  = '" + row.dataSetCollectionId + "' " +
-			    "permissions_groups ='"+ JSON.stringify(permissions) + "'  access_groups  = '" + row.dataLevelAccessGroups+ "' metadata_path  = '" + row.dataSetPath+ "'>" +
+			    "permissions_groups ='"+ JSON.stringify(permissions) + "'  selectedCollection = 'data_set' access_groups  = '" + row.dataLevelAccessGroups+ "' metadata_path  = '" + row.dataSetPath+ "'>" +
                  "<i class='fa fa-users' data-toggle='tooltip' data-content='Edit Data Set Access Permissions'></i></span>";
 			}
 		}
@@ -244,7 +245,7 @@ function renderPath(data, type, row) {
 			"<i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Study Metadata'></i></span>";
 			if(row.studyPermissionRole == 'Owner') {
 				editStudySetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collectionId  = '" + row.studyCollectionId + "' " +
-			    " permissions_groups ='"+ JSON.stringify(permissions) + "'  access_groups  = '" + row.studyLevelAccessGroups+ "' metadata_path  = '" + row.studyPath+ "'>" +
+			    " permissions_groups ='"+ JSON.stringify(permissions) + "'   selectedCollection = 'study'  access_groups  = '" + row.studyLevelAccessGroups+ "' metadata_path  = '" + row.studyPath+ "'>" +
                  "<i class='fa fa-users' data-toggle='tooltip' data-content='Edit Study Access Permissions'></i></span>";
 			}
 		}
@@ -257,7 +258,7 @@ function renderPath(data, type, row) {
 			
 			if(row.programPermissionRole == 'Owner') {
 				editProgramSetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collectionId  = '" + row.programCollectionId + "' " +
-			    "permissions_groups ='"+ JSON.stringify(permissions) + "'  access_groups  = '" + row.programLevelAccessGroups+ "' metadata_path  = '" + row.institutePath+ "'>" +
+			    "permissions_groups ='"+ JSON.stringify(permissions) + "'   selectedCollection = 'program'  access_groups  = '" + row.programLevelAccessGroups+ "' metadata_path  = '" + row.institutePath+ "'>" +
                  "<i class='fa fa-users' data-toggle='tooltip' data-content='Edit Program Access Permissions'></i></span>";
 			}
 		}

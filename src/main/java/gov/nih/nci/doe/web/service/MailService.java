@@ -1,5 +1,6 @@
 package gov.nih.nci.doe.web.service;
 
+import java.util.List;
 
 public interface MailService {
 
@@ -12,5 +13,5 @@ public interface MailService {
 	
 	public void sendResetPasswordEmail(String password,String email) throws Exception;
 	
-	public void sendNotifyUsersForAccessGroups(String email) throws Exception;
+	public void sendNotifyUsersForAccessGroups(List<String> email) throws Exception;
 }

@@ -9,9 +9,17 @@ public class PermissionsModel {
 	private String studyCollectionId;
 	private String progCollectionId;
 	private String selectedAccessGroups;
+	private String selectedCollection;
 	private String path;
 	
 	
+	
+	public String getSelectedCollection() {
+		return selectedCollection;
+	}
+	public void setSelectedCollection(String selectedCollection) {
+		this.selectedCollection = selectedCollection;
+	}
 	public String getDataLevelAccessGroups() {
 		return dataLevelAccessGroups;
 	}
