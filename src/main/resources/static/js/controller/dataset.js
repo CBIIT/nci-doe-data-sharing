@@ -63,7 +63,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
         	
         	var selfMetadata = JSON.parse(metadata);
         	$.each(selfMetadata, function(key, value) {	
-                $("#dataSetMetaData tbody").append("<tr><td>" + value.key + "</td><td>" + value.value + "</td></tr>");
+                $("#dataSetMetaData tbody").append("<tr><td>" + value.displayName + "</td><td>" + value.value + "</td></tr>");
         	});
 
         	

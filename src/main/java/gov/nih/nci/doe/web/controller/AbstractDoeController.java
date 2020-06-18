@@ -119,14 +119,19 @@ public abstract class AbstractDoeController {
 	    }
 	  
 		public List<KeyValueBean> getUserMetadata(List<HpcMetadataEntry> list,String levelName, List<String> systemAttrs) {
-			if (list == null)
-				return null;
-
+		
 			List<KeyValueBean> entryList = new ArrayList<KeyValueBean>();
 			
 			for (HpcMetadataEntry entry : list) {
 				if (systemAttrs != null && !systemAttrs.contains(entry.getAttribute()) && levelName.equalsIgnoreCase(entry.getLevelLabel())) {
-					KeyValueBean k = new KeyValueBean(entry.getAttribute(), entry.getValue());			
+					String attrName = lookUpService.getDisplayName(levelName,entry.getAttribute());
+					KeyValueBean k = null;
+					if(!StringUtils.isEmpty(attrName)) {
+						 k = new KeyValueBean(entry.getAttribute(),attrName, entry.getValue());
+					} else {
+						 k = new KeyValueBean(entry.getAttribute(),entry.getAttribute(), entry.getValue());
+					}
+								
 					entryList.add(k);
 				}
 				

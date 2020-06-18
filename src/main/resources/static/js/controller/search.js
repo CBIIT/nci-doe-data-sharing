@@ -443,7 +443,7 @@ function openPopOver($this) {
             var content = "";
 
             $.each(list, function( key, value ) {	
-                content += "<div class='divTableRow'><div class='divTableCell'>" + value.key + "</div>" +
+                content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
                         "<div class='divTableCell'>" + value.value + "</div></div>";
                 });
             
