@@ -297,7 +297,7 @@ function onClickOfBulkDownloadBtn() {
 
 function postSuccessDelete(data,status) {
 	if(data != "SUCCESS") {
-		return bootbox.alert("Failed to delete data file.");
+		return bootbox.alert(data);
 	}
 }
 
