@@ -238,40 +238,29 @@ $("#returnToLoginForm").click(function(e){
 	$("#loginSubTab").show();
 });
 
-$("#myaccountTab").click(function(e){
-	$("#landingDiv").hide();
-	$("#myAccount").show();
-	$("#changePassword").hide();
-	var params= {emailAddr:$("#emailAddrTxt").text()};
-	invokeAjax('/user-info','GET',params,postGetUserInfoFunction,null,null,'text');
-	
-});
+invokeAjax('/user-info','GET',{emailAddr:$("#emailAddrTxt").text()},postGetUserInfoFunction,null,null,'text');
 
 $("#cancelAccntUpdate").click(function(e){
-	$("#landingDiv").show();
-	$("#myAccount").hide();
-	$("#changePassword").hide();
+	location.replace("/");
 });
 
 
-$("#changePswdTab").click(function(e){
+/*$("#changePswdTab").click(function(e){
 	$("#landingDiv").hide();
 	$("#myAccount").hide();
 	$("#changePassword").show();
 	$(".successBlock").hide();
 	$(".errorBlock").hide();
-});
+});*/
 
 $("#landing-tab").click(function(e){
 	$("#landingDiv").show();
-	$("#myAccount").hide();
-	$("#changePassword").hide();
+	//$("#myAccount").hide();
+	//$("#changePassword").hide();
 });
 
 $("#cancelResetPswdBtn").click(function(e){
-	$("#landingDiv").show();
-	$("#myAccount").hide();
-	$("#changePassword").hide();
+	location.replace("/");
 });
 
 

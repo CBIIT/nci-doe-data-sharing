@@ -50,8 +50,8 @@
                        <i aria-hidden="true" class="fa fa-caret-down pull-right"></i></span>
                     </a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" id="myaccountTab" data-toggle="tab" href="#landingTab">My Account</a>
-                        <a class="dropdown-item" href="javascript:void(0)" id="changePswdTab" data-toggle="tab" data-target="#landingTab">Change Password</a>
+                        <a class="dropdown-item" th:href="@{/myaccount}" id="myaccountTab">My Account</a>
+                        <a class="dropdown-item" th:href="@{/resetPassword}" id="changePswdTab">Change Password</a>
                     </div>
 
                 </li>

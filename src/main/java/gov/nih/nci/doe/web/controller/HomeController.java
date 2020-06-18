@@ -96,6 +96,16 @@ public class HomeController extends AbstractDoeController {
 			return "loginTab";
 		 }
 		 
+		 @GetMapping(value = "/myaccount")
+		 public String getMyAccount(HttpSession session, HttpServletRequest request)  { 			 
+			return "myAccount";
+		 }
+		 
+		 
+		 @GetMapping(value = "/resetPassword")
+		 public String getResetPassword(HttpSession session, HttpServletRequest request)  { 			 
+			return "resetPassword";
+		 }
 		 
 	
 }

@@ -97,5 +97,5 @@ function postGetUserInfoFunction (data,status) {
 }
 
 function postUpdateUserFunction(data,status) {
-	location.reload();
+	location.replace("/");
 }
