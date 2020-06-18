@@ -146,7 +146,7 @@ function postForgotPassword(data,status) {
 function postResetLinkFunction(data,status) {
 	$("#forgotPasswordLightbox").modal('hide');	
 	if(data == 'SUCCESS') {		
-	bootbox.alert("A password reset link has been sent successfully!");
+	bootbox.alert("A password has been sent successfully!");
 	} else {
 		bootbox.alert("Unknown Error. Contact Technical Support!");
 	}
