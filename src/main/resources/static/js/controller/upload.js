@@ -333,7 +333,7 @@ function registerCollection() {
 	
 	if(!usermetaDataEntered) {
 		validate = false;
-		$("#registerCollectionModal").find(".registerErrorMsg").append("Enter the values for all collection MetaData.");
+		$("#registerCollectionModal").find(".registerErrorMsg").append("Enter the values for all collection Metadata.");
 		$("#registerCollectionModal").find(".registerMsgErrorBlock").show();
 	}
 	

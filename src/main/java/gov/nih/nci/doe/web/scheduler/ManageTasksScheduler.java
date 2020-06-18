@@ -7,6 +7,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -20,6 +21,7 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcDownloadSummaryDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcRegistrationSummaryDTO;
 
 
+@Component
 public class ManageTasksScheduler extends AbstractDoeController {
 	
 	@Value("${gov.nih.nci.hpc.server.download}")
@@ -87,7 +89,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 					} else {
 						HpcUserDownloadRequest download = downloadResults.stream().filter(x -> audit.getTaskId().equals(x.getTaskId())).findAny().orElse(null);
 					       audit.setCompletionTime((download != null && download.getCompleted() != null)? download.getCompleted().getTime(): null);
-					       if(download.getResult() != null && download.getResult().value().equals("FAILED")) {
+					       if(download != null && download.getResult() != null && download.getResult().value().equals("FAILED")) {
 	    						List<String> message = new ArrayList<String>();
 	    						download.getItems().stream().forEach(x -> message.add(x.getMessage()));    						
 	    						audit.setStatus("Failed");
