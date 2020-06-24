@@ -244,19 +244,8 @@ $("#cancelAccntUpdate").click(function(e){
 	location.replace("/");
 });
 
-
-/*$("#changePswdTab").click(function(e){
-	$("#landingDiv").hide();
-	$("#myAccount").hide();
-	$("#changePassword").show();
-	$(".successBlock").hide();
-	$(".errorBlock").hide();
-});*/
-
 $("#landing-tab").click(function(e){
 	$("#landingDiv").show();
-	//$("#myAccount").hide();
-	//$("#changePassword").hide();
 });
 
 $("#cancelResetPswdBtn").click(function(e){
