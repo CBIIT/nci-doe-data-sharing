@@ -384,7 +384,7 @@ function postSuccessRegisterCollection(data,collectionType) {
 			 loadJsonData('/browse/collection', $("#dataList"), true, params, null, null, "key", "value");
 		}
 	} else {
-		$("#registerCollectionModal").find(".registerErrorMsg").html("Error in create collection.");
+		$("#registerCollectionModal").find(".registerErrorMsg").html("Error in create collection:" + data);
 		$("#registerCollectionModal").find(".registerMsgErrorBlock").show();
 	}
 

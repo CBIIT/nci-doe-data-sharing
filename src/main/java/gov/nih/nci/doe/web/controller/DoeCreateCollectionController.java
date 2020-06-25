@@ -186,7 +186,6 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 	 * @param redirectAttributes
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	@PostMapping
 	@ResponseBody
 	public String createCollection(@Valid DoeCollectionModel doeCollection, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
