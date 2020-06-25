@@ -60,11 +60,11 @@
                             </div>
                             
                              <div class="form-group col-lg-6 col-md-12" id="dataSetListDiv" style="display:none;">
-                          <label for="attributeVal">Select Data Set &nbsp;&nbsp;<a href="#" id="addNewDataSet" 
+                          <label for="attributeVal">Select Dataset &nbsp;&nbsp;<a href="#" id="addNewDataSet" 
                           onclick="openUploadModal('studyList')" data-backdrop="static" data-keyboard="false">
-                          <i class="fal fa-plus-circle"></i> Add new data set</a>
+                          <i class="fal fa-plus-circle"></i> Add new dataset</a>
                              <a href="#" style="display:none;" id="deleteDataSet" onclick="functionDelete('dataList','Data_Set')">
-                               <i class="fal fa-minus-circle"></i> Delete Data Set</a>
+                               <i class="fal fa-minus-circle"></i> Delete Dataset</a>
                           </label>
                                 <select class="simple-select2"  id="dataList" name="dataList" style="width:70%"
                                 onchange="retrieveCollections('dataList', this.options[this.selectedIndex],'onChange');">
@@ -76,7 +76,7 @@
                             <div class="col-md-12 col-sm-12" id="dataListDiv" style="display:none;margin-top:30px;">
                               <div class="form-row" style="height:190px;position:relative;">
                              <div class="form-group col-lg-8 col-md-12" style="background-color: #fff;max-height:100%;overflow:auto;">
-                               <p style=" margin-top: 4px; margin-left: 10px;"><b>Data Objects for the Selected Data Set</b></p>
+                               <p style=" margin-top: 4px; margin-left: 10px;"><b>Data Objects for the Selected Dataset</b></p>
                                 <ol id="dataListing">
                                 </ol>
                             </div>

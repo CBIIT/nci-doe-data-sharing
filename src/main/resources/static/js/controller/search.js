@@ -230,11 +230,11 @@ function renderPath(data, type, row) {
 			editDataSetHtml = "<span class='editCollectionMetadata' collectionId  = '" + row.dataSetCollectionId + "' " +
 			"permissions_role = '" + row.dataSetPermissionRole + "'" +
 			" metadata_path  = '" + row.dataSetPath+ "' metadata_set = '" + data  + "'>" +
-           "<i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Data Set Metadata'></i></span>";
+           "<i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Dataset Metadata'></i></span>";
 			if(row.dataSetPermissionRole == 'Owner') {
 				editDataSetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collectionId  = '" + row.dataSetCollectionId + "' " +
 			    "permissions_groups ='"+ JSON.stringify(permissions) + "'  selectedCollection = 'data_set' access_groups  = '" + row.dataLevelAccessGroups+ "' metadata_path  = '" + row.dataSetPath+ "'>" +
-                 "<i class='fa fa-users' data-toggle='tooltip' data-content='Edit Data Set Access Permissions'></i></span>";
+                 "<i class='fa fa-users' data-toggle='tooltip' data-content='Edit Dataset Access Permissions'></i></span>";
 			}
 		}
 		
@@ -264,11 +264,14 @@ function renderPath(data, type, row) {
 		}
 	
 		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'><input aria-label='checkbox' type='checkbox' id=" + row.dataSetPath + " " +
-			"class='selectCheckboxForIns'/>&nbsp;&nbsp;&nbsp;<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span>" +
+			"class='selectCheckboxForIns'/>&nbsp;&nbsp;&nbsp;<a href='#' class='dataSetFragment' " +
+			"permissions_role = '" + row.dataSetPermissionRole + "'  access_grp ='"+row.dataLevelAccessGroups +"'" +
+					" metadata_type = '" + data  + "' data_set_path = " + row.dataSetPath + ">" +
+							"<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span></a>" +
 			"&nbsp&nbsp;" + editDataSetHtml + "</div><div class='col-md-12'></div>" +
-			"<div class='col-md-12' style='margin-left:22px;'><a href='#' class='dataSetFragment' permissions_role = '" + row.dataSetPermissionRole + "'  access_grp ='"+row.dataLevelAccessGroups +"' metadata_type = '" + data  + "' data_set_path = " + row.dataSetPath + ">" +
+			"<div class='col-md-12' style='margin-left:22px;'>" +
 					"<span class='cil_12_bold_no_color'>" + row.dataSetDescription + "</span>" +
-			"</a><br></div><div class='col-md-12'><br></div><div class='col-md-12' style='margin-left:22px;'>" +
+			"<br></div><div class='col-md-12'><br></div><div class='col-md-12' style='margin-left:22px;'>" +
 			"<span class='cil_12_bold_no_color'>Study: </span><a class='cil_12_no_color button2a' metadata_type = '" + study  + "' tabindex='0'" +
 			" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' data-popover-content='#a01'>" + row.studyName + "</a>" +
 					"&nbsp&nbsp;"+editStudySetHtml+"</div>" +
@@ -279,9 +282,9 @@ function renderPath(data, type, row) {
 
 	} else {
 		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'>"+
-		"&nbsp;&nbsp;&nbsp;<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span>" +
+		"&nbsp;&nbsp;&nbsp;<a href='#' class='dataSetFragment' permissions_role = '" + row.dataSetPermissionRole + "' access_grp ='"+row.dataLevelAccessGroups +"' metadata_type = '" + data  + "' data_set_path = " + row.dataSetPath + "><span class='cil_14_bold_no_color'>" + row.dataSetName + "</span></a>" +
 		"&nbsp&nbsp;</div><div class='col-md-12'></div>" +
-		"<div class='col-md-12' style='margin-left:22px;'><a href='#' class='dataSetFragment' permissions_role = '" + row.dataSetPermissionRole + "' access_grp ='"+row.dataLevelAccessGroups +"' metadata_type = '" + data  + "' data_set_path = " + row.dataSetPath + ">" +
+		"<div class='col-md-12' style='margin-left:22px;'>" +
 				"<span class='cil_12_bold_no_color'>" + row.dataSetDescription + "</span>" +
 		"</a><br></div><div class='col-md-12'><br></div><div class='col-md-12' style='margin-left:22px;'>" +
 		"<span class='cil_12_bold_no_color'>Study: </span><a class='cil_12_no_color button2a' metadata_type = '" + study  + "' tabindex='0'" +
@@ -297,9 +300,6 @@ function renderPath(data, type, row) {
 
 
 function display(value) {
-	//var asyncDiv = document.getElementById("AsyncDiv");
-	//var syncDiv = document.getElementById("SyncDiv");
-	//var s3Div = document.getElementById("s3Div");
 	if (value == "async") {
 		$("#AsyncDiv").show();
 		$("#SyncDiv").hide();
