@@ -209,7 +209,11 @@ aria-labelledby="forgotPasswordLabel">
                 <input type="hidden" id="metadata_path"/>
                  <input type="hidden" id="selectedCollection"/>
                 
-                <div class="modal-body drilldown-content">               
+                <div class="modal-body drilldown-content">  
+                <div class="row row-buffer">
+                      <label for="selectedCollectionName">Selected collection: <span id="selectedCollectionName"></span> </label>
+                          
+                  </div>             
                   <div class="row row-buffer">
                       <label for="updateAccessGroupsList">Access Groups Permissions</label>
                           <select class="simple-select2" multiple="multiple" id="updateAccessGroupsList" name="updateAccessGroupsList" style="width:70%">

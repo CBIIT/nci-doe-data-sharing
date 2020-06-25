@@ -1,9 +1,9 @@
-function refreshDataSetDataTable(dataSetPath,metadata,accessgroups,permissions) {
+function refreshDataSetDataTable(dataSetPath,metadata,accessgroups,permissions,collections) {
 	var isVisible = (loggedOnUserInfo ? true:false);
     console.log("refresh datatable");
     $("#dataSetTable").dataTable().fnDestroy();
     if (!$.fn.DataTable.isDataTable('#dataSetTable')) {
-    	dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permissions);
+    	dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permissions,collections);
     } else {
         var t = $('#dataSetTable').DataTable();
         console.log(t);
@@ -11,7 +11,7 @@ function refreshDataSetDataTable(dataSetPath,metadata,accessgroups,permissions) 
     }
 }
 
-function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permissions) {
+function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permissions,collections) {
     $('#dataSetTable').DataTable({
         "paging": true,
         "ordering": false,
@@ -66,6 +66,10 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
                 $("#dataSetMetaData tbody").append("<tr><td>" + value.displayName + "</td><td>" + value.value + "</td></tr>");
         	});
 
+        	var collectionSet= JSON.parse(collections);
+        	$("#selectedProgramName").text(collectionSet.programName);
+        	$("#selectedStudyName").text(collectionSet.studyName);
+        	$("#selectedDataSetName").text(collectionSet.datasetName);
         	
         	 $(".selectAll").change(function (e) {
                  var table = $(e.target).closest('table');

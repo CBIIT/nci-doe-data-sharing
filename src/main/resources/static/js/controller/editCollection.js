@@ -61,7 +61,7 @@ function postSuccessUpdatePermissions(data,status) {
 	
 }
 
-function editAccessPermissions(collectionId,access_groups,metadata_path,permissions,selectedCollection) {
+function editAccessPermissions(collectionId,access_groups,metadata_path,permissions,selectedCollection,collectionName) {
 	$("#updateAccessPermissionsModal").find(".updateAccessMsg").html("");
 	$("#updateAccessPermissionsModal").find(".updateAccessGroupsBlock").hide();
 	
@@ -70,6 +70,7 @@ function editAccessPermissions(collectionId,access_groups,metadata_path,permissi
 	$("#updateAccessPermissionsModal").find("#permissionGroups").val(permissions);
 	$("#updateAccessPermissionsModal").find("#metadata_path").val(metadata_path);
 	$("#updateAccessPermissionsModal").find("#selectedCollection").val(selectedCollection);
+	$("#updateAccessPermissionsModal").find("#selectedCollectionName").text(collectionName);
 	$("#updateAccessPermissionsModal").modal('show');	
 	loadJsonData('/metaDataPermissionsList', $("#updateAccessPermissionsModal").find("#updateAccessGroupsList"),
 			false, null, postSuccessAccessPermissions, null, "key", "value"); 
