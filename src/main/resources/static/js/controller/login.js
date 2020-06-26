@@ -94,6 +94,7 @@ function postGetUserInfoFunction (data,status) {
 	$("#firstNameTxt").val(userData.firstName);
 	$("#lastNameTxt").val(userData.lastName);
 	$("#institutionTxt").val(userData.institution);
+	$("#groupNames").text(userData.programName);
 }
 
 function postUpdateUserFunction(data,status) {
