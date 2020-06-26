@@ -33,7 +33,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import gov.nih.nci.doe.web.domain.LookUp;
-import gov.nih.nci.doe.web.domain.MetaDataPermissions;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.DoeSearchResult;
 import gov.nih.nci.doe.web.model.KeyValueBean;
