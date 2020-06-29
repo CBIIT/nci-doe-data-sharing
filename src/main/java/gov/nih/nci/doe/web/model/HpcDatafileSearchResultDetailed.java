@@ -14,11 +14,20 @@ public class HpcDatafileSearchResultDetailed {
 	private String download;
 	private String permission;
 	private String name;
+	private String fileSize;
 	private List<KeyValueBean> selfMetadata;
 	HpcMetadataEntries metadataEntries;
 	
 	 
 	 
+
+	public String getFileSize() {
+		return fileSize;
+	}
+
+	public void setFileSize(String fileSize) {
+		this.fileSize = fileSize;
+	}
 
 	public String getPermission() {
 		return permission;

@@ -172,6 +172,13 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
                 },
                 responsivePriority: 1
             },
+            
+            {"data": "name", "render": function (data, type, row) {
+                return renderFileSize(data, type, row);
+            },
+            responsivePriority: 4
+            },
+        
             {"data": "download", "render": function (data, type, row) {
                 return renderDownload(data, type, row,accessgroups,permissions);
             },
@@ -188,7 +195,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
                 targets: 0,
                 "visible": isVisible,
             },
-            { "visible": isVisible, "targets": 2}],
+            { "visible": isVisible, "targets": 3}],
         "dom": '<"top"lip>rt<"bottom"p>',
 
         "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
@@ -220,6 +227,12 @@ function renderDataSetPath(data, type, row) {
 	}
 	
 	return html;
+}
+
+
+function renderFileSize(data, type, row) {
+	return row.fileSize;
+	
 }
 
 function renderDownload(data, type, row,accessgroups,permissions) {

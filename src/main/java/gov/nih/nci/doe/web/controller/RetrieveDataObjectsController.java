@@ -11,6 +11,8 @@ import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -59,6 +61,21 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.model}")
 	private String hpcModelURL;
 
+	
+	/**
+     * The number of bytes in a kilobyte.
+     */
+    public static final long ONE_KB = 1024;
+
+    /**
+     * The number of bytes in a megabyte.
+     */
+    public static final long ONE_MB = ONE_KB * ONE_KB;
+
+    /**
+     * The number of bytes in a gigabyte.
+     */
+    public static final long ONE_GB = ONE_KB * ONE_MB;
 
 	@GetMapping
 	    public ResponseEntity<?> search(HttpSession session,@RequestHeader HttpHeaders headers, DoeSearch search,
@@ -145,10 +162,35 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 				returnResult.setPermission(result.getDataObject().getAbsolutePath());
 				returnResult.setCreatedOn(format.format(result.getDataObject().getCreatedAt().getTime()));
 				returnResult.setSelfMetadata(getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),"DataObject", systemAttrs));
+	            returnResult.setFileSize(addHumanReadableSize(getAttributeValue("source_file_size", result.getMetadataEntries().getSelfMetadataEntries(),"DataObject")));
 				returnResults.add(returnResult);
 			}
 			
 			return returnResults;
 		
 	}
+	
+	private String addHumanReadableSize(String value) {
+		if(StringUtils.isNotEmpty(value)) {
+        String humanReadableSize = FileUtils.byteCountToDisplaySize(Long.parseLong(value));
+        return value + " (" + humanReadableSize + ")";
+		}
+		
+		return null;
+    }
+	
+	  public static String byteCountToDisplaySize(long size) {
+	        String displaySize;
+
+	        if (size / ONE_GB > 0) {
+	            displaySize = String.valueOf(size / ONE_GB) + " GB";
+	        } else if (size / ONE_MB > 0) {
+	            displaySize = String.valueOf(size / ONE_MB) + " MB";
+	        } else if (size / ONE_KB > 0) {
+	            displaySize = String.valueOf(size / ONE_KB) + " KB";
+	        } else {
+	            displaySize = String.valueOf(size) + " bytes";
+	        }
+	        return displaySize;
+	    }
 }
