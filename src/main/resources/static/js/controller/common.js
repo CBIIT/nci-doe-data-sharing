@@ -388,6 +388,16 @@ $(document).ajaxStop(function () {
 
 });
 
+$(document).on('change', '#publicAccess', function() {
+	if($(this).is(":checked")) {
+		$("#registerCollectionModal").find("#accessGroupSelect").next(".select2-container").hide();
+		
+	} else {
+		$("#registerCollectionModal").find("#accessGroupSelect").next(".select2-container").show();
+	}
+
+});
+
 $(document).on('click', '.notifyUsersLink', function(){
 	notifyUsersFunction($(this).attr('notify_permissions'));
 });

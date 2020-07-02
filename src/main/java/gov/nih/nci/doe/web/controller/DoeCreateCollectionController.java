@@ -252,7 +252,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 				
 				//after collection is created, store the permissions.
 				String progList = request.getParameter("metaDataPermissionsList");
-				if(!StringUtils.isEmpty(progList)) {
+				//if(!StringUtils.isEmpty(progList)) {
 					log.info("selected permissions" + progList);
 					
 					HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL, 
@@ -262,7 +262,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 						HpcCollectionDTO collection = collections.getCollections().get(0);
 						metaDataPermissionService.savePermissionsList(getLoggedOnUserInfo(),progList,collection.getCollection().getCollectionId());
 					}	
-				}				
+				//}				
 				return  "Collection is created!";
 			} 
 		} catch (Exception e) {

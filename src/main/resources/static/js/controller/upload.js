@@ -219,7 +219,7 @@ function constructNewCollectionMetaDataSet(data,status) {
 		 	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
         			'data-placement="right" title="'+value.description+'"></i></td><td>'+
         			'<select class="simple-select2" multiple="multiple" id="accessGroupSelect" name="zAttrStr_'+value.attrName+'"' +
-        			'style="width:70%;"></select> &nbsp;&nbsp;<i class="fas fa-question-circle"><span>Leave this field empty for public access.</span></i></td></tr>');
+        			'style="width:70%;"></select> &nbsp;&nbsp;<input type="checkbox" id="publicAccess" checked="true" aria-label="public access" value="public access"/>&nbsp;&nbsp;Is public access?</td></tr>');
 		 	loadJsonData('/metaDataPermissionsList', $("#registerCollectionModal").find("#accessGroupSelect"), false, null, null, null, "key", "value"); 
 		
 			} else {
@@ -235,7 +235,7 @@ function constructNewCollectionMetaDataSet(data,status) {
         			'style="width:70%;"></td></tr>');
 		}       
 	});	
-	
+
 	
 }
 
