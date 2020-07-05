@@ -18,9 +18,8 @@ function loadUploadTab() {
 				$("#addBulkDataFiles").show();
 				$("#uploadDataFilesTab").show();
 				$('input[name=datafileTypeUpload]:checked').val();
-				$('input[name=bulkUploadType]:checked').val();
-				$("#datafileTypeBulk").prop("checked", true);
-				$("#uploadTypeGlobus").prop("checked", true);
+				$("#datafileTypeGlobusUpload").prop("checked", true);
+				//$("#uploadTypeGlobus").prop("checked", true);
 				$("#singleFileDataUploadSection").hide();
 				$("#bulkFileUploadSection").show();
 				$("#registerFileBtnsDiv").show();		
@@ -188,7 +187,7 @@ function retrieveCollections($this, selectedIndex,action) {
 
 function clearRegisterDataDiv() {
 	$('input[name=datafileTypeUpload]').prop('checked', false);
-	$('input[name=bulkUploadType]').prop('checked', false);
+	//$('input[name=bulkUploadType]').prop('checked', false);
 	$("#singleFileDataUploadSection").hide();
 	$("#bulkFileUploadSection").hide();
 	$("#registerFileBtnsDiv").hide();			
@@ -455,7 +454,7 @@ function registerBulkDataFile() {
 		
 	} else {
 		var dataFilePath = $("#bulkDataFilePathCollection").val();
-		var bulkUploadType = $('input[name=bulkUploadType]:checked').val();
+		var bulkUploadType = $('input[name=datafileTypeUpload]:checked').val();
 		var validate = true;
 		$('form#registerBulkDataForm input[type="text"]').each(function(){
 	        if(!$(this).val()){
@@ -517,43 +516,33 @@ function displayDataFileSection(value) {
 	$("#bulkDataFilePathCollection").val(datafilePath);
 	$(".registerBulkDataFileSuccess").hide();
 	$(".registerBulkDataFile").html("");
+	$("#registerFileBtnsDiv").show();
 	
 	if(value == 'singleData') {
 		$("#singleFileDataUploadSection").show();
 		$("#bulkFileUploadSection").hide();					
 	    $("#dataFilePath").val(datafilePath);	
-	    $("#registerFileBtnsDiv").show();
 		
-	} else if(value == 'bulkData'){
+	} else if(value == 'globus'){
 		$("#singleFileDataUploadSection").hide();
 		$("#bulkFileUploadSection").show();
-		$("#registerFileBtnsDiv").hide();
-		
-		//hide the globus and s3 radio buttons and  dic
-		$('input[name=bulkUploadType]').prop('checked', false);
-		$("#registerFileBtnsDiv").hide();			
-		$("#registerBulkDataForm").hide();
-	}
-}
-
-
-function displayUploadTypeDiv(value){
-	$("#registerFileBtnsDiv").show();
-	$(".registerBulkDataFileSuccess").hide();
-	$(".registerBulkDataFile").html("");
-	$("#registerBulkDataForm").show();
-	if(value == 'globus') {
-		$("#displayGlobusUploadDiv").show();
-		$("#displayS3UploadDiv").hide();	
-		$("#selectedFilesDiv").show();
-		$("#selectedFoldersDiv").show();
-		
-	} else if(value == 's3'){
-		$("#displayGlobusUploadDiv").hide();
-		$("#displayS3UploadDiv").show();
-		$("#selectedFilesDiv").hide();
-		$("#selectedFoldersDiv").hide();
-	}
+		$("#registerBulkDataForm").show();		
+			$("#displayGlobusUploadDiv").show();
+			$("#displayS3UploadDiv").hide();	
+			$("#selectedFilesDiv").show();
+			$("#selectedFoldersDiv").show();
+	}	
+	
+		else if(value == 's3'){
+			$("#singleFileDataUploadSection").hide();
+			$("#bulkFileUploadSection").show();	
+			$("#registerBulkDataForm").show();
+			$("#displayGlobusUploadDiv").hide();
+			$("#displayS3UploadDiv").show();
+			$("#selectedFilesDiv").hide();
+			$("#selectedFoldersDiv").hide();
+		}
+	
 }
 
 
