@@ -32,13 +32,37 @@ function populateSearchCriteria(searchType) {
 		var rowId = 3;
 		$(".filteritem").each(function(){
 			var attrName = $(this).find("div.filtertext").text();
-			var attrVal = $(this).find("input[type=text]").val();
-			attrNames.push(attrName);
-			attrValues.push('%' + attrVal + '%' );
-			rowIds.push(rowId);
-			isExcludeParentMetadata.push(false);
-			operators.push("LIKE");
-			rowId =  rowId + 1 ;
+			  if (/.*Date.*/.test(attrName)) {
+				  var dateFromAttr = $(this).find(".fromDate").val();
+				  var dateToAttr = $(this).find(".toDate").val();
+				  if(dateFromAttr) {
+					  attrNames.push(attrName);
+						attrValues.push('%' + dateFromAttr + '%' );
+						rowIds.push(rowId);
+						isExcludeParentMetadata.push(false);
+						operators.push("TIMESTAMP_GREATER_OR_EQUAL");
+						rowId =  rowId + 1 ;  
+				  }
+				  
+				  if(dateToAttr) {
+					  attrNames.push(attrName);
+						attrValues.push('%' + dateToAttr + '%' );
+						rowIds.push(rowId);
+						isExcludeParentMetadata.push(false);
+						operators.push("TIMESTAMP_LESS_OR_EQUAL");
+						rowId =  rowId + 1 ;  
+				  }
+				  
+			  } else {
+				  var attrVal = $(this).find("input[type=text]").val();
+					attrNames.push(attrName);
+					attrValues.push('%' + attrVal + '%' );
+					rowIds.push(rowId);
+					isExcludeParentMetadata.push(false);
+					operators.push("LIKE");
+					rowId =  rowId + 1 ;
+			  }
+			
 		});	
 	}
 	 
@@ -341,20 +365,25 @@ function addValueToSelected(optionVal) {
     var $inputGroup = $('<div class="input-group" />');
     $inputColumn.append($inputGroup);
     $rowdiv.append($inputColumn);
-    var advancedSearchInput = $('<input type="text" data-value="' + fieldPath + '" data-type="'
-        + $(optionVal).attr('data-type') + '" id="metadatasearch_' + mdIdentifier
-        + '" class="form-control" placeholder="Enter a keyword..."'
-        + ' title="Enter a Search Keyword or Phrase" aria-label="Enter a Search Keyword or Phrase"'
-        + ' inputtype="textval"/>');
-    $inputGroup.append(advancedSearchInput);
-    var $inputGroupButton = $('<div class="input-group-btn" />');
-    $inputGroup.append($inputGroupButton);
-    $inputGroupButton.append('<input class="btn btn-primary pull-right" type="button" ' +
-        'value="X" onclick="removeRowAddOption(\'' + rowId + '\')"/>');
+    
     if (/.*Date.*/.test($(optionVal).text())) {
-        advancedSearchInput.attr(
-            'placeholder', 'Enter a date range (e.g. \'June 2017\' or \'May through September\')');
+    	var $dateColumn = $('<div class="form-row><div class="form-group" style="padding-right: 50px;">'
+    			+'<label>From: <input type="date" class="fromDate" id="from_' + fieldPath + '" > </label></div> <div class="form-group" '
+    			+'style=" padding-left: 50px;"> <label>To: <input type="date" class="toDate" id="To_' + fieldPath + '"> </label></div></div>');
+    	$inputGroup.append($dateColumn);
+    } else {
+    	var advancedSearchInput = $('<input type="text" data-value="' + fieldPath + '" data-type="'
+    	        + $(optionVal).attr('data-type') + '" id="metadatasearch_' + mdIdentifier
+    	        + '" class="form-control" placeholder="Enter a keyword..."'
+    	        + ' title="Enter a Search Keyword or Phrase" aria-label="Enter a Search Keyword or Phrase"'
+    	        + ' inputtype="textval"/>');
+    	    $inputGroup.append(advancedSearchInput);
     }
+    	    var $inputGroupButton = $('<div class="input-group-btn" />');
+    	    $inputGroup.append($inputGroupButton);
+    	    $inputGroupButton.append('<input class="btn btn-primary pull-right" type="button" ' +
+    	        'value="X" onclick="removeRowAddOption(\'' + rowId + '\')"/>');
+    
 
     removeOptionFromAdvancedSearchSelector(rowId, $(optionVal).attr('value'));
 }
