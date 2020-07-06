@@ -68,7 +68,7 @@
 .nav-link.active {
     background-color: transparent!important;
     border-color: transparent !important;
-    color: #fff !important;
+    color: #000 !important;
 }
 
 /*--wizard--*/
@@ -192,12 +192,12 @@ BRANDING
 
 /* NCI Logo */
 #brand {
-background-image: url(../images/tempate-bg-blue-02.png);
+/*background-image: url(../images/tempate-bg-blue-02.png);*/
 background-repeat: no-repeat;
 background-size: cover;
 /*border-bottom: 8px solid rgb(3, 158, 31);*/
-    border-bottom: 20px solid rgba(0,0,0,.4);
-background-color:#01223e;
+border-bottom: 6px solid rgba(0,0,0,.4);
+/*background-color:#01223e;*/
 }
 
 #nci-brand{
@@ -207,7 +207,7 @@ width: 100%;
 
 #topNav .navbar-nav li > a{
     text-transform:none;
-    color:#fff;
+    color:#000;
     
 }
 
@@ -554,7 +554,7 @@ h3.table-title{font-size:1rem;}
     /* background: #e5e5e5; */
     margin-right: 5px;
     /* margin-bottom: -12px; */
-    color: #fff;
+    color: #000;
 }
 /* collapse history */
 .card-header .fa {
