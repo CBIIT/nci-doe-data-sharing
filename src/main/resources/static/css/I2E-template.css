@@ -149,7 +149,7 @@ NAVIGATIONS
 .nav-link {display: block;padding: 1rem 1rem;}
 #navbarDropdown.dropdown-menu{margin: .125rem -150px 0!important; width:250px!important;}
 .navbar-light .navbar-nav .nav-link{color:#000;font-weight: bold;font-size: 14px;}
-.navbar-light .navbar-nav .nav-link:hover{color:#7f8990;background-color:#fff;}
+.navbar-light .navbar-nav .nav-link:hover{color:#7f8990;background-color:#eee;}
 /*gloabl navigation */
 #topNav.navbar-dark .navbar-nav .nav-link {text-transform:normal; font-size:12px;}
 .fa-users-cog{font-size:19px;}
@@ -167,7 +167,7 @@ NAVIGATIONS
     max-height: 40px;
     padding-top: 12px;
     }
-    /*          #subNav a:hover{background:#eeeeee;}*/
+
 #subTabs a:hover, #subNav a:focus{background:#fff;}
 #subTabs a.active{background:#fff;color:#4066a5;font-weight: 600;}
 #subTabs a .fa{color:#fff;font-weight: 600;}

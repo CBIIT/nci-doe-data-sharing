@@ -60,61 +60,21 @@
 #pills{border-bottom:1px solid #e6e6e6}
 .nav-pills a.nav-link {color:#000!important;}
 .nav-pills .nav-link.active, .nav-pills .show>.nav-link{
-    color:#fff!important;
+    color:#000!important;
     background-color:#616A70;
     border-radius:0px;
+    background: #606060;
 }
 
 .nav-link.active {
-    background-color: transparent!important;
     border-color: transparent !important;
-    color: #000 !important;
+    color: #fff !important;
+    background: #606060!important;
 }
 
-/*--wizard--*/
-.custom-wizard-pills .nav-pills > li > a {
-    padding: 10px 30px;
-   
-border-right:1px solid #e5e5e5;
-    background: #eee;
+.nav-link:hover{
+	background-color:#eee !important;
 }
-.custom-wizard-pills .nav-pills  {
-    background-color:#eeeeee;
-}
-
-
-.custom-wizard-pills .nav-pills  li.active a, .custom-wizard-pills .nav-pills  li a:hover {
-background: #fff!important;
-color: #333333;
-font-weight: 400;
-
-}
-
-.custom-wizard-pills .nav-pills li.active a:after {
-  width: 0;
-  height: 0;
-  border-left: 12px solid transparent;
-  border-right: 12px solid transparent;
-  border-bottom: 12px solid #01794a;
-  content: " ";
-  position: absolute;
-     bottom: -1px;
-    left: 50%;
-}
-.custom-wizard-pills .nav-pills > li > a {
-    color: #000;
-    border-radius:0px;
- 
-}
-.custom-wizard-pills .nav-pills > li > a.active{background-color:#616A70; color:#FFF; border:none; border-radius:0px;}
-
-.custom-wizard-pills .nav-pills li.active a, .custom-wizard-pills .nav-pills li a:hover {
-    background: #616A70 !important;
-    color: #fff;
-    font-weight: 400;
-    border-radius:0px;
-}
-
 
 /* DivTable  */
 .divTable {
@@ -555,6 +515,10 @@ h3.table-title{font-size:1rem;}
     margin-right: 5px;
     /* margin-bottom: -12px; */
     color: #000;
+}
+.card-header {
+	background-color: #fff !important;
+	border-bottom:0px!important;
 }
 /* collapse history */
 .card-header .fa {
