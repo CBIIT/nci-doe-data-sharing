@@ -1,4 +1,8 @@
-
+$(document).ready(function () {
+	$("#landing-tab").removeClass('active');
+	$("#upload-tab").addClass('active');
+	loadUploadTab();
+});
 function loadUploadTab() {	 
 	 
 	var ins = $("#institutePath").val();
@@ -19,7 +23,6 @@ function loadUploadTab() {
 				$("#uploadDataFilesTab").show();
 				$('input[name=datafileTypeUpload]:checked').val();
 				$("#datafileTypeGlobusUpload").prop("checked", true);
-				//$("#uploadTypeGlobus").prop("checked", true);
 				$("#singleFileDataUploadSection").hide();
 				$("#bulkFileUploadSection").show();
 				$("#registerFileBtnsDiv").show();		

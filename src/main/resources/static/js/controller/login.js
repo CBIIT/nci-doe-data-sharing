@@ -1,4 +1,3 @@
-
  $('#loginTab').on('hide.bs.tab hidden.bs.tab', function(e) {
         clearMessages();
     });

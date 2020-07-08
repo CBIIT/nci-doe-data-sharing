@@ -1,4 +1,6 @@
 $(document).ready(function () {
+	$("#landing-tab").removeClass('active');
+	$("#manageTasks-tab").addClass('active');
 	refreshTaskManagerDataTable();
 });
 

@@ -244,10 +244,6 @@ $("#cancelAccntUpdate").click(function(e){
 	location.replace("/");
 });
 
-$("#landing-tab").click(function(e){
-	$("#landingDiv").show();
-});
-
 $("#cancelResetPswdBtn").click(function(e){
 	location.replace("/");
 });
@@ -371,7 +367,6 @@ $("#btnUpdatePermissions").click(function(e) {
 $("#btnUpdateAccessGroup").click(function(e){
 	updateAccessGroupsFunction();
 });
-loadUploadTab();
 
 $(".select2-selection").removeAttr("role");
 $(".select2-search__field").removeAttr("role");

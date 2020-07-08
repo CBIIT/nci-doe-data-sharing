@@ -1,3 +1,7 @@
+$(document).ready(function () {
+	$("#landing-tab").removeClass('active');
+	$("#search-tab").addClass('active');
+});
 function populateSearchCriteria(searchType) {
 	
 	$("#searchResultsDiv").show();
