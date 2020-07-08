@@ -67,6 +67,9 @@ public abstract class AbstractDoeController {
 	 @Autowired
 	 MailService mailService;
 	 
+	 @Autowired
+	 AuthenticateService authService;
+	 
 	@Value("${doe.basePath}")
 	String basePath;
     
@@ -104,6 +107,19 @@ public abstract class AbstractDoeController {
 			}
 			return null;
 	    }
+	  
+	  @ModelAttribute("firstName")
+	    public String getLoggedOnUserFirstName() {
+		  String emailAddr = getLoggedOnUserInfo();
+		  if(StringUtils.isNotEmpty(emailAddr)) {
+			  DoeUsersModel user = authService.getUserInfo(emailAddr);
+			  if(user != null) {
+				  return user.getFirstName();
+			  }
+		  }
+			return null;
+	    }
+	  
 	  
 	  @ModelAttribute("isUploader")
 	    public Boolean getIsUploader() {

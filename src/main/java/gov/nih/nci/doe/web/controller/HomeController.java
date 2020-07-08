@@ -4,7 +4,6 @@ package gov.nih.nci.doe.web.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import gov.nih.nci.doe.web.model.DoeUsersModel;
-import gov.nih.nci.doe.web.service.AuthenticateService;
 
 
 
@@ -36,9 +34,6 @@ import gov.nih.nci.doe.web.service.AuthenticateService;
 public class HomeController extends AbstractDoeController {
 
 
-	 @Autowired
-	 AuthenticateService authService;
-	 
 	@GetMapping
 	public String index() {
 		log.info("home page");
@@ -107,5 +102,8 @@ public class HomeController extends AbstractDoeController {
 			return "resetPassword";
 		 }
 		 
-	
+		 @GetMapping(value = "/aboutTab")
+		 public String getAboutTab(HttpSession session, HttpServletRequest request)  { 			 
+			return "aboutTab";
+		 }
 }
