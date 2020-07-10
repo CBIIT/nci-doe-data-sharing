@@ -1,6 +1,4 @@
 $(document).ready(function () {
-	
-	var uploadtabIniatialize = false;
 	    console.log("initialize dirty checking");
 	    $('form.dirty-check').areYouSure();
 	    
