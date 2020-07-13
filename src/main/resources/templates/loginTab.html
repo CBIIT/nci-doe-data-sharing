@@ -15,7 +15,12 @@
 <div class="wrapper">
 
     <!-- HEADER -->
+    <div th:if= "${loggedOnUser != null}">
     <div th:replace="fragments/header :: header">Header and nav goes here</div>
+    </div>
+    <div th:if= "${loggedOnUser == null}">
+    <div th:replace="fragments/public-header :: public-header">Header and nav goes here</div>
+    </div>
     <!-- END HEADER -->
     
  
