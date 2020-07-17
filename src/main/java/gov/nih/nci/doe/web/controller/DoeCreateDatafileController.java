@@ -89,7 +89,7 @@ public class DoeCreateDatafileController extends DoeCreateCollectionDataFileCont
 							sslCertPassword);
 					Boolean isValidPermissions = verifyCollectionPermissions(parentPath,parentCollectionDto);
 					if (Boolean.FALSE.equals(isValidPermissions)) {
-							return "Insufficient privileges to create collection";
+							return "Insufficient privileges to add data files.";
 						}
 				   }
 				
