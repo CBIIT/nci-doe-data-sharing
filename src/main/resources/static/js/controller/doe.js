@@ -108,6 +108,7 @@ function loadJsonData(url, selectTarget, emptyOption, params, successCallback, f
                 $select.append($('<option></option>').attr('value', data[i][valueField]).text(data[i][textField]));
             }
             $select.select2();
+            $("#registerCollectionModal").find("#accessGroupSelect").next(".select2-container").hide();
             if (successCallback) {
                 successCallback(data, status);
             }
