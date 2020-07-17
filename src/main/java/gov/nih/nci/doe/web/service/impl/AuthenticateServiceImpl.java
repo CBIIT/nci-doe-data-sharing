@@ -160,7 +160,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		 user.setEmailAddrr(register.getEmailAddress().toLowerCase());
 		 user.setLockoutCounter(0);
 		 // for now, adding write permissions to everyone.
-		 user.setIsWrite(true);
+		 //user.setIsWrite(true);
 		 doeUserRepository.saveAndFlush(user);
 		 
 		 String encodedPassword = passwordEncoder.encode(register.getPassword());
