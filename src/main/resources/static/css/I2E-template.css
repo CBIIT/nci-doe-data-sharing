@@ -112,7 +112,7 @@ inline{display:inline;}
 background-repeat: no-repeat;
 background-size: cover;
 /*border-bottom: 8px solid rgb(3, 158, 31);*/
-    border-bottom: 7px solid rgba(0,0,0,.4);
+    /*border-bottom: 7px solid rgba(0,0,0,.4);*/
 }
 /*--===============================================================================
 NAVIGATIONS 

@@ -6,57 +6,47 @@
 </head>
 <body>
     <div class="tab-pane fade show active M-4 p-4" th:fragment="landing" id="landingTab" role="tabpanel">
-             <div class="row" id="landingDiv" style="background-image:url(/images/brain-scan.png);">
+             <div class="row" id="landingDiv" style="">
             <input type="hidden" id="uploader" value="${isUploader}"/>
-            <div class="col-md-12 buttoncontainer" style="margin-bottom:110px;">
-            <div class="col-md-12" style="text-align:center;margin-top:20px;margin-bottom: 50px;"><h1 style="color:#0A3F7F;">
-             Model and Data Clearinghouse
-        </h1></div>
-            <div class="col-md-12 form-row">
-             <div class="col-md-4 form-group" th:if="${loggedOnUser == null}">
-            <a href="/loginTab" class="bigbutton">
-                    <div class="bigbutton">
-                        <h2> <i class="fas fa-user"></i>&nbsp;Already a member?</h2>
-                        <p>
-                          Sign in.
-                        </p>
-                    </div>
-                </a>
-                </div>
-            <div class="col-md-4 form-group">
-                <a th:href="@{/searchTab}"class="bigbutton" id="btnSearchHomeTab">
-                    <div class="bigbutton searchbutton">
-                        <h2> <i class="fas fa-search"></i> Search </h2>
-                        <p>
-                            Search investigations, studies or data sets using any keyword.
-                        </p>
-                    </div>
-                </a>
-                </div>
-                 <br>
-                 <div class="col-md-4 form-group">
-                  <a th:href="@{/tasksTab}"class="bigbutton" id="btnStatusHomeTab" th:if="${loggedOnUser != null}">
-                    <div class="bigbutton">
-                        <h2> <i class="fas fa-chart-area"></i>  Status </h2>
-                        <p>
-                           View Status of downloads and uploads.
-                        </p>
-                    </div>
-                </a>
-                </div>
-                <br/>
-                <div class="col-md-4 form-group">
-                 <a  th:href="@{/addbulk}" class="bigbutton" id="btnUploadHomeTab" th:if="${loggedOnUser != null && isUploader eq true}">
-                    <div class="bigbutton">
-                        <h2> <i class="fas fa-upload"></i> Uploads </h2>
-                        <p>
-                           Add collections and upload bulk or single files.
-                        </p>
-                    </div>
-                </a>
-                </div>
-                </div>
-                
+            <div class="col-md-12 buttoncontainer">
+            <div class="col-md-12 subbuttoncontainer">
+            <h1 style="height: 26px;color: #FFFFFF;font-family:Proxima Nova;font-size: 29px;
+             line-height: 48px;text-align: center;">
+             MODEL AND DATA CLEARINGHOUSE
+        </h1></div>               
+            </div>
+           <div class="col-md-12 form-row" style="height: 239px;width: 1123px;background-color: #5C90C2;margin-top: -83px;">
+            
+            
+            <div class="col-md-4 form-group ellipse-1 " style="text-align: center;" th:if="${loggedOnUser == null}">
+             <blockquote class="blockquoteText">
+              <p><a th:href="@{/loginTab}" style="color:#AF5B00;">
+               Already a Member? Sign in.</a></p></blockquote>
+            </div>
+            
+            
+            <div class="col-md-4 form-group ellipse-1 " style="text-align: center;">
+             <blockquote class="blockquoteText">
+              <p><a th:href="@{/searchTab}" style="color:#AF5B00;">
+              Search investigations, studies or data sets using any keyword.</a></p></blockquote>
+            </div>
+            
+             
+            
+             <div class="col-md-4 form-group ellipse-1 " style="text-align: center;" th:if="${loggedOnUser != null}">
+            
+            <blockquote class="blockquoteText">
+              <p><a th:href="@{/tasksTab}" style="color:#AF5B00;">
+               View Status of downloads and uploads.</a></p></blockquote>
+            </div>
+
+           <div class="col-md-4 form-group ellipse-1 " style="text-align: center;" th:if="${loggedOnUser != null && isUploader eq true}">
+            
+            <blockquote class="blockquoteText">
+              <p><a th:href="@{/addbulk}" style="color:#AF5B00;">
+               Add collections and upload bulk or single files.</a></p></blockquote>
+            </div>
+            
             </div>
         </div>
         <hr>

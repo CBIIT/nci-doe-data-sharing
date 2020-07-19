@@ -26,6 +26,9 @@ public interface DoeUserRepository extends JpaRepository<DoeUsers, String> {
 	@Query(value = "update DOE_USER_T set LOCKOUT_COUNTER = ?1 where EMAIL_ADDR = ?2", nativeQuery = true)
 	public void updateCounterInfo(Integer counter, String emailAddrr);
 	
+	@Modifying
+ 	@Query(value = "update DOE_USER_T set FIRST_NAME = ?1,LAST_NAME = ?2,INSTITUTION = ?3 where EMAIL_ADDR = ?4", nativeQuery = true)
+ 	public void updateUserInfo(String firstName, String lastName, String institution, String emailAddrr);
 	
     // Check if an email exists in the table or not
     @Query("select count(u)>0 from DoeUsers u where u.emailAddrr = :emailAddrr")
@@ -35,7 +38,5 @@ public interface DoeUserRepository extends JpaRepository<DoeUsers, String> {
     public DoeUsers getUserInfo(String emailAddr);
      
 
- 	@Modifying
- 	@Query(value = "update DOE_USER_T set FIRST_NAME = ?1,LAST_NAME = ?2,INSTITUTION = ?3 where EMAIL_ADDR = ?4", nativeQuery = true)
- 	public void updateUserInfo(String firstName, String lastName, String institution, String emailAddrr);
+ 	
 }
