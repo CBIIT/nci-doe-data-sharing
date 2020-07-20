@@ -114,7 +114,7 @@ function postSuccessDeleteCollection(data,collectionType) {
 			loadJsonData('/browse/collection', $("#studyList"), true, params, null, null, "key", "value");
 			retrieveCollections('studyList','ANY','deleteAction');
 			
-		} else if(collectionType == 'Data_Set') {
+		} else if(collectionType == 'Dataset') {
 			var params= {selectedPath:$("#studyList").val(),refreshNode:'true'};
 			 loadJsonData('/browse/collection', $("#dataList"), true, params, null, null, "key", "value");
 				retrieveCollections('dataList','ANY','deleteAction');
@@ -381,7 +381,7 @@ function postSuccessRegisterCollection(data,collectionType) {
 			var params= {selectedPath:$("#instituteList").val(),refreshNode:'true'};
 			loadJsonData('/browse/collection', $("#studyList"), true, params, null, null, "key", "value");
 			
-		} else if(collectionType == 'Data_Set') {
+		} else if(collectionType == 'Dataset') {
 			var params= {selectedPath:$("#studyList").val(),refreshNode:'true'};
 			 loadJsonData('/browse/collection', $("#dataList"), true, params, null, null, "key", "value");
 		}

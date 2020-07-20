@@ -178,15 +178,15 @@ public class SearchController extends AbstractDoeController {
 			returnResult.setStudyPermissionRole(getPermissionRole(user,studyCollectionId,loggedOnUserPermissions));
 			returnResult.setProgramPermissionRole(getPermissionRole(user,programCollectionId,loggedOnUserPermissions));
 			returnResult.setDataSetPath(result.getCollection().getCollectionName());
-            returnResult.setDataSetName(getAttributeValue("data_set_name", result.getMetadataEntries().getSelfMetadataEntries(),"Data_Set"));
-            returnResult.setDataSetDescription(getAttributeValue("description", result.getMetadataEntries().getSelfMetadataEntries(),"Data_Set"));
+            returnResult.setDataSetName(getAttributeValue("data_set_name", result.getMetadataEntries().getSelfMetadataEntries(),"Dataset"));
+            returnResult.setDataSetDescription(getAttributeValue("description", result.getMetadataEntries().getSelfMetadataEntries(),"Dataset"));
             returnResult.setStudyPath(result.getCollection().getCollectionParentName());
-            returnResult.setSelfMetadata(getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),"Data_Set", systemAttrs));
+            returnResult.setSelfMetadata(getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),"Dataset", systemAttrs));
 			returnResult.setStudyUserMetadata(getUserMetadata(result.getMetadataEntries().getParentMetadataEntries(),"Study", systemAttrs));
 			returnResult.setInstituteUserMetadata(getUserMetadata(result.getMetadataEntries().getParentMetadataEntries(),"Program", systemAttrs));
 			returnResult.setProgramName(getAttributeValue("program_name", result.getMetadataEntries().getParentMetadataEntries(),"Program"));
             returnResult.setStudyName(getAttributeValue("study_name", result.getMetadataEntries().getParentMetadataEntries(),"Study"));
-			returnResult.setDataLevelAccessGroups(getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries(),"Data_Set"));
+			returnResult.setDataLevelAccessGroups(getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries(),"Dataset"));
 			returnResult.setStudyLevelAccessGroups(getAttributeValue("access_group", result.getMetadataEntries().getParentMetadataEntries(),"Study"));
 			returnResult.setProgramLevelAccessGroups(getAttributeValue("access_group", result.getMetadataEntries().getParentMetadataEntries(),"Program"));
             returnResults.add(returnResult);
@@ -245,7 +245,7 @@ public class SearchController extends AbstractDoeController {
 		// perform OR operation of public access and logged on users access groups 
 		HpcMetadataQuery q = new HpcMetadataQuery();
 		HpcMetadataQueryLevelFilter levelFilter = new HpcMetadataQueryLevelFilter();
-		levelFilter.setLabel("Data_Set");
+		levelFilter.setLabel("Dataset");
 		levelFilter.setOperator(HpcMetadataQueryOperator.EQUAL);
 		q.setLevelFilter(levelFilter);
 		q.setAttribute("access_group");
@@ -256,7 +256,7 @@ public class SearchController extends AbstractDoeController {
 		for(KeyValueBean x :loggedOnUserPermissions) {
 			HpcMetadataQuery q1 = new HpcMetadataQuery();
 			HpcMetadataQueryLevelFilter levelFilter1 = new HpcMetadataQueryLevelFilter();
-			levelFilter1.setLabel("Data_Set");
+			levelFilter1.setLabel("Dataset");
 		    levelFilter1.setOperator(HpcMetadataQueryOperator.EQUAL);
 			q1.setAttribute("access_group");
 			q1.setValue("%"+x.getValue()+"%");

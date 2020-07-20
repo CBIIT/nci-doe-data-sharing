@@ -315,9 +315,11 @@ function onClickOfBulkDownloadBtn() {
 function postSuccessDelete(data,status) {
 	if(data != "SUCCESS") {
 		return bootbox.alert(data);
+	} else {
+		$('#dataSetTable').DataTable();
 	}
 }
 
 function postFailureDeleteFunction() {
-	
+	return bootbox.alert("Data file delete failed".);
 }

@@ -233,7 +233,7 @@ public abstract class AbstractDoeController {
 				  perm = metaDataPermissionService.getMetaDataPermissionsOwnerByCollectionId
 						 (Integer.valueOf(permissionGroups.getProgCollectionId()));
 				  collectionOwnersList.add(perm.getUserGroupId());
-			 } else if("data_set".equalsIgnoreCase(permissionGroups.getSelectedCollection())) {
+			 } else if("Dataset".equalsIgnoreCase(permissionGroups.getSelectedCollection())) {
 				 perm = metaDataPermissionService.getMetaDataPermissionsOwnerByCollectionId
 						 (Integer.valueOf(permissionGroups.getStudyCollectionId()));
 				 MetaDataPermissions progPermissions = metaDataPermissionService.getMetaDataPermissionsOwnerByCollectionId
@@ -263,7 +263,7 @@ public abstract class AbstractDoeController {
 						 permissionGroups.getSelectedAccessGroups().contains(permissionGroups.getProgramLevelAccessGroups())) {
 					 isUpdate = true;
 				 }
-			 } else if("data_set".equalsIgnoreCase(permissionGroups.getSelectedCollection())) {
+			 } else if("Dataset".equalsIgnoreCase(permissionGroups.getSelectedCollection())) {
 				 if("public".equalsIgnoreCase(permissionGroups.getProgramLevelAccessGroups()) && 
 					"public".equalsIgnoreCase(permissionGroups.getStudyLevelAccessGroups())) {
 					 isUpdate = true;
