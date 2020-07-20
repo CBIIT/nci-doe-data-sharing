@@ -189,6 +189,11 @@ width: 100%;
     
 }
 
+#topNav a.dropdown-item {
+    font-family: Nunito sans-serif;
+    font-size: 15px;
+}
+
 .navbar-nav li > a {
 	text-transform: uppercase;
 	color: #333;
