@@ -238,15 +238,6 @@ $("#returnToLoginForm").click(function(e){
 
 invokeAjax('/user-info','GET',{emailAddr:$("#emailAddrTxt").text()},postGetUserInfoFunction,null,null,'text');
 
-$("#cancelAccntUpdate").click(function(e){
-	location.replace("/");
-});
-
-$("#cancelResetPswdBtn").click(function(e){
-	location.replace("/");
-});
-
-
 
 $("#btnUpdateProfile").click(function(e){
 	var d= {};
