@@ -144,7 +144,12 @@ NAVIGATIONS
 }
 
 .navbar-expand-sm .navbar-nav .nav-link{    padding-right: 1rem; padding-left: 1rem;font-weight:bold;font-size: 14px;}
-.navbar-dark .navbar-nav .nav-link {font-size:14px;}
+.navbar-dark .navbar-nav .nav-link {font-size: 15px;
+    font-family: Nunito sans-serif;}
+    #subTab .nav-item a {
+    font-family: "Nunito Sans";
+    font-size: 18px;
+}
 .navbar-dark .navbar-nav .nav-link{color:#fff;text-transform:none;float:right}
 .nav-link {display: block;padding: 1rem 1rem;}
 #navbarDropdown.dropdown-menu{margin: .125rem -150px 0!important; width:250px!important;}
