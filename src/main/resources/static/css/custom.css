@@ -134,11 +134,18 @@
 .buttoncontainer {
 	margin-bottom: 110px;
     background-image: url(/images/modac.hero.png);
-    align-text: text;
     width: 1000px;
     background-repeat: no-repeat;
     background-size: 2000px 600px;
     height:500px;
+}
+
+.Aboutbuttoncontainer {
+margin-bottom: 110px;
+    background-repeat: no-repeat;
+    background-size: 701px 400px;
+    height: 350px;
+    background-position: right;
 }
 .subbuttoncontainer {
 	text-align: center;

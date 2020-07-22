@@ -19,44 +19,39 @@
             
             
             <div class="col-md-4 form-group ellipse-1 " style="text-align: center;" th:if="${loggedOnUser == null}">
-             <blockquote class="blockquoteText">
+             <blockquote>
               <p>
-
                <a th:href="@{/loginTab}" style="color:#AF5B00;">
-    <span style="font-family:Proxima Nova;font-size: 20px;">Already a Member?</span> <br><span style="
-    font-family: Raleway;font-size: 15px;line-height: 13px;"> Sign in.</span></a>
+    <img src="images/signin-circle.svg" th:src="@{/images/signin-circle.svg}" 
+    style="width:210px;margin-top:18px;" alt="sign in image"></a>
                </p></blockquote>
             </div>
             
             
             <div class="col-md-4 form-group ellipse-1 " style="text-align: center;">
-             <blockquote class="blockquoteText">
-              <p><a th:href="@{/searchTab}" style="color:#AF5B00;">
-              <span style="font-family:Proxima Nova;font-size: 20px;">Search MoDaC</span><br><span style="
-         font-family: Raleway;font-size: 15px;line-height: 13px;">Explore investigations, studies and datasets.</span>
-              </a>
+             <blockquote>
+              <p>
+              <a th:href="@{/searchTab}" style="color:#AF5B00;">
+              <img src="images/Search-circle.svg" th:src="@{/images/Search-circle.svg}" 
+                style="width:210px;margin-top:18px;" alt="sign in image"></a>
               </p></blockquote>
             </div>
             
-             
-            
              <div class="col-md-4 form-group ellipse-1 " style="text-align: center;" th:if="${loggedOnUser != null}">
-            
-            <blockquote class="blockquoteText">
+           
+            <blockquote>
               <p><a th:href="@{/tasksTab}" style="color:#AF5B00;">
-             
-               <span style="font-family:Proxima Nova;font-size: 20px;">Check Your Status</span><br><span style="
-         font-family: Raleway;font-size: 15px;line-height: 13px;">View Status of downloads and uploads.</span>
-               </a></p></blockquote>
+               <img src="images/status-circle.svg" th:src="@{/images/status-circle.svg}" 
+                style="width:210px;margin-top:18px;" alt="sign in image"></a>
+               </p></blockquote>
             </div>
 
            <div class="col-md-4 form-group ellipse-1 " style="text-align: center;" th:if="${loggedOnUser != null && isUploader eq true}">
             
-            <blockquote class="blockquoteText">
+            <blockquote >
               <p><a th:href="@{/addbulk}" style="color:#AF5B00;">
-              
-               <span style="font-family:Proxima Nova;font-size: 20px;">Upload Your Data</span><br><span style="
-         font-family: Raleway;font-size: 15px;line-height: 13px;">Add collections and upload bulk or single files.</span>
+              <img src="images/upload-circle.svg" th:src="@{/images/upload-circle.svg}" 
+               style="width:210px;margin-top:18px;" alt="sign in image">
                </a></p></blockquote>
             </div>
             
