@@ -321,5 +321,5 @@ function postSuccessDelete(data,status) {
 }
 
 function postFailureDeleteFunction() {
-	return bootbox.alert("Data file delete failed".);
+	return bootbox.alert("Data file delete failed.");
 }
