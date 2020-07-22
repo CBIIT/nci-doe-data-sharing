@@ -52,7 +52,8 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
         },
 
         "drawCallback": function (settings) {
-        	
+
+        	$("#downloadSelectedDataSet").prop("disabled",true);
         	if(isVisible) {
         		$("#downloadSelectedDataSet").show();
         	} else {
