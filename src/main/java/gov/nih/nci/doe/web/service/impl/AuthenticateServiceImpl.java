@@ -118,12 +118,14 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 				log.info("Locking account for user ID: {}", d.getEmailAddrr());
 				// login failed and user has tried 3 times.lock the account 					
 				status = LoginStatusCode.LOGIN_LOCKED;
-				doeUserRepository.updateCounterInfo(MAXIM_LOGIN_ATTEMPTS, d.getEmailAddrr());
+				d.setLockoutCounter(MAXIM_LOGIN_ATTEMPTS);
+				//doeUserRepository.updateCounterInfo(MAXIM_LOGIN_ATTEMPTS, d.getEmailAddrr());
 			} else {
 				// login failed but has not reached the max number of attempts. do not lock the account
-				doeUserRepository.updateCounterInfo(newCounter, d.getEmailAddrr());
+				d.setLockoutCounter(newCounter);
+				//doeUserRepository.updateCounterInfo(newCounter, d.getEmailAddrr());
 			}
-			
+			doeUserRepository.saveAndFlush(d);
 		} else {
 			clearLockFields(d.getEmailAddrr());
 		}
@@ -159,12 +161,13 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		 user.setInstitution(register.getInstitution());
 		 user.setEmailAddrr(register.getEmailAddress().toLowerCase());
 		 user.setLockoutCounter(0);
-		 // for now, adding write permissions to everyone.
-		 //user.setIsWrite(true);
 		 doeUserRepository.saveAndFlush(user);
 		 
 		 String encodedPassword = passwordEncoder.encode(register.getPassword());
-		 doeUserRepository.updatePasswordByUsername(encodedPassword, register.getEmailAddress());
+		 
+		 user.setPassword(encodedPassword);
+		 doeUserRepository.saveAndFlush(user);
+		 //doeUserRepository.updatePasswordByUsername(encodedPassword, register.getEmailAddress());
 	}
 	
 	@Override
@@ -234,12 +237,16 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 			status = PasswordStatusCode.SUCCESS;
 		}
 		if(PasswordStatusCode.SUCCESS == status) {
+			DoeUsers user = doeUserRepository.getUserInfo(userid);
+			
 			 String encodedPassword = passwordEncoder.encode(rawPassword);
-			 doeUserRepository.updatePasswordByUsername(encodedPassword, userid);			 
+			 user.setPassword(encodedPassword);
+			// doeUserRepository.updatePasswordByUsername(encodedPassword, userid);			 
 			 log.info("Attempt to unlock account for user ID: " + userid);
 			 // reset counter
-			 doeUserRepository.updateCounterInfo(0, userid);
-			
+			 user.setLockoutCounter(0);
+			// doeUserRepository.updateCounterInfo(0, userid);
+			 doeUserRepository.saveAndFlush(user);
 		}
 		
 		return status;
@@ -268,8 +275,14 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 	public void saveUserInfo(DoeUsersModel doeModel) {
 		log.info("save user " + doeModel.getEmailAddrr());
 		DoeUsers d =  doeUserRepository.getUserInfo(doeModel.getEmailAddrr());
-		if( d != null && doeModel != null) {
-			doeUserRepository.updateUserInfo(doeModel.getFirstName(),doeModel.getLastName(),doeModel.getInstitution(),doeModel.getEmailAddrr());
+		if( d != null) {
+			d.setFirstName(doeModel.getFirstName());
+			d.setInstitution(doeModel.getInstitution());
+			d.setLastName(doeModel.getLastName());
+			d.setEmailAddrr(doeModel.getEmailAddrr());
+			doeUserRepository.saveAndFlush(d);
+			//doeUserRepository.updateUserInfo(doeModel.getFirstName(),
+				//	doeModel.getLastName(),doeModel.getInstitution(),doeModel.getEmailAddrr());
 		}
 		
 	}
