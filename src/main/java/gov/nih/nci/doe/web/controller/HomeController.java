@@ -60,7 +60,8 @@ public class HomeController extends AbstractDoeController {
 	    
 
 		@PostMapping(value = "user-info")
-	    public ResponseEntity<?> updateUserInfo(@RequestBody DoeUsersModel doeModel,@RequestHeader HttpHeaders headers) {
+	    public ResponseEntity<?> updateUserInfo(@RequestBody DoeUsersModel doeModel,
+	    		@RequestHeader HttpHeaders headers) {
 	        log.info("update user info for user " + doeModel.getEmailAddrr());
 	        try {
 	        	if(doeModel.getEmailAddrr() != null) {

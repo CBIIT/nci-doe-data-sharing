@@ -1,21 +1,18 @@
 package gov.nih.nci.doe.web.controller;
 
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import gov.nih.nci.doe.web.constants.PasswordStatusCode;
 import gov.nih.nci.doe.web.model.ForgotPassword;
-import gov.nih.nci.doe.web.service.AuthenticateService;
 
 /**
  *
@@ -29,11 +26,10 @@ import gov.nih.nci.doe.web.service.AuthenticateService;
 @RequestMapping("/forgotPassword")
 public class ForgotPasswordController extends AbstractDoeController {
 
-	 @Autowired
-	 AuthenticateService authService;
 
-	 @GetMapping
-	public ResponseEntity<?> forgotPassword(HttpSession session,@RequestHeader HttpHeaders headers, ForgotPassword forgotPassword) throws Exception {
+	 @PostMapping
+	public ResponseEntity<?> forgotPassword(
+			@RequestHeader HttpHeaders headers, @RequestBody ForgotPassword forgotPassword) throws Exception {
 		log.info("forgot password");
 		
 		if(forgotPassword.getEmailAddrr() == null || StringUtils.isEmpty(forgotPassword.getEmailAddrr())) {

@@ -120,7 +120,7 @@ function validateForgotPassword () {
         	forgot_password.password = $("#forgot_password").val();
         	forgot_password.confirmPassword = $("#forgot_password_confirm").val();
         	
-        	invokeAjax('/forgotPassword','GET',forgot_password,postForgotPassword,null,null,'text');
+        	invokeAjax('/forgotPassword','POST',JSON.stringify(forgot_password),postForgotPassword,null,null,'text');
 		  },
 	});
 }
