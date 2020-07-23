@@ -119,11 +119,9 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 				// login failed and user has tried 3 times.lock the account 					
 				status = LoginStatusCode.LOGIN_LOCKED;
 				d.setLockoutCounter(MAXIM_LOGIN_ATTEMPTS);
-				//doeUserRepository.updateCounterInfo(MAXIM_LOGIN_ATTEMPTS, d.getEmailAddrr());
 			} else {
 				// login failed but has not reached the max number of attempts. do not lock the account
 				d.setLockoutCounter(newCounter);
-				//doeUserRepository.updateCounterInfo(newCounter, d.getEmailAddrr());
 			}
 			doeUserRepository.saveAndFlush(d);
 		} else {
@@ -167,7 +165,6 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		 
 		 user.setPassword(encodedPassword);
 		 doeUserRepository.saveAndFlush(user);
-		 //doeUserRepository.updatePasswordByUsername(encodedPassword, register.getEmailAddress());
 	}
 	
 	@Override
@@ -241,11 +238,10 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 			
 			 String encodedPassword = passwordEncoder.encode(rawPassword);
 			 user.setPassword(encodedPassword);
-			// doeUserRepository.updatePasswordByUsername(encodedPassword, userid);			 
 			 log.info("Attempt to unlock account for user ID: " + userid);
 			 // reset counter
 			 user.setLockoutCounter(0);
-			// doeUserRepository.updateCounterInfo(0, userid);
+
 			 doeUserRepository.saveAndFlush(user);
 		}
 		
@@ -281,8 +277,6 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 			d.setLastName(doeModel.getLastName());
 			d.setEmailAddrr(doeModel.getEmailAddrr());
 			doeUserRepository.saveAndFlush(d);
-			//doeUserRepository.updateUserInfo(doeModel.getFirstName(),
-				//	doeModel.getLastName(),doeModel.getInstitution(),doeModel.getEmailAddrr());
 		}
 		
 	}
