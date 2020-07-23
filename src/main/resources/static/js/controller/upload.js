@@ -174,9 +174,16 @@ function retrieveCollections($this, selectedIndex,action) {
 		$("#uploadDataFilesTab").hide();
 		if(selectedValue && selectedValue != 'ANY') {
 			var params1= {selectedPath:selectedValue,refreshNode:'true'};	
-			invokeAjax('/browse/collection','GET',params1,contructDataListDiv,null,null,null);		
-			$("#addBulkDataFiles").show();
+			invokeAjax('/browse/collection','GET',params1,contructDataListDiv,null,null,null);	
+			if(action  == 'onChange') {
+				var params2= {selectedPath:selectedValue};
+				invokeAjax('/addbulk/canEdit','GET',params2,postSuccessCanEdit,null,null,null);
+			} else {
+				$("#addBulkDataFiles").show();
+			
+			}
 			$("#deleteDataSet").show();
+			
 		} else {
 			$("#dataListDiv").hide();
 			$("#addBulkDataFiles").hide();
@@ -202,6 +209,13 @@ function clearRegisterDataDiv() {
 	$("#globusEndPointInformation").html("");
 }
 
+function postSuccessCanEdit(data,status) {
+	$("#addBulkDataFiles").show();
+	if(data == false) {
+		$("#addBulkDataFiles").prop("disabled",true);
+		$("#addBulkDataFiles").prop("title","Insufficient permissions to add data.");
+	} 
+}
 
 function contructDataListDiv(data,status) {
 	$("#dataListing").html("");
@@ -449,7 +463,11 @@ function registerBulkDataFile() {
 						 
 					 },
 					error : function(e) {
-						 console.log('ERROR: ', e);				 
+						$("#spinner").hide();
+				         $("#dimmer").hide();
+						 console.log('ERROR: ', e);			
+						 $(".uploadBulkDataError").show();
+						 $(".uploadBulkDataErrorMsg").html(e);
 					}
 				});
 			}
@@ -498,7 +516,11 @@ function registerBulkDataFile() {
 					 cancelAndReturnToUploadTab();		 
 				 },
 				error : function(e) {
-					 console.log('ERROR: ', e);				 
+					$("#spinner").hide();
+			         $("#dimmer").hide();
+					 console.log('ERROR: ', e);	
+					 $(".uploadBulkDataError").show();
+					 $(".uploadBulkDataErrorMsg").html(e);
 				}
 			});
 		}
