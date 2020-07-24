@@ -87,6 +87,11 @@ $("#downloadSelected").click(function(e){
 	    $("#searchResultTable tbody input[type=checkbox]:checked").each(function () {
 	    	selectedPaths.push($(this).attr('id'));
 	    });
+	    if(selectedPaths.length == 0) {
+	    	$("#searchResultTable tbody input[type=radio]:checked").each(function () {
+		    	selectedPaths.push($(this).attr('id'));
+		    });
+	    }
 	    $("#download-modal").find("#selectedFilesList").val(selectedPaths);
 	    
 	    $.each(selectedPaths, function(index, value) {

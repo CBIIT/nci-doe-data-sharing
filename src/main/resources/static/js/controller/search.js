@@ -184,21 +184,6 @@ function dataTableInit(isVisible) {
            $(".selectCheckboxForIns").click(function(e){
         	   var table = $(e.target).closest('table').attr('id');
         	   var len = $('#' + table).find("input[type=checkbox]:checked").length;
-        	   if ($(this).is(':checked')) {
-        		   $(e.target).closest('table tr').find('.selectCheckBoxForStudy').prop('checked', true);        		   
-        	   } else {
-        		   $(e.target).closest('table tr').find('.selectCheckBoxForStudy').prop('checked', false);
-        	   }
-        	   if (len >= 1) {
-        		   $("#downloadSelected").prop("disabled", false);
-        	   } else {
-        		   $("#downloadSelected").prop("disabled", true);
-        	   }
-        	   
-           });
-           $(".selectCheckBoxForStudy").click(function(e){
-        	   var table = $(e.target).closest('table').attr('id');
-        	   var len = $('#' + table).find("input[type=checkbox]:checked").length;        	   
         	   if (len >= 1) {
         		   $("#downloadSelected").prop("disabled", false);
         	   } else {
@@ -207,6 +192,19 @@ function dataTableInit(isVisible) {
         	   
            });
            
+           $(".selectRadioForDataSet").click(function(e){
+        	   var table = $(e.target).closest('table').attr('id');
+        	   var len = $('#' + table).find("input[type=radio]:checked").length;
+        	   if (len >= 1) {
+        		   $("#downloadSelected").prop("disabled", false);
+        	   } else {
+        		   $("#downloadSelected").prop("disabled", true);
+        	   }
+        	   
+           });
+           
+           
+
            initializeToolTips();
            initializePopover();
            displayPopover();
@@ -258,7 +256,13 @@ function renderPath(data, type, row) {
 		var editDataSetHtml = "";
 		var editStudySetHtml = "";
 		var editProgramSetHtml = "";
+		var checkboxHtml ="";
 		
+		if(isUploader && isUploader == true) {
+			checkboxHtml +="<input aria-label='checkbox' type='checkbox' id=" + row.dataSetPath + " class='selectCheckboxForIns'/>";
+		} else {
+			checkboxHtml += "<input aria-label='radio' type='radio' id=" + row.dataSetPath + " class='selectRadioForDataSet'/>";
+		}
 		if(row.dataSetPermissionRole && row.dataSetPermissionRole != 'No Permissions') {
 			editDataSetHtml = "<span class='editCollectionMetadata' collectionId  = '" + row.dataSetCollectionId + "' " +
 			"permissions_role = '" + row.dataSetPermissionRole + "'" +
@@ -296,8 +300,9 @@ function renderPath(data, type, row) {
 			}
 		}
 	
-		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'><input aria-label='checkbox' type='checkbox' id=" + row.dataSetPath + " " +
-			"class='selectCheckboxForIns'/>&nbsp;&nbsp;&nbsp;<a href='#' class='dataSetFragment' " +
+		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'>" +
+				""+checkboxHtml+"&nbsp;&nbsp;&nbsp;" +
+						"<a href='#' class='dataSetFragment' " +
 			"permissions_role = '" + row.dataSetPermissionRole + "'  collections = '" + JSON.stringify(collections)+ "' access_grp ='"+row.dataLevelAccessGroups +"'" +
 					" metadata_type = '" + data  + "' data_set_path = " + row.dataSetPath + ">" +
 							"<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span></a>" +
