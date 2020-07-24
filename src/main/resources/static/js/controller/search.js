@@ -16,7 +16,7 @@ function populateSearchCriteria(searchType) {
 	var operators = [];
 
 	attrNames.push("collection_type");
-	attrValues.push("Data_Set");
+	attrValues.push("Dataset");
 	levelValues.push("ANY");
 	isExcludeParentMetadata.push(true);
 	rowIds.push(1);
@@ -270,7 +270,7 @@ function renderPath(data, type, row) {
            "<i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Dataset Metadata'></i></span>";
 			if(row.dataSetPermissionRole == 'Owner') {
 				editDataSetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collection_name = '" + row.dataSetName + "' collectionId  = '" + row.dataSetCollectionId + "' " +
-			    "permissions_groups ='"+ JSON.stringify(permissions) + "'  selectedCollection = 'Data_Set' access_groups  = '" + row.dataLevelAccessGroups+ "' metadata_path  = '" + row.dataSetPath+ "'>" +
+			    "permissions_groups ='"+ JSON.stringify(permissions) + "'  selectedCollection = 'Dataset' access_groups  = '" + row.dataLevelAccessGroups+ "' metadata_path  = '" + row.dataSetPath+ "'>" +
                  "<i class='fa fa-users' data-toggle='tooltip' data-content='Edit Dataset Access Permissions'></i></span>";
 			}
 		}
