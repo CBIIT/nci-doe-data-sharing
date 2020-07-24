@@ -72,6 +72,10 @@ function postLoginFunction(data,status) {
 		$(".errorBlockLogin").show();
 		$(".errorMsgLogin").html("Maximum attempts of login Exceeded. Request a password via forgot password.");
 		
+	} else if("loginInactivated" == data) {
+		$(".errorBlockLogin").show();
+		$(".errorMsgLogin").html("Account not activated.");
+		
 	} else {
 		location.replace("/");
 	}

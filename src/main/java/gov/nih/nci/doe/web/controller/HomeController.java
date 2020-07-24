@@ -4,6 +4,7 @@ package gov.nih.nci.doe.web.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -35,8 +36,16 @@ public class HomeController extends AbstractDoeController {
 
 
 	@GetMapping
-	public String index() {
+	public String index(@RequestParam(value = "token",required = false) String token,
+			@RequestParam(value = "email",required = false) String email) throws Exception {
+
 		log.info("home page");
+		if(StringUtils.isNotEmpty(token) && StringUtils.isNotEmpty(email)) {
+			String status = authenticateService.confirmRegistration(token,email);
+			if("SUCCESS".equalsIgnoreCase(status)) {
+			  mailService.sendRegistrationEmail(email);
+			}
+		}
 		return "home";
 		
 	}

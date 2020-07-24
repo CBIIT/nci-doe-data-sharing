@@ -82,9 +82,13 @@ function callRegisterFormValidation() {
 
 function postRegisterFunction(data, status) {
 	if(data == 'SUCCESS') {
-		location.replace("/");
+		$('#btnRegister').prop('disabled',false);
+		$(".errorBlockRegister").hide();
+		$(".successBlockRegister").show();
+		$(".successMsgRegister").html("An activation link has been sent your email.");
 	} else  {
 		$('#btnRegister').prop('disabled',false);
+		$(".successBlockRegister").hide();
 		$(".errorBlockRegister").show();
 		$(".errorMsgRegister").html(data);
 	}

@@ -53,7 +53,7 @@ public abstract class AbstractDoeController {
 	protected String sslCertPassword;
 	
 	@Autowired
-	private AuthenticateService authenticateService;
+	public AuthenticateService authenticateService;
 	
 	@Autowired
 	MetaDataPermissionsService metaDataPermissionService;

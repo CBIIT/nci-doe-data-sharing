@@ -50,8 +50,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	private String hpcModelURL;
 	@Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
 	private String bulkRegistrationURL;
-	@Value("${gov.nih.nci.hpc.web.server}")
-	private String webServerName;	
+		
 	@Value("${doe.basePath}")
 	private String basePath;
 	

@@ -50,6 +50,8 @@ public class AuthenticationProvider implements org.springframework.security.auth
             	error = "inValidPassword";
             } else if(status == LoginStatusCode.LOGIN_LOCKED) {
             	error = "loginlocked";
+            } else if(status == LoginStatusCode.LOGIN_INACTIVATED) {
+            	error = "loginInactivated";
             }
         } catch(Exception ex) {
         	ex.printStackTrace();

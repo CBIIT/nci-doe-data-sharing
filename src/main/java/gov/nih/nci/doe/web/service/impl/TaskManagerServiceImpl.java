@@ -43,6 +43,9 @@ public class TaskManagerServiceImpl implements TaskManagerService {
 		log.info("get all Tasks for user :" + userId);
 		return taskManagerRepository.findAllByUserId(userId);
 	}
-	  
+	public List<TaskManager> getTaskDetails(String userId, String name) {
+		log.info("get all Tasks for user and task name :" + userId + " " + name);
+		return taskManagerRepository.getTaskDetails(userId,name);
+	}
 
 }

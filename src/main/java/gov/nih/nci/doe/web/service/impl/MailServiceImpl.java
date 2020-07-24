@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.mail.internet.InternetAddress;
 import org.apache.velocity.VelocityContext;
@@ -183,8 +184,20 @@ public class MailServiceImpl implements MailService {
 		to.add(email);
 		
 		params.put(TO, to.toArray(new String[0]));
-		params.put(BCC, overrideAddresses);
 		send("REGISTRATION_EMAIL", params);
+	}
+	
+	
+	@Override
+	@Transactional(readOnly = true)
+	public void sendActivationEmail(String webServerName, String email,String uuid) throws Exception {
+		log.info("Sending an activation email after registration");
+		final Map<String, Object> params = new HashMap<String, Object>();
+		final List<String> to = new ArrayList<String>();
+		to.add(email);
+		params.put("confirm_email", webServerName+"?token="+uuid+"&email="+email);
+		params.put(TO, to.toArray(new String[0]));
+		send("ACTIVATION_EMAIL", params);
 	}
 
 	@Override

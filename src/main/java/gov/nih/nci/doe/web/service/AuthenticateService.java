@@ -4,6 +4,7 @@ package gov.nih.nci.doe.web.service;
 
 import gov.nih.nci.doe.web.constants.LoginStatusCode;
 import gov.nih.nci.doe.web.constants.PasswordStatusCode;
+import gov.nih.nci.doe.web.domain.DoeUsers;
 import gov.nih.nci.doe.web.model.DoeRegistration;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
 
@@ -15,7 +16,7 @@ public interface AuthenticateService {
 	
 	String getPassword(String username) throws Exception;
 
-	void register (DoeRegistration register);
+	DoeUsers register (DoeRegistration register);
 	
 	PasswordStatusCode validatePassword(String rawPassword, String userId);
 	
@@ -30,5 +31,7 @@ public interface AuthenticateService {
 	void clearLockFields(String username);
 	
     LoginStatusCode lockOrUnlockUser(final String user, final boolean lock) throws Exception;
+    
+    String confirmRegistration(String token,String email);
 
 }

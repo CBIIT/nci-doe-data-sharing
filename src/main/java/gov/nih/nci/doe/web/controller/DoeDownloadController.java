@@ -53,8 +53,7 @@ public class DoeDownloadController extends AbstractDoeController {
 	private String dataObjectServiceURL;
 	@Value("${gov.nih.nci.hpc.server.v2.collection}")
 	private String collectionServiceURL;
-	@Value("${gov.nih.nci.hpc.web.server}")
-	private String webServerName;
+	
 
 	
     @Autowired
@@ -83,11 +82,11 @@ public class DoeDownloadController extends AbstractDoeController {
 		try {
 			String authToken = null;
 			String loggedOnUser = getLoggedOnUserInfo();
+      	  String name = downloadFile.getDestinationPath().substring(downloadFile.getDestinationPath().lastIndexOf('/') + 1);
 			if(loggedOnUser != null && !StringUtils.isEmpty(loggedOnUser) && !StringUtils.isBlank(loggedOnUser)) {
 				 authToken = (String) session.getAttribute("writeAccessUserToken");
-			} else {
-				 authToken = (String) session.getAttribute("hpcUserToken");
-			}
+				 taskManagerService.getTaskDetails(loggedOnUser,name);
+			} 
 			
 			if (authToken == null) {
 				result.setMessage("Invalid user session, expired. Login again.");
@@ -128,7 +127,7 @@ public class DoeDownloadController extends AbstractDoeController {
               String taskId = result.getMessage();
               //store the task ID in DB if logged on user exists
               if(loggedOnUser != null) {
-            	  String name = downloadFile.getDestinationPath().substring(downloadFile.getDestinationPath().lastIndexOf('/') + 1);
+
                   taskManagerService.saveTransfer(taskId,"Download",downloadFile.getDownloadType(),name,getLoggedOnUserInfo());  
                 String transferType = downloadFile.getSearchType().equals("async") ? "Globus":"S3";
                   //store the auditing info

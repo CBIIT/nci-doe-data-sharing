@@ -43,9 +43,6 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.v2.download}")
 	private String downloadServiceURL;
 	
-	@Value("${gov.nih.nci.hpc.web.server}")
-	private String webServerName;
-	
 	 @Autowired
 	 TaskManagerService taskManagerService;
 
@@ -72,9 +69,7 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 			String loggedOnUser = getLoggedOnUserInfo();
 			if(loggedOnUser != null && !StringUtils.isEmpty(loggedOnUser) && !StringUtils.isBlank(loggedOnUser)) {
 				 authToken = (String) session.getAttribute("writeAccessUserToken");
-			} else {
-				 authToken = (String) session.getAttribute("hpcUserToken");
-			}
+			} 
 			if (authToken == null) {
 				result.setMessage("Invalid user session, expired. Login again.");
 				return result;

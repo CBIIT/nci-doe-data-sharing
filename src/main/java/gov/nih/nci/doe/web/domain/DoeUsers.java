@@ -24,6 +24,8 @@ public class DoeUsers {
 	private Date lockoutDate;
 	private Integer lockoutCounter;
 	private Boolean isWrite;
+	private Boolean isActivated;
+	private String uuid;
 	private String programName;
 	
 
@@ -145,6 +147,30 @@ public class DoeUsers {
 	public void setIsWrite(Boolean isWrite) {
 		this.isWrite = isWrite;
 	}
+
+	@Basic
+	@Column(name = "IS_ACTIVATED", nullable = true, length = 1)
+	@Type(type = "yes_no")
+	public Boolean getIsActivated() {
+		return isActivated;
+	}
+
+
+	public void setIsActivated(Boolean isActivated) {
+		this.isActivated = isActivated;
+	}
+
+	@Basic
+    @Column(name = "UUID")
+	public String getUuid() {
+		return uuid;
+	}
+
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
 
 	@Basic
     @Column(name = "PROGRAM_NAME")

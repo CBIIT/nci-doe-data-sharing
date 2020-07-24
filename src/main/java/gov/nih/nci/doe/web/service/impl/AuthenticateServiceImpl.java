@@ -14,6 +14,7 @@ import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.repository.DoeUserRepository;
 import gov.nih.nci.doe.web.service.AuthenticateService;
 
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -66,7 +67,11 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 				log.info("Account is locked for username: {}", username);
 					status = LoginStatusCode.LOGIN_LOCKED;
 				
-			} else { 
+			} else if(Boolean.FALSE.equals(user.getIsActivated())) {
+				log.info("Account is not activated for username: {}", username);
+				status = LoginStatusCode.LOGIN_INACTIVATED;
+			
+		      } else { 
 				status = checkForPassword(username, passwordMatched);
 			}
 			
@@ -150,8 +155,9 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void register(DoeRegistration register) {
+	public DoeUsers register(DoeRegistration register) {
 		 log.info(" register user " +register.getEmailAddress());
+		 String token = UUID.randomUUID().toString();
 		DoeUsers user = new DoeUsers();
 		 user.setFirstName(register.getFirstName());
 		 user.setPassword(register.getPassword());
@@ -159,14 +165,29 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		 user.setInstitution(register.getInstitution());
 		 user.setEmailAddrr(register.getEmailAddress().toLowerCase());
 		 user.setLockoutCounter(0);
+		 user.setIsActivated(false);
+		 user.setUuid(token);
 		 doeUserRepository.saveAndFlush(user);
 		 
 		 String encodedPassword = passwordEncoder.encode(register.getPassword());
 		 
 		 user.setPassword(encodedPassword);
 		 doeUserRepository.saveAndFlush(user);
+		 return user;
 	}
 	
+	
+	@Override
+	@Transactional(readOnly = false)
+	public String confirmRegistration(String token,String email) {
+		DoeUsers user =  doeUserRepository.getUserInfoByToken(token,email);		
+		if(user != null) {
+			user.setIsActivated(true);
+			doeUserRepository.saveAndFlush(user);
+			return "SUCCESS";
+		}
+		return "FAILURE";
+	}
 	@Override
 	public PasswordStatusCode validatePassword(String rawPassword, String userId) {
 				
