@@ -6,16 +6,23 @@
 </head>
 <body>
     <div class="tab-pane fade show active M-4 p-4" th:fragment="landing" id="landingTab" role="tabpanel">
-             <div class="row" id="landingDiv" style="">
+        <div class="row" id="landingDiv" style="">
             <input type="hidden" id="uploader" value="${isUploader}"/>
             <div class="col-md-12 buttoncontainer">
-            <div class="col-md-12 subbuttoncontainer">
-            <h1 style="color: #FFFFFF;font-family:Proxima Nova;font-size: 29px;
-             line-height: 54px;text-align: center;">
-             MODEL AND DATA CLEARINGHOUSE
-        </h1></div>               
+		<div class = "container">
+		    <div class = "row justify-content-center">
+                       <div class="col-md-8 subbuttoncontainer">
+                          <h1 style="color: #FFFFFF;font-family:Proxima Nova;font-size: 29px;
+                              line-height: 54px;text-align: center;
+                              margin-left:50px; margin-right:50px;
+			      margin-top:5px; margin-bottom:5px">
+                              MODEL AND DATA CLEARINGHOUSE
+                          </h1>
+                       </div>
+                    </div>
+                </div>               
             </div>
-           <div class="col-md-12 form-row" style="height: 239px;width: 1123px;background-color: #5C90C2;margin-top: -88px;">
+            <div class="col-md-12 form-row" style="height: 239px;width: 1123px;background-color: #5C90C2;margin-top: -88px;">
             
             
             <div class="col-md-6 form-group ellipse-1 " style="text-align: center;" th:if="${loggedOnUser == null}">
