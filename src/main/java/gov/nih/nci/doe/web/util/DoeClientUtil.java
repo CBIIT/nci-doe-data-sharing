@@ -782,11 +782,11 @@ public class DoeClientUtil {
         JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 
         HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
-        throw new DoeWebException("Failed to submit download request: " + exception.getMessage());
+        throw new DoeWebException(exception.getMessage());
       }
     } catch (Exception e) {
       log.error("Failed to submit download request: " + e);
-      throw new DoeWebException("Failed to submit download request: " + e.getMessage());
+      throw new DoeWebException(e.getMessage());
     }
     return response;
   }

@@ -1,8 +1,5 @@
 package gov.nih.nci.doe.web.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class DoeDownloadDatafile {
 
 	private String endPointName;

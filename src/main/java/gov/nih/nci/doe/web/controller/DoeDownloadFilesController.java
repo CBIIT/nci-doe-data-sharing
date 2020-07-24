@@ -2,6 +2,7 @@ package gov.nih.nci.doe.web.controller;
 
 
 import java.util.Date;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
+import gov.nih.nci.doe.web.domain.TaskManager;
 import gov.nih.nci.doe.web.model.AjaxResponseBody;
 import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeDownloadDatafile;
@@ -46,6 +49,8 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 	 @Autowired
 	 TaskManagerService taskManagerService;
 
+	 @Value("${doe.download.maxlimit}")
+	 private Integer maxLimit;
 
 	/**
 	 * POST action to initiate asynchronous download.
@@ -66,9 +71,20 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 		AjaxResponseBody result = new AjaxResponseBody();
 		try {
 			String authToken = null;
+			String name = null;
 			String loggedOnUser = getLoggedOnUserInfo();
 			if(loggedOnUser != null && !StringUtils.isEmpty(loggedOnUser) && !StringUtils.isBlank(loggedOnUser)) {
 				 authToken = (String) session.getAttribute("writeAccessUserToken");
+				 String[] paths = downloadFile.getSelectedPaths().split(",");
+				 if(paths != null && paths.length == 1) {
+					  name = downloadFile.getSelectedPaths().substring(downloadFile.getSelectedPaths().lastIndexOf('/') + 1); 
+					 List<TaskManager> taskList = taskManagerService.getTaskDetails(loggedOnUser,name);
+					 if(CollectionUtils.isNotEmpty(taskList) && taskList.size() > maxLimit) {
+						 result.setMessage(" You have exceeded the maximum number of download attempts for this dataset."
+						 		+ " Please contact <a href='mailto:modac-support@mail.nih.gov?'>modac-support@mail.nih.gov</a> for assistance.");
+							return result; 
+					 }
+				 }
 			} 
 			if (authToken == null) {
 				result.setMessage("Invalid user session, expired. Login again.");
@@ -119,7 +135,8 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 					String taskId = downloadDTO.getTaskId();
 					result.setMessage("Download request successful. Task ID: " +taskId);
 					 if(loggedOnUser != null) {
-				     taskManagerService.saveTransfer(taskId,"Download","Bulk Download Files",downloadType, getLoggedOnUserInfo());
+				     taskManagerService.saveTransfer(taskId,"Download",downloadFile.getSearchType(),
+				    		 name != null? name:downloadType, getLoggedOnUserInfo());
 				     String transferType = downloadFile.getSearchType().equals("async") ? "Globus":"S3";
 				     //store the auditing info
 	                  AuditingModel audit = new AuditingModel();
