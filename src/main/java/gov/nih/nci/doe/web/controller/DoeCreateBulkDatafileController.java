@@ -13,11 +13,13 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import gov.nih.nci.doe.web.DoeWebException;
@@ -71,6 +73,19 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 		return "upload";
 	}
 	
+	
+	@ResponseBody
+	@GetMapping(value = "/canEdit", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Boolean isEditpermissions(@RequestParam(value = "selectedPath") String selectedPath, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+	
+		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		if (StringUtils.isNotEmpty(selectedPath)) {
+			HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, 
+					collectionServiceURL, selectedPath, true, sslCertPath,sslCertPassword);
+			return  verifyCollectionPermissions(selectedPath,parentCollectionDto);
+		}
+			return false;
+	}
 
 	/**
 	 * Post operation to update metadata

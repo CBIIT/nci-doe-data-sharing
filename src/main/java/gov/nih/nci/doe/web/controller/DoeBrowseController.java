@@ -17,8 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import gov.nih.nci.doe.web.model.DoeBrowserEntry;
@@ -62,26 +62,10 @@ public class DoeBrowseController extends AbstractDoeController {
 	@Value("${doe.basePath}")
 	private String basePath;
 	
-	  
-	
-	/**
-	 * POST Action. This AJAX action is invoked when:
-	 * - A tree node is expanded, 
-	 * - A node is refreshed
-	 * nodes
-	 * 
-	 * @param hpcBrowserEntry
-	 * @param model
-	 * @param bindingResult
-	 * @param session
-	 * @param request
-	 * @param response
-	 * @param redirectAttributes
-	 * @return
-	 */
-	@RequestMapping(value = "/collection", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+
+	@GetMapping(value = "/collection", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> browseCollection(@RequestParam(value = "selectedPath") String selectedPath, 
-			@RequestParam(required = false) String refreshNode, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+			@RequestParam(required = false) String refreshNode,HttpSession session, HttpServletRequest request, HttpServletResponse response) {
 		
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		DoeBrowserEntry browserEntry = (DoeBrowserEntry) session.getAttribute("browserEntry");
@@ -127,7 +111,7 @@ public class DoeBrowseController extends AbstractDoeController {
    * @param request
    * @return
    */
-  @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> get(HttpSession session, HttpServletRequest request) {
 
     // Verify User session
