@@ -147,8 +147,37 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
         		    callback: function (result) {
         		    	if(result == true) {
         		           var params = {deletepath:path};
-        		           invokeAjax('/delete/datafile','POST',params,postSuccessDelete,postFailureDeleteFunction,
-        		        	'application/x-www-form-urlencoded; charset=UTF-8','text');
+        		           $.ajax({
+        						type : "POST",
+        					     url : "/delete/datafile",
+        						 contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+        					       dataType: 'text',
+        					       data: params,
+        						 beforeSend: function () {
+        					    	   $("#spinner").show();
+        					           $("#dimmer").show();
+        					       },
+        						 success : function(msg) {
+        							 $("#spinner").hide();
+        					         $("#dimmer").hide();
+        							 console.log('SUCCESS: ', msg);
+        							 if(msg != "SUCCESS") {
+        									return bootbox.alert(msg);
+        								} else {
+        									refreshDataSetDataTable(dataSetPath,metadata,accessgroups,
+        											permissions,collections);
+        								}
+        							 
+        						 },
+        						error : function(e) {
+        							$("#spinner").hide();
+        					         $("#dimmer").hide();
+        							 console.log('ERROR: ', e);
+        							 bootbox.alert("Data file delete failed.");
+        						}
+        					});
+        		           //invokeAjax('/delete/datafile','POST',params,postSuccessDelete,postFailureDeleteFunction,
+        		        	//'application/x-www-form-urlencoded; charset=UTF-8','text');
         		    	}   
         		    }
         		});
@@ -317,7 +346,9 @@ function postSuccessDelete(data,status) {
 	if(data != "SUCCESS") {
 		return bootbox.alert(data);
 	} else {
-		$('#dataSetTable').DataTable();
+		 $("#dataSetTable").dataTable().fnDestroy();
+		 var t = $('#dataSetTable').DataTable();
+	        t.ajax.reload(null, false);
 	}
 }
 
