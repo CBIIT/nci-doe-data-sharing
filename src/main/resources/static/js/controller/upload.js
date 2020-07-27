@@ -523,7 +523,7 @@ function registerBulkDataFile() {
 			         $("#dimmer").hide();
 					 console.log('ERROR: ', e);	
 					 $(".uploadBulkDataError").show();
-					 $(".uploadBulkDataErrorMsg").html(e);
+					 $(".uploadBulkDataErrorMsg").html("Error in Registration.");
 				}
 			});
 		}
