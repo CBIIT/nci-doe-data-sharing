@@ -214,7 +214,10 @@ function postSuccessCanEdit(data,status) {
 	if(data == false) {
 		$("#addBulkDataFiles").prop("disabled",true);
 		$("#addBulkDataFiles").prop("title","Insufficient permissions to add data.");
-	} 
+	} else {
+			$("#addBulkDataFiles").prop("disabled",false);
+		$("#addBulkDataFiles").prop("title","");
+}
 }
 
 function contructDataListDiv(data,status) {
@@ -467,7 +470,7 @@ function registerBulkDataFile() {
 				         $("#dimmer").hide();
 						 console.log('ERROR: ', e);			
 						 $(".uploadBulkDataError").show();
-						 $(".uploadBulkDataErrorMsg").html(e);
+						 $(".uploadBulkDataErrorMsg").html("Error in Registration.");
 					}
 				});
 			}

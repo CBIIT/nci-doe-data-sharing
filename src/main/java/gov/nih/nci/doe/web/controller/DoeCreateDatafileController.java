@@ -115,7 +115,7 @@ public class DoeCreateDatafileController extends DoeCreateCollectionDataFileCont
 			clearSessionAttrs(session);
 		
 		
-        return null;
+        return "Error in registration.";
 		
 	}
 
