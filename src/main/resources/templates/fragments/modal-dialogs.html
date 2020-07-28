@@ -27,7 +27,7 @@
 					 <input type="hidden" name="destinationPath" id="destinationPathId"/>
 					 <input type="hidden" class="form-control" name="downloadFileName" id="downloadFileName" />
                </form>
-                     <span style="font-style: italic;font-weight: bold;">This page allows you to download the selected data file either synchronously to your computer or 
+                     <span style="font-style: italic;font-weight: bold;">This page allows you to download the selected data files either synchronously to your computer or 
                         asynchronously to Globus endpoint location or an S3 bucket.</span>
                         
 					    
@@ -299,11 +299,14 @@ aria-labelledby="forgotPasswordLabel">
                   <input type="hidden" id="parentAccessGroup"/>
                 <div class="col-md-12 col-sm-12">
                     <div class="col-md-12 col-sm-12">
-                        <div class="form-row jumbotron" style=" margin-top: 20px;">
+                        <div class="form-row jumbotron">
+                        <div class="form-group col-lg-12 col-md-12" style="margin-top: -37px;">
+                        <h4>Metadata Permissions</h4></div>
                         <div class="form-group col-lg-4 col-md-12">
-                            <label for="metaDataPermissionsList">Metadata Permissions</label>
+                            <label for="metaDataPermissionsList">Specify who can edit permissions :
                                 <select class="simple-select2" multiple="multiple" id="metaDataPermissionsList" name="metaDataPermissionsList" style="width:100%">
                                 </select>
+                                </label>
                             </div>
                              <div class="form-group col-lg-4 col-md-12" style="display:none;">
                                 <label for="collectionType">Collection Type</label>

@@ -74,8 +74,11 @@ public class ManageTasksScheduler extends AbstractDoeController {
 			if(CollectionUtils.isNotEmpty(auditingTaskIds)) {
 				for(Auditing audit : auditingTaskIds) {
 					if(audit.getOperation().equalsIgnoreCase("Upload")) {
-						HpcBulkDataObjectRegistrationTaskDTO upload = uploadResults.stream().filter(x -> audit.getTaskId().equals(x.getTaskId())).findAny().orElse(null);
-					    audit.setCompletionTime((upload != null && upload.getCompleted() != null) ? upload.getCompleted().getTime(): null);
+						HpcBulkDataObjectRegistrationTaskDTO upload = uploadResults.stream().filter(
+								x -> audit.getTaskId().equals(x.getTaskId())).findAny().orElse(null);
+					    
+						if(upload != null) {
+						audit.setCompletionTime((upload != null && upload.getCompleted() != null) ? upload.getCompleted().getTime(): null);
 					    if(upload.getResult() == null) {
 					    	audit.setStatus("In progress");
     					} else if(Boolean.TRUE.equals(upload.getResult())) {
@@ -86,9 +89,13 @@ public class ManageTasksScheduler extends AbstractDoeController {
     						upload.getFailedItems().stream().forEach(x -> message.add(x.getMessage()));
     						audit.setErrorMsg(message.get(0));
     					}
-					} else {
-						HpcUserDownloadRequest download = downloadResults.stream().filter(x -> audit.getTaskId().equals(x.getTaskId())).findAny().orElse(null);
-					       audit.setCompletionTime((download != null && download.getCompleted() != null)? download.getCompleted().getTime(): null);
+					    auditingRepository.save(audit);
+						}
+					} else if(audit.getOperation().equalsIgnoreCase("Download")) { 
+						HpcUserDownloadRequest download = downloadResults.stream().filter(
+								x -> audit.getTaskId().equals(x.getTaskId())).findAny().orElse(null);
+						if(download != null) {
+						audit.setCompletionTime((download != null && download.getCompleted() != null)? download.getCompleted().getTime(): null);
 					       if(download != null && download.getResult() != null && download.getResult().value().equals("FAILED")) {
 	    						List<String> message = new ArrayList<String>();
 	    						download.getItems().stream().forEach(x -> message.add(x.getMessage()));    						
@@ -100,8 +107,10 @@ public class ManageTasksScheduler extends AbstractDoeController {
 	    					} else {
 	    						audit.setStatus("In Progress");
 	    					}
+					       auditingRepository.save(audit);
+						}
 					}
-					   auditingRepository.saveAndFlush(audit);
+					   
 				}
 			}
 	  }

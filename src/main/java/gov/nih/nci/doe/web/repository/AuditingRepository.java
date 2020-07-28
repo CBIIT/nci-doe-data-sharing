@@ -11,4 +11,6 @@ public interface AuditingRepository extends JpaRepository<Auditing, String> {
 
 	@Query("select a from Auditing a where a.taskId IS NOT NULL AND a.completionTime IS NULL")
 	List<Auditing> findAllTaksIds();
+	
+	
 }

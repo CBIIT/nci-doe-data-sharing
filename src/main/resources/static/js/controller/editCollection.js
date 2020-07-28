@@ -100,7 +100,7 @@ function updateAccessGroupsFunction() {
 
 function postSuccessUpdateAccessgroups(data,status){
 	if(data == 'SUCCESS') {
-		$("#updateAccessPermissionsModal").find(".updateAccessMsg").html("Access group Updated");
+		$("#updateAccessPermissionsModal").find(".updateAccessMsg").html("Access group updated.");
 		$("#updateAccessPermissionsModal").find(".updateAccessGroupsBlock").show();
 	} else if(data == 'Permission group cannot be updated') {
 		var json = $("#updateAccessPermissionsModal").find("#permissionGroups").val();
