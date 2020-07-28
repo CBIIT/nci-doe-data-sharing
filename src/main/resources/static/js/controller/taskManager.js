@@ -102,11 +102,11 @@ function dataTableInitTaskManager() {
 
         "columns": [
         	
-        {"data": "taskId", "defaultContent": ""},
-        {"data": "taskName", "defaultContent": ""},
-        {"data": "taskDate", "defaultContent": ""},
-        {"data": "taskType", "defaultContent": ""},
-        {"data": "transferStatus", "defaultContent": ""},
+        {"data": "taskId", "defaultContent": "",responsivePriority: 3},
+        {"data": "taskName", "defaultContent": "",responsivePriority: 1},
+        {"data": "taskDate", "defaultContent": "",responsivePriority: 4},
+        {"data": "taskType", "defaultContent": "",responsivePriority: 5},
+        {"data": "transferStatus", "defaultContent": "",responsivePriority: 2},
         
         ],
         "dom": '<"top"lip>rt<"bottom"p>',
