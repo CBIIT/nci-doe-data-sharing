@@ -737,6 +737,12 @@ th.active .arrow {
   border-top: 4px solid #fff;
 }
 
+#spinner {
+text-align: center;
+    z-index: 101010;
+    position: relative;
+    margin: 40px auto;
+	}
 	#dimmer {
 		background: #000;
 		opacity: 0.5;
