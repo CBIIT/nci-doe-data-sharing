@@ -29,10 +29,13 @@ import com.fasterxml.jackson.databind.MappingJsonFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
+import gov.nih.nci.doe.web.constants.SystemAttributesList;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.HpcDatafileSearchResultDetailed;
+import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
+import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
@@ -162,7 +165,8 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 				returnResult.setPermission(result.getDataObject().getAbsolutePath());
 				returnResult.setCreatedOn(format.format(result.getDataObject().getCreatedAt().getTime()));
 				returnResult.setSelfMetadata(getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),"DataObject", systemAttrs));
-	            returnResult.setFileSize(addHumanReadableSize(getAttributeValue("source_file_size", result.getMetadataEntries().getSelfMetadataEntries(),"DataObject")));
+				returnResult.setSystemMetadata(getSystemMetaData(result.getMetadataEntries().getSelfMetadataEntries(),"DataObject", systemAttrs));
+				returnResult.setFileSize(addHumanReadableSize(getAttributeValue("source_file_size", result.getMetadataEntries().getSelfMetadataEntries(),"DataObject")));
 				returnResults.add(returnResult);
 			}
 			
@@ -193,4 +197,22 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 	        }
 	        return displaySize;
 	    }
+	  
+	  public List<KeyValueBean> getSystemMetaData(List<HpcMetadataEntry> list,String levelName, List<String> systemAttrs) {
+			
+			List<KeyValueBean> entryList = new ArrayList<KeyValueBean>();
+			
+			for (HpcMetadataEntry entry : list) {
+				if (systemAttrs != null && systemAttrs.contains(entry.getAttribute()) && 
+						SystemAttributesList.dataSystemAttributes.contains(entry.getAttribute()) &&
+						levelName.equalsIgnoreCase(entry.getLevelLabel())) {
+					KeyValueBean k = null;
+						 k = new KeyValueBean(entry.getAttribute(),entry.getAttribute(), entry.getValue());				
+					entryList.add(k);
+				}
+				
+			}
+
+			return entryList;
+		}
 }

@@ -16,6 +16,7 @@ public class HpcDatafileSearchResultDetailed {
 	private String name;
 	private String fileSize;
 	private List<KeyValueBean> selfMetadata;
+	private List<KeyValueBean> systemMetadata;
 	HpcMetadataEntries metadataEntries;
 	
 	 
@@ -115,6 +116,14 @@ public class HpcDatafileSearchResultDetailed {
 
 	public void setSelfMetadata(List<KeyValueBean> selfMetadata) {
 		this.selfMetadata = selfMetadata;
+	}
+
+	public List<KeyValueBean> getSystemMetadata() {
+		return systemMetadata;
+	}
+
+	public void setSystemMetadata(List<KeyValueBean> systemMetadata) {
+		this.systemMetadata = systemMetadata;
 	}
 	
 

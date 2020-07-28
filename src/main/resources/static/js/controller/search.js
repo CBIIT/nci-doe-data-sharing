@@ -473,11 +473,16 @@ function openPopOver($this) {
     var pop = $this;
     $('.button2a').not($this).popover('hide'); 
     var metadata = $this.attr('metadata_type');
-    
+    var headerTest = $this.attr('metadata_context');
+    if(!headerTest) {
+    	headerTest = 'User Metadata';
+    } else {
+    	headerTest = 'System Metadata';
+    }
     var list = JSON.parse(metadata);
     
       var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\">" +
-                "User Metadata <a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a> </div>" +
+                "" + headerTest +" <a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a> </div>" +
                 "<div class='popover-body'> <div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
                 "<div class='divTableBody'><div class='divTableRow'>" +
                 "<div class='divTableHead'>Attribute</div>" + 
