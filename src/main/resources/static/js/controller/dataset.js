@@ -15,6 +15,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
     $('#dataSetTable').DataTable({
         "paging": true,
         "ordering": false,
+        "sorting":false,
         "info": true,
         "pageLength": 25,
         oLanguage: {
@@ -113,7 +114,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
            $(".downloadLink").click(function(e){
         	   var path = $(this).attr('data-path');
         	   var fileName = $(this).attr('data-fileName');  
-        	   $("#download-modal").find(".selectedFilesDiv").hide();
+        	   $("#download-modal").find(".selectedFilesDiv").show();
                downloadFunction(path,fileName);
              });
            
@@ -176,14 +177,9 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
         							 bootbox.alert("Data file delete failed.");
         						}
         					});
-        		           //invokeAjax('/delete/datafile','POST',params,postSuccessDelete,postFailureDeleteFunction,
-        		        	//'application/x-www-form-urlencoded; charset=UTF-8','text');
         		    	}   
         		    }
-        		});
-        	   
-        	  
-        	   
+        		}); 
            });
            initializeToolTips();
            initializePopover();
@@ -295,13 +291,18 @@ function renderDownload(data, type, row,accessgroups,permissions) {
 
 
 function downloadFunction(path,fileName) {
-	
+	$("#download-modal").find(".selectedFilesListDisplay").html("");
+	$("#download-modal").find(".selectedFilesListDisplay").append("<p>"+path+"</p>");
+	 $("#download-modal").find("#selectedFilesList").val("");
 	$("#download-modal").find("#destinationPathId").val(path);	
 	$("#download-modal").find("#message").hide();
 	$("#download-modal").find('.downloadErrorMsg').html("");
 	
 	if(fileName && fileName != "null") {
 		$("#download-modal").find("#syncRadioSet").show();
+		$("#download-modal").find("#informationalText").html("This page allows you to download the " +
+				"selected data file either synchronously to your computer or asynchronously " +
+				"to Globus endpoint location or an S3 bucket.");
 		$("#download-modal").find("#SyncDiv").show();
 		$("#download-modal").find("#searchTypeSync").click();
 		$("#download-modal").find("#downloadType").val("data_object");
@@ -316,6 +317,9 @@ function onClickOfBulkDownloadBtn() {
 	$("#download-modal").find(".selectedFilesListDisplay").html("");
 	$("#download-modal").find("#message").hide();
 	$("#download-modal").find('.downloadErrorMsg').html("");
+	$("#download-modal").find("#informationalText").html("This page allows you to download the " +
+			"selected data files " +
+			"asynchronously to a Globus endpoint location or an S3 bucket.");
 	 var selectedPaths = [];
 	    $("#dataSetTable tbody input[type=checkbox]:checked").each(function () {
 	    	selectedPaths.push($(this).attr('id'));

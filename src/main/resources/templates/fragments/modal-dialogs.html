@@ -27,10 +27,10 @@
 					 <input type="hidden" name="destinationPath" id="destinationPathId"/>
 					 <input type="hidden" class="form-control" name="downloadFileName" id="downloadFileName" />
                </form>
-                     <span style="font-style: italic;font-weight: bold;">This page allows you to download the selected data files either synchronously to your computer or 
-                        asynchronously to Globus endpoint location or an S3 bucket.</span>
-                        
-					    
+                     <span style="font-style: italic;font-weight: bold;" id="informationalText">
+                     This page allows you to download the selected data files either synchronously to your 
+                     computer or asynchronously to Globus endpoint location or an S3 bucket.</span>
+                        					    
 					     <div class="clearfix errorBlock pull-left" id="message" style="display: none;">
                     <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
                         <div class="alert alert-danger">
@@ -302,9 +302,10 @@ aria-labelledby="forgotPasswordLabel">
                         <div class="form-row jumbotron">
                         <div class="form-group col-lg-12 col-md-12" style="margin-top: -37px;">
                         <h4>Metadata Permissions</h4></div>
-                        <div class="form-group col-lg-4 col-md-12">
-                            <label for="metaDataPermissionsList">Specify who can edit permissions :
-                                <select class="simple-select2" multiple="multiple" id="metaDataPermissionsList" name="metaDataPermissionsList" style="width:100%">
+                        <div class="form-group col-lg-6 col-md-12" style="margin-top:25px;">
+                            <label for="metaDataPermissionsList">Specify who can edit permissions : &nbsp;&nbsp;
+                                <select class="simple-select2" multiple="multiple" id="metaDataPermissionsList" 
+                                name="metaDataPermissionsList" style="width:50% !important">
                                 </select>
                                 </label>
                             </div>

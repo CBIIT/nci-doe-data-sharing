@@ -83,6 +83,9 @@ $("#downloadSelected").click(function(e){
 	$("#download-modal").find("#s3Div").hide();
     $("#download-modal").find("div#AsyncDiv input[type='text']").val("");
     $("#download-modal").find("div#s3Div input[type='text']").val("");
+    $("#download-modal").find("#informationalText").html("This page allows you to download the " +
+			"selected data files " +
+			"asynchronously to a Globus endpoint location or an S3 bucket.");
 	var selectedPaths = [];
 	    $("#searchResultTable tbody input[type=checkbox]:checked").each(function () {
 	    	selectedPaths.push($(this).attr('id'));
