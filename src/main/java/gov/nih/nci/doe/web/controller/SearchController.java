@@ -4,6 +4,7 @@ package gov.nih.nci.doe.web.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -31,7 +32,6 @@ import com.fasterxml.jackson.databind.MappingJsonFactory;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-
 import gov.nih.nci.doe.web.domain.LookUp;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.DoeSearchResult;
@@ -397,7 +397,7 @@ public class SearchController extends AbstractDoeController {
 		     	attrNamesList.addAll(userDefinedMetadaList);
 		     	
 		     	attrNamesList.stream().forEach(e -> keyValueBeanResults.add(new KeyValueBean(e, e))); 
-		     	
+		     	keyValueBeanResults.sort(Comparator.comparing(KeyValueBean::getKey,String.CASE_INSENSITIVE_ORDER));
 				
 			}
 	  			return new ResponseEntity<>(keyValueBeanResults, headers, HttpStatus.OK);
