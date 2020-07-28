@@ -186,6 +186,8 @@ $("#download-btn").click(function(e){
 				 },
 				error : function(e) {
 					 console.log('ERROR: ', e);
+					 $("#spinner").hide();
+			         $("#dimmer").hide();
 					 $('#downloadErrorMsg').html(e.message);
 					 $("#message").show();
 				}

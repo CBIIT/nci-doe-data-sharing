@@ -31,6 +31,8 @@ function retryUpload(taskId,taskName) {
 	         refreshTaskManagerDataTable();		 
 		 },
 		error : function(e) {
+			$("#spinner").hide();
+	         $("#dimmer").hide();
 			 console.log('ERROR: ', e);				 
 		}
 	});
@@ -52,6 +54,8 @@ function retryDownload(taskId,taskName,taskType) {
 	         refreshTaskManagerDataTable();		 
 		 },
 		error : function(e) {
+			$("#spinner").hide();
+	         $("#dimmer").hide();
 			 console.log('ERROR: ', e);				 
 		}
 	});

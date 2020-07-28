@@ -36,6 +36,8 @@ function invokeAjax(url, type, params, successCallback, failureCallback, content
            }
        },
        error: function (data, status, error) {
+    	   $("#spinner").hide();
+	         $("#dimmer").hide();
            handleAjaxError(url, params, status, error, data);
            if (failureCallback) {
                failureCallback(url, params, status, error, data);
@@ -114,6 +116,8 @@ function loadJsonData(url, selectTarget, emptyOption, params, successCallback, f
             }
         },
         error: function (data, status, error) {
+        	$("#spinner").hide();
+	         $("#dimmer").hide();
             handleAjaxError(url, params, status, error, data);
             if (failureCallback) {
                 failureCallback();

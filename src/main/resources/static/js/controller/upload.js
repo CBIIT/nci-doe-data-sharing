@@ -92,6 +92,8 @@ function functionDelete($this,collectionType) {
 						 
 					 },
 					error : function(e) {
+						$("#spinner").hide();
+				         $("#dimmer").hide();
 						 console.log('ERROR: ', e);				 
 					}
 				});
@@ -379,6 +381,8 @@ function registerCollection() {
 				 
 			 },
 			error : function(e) {
+				$("#spinner").hide();
+		         $("#dimmer").hide();
 				 console.log('ERROR: ', e);				 
 			}
 		});

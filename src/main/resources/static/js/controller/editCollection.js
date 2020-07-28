@@ -153,6 +153,8 @@ function updateMetaDataCollection() {
 				 
 			 },
 			error : function(e) {
+				$("#spinner").hide();
+		         $("#dimmer").hide();
 				 console.log('ERROR: ', e);				 
 			}
 		});
