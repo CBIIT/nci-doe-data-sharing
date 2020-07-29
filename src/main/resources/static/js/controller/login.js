@@ -15,8 +15,6 @@ function validateUserLogin() {
 			},
 			password: {
 		        required: true,
-		        //minlength: 8,
-		        //maxlength: 14
 		    }
 		},
 		messages: {
@@ -25,8 +23,6 @@ function validateUserLogin() {
 			    },
 			password: {
 		        required: "Password is required.",
-		        //minlength: "Password must be at least eight (8) characters in length and no more than 14 characters.",
-		       // maxlength: "Password must be at least eight (8) characters in length and no more than 14 characters."
 		    },
 		   
 		},
