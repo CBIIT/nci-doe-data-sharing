@@ -32,7 +32,8 @@ function validateUserLogin() {
 		},
 		submitHandler: function(form) {
 			$('#loginButton').prop('disabled',true);
-			  var data = 'username=' + $('#username').val() + '&password=' + $('#password').val();				
+			  //var data = 'username=' + $('#username').val() + '&password=' + $('#password').val();	
+			  var data = $('#userlogin').serialize();
 			   $.ajax({
 			      data: data,
 			      type: 'POST',
@@ -88,7 +89,6 @@ function loginFailureFunction(data,status) {
 }
 
 function postLogOutFunction(data, status) {
-	//$('.nav-tabs a[href="#' + landingTab + '"]').tab('show');
 	location.replace("/");
 }
 
