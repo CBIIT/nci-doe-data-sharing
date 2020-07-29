@@ -78,26 +78,17 @@ public abstract class AbstractDoeController {
 
 	protected Logger log = LoggerFactory.getLogger(this.getClass());
 
-	@ExceptionHandler({ Exception.class, java.net.ConnectException.class })
+	@ExceptionHandler({ Exception.class})
 	public @ResponseBody DoeResponse handleUncaughtException(Exception ex, WebRequest request,
 			HttpServletResponse response) {
 		log.info("Converting Uncaught exception to RestResponse : " + ex.getMessage());
 
 		response.setHeader("Content-Type", "application/json");
 		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		return new DoeResponse("Error occurred", ex.toString());
+		return new DoeResponse("Error occurred", "Invalid input or system error");
+		
 	}
 
-	@ExceptionHandler(IllegalArgumentException.class)
-	public @ResponseBody DoeResponse handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request,
-			HttpServletResponse response) {
-		log.info("Converting IllegalArgumentException to RestResponse : " + ex.getMessage());
-
-		response.setHeader("Content-Type", "application/json");
-		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-		return new DoeResponse("Error occurred", ex.toString());
-	}
-	
 	  @ModelAttribute("loggedOnUser")
 	    public String getLoggedOnUserInfo() {
 		  Authentication auth = SecurityContextHolder.getContext().getAuthentication();
