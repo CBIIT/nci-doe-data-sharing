@@ -37,7 +37,6 @@ import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.DoeSearchResult;
 import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.service.ConsortiumService;
-import gov.nih.nci.doe.web.service.LookUpService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.doe.web.util.LambdaUtils;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
@@ -91,8 +90,6 @@ public class SearchController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.model}")
 	private String hpcModelURL;
 
-	 @Autowired
-	 LookUpService lookUpService;
 	 
 	 @Autowired
 	 ConsortiumService consortiumService;
