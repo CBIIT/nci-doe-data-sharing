@@ -7,7 +7,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -36,22 +37,22 @@ public class RegistrationController extends AbstractDoeController {
     @Value("${gov.nih.nci.hpc.web.server}")
 	private String webServerName;
 
-	@GetMapping
+    @PostMapping
 	public ResponseEntity<?> register(HttpSession session,@RequestHeader HttpHeaders headers, 
-			HttpServletRequest request, DoeRegistration register) throws Exception {
+			HttpServletRequest request, @RequestBody DoeRegistration register) throws Exception {
     	
 		log.info("register user");
 		
 		//validate the password first
 		PasswordStatusCode status = authService.validatePassword(register.getPassword(), null);
-		
-		if(!status.equals(PasswordStatusCode.SUCCESS)) {
-			log.info("Password validation failed...");
-			return new ResponseEntity<>("Enter a valid password.", HttpStatus.OK);
-		} else if(authService.doesUsernameExist(register.getEmailAddress().trim().toLowerCase())) {
+		 if(authService.doesUsernameExist(register.getEmailAddress().trim().toLowerCase())) {
 			log.info("Email already found in the system...");
 			return new ResponseEntity<>("Email address already exists.", HttpStatus.OK);
-		} else {
+		} 
+		else if(!status.equals(PasswordStatusCode.SUCCESS)) {
+			log.info("Password validation failed...");
+			return new ResponseEntity<>("Enter a valid password.", HttpStatus.OK);
+		}  else {
 			//register the user in the system			
 			DoeUsers user = authService.register(register);
             try {

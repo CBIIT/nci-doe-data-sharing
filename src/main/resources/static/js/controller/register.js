@@ -75,7 +75,7 @@ function callRegisterFormValidation() {
 			registerForm.password = $("#id_password").val();
 			registerForm.confirmPassword = $("#id_password_confirm").val();
 			registerForm.institution = $("#id_institution").val();
-			invokeAjax('/register','GET',registerForm,postRegisterFunction,postRegistrationFailure,null,'text');
+			invokeAjax('/register','POST',JSON.stringify(registerForm),postRegisterFunction,postRegistrationFailure,null,'text');
 		  },
 	});
 }
