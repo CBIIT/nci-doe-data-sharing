@@ -348,7 +348,8 @@ function registerCollection() {
 	        } 
 	        if(name && ($(this).attr('name') == ('zAttrStr_' + collectionType.toLowerCase() + '_' + 'name'))) {
 	        	var modifiedName = name.replace(/ /g,"_");
-	        	collectionName = collectionType + "_" + modifiedName;
+	        	//collectionName = collectionType + "_" + modifiedName;
+	        	collectionName = modifiedName;
 	        }
 		});
 	
