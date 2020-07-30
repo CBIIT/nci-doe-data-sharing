@@ -20,9 +20,10 @@
                 </div>               
             </div>
             
-           <div class="col-md-12 form-row" style="height: 239px;width: 1123px;background-color: #5C90C2;margin-top: -88px;" th:if="${loggedOnUser == null}">
+           <div class="col-md-12 form-row" style="height: 239px;width: 1123px;background-color: #5C90C2;
+           margin-top: -88px;" th:if="${loggedOnUser == null}">
            
-            <div class="col-md-5 form-group ellipse-1 " style="text-align: right;padding: 0px !important;" th:if="${loggedOnUser == null}">
+            <div class="col-md-5 form-group ellipse-1 " style="text-align: right;padding: 0px !important;">
              <blockquote>
               <p>
                <a th:href="@{/loginTab}" style="color:#AF5B00;">
@@ -45,7 +46,34 @@
             </div>
            </div> 
             
-            <div class="col-md-12 form-row" style="height: 239px;width: 1123px;background-color: #5C90C2;margin-top: -88px;" th:if="${loggedOnUser != null}">
+           <div class="col-md-12 form-row" style="height: 239px;width: 1123px;background-color: #5C90C2;
+           margin-top: -88px;" th:if="${loggedOnUser != null && isUploader ne true}">
+           
+     <div class="col-md-5 form-group ellipse-1 " style="text-align: right;">
+             <blockquote>
+              <p>
+              <a th:href="@{/searchTab}" style="color:#AF5B00;">
+              <img src="images/Search-circle.svg" th:src="@{/images/Search-circle.svg}" 
+                style="width:210px;margin-top:18px;" alt="sign in image"></a>
+              </p></blockquote>
+            </div>
+            <div class="col-md-2 form-group ellipse-1 ">
+             <blockquote>
+              <p>
+              </p></blockquote>
+            </div>
+            
+             <div class="col-md-5 form-group ellipse-1 " style="text-align: left;">
+           
+            <blockquote>
+              <p><a th:href="@{/tasksTab}" style="color:#AF5B00;">
+               <img src="images/status-circle.svg" th:src="@{/images/status-circle.svg}" 
+                style="width:210px;margin-top:18px;" alt="sign in image"></a>
+               </p></blockquote>
+            </div>
+           </div> 
+            <div class="col-md-12 form-row" style="height: 239px;width: 1123px;background-color: #5C90C2;
+            margin-top: -88px;" th:if="${loggedOnUser != null && isUploader eq true}">
             
             <div class="col-md-4 form-group ellipse-1 " style="text-align: center;">
              <blockquote>
@@ -56,7 +84,7 @@
               </p></blockquote>
             </div>
             
-             <div class="col-md-4 form-group ellipse-1 " style="text-align: center;" th:if="${loggedOnUser != null}">
+             <div class="col-md-4 form-group ellipse-1 " style="text-align: center;">
            
             <blockquote>
               <p><a th:href="@{/tasksTab}" style="color:#AF5B00;">
@@ -65,7 +93,7 @@
                </p></blockquote>
             </div>
 
-           <div class="col-md-4 form-group ellipse-1 " style="text-align: center;" th:if="${loggedOnUser != null && isUploader eq true}">
+           <div class="col-md-4 form-group ellipse-1 " style="text-align: center;">
             
             <blockquote >
               <p><a th:href="@{/addbulk}" style="color:#AF5B00;">
