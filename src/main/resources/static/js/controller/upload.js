@@ -346,7 +346,7 @@ function registerCollection() {
 	        if(!name){
 	        	usermetaDataEntered = false;
 	        } 
-	        if(name && ($(this).attr('name') == ('zAttrStr_' + collectionType.toLowerCase() + '_' + 'name'))) {
+	        if(name && ($(this).attr('name') == ('zAttrStr_' + collectionType.toLowerCase() + '_' + 'identifier'))) {
 	        	var modifiedName = name.replace(/ /g,"_");
 	        	//collectionName = collectionType + "_" + modifiedName;
 	        	collectionName = modifiedName;
