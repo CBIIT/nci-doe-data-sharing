@@ -564,9 +564,7 @@ function displayDataFileSection(value) {
 			$("#displayS3UploadDiv").hide();	
 			$("#selectedFilesDiv").show();
 			$("#selectedFoldersDiv").show();
-	}	
-	
-		else if(value == 's3'){
+	} else if(value == 's3'){
 			$("#singleFileDataUploadSection").hide();
 			$("#bulkFileUploadSection").show();	
 			$("#registerBulkDataForm").show();
