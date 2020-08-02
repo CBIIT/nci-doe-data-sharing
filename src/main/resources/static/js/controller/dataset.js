@@ -249,6 +249,9 @@ function renderDataSetPath(data, type, row) {
 			var metadata = JSON.stringify(row.selfMetadata);
 			 html+= "<a class='cil_12_no_color button2a' metadata_type = '" + metadata  + "' tabindex='0'" +
 			" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' data-popover-content='#a01'>" + row.name + "</a>";
+			 var metadata1 = JSON.stringify(row.systemMetadata);
+			 html+= row.name + "&nbsp;&nbsp;<a class='cil_12_no_color button2a' metadata_context='system_metadata' metadata_type = '" + metadata1  + "' tabindex='0'" +
+				" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' data-popover-content='#a01'><i class='fas fa-info-circle'></i></a>";
 		} else {
 			var metadata = JSON.stringify(row.systemMetadata);
 			 html+= row.name + "&nbsp;&nbsp;<a class='cil_12_no_color button2a' metadata_context='system_metadata' metadata_type = '" + metadata  + "' tabindex='0'" +
