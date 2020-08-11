@@ -128,7 +128,8 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
         	   $("#editCollectionFragment").show();
         	   var metaData = $(this).attr('metadata_set');
         	   var metaDataPath = $(this).attr('metadata_path');
-        	   constructCollectionMetData(metaData,metaDataPath,true,null,null);
+        	   var fileName = $(this).attr('data-fileName');
+        	   constructCollectionMetData(metaData,metaDataPath,true,null,null,fileName);
            });
            
            $(".deleteDataFileBtn").click(function(e){
@@ -295,7 +296,7 @@ function renderDownload(data, type, row,accessgroups,permissions) {
 	}	
    
 	html += "<span class='btn btn-link btn-sm editDataFileCollectionMetadata'  metadata_path  = '" + path + "'" +
-				" metadata_set = '" + metadata  + "' ><i class='fa fa-edit' data-toggle='tooltip'" +
+				" metadata_set = '" + metadata  + "' data-fileName = '" + downdloadFileName + "' ><i class='fa fa-edit' data-toggle='tooltip'" +
 				" data-content='Edit Data Object Metadata'></i></span>";
 				
 	if(accessgroups && accessgroups.indexOf("public") == -1 && permissions && permissions == 'Owner') {		

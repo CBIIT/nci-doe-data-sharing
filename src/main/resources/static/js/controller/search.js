@@ -1,6 +1,12 @@
 $(document).ready(function () {
 	$("#landing-tab").removeClass('active');
 	$("#search-tab").addClass('active');
+	
+	 $('.dt-responsive tbody').on('click', 'td', function (e) {
+		 initializeToolTips();
+		
+	 });
+	 $('body').tooltip({selector: '[data-toggle="tooltip"]'});
 });
 function populateSearchCriteria(searchType) {
 	
@@ -137,7 +143,7 @@ function dataTableInit(isVisible) {
         },
 
         "initComplete": function (settings, json) {
-
+        	$('body').tooltip({selector: '[data-toggle="tooltip"]'});
         },
 
         "drawCallback": function (settings) {
@@ -168,7 +174,8 @@ function dataTableInit(isVisible) {
         	   var metaDataPath = $(this).attr('metadata_path');
         	   var permissionsRole = $(this).attr('permissions_role');
         	   var collectionId = $(this).attr('collectionId');
-        	   constructCollectionMetData(metaData,metaDataPath,false,permissionsRole,collectionId);
+        	   var fileName = $(this).attr('data-fileName');
+        	   constructCollectionMetData(metaData,metaDataPath,false,permissionsRole,collectionId,fileName);
            });
            
            $(".editAccessGroupPermissions").click(function(e){
@@ -264,7 +271,7 @@ function renderPath(data, type, row) {
 			checkboxHtml += "<input aria-label='radio' type='radio' id=" + row.dataSetPath + " class='selectRadioForDataSet'/>";
 		}
 		if(row.dataSetPermissionRole && row.dataSetPermissionRole != 'No Permissions') {
-			editDataSetHtml = "<span class='editCollectionMetadata' collectionId  = '" + row.dataSetCollectionId + "' " +
+			editDataSetHtml = "<span class='editCollectionMetadata' data-fileName = '" + row.dataSetName + "' collectionId  = '" + row.dataSetCollectionId + "' " +
 			"permissions_role = '" + row.dataSetPermissionRole + "'" +
 			" metadata_path  = '" + row.dataSetPath+ "' metadata_set = '" + data  + "'>" +
            "<i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Dataset Metadata'></i></span>";
@@ -276,7 +283,7 @@ function renderPath(data, type, row) {
 		}
 		
 		if(row.dataSetPermissionRole && row.dataSetPermissionRole != 'No Permissions') {
-			editStudySetHtml = "<span class='editCollectionMetadata' collectionId  = '" + row.studyCollectionId + "'" +
+			editStudySetHtml = "<span class='editCollectionMetadata' data-fileName = '" + row.studyName + "' collectionId  = '" + row.studyCollectionId + "'" +
 							" permissions_role = '" + row.studyPermissionRole + "' metadata_path  = '" + row.studyPath+ "' " +
 									" metadata_set = '" + study  + "'>" +
 			"<i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Study Metadata'></i></span>";
@@ -288,7 +295,7 @@ function renderPath(data, type, row) {
 		}
 		
 		if(row.programPermissionRole && row.programPermissionRole != 'No Permissions') {
-			editProgramSetHtml = "<span class='editCollectionMetadata' collectionId  = '" + row.programCollectionId + "'" +
+			editProgramSetHtml = "<span class='editCollectionMetadata' data-fileName = '" + row.programName + "' collectionId  = '" + row.programCollectionId + "'" +
 							" permissions_role = '" + row.programPermissionRole + "' metadata_path  = '" + row.institutePath+ "' " +
 									"metadata_set = '" + ins  + "'>" +
 			"<i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Program Metadata'></i></span>"; 
@@ -437,6 +444,7 @@ function removeRow(rowId) {
 
 function initializeToolTips() {
     $('[data-toggle="tooltip"]').tooltip();
+    $('body').tooltip({selector: '[data-toggle="tooltip"]'});
 }
 
 function initializePopover() {

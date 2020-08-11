@@ -1,4 +1,4 @@
-function constructCollectionMetData(metadata,metaDataPath,isDataObject,permissionrole,collectionId) {
+function constructCollectionMetData(metadata,metaDataPath,isDataObject,permissionrole,collectionId,fileName) {
 	$("#userMetaData tbody").html("");
 	$("#path").val(metaDataPath);
 	 $(".editCollectionSuccess").hide();
@@ -7,6 +7,7 @@ function constructCollectionMetData(metadata,metaDataPath,isDataObject,permissio
 	 $(".editCollectionErrorMsg").html("");
 	 $("#collectionId").val(collectionId);
 	 $("#isDataObject").val(isDataObject);
+	 $("#editUserMetadataFileName").html(fileName);
 	var data = JSON.parse(metadata);
 	$.each(data, function(key, value) {	
         $("#userMetaData tbody").append('<tr><td>' + value.displayName + '</td><td><input type="text" aria-label="value of meta data" name="zAttrStr_'+value.key+'" style="width:70%;" value="' + value.value + '"></td></tr>');

@@ -247,21 +247,17 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 		try {
 			boolean created = DoeClientUtil.updateCollection(authToken, serviceURL, registrationDTO,
 					doeCollection.getPath(), sslCertPath, sslCertPassword);
-			if (created) {
-				
+			if (created) {	
 				//after collection is created, store the permissions.
 				String progList = request.getParameter("metaDataPermissionsList");
-				//if(!StringUtils.isEmpty(progList)) {
 					log.info("selected permissions" + progList);
-					
 					HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL, 
 							doeCollection.getPath(), false, sslCertPath,sslCertPassword);
 					if (collections != null && collections.getCollections() != null
 							&& !CollectionUtils.isEmpty(collections.getCollections())) {
 						HpcCollectionDTO collection = collections.getCollections().get(0);
 						metaDataPermissionService.savePermissionsList(getLoggedOnUserInfo(),progList,collection.getCollection().getCollectionId());
-					}	
-				//}				
+					}
 				return  "Collection is created!";
 			} 
 		} catch (Exception e) {
