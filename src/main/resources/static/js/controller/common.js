@@ -392,6 +392,17 @@ $(document).on('change', '#publicAccess', function() {
 
 });
 
+$(document).on('change', '#editPublicAccess', function() {
+	if($(this).is(":checked")) {
+		$("#updateAccessPermissionsModal").find("#updateAccessGroupsList").next(".select2-container").hide();
+		$("#updateAccessPermissionsModal").find("#updateAccessGroupsList").val("").trigger('change');
+		
+	} else {
+		$("#updateAccessPermissionsModal").find("#updateAccessGroupsList").next(".select2-container").show();
+	}
+
+});
+
 $(document).on('click', '.notifyUsersLink', function(){
 	notifyUsersFunction($(this).attr('notify_permissions'));
 });
