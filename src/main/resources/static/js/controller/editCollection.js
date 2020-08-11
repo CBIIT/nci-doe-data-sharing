@@ -10,7 +10,12 @@ function constructCollectionMetData(metadata,metaDataPath,isDataObject,permissio
 	 $("#editUserMetadataFileName").html(fileName);
 	var data = JSON.parse(metadata);
 	$.each(data, function(key, value) {	
-        $("#userMetaData tbody").append('<tr><td>' + value.displayName + '</td><td><input type="text" aria-label="value of meta data" name="zAttrStr_'+value.key+'" style="width:70%;" value="' + value.value + '"></td></tr>');
+		if(value.key.indexOf("_identifier") != -1) {
+			$("#userMetaData tbody").append('<tr><td>' + value.displayName + '</td><td><input type="text" disabled="true" aria-label="value of meta data" name="zAttrStr_'+value.key+'" style="width:70%;" value="' + value.value + '"></td></tr>');
+		} else {
+          $("#userMetaData tbody").append('<tr><td>' + value.displayName + '</td><td><input type="text" aria-label="value of meta data" name="zAttrStr_'+value.key+'" style="width:70%;" value="' + value.value + '"></td></tr>');
+		}
+		
 	});
 	if(permissionrole && permissionrole == 'Owner') {
 		$("#updatePermissions").show();
