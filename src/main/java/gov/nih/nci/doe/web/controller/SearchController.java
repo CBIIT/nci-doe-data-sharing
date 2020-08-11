@@ -166,6 +166,8 @@ public class SearchController extends AbstractDoeController {
 		for (HpcCollectionDTO result : searchResults) {
 			
 			DoeSearchResult returnResult = new DoeSearchResult();
+			String studyPath = result.getCollection().getCollectionParentName();
+			String programPath = studyPath.substring(0, studyPath.lastIndexOf('/'));
 			Integer studyCollectionId = getCollectionId(result.getMetadataEntries().getParentMetadataEntries(),"Study");
 			Integer programCollectionId  = getCollectionId(result.getMetadataEntries().getParentMetadataEntries(),"Program");
 			returnResult.setDataSetCollectionId(result.getCollection().getCollectionId());
@@ -177,7 +179,8 @@ public class SearchController extends AbstractDoeController {
 			returnResult.setDataSetPath(result.getCollection().getCollectionName());
             returnResult.setDataSetName(getAttributeValue("dataset_name", result.getMetadataEntries().getSelfMetadataEntries(),"Dataset"));
             returnResult.setDataSetDescription(getAttributeValue("description", result.getMetadataEntries().getSelfMetadataEntries(),"Dataset"));
-            returnResult.setStudyPath(result.getCollection().getCollectionParentName());
+            returnResult.setStudyPath(studyPath);
+            returnResult.setInstitutePath(programPath);
             returnResult.setSelfMetadata(getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),"Dataset", systemAttrs));
 			returnResult.setStudyUserMetadata(getUserMetadata(result.getMetadataEntries().getParentMetadataEntries(),"Study", systemAttrs));
 			returnResult.setInstituteUserMetadata(getUserMetadata(result.getMetadataEntries().getParentMetadataEntries(),"Program", systemAttrs));
