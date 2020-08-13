@@ -247,7 +247,7 @@ function constructNewCollectionMetaDataSet(data,status) {
 				$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
 	        			'data-placement="right" title="'+value.description+'"></i></td><td>'+
 	        			'<input type="text" placeholder="Required" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'" value ="'+ parentAccessgrp+'"' +
-	        			'disabled="disabled" style="width:70%;"><input type="hidden" name="zAttrStr_'+value.attrName+'" value ="'+ parentAccessgrp+'"/> &nbsp;&nbsp;<i class="fas fa-question-circle"><span>Access group inherited from parent.</span></i></td></tr>'); 
+	        			'disabled="disabled" style="width:70%;background-color: #dddddd;"><input type="hidden" name="zAttrStr_'+value.attrName+'" value ="'+ parentAccessgrp+'"/> &nbsp;&nbsp;<i class="fas fa-question-circle"><span>Access group inherited from parent.</span></i></td></tr>'); 
 			}
 	   } else {
 		 	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
