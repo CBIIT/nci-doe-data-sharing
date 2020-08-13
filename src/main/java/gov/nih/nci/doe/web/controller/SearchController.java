@@ -96,7 +96,7 @@ public class SearchController extends AbstractDoeController {
 	
 	    @GetMapping
 	    public ResponseEntity<?> search(HttpSession session,@RequestHeader HttpHeaders headers,
-	    		HttpServletRequest request, DoeSearch search ) {
+	    		HttpServletRequest request, DoeSearch search) {
 		
 		String authToken = (String) session.getAttribute("hpcUserToken");
 		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
@@ -107,12 +107,13 @@ public class SearchController extends AbstractDoeController {
 		
 		
 		List<String> systemAttrs = modelDTO.getCollectionSystemGeneratedMetadataAttributeNames();
+		List<String> dataObjectsystemAttrs = modelDTO.getDataObjectSystemGeneratedMetadataAttributeNames();
+		systemAttrs.addAll(dataObjectsystemAttrs);
 		systemAttrs.add("collection_type");
 		systemAttrs.add("access_group");
 		session.setAttribute("systemAttrs", systemAttrs);
 		
-		List<DoeSearchResult> results = new ArrayList<>();	
-		
+		List<DoeSearchResult> results = new ArrayList<>();
 
 		try {			
 			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search);
@@ -370,6 +371,17 @@ public class SearchController extends AbstractDoeController {
 					
 				}
 			}
+	  		
+	  		if (dto != null && dto.getDataObjectMetadataAttributes() != null) {
+				for (HpcMetadataLevelAttributes levelAttrs : dto.getDataObjectMetadataAttributes()) {
+					String label = levelAttrs.getLevelLabel();
+					if (label == null)
+						continue;
+					collectionLevels.addAll(levelAttrs.getMetadataAttributes());
+					
+				}
+			}
+	  		
 
 			if(CollectionUtils.isNotEmpty(collectionLevels)) {
 				
@@ -381,6 +393,8 @@ public class SearchController extends AbstractDoeController {
 				
 				
 				List<String> systemAttrs = modelDTO.getCollectionSystemGeneratedMetadataAttributeNames();
+				List<String> dataObjectsystemAttrs = modelDTO.getDataObjectSystemGeneratedMetadataAttributeNames();
+				systemAttrs.addAll(dataObjectsystemAttrs);
 				systemAttrs.add("collection_type");
 				systemAttrs.add("access_group");
 				session.setAttribute("systemAttrs", systemAttrs);
