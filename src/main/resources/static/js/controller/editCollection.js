@@ -86,6 +86,16 @@ function postSuccessAccessPermissions(data,status) {
 	var accessGrp = $("#updateAccessPermissionsModal").find("#accessGroups").val();
 	var accessGrpList = accessGrp.split(",");
 	
+	if(accessGrp == 'public') {
+		$("#updateAccessPermissionsModal").find("#updateAccessGroupsList").next(".select2-container").hide();
+		$("#updateAccessPermissionsModal").find("#updateAccessGroupsList").val("").trigger('change');
+		$("#updateAccessPermissionsModal").find("#editPublicAccess").prop("checked",true);
+
+	} else {
+		$("#updateAccessPermissionsModal").find("#updateAccessGroupsList").next(".select2-container").show();
+		$("#updateAccessPermissionsModal").find("#editPublicAccess").prop("checked",false);
+	}
+	
 	 for (var i = 0; i < accessGrpList.length; i++) {
 	        $("#updateAccessGroupsList option[value='" + accessGrpList[i] + "']").prop("selected", true);
 	        $("#updateAccessPermissionsModal").find("#updateAccessGroupsList").trigger('change');
