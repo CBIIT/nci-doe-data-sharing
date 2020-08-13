@@ -403,6 +403,10 @@ padding-left: 10px;
 padding-right: 10px;
 }
 
+.cil_12_no_color {
+	cursor: pointer;
+}
+
 .btn-danger {
     color: #fff!important;
     background-color: #dc3545!important;

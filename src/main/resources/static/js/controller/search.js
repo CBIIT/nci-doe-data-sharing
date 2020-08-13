@@ -274,11 +274,11 @@ function renderPath(data, type, row) {
 			editDataSetHtml = "<span class='editCollectionMetadata' data-fileName = '" + row.dataSetName + "' collectionId  = '" + row.dataSetCollectionId + "' " +
 			"permissions_role = '" + row.dataSetPermissionRole + "'" +
 			" metadata_path  = '" + row.dataSetPath+ "' metadata_set = '" + data  + "'>" +
-           "<i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Dataset Metadata'></i></span>";
+           "<i class='fa fa-edit' data-toggle='tooltip' title='Edit Dataset Metadata'></i></span>";
 			if(row.dataSetPermissionRole == 'Owner') {
 				editDataSetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collection_name = '" + row.dataSetName + "' collectionId  = '" + row.dataSetCollectionId + "' " +
 			    "permissions_groups ='"+ JSON.stringify(permissions) + "'  selectedCollection = 'Dataset' access_groups  = '" + row.dataLevelAccessGroups+ "' metadata_path  = '" + row.dataSetPath+ "'>" +
-                 "<i class='fa fa-users' data-toggle='tooltip' data-content='Edit Dataset Access Permissions'></i></span>";
+                 "<i class='fa fa-users' data-toggle='tooltip' title='Edit Dataset Access Permissions'></i></span>";
 			}
 		}
 		
@@ -286,11 +286,11 @@ function renderPath(data, type, row) {
 			editStudySetHtml = "<span class='editCollectionMetadata' data-fileName = '" + row.studyName + "' collectionId  = '" + row.studyCollectionId + "'" +
 							" permissions_role = '" + row.studyPermissionRole + "' metadata_path  = '" + row.studyPath+ "' " +
 									" metadata_set = '" + study  + "'>" +
-			"<i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Study Metadata'></i></span>";
+			"<i class='fa fa-edit' data-toggle='tooltip' title='Edit Study Metadata'></i></span>";
 			if(row.studyPermissionRole == 'Owner') {
 				editStudySetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collection_name ='" +row.studyName + "' collectionId  = '" + row.studyCollectionId + "' " +
 			    " permissions_groups ='"+ JSON.stringify(permissions) + "'   selectedCollection = 'study'  access_groups  = '" + row.studyLevelAccessGroups+ "' metadata_path  = '" + row.studyPath+ "'>" +
-                 "<i class='fa fa-users' data-toggle='tooltip' data-content='Edit Study Access Permissions'></i></span>";
+                 "<i class='fa fa-users' data-toggle='tooltip' title='Edit Study Access Permissions'></i></span>";
 			}
 		}
 		
@@ -298,12 +298,12 @@ function renderPath(data, type, row) {
 			editProgramSetHtml = "<span class='editCollectionMetadata' data-fileName = '" + row.programName + "' collectionId  = '" + row.programCollectionId + "'" +
 							" permissions_role = '" + row.programPermissionRole + "' metadata_path  = '" + row.institutePath+ "' " +
 									"metadata_set = '" + ins  + "'>" +
-			"<i class='fa fa-edit' data-toggle='tooltip' data-content='Edit Program Metadata'></i></span>"; 
+			"<i class='fa fa-edit' data-toggle='tooltip' title='Edit Program Metadata'></i></span>"; 
 			
 			if(row.programPermissionRole == 'Owner') {
 				editProgramSetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collection_name ='" +row.programName + "' collectionId  = '" + row.programCollectionId + "' " +
 			    "permissions_groups ='"+ JSON.stringify(permissions) + "'   selectedCollection = 'program'  access_groups  = '" + row.programLevelAccessGroups+ "' metadata_path  = '" + row.institutePath+ "'>" +
-                 "<i class='fa fa-users' data-toggle='tooltip' data-content='Edit Program Access Permissions'></i></span>";
+                 "<i class='fa fa-users' data-toggle='tooltip' title='Edit Program Access Permissions'></i></span>";
 			}
 		}
 	
