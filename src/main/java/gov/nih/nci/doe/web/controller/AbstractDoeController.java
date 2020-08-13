@@ -270,7 +270,12 @@ public abstract class AbstractDoeController {
 			 List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
 			 HpcMetadataEntry entry = new HpcMetadataEntry();
 				entry.setAttribute("access_group");
-				entry.setValue(permissionGroups.getSelectedAccessGroups());
+				if(permissionGroups.getSelectedAccessGroups().isEmpty()) {
+					entry.setValue("public");
+				} else {
+					entry.setValue(permissionGroups.getSelectedAccessGroups());
+				}
+			
 				metadataEntries.add(entry);
 			 dto.getMetadataEntries().addAll(metadataEntries);
 				boolean updated = DoeClientUtil.updateCollection(authToken, serviceURL, dto,
