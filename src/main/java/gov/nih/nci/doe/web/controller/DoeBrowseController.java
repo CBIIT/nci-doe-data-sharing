@@ -26,8 +26,12 @@ import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.datamanagement.HpcCollection;
 import gov.nih.nci.hpc.domain.datamanagement.HpcCollectionListingEntry;
+import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
 
 
 /**
@@ -55,14 +59,147 @@ public class DoeBrowseController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.pathreftype}")
 	private String hpcPathRefTypeURL;
 	
+	@Value("${gov.nih.nci.hpc.server.dataObject}")
+	private String serviceURL;
+	
 	// The logger instance.
 	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
-
-
-	@Value("${doe.basePath}")
-	private String basePath;
 	
 
+	@GetMapping(value = "/metaData", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getUserMetaDataByPath(@RequestParam(value = "selectedPath") String selectedPath,
+			@RequestParam(value = "levelName") String levelName,@RequestParam(value = "isDataObject") String isDataObject,
+			HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+		
+		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		List<KeyValueBean> entryList = new ArrayList<KeyValueBean>();
+		
+		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
+		if (modelDTO == null) {
+			modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL, sslCertPath, sslCertPassword);
+			session.setAttribute("userDOCModel", modelDTO);
+		}
+
+		List<String> systemAttrs = modelDTO.getCollectionSystemGeneratedMetadataAttributeNames();
+		List<String> dataObjectsystemAttrs = modelDTO.getDataObjectSystemGeneratedMetadataAttributeNames();
+		systemAttrs.addAll(dataObjectsystemAttrs);
+		systemAttrs.add("collection_type");
+		systemAttrs.add("access_group");
+		session.setAttribute("systemAttrs", systemAttrs);
+		
+		try {
+			if (selectedPath!= null) {
+				if(StringUtils.isNotEmpty(isDataObject) && isDataObject.equalsIgnoreCase("false")) {
+				// Get collection
+				HpcCollectionListDTO collections =  DoeClientUtil.getCollection(authToken, collectionURL, 
+						selectedPath, false, sslCertPath,sslCertPassword);
+				if (collections != null && collections.getCollections() != null
+						&& !collections.getCollections().isEmpty()) {
+					HpcCollectionDTO collection = collections.getCollections().get(0);					
+					for (HpcMetadataEntry entry : collection.getMetadataEntries().getSelfMetadataEntries()) {						
+							if (systemAttrs != null && !systemAttrs.contains(entry.getAttribute())) {
+								String attrName = lookUpService.getDisplayName(levelName,entry.getAttribute());
+								KeyValueBean k = null;
+								if(!StringUtils.isEmpty(attrName)) {
+									 k = new KeyValueBean(entry.getAttribute(),attrName, entry.getValue());
+								} else {
+									 k = new KeyValueBean(entry.getAttribute(),entry.getAttribute(), entry.getValue());
+								}
+											
+								entryList.add(k);
+							}
+							
+						
+					}
+				}
+					
+				} else {
+				  HpcDataObjectListDTO datafiles = DoeClientUtil.getDatafiles(authToken, serviceURL, 
+						  selectedPath, false, true,sslCertPath, sslCertPassword);
+					if (datafiles != null && datafiles.getDataObjects() != null &&
+							!datafiles.getDataObjects().isEmpty()) {
+						HpcDataObjectDTO dataFile = datafiles.getDataObjects().get(0);
+						for (HpcMetadataEntry entry : dataFile.getMetadataEntries().getSelfMetadataEntries()) {						
+							if (systemAttrs != null && !systemAttrs.contains(entry.getAttribute())) {
+								String attrName = lookUpService.getDisplayName(levelName,entry.getAttribute());
+								KeyValueBean k = null;
+								if(!StringUtils.isEmpty(attrName)) {
+									 k = new KeyValueBean(entry.getAttribute(),attrName, entry.getValue());
+								} else {
+									 k = new KeyValueBean(entry.getAttribute(),entry.getAttribute(), entry.getValue());
+								}
+											
+								entryList.add(k);
+							}
+							
+						
+					}
+					
+			  }
+			}
+		  }
+		} catch (Exception e) {
+			String errMsg = "Failed to get metadata: " + e.getMessage();
+			logger.error(errMsg, e);
+		} 
+		 return new ResponseEntity<>(entryList, HttpStatus.OK);
+	}
+	
+	
+
+	@GetMapping(value = "/getAccessgroups", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getAccessgroups(@RequestParam(value = "selectedPath") String selectedPath,
+			@RequestParam(value = "levelName") String levelName,
+			HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+		
+		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		List<KeyValueBean> entryList = new ArrayList<KeyValueBean>();
+		
+		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
+		if (modelDTO == null) {
+			modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL, sslCertPath, sslCertPassword);
+			session.setAttribute("userDOCModel", modelDTO);
+		}
+		
+		try {
+			if (selectedPath!= null) {
+				// Get collection
+				HpcCollectionListDTO collections =  DoeClientUtil.getCollection(authToken, collectionURL, 
+						selectedPath, true, sslCertPath,sslCertPassword);
+				if (collections != null && collections.getCollections() != null
+						&& !collections.getCollections().isEmpty()) {
+					HpcCollectionDTO collection = collections.getCollections().get(0);			
+					HpcMetadataEntry selectedEntry =  collection.getMetadataEntries().getSelfMetadataEntries().stream().
+							filter(e -> e.getAttribute().equalsIgnoreCase("access_group")).
+							findAny().orElse(null);
+					if(selectedEntry !=null) {
+						entryList.add(new KeyValueBean("selectedEntry",selectedEntry.getValue()));
+					}
+					
+					HpcMetadataEntry programEntry =  collection.getMetadataEntries().getParentMetadataEntries().stream().
+							filter(e -> e.getAttribute().equalsIgnoreCase("access_group") && 
+							e.getLevelLabel().equalsIgnoreCase("program")).
+							findAny().orElse(null);
+					if(programEntry !=null) {
+						entryList.add(new KeyValueBean("programLevelAccessGroups",programEntry.getValue()));
+					}
+					
+					HpcMetadataEntry studyEntry =  collection.getMetadataEntries().getParentMetadataEntries().stream().
+							filter(e -> e.getAttribute().equalsIgnoreCase("access_group") && 
+									e.getLevelLabel().equalsIgnoreCase("study")).
+							findAny().orElse(null);
+					if(studyEntry !=null) {
+						entryList.add(new KeyValueBean("studyLevelAccessGroups",studyEntry.getValue()));
+					}
+				}
+			}
+		} catch (Exception e) {
+			String errMsg = "Failed to get metadata: " + e.getMessage();
+			logger.error(errMsg, e);
+		} 
+		 return new ResponseEntity<>(entryList, HttpStatus.OK);
+	}
+	
 	@GetMapping(value = "/collection", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> browseCollection(@RequestParam(value = "selectedPath") String selectedPath, 
 			@RequestParam(required = false) String refreshNode,HttpSession session, HttpServletRequest request, HttpServletResponse response) {

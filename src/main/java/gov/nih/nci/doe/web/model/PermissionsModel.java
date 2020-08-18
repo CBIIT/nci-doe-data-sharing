@@ -10,10 +10,17 @@ public class PermissionsModel {
 	private String progCollectionId;
 	private String selectedAccessGroups;
 	private String selectedCollection;
+	private String selectedEntry;
 	private String path;
 	
 	
 	
+	public String getSelectedEntry() {
+		return selectedEntry;
+	}
+	public void setSelectedEntry(String selectedEntry) {
+		this.selectedEntry = selectedEntry;
+	}
 	public String getSelectedCollection() {
 		return selectedCollection;
 	}

@@ -170,22 +170,67 @@ function dataTableInit(isVisible) {
         	   $("#searchFragmentDiv").hide();
         	   $("#dataSetFragment").hide();
         	   $("#editCollectionFragment").show();
-        	   var metaData = $(this).attr('metadata_set');
+        	   //var metaData = $(this).attr('metadata_set');
         	   var metaDataPath = $(this).attr('metadata_path');
         	   var permissionsRole = $(this).attr('permissions_role');
         	   var collectionId = $(this).attr('collectionId');
         	   var fileName = $(this).attr('data-fileName');
-        	   constructCollectionMetData(metaData,metaDataPath,false,permissionsRole,collectionId,fileName);
+        	   var selectedCollection = $(this).attr('selectedCollection');
+        	   var params= {selectedPath:metaDataPath,levelName:selectedCollection,isDataObject:false};
+        	   
+   			$.ajax({
+				type : "GET",
+			     url : '/browse/metaData',
+			     contentType : 'application/json',
+				 data : params,
+				 beforeSend: function () {
+			    	   $("#spinner").show();
+			           $("#dimmer").show();
+			       },
+				 success : function(msg) {
+					 $("#spinner").hide();
+			         $("#dimmer").hide();
+			         constructCollectionMetData(msg,metaDataPath,false,permissionsRole,collectionId,fileName);
+				 },
+				error : function(e) {
+					 console.log('ERROR: ', e);
+					 $("#spinner").hide();
+			         $("#dimmer").hide();
+				}
+			});
+        	   
            });
            
            $(".editAccessGroupPermissions").click(function(e){
          	   var collectionId = $(this).attr('collectionId');
-         	   var permissions = $(this).attr('permissions_groups');
-         	  var access_groups = $(this).attr('access_groups');
+         	   //var permissions = $(this).attr('permissions_groups');
+         	 // var access_groups = $(this).attr('access_groups');
          	 var metaDataPath = $(this).attr('metadata_path');
          	var selectedCollection = $(this).attr('selectedCollection');
          	var collectionName = $(this).attr('collection_name');
-        	   editAccessPermissions(collectionId,access_groups,metaDataPath,permissions,selectedCollection,collectionName);
+     	   var params= {selectedPath:metaDataPath,levelName:selectedCollection};
+    	   
+  			$.ajax({
+				type : "GET",
+			     url : '/browse/getAccessgroups',
+			     contentType : 'application/json',
+				 data : params,
+				 beforeSend: function () {
+			    	   $("#spinner").show();
+			           $("#dimmer").show();
+			       },
+				 success : function(msg) {
+					 $("#spinner").hide();
+			         $("#dimmer").hide();
+			         editAccessPermissions(collectionId,metaDataPath,msg,selectedCollection,collectionName);
+				 },
+				error : function(e) {
+					 console.log('ERROR: ', e);
+					 $("#spinner").hide();
+			         $("#dimmer").hide();
+				}
+			});
+        	   
            });
            
            $(".selectCheckboxForIns").click(function(e){
@@ -271,7 +316,7 @@ function renderPath(data, type, row) {
 			checkboxHtml += "<input aria-label='radio' type='radio' id=" + row.dataSetPath + " class='selectRadioForDataSet'/>";
 		}
 		if(row.dataSetPermissionRole && row.dataSetPermissionRole != 'No Permissions') {
-			editDataSetHtml = "<span class='editCollectionMetadata' data-fileName = '" + row.dataSetName + "' collectionId  = '" + row.dataSetCollectionId + "' " +
+			editDataSetHtml = "<span class='editCollectionMetadata' selectedCollection = 'Dataset' data-fileName = '" + row.dataSetName + "' collectionId  = '" + row.dataSetCollectionId + "' " +
 			"permissions_role = '" + row.dataSetPermissionRole + "'" +
 			" metadata_path  = '" + row.dataSetPath+ "' metadata_set = '" + data  + "'>" +
            "<i class='fa fa-edit' data-toggle='tooltip' title='Edit Dataset Metadata'></i></span>";
@@ -283,7 +328,7 @@ function renderPath(data, type, row) {
 		}
 		
 		if(row.dataSetPermissionRole && row.dataSetPermissionRole != 'No Permissions') {
-			editStudySetHtml = "<span class='editCollectionMetadata' data-fileName = '" + row.studyName + "' collectionId  = '" + row.studyCollectionId + "'" +
+			editStudySetHtml = "<span class='editCollectionMetadata' selectedCollection = 'study' data-fileName = '" + row.studyName + "' collectionId  = '" + row.studyCollectionId + "'" +
 							" permissions_role = '" + row.studyPermissionRole + "' metadata_path  = '" + row.studyPath+ "' " +
 									" metadata_set = '" + study  + "'>" +
 			"<i class='fa fa-edit' data-toggle='tooltip' title='Edit Study Metadata'></i></span>";
@@ -295,7 +340,7 @@ function renderPath(data, type, row) {
 		}
 		
 		if(row.programPermissionRole && row.programPermissionRole != 'No Permissions') {
-			editProgramSetHtml = "<span class='editCollectionMetadata' data-fileName = '" + row.programName + "' collectionId  = '" + row.programCollectionId + "'" +
+			editProgramSetHtml = "<span class='editCollectionMetadata' selectedCollection = 'program' data-fileName = '" + row.programName + "' collectionId  = '" + row.programCollectionId + "'" +
 							" permissions_role = '" + row.programPermissionRole + "' metadata_path  = '" + row.institutePath+ "' " +
 									"metadata_set = '" + ins  + "'>" +
 			"<i class='fa fa-edit' data-toggle='tooltip' title='Edit Program Metadata'></i></span>"; 

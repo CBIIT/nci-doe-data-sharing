@@ -8,7 +8,7 @@ function constructCollectionMetData(metadata,metaDataPath,isDataObject,permissio
 	 $("#collectionId").val(collectionId);
 	 $("#isDataObject").val(isDataObject);
 	 $("#editUserMetadataFileName").html(fileName);
-	var data = JSON.parse(metadata);
+	var data = metadata;
 	$.each(data, function(key, value) {	
 		if(value.key.indexOf("_identifier") != -1) {
 			$("#userMetaData tbody").append('<tr><td>' + value.displayName + '</td><td><input type="text" disabled="true" aria-label="value of meta data" name="zAttrStr_'+value.key+'" style="width:70%;" value="' + value.value + '"></td></tr>');
@@ -67,13 +67,26 @@ function postSuccessUpdatePermissions(data,status) {
 	
 }
 
-function editAccessPermissions(collectionId,access_groups,metadata_path,permissions,selectedCollection,collectionName) {
+function editAccessPermissions(collectionId,metadata_path,msg,selectedCollection,collectionName) {
+
+	var permissions={};
+	$.each(msg, function(key, value) {	
+		if(value.key.indexOf("selectedEntry") != -1) {
+			$("#updateAccessPermissionsModal").find("#accessGroups").val(value.value);
+		} 
+			if(value.key.indexOf("studyLevelAccessGroups") != -1) {
+			permissions.studyLevelAccessGroups =value.value;
+		} 
+			if(value.key.indexOf("programLevelAccessGroups") != -1) {
+permissions.programLevelAccessGroups = value.value;
+		} 
+		
+	});
+	
 	$("#updateAccessPermissionsModal").find(".updateAccessMsg").html("");
 	$("#updateAccessPermissionsModal").find(".updateAccessGroupsBlock").hide();
-	
-	$("#updateAccessPermissionsModal").find("#updateCollectionId").val(collectionId);
-	$("#updateAccessPermissionsModal").find("#accessGroups").val(access_groups);	
-	$("#updateAccessPermissionsModal").find("#permissionGroups").val(permissions);
+	$("#updateAccessPermissionsModal").find("#updateCollectionId").val(collectionId);		
+	$("#updateAccessPermissionsModal").find("#permissionGroups").val(JSON.stringify(permissions));
 	$("#updateAccessPermissionsModal").find("#metadata_path").val(metadata_path);
 	$("#updateAccessPermissionsModal").find("#selectedCollection").val(selectedCollection);
 	$("#updateAccessPermissionsModal").find("#selectedCollectionName").text(collectionName);

@@ -129,7 +129,28 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
         	   var metaData = $(this).attr('metadata_set');
         	   var metaDataPath = $(this).attr('metadata_path');
         	   var fileName = $(this).attr('data-fileName');
-        	   constructCollectionMetData(metaData,metaDataPath,true,null,null,fileName);
+        	   var params= {selectedPath:metaDataPath,levelName:'DataObject',isDataObject:true};
+      			$.ajax({
+    				type : "GET",
+    			     url : '/browse/metaData',
+    			     contentType : 'application/json',
+    				 data : params,
+    				 beforeSend: function () {
+    			    	   $("#spinner").show();
+    			           $("#dimmer").show();
+    			       },
+    				 success : function(msg) {
+    					 $("#spinner").hide();
+    			         $("#dimmer").hide();
+    			         constructCollectionMetData(msg,metaDataPath,true,null,null,fileName);
+    				 },
+    				error : function(e) {
+    					 console.log('ERROR: ', e);
+    					 $("#spinner").hide();
+    			         $("#dimmer").hide();
+    				}
+    			});
+        	
            });
            
            $(".deleteDataFileBtn").click(function(e){
@@ -184,7 +205,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
            });
            initializeToolTips();
            initializePopover();
-           displayPopover();
+           displayPopoverDataSet();
         },
 
         "columns": [
@@ -248,24 +269,26 @@ function renderDataSetPath(data, type, row) {
 	if(row.systemMetadata && row.systemMetadata.length > 0) {
 		if(row.selfMetadata && row.selfMetadata.length > 0) {
 			var metadata = JSON.stringify(row.selfMetadata);
-			 html+= "<a class='cil_12_no_color button2a' metadata_type = '" + metadata  + "' tabindex='0'" +
+			var metadata1 = JSON.stringify(row.systemMetadata);
+			
+			 html+= "<a class='cil_12_no_color button2a' sys_metadata = '" + metadata1 + "' " +
+			 		"metadata_type = '" + metadata  + "' tabindex='0'" +
 			" data-container='body' data-toggle='popover' data-placement='right' " +
 			"data-trigger='click' data-popover-content='#a01'>" + row.name + "</a>";
-			 var metadata1 = JSON.stringify(row.systemMetadata);
-			 html+= "&nbsp;&nbsp;<a class='cil_12_no_color button2a' " +
-			 		"metadata_context='system_metadata' metadata_type = '" + metadata1  + "' " +
-			 				"tabindex='0'" +
-				" data-container='body' data-toggle='popover' data-placement='right' " +
-				"data-trigger='click' data-popover-content='#a01'><i class='fas fa-info-circle'></i></a>";
+			 
 		} else {
 			var metadata = JSON.stringify(row.systemMetadata);
-			 html+= row.name + "&nbsp;&nbsp;<a class='cil_12_no_color button2a' metadata_context='system_metadata' metadata_type = '" + metadata  + "' tabindex='0'" +
-				" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' data-popover-content='#a01'><i class='fas fa-info-circle'></i></a>";
+			 html+= row.name + "&nbsp;&nbsp;<a class='cil_12_no_color button2a' " +
+			 		"metadata_context='system_metadata' sys_metadata = '" + metadata + "' tabindex='0'" +
+				" data-container='body' data-toggle='popover' data-placement='right' " +
+				"data-trigger='click' data-popover-content='#a01'>" + row.name + "</a>";
 		}
 	} else if(row.selfMetadata && row.selfMetadata.length > 0) {
 		var metadata = JSON.stringify(row.selfMetadata);
-		 html+= "<a class='cil_12_no_color button2a' metadata_type = '" + metadata  + "' tabindex='0'" +
-		" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' data-popover-content='#a01'>" + row.name + "</a>";
+		 html+= "<a class='cil_12_no_color button2a' " +
+		 		"metadata_type = '" + metadata  + "' tabindex='0'" +
+		" data-container='body' data-toggle='popover' data-placement='right' " +
+		"data-trigger='click' data-popover-content='#a01'>" + row.name + "</a>";
 	} else {
 		 html= row.name;
 	}
@@ -273,6 +296,75 @@ function renderDataSetPath(data, type, row) {
 	return html;
 }
 
+
+function displayPopoverDataSet() {
+    $('.button2a').on('click', function (e) {
+        openPopOverDataSet($(this));
+    });
+    $('.button2a').on('keypress', function (e) {
+        if (e.which == 13 || e.keyCode == 13) {
+        	openPopOverDataSet($(this));
+        }
+    });
+}
+
+function openPopOverDataSet($this) {
+    var pop = $this;
+    $('.button2a').not($this).popover('hide'); 
+    var metadata = $this.attr('metadata_type');
+    var usermetadata = $this.attr('sys_metadata');
+    var headerTest = 'System Metadata';
+    
+    var list = JSON.parse(metadata);
+    var list1 = JSON.parse(usermetadata);
+    var ind = "";
+    
+    if(list) {
+    	headerTest = 'User Metadata';
+    	
+       ind = "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\">" +
+                "" + headerTest +" <a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a> </div>" +
+                "<div class='popover-body'> <div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
+                "<div class='divTableBody'><div class='divTableRow'>" +
+                "<div class='divTableHead'>Attribute</div>" + 
+                "<div class='divTableHead'>Value</div></div>";
+
+            var content = "";
+
+            $.each(list, function( key, value ) {	
+                content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
+                        "<div class='divTableCell'>" + value.value + "</div></div>";
+                });
+            
+            var table = ind + content + "</div> </div></div> </div>";
+           
+    }
+            
+            if(list1) {
+            	headerTest = 'System Metadata';
+                 ind += "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\">" +
+                "" + headerTest +" <a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a> </div>" +
+                "<div class='popover-body'> <div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
+                "<div class='divTableBody'><div class='divTableRow'>" +
+                "<div class='divTableHead'>Attribute</div>" + 
+                "<div class='divTableHead'>Value</div></div>";
+
+
+            $.each(list1, function( key, value ) {	
+                content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
+                        "<div class='divTableCell'>" + value.value + "</div></div>";
+                });
+            
+             table += ind + content + "</div> </div></div> </div>";
+            
+            }
+            $("#a01").remove();
+            pop.after(table);
+            pop.data('bs.popover').setContent();
+            pop.popover('show');
+        
+   
+}
 
 function renderFileSize(data, type, row) {
 	return row.fileSize;
