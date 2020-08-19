@@ -30,9 +30,7 @@ function addCollectionMetaDataRows() {
 	rowId = rowId +1; 
 	 $("#userMetaData tbody").append('<tr id="addRow'+rowId+'"><td><input type="text" style="width:70%;" ' +
 			 'name="_addAttrName'+rowId+'" aria-label="add new row" id="_addAttrName'+rowId+'"></td><td><input type="text" style="width:70%;" id="_addAttrValue'+rowId+'" name="_addAttrValue'+rowId+'" >' +
-	 		'&nbsp;&nbsp;<input class="btn btn-primary pull-right" type="button" value="X" onclick="removeCollectionRow(\'addRow' + rowId + '\')"></td></tr>');
-	 
-	
+	 		'&nbsp;&nbsp;<input class="btn btn-primary pull-right" type="button" value="X" onclick="removeCollectionRow(\'addRow' + rowId + '\')"></td></tr>');	
 }
 
 function editPermissionsOpenModal() {
@@ -78,7 +76,7 @@ function editAccessPermissions(collectionId,metadata_path,msg,selectedCollection
 			permissions.studyLevelAccessGroups =value.value;
 		} 
 			if(value.key.indexOf("programLevelAccessGroups") != -1) {
-permissions.programLevelAccessGroups = value.value;
+            permissions.programLevelAccessGroups = value.value;
 		} 
 		
 	});

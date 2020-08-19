@@ -55,10 +55,14 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
         "drawCallback": function (settings) {
 
         	$("#downloadSelectedDataSet").prop("disabled",true);
+        	$("#downloadSelectedMetadata").prop("disabled",true);
+        	
         	if(isVisible) {
         		$("#downloadSelectedDataSet").show();
+        		$("#downloadSelectedMetadata").show();
         	} else {
         		$("#downloadSelectedDataSet").hide();
+        		$("#downloadSelectedMetadata").hide();
         	}
         	
         	$("#dataSetMetaData tbody").html("");
@@ -81,6 +85,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
                      $('td input:checkbox', table).prop('checked', true);
                      if (row_count > 1) {
                          $("#downloadSelectedDataSet").prop("disabled", false);
+                         $("#downloadSelectedMetadata").prop("disabled", false);
                          $(".downloadLink").prop("disabled", true);
                      }
 
@@ -88,6 +93,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
                      $('td input:checkbox', table).prop('checked', false);
                      if (row_count > 1) {
                          $("#downloadSelectedDataSet").prop("disabled", true);
+                         $("#downloadSelectedMetadata").prop("disabled", true);
                          $(".downloadLink").prop("disabled", false);
                      }
                  }
@@ -101,13 +107,19 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
                   }
                   var len = $('#' + table).find('.selectIndividualCheckbox:checked').length;
                   if (len > 1) {
-                      $("#downloadSelectedDataSet").prop("disabled", false);
+                      $("#downloadSelectedDataSet").prop("disabled", false);                    
                       $("#" + table + " input[type=checkbox]:checked").each(function () {
                           $(this).closest("tr").find('a.downloadLink').prop("disabled", true);
                       });
                   } else {
                       $("#downloadSelectedDataSet").prop("disabled", true);
                       $(".downloadLink").prop("disabled", false);
+                  }
+                  
+                  if(len >= 1) {
+                	  $("#downloadSelectedMetadata").prop("disabled", false);
+                  } else {
+                	  $("#downloadSelectedMetadata").prop("disabled", true);
                   }
               });
         	  
@@ -120,6 +132,10 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
            
            $("#downloadSelectedDataSet").click(function(e){
         	   onClickOfBulkDownloadBtn();
+           });
+           
+           $("#downloadSelectedMetadata").click(function(e){
+        	   exportDataObjectMetadata();
            });
            
            $(".editDataFileCollectionMetadata").click(function(e){
@@ -369,6 +385,13 @@ function openPopOverDataSet($this) {
 function renderFileSize(data, type, row) {
 	return row.fileSize;
 	
+}
+function exportDataObjectMetadata() {
+	var selectedPaths = [];
+    $("#dataSetTable tbody input[type=checkbox]:checked").each(function () {
+    	selectedPaths.push($(this).attr('id'));
+    });
+	window.open('/export?selectedPaths='+selectedPaths, '_self');
 }
 
 function renderDownload(data, type, row,accessgroups,permissions) {
