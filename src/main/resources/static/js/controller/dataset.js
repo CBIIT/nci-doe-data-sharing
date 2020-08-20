@@ -221,7 +221,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
            });
            initializeToolTips();
            initializePopover();
-           displayPopoverDataSet();
+           displayPopover();
         },
 
         "columns": [
@@ -285,26 +285,24 @@ function renderDataSetPath(data, type, row) {
 	if(row.systemMetadata && row.systemMetadata.length > 0) {
 		if(row.selfMetadata && row.selfMetadata.length > 0) {
 			var metadata = JSON.stringify(row.selfMetadata);
-			var metadata1 = JSON.stringify(row.systemMetadata);
-			
-			 html+= "<a class='cil_12_no_color button2a' sys_metadata = '" + metadata1 + "' " +
-			 		"metadata_type = '" + metadata  + "' tabindex='0'" +
+			 html+= "<a class='cil_12_no_color button2a' metadata_type = '" + metadata  + "' tabindex='0'" +
 			" data-container='body' data-toggle='popover' data-placement='right' " +
 			"data-trigger='click' data-popover-content='#a01'>" + row.name + "</a>";
-			 
+			 var metadata1 = JSON.stringify(row.systemMetadata);
+			 html+= "&nbsp;&nbsp;<a class='cil_12_no_color button2a' " +
+			 		"metadata_context='system_metadata' metadata_type = '" + metadata1  + "' " +
+			 				"tabindex='0'" +
+				" data-container='body' data-toggle='popover' data-placement='right' " +
+				"data-trigger='click' data-popover-content='#a01'><i class='fas fa-info-circle'></i></a>";
 		} else {
 			var metadata = JSON.stringify(row.systemMetadata);
-			 html+= row.name + "&nbsp;&nbsp;<a class='cil_12_no_color button2a' " +
-			 		"metadata_context='system_metadata' sys_metadata = '" + metadata + "' tabindex='0'" +
-				" data-container='body' data-toggle='popover' data-placement='right' " +
-				"data-trigger='click' data-popover-content='#a01'>" + row.name + "</a>";
+			 html+= row.name + "&nbsp;&nbsp;<a class='cil_12_no_color button2a' metadata_context='system_metadata' metadata_type = '" + metadata  + "' tabindex='0'" +
+				" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' data-popover-content='#a01'><i class='fas fa-info-circle'></i></a>";
 		}
 	} else if(row.selfMetadata && row.selfMetadata.length > 0) {
 		var metadata = JSON.stringify(row.selfMetadata);
-		 html+= "<a class='cil_12_no_color button2a' " +
-		 		"metadata_type = '" + metadata  + "' tabindex='0'" +
-		" data-container='body' data-toggle='popover' data-placement='right' " +
-		"data-trigger='click' data-popover-content='#a01'>" + row.name + "</a>";
+		 html+= "<a class='cil_12_no_color button2a' metadata_type = '" + metadata  + "' tabindex='0'" +
+		" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' data-popover-content='#a01'>" + row.name + "</a>";
 	} else {
 		 html= row.name;
 	}
