@@ -326,6 +326,15 @@ label{font-weight:bold;}
 form#register-form label {
     color: #fff;
 }
+form#update-profile-form label {
+    color: #fff;
+}
+form#forgot-password-form label {
+    color: #fff;
+}
+form#forgot-password-form .error {
+    color: rgb(251, 6, 10);
+}
 form#register-form .error {
     color: rgb(251, 6, 10);
 }
