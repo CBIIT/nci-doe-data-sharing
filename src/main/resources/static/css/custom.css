@@ -323,6 +323,9 @@ ul.myErrorClass input {
 }
 .ui-button{background:#fff!important;}
 label{font-weight:bold;}
+form#register-form label {
+    color: #fff;
+}
 label.myErrorClass {
     color: red;
     font-size: 11px;

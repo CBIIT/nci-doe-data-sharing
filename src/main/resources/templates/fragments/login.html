@@ -5,58 +5,63 @@
     <title>Title</title>
 </head>
 <body>
-     <div class="M-4 p-4" id="loginTab" role="tabpanel" th:fragment="login">
-        <div class="form-row jumbotron pt-2 pb-2 mb-2" id="loginSubTab">
-                 <form role="form" id="userlogin" style="width:50%;">
-                        <h2>Sign In</h2>
+     <div class="M-4 p-4" id="loginTab" role="tabpanel" th:fragment="login" style="
+    width: 800px;height: 600px;margin-left: 350px;">
+    
+        <div class="form-row jumbotron pt-2 pb-2 mb-2" id="loginSubTab" style="
+    background-color: #6496C6;border: 0 solid #000000;
+    box-sizing: border-box;opacity: 0.96;border-radius: 11px;height: 432px;">
+                 <form role="form" id="userlogin" style="width:100%;">
+                        <h2 style="text-align: center;color: #fff;">LOGIN</h2>
                         <div class="clearfix errorBlockLogin" style="display: none;">
                     <div class="col-md-12" style="padding-left: 0px; Padding-right: 0px; border-radius: 0px;">
-                        <div class="alert alert-danger">
-                            <h6 class="errorMsgLogin"></h6>
+                        <div class="alert alert-danger" style="background-color: #E87B05;">
+                            <h6 class="errorMsgLogin" style="color:#EAF6FF"></h6>
                         </div>
                     </div>
                 </div>
                         <hr>
                     <br>                 
 
-                       <p style="text-align: left;font-size: 16px;color: #00579e!important;">You can search publicly available data without an account.</p>
+                       <p style="text-align: center;font-size: 16px;color: #fff;">You can search publicly available data without an account.</p>
                         <div class="row row-buffer">
-                            <div class="col-lg-2">
+                            <div class="col-lg-4">
                                 <label for="username">Email Address <span class="required">*</span></label>
                             </div>
-                            <div class="col-lg-10">
+                            <div class="col-lg-6">
                                 <input class="form-control input-lg" id="username" maxlength="50" name="username" placeholder="Your Email" type="text">
                                 
                             </div>
                         </div>
                         <div class="row row-buffer">
-                            <div class="col-lg-2">
+                            <div class="col-lg-4">
                                 <label for="password">Password <span class="required">*</span></label>
                             </div>
-                            <div class="col-lg-10">
+                            <div class="col-lg-6">
                                 <input autocomplete="off" class="form-control input-lg" id="password" maxlength="20" name="password" placeholder="Your Password" type="password">
                                 
                             </div>
                         </div>
-                        <div class="row" style="justify-content: flex-end;margin-right: 10px;">
-                            <a href="javascript:void(0)" data-toggle="modal" data-target="#forgotPasswordLightbox" class="btn-link pull-right">Forgot your password?</a>
+                        <div class="row row-buffer" style="margin-left: 100px;background-color: none;margin-top: 15px;">
+                           <div class="col-lg-5"> <a href="javascript:void(0)" data-toggle="modal" 
+                           data-target="#forgotPasswordLightbox" class="btn-link pull-right" 
+                           style="color: black !important;">Forgot your password?</a></div>
+                           <div class="col-lg-5">  <a id="register-tab" href="javascript:void(0);" style="color:#fff!important">Register as a new user.</a></div>
                         </div>
     
                         <hr>
                         <div class="row" style="justify-content: center;">
                         
                             <div class="col-xs-3 col-sm-3 col-md-3">
-                                <button class="btn btn-lg btn-success btn-block" id="loginButton" name="login" value="Sign In">Sign In</button>
+                               <button class="btn btn-lg btn-success btn-block" id="loginButton" 
+                               name="login" value="Sign In" style="background-color: #C6FFF4 !important;
+                       color: #1C5886;font-size: 15px;border-radius: 6px;">LOGIN</button>
                             </div>
                         </div>
                         <br/>
-                        <div class="row" style="justify-content: center;">
-                            <p style="text-align: left;font-size: 18px;font-style:italic;color: #00579e!important;">
-                        <a id="register-tab" href="javascript:void(0);" style="text-decoration: underline;">Register as a new user.</a></p>
-                        </div>
+                        
                 </form>
         </div>
-        <hr>
            <div th:replace="fragments/registration :: registration">Registration tab</div>
     </div>
 </body>

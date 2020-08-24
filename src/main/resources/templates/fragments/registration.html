@@ -5,14 +5,17 @@
     <title>Title</title>
 </head>
 <body>
-     <div class="form-row jumbotron pt-2 pb-2 mb-2" id="registrationTab" th:fragment="registration" style="display:none;">
-    <form role="form" id="register-form" autocomplete="off"  style="width: 50%;">
-        <h1>Registration</h1>
+     <div class="form-row jumbotron pt-2 pb-2 mb-2" id="registrationTab" th:fragment="registration" style="
+    background-color: #6496C6;border: 0 solid #000000;
+    box-sizing: border-box;opacity: 0.96;border-radius: 11px;height: 567px;display:none;">
+    <form role="form" id="register-form" autocomplete="off"  style="width: 100%;color:#fff">
+        <h3 style="text-align: center;
+    color: #fff;">CREATE AN ACCOUNT</h3>
          <div class="clearfix errorBlockRegister" style="display: none;">
                     <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;
                      border-radius: 0px;">
-                        <div class="alert alert-danger">
-                            <h6 class="errorMsgRegister"></h6>
+                        <div class="alert alert-danger" style="background-color: #E87B05;">
+                            <h6 class="errorMsgRegister" style="color:#EAF6FF"></h6>
                         </div>
                     </div>
                 </div>
@@ -104,13 +107,14 @@
         <div class="row" style="justify-content: center;">
             
              <div class="col-xs-6 col-sm-6 col-md-6 pull-right">    
-                <button class=" btn btn-primary btn-block pull-right" id="btnRegister">Register</button>
+                <button class=" btn btn-primary btn-block pull-right" style="background-color: #C6FFF4 !important;
+                       color: #1C5886;font-size: 15px;border-radius: 6px;"id="btnRegister">REGISTER</button>
             </div>            
         </div>
         
         <div class="row" style="justify-content: center;margin-left: 60px;margin-top:25px;">
             <div class="col-xs-6 col-sm-6 col-md-6">
-               <a id="returnToLoginForm" href="javascript:void(0);">Log in if you already have an account.</a> 
+               <a id="returnToLoginForm" style="color:#000;" href="javascript:void(0);">Log in if you already have an account.</a> 
             </div>
         </div>
         
