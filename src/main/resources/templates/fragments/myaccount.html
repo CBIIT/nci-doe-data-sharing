@@ -5,11 +5,16 @@
     <title>Title</title>
 </head>
 <body>
- <div class="M-4 p-4" id="myAccount" th:fragment="myaccount">
+ <div class="M-4 p-4" id="myAccount" th:fragment="myaccount" style="
+    width: 800px;height: 600px;margin-left: 350px;">
   
-        <div class="form-row jumbotron pt-2 pb-2 mb-2" >
-                 <form role="form" id="update-profile-form" style="width: 50%;">
-                        <h1>My Account</h1>
+        <div class="form-row jumbotron pt-2 pb-2 mb-2" style="
+    background-color: #6496C6;border: 0 solid #000000;
+    box-sizing: border-box;opacity: 0.96;border-radius: 11px;height: 432px;">
+                 <form role="form" id="update-profile-form" style="width: 100%;">
+                        <h3 style="text-align: center;
+    color: #fff;">MY ACCOUNT</h3>
+    <hr/>
                     <br>
                        
                         <div class="row row-buffer">
@@ -67,10 +72,12 @@
                         <hr>
                         <div class="row" style="justify-content: center;">                      
                             <div class="col-xs-3 col-sm-3 col-md-3">
-                                <a class="btn btn-success btn-block" th:href="@{/}">Cancel</a>
+                                <a class="btn btn-success btn-block" style="background-color: #FFF6BB !important;
+                             color: #1C5886;border-radius: 8px;" th:href="@{/}">Cancel</a>
                             </div>
                             <div class="col-xs-3 col-sm-3 col-md-3">
-                                <a class="btn btn-primary btn-block" id="btnUpdateProfile" href="javascript:void(0);">Update</a>
+                                <a class="btn btn-primary btn-block" style="background-color: #C6FFF4 !important;
+                       color: #1C5886;border-radius: 8px;" id="btnUpdateProfile" href="javascript:void(0);">Update</a>
                             </div>
                         </div>
                 </form>

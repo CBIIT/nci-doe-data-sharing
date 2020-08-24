@@ -326,6 +326,9 @@ label{font-weight:bold;}
 form#register-form label {
     color: #fff;
 }
+form#register-form .error {
+    color: rgb(251, 6, 10);
+}
 label.myErrorClass {
     color: red;
     font-size: 11px;
