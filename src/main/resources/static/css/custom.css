@@ -67,9 +67,11 @@
 }
 
 .nav-link.active {
-    border-color: transparent !important;
-    color: #fff !important;
-    background: #606060!important;
+   border-color: transparent !important;
+    /* color: #fff !important; */
+    /* background: #606060!important; */
+    /* border-bottom-color: #D06709!important; */
+    border-bottom: 2px solid #D06709 !important;
 }
 
 .nav-link:hover{
@@ -651,6 +653,9 @@ return to the top
     color: #004A9E !important;
 }
 
+#content {
+	padding-top:10px;
+}
 .btn-success {
     background-color: #218739 !important;
 }
