@@ -6,9 +6,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -382,6 +384,11 @@ public class SearchController extends AbstractDoeController {
 				}
 			}
 	  		
+	  		//remove duplicates from collectionlevels list
+	        Set<String> set = new HashSet<>(); 
+	        set.addAll(collectionLevels); 
+	        collectionLevels.clear();  
+	        collectionLevels.addAll(set); 
 
 			if(CollectionUtils.isNotEmpty(collectionLevels)) {
 				

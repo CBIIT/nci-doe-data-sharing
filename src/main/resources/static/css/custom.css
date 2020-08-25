@@ -329,6 +329,10 @@ form#register-form label {
 form#update-profile-form label {
     color: #fff;
 }
+form#userlogin label {
+    color: #fff;
+}
+
 form#forgot-password-form label {
     color: #fff;
 }
@@ -336,6 +340,9 @@ form#forgot-password-form .error {
     color: rgb(251, 6, 10);
 }
 form#register-form .error {
+    color: rgb(251, 6, 10);
+}
+form#userlogin .error {
     color: rgb(251, 6, 10);
 }
 label.myErrorClass {
