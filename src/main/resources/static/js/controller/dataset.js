@@ -49,7 +49,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
         },
 
         "initComplete": function (settings, json) {
-
+        	$('body').tooltip({selector: '[data-toggle="tooltip"]'});
         },
 
         "drawCallback": function (settings) {
@@ -136,6 +136,13 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
            
            $("#downloadSelectedMetadata").click(function(e){
         	   exportDataObjectMetadata();
+           });
+           
+           $(".downloadMetadata").click(function(e){
+        	   var selectedPath = $(this).attr('data_path');       	   
+        	   var selectedPaths = [];
+        	   selectedPaths.push(selectedPath);
+        		window.open('/export?selectedPaths='+selectedPaths, '_self');
            });
            
            $(".editDataFileCollectionMetadata").click(function(e){
@@ -402,7 +409,7 @@ function renderDownload(data, type, row,accessgroups,permissions) {
 	
 	html += "<a aria-label='download link' class='btn btn-link btn-sm downloadLink' href='javascript:void(0);' " +
 	       "data-toggle='modal' data-backdrop='static' data-keyboard='false' data-fileName = " + downdloadFileName + " data-path=" + row.download + " " +
-	        "data-target='#download-modal'><i class='fa fa-download' aria-hidden='true'></i></a>";
+	        "data-target='#download-modal'><i class='fa fa-download' data-toggle='tooltip' title='download' aria-hidden='true'></i></a>";
 
 	if(row.selfMetadata && row.selfMetadata.length > 0) {
 		var metadata = JSON.stringify(row.selfMetadata);
@@ -410,12 +417,16 @@ function renderDownload(data, type, row,accessgroups,permissions) {
    
 	html += "<span class='btn btn-link btn-sm editDataFileCollectionMetadata'  metadata_path  = '" + path + "'" +
 				" metadata_set = '" + metadata  + "' data-fileName = '" + downdloadFileName + "' ><i class='fa fa-edit' data-toggle='tooltip'" +
-				" data-content='Edit Data Object Metadata'></i></span>";
+				" title='Edit Data Object Metadata'></i></span>";
 				
 	if(accessgroups && accessgroups.indexOf("public") == -1 && permissions && permissions == 'Owner') {		
-	 html+="&nbsp;&nbsp;<span data-filePath = '" + path + "' class='btn btn-link btn-sm deleteDataFileBtn'><i class='fas fa-trash'></i></span>";
+	 html+="&nbsp;&nbsp;<span data-filePath = '" + path + "' class='btn btn-link btn-sm deleteDataFileBtn'><i class='fas fa-trash' data-toggle='tooltip' title='Delete File'></i></span>";
 
 	}
+	
+	html += "<a aria-label='download link' class='btn btn-link btn-sm downloadMetadata'  data_path  = '" + path + "' href='javascript:void(0);' " +
+     "><i class='fas fa-file-export' data-toggle='tooltip' title='download metadata'></i></a>";
+	
 	return html;
 
 }

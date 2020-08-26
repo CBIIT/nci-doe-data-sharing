@@ -53,8 +53,14 @@ public class ExportController extends AbstractDoeController{
 								!datafiles.getDataObjects().isEmpty()) {
 							HpcDataObjectDTO dataFile = datafiles.getDataObjects().get(0);
 							for (HpcMetadataEntry entry : dataFile.getMetadataEntries().getSelfMetadataEntries()) {
-								headers.add(entry.getAttribute());
-								result.add(entry.getValue());
+								if(headers.contains(entry.getAttribute())) {
+									result.add(entry.getValue());
+								} else {
+									headers.add(entry.getAttribute());
+									result.add(entry.getValue());
+								}
+								
+								
 						}
 						
 				      }
