@@ -310,7 +310,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 }
 
 .loginFieldsTextBox::placeholder {
-    color: #4E8BC6;
+    color: #4E8BC6!important;
 }
      
 /*--===============================================================================
