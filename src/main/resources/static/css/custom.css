@@ -290,6 +290,28 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
     display:none
 }
 
+
+/*login fields */
+
+.loginFieldsTextBox {
+	width: 70%;
+    height: 110%;
+    padding-top: 14px;
+    border-radius: 22px;
+    padding-left: 26px;
+}
+
+.TextField-floatingLabel-qefpP {
+	position: absolute;
+    left: 2.75rem;
+    top: 2px;
+    font-size: 11px;
+    color: #000;
+}
+
+.loginFieldsTextBox::placeholder {
+    color: #4E8BC6;
+}
      
 /*--===============================================================================
 form twicks 

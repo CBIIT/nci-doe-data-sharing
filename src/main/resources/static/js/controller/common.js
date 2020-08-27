@@ -10,6 +10,14 @@ $(document).ready(function () {
 	    $("#id_user_email").blur(function() {
 	    	$(this).val($(this).val().trim().toLowerCase());
 	    });
+	    
+	    $(".loginFieldsTextBox").keyup(function() {
+	    	if($(this).val()) {
+	    		$(this).parent().find('.TextField-floatingLabel-qefpP').show();
+	    	} else {
+	    		$(this).parent().find('.TextField-floatingLabel-qefpP').hide();
+	    	}
+	    });
 	   	    
 	    $(window).scroll(function () {
 	        if ($(this).scrollTop() >= 50) {        // If page is scrolled more than 50px
