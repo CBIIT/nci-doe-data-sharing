@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -86,7 +87,12 @@ public class HomeController extends AbstractDoeController {
 		
 		
 		 @GetMapping(value = "/searchTab")
-		 public String getSearchTab(HttpSession session, HttpServletRequest request)  { 			 
+		 public String getSearchTab(Model model,HttpSession session, HttpServletRequest request, 
+				 @RequestParam(value = "doeIdentifier", required = false) String doeIdentifier)  { 	
+			 
+			 if(StringUtils.isNotEmpty(doeIdentifier)) {
+				 model.addAttribute("doeIdentifier", doeIdentifier);
+			 }
 			return "searchTab";
 		 }
 		 

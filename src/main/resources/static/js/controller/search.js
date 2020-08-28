@@ -7,6 +7,10 @@ $(document).ready(function () {
 		
 	 });
 	 $('body').tooltip({selector: '[data-toggle="tooltip"]'});
+	 var doeIdentifier = $("#doeIdentifier").val();
+	 if(doeIdentifier) {
+		 populateSearchCriteria('datasetUrl');
+	 }
 });
 function populateSearchCriteria(searchType) {
 	
@@ -75,6 +79,18 @@ function populateSearchCriteria(searchType) {
 			
 		});	
 	}
+	 
+	 if(searchType == 'datasetUrl') {
+		 var rowId = 3;
+		 var attrVal = $("#doeIdentifier").val();
+		 attrNames.push('Dataset Name');
+			attrValues.push('%' + attrVal + '%' );
+			rowIds.push(rowId);
+			isExcludeParentMetadata.push(false);
+			operators.push("LIKE");
+	 }
+	 
+		 
 	 
 		search_criteria_json.attrName = attrNames.join();
 		search_criteria_json.attrValue = attrValues.join();
