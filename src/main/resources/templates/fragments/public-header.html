@@ -67,8 +67,9 @@
 
              <!--Users Guide-->
                 <li class="nav-item" role="tab">
-                    <a class="nav-link" target="_blank" href="https://wiki.nci.nih.gov/display/MoDaCdoc">
-                    <i class="fas fa-book"></i> <span class="topNav-item">User Guide</span></a>
+                    <a class="nav-link" rel="noopener noreferrer" data-toggle="tooltip" title="User Guide" target="_blank" 
+                    href="https://wiki.nci.nih.gov/display/MoDaCdoc">
+                    <i class="fas fa-book"></i></a>
                 </li>
                 <li class="nav-item" role="tab" th:if="${loggedOnUser == null}">
                 <a class="nav-link" id="login-tab" style="color: #D06709;" th:href="@{/loginTab}" 

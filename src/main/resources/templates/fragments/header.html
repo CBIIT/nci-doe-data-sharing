@@ -77,8 +77,9 @@
              
               <!--Users Guide-->
                 <li class="nav-item" role="tab">
-                    <a class="nav-link" target="_blank" href="https://wiki.nci.nih.gov/display/MoDaCdoc">
-                     <i class="fas fa-book"></i> <span class="topNav-item">User Guide</span></a>
+                    <a class="nav-link" rel="noopener noreferrer" data-toggle="tooltip" title="User Guide" 
+                    target="_blank" href="https://wiki.nci.nih.gov/display/MoDaCdoc">
+                     <i class="fas fa-book"></i></a>
                 </li>
                 
                 <li th:if= "${loggedOnUser != null}" class="nav-item dropdown" role="tab">
