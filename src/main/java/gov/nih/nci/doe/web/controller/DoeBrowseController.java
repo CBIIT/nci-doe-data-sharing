@@ -47,18 +47,12 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
 @RequestMapping("/browse")
 public class DoeBrowseController extends AbstractDoeController {
 
-	@Value("${gov.nih.nci.hpc.server.bookmark}")
-	private String bookmarkServiceURL;
-
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	private String collectionURL;
 
 	@Value("${gov.nih.nci.hpc.server.model}")
 	private String hpcModelURL;
 
-	@Value("${gov.nih.nci.hpc.server.pathreftype}")
-	private String hpcPathRefTypeURL;
-	
 	@Value("${gov.nih.nci.hpc.server.dataObject}")
 	private String serviceURL;
 	

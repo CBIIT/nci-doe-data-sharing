@@ -120,6 +120,13 @@
     font-size: 16px;
 }
 
+table.dataTable thead th, table.dataTable tfoot th {
+    background-color: #194F85;
+}
+
+table.dataTable tr.odd {background-color: #E0F0F4!important;}
+table.dataTable tr.even {background-color: #FBFBFB!important;}
+
 .divTableCell, .divTableHead {
     border: 1px solid #999999;
     display: table-cell;
