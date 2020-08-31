@@ -99,6 +99,26 @@
     color: #fff;
 }
 
+#manageTasksTable_paginate {
+	margin-right: 50px;
+	color: #000000;
+    font-family: Lato;
+    font-size: 16px;
+}
+
+#manageTasksTable_info{
+	float: right;
+	color: #000000;
+    font-family: Lato;
+    font-size: 16px;
+}
+
+#manageTasksTable_length {
+   float: right;
+   color: #000000;
+    font-family: Lato;
+    font-size: 16px;
+}
 
 .divTableCell, .divTableHead {
     border: 1px solid #999999;
