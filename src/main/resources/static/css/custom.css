@@ -124,8 +124,9 @@ table.dataTable thead th, table.dataTable tfoot th {
     background-color: #194F85;
 }
 
-table.dataTable tr.odd {background-color: #E0F0F4!important;}
-table.dataTable tr.even {background-color: #FBFBFB!important;}
+
+table.dataTable tr.odd td{background-color: #E0F0F4!important;}
+table.dataTable tr.even td{background-color: #FBFBFB!important;}
 
 .divTableCell, .divTableHead {
     border: 1px solid #999999;
@@ -143,6 +144,15 @@ table.dataTable tr.even {background-color: #FBFBFB!important;}
     background-color: #EEE;
     display: table-footer-group;
     font-weight: bold;
+}
+
+table.dataTable thead .sorting {
+    background-image: none!important;
+}
+
+table.dataTable thead .sorting_asc {
+	background-image: none!important;
+
 }
 
 .divTableBody {
@@ -566,7 +576,9 @@ table{text-align: left; font-size:14px;}
 .dataTables_wrapper .dataTables_paginate .paginate_button{padding:0px;!important;}
 .pagination{float:right !important;}
 .dataTables_wrapper .dataTables_paginate .paginate_button.current{color:#000!important; background:#f8f9fa;}
-table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after,  table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:after, table.dataTable thead .sorting_desc_disabled:after{opacity:0.5!important;}
+table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after,  
+table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:after,
+ table.dataTable thead .sorting_desc_disabled:after{opacity:0.5!important;}
 .page-item.active .page-link{background-color:#7f8990!important;border-color:#7f8990}
 img.historyImg{width:24px;}
 img:hover{cursor: pointer}
