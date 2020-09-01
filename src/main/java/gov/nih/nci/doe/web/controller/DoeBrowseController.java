@@ -306,7 +306,7 @@ public class DoeBrowseController extends AbstractDoeController {
 
   private DoeBrowserEntry addPathEntry(String fullPath, String path, DoeBrowserEntry childEntry) {
     DoeBrowserEntry entry = new DoeBrowserEntry();
-    String entryPath = fullPath.substring(0, (fullPath.indexOf("/" + path) + ("/" + path).length()));
+    String entryPath = fullPath.substring(0, (fullPath.indexOf('/' + path) + ('/' + path).length()));
     entry.setCollection(true);
     entry.setId(entryPath);
     entry.setFullPath(entryPath);
