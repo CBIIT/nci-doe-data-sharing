@@ -186,7 +186,6 @@ function dataTableInit(isVisible) {
         	   $("#searchFragmentDiv").hide();
         	   $("#dataSetFragment").hide();
         	   $("#editCollectionFragment").show();
-        	   //var metaData = $(this).attr('metadata_set');
         	   var metaDataPath = $(this).attr('metadata_path');
         	   var permissionsRole = $(this).attr('permissions_role');
         	   var collectionId = $(this).attr('collectionId');
@@ -219,8 +218,6 @@ function dataTableInit(isVisible) {
            
            $(".editAccessGroupPermissions").click(function(e){
          	   var collectionId = $(this).attr('collectionId');
-         	   //var permissions = $(this).attr('permissions_groups');
-         	 // var access_groups = $(this).attr('access_groups');
          	 var metaDataPath = $(this).attr('metadata_path');
          	var selectedCollection = $(this).attr('selectedCollection');
          	var collectionName = $(this).attr('collection_name');
@@ -279,6 +276,10 @@ function dataTableInit(isVisible) {
         },
 
         "columns": [
+        	{"data": "path", "render": function (data, type, row) {
+                return renderDataSetName(data, type, row);
+            },
+        	},
             {"data": "path", "render": function (data, type, row) {
                     return renderPath(data, type, row);
                 },
@@ -298,7 +299,8 @@ function dataTableInit(isVisible) {
     });
 }
 
-function renderPath(data, type, row) {
+    
+function renderDataSetName(data, type, row){
 	var html = "";
 	
 	var study;
@@ -342,8 +344,52 @@ function renderPath(data, type, row) {
                  "<i class='fa fa-users' data-toggle='tooltip' title='Edit Dataset Access Permissions'></i></span>";
 			}
 		}
-		
-		if(row.dataSetPermissionRole && row.dataSetPermissionRole != 'No Permissions') {
+			
+		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'>" +
+				""+checkboxHtml+"&nbsp;&nbsp;&nbsp;" +
+						"<a href='#' class='dataSetFragment' " +
+			"permissions_role = '" + row.dataSetPermissionRole + "'  collections = '" + JSON.stringify(collections)+ "' access_grp ='"+row.dataLevelAccessGroups +"'" +
+					" metadata_type = '" + data  + "' data_set_path = " + row.dataSetPath + ">" +
+							"<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span></a>" +
+			"&nbsp&nbsp;" + editDataSetHtml + "</div></div></div>";
+
+	} else {
+		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'>"+
+		"&nbsp;&nbsp;&nbsp;<a href='#' class='dataSetFragment' collections = '" + JSON.stringify(collections)+ "' permissions_role = '" + row.dataSetPermissionRole + "' access_grp ='"+row.dataLevelAccessGroups +"' metadata_type = '" + data  + "' data_set_path = " + row.dataSetPath + "><span class='cil_14_bold_no_color'>" + row.dataSetName + "</span></a>" +
+		"&nbsp&nbsp;</div></div></div>";
+	}
+    return html;	
+ }
+
+function renderPath(data, type, row) {
+	var html = "";
+	
+	var study;
+	var ins;
+	var permissions ={};
+	var collections = {};
+	var isLoggedOnuserExists = (loggedOnUserInfo ? true:false);
+	
+	study = JSON.stringify(row.studyUserMetadata);
+	ins = JSON.stringify(row.instituteUserMetadata);
+	data = JSON.stringify(row.selfMetadata);
+	permissions.dataLevelAccessGroups = row.dataLevelAccessGroups;
+	permissions.studyLevelAccessGroups = row.studyLevelAccessGroups;
+	permissions.programLevelAccessGroups = row.programLevelAccessGroups;
+	permissions.dataCollectionId = row.dataSetCollectionId;
+	permissions.studyCollectionId = row.studyCollectionId;
+	permissions.progCollectionId = row.programCollectionId;
+	collections.datasetName = row.dataSetName;
+	collections.studyName = row.studyName;
+	collections.programName = row.programName;
+	
+	if(isLoggedOnuserExists) {
+		var editDataSetHtml = "";
+		var editStudySetHtml = "";
+		var editProgramSetHtml = "";
+		var checkboxHtml ="";
+				
+		if(row.studyPermissionRole && row.studyPermissionRole != 'No Permissions') {
 			editStudySetHtml = "<span class='editCollectionMetadata' selectedCollection = 'study' data-fileName = '" + row.studyName + "' collectionId  = '" + row.studyCollectionId + "'" +
 							" permissions_role = '" + row.studyPermissionRole + "' metadata_path  = '" + row.studyPath+ "' " +
 									" metadata_set = '" + study  + "'>" +
@@ -368,13 +414,8 @@ function renderPath(data, type, row) {
 			}
 		}
 	
-		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'>" +
-				""+checkboxHtml+"&nbsp;&nbsp;&nbsp;" +
-						"<a href='#' class='dataSetFragment' " +
-			"permissions_role = '" + row.dataSetPermissionRole + "'  collections = '" + JSON.stringify(collections)+ "' access_grp ='"+row.dataLevelAccessGroups +"'" +
-					" metadata_type = '" + data  + "' data_set_path = " + row.dataSetPath + ">" +
-							"<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span></a>" +
-			"&nbsp&nbsp;" + editDataSetHtml + "</div><div class='col-md-12'></div>" +
+		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'>" +
+				"<div class='col-md-12'></div>" +
 			"<div class='col-md-12' style='margin-left:22px;'>" +
 					"<span class='cil_12_bold_no_color'>" + row.dataSetDescription + "</span>" +
 			"<br></div><div class='col-md-12'><br></div><div class='col-md-12' style='margin-left:22px;'>" +
@@ -387,9 +428,8 @@ function renderPath(data, type, row) {
 					"&nbsp&nbsp;"+editProgramSetHtml+"</div></div></div>";
 
 	} else {
-		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'>"+
-		"&nbsp;&nbsp;&nbsp;<a href='#' class='dataSetFragment' collections = '" + JSON.stringify(collections)+ "' permissions_role = '" + row.dataSetPermissionRole + "' access_grp ='"+row.dataLevelAccessGroups +"' metadata_type = '" + data  + "' data_set_path = " + row.dataSetPath + "><span class='cil_14_bold_no_color'>" + row.dataSetName + "</span></a>" +
-		"&nbsp&nbsp;</div><div class='col-md-12'></div>" +
+		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'>" +
+				"<div class='col-md-12'></div>" +
 		"<div class='col-md-12' style='margin-left:22px;'>" +
 				"<span class='cil_12_bold_no_color'>" + row.dataSetDescription + "</span>" +
 		"</a><br></div><div class='col-md-12'><br></div><div class='col-md-12' style='margin-left:22px;'>" +

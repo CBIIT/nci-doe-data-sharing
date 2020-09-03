@@ -128,6 +128,9 @@ table.dataTable thead th, table.dataTable tfoot th {
 table.dataTable tr.odd td{background-color: #E0F0F4!important;}
 table.dataTable tr.even td{background-color: #FBFBFB!important;}
 
+table#searchResultTable tr.odd td{background-color: #FBFBFB!important;}
+table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
+
 .divTableCell, .divTableHead {
     border: 1px solid #999999;
     display: table-cell;
