@@ -876,7 +876,8 @@ text-align: center;
 
 #titleText{
 	color: #FFFFFF;
-	font-size: 29px;
+	font-family: 'latoregular';
+	font-size: 25px;
     line-height: 48px;
     text-align: center;
     margin-left:50px;

@@ -12,8 +12,32 @@ FONTS, FONT AWESOME, FONT SOURCE SANS PRO
     font-style: normal
 }
 
+@font-face {
+    font-family: 'latoregular';
+    src: url('../webfonts/lato-regular-webfont.woff2') format('woff2'),
+         url('../webfonts/lato-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
 
+}
 
+@font-face {
+    font-family: 'ralewayregular';
+    src: url('../webfonts/raleway-regular-webfont.woff2') format('woff2'),
+         url('../webfonts/raleway-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'nunito_sansbold';
+    src: url('../webfonts/nunitosans-bold-webfont.woff2') format('woff2'),
+         url('../webfonts/nunitosans-bold-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
 
 /* font use */
 @font-face {
@@ -144,11 +168,11 @@ NAVIGATIONS
 }
 
 .navbar-expand-sm .navbar-nav .nav-link{    padding-right: 1rem; padding-left: 1rem;font-weight:bold;font-size: 14px;}
-.navbar-dark .navbar-nav .nav-link {font-size: 15px;
-    font-family: Nunito sans-serif;}
+.navbar-dark .navbar-nav .nav-link {font-size: 10px;
+    font-family: 'nunito_sansbold';}
     #subTab .nav-item a {
-    font-family: "Nunito Sans";
-    font-size: 18px;
+    font-family: 'nunito_sansbold';
+    font-size: 15px;
 }
 .navbar-dark .navbar-nav .nav-link{color:#fff;text-transform:none;float:right}
 .nav-link {display: block;padding: 1rem 1rem;}
