@@ -167,12 +167,18 @@ NAVIGATIONS
 	}
 }
 
-.navbar-expand-sm .navbar-nav .nav-link{    padding-right: 1rem; padding-left: 1rem;font-weight:bold;font-size: 14px;}
-.navbar-dark .navbar-nav .nav-link {font-size: 10px;
-    font-family: 'nunito_sansbold';}
-    #subTab .nav-item a {
+.navbar-expand-sm .navbar-nav .nav-link{ 
+	padding-right: 1rem; padding-left: 1rem;font-weight:bold;font-size: 14px;
+	}
+	
+.navbar-dark .navbar-nav .nav-link {
+	font-size: 12px;
     font-family: 'nunito_sansbold';
-    font-size: 15px;
+    }
+    
+ #subTab .nav-item a {
+    font-family: 'nunito_sansbold';
+    font-size: 16px;
 }
 .navbar-dark .navbar-nav .nav-link{color:#fff;text-transform:none;float:right}
 .nav-link {display: block;padding: 1rem 1rem;}
