@@ -51,6 +51,7 @@ function populateSearchCriteria(searchType) {
 				  var dateToAttr = $(this).find(".toDate").val();
 				  if(dateFromAttr) {
 					  attrNames.push(attrName);
+					  levelValues.push("ANY");
 						attrValues.push('%' + dateFromAttr + '%' );
 						rowIds.push(rowId);
 						isExcludeParentMetadata.push(false);
@@ -60,6 +61,7 @@ function populateSearchCriteria(searchType) {
 				  
 				  if(dateToAttr) {
 					  attrNames.push(attrName);
+					  levelValues.push("ANY");
 						attrValues.push('%' + dateToAttr + '%' );
 						rowIds.push(rowId);
 						isExcludeParentMetadata.push(false);
@@ -70,6 +72,7 @@ function populateSearchCriteria(searchType) {
 			  } else {
 				  var attrVal = $(this).find("input[type=text]").val();
 					attrNames.push(attrName);
+					levelValues.push("ANY");
 					attrValues.push('%' + attrVal + '%' );
 					rowIds.push(rowId);
 					isExcludeParentMetadata.push(false);
