@@ -612,6 +612,8 @@ h3.table-title{font-size:1rem;}
 .modal-title  {
 	font-size:20px;
 	font-weight:500;
+	font-family: latoregular;
+	    color: #1C3D5D;
 }
 .modal-body {
     max-height: 800px;
