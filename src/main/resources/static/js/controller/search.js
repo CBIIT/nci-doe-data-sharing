@@ -16,7 +16,7 @@ function populateSearchCriteria(searchType) {
 	
 	$("#searchResultsDiv").show();
 	search_criteria_json.detailed = true;
-	search_criteria_json.searchType = "collection";	
+	search_criteria_json.searchType = "dataobject";	
 	
 	var attrNames = [] ;
 	var attrValues = [];
@@ -28,7 +28,7 @@ function populateSearchCriteria(searchType) {
 	attrNames.push("collection_type");
 	attrValues.push("Dataset");
 	levelValues.push("ANY");
-	isExcludeParentMetadata.push(true);
+	isExcludeParentMetadata.push(false);
 	rowIds.push(1);
 	operators.push("EQUAL");
 			

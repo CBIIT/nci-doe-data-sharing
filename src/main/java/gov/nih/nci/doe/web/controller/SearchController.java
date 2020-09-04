@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
@@ -120,15 +121,30 @@ public class SearchController extends AbstractDoeController {
 		try {			
 			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search);
 			compoundQuery.setDetailedResponse(true);
-			serviceURL = compoundCollectionSearchServiceURL;
+			serviceURL = compoundDataObjectSearchServiceURL;
 
-			WebClient client = DoeClientUtil.getWebClient(serviceURL, sslCertPath, sslCertPassword);
-			client.header("Authorization", "Bearer " + authToken);
+			//WebClient client = DoeClientUtil.getWebClient(serviceURL, sslCertPath, sslCertPassword);
+			//client.header("Authorization", "Bearer " + authToken);
 
-			Response restResponse = client.invoke("POST", compoundQuery);
+			//Response restResponse = client.invoke("POST", compoundQuery);
+			
+			
+			 UriComponentsBuilder ucBuilder  = UriComponentsBuilder.fromHttpUrl(compoundDataObjectSearchServiceURL);		     		    
+			    
+			    if (ucBuilder == null) {
+				      return null;
+				    }
+
+			    ucBuilder.queryParam("returnParent", Boolean.TRUE);
+			    final String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
+
+			    WebClient client = DoeClientUtil.getWebClient(requestURL, sslCertPath, sslCertPassword);
+				client.header("Authorization", "Bearer " + authToken);	
+				Response restResponse = client.invoke("POST", compoundQuery);
+				
 			if (restResponse.getStatus() == 200) {
 				session.setAttribute("compoundQuery", compoundQuery);
-				if (search.getSearchType() != null && search.getSearchType().equals("collection")) {
+				if (search.getSearchType() != null && search.getSearchType().equals("dataobject")) {
 					results = processResponseResults(systemAttrs, restResponse);
 					return new ResponseEntity<>(results, HttpStatus.OK);
 				} 
