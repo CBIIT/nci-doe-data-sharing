@@ -179,6 +179,10 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 	color: #E87B05!important;
 }
 
+#collectionMetaDataLabel {
+	color: #1C3D5D;
+    font-family: latoregular;
+}
 #downloadSelectedMetadata {
 	background-color: #E87B05!important;
 }
@@ -186,7 +190,7 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 	background-color: #E87B05!important;
 }
 #updateMetaData,#addMetaData,#addBulkDataFiles,#addNewMetaDataForSingleDataFile,
-#registerBulkDataFileBtn,#addNewMetaData,#registerCollectionBtn,#updatePermissions,.backToSearch {
+#registerBulkDataFileBtn,#registerCollectionBtn,#updatePermissions,.backToSearch {
 	background-color: #E87B05!important;
 }
 
