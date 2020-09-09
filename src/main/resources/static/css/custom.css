@@ -124,9 +124,37 @@ table.dataTable thead th, table.dataTable tfoot th {
     background-color: #194F85;
 }
 
+table#userMetaData thead th, table.dataTable tfoot th {
+    background-color: #194F85;
+}
+
+
+table#dataSetMetaData thead th, table.dataTable tfoot th {
+    background-color: #194F85;
+}
 
 table.dataTable tr.odd td{background-color: #E0F0F4!important;}
 table.dataTable tr.even td{background-color: #FBFBFB!important;}
+
+table#userMetaData tr:nth-child(odd) td{
+	    background-color: #E0F0F4!important;
+}
+table#userMetaData tr:nth-child(even) td{
+	background-color: #FBFBFB!important;
+}
+
+table#dataSetMetaData tr:nth-child(odd) td{
+	background-color: #E0F0F4!important;
+}
+table#dataSetMetaData tr:nth-child(even) td{
+	background-color: #FBFBFB!important;
+}
+table#newMetaDataTable tr:nth-child(odd) td{
+	background-color: #E0F0F4!important;
+}
+table#newMetaDataTable tr:nth-child(even) td{
+	background-color: #FBFBFB!important;
+}
 
 table#searchResultTable tr.odd td{background-color: #FBFBFB!important;}
 table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
@@ -143,12 +171,49 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 	  color: #E87B05!important;
 }
 
+.fa-download {
+	color: #E87B05!important;
+}
+
+.fa-file-export {
+	color: #E87B05!important;
+}
+
+#downloadSelectedMetadata {
+	background-color: #E87B05!important;
+}
+#downloadSelectedDataSet{
+	background-color: #E87B05!important;
+}
+#updateMetaData,#addMetaData,#addBulkDataFiles,#addNewMetaDataForSingleDataFile,
+#registerBulkDataFileBtn,#addNewMetaData,#registerCollectionBtn,#updatePermissions,.backToSearch {
+	background-color: #E87B05!important;
+}
+
+.datasetDetailsheader {
+	font-size: 22px;
+    font-weight: 500;
+    color: #5099AB;
+    font-family: latoregular;
+}
 .divTableHeading {
     background-color: #EEE;
     display: table-header-group;
     font-weight: bold;
 }
 
+.addDeleteUploadLabels {
+	color: #F39530;
+  font-family: Inter;
+  font-size: 14px;
+}
+
+.uploadLabels {
+	color: #C06400;
+    font-family: Inter;
+    font-weight: 200;
+    font-size: 15px;
+}
 .divTableFoot {
     background-color: #EEE;
     display: table-footer-group;

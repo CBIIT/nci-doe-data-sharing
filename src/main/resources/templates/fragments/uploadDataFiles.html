@@ -5,41 +5,37 @@
     <title>Title</title>
 </head>
 <body>
-      <div class="form-row jumbotron col-md-10 col-sm-10" id="uploadDataFilesTab" th:fragment="uploadDataFiles" style="display:none;margin-top:40px;margin-left:25px;">
+      <div class="form-row col-md-10 col-sm-10" id="uploadDataFilesTab" th:fragment="uploadDataFiles" 
+      style="display:none;margin-top:40px;margin-left:25px;border-top: 2px solid #E87B05;">
                 <div class="col-md-12 col-sm-12 p-0 m-0">
                  <div class="alert alert-danger uploadBulkDataError" role="alert" style="display:none;margin-bottom:10px;">
            <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
                             <h6 class="uploadBulkDataErrorMsg"></h6>                       
                     </div>
         </div>
-                    <div class="col-lg-2 col-md-2 col-sm-12" style="z-index:1010;">
-                        <button type="button" class="float-left btn btn-link" 
-                                style="background-color:transparent; border:0px;color: #00467f;">
-                             <b>Register Data</b>
-                        </button>
-                        </div>
+                    
                 </div>
        
              <input type="hidden" id="bulkDataFilePathCollection" name="bulkDataFilePathCollection"/>
              
                      
-                      <div class="form-row col-md-9 col-sm-9" style="margin-left:20px;">
+                      <div class="form-row col-md-9 col-sm-9" style="margin-left:20px;margin-top: 20px;">
                              <div class="form-group">
 										<div class="pull-left">
-										<label class="radio-inline"><input type="radio" id="datafileTypeSingle" name="datafileTypeUpload" value="singleData" 
+										<label class="uploadLabels radio-inline"><input type="radio" id="datafileTypeSingle" name="datafileTypeUpload" value="singleData" 
 										onchange="displayDataFileSection('singleData')"> &nbsp;&nbsp; Select a File</label>
 										</div>
                               </div>
                         <div class="form-group">
 										<div class="pull-left" style="margin-left: 15px">
-										<label class="radio-inline"><input type="radio" name="datafileTypeUpload" id="datafileTypeGlobusUpload" value="globus" 
+										<label class="uploadLabels radio-inline"><input type="radio" name="datafileTypeUpload" id="datafileTypeGlobusUpload" value="globus" 
 										onchange="displayDataFileSection('globus')">&nbsp;&nbsp; Transfer from Globus</label>
 										</div>
                          </div>
                          
                           <div class="form-group">
 										<div class="pull-left" style="margin-left: 15px">
-										<label class="radio-inline"><input type="radio" name="datafileTypeUpload" id="datafileTypes3Upload" value="s3" 
+										<label class="uploadLabels radio-inline"><input type="radio" name="datafileTypeUpload" id="datafileTypes3Upload" value="s3" 
 										onchange="displayDataFileSection('s3')">&nbsp;&nbsp; Transfer from S3</label>
 										</div>
                          </div>
@@ -56,7 +52,8 @@
                             </div>
                              
                              <div class="form-group col-lg-8 col-md-12">
-                            <label for="collectionPath">Data Source &nbsp;&nbsp; <span><i class="fas fa-info-circle"></i> Max File Size: 5 GB</span></label>
+                            <label class="uploadLabels" for="collectionPath">Data Source &nbsp;&nbsp; 
+                            <span style="font-size: 12px;color: #000;"><i class="fas fa-info-circle"></i> Max File Size: 5 GB</span></label>
                             <input type="file" aria-label="doe data file"  name="doeDataFile" id="doeDataFile">
                             </div>
                         </div>
@@ -107,7 +104,7 @@
 							</div>
 							</div>	
 							
-							   <div class="form-group col-lg-12 col-md-12" id="displayS3UploadDiv" style="display:none;">
+							   <div class="form-group col-lg-12 col-md-12" id="displayS3UploadDiv" style="display:none;background-color: #E0F0F4;padding-bottom: 20px;">
                                <div class="form-group col-lg-12 col-md-12">
                           <label for="bucketName">S3 Bucket:</label>
 										<input
