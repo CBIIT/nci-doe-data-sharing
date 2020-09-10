@@ -300,11 +300,11 @@ function renderDataSetPath(data, type, row) {
 			 		"metadata_context='system_metadata' metadata_type = '" + metadata1  + "' " +
 			 				"tabindex='0'" +
 				" data-container='body' data-toggle='popover' data-placement='right' " +
-				"data-trigger='click' data-popover-content='#a01'><i class='fas fa-info-circle'></i></a>";
+				"data-trigger='click' data-popover-content='#a01'><i class='fas fa-info-circle' data-toggle='tooltip' title='Key System Metadata'></i></a>";
 		} else {
 			var metadata = JSON.stringify(row.systemMetadata);
 			 html+= row.name + "&nbsp;&nbsp;<a class='cil_12_no_color button2a' metadata_context='system_metadata' metadata_type = '" + metadata  + "' tabindex='0'" +
-				" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' data-popover-content='#a01'><i class='fas fa-info-circle'></i></a>";
+				" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' data-popover-content='#a01'><i class='fas fa-info-circle' data-toggle='tooltip' title='Key System Metadata'></i></a>";
 		}
 	} else if(row.selfMetadata && row.selfMetadata.length > 0) {
 		var metadata = JSON.stringify(row.selfMetadata);
@@ -409,7 +409,7 @@ function renderDownload(data, type, row,accessgroups,permissions) {
 	
 	html += "<a aria-label='download link' class='btn btn-link btn-sm downloadLink' href='javascript:void(0);' " +
 	       "data-toggle='modal' data-backdrop='static' data-keyboard='false' data-fileName = " + downdloadFileName + " data-path=" + row.download + " " +
-	        "data-target='#download-modal'><i class='fa fa-download' data-toggle='tooltip' title='download' aria-hidden='true'></i></a>";
+	        "data-target='#download-modal'><i class='fa fa-download' data-toggle='tooltip' title='Download File' aria-hidden='true'></i></a>";
 
 	if(row.selfMetadata && row.selfMetadata.length > 0) {
 		var metadata = JSON.stringify(row.selfMetadata);
@@ -417,7 +417,7 @@ function renderDownload(data, type, row,accessgroups,permissions) {
    
 	html += "<span class='btn btn-link btn-sm editDataFileCollectionMetadata'  metadata_path  = '" + path + "'" +
 				" metadata_set = '" + metadata  + "' data-fileName = '" + downdloadFileName + "' ><i class='fa fa-edit' data-toggle='tooltip'" +
-				" title='Edit Data Object Metadata'></i></span>";
+				" title='Edit File Metadata'></i></span>";
 				
 	if(accessgroups && accessgroups.indexOf("public") == -1 && permissions && permissions == 'Owner') {		
 	 html+="&nbsp;&nbsp;<span data-filePath = '" + path + "' class='btn btn-link btn-sm deleteDataFileBtn'><i class='fas fa-trash' data-toggle='tooltip' title='Delete File'></i></span>";
@@ -425,7 +425,7 @@ function renderDownload(data, type, row,accessgroups,permissions) {
 	}
 	
 	html += "<a aria-label='download link' class='btn btn-link btn-sm downloadMetadata'  data_path  = '" + path + "' href='javascript:void(0);' " +
-     "><i class='fas fa-file-export' data-toggle='tooltip' title='download metadata'></i></a>";
+     "><i class='fas fa-file-export' data-toggle='tooltip' title='Download Metadata'></i></a>";
 	
 	return html;
 
