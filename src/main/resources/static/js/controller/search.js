@@ -86,8 +86,9 @@ function populateSearchCriteria(searchType) {
 	 if(searchType == 'datasetUrl') {
 		 var rowId = 3;
 		 var attrVal = $("#doeIdentifier").val();
-		 attrNames.push('Dataset Name');
+		 attrNames.push('dme_data_id');
 			attrValues.push('%' + attrVal + '%' );
+			levelValues.push("Dataset");
 			rowIds.push(rowId);
 			isExcludeParentMetadata.push(false);
 			operators.push("LIKE");
