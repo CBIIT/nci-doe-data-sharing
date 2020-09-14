@@ -122,12 +122,6 @@ public class SearchController extends AbstractDoeController {
 			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search);
 			compoundQuery.setDetailedResponse(true);
 			serviceURL = compoundDataObjectSearchServiceURL;
-
-			//WebClient client = DoeClientUtil.getWebClient(serviceURL, sslCertPath, sslCertPassword);
-			//client.header("Authorization", "Bearer " + authToken);
-
-			//Response restResponse = client.invoke("POST", compoundQuery);
-			
 			
 			 UriComponentsBuilder ucBuilder  = UriComponentsBuilder.fromHttpUrl(compoundDataObjectSearchServiceURL);		     		    
 			    
