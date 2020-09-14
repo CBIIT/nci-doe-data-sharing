@@ -5,7 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-     <div class="form-row jumbotron pt-2 pb-2 mb-2" id="dataSetFragment" th:fragment="dataSetFragment" style="display:none;font-size:13px;">
+     <div class="form-row pt-2 pb-2 mb-2" id="dataSetFragment" th:fragment="dataSetFragment" style="display:none;font-size:13px;">
      
      <div class="col-lg-12 col-md-12 col-sm-12 float-right">
        <div class="controls controls-row mt-4">
@@ -13,16 +13,16 @@
        </div>
      </div>
      
-     <div class="col-lg-12 col-md-12 col-sm-12" style="margin-top: 20px;">
+     <div class="col-lg-12 col-md-12 col-sm-12" style="margin-top: 20px;border-bottom: 4px solid #194F85;">
     <h4 class="datasetDetailsheader">Dataset Details</h4>
      </div>
      
     <br/>
     <br/>
     
-    <div class="form-row jumbotron col-lg-12 col-md-12 col-sm-12" style="padding:2rem 2rem;margin-top:20px;">
+    <div class="form-row jumbotron col-lg-12 col-md-12 col-sm-12" style="padding:2rem 2rem;margin-top:20px;border-bottom: 2px solid #194F85;">
     <div class="col-md-12 col-sm-12">
-                        <div class="form-row">
+                        <div class="form-group">
                                 <div class="form-group col-lg-4 col-md-12">
                                     <label aria-label="program name">Program Name: <span id="selectedProgramName"></span></label>
                             </div>
@@ -57,7 +57,7 @@
        </table> 
 
                     
-        <div class="col-lg-12 col-md-12 col-sm-12 float-right">
+        <div class="col-lg-12 col-md-12 col-sm-12 float-right" style="border-top: 2px solid #194F85;">
        <div class="controls controls-row mt-4">
        <p class="datasetDetailsheader" style="font-size: 20px;font-weight: 500;">Dataset Files</p>
        <button id="downloadSelectedMetadata" type="button" class="btn btn-primary float-right mb-2 mr-2" disabled>Download Selected Metadata</button>

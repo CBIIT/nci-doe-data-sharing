@@ -141,7 +141,7 @@ table#userMetaData tr:nth-child(odd) td{
 	    background-color: #E0F0F4!important;
 }
 table#userMetaData tr:nth-child(even) td{
-	background-color: #FBFBFB!important;
+	background-color: #E0F0F4!important;
 }
 
 table#dataSetMetaData tr:nth-child(odd) td{
