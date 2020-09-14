@@ -32,8 +32,8 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNav" aria-controls="topNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-<div id="globalNav" class="collapse navbar-collapse justify-content-end col order-last bordered">
-            <div id="subNav" class="card-header">
+<div id="globalNav" class="collapse navbar-collapse justify-content-end col order-last bordered" style="max-height:15%;">
+            <div id="subNav" class="card-header" style="height:50px;">
         <ul class="nav nav-tabs card-header-tabs" id="subTab" role="tablist" style="margin-right: -59px;font-size:18px;">
             <li class="nav-item" role="tab">
                 <a class="nav-link active" id="landing-tab" th:href="@{/}"role="tab">Home</a>
@@ -58,7 +58,7 @@
     </div> 
                 </div>
     <!--top right navigation-->
-    <div id="topNav" class="collapse navbar-collapse justify-content-end col order-last bordered" >
+    <div id="topNav" class="collapse navbar-collapse justify-content-end col order-last bordered" style="max-width:40%;">
         <ul class="navbar-nav navbar-dark text-white justify-content-end" role="tablist">
 
              <!--Users Guide-->

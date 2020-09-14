@@ -98,15 +98,7 @@ body{
 BRANDING 
 ==================================================================================---*/
 
-/* NCI Logo */
-/*
-#nci-brand{
-background-image: url(../images/tempate-bg-blue.png);
-background-repeat: no-repeat;
-background-size: cover;
-    border-bottom:8px solid rgb(3, 158, 31);
-}
-*/
+
 .logoImg{width:500px}
 /* IMPACC 2 Suite label*/
 .appGroup{margin-left:60px;display:block;    margin-top: -12px;}
@@ -129,8 +121,6 @@ text-shadow: 2px 2px #333;
     }
 .versionNumber{font-size: 12px;float: right;12px;float: right;}
 inline{display:inline;}
-/*.navbar-dark .navbar-brand{position: fixed}*/
-/* #nci-brand.navbar-dark .navbar-toggler{margin-left:90%} */
 #brand{
 	/*background-image: url(../images/tempate-bg-blue.png);*/
 background-repeat: no-repeat;
@@ -179,6 +169,8 @@ NAVIGATIONS
  #subTab .nav-item a {
     font-family: 'nunito_sansbold';
     font-size: 16px;
+    margin-top: -12px;
+    padding-bottom: 2px;
 }
 .navbar-dark .navbar-nav .nav-link{color:#fff;text-transform:none;float:right}
 .nav-link {display: block;padding: 1rem 1rem;}

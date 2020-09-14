@@ -258,6 +258,10 @@ table.dataTable thead .sorting_asc {
     height:450px;
 }
 
+ul#subTab li {
+	padding-left: 20px;
+}
+
 .Aboutbuttoncontainer {
 margin-bottom: 110px;
     background-repeat: no-repeat;
@@ -305,6 +309,7 @@ background-size: cover;
 z-index: 1010;
 width: 100%;
 background-color: #DDDDDD;
+height: 50px;
 }
 
 #subNav.card-header {
