@@ -262,6 +262,13 @@ ul#subTab li {
 	padding-left: 20px;
 }
 
+#subNav a.dropdown-item {
+    padding-bottom: 10px;
+    font-family: Nunito sans-serif;
+    font-size: 15px;
+    padding-top: 10px;
+}
+
 .Aboutbuttoncontainer {
 margin-bottom: 110px;
     background-repeat: no-repeat;
