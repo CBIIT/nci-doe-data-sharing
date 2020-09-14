@@ -318,6 +318,9 @@ width: 100%;
 background-color: #DDDDDD;
 height: 50px;
 }
+.td_class_3 {
+	width:30%;
+}
 
 #subNav.card-header {
 	background-color: #DDDDDD !important;

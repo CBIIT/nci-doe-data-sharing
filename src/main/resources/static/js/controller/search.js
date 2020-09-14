@@ -290,6 +290,10 @@ function dataTableInit(isVisible) {
         },
 
         ],
+        "columnDefs": [
+            {className: "td_class_3", "targets": [0]},
+        ],
+        
         "dom": '<"top"lip>rt<"bottom"p>',
 
         "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
