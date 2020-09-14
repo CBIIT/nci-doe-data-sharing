@@ -20,23 +20,19 @@
 <body>
  <div id="brand" class="col-md-12 col-sm-12 pl-0 pr-0" role="navigation" th:fragment="public-header" aria-label="brand div">
 
-    <nav id="nci-brand" class="navbar navbar-expand-lg navbar-dark bg-default ml-auto">
-    <!--logo image-->
+	<!--logo image-->
     <div class="col order-first">
         <a href="#" aria-label="image link">
         <img src="images/nci_logo.png" th:src="@{/images/nci_logo.png}" class="logoImg" alt="National Cancer Institute"></a>
     </div>
-    <!--app title-->
-    <div class="col justify-content=center appnameWrapper">
-        <div class="appName">
-      
-        </div>
-    </div>
+    
+    <nav id="nci-brand" class="navbar navbar-expand-lg navbar-dark bg-default ml-auto">
+    
     <!--on small media collapse icon-->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNav" aria-controls="topNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-<div id="globalNav" class="collapse navbar-collapse justify-content-end col order-last bordered" style="margin-bottom:-61px;">
+<div id="globalNav" class="collapse navbar-collapse justify-content-end col order-last bordered">
             <div id="subNav" class="card-header">
         <ul class="nav nav-tabs card-header-tabs" id="subTab" role="tablist" style="margin-right: -59px;font-size:18px;">
             <li class="nav-item" role="tab">
@@ -62,7 +58,7 @@
     </div> 
                 </div>
     <!--top right navigation-->
-    <div id="topNav" class="collapse navbar-collapse justify-content-end col order-last bordered"  style="margin-bottom:-87px;">
+    <div id="topNav" class="collapse navbar-collapse justify-content-end col order-last bordered" >
         <ul class="navbar-nav navbar-dark text-white justify-content-end" role="tablist">
 
              <!--Users Guide-->

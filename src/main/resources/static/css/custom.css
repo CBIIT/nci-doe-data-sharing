@@ -72,6 +72,7 @@
     /* background: #606060!important; */
     /* border-bottom-color: #D06709!important; */
     border-bottom: 2px solid #D06709 !important;
+    background-color: #DDDDDD !important;
 }
 
 .nav-link:hover{
@@ -303,6 +304,11 @@ background-size: cover;
 #nci-brand{
 z-index: 1010;
 width: 100%;
+background-color: #DDDDDD;
+}
+
+#subNav.card-header {
+	background-color: #DDDDDD !important;
 }
 
 #topNav .navbar-nav li > a{
@@ -801,7 +807,7 @@ return to the top
 }
 
 #content {
-	padding-top:10px;
+	/*padding-top:10px;*/
 }
 .btn-success {
     background-color: #218739 !important;
