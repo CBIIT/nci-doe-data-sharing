@@ -480,10 +480,16 @@ form#forgot-password-form .error {
 }
 form#register-form .error {
     color: rgb(251, 6, 10);
+    padding-top: 0px;
 }
 form#userlogin .error {
     color: rgb(251, 6, 10);
+    padding-top: 0px;
 }
+label.error {
+    margin-left: 17px;
+}
+
 label.myErrorClass {
     color: red;
     font-size: 11px;
