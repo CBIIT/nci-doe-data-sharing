@@ -111,7 +111,6 @@ function dataTableInitTaskManager() {
         {"data": "taskDate", "defaultContent": "",responsivePriority: 4},
         {"data": "taskType", "defaultContent": "",responsivePriority: 5},
         {"data": "transferStatus", "defaultContent": "",responsivePriority: 2},
-        {"data": "transferStatus", "defaultContent": ""},
         ],
         "dom": '<"top"lip>rt<"bottom"p>',
 
