@@ -506,9 +506,10 @@ function addValueToSelected(optionVal) {
     }
     	    var $inputGroupButton = $('<div class="input-group-btn" />');
     	    $inputGroup.append($inputGroupButton);
-    	    $inputGroupButton.append('<input class="btn btn-primary pull-right" type="button" ' +
+    	    $inputGroupButton.append('<input class="btn btn-primary pull-right" style="background-color: #7C7C7C !important;color: #fff;" type="button" ' +
     	        'value="X" onclick="removeRowAddOption(\'' + rowId + '\')"/>');
-    
+    	    
+    $("#advSearchDiv").show();
 
     removeOptionFromAdvancedSearchSelector(rowId, $(optionVal).attr('value'));
 }

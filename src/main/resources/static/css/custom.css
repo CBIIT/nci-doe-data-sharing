@@ -445,8 +445,35 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
     color: #000;
 }
 
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+	 background-color: transparent !important;
+	    color: #E87B05!important;
+}
+
+.select2-container--default .select2-results>.select2-results__options {
+	    background-color: #E4E1E1 !important;
+}
+
 .loginFieldsTextBox::placeholder {
     color: #4E8BC6!important;
+}
+
+#attributeVal::placeholder {
+	color: #E87B05;
+  font-family: latoregular;
+  font-size: 22px;
+}
+
+.filtertext {
+	height: 36px;
+    border: 1.75px solid #E2750B;
+    background-color: #E2750B;
+    border-radius: 10px;
+    color: #fff;
+    font-family: Inter;
+    font-size: 15px;
+    text-align: center;
+    line-height: 28px;
 }
      
 /*--===============================================================================
@@ -622,7 +649,9 @@ select.form-control:not([size]):not([multiple]){height:35px;}
 
 .select2-container--bootstrap4 .select2-selection__clear{margin-right:-15px}
 .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__rendered{padding:0px;}
-.select2-container .select2-selection--single .select2-selection__rendered{font-size:14px;padding-bottom: 3px;color:#000;}
+.select2-container .select2-selection--single .select2-selection__rendered{
+	font-size:14px;padding-bottom: 3px;color:#fff;background-color: #E87B05;
+	}
 .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice{ 
     margin: 0px 5px;
     background: #e9ecef;
@@ -637,10 +666,19 @@ font-size: 14px;
 padding: 6px;
 }
 
+.select2-container .select2-selection--single #select2-instituteList-container,#select2-studyList-container,#select2-dataList-container {
+    background-color: #fff !important;
+    color: #000 !important;
+    border: 2px solid #E87B05;
+}
+
 .select2-results__option[aria-selected=true] {
     display: none;
 }
 
+.select2-container--default .select2-selection--single .select2-selection__arrow b  {
+	border-color: #fff transparent transparent transparent !important;
+}
 .select2-container--bootstrap4.select2-container--focus .select2-selection{border-color: #a94442;}
 /*.select2-container .select2-search--inline{float:none;}*/
 .has-error .select2-selection {

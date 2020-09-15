@@ -8,68 +8,56 @@
     <div class="M-4 p-4" id="searchTab" role="tabpanel" th:fragment="search">
     <div id="searchFragmentDiv">
         <form id="referral-search-params">
-            <div class="form-row jumbotron pt-2 pb-2 mb-2">
-                <div class="col-md-12 col-sm-12 p-0 m-0">
-                    <div class="col-lg-2 col-md-2 col-sm-12" style="z-index:1010;">
-                        <button id="button1" type="button" class="float-left btn btn-link" 
-                                style="background-color:transparent; border:0px;color: #00467f;">
-                             <b>Search Criteria</b>
-                        </button>
-                        </div>
-                </div>
-
+            <div class="form-row  pt-2 pb-2 mb-2">
                 <div id="searchCollapse" class="col-md-12 col-sm-12 collapse show">
                     <div class="col-md-12 col-sm-12">
                         <div class="form-row">
-                             <div class="form-group col-lg-10 col-md-12">
-                             <input type="hidden" th:value="${doeIdentifier}" id="doeIdentifier"/>
-                                <label for="attributeVal">Keyword</label>
-                                <input type="text" style="width:40%;margin-top:10px;" id="attributeVal" class="form-control">
-                               <label style="display:none;"class='error keywordError'>This field is required.</label>
-                                <br/>
-                            </div>
-                            <div class="form-group col-lg-2 col-md-12" style="margin-top: 32px;">
-                               <input type="button" id="displayAllResults" class=" btn btn-primary float-right" value="Display All Results">
+                            <div class="form-group col-lg-8 col-md-12" style="float: right;margin-top: 33px;">
+                             <input type="hidden" value="" id="doeIdentifier">
+                                <input type="text" placeholder="Search CModaC" style="width: 69%;
+                                height: 112%;margin-top:10px;border: 2px solid #E87B05;border-radius: 
+                                26px;float: right;" id="attributeVal" class="form-control">
+                                
+                                <label style="display:none;" class="error keywordError">This field is required.</label>
+                                 <br>
+                              </div>
+                            <div class="form-row col-lg-12 col-md-12" style="margin-top: 32px;align-content: center;
+                            margin-left: 164px;">
+                            <div class="form-group col-lg-4 col-md-12" style="text-align: center;align-content: center;">
+                               <a href="#" id="displayAllResults" style="color: #C06400;font-family: Inter;font-size: 17px;">
+                               Display All Results &nbsp;&nbsp; <i class="fas fa-arrow-right"></i></a></div>
+                       <div id="advancedsearchCollapse" class="form-group col-md-6 col-sm-12" style="margin-top: -15px;">
+                    <div class="col-md-12 col-sm-12">
+                        <div class="form-row">
+                             <div class="form-group col-lg-8 col-md-12">
+                                <label for="metadatalist" style="color: #C06400;font-family: Inter;font-size: 17px;font-weight:200;">Filter Results By: 
+                                 <select class="simple-select2"  id="metadatalist" name="metadatalist" style="width:70%" onchange="addValueToSelected(this.options[this.selectedIndex]);">
+                                </select></label>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-12 col-sm-12 ml-auto" id="buttonsRow">
-                        <input type="button" id="searchBtn" value="Search" class="btn btn-primary float-left ml-1">
-                        <a class="btn btn-default float-left" href="#" id="resetBtn" style="background:#fff;margin-left:10px;">Clear</a>
+                    
+                </div>
+                            </div>
+                            <div class="form-row col-lg-12 col-md-12" style="margin-top: 32px;align-content: center;
+                            margin-left: 216px;background-color: #DDE9F7;display:none;padding:10px;" id="advSearchDiv">
+                            <div class="form-group col-lg-8 col-md-12" id="metadatalisting" 
+                             style="margin-bottom:15px;background-color: #DDE9F7;padding-bottom:15px;">
+                            </div>
+                            <div class="col-md-8 col-sm-8" id="advBtnRow">
+                            <input type="button" id="advSearchBtn" style="background-color: #7C7C7C!important;" 
+                            value="Run Search" class="btn btn-primary float-right ml-1">
+                            <a class="btn btn-default float-right" href="#" id="resetAdvSearchBtn" 
+                            style="background-color: #7C7C7C;color: #fff;">Clear All</a>
+                            </div>
+                            </div>
+                            
+                        </div>
                     </div>
+                    
                 </div>
             </div>
             
-                        <div class="form-row jumbotron pt-2 pb-2 mb-2" style="margin-top:20px;">
-                <div class="col-md-12 col-sm-12 p-0 m-0">
-                    <div class="col-lg-2 col-md-2 col-sm-12" style="z-index:1010;">
-                        <button id="advancedSearch" type="button" class="float-left btn btn-link" data-toggle="collapse"
-                                data-target="#advancedsearchCollapse"
-                                style="background-color:transparent; border:0px;color: #00467f;">
-                            <i class="fa fa-minus-circle" style="color: #00467f;"></i> <b>Filter Results By</b>
-                        </button>
-                        </div>
-                </div>
-    <div class="errorFilterCriteria" style="margin-left: 23px;display:none;">
-    <label style="color: rgb(251, 6, 10);">Add at least one criteria.</label></div>
-                <div id="advancedsearchCollapse" class="col-md-12 col-sm-12 collapse show">
-                    <div class="col-md-12 col-sm-12">
-                        <div class="form-row">
-                             <div class="form-group col-lg-4 col-md-12">
-                                <label for="metadatalist"></label>
-                                 <select class="simple-select2"  id="metadatalist" name="metadatalist" style="width:100%" onchange="addValueToSelected(this.options[this.selectedIndex]);">
-                                </select>
-                            </div>
-                             <div class="form-group col-lg-12 col-md-12" id="metadatalisting" style="background-color:#fff;margin-bottom:15px;">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 col-sm-12 ml-auto" id="advBtnRow">
-                        <input type="button" id="advSearchBtn" value="Run Search" class="btn btn-primary float-right ml-1">
-                        <a class="btn btn-default float-right" href="#" id="resetAdvSearchBtn" style="background:#fff;">Reset</a>
-                    </div>
-                </div>
-            </div>
            
             <div class="container main col-md-12 col-sm-12 mb-4" id="searchResultsDiv" 
             style="display:none;margin-top:40px;background-color: #C6D9EC;">                          
@@ -78,9 +66,8 @@
             </div>
         </form>
         </div>
-         <div th:replace="fragments/dataSetFragment :: dataSetFragment"></div>
-         <div th:replace="fragments/editCollectionFragment :: editCollectionFragment"></div>
-    </div>
-</div>
+         <div th:replace="fragments/dataSetFragment :: dataSetFragment"/>
+         <div th:replace="fragments/editCollectionFragment :: editCollectionFragment"/>
+         </div>
 </body>
 </html>
