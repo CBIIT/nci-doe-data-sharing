@@ -283,6 +283,7 @@ $("#resetBtn").click(function(e){
 	$(".errorFilterCriteria").hide();
 	$("#attributeVal").val("");
 	 $("#searchResultsDiv").hide();
+	 $("#advSearchDiv").hide();
 	$('#metadatalisting').empty();
 
 });

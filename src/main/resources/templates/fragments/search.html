@@ -18,21 +18,27 @@
                                 height: 112%;margin-top:10px;border: 2px solid #E87B05;border-radius: 
                                 26px;float: right;" id="attributeVal" class="form-control">
                                 
-                                <span id="resetBtn" data-toggle="tooltip" title="Reset" style="position: absolute;top: 20px;right: 58px;height: 29px;width: 53px;
-                                font-size: 22px;color: #7C7C7C;border-radius: 10px;"><i class="fas fa-times"></i></span>
+                                <span id="resetBtn" data-toggle="tooltip" title="Reset" 
+                                style="position: absolute;top: 25px;
+                                right: 90px;height: 16px;"><img src="/images/cancel-X-grey.svg" style="width:20px;"/></span>
                             
-                                <span data-toggle="tooltip" title="Search" style="position: absolute;top: 20px;right: 25px;height: 29px;width: 53px;
-                                font-size: 22px;background-color: #7C7C7C;border-radius: 10px;" id="searchBtn">
-                                <i class="fas fa-arrow-right" style="color: #fff;margin-left: 15px;"></i></span>
+                                <span data-toggle="tooltip" title="Search" style="position: absolute;top: 20px;
+                                right: 25px;height: 29px;width: 57px;font-size: 18px;background-color: #E87B05;border-radius: 13px;
+                                text-align: center;" id="searchBtn">
+                                <img src="/images/arrow-white-large.svg" style="width: 29px;"></span>
                                 
-                                <label style="display:none;" class="error keywordError">This field is required.</label>
+                                
+                                <label style="margin-left: 320px;display:none; float: left; height: 5px;" class="error keywordError">This field is required.</label>
                                  <br>
                               </div>
-                            <div class="form-row col-lg-12 col-md-12" style="margin-top: 32px;align-content: center;
+                            <div class="form-row col-lg-12 col-md-12" style="margin-top: 50px;align-content: center;
                             margin-left: 164px;">
                             <div class="form-group col-lg-4 col-md-12" style="text-align: center;align-content: center;">
                                <a href="#" id="displayAllResults" style="color: #C06400;font-family: Inter;font-size: 17px;">
-                               Display All Results &nbsp;&nbsp; <i class="fas fa-arrow-right"></i></a></div>
+                               Display All Results &nbsp;&nbsp; <span data-toggle="tooltip" title="Search" 
+                               style="position: absolute;right: 129px;height: 26px;width: 44px;
+                               font-size: 16px;background-color: #E87B05;border-radius: 10px;">
+                               <img src="/images/arrow-white-large.svg" style="width: 20px;"></span></a></div>
                        <div id="advancedsearchCollapse" class="form-group col-md-6 col-sm-12" style="margin-top: -15px;">
                     <div class="col-md-12 col-sm-12">
                         <div class="form-row">
@@ -52,8 +58,11 @@
                              style="margin-bottom:15px;background-color: #DDE9F7;padding-bottom:15px;">
                             </div>
                             <div class="col-md-8 col-sm-8" id="advBtnRow">
-                            <input type="button" id="advSearchBtn" style="background-color: #7C7C7C!important;" 
-                            value="Run Search" class="btn btn-primary float-right ml-1">
+                            <span data-toggle="tooltip" id="advSearchBtn" title="Search" style="
+                             position: absolute;right: -53px;height: 33px;
+                             width: 48px;font-size: 18px;background-color: #7C7C7C;
+                             border-radius: 13px;text-align: center;float: left;"
+                             class="float-right"> <img src="/images/arrow-white-large.svg" style="width: 29px;"></span>
                             <a class="btn btn-default float-right" href="#" id="resetAdvSearchBtn" 
                             style="background-color: #7C7C7C;color: #fff;">Clear All</a>
                             </div>
