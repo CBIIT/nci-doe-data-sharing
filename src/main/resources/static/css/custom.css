@@ -184,6 +184,9 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 	color: #1C3D5D;
     font-family: latoregular;
 }
+
+.btn-primary, bg-primary{background-color: #00579e!important;}
+
 #downloadSelectedMetadata {
 	background-color: #E87B05!important;
 }
@@ -702,7 +705,6 @@ padding: 6px;
 .gj-datepicker-bootstrap [role=right-icon] button{background-color:#fff!important;}
 #search-from-date.form-control:after, #search-to-date.form-control:after{content:"\f073"; font-family:fontAwesome; font-size:12px;color:#000}
 button.ms-choice{border:0px;margin-top:5px;}
-.btn-primary, bg-primary{background-color: #00579e!important;}
 .btn-primary:hover{background-color:#0364b3 !important;}
 div.ms-parent{padding-left: 1px;}
 mrs-100{width:100%}
