@@ -55,7 +55,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.bulkregistration}")
 	private String registrationServiceUrl;
 
-	SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+	SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 	
 
 	@GetMapping
