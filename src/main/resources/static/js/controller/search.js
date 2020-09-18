@@ -272,7 +272,22 @@ function dataTableInit(isVisible) {
         	   
            });
            
+           $(".sharableLink").click(function(){
+   	    	if($(this).parent().find('.sharableLinkDiv:visible').length == 0) {
+   	    		$(this).parent().find('.sharableLinkDiv').show();
+   	    	} else {
+   	    		$(this).parent().find('.sharableLinkDiv').hide();
+   	    	}
+   	    	
+   	    });
            
+           $(".share-link-copy-button").click(function(){
+   	    	var copyText = $(this).parent().find('input[type=text]');
+   	    	 copyText.select();
+   	    	 document.execCommand("copy");
+   	    	  alert("Copied the text: " + copyText.val());
+   	    });
+   	   	    
 
            initializeToolTips();
            initializePopover();
@@ -366,6 +381,12 @@ function renderDataSetName(data, type, row){
 		"&nbsp;&nbsp;&nbsp;<a href='#' class='dataSetFragment' collections = '" + JSON.stringify(collections)+ "' permissions_role = '" + row.dataSetPermissionRole + "' access_grp ='"+row.dataLevelAccessGroups +"' metadata_type = '" + data  + "' data_set_path = " + row.dataSetPath + "><span class='cil_14_bold_no_color'>" + row.dataSetName + "</span></a>" +
 		"&nbsp&nbsp;</div></div></div>";
 	}
+	
+	html+= "<div class='col-md-12' style='margin-left: 21px;'><span class='sharableLink'>Sharable Link: " +
+			"<i class='fas fa-share'></i></span><p style='display: none;' class ='sharableLinkDiv'><input type='text' value='"+ row.dataSetdmeDataId + "' disabled/> &nbsp; " +
+			"<button class='share-link-copy-button' type='button' style='background-color: rgba(9,30,66,.08);" +
+			"border: 1px solid transparent;'>Copy</button></p></div>";
+    
     return html;	
  }
 

@@ -24,9 +24,16 @@ public class DoeSearchResult {
     private String dataLevelAccessGroups;
     private String studyLevelAccessGroups;
     private String programLevelAccessGroups;
+    private String dataSetdmeDataId;
     
     
     
+	public String getDataSetdmeDataId() {
+		return dataSetdmeDataId;
+	}
+	public void setDataSetdmeDataId(String dataSetdmeDataId) {
+		this.dataSetdmeDataId = dataSetdmeDataId;
+	}
 	public String getDataSetName() {
 		return dataSetName;
 	}

@@ -93,6 +93,8 @@ public class SearchController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.model}")
 	private String hpcModelURL;
 
+	@Value("${gov.nih.nci.hpc.web.server}")
+	private String webUrl;
 	 
 	 @Autowired
 	 ConsortiumService consortiumService;
@@ -202,7 +204,8 @@ public class SearchController extends AbstractDoeController {
 			returnResult.setDataLevelAccessGroups(getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries(),"Dataset"));
 			returnResult.setStudyLevelAccessGroups(getAttributeValue("access_group", result.getMetadataEntries().getParentMetadataEntries(),"Study"));
 			returnResult.setProgramLevelAccessGroups(getAttributeValue("access_group", result.getMetadataEntries().getParentMetadataEntries(),"Program"));
-            returnResults.add(returnResult);
+			returnResult.setDataSetdmeDataId(webUrl+ "/searchTab?doeIdentifier=" + getAttributeValue("dme_data_id", result.getMetadataEntries().getSelfMetadataEntries(),"Dataset"));
+			returnResults.add(returnResult);
 		}
 		
 		return returnResults;
