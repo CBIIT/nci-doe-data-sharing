@@ -27,6 +27,7 @@ public class DoeUsers {
 	private Boolean isActivated;
 	private String uuid;
 	private String programName;
+	private Date createdDate;
 	
 
     public boolean equals(Object object) {
@@ -121,6 +122,18 @@ public class DoeUsers {
 	public Date getLockoutDate() {
 		return lockoutDate;
 	}
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "CREATED_DATE", length = 29)
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
 
 	public void setLockoutDate(Date lockoutDate) {
 		this.lockoutDate = lockoutDate;

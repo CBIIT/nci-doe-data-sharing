@@ -14,6 +14,7 @@ import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.repository.DoeUserRepository;
 import gov.nih.nci.doe.web.service.AuthenticateService;
 
+import java.util.Date;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -167,6 +168,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		 user.setLockoutCounter(0);
 		 user.setIsActivated(false);
 		 user.setUuid(token);
+		 user.setCreatedDate(new Date());
 		 doeUserRepository.saveAndFlush(user);
 		 
 		 String encodedPassword = passwordEncoder.encode(register.getPassword());
