@@ -1057,7 +1057,8 @@ text-align: center;
     margin-left:50px;
     margin-right:50px;
 	margin-top:5px;
-	margin-bottom:5px
+	margin-bottom:5px;
+    letter-spacing: 2px;
 }
 
 .row-buffer {
