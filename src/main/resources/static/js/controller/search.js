@@ -285,11 +285,14 @@ function dataTableInit(isVisible) {
         	   var clipboard = new ClipboardJS('.share-link-copy-button');
 
         	   clipboard.on('success', function(e) {
-        	     console.log(e);
-        	     $('.share-link-copy-button').tooltip('hide').attr('data-original-title', 'Copied!').tooltip('fixTitle').tooltip('show');
-        		    $('.share-link-copy-button').attr('data-original-title', 'Copy to clipboard');
-        		    e.clearSelection();
-        	   });
+          	     console.log(e);
+          	     $(e.trigger).tooltip('hide').attr('data-original-title', 'Copied').tooltip('show');
+          	     setTimeout(function() {
+                       $(e.trigger).tooltip('hide');
+                       $(e.trigger).attr('data-original-title', 'Copy to Clipboard');
+                         }, 2000);
+          	  
+          	   });
 
         	   clipboard.on('error', function(e) {
         	     console.log(e);
