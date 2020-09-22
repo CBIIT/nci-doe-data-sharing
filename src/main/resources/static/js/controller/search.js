@@ -281,13 +281,22 @@ function dataTableInit(isVisible) {
    	    	
    	    });
            
-           $(".share-link-copy-button").click(function(){
-   	    	var copyText = $(this).parent().find('input[type=text]');
-   	    	 copyText.select();
-   	    	 document.execCommand("copy");
-   	    	  alert("Copied the text: " + copyText.val());
-   	    });
-   	   	    
+       
+        	   var clipboard = new ClipboardJS('.share-link-copy-button');
+
+        	   clipboard.on('success', function(e) {
+        	     console.log(e);
+        	     $('.share-link-copy-button').tooltip('hide').attr('data-original-title', 'Copied!').tooltip('fixTitle').tooltip('show');
+        		    $('.share-link-copy-button').attr('data-original-title', 'Copy to clipboard');
+        		    e.clearSelection();
+        	   });
+
+        	   clipboard.on('error', function(e) {
+        	     console.log(e);
+        	   });
+        	   
+       
+           
 
            initializeToolTips();
            initializePopover();
@@ -383,9 +392,9 @@ function renderDataSetName(data, type, row){
 	}
 	
 	html+= "<div class='col-md-12' style='margin-left: 21px;'><span class='sharableLink'>Sharable Link: " +
-			"<i class='fas fa-share'></i></span><p style='display: none;' class ='sharableLinkDiv'><input type='text' value='"+ row.dataSetdmeDataId + "' disabled/> &nbsp; " +
-			"<button class='share-link-copy-button' type='button' style='background-color: rgba(9,30,66,.08);" +
-			"border: 1px solid transparent;'>Copy</button></p></div>";
+			"<i class='fas fa-share'></i></span><p style='display: none;' class ='sharableLinkDiv'><input type='text' id= 'colId"+row.dataSetCollectionId+"' value='"+ row.dataSetdmeDataId + "' readonly='true'/> &nbsp; " +
+			"<button type='button' class='share-link-copy-button' data-toggle='tooltip' data-placement='bottom' title='Copy to clipboard' data-clipboard-target='#colId"+row.dataSetCollectionId+"'>" +
+			"<img src='images/clippy.svg' width='13' alt='Copy to clipboard'/></button></p></div>";
     
     return html;	
  }
