@@ -39,6 +39,23 @@ FONTS, FONT AWESOME, FONT SOURCE SANS PRO
 
 }
 
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../webfonts/nunito-v14-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../webfonts/nunito-v14-latin-regular.woff') format('woff'), /* Modern Browsers */
+}
+
+/* inter-regular - latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  src:url('../webfonts/inter-v2-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../webfonts/inter-v2-latin-regular.woff') format('woff'), /* Modern Browsers */
+}
+
 /* font use */
 @font-face {
     font-family: 'gijgo';
