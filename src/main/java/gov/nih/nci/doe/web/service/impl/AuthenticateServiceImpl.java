@@ -129,6 +129,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 				// login failed but has not reached the max number of attempts. do not lock the account
 				d.setLockoutCounter(newCounter);
 			}
+			d.setLastChangedDate(new Date());
 			doeUserRepository.saveAndFlush(d);
 		} else {
 			clearLockFields(d.getEmailAddrr());
@@ -264,7 +265,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 			 log.info("Attempt to unlock account for user ID: " + userid);
 			 // reset counter
 			 user.setLockoutCounter(0);
-
+             user.setLastChangedDate(new Date());
 			 doeUserRepository.saveAndFlush(user);
 		}
 		
@@ -299,6 +300,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 			d.setInstitution(doeModel.getInstitution());
 			d.setLastName(doeModel.getLastName());
 			d.setEmailAddrr(doeModel.getEmailAddrr());
+			d.setLastChangedDate(new Date());
 			doeUserRepository.saveAndFlush(d);
 		}
 		

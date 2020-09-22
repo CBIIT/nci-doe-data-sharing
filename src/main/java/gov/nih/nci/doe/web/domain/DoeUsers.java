@@ -28,6 +28,7 @@ public class DoeUsers {
 	private String uuid;
 	private String programName;
 	private Date createdDate;
+	private Date lastChangedDate;
 	
 
     public boolean equals(Object object) {
@@ -132,6 +133,18 @@ public class DoeUsers {
 
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
+	}
+
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "LAST_UPDATED_DATE", length = 29)
+	public Date getLastChangedDate() {
+		return lastChangedDate;
+	}
+
+
+	public void setLastChangedDate(Date lastChangedDate) {
+		this.lastChangedDate = lastChangedDate;
 	}
 
 
