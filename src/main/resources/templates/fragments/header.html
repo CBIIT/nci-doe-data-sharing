@@ -41,8 +41,7 @@
              <li class="nav-item dropdown" role="tab">
                     <a class="nav-link dropdown-toggle" href="#" role="button" aria-label="Help"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                       About &nbsp;
-                       <i aria-hidden="true" class="fa fa-caret-down pull-right"></i>
+                       About
                     </a>
                          <div class="dropdown-menu" style="margin-top:5px !important;background-color: #1D90FF;">
                         <a class="dropdown-item" id="about-tab" th:href="@{/aboutTab}">About Modac</a>
@@ -79,7 +78,7 @@
                 <li th:if= "${loggedOnUser != null}" class="nav-item dropdown" role="tab">
                     <a class="nav-link dropdown-toggle" style="color: #D06709;" href="#" role="button" aria-label="Help"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                       <i class="fa fa-user" aria-hidden="true"></i>&nbsp;<span class="topNav-item" th:text="${firstName}">&nbsp;
+                       <span class="topNav-item" style="text-transform: uppercase;" th:text="${firstName}">&nbsp;
                        <i aria-hidden="true" class="fa fa-caret-down pull-right"></i></span>
                     </a>
                     <div class="dropdown-menu">
@@ -93,7 +92,7 @@
               </li>
                 			    	
                <li class="nav-item" th:if= "${loggedOnUser != null}" role="tab">
-			    	<a class="nav-link" style="color: #D06709;" href="#" id="logout">|&nbsp;&nbsp;&nbsp;Log Out</a>
+			    	<a class="nav-link" style="color: #D06709;" href="#" id="logout">|&nbsp;&nbsp;&nbsp;LOGOUT</a>
 			    	</li>
             </ul>
         </div>
