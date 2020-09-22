@@ -306,7 +306,9 @@ ul#subTab li {
     padding-bottom: 10px;
     font-family: Nunito;
     font-size: 15px;
-    padding-top: 10px;
+    padding-top: 15px;
+    letter-spacing: 1px;
+    color: #fff;
 }
 
 .Aboutbuttoncontainer {
