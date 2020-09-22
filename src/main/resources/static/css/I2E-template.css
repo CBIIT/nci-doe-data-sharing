@@ -40,6 +40,14 @@ FONTS, FONT AWESOME, FONT SOURCE SANS PRO
 }
 
 @font-face {
+  font-family: 'Nunito Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../webfonts/nunito-sans-v6-latin-regular.woff2') format('woff2'),
+         url('../webfonts/nunito-sans-v6-latin-regular.woff') format('woff');
+}
+
+@font-face {
   font-family: 'Nunito';
   font-style: normal;
   font-weight: 400;

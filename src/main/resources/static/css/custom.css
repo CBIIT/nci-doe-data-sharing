@@ -309,7 +309,7 @@ ul#subTab li {
 
 #subNav a.dropdown-item {
     padding-bottom: 10px;
-    font-family: Nunito;
+    font-family: Nunito Sans;
     font-size: 15px;
     padding-top: 15px;
     letter-spacing: 1px;
@@ -380,7 +380,7 @@ height: 50px;
 }
 
 #topNav a.dropdown-item {
-    font-family: Nunito;
+    font-family: Nunito Sans;
     font-size: 15px;
 }
 
