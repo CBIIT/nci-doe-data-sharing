@@ -226,6 +226,11 @@ button.share-link-copy-button > img {
 	filter: invert(40%) sepia(97%) saturate(5634%) hue-rotate(202deg) brightness(109%) contrast(104%);
 }
 
+li.nav-item > .dropdown-menu > a:hover {
+    background-color: transparent !important;
+    color:#000!important;
+}
+
 .uploadLabels {
 	color: #C06400;
     font-family: Inter;
