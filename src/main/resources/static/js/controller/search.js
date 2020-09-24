@@ -7,8 +7,8 @@ $(document).ready(function () {
 		
 	 });
 	 $('body').tooltip({selector: '[data-toggle="tooltip"]'});
-	 var doeIdentifier = $("#doeIdentifier").val();
-	 if(doeIdentifier) {
+	 var dmeDataId = $("#dmeDataId").val();
+	 if(dmeDataId) {
 		 populateSearchCriteria('datasetUrl');
 	 }
 });
@@ -85,7 +85,7 @@ function populateSearchCriteria(searchType) {
 	 
 	 if(searchType == 'datasetUrl') {
 		 var rowId = 3;
-		 var attrVal = $("#doeIdentifier").val();
+		 var attrVal = $("#dmeDataId").val();
 		 attrNames.push('dme_data_id');
 			attrValues.push('%' + attrVal + '%' );
 			levelValues.push("Dataset");

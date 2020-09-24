@@ -204,7 +204,7 @@ public class SearchController extends AbstractDoeController {
 			returnResult.setDataLevelAccessGroups(getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries(),"Dataset"));
 			returnResult.setStudyLevelAccessGroups(getAttributeValue("access_group", result.getMetadataEntries().getParentMetadataEntries(),"Study"));
 			returnResult.setProgramLevelAccessGroups(getAttributeValue("access_group", result.getMetadataEntries().getParentMetadataEntries(),"Program"));
-			returnResult.setDataSetdmeDataId(webUrl+ "/searchTab?doeIdentifier=" + getAttributeValue("dme_data_id", result.getMetadataEntries().getSelfMetadataEntries(),"Dataset"));
+			returnResult.setDataSetdmeDataId(webUrl+ "/searchTab?dmeDataId=" + getAttributeValue("dme_data_id", result.getMetadataEntries().getSelfMetadataEntries(),"Dataset"));
 			returnResults.add(returnResult);
 		}
 		

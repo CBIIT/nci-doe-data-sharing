@@ -88,10 +88,10 @@ public class HomeController extends AbstractDoeController {
 		
 		 @GetMapping(value = "/searchTab")
 		 public String getSearchTab(Model model,HttpSession session, HttpServletRequest request, 
-				 @RequestParam(value = "doeIdentifier", required = false) String doeIdentifier)  { 	
+				 @RequestParam(value = "dmeDataId", required = false) String dmeDataId)  { 	
 			 
-			 if(StringUtils.isNotEmpty(doeIdentifier)) {
-				 model.addAttribute("doeIdentifier", doeIdentifier);
+			 if(StringUtils.isNotEmpty(dmeDataId)) {
+				 model.addAttribute("dmeDataId", dmeDataId);
 			 }
 			return "searchTab";
 		 }
