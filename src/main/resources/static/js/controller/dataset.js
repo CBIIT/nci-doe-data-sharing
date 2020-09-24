@@ -106,20 +106,20 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
                       $(this).closest("tr").find('a.downloadLink').prop("disabled", false);
                   }
                   var len = $('#' + table).find('.selectIndividualCheckbox:checked').length;
-                  if (len > 1) {
-                      $("#downloadSelectedDataSet").prop("disabled", false);                    
+                  if (len > 1) {              
                       $("#" + table + " input[type=checkbox]:checked").each(function () {
                           $(this).closest("tr").find('a.downloadLink').prop("disabled", true);
                       });
-                  } else {
-                      $("#downloadSelectedDataSet").prop("disabled", true);
+                  } else {                      
                       $(".downloadLink").prop("disabled", false);
                   }
                   
                   if(len >= 1) {
                 	  $("#downloadSelectedMetadata").prop("disabled", false);
+                	  $("#downloadSelectedDataSet").prop("disabled", false); 
                   } else {
                 	  $("#downloadSelectedMetadata").prop("disabled", true);
+                	  $("#downloadSelectedDataSet").prop("disabled", true);
                   }
               });
         	  
