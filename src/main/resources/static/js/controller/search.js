@@ -8,7 +8,8 @@ $(document).ready(function () {
 	 });
 	 $('body').tooltip({selector: '[data-toggle="tooltip"]'});
 	 var dmeDataId = $("#dmeDataId").val();
-	 if(dmeDataId) {
+	 var doiId = $("#doi").val();
+	 if(dmeDataId || doiId) {
 		 populateSearchCriteria('datasetUrl');
 	 }
 });
@@ -86,8 +87,15 @@ function populateSearchCriteria(searchType) {
 	 if(searchType == 'datasetUrl') {
 		 var rowId = 3;
 		 var attrVal = $("#dmeDataId").val();
-		 attrNames.push('dme_data_id');
-			attrValues.push('%' + attrVal + '%' );
+		 var attrVal1 = $("#doi").val();
+		 if(attrVal) {
+			 attrNames.push('dme_data_id');
+			 attrValues.push('%' + attrVal + '%' );
+		 } else if(attrVal1) {
+			 attrNames.push('doi');
+			 attrValues.push('%' + attrVal1 + '%' );
+		 }
+		
 			levelValues.push("Dataset");
 			rowIds.push(rowId);
 			isExcludeParentMetadata.push(false);
