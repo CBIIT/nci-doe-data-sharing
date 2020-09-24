@@ -68,13 +68,22 @@
 
 .nav-link.active {
    border-color: transparent !important;
-    border-bottom: 2px solid #e87b05 !important;
     background-color: #DDDDDD !important;
+}
+
+.nav-link u {
+	text-decoration: none;
+}
+
+.nav-link.active u {
+	text-decoration: none;
+    border-bottom: 2px solid #e87b05 !important;
 }
 
 .nav-link:hover{
 	background-color:#eee !important;
 }
+
 
 .searchResultTable_length {
 	margin-top: -30px;
