@@ -285,7 +285,7 @@ function retrieveCollectionList(data,status) {
 	 var collectionType = data[0].key;
 	 var parent = data[0].value;
 	 var parentAccessGrp = data[1].value;
-	 $("#registerCollectionModal").find('label[for="parentCollectionName"]').text(parent + " Collection Name");
+	 $("#registerCollectionModal").find('#parentCollectionLabel').text(parent + " Collection Name");
 	 $("#registerCollectionModal").find("#parentCollectionType").val(parent);
 	 $("#registerCollectionModal").find("#parentAccessGroup").val(parentAccessGrp);
 	 $("#registerCollectionModal").find("#collectionType").val(collectionType);
