@@ -110,12 +110,12 @@
     color: #fff;
 }
 
-#manageTasksTable_paginate {
+/*#manageTasksTable_paginate {
 	margin-right: 50px;
 	color: #000000;
     font-family: Lato;
     font-size: 16px;
-}
+}*/
 
 #manageTasksTable_info{
 	float: right;
@@ -775,6 +775,13 @@ table{text-align: left; font-size:14px;}
 .dataTables_wrapper .dataTables_paginate .paginate_button{padding:0px;!important;}
 .pagination{float:right !important;}
 .dataTables_wrapper .dataTables_paginate .paginate_button.current{color:#000!important; background:#f8f9fa;}
+
+.dataTables_paginate{
+ margin-right: 50px;
+	color: #000000;
+    font-family: Lato;
+    font-size: 16px;
+}
 table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after,  
 table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:after,
  table.dataTable thead .sorting_desc_disabled:after{opacity:0.5!important;}
