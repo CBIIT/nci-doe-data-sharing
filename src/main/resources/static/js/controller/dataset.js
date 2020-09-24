@@ -81,12 +81,12 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
                  var table = $(e.target).closest('table');
                  var tableId = table.attr('id');
                  var row_count = $('#' + tableId + "> tbody").children().length;
+                 $(".downloadLink").prop("disabled", false);
                  if ($(this).is(':checked')) {
                      $('td input:checkbox', table).prop('checked', true);
-                     if (row_count > 1) {
+                     if (row_count >= 1) {
                          $("#downloadSelectedDataSet").prop("disabled", false);
-                         $("#downloadSelectedMetadata").prop("disabled", false);
-                         $(".downloadLink").prop("disabled", true);
+                         $("#downloadSelectedMetadata").prop("disabled", false);       
                      }
 
                  } else {
@@ -94,7 +94,6 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
                      if (row_count > 1) {
                          $("#downloadSelectedDataSet").prop("disabled", true);
                          $("#downloadSelectedMetadata").prop("disabled", true);
-                         $(".downloadLink").prop("disabled", false);
                      }
                  }
              });
@@ -106,14 +105,14 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
                       $(this).closest("tr").find('a.downloadLink').prop("disabled", false);
                   }
                   var len = $('#' + table).find('.selectIndividualCheckbox:checked').length;
-                  if (len > 1) {              
+                  /*if (len > 1) {              
                       $("#" + table + " input[type=checkbox]:checked").each(function () {
                           $(this).closest("tr").find('a.downloadLink').prop("disabled", true);
                       });
                   } else {                      
                       $(".downloadLink").prop("disabled", false);
-                  }
-                  
+                  }*/
+                  $(".downloadLink").prop("disabled", false);
                   if(len >= 1) {
                 	  $("#downloadSelectedMetadata").prop("disabled", false);
                 	  $("#downloadSelectedDataSet").prop("disabled", false); 
