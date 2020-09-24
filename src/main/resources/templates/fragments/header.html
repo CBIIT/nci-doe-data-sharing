@@ -35,21 +35,21 @@
             <div id="subNav" class="card-header" style="height:50px;">
         <ul class="nav nav-tabs card-header-tabs" id="subTab" role="tablist" style="margin-right: -59px;font-size:18px;">
             <li class="nav-item" role="tab">
-                <a class="nav-link active" id="landing-tab" th:href="@{/}"role="tab">Home</a>
+                <a class="nav-link active" id="landing-tab" th:href="@{/}"role="tab"><u>Home</u></a>
             </li>
             
             
                 
             <li class="nav-item" role="tab">
-                <a class="nav-link" id="search-tab" th:href="@{/searchTab}" role="tab">Search</a>
+                <a class="nav-link" id="search-tab" th:href="@{/searchTab}" role="tab"><u>Search</u></a>
             </li>
            
            <li class="nav-item" role="tab" th:if="${loggedOnUser != null && isUploader eq true}">
-                <a class="nav-link" id="upload-tab" th:href="@{/addbulk}" role="tab" >Uploads</a>
+                <a class="nav-link" id="upload-tab" th:href="@{/addbulk}" role="tab" ><u>Uploads</u></a>
             </li>
             
             <li class="nav-item" role="tab" th:if="${loggedOnUser != null}">
-                <a class="nav-link" id="manageTasks-tab" th:href="@{/tasksTab}" role="tab">Status</a>
+                <a class="nav-link" id="manageTasks-tab" th:href="@{/tasksTab}" role="tab"><u>Status</u></a>
             </li>
             
             
@@ -59,7 +59,7 @@
                        About
                     </a>
                          <div class="dropdown-menu" style="margin-top:5px !important;background-color: #1D90FF;">
-                        <a class="dropdown-item" id="about-tab" th:href="@{/aboutTab}">About MoDaC</a>
+                        <a class="dropdown-item" id="about-tab" th:href="@{/aboutTab}"><u>About MoDaC</u></a>
                         <a class="dropdown-item" target="_blank" href="https://wiki.nci.nih.gov/display/MoDaCdoc">User Guide</a>
                         <a class="dropdown-item" href="mailto:modac-support@mail.nih.gov?">Contact</a>
                     </div>
