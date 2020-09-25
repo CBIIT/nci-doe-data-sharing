@@ -339,6 +339,7 @@ margin-bottom: 110px;
     margin-bottom: 50px;
     background-color: #E87B05;
         height: 55px;
+        max-width: 86%;
 }
 div.container.main {
 
@@ -1087,11 +1088,11 @@ text-align: center;
 #titleText{
 	color: #FFFFFF;
 	font-family: 'latoregular';
-	font-size: 25px;
+	font-size: 24px;
     line-height: 48px;
     text-align: center;
-    margin-left:50px;
-    margin-right:50px;
+    /*margin-left:50px;
+    margin-right:50px;*/
 	margin-top:5px;
 	margin-bottom:5px;
     letter-spacing: 2px;
