@@ -510,7 +510,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 .select2-container--default .select2-results>.select2-results__options {
 	    background-color: #E4E1E1 !important;
 }
-
+.select2-container *:focus {
+        outline: none;
+}
 .loginFieldsTextBox::placeholder {
     color: #4E8BC6!important;
 }
