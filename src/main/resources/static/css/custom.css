@@ -1095,7 +1095,8 @@ text-align: center;
     margin-right:50px;*/
 	margin-top:5px;
 	margin-bottom:5px;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
+    word-spacing: 6px;
 }
 
 .row-buffer {
