@@ -2,6 +2,7 @@ package gov.nih.nci.doe.web.controller;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -103,6 +104,16 @@ public class TaskManagerCotroller extends AbstractDoeController {
     		    for (HpcUserDownloadRequest download : finalTaskIds) {
     					TaskManagerDto task = new TaskManagerDto();
     					TaskManager t = results.stream().filter(x -> download.getTaskId().equals(x.getTaskId())).findAny().orElse(null);
+    					String path = download.getPath();
+    					
+    					if(StringUtils.isEmpty(path) || StringUtils.isBlank(path)) {
+    						path = download.getItems().get(0).getPath();
+    					}
+    					String[] collectionNames = path.split("/");
+    					task.setProgName(collectionNames[2]);
+    					task.setStudyName(collectionNames[3]);
+    					task.setDataSetName(collectionNames[4]);	
+    							
     					
     	    			task.setTaskId(download.getTaskId());
     					task.setTaskDate((download.getCreated() != null && download.getCompleted() != null) ? t.getTaskDate()!= null?
@@ -139,7 +150,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
     		    for (HpcBulkDataObjectRegistrationTaskDTO upload : finalTaskUploadIds) {
     					TaskManagerDto task = new TaskManagerDto();
     					TaskManager t = results.stream().filter(x -> upload.getTaskId().equals(x.getTaskId())).findAny().orElse(null);
-    					
+    					String path = null;
     	    			task.setTaskId(upload.getTaskId());
     					task.setTaskDate((upload.getCreated() != null && upload.getCompleted() != null) ? upload.getCreated() != null?
     							(format.format(upload.getCreated().getTime()) + " - " +
@@ -149,9 +160,15 @@ public class TaskManagerCotroller extends AbstractDoeController {
     					task.setTaskType(t != null ? t.getTaskType() :"");
     					if(upload.getResult() == null) {
     						task.setTransferStatus("In Progress");
+    						 path = upload.getInProgressItems().get(0).getPath();
+        					      					
     					} else if(Boolean.TRUE.equals(upload.getResult())) {
     						task.setTransferStatus("Completed");
+    						 path = upload.getCompletedItems().get(0).getPath();
     					} else if(Boolean.FALSE.equals(upload.getResult())) {
+    						
+    						 path = upload.getFailedItems().get(0).getPath();
+        					
     						List<String> message = new ArrayList<String>();
     						upload.getFailedItems().stream().forEach(x -> message.add(x.getMessage()));
     						
@@ -160,6 +177,12 @@ public class TaskManagerCotroller extends AbstractDoeController {
     								+ "onclick='retryUpload(\"" + upload.getTaskId() + "\" ,\"" + t.getTaskName() + "\")'>"
     								+ "<i class='fa fa-repeat' title='Retry' aria-hidden='true'></i></a></strong>");
     					} 
+    					if(StringUtils.isNotEmpty(path)) {
+    					 String[] collectionNames = path.split("/");
+    					 task.setProgName(collectionNames[2]);
+    					 task.setStudyName(collectionNames[3]);
+    					 task.setDataSetName(collectionNames[4]);
+    					}
     					uploadTaskResults.add(task);
     			}
     		    

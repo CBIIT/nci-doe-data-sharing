@@ -102,11 +102,17 @@ function dataTableInitTaskManager() {
         },
 
         "drawCallback": function (settings) {
+        	initializeToolTips();
+        	initializePopover();
+            displayPopoverTask();
         },
 
         "columns": [
-        	
-        {"data": "taskId", "defaultContent": "",responsivePriority: 3},
+        	{"data": "taskId", "render": function (data, type, row) {
+                return rendertaskId(data, type, row);
+            },
+            responsivePriority: 3
+        },
         {"data": "taskName", "defaultContent": "",responsivePriority: 1},
         {"data": "taskDate", "defaultContent": "",responsivePriority: 4},
         {"data": "taskType", "defaultContent": "",responsivePriority: 5},
@@ -125,3 +131,54 @@ function dataTableInitTaskManager() {
     });
 }
 
+
+
+function rendertaskId(data, type, row) {
+	var html = "";
+	
+	html += row.taskId + "&nbsp;&nbsp;<span prog_name='" + row.progName + "' study_name = '"+row.studyName + "' " +
+			"datasetname='" + row.dataSetName + "' class='button3a' data-container='body' data-toggle='popover'" +
+			"data-placement='right' data-trigger='click' data-popover-content='#a02'><i class='fa fa-question-circle'></i></span>";
+	
+	return html;
+}
+function displayPopoverTask() {
+    $('.button3a').on('click', function (e) {
+        openPopOverDisplay($(this));
+    });
+    $('.button3a').on('keypress', function (e) {
+        if (e.which == 13 || e.keyCode == 13) {
+        	openPopOverDisplay($(this));
+        }
+    });
+}
+
+function openPopOverDisplay($this) {
+    var pop = $this;
+    $('.button3a').not($this).popover('hide'); 
+    var programName = $this.attr('prog_name');
+    var studyName = $this.attr('study_name');
+    var datasetName = $this.attr('datasetname');
+
+    
+      var ind = "<div id=\"a02\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\">" +
+                "<a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a> </div>" +
+                "<div class='popover-body'> <div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
+                "<div class='divTableBody'>";
+
+            var content = "<div class='divTableRow'><div class='divTableCell'>Program Name</div>" +
+                        "<div class='divTableCell'>" + programName + "</div></div><div class='divTableRow'>" +
+                        "<div class='divTableCell'>Study Name</div>" +
+                        "<div class='divTableCell'>" + studyName + "</div></div><div class='divTableRow'>" +
+                        "<div class='divTableCell'>Dataset Name</div>" +
+                        "<div class='divTableCell'>" + datasetName + "</div></div>";
+                
+            
+            var table = ind + content + "</div> </div></div> </div>";
+            $("#a02").remove();
+            pop.after(table);
+            pop.data('bs.popover').setContent();
+            pop.popover('show');
+        
+   
+}

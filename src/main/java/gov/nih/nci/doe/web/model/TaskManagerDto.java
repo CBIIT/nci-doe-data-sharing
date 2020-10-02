@@ -9,6 +9,30 @@ public class TaskManagerDto {
 	private String userId;
 	private String taskDate;
 	private String transferStatus;
+	private String progName;
+	private String studyName;
+	private String dataSetName;
+	
+	
+	
+	public String getProgName() {
+		return progName;
+	}
+	public void setProgName(String progName) {
+		this.progName = progName;
+	}
+	public String getStudyName() {
+		return studyName;
+	}
+	public void setStudyName(String studyName) {
+		this.studyName = studyName;
+	}
+	public String getDataSetName() {
+		return dataSetName;
+	}
+	public void setDataSetName(String dataSetName) {
+		this.dataSetName = dataSetName;
+	}
 	public String getTaskId() {
 		return taskId;
 	}
