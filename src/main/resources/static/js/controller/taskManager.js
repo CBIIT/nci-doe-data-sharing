@@ -113,7 +113,12 @@ function dataTableInitTaskManager() {
             },
             responsivePriority: 3
         },
-        {"data": "taskName", "defaultContent": "",responsivePriority: 1},
+        
+        {"data": "taskName", "render": function (data, type, row) {
+            return renderTaskName(data, type, row);
+        },
+        responsivePriority: 1
+    },
         {"data": "taskDate", "defaultContent": "",responsivePriority: 4},
         {"data": "taskType", "defaultContent": "",responsivePriority: 5},
         {"data": "transferStatus", "defaultContent": "",responsivePriority: 2},
@@ -132,16 +137,22 @@ function dataTableInitTaskManager() {
 }
 
 
-
-function rendertaskId(data, type, row) {
+function renderTaskName(data, type, row) {
+    
 	var html = "";
 	
-	html += row.taskId + "&nbsp;&nbsp;<span prog_name='" + row.progName + "' study_name = '"+row.studyName + "' " +
+	html += row.taskName + "&nbsp;&nbsp;<span prog_name='" + row.progName + "' study_name = '"+row.studyName + "' " +
 			"datasetname='" + row.dataSetName + "' class='button3a' data-container='body' data-toggle='popover'" +
 			"data-placement='right' data-trigger='click' data-popover-content='#a02'><i class='fa fa-question-circle'></i></span>";
 	
 	return html;
 }
+
+function rendertaskId(data, type, row) {
+		
+	return row.taskId ;
+}
+
 function displayPopoverTask() {
     $('.button3a').on('click', function (e) {
         openPopOverDisplay($(this));

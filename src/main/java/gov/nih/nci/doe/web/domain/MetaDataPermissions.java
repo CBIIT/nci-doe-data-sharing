@@ -17,6 +17,7 @@ public class MetaDataPermissions {
 
 	private Integer id;
 	private Integer collectionId;
+	private String collectionPath;
 	private String userGroupId;
 	private Boolean isGroup;
 	private Boolean isOwner;
@@ -121,6 +122,16 @@ public class MetaDataPermissions {
 	}
 
 
+	@Basic
+    @Column(name = "COLLECTION_PATH")
+	public String getCollectionPath() {
+		return collectionPath;
+	}
+
+	public void setCollectionPath(String collectionPath) {
+		this.collectionPath = collectionPath;
+	}
+
 	@Override
     public String toString() {
         return "MetaDataPermissions{" +
@@ -128,6 +139,7 @@ public class MetaDataPermissions {
             ", userGroupId='" + userGroupId + '\'' +
             ", isOwner=" + isOwner +
              ", createdDate=" + createdDate +
+             ", collectionPath=" + collectionPath +
               ", isGroup=" + isGroup +
             '}';
     }

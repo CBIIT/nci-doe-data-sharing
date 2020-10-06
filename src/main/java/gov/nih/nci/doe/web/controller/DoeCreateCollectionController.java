@@ -256,7 +256,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 					if (collections != null && collections.getCollections() != null
 							&& !CollectionUtils.isEmpty(collections.getCollections())) {
 						HpcCollectionDTO collection = collections.getCollections().get(0);
-						metaDataPermissionService.savePermissionsList(getLoggedOnUserInfo(),progList,collection.getCollection().getCollectionId());
+						metaDataPermissionService.savePermissionsList(getLoggedOnUserInfo(),progList,collection.getCollection().getCollectionId(),doeCollection.getPath());
 					}
 				return  "Collection is created!";
 			} 

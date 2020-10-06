@@ -177,7 +177,7 @@ public abstract class AbstractDoeController {
 		     if (CollectionUtils.isEmpty(oldPermissionsList) && !CollectionUtils.isEmpty(newSelectedPermissionList) && 
 		    		 StringUtils.isNotBlank(collectionId)) {
 		                // save the new set of permissions
-		    	 metaDataPermissionService.savePermissionsList(loggedOnUser, String.join(",", newSelectedPermissionList), Integer.valueOf(collectionId));
+		    	 metaDataPermissionService.savePermissionsList(loggedOnUser, String.join(",", newSelectedPermissionList), Integer.valueOf(collectionId),null);
 		     } else {
 		                List<String> deletedPermissions = new ArrayList<String>();
 		                List<String> addedPermissions = new ArrayList<String>();
@@ -191,7 +191,7 @@ public abstract class AbstractDoeController {
 		                    .collect(Collectors.toList());  
 				
 				metaDataPermissionService.deletePermissionsList(loggedOnUser, deletedPermissions, Integer.valueOf(collectionId));  
-		        metaDataPermissionService.savePermissionsList(loggedOnUser, String.join(",", addedPermissions), Integer.valueOf(collectionId));
+		        metaDataPermissionService.savePermissionsList(loggedOnUser, String.join(",", addedPermissions), Integer.valueOf(collectionId),null);
 
 		     }			 
 			 return "SUCCESS";

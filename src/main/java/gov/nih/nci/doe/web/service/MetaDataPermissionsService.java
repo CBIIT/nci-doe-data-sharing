@@ -10,7 +10,7 @@ public interface MetaDataPermissionsService {
     
     public List<MetaDataPermissions> getAllMetaDataPermissionsByUserId(String userId);
     
-    public void savePermissionsList(String user,String progList,Integer collectionId);
+    public void savePermissionsList(String user,String progList,Integer collectionId, String collectionPath);
     
     public void deletePermissionsList(String user,List<String> deletedList,Integer collectionId);
     

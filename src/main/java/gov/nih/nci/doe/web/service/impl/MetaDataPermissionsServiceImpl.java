@@ -31,7 +31,7 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 	}
 
 	@Override
-	public void savePermissionsList(String user, String progList, Integer collectionId) {
+	public void savePermissionsList(String user, String progList, Integer collectionId, String collectionPath) {
 		log.info("save permission list for user " + user  + " with prog list " + progList + 
 				" and collection id" + collectionId);
 		
@@ -41,6 +41,7 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 		permissions.setIsGroup(false);
 		permissions.setIsOwner(true);
 		permissions.setUserGroupId(user);
+		permissions.setCollectionPath(collectionPath);
 		metaDataPermissionsRepository.saveAndFlush(permissions);
 		
 		//create for groups
