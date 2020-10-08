@@ -494,6 +494,7 @@ public class DoeClientUtil {
           throw new DoeWebException("Failed to create. Data file already exists: " + path);
       } catch (DoeWebException e) {
         // Data file is not there!
+    	  log.error("failed to get data file" +e);
       }
 
       WebClient client = DoeClientUtil.getWebClient(UriComponentsBuilder
