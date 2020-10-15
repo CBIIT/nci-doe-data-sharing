@@ -77,6 +77,7 @@ public class DoeClientUtil {
   public static WebClient getWebClient(String url, String hpcCertPath,
     String hpcCertPassword) {
 
+	  log.debug("get web client for url " +url);
     WebClient client = WebClient.create(url, Collections.singletonList(
       new JacksonJsonProvider()));
 
@@ -136,6 +137,8 @@ public class DoeClientUtil {
 
   public static String getAuthenticationToken(String userId, String passwd, String hpcServerURL)
       throws DoeWebException {
+	  
+	  log.debug("get authentication token for " +userId);
 
     WebClient client = DoeClientUtil.getWebClient(hpcServerURL, null, null);
     String token = DatatypeConverter.printBase64Binary((userId + ":" + passwd).getBytes());
@@ -485,6 +488,8 @@ public class DoeClientUtil {
   public static boolean registerDatafile(String token, MultipartFile hpcDatafile,
       String hpcDatafileURL, HpcDataObjectRegistrationRequestDTO datafileDTO, String path,
       String hpcCertPath, String hpcCertPassword) {
+	  
+	  log.debug("Register data file for path: " + path);
     try {
       try {
         HpcDataObjectListDTO datafile =
@@ -514,6 +519,7 @@ public class DoeClientUtil {
 
       Response restResponse = client.put(new MultipartBody(atts));
       if (restResponse.getStatus() == 201) {
+    	  //add log.debug
         return true;
       } else {
         ObjectMapper mapper = new ObjectMapper();
@@ -527,6 +533,7 @@ public class DoeClientUtil {
         JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 
         HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
+        log.error("failed to register data file" +exception);
         throw new DoeWebException(exception.getMessage());
       }
     } catch (Exception e) {
@@ -757,6 +764,7 @@ public class DoeClientUtil {
       HpcBulkDataObjectDownloadRequestDTO dto, String hpcCertPath, String hpcCertPassword) {
     HpcBulkDataObjectDownloadResponseDTO response = null;
     try {
+    	log.debug("download files for path" +hpcCertPath );
       WebClient client = DoeClientUtil.getWebClient(hpcQueryURL, hpcCertPath, hpcCertPassword);
       client.header("Authorization", "Bearer " + token);
       Response restResponse = client.invoke("POST", dto);
@@ -795,6 +803,8 @@ public class DoeClientUtil {
   public static AjaxResponseBody downloadDataFile(String token, String serviceURL,
       HpcDownloadRequestDTO dto, String downloadType, String hpcCertPath, String hpcCertPassword)
       throws JsonParseException, IOException {
+	  
+	  log.debug("download files for path" +hpcCertPath  + " and download type " +downloadType );
     AjaxResponseBody result = new AjaxResponseBody();
     WebClient client = DoeClientUtil.getWebClient(serviceURL, hpcCertPath, hpcCertPassword);
     client.header("Authorization", "Bearer " + token);
@@ -835,6 +845,8 @@ public class DoeClientUtil {
     getDataObjectRegistrationTask(String token, String hpcQueryURL, String
     taskId, String hpcCertPath, String hpcCertPassword) {
     try {
+    	
+      log.debug("get data object registration task" +hpcCertPath  + " and task Id " +taskId );
       WebClient client = DoeClientUtil.getWebClient(UriComponentsBuilder
         .fromHttpUrl(hpcQueryURL).pathSegment(taskId).build().encode().toUri()
         .toURL().toExternalForm(), hpcCertPath, hpcCertPassword);
@@ -867,6 +879,7 @@ public class DoeClientUtil {
   public static HpcDataObjectDownloadStatusDTO getDataObjectDownloadTask(String token,
       String hpcQueryURL, String hpcCertPath, String hpcCertPassword) {
 
+	log.debug("get data object download task" +hpcCertPath);
     WebClient client = DoeClientUtil.getWebClient(hpcQueryURL, hpcCertPath, hpcCertPassword);
     client.header("Authorization", "Bearer " + token);
 
@@ -912,6 +925,7 @@ public class DoeClientUtil {
   public static HpcCollectionDownloadStatusDTO getDataObjectsDownloadTask(String token,
       String hpcQueryURL, String hpcCertPath, String hpcCertPassword) {
 
+	  log.debug("get data object downloads " +hpcCertPath);
     WebClient client = DoeClientUtil.getWebClient(hpcQueryURL, hpcCertPath, hpcCertPassword);
     client.header("Authorization", "Bearer " + token);
 
