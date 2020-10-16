@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.annotation.JsonView;
 
+import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.AjaxResponseBody;
 import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeDownloadDatafile;
@@ -143,8 +144,13 @@ public class DoeDownloadController extends AbstractDoeController {
               
               result.setMessage("Asynchronous download request is submitted successfully! Task ID: " + taskId);
               return result;
-		}  catch (Exception e) {
+		} catch (DoeWebException e) {
 			result.setMessage("Download request is not successful: " + e.getMessage());
+			return result;
+		}
+		catch (Exception e) {
+			log.error("Error in download request" + e.getMessage());
+			result.setMessage("Download request is not successful");
 			return result;
 		}
 	}
