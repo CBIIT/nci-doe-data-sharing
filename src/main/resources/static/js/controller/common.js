@@ -190,8 +190,10 @@ $("#download-btn").click(function(e){
 					 $("#spinner").hide();
 			         $("#dimmer").hide();
 					 console.log('SUCCESS: ', msg);
-					 $("#download-modal").find('.downloadErrorMsg').html(msg.message);
-					 $("#download-modal").find("#message").show();
+					 $("#download-modal").find('.downloadErrorMsg').html("");
+					 $("#download-modal").find("#message").hide();
+					 $("#download-modal").find('.downloadSuccessMsg').html(msg.message);
+					 $("#download-modal").find("#successBlockDownload").show();
 				 },
 				error : function(e) {
 					 console.log('ERROR: ', e);
