@@ -161,7 +161,7 @@ function updateMetaDataCollection() {
 		
 		if(!validate) {
 			$(".editCollectionError").show();
-			$(".editCollectionErrorMsg").html("Enter all the required metdata.");
+			$(".editCollectionErrorMsg").html("Enter all the required metadata.");
 		} else {
 		$.ajax({
 			type : "POST",
