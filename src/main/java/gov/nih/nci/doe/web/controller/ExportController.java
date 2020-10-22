@@ -53,7 +53,6 @@ public class ExportController extends AbstractDoeController{
 				 
 				 for(String path :paths) {
 						List<String> result = new ArrayList<String>();
-						List<String> parentResult = new ArrayList<String>();
 					  HpcDataObjectListDTO datafiles = DoeClientUtil.getDatafiles(authToken, serviceURL, 
 							  path, false, true,sslCertPath, sslCertPassword);
 					  
@@ -95,7 +94,6 @@ public class ExportController extends AbstractDoeController{
 						
 				      }
 						rows.add(result);
-						//rows.add(parentResult);
 						
 				 }
 				
