@@ -1068,11 +1068,4 @@ public class DoeClientUtil {
       throw new DoeWebException("Unable to load application properties!", e);
     }
   }
-
-
-
-
-
-
-
 }

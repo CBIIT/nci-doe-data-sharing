@@ -83,7 +83,9 @@
 .nav-link:hover{
 	background-color:#eee !important;
 }
-
+.nav-tabs .nav-item.show .nav-link {
+	background-color:transparent !important;
+}
 
 .searchResultTable_length {
 	margin-top: -30px;
@@ -1094,8 +1096,8 @@ text-align: center;
     text-align: center;
     /*margin-left:50px;
     margin-right:50px;*/
-	margin-top:5px;
-	margin-bottom:5px;
+	margin-top:4px;
+	margin-bottom:4px;
     letter-spacing: 2px;
     word-spacing: 6px;
 }
