@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.doe.web.util.ExcelExportProc;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
+import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
 
@@ -31,10 +33,14 @@ public class ExportController extends AbstractDoeController{
 	@Value("${gov.nih.nci.hpc.server.dataObject}")
 	private String serviceURL;
 	
+	@Value("${gov.nih.nci.hpc.server.collection}")
+	private String collectionURL;
+	
 
 	@GetMapping
     public String exportMetadata(HttpSession session, HttpServletResponse
-            response, HttpServletRequest request,@RequestParam(value = "selectedPaths") String selectedPaths)
+            response, HttpServletRequest request,@RequestParam(value = "selectedPaths") String selectedPaths,
+            @RequestParam(value="isParent") String isParent)
     		throws Exception {
 		
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
@@ -47,8 +53,16 @@ public class ExportController extends AbstractDoeController{
 				 
 				 for(String path :paths) {
 						List<String> result = new ArrayList<String>();
+						List<String> parentResult = new ArrayList<String>();
 					  HpcDataObjectListDTO datafiles = DoeClientUtil.getDatafiles(authToken, serviceURL, 
 							  path, false, true,sslCertPath, sslCertPassword);
+					  
+					  String parentPath = path.substring(0, path.lastIndexOf('/'));
+					 
+					  
+					  HpcCollectionListDTO parentData =  DoeClientUtil.getCollection(authToken, collectionURL, 
+							  parentPath, false, sslCertPath,sslCertPassword);
+					  
 						if (datafiles != null && datafiles.getDataObjects() != null &&
 								!datafiles.getDataObjects().isEmpty()) {
 							HpcDataObjectDTO dataFile = datafiles.getDataObjects().get(0);
@@ -64,7 +78,25 @@ public class ExportController extends AbstractDoeController{
 						}
 						
 				      }
+						
+
+						if (!StringUtils.isEmpty(isParent) && isParent.equalsIgnoreCase("true") &&  
+								parentData != null && parentData.getCollections() != null
+									&& !parentData.getCollections().isEmpty()) {
+							HpcCollectionDTO dataFile = parentData.getCollections().get(0);
+							for (HpcMetadataEntry entry : dataFile.getMetadataEntries().getSelfMetadataEntries()) {
+								if(headers.contains(entry.getAttribute())) {
+									result.add(entry.getValue());
+								} else {
+									headers.add(entry.getAttribute());
+									result.add(entry.getValue());
+								}	
+						}
+						
+				      }
 						rows.add(result);
+						//rows.add(parentResult);
+						
 				 }
 				
 					

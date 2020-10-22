@@ -105,13 +105,6 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
                       $(this).closest("tr").find('a.downloadLink').prop("disabled", false);
                   }
                   var len = $('#' + table).find('.selectIndividualCheckbox:checked').length;
-                  /*if (len > 1) {              
-                      $("#" + table + " input[type=checkbox]:checked").each(function () {
-                          $(this).closest("tr").find('a.downloadLink').prop("disabled", true);
-                      });
-                  } else {                      
-                      $(".downloadLink").prop("disabled", false);
-                  }*/
                   $(".downloadLink").prop("disabled", false);
                   if(len >= 1) {
                 	  $("#downloadSelectedMetadata").prop("disabled", false);
@@ -133,17 +126,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
         	   onClickOfBulkDownloadBtn();
            });
            
-           $("#downloadSelectedMetadata").click(function(e){
-        	   exportDataObjectMetadata();
-           });
-           
-           $(".downloadMetadata").click(function(e){
-        	   var selectedPath = $(this).attr('data_path');       	   
-        	   var selectedPaths = [];
-        	   selectedPaths.push(selectedPath);
-        		window.open('/export?selectedPaths='+selectedPaths, '_self');
-           });
-           
+
            $(".editDataFileCollectionMetadata").click(function(e){
         	   $("#searchFragmentDiv").hide();
         	   $("#dataSetFragment").hide();
@@ -173,6 +156,57 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
     				}
     			});
         	
+           });
+           
+           $("#downloadSelectedMetadata").click(function(e){
+        	   bootbox.confirm({
+          		    message: "Do you wish to include parent metadata also?",
+          		    buttons: {
+          		        confirm: {
+          		            label: 'Yes',
+          		            className: 'btn-success'
+          		        },
+          		        cancel: {
+          		            label: 'No',
+          		            className: 'btn-danger'
+          		        }
+          		    },
+          		    callback: function (result) {
+          		    	if(result == true) {
+          		    		 exportDataObjectMetadata('true');
+          		    	} else if(result == false) {
+          		    		 exportDataObjectMetadata('false');
+          		    	}   
+          		    }
+          		});
+        	  
+           });
+           
+           $(".downloadMetadata").click(function(e){
+        	   var selectedPath = $(this).attr('data_path');       	   
+        	   var selectedPaths = [];
+        	   selectedPaths.push(selectedPath);
+        	   bootbox.confirm({
+       		    message: "Do you wish to include parent metadata also?",
+       		    buttons: {
+       		        confirm: {
+       		            label: 'Yes',
+       		            className: 'btn-success'
+       		        },
+       		        cancel: {
+       		            label: 'No',
+       		            className: 'btn-danger'
+       		        }
+       		    },
+       		    callback: function (result) {
+       		    	if(result == true) {
+       		    		window.open('/export?isParent=true&&selectedPaths='+selectedPaths, '_self');
+       		    	} else if(result == false) {
+       		    		window.open('/export?isParent=false&&selectedPaths='+selectedPaths, '_self');
+       		    	}   
+       		    }
+       		});
+        		
            });
            
            $(".deleteDataFileBtn").click(function(e){
@@ -390,12 +424,12 @@ function renderFileSize(data, type, row) {
 	return row.fileSize;
 	
 }
-function exportDataObjectMetadata() {
+function exportDataObjectMetadata(isParent) {
 	var selectedPaths = [];
     $("#dataSetTable tbody input[type=checkbox]:checked").each(function () {
     	selectedPaths.push($(this).attr('id'));
     });
-	window.open('/export?selectedPaths='+selectedPaths, '_self');
+	window.open('/export?isParent='+isParent+'&&selectedPaths='+selectedPaths, '_self');
 }
 
 function renderDownload(data, type, row,accessgroups,permissions) {
