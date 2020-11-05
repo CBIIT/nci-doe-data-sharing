@@ -34,7 +34,7 @@
     </button>
 <div id="globalNav" class="collapse navbar-collapse justify-content-end col order-last bordered" style="max-height:15%;">
             <div id="subNav" class="card-header" style="height:50px;">
-        <ul class="nav nav-tabs card-header-tabs" id="subTab" role="tablist" style="margin-right: -59px;font-size:18px;">
+        <ul class="nav nav-tabs card-header-tabs" id="subTab" role="tablist" style="margin-right: -65px;font-size:18px;margin-top: -3px;">
             <li class="nav-item" role="tab">
                 <a class="nav-link active" id="landing-tab" th:href="@{/}"role="tab"><u>Home</u></a>
             </li>
@@ -48,7 +48,7 @@
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                        <u>About</u>
                     </a>
-                    <div class="dropdown-menu" style="margin-top:12px !important;margin-left: 35px;background-color: #1D90FF;">
+                    <div class="dropdown-menu" style="margin-top:6px !important;margin-left: 13px;background-color: #1D90FF;">
                         <a class="dropdown-item" id="about-tab" th:href="@{/aboutTab}">About MoDaC</a>
                          <a class="dropdown-item" target="_blank" href="https://wiki.nci.nih.gov/display/MoDaCdoc">User Guide</a>
                         <a class="dropdown-item" href="mailto:modac-support@mail.nih.gov?">Contact</a>
@@ -61,7 +61,7 @@
                 </div>
     <!--top right navigation-->
     <div id="topNav" class="collapse navbar-collapse justify-content-end col order-last bordered" style="max-width:40%;">
-        <ul class="navbar-nav navbar-dark text-white justify-content-end" role="tablist">
+        <ul class="navbar-nav navbar-dark text-white justify-content-end" role="tablist" style="margin-top: 5px;">
 
                 <li class="nav-item" role="tab" th:if="${loggedOnUser == null}">
                 <a class="nav-link" id="login-tab" style="color: #D06709;" th:href="@{/loginTab}" 
