@@ -317,6 +317,9 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before
     height:450px;
 }
 
+.underlineLinks {
+	text-decoration: underline !important;
+}
 ul#subTab li {
 	padding-left: 20px;
 }
