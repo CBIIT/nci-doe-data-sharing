@@ -567,6 +567,7 @@ function displayDataFileSection(value) {
 			$("#displayS3UploadDiv").hide();	
 			$("#selectedFilesDiv").show();
 			$("#selectedFoldersDiv").show();
+			$("#displayDriveUploadDiv").hide();
 	} else if(value == 's3'){
 			$("#singleFileDataUploadSection").hide();
 			$("#bulkFileUploadSection").show();	
@@ -575,10 +576,19 @@ function displayDataFileSection(value) {
 			$("#displayS3UploadDiv").show();
 			$("#selectedFilesDiv").hide();
 			$("#selectedFoldersDiv").hide();
+			$("#displayDriveUploadDiv").hide();
+		} else if(value == 'drive'){
+			$("#singleFileDataUploadSection").hide();
+			$("#bulkFileUploadSection").show();	
+			$("#registerBulkDataForm").show();
+			$("#displayGlobusUploadDiv").hide();
+			$("#displayS3UploadDiv").hide();
+			$("#selectedFilesDiv").hide();
+			$("#selectedFoldersDiv").hide();
+			$("#displayDriveUploadDiv").show();
 		}
 	
 }
-
 
 function postUploadGlobusFunction(data,status) {
 	location.replace(data);

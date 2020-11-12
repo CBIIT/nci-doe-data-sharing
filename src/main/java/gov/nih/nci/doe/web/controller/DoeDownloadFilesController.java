@@ -34,8 +34,10 @@ import gov.nih.nci.hpc.domain.datatransfer.HpcFileLocation;
 import gov.nih.nci.hpc.domain.datatransfer.HpcGlobusDownloadDestination;
 import gov.nih.nci.hpc.domain.datatransfer.HpcS3Account;
 import gov.nih.nci.hpc.domain.datatransfer.HpcS3DownloadDestination;
+import gov.nih.nci.hpc.domain.datatransfer.HpcGoogleDriveDownloadDestination;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectDownloadRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectDownloadResponseDTO;
+import gov.nih.nci.doe.web.service.DoeAuthorizationService;
 
 
 
@@ -48,6 +50,9 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 	
 	 @Autowired
 	 TaskManagerService taskManagerService;
+	 
+	 @Autowired
+	 DoeAuthorizationService doeAuthorizationService;
 
 	 @Value("${doe.download.maxlimit}")
 	 private Integer maxLimit;
@@ -126,7 +131,16 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 				account.setRegion(downloadFile.getRegion());
 				destination.setAccount(account);
 				dto.setS3DownloadDestination(destination);
-			}
+			}else if (downloadFile.getSearchType() != null && downloadFile.getSearchType().equals("drive")) {
+                String accessToken = (String)session.getAttribute("accessToken");
+                HpcGoogleDriveDownloadDestination destination = new HpcGoogleDriveDownloadDestination();
+                HpcFileLocation location = new HpcFileLocation();
+                location.setFileContainerId("MyDrive");
+                location.setFileId(downloadFile.getDrivePath().trim());
+                destination.setDestinationLocation(location);
+                destination.setAccessToken(accessToken);
+                dto.setGoogleDriveDownloadDestination(destination);
+            }
 
 				HpcBulkDataObjectDownloadResponseDTO downloadDTO = null;
 				downloadDTO = DoeClientUtil

@@ -128,4 +128,55 @@ public class HomeController extends AbstractDoeController {
 		 public String getAboutTab(HttpSession session, HttpServletRequest request)  { 			 
 			return "aboutTab";
 		 }
+		 @GetMapping(value = "/downloadTab")
+		 public String getDownload(Model model, HttpSession session, HttpServletRequest request,
+				 @RequestParam(value = "selectedPaths",required=false) String selectedPaths,
+				 @RequestParam(value = "code",required=false) String code,
+				 @RequestParam(value = "downloadAsyncType",required=false) String downloadAsyncType,
+				 @RequestParam(value = "fileName",required=false) String fileName)  { 
+			 
+			 model.addAttribute("selectedPathsString", selectedPaths);
+			 model.addAttribute("downloadAsyncType", downloadAsyncType);
+			 model.addAttribute("fileName", fileName);
+			 
+			 if(StringUtils.isNotEmpty(selectedPaths)) {
+		      session.setAttribute("selectedPathsString", selectedPaths);
+			 }
+			 
+			 
+			 if(StringUtils.isNotEmpty(downloadAsyncType)) {
+			      session.setAttribute("downloadAsyncType", downloadAsyncType);
+			}
+			 
+			 if(StringUtils.isNotEmpty(fileName)) {
+			      session.setAttribute("fileName", fileName);
+			 }
+			 
+		        if (code != null) {
+		        	 code = request.getParameter("code");
+		        	 if(code != null) {
+		            //Return from Google Drive Authorization
+		            String downloadType = (String)session.getAttribute("downloadType");
+		            selectedPaths = (String)session.getAttribute("selectedPathsString");
+		            downloadAsyncType = (String)session.getAttribute("downloadAsyncType");
+		            fileName = (String)session.getAttribute("fileName");
+		            final String returnURL = this.webServerName + "/downloadTab";
+		            try {
+		              String accessToken = doeAuthorizationService.getToken(code, returnURL);
+		              session.setAttribute("accessToken", accessToken);
+		              model.addAttribute("accessToken", accessToken);
+		            } catch (Exception e) {
+		              model.addAttribute("error", "Failed to redirect to Google for authorization: " + e.getMessage());
+		              e.printStackTrace();
+		            }
+		            model.addAttribute("asyncSearchType", "drive");
+		            model.addAttribute("transferType", "drive");
+		            model.addAttribute("authorized", "true");
+		            model.addAttribute("selectedPathsString", selectedPaths);
+		            model.addAttribute("downloadAsyncType", downloadAsyncType);
+					model.addAttribute("fileName", fileName);
+		          }
+		        }
+			return "downloadTab";
+		 }
 }

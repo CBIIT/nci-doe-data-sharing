@@ -56,6 +56,7 @@
     var selfMetadata;
     var loggedOnUserInfo = /*[[${loggedOnUser}]]*/ 'undefined';
     var isUploader = /*[[${isUploader}]]*/ 'undefined';
+    var oauthToken = [[${accessToken}]];
     /*]]>*/
 
 </script>
@@ -82,5 +83,6 @@
 <script src="js/controller/doe.js" th:src="@{/js/controller/doe.js}"></script>
 <script src="js/controller/editCollection.js" th:src="@{/js/controller/editCollection.js}"></script>
 <script src="js/controller/upload.js" th:src="@{/js/controller/upload.js}"></script>
+<script src="js/controller/doeUpload.js" th:src="@{/js/controller/doeUpload.js}"></script>
 </body>
 </html>

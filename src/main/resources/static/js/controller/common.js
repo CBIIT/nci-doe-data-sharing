@@ -84,45 +84,94 @@ $("#advSearchBtn").click(function(e){
 });
 
 $("#downloadSelected").click(function(e){
-	$("#download-modal").find("input[type=radio]").prop("checked", "").end();
-	$("#download-modal").find(".selectedFilesListDisplay").html("");
-	$("#download-modal").find('.downloadErrorMsg').html("");
-	$("#download-modal").find("#message").hide();
-	$("#download-modal").find("#AsyncDiv").hide();
-	$("#download-modal").find("#s3Div").hide();
-    $("#download-modal").find("div#AsyncDiv input[type='text']").val("");
-    $("#download-modal").find("div#s3Div input[type='text']").val("");
-    $("#download-modal").find("#informationalText").html("This page allows you to download the " +
-			"selected data files " +
-			"asynchronously to a Globus endpoint location or an S3 bucket.");
 	var selectedPaths = [];
-	    $("#searchResultTable tbody input[type=checkbox]:checked").each(function () {
+    $("#searchResultTable tbody input[type=checkbox]:checked").each(function () {
+    	selectedPaths.push($(this).attr('id'));
+    });
+    if(selectedPaths.length == 0) {
+    	$("#searchResultTable tbody input[type=radio]:checked").each(function () {
 	    	selectedPaths.push($(this).attr('id'));
 	    });
-	    if(selectedPaths.length == 0) {
-	    	$("#searchResultTable tbody input[type=radio]:checked").each(function () {
-		    	selectedPaths.push($(this).attr('id'));
-		    });
-	    }
-	    $("#download-modal").find("#selectedFilesList").val(selectedPaths);
-	    
-	    $.each(selectedPaths, function(index, value) {
-	    	$("#download-modal").find(".selectedFilesListDisplay").append("<p>"+value+"</p>");
-	    });
-	    
-	    if(selectedPaths.length == 1) {
-	    	  $("#download-modal").find("#destinationPathId").val(selectedPaths);
-	    	  $("#download-modal").find("#downloadType").val("collection");
-	    } else  {
-	    	$("#download-modal").find("#downloadType").val("collectionfiles");
-	    }
-	    $("#download-modal").find("#SyncDiv").hide();
-		$("#download-modal").find("#syncRadioSet").hide();		
-		$("#download-modal").find(".selectedFilesDiv").show();
-	    $("#download-modal").modal('show');
+    }
+    
+    if(selectedPaths.length == 1) {
+  	location.replace('/downloadTab?selectedPaths='+selectedPaths+'&&downloadAsyncType=collection');
+  } else  {
+  	$("#downloadType").val("collectionfiles");
+  	location.replace('/downloadTab?selectedPaths='+selectedPaths+'&&downloadAsyncType=collectionfiles');
+  }
+    
+    
 });
 
 
+var selectedPathsString = $("#selectedPathsString").val();
+var downloadType = $("#downloadType").val();
+var downloadFileName = $("#downloadFileName").val();
+var asyncSearchType = $("#asyncSearchType").val();
+
+  if(selectedPathsString && downloadType && (downloadType == 'collection' || downloadType == 'collectionfiles')) {
+	  $("#syncRadioSet").hide();	
+	  $("#SyncDiv").hide();
+	  if(asyncSearchType) {
+		  $("input[name=searchType][value="+asyncSearchType+"]").click();
+	  }
+	  
+	  var selectedPaths = selectedPathsString.split(',');
+    $("#selectedFilesList").val(selectedPaths);
+    
+    $.each(selectedPaths, function(index, value) {
+    	$(".selectedFilesListDisplay").append("<p>"+value+"</p>");
+    });
+    $(".selectedFilesDiv").show();
+    
+    if(selectedPaths.length == 1) {
+	  $("#destinationPathId").val(selectedPaths);
+     }
+    
+	$("#informationalText").html("This page allows you to download the " +
+			"selected data files " +
+			"asynchronously to a Globus endpoint location or an S3 bucket.");
+} else if(selectedPathsString && downloadType && (downloadType == 'data_object' || downloadType == 'datafiles')) {
+
+	if(downloadFileName && downloadFileName != "null") {
+		$("#syncRadioSet").show();
+		$(".selectedFilesListDisplay").append("<p>"+selectedPathsString+"</p>");
+		$(".selectedFilesDiv").show();
+		$("#destinationPathId").val(selectedPathsString);
+		$("#informationalText").html("This page allows you to download the " +
+				"selected data file either synchronously to your computer or asynchronously " +
+				"to Globus endpoint location or an S3 bucket.");
+		if(asyncSearchType) {
+			 $("input[name=searchType][value="+asyncSearchType+"]").click();
+		  } else {
+			  $("#searchTypeSync").click(); 
+		  }
+		
+	} else {
+		 $("#syncRadioSet").hide();	
+		  $("#SyncDiv").hide();
+		  if(asyncSearchType) {
+			  $("input[name=searchType][value="+asyncSearchType+"]").click();
+		  }
+		$("#informationalText").html("This page allows you to download the " +
+				"selected data files " +
+				"asynchronously to a Globus endpoint location or an S3 bucket.");
+		
+		  var selectedPaths = selectedPathsString.split(',');
+		    $("#selectedFilesList").val(selectedPaths);
+		    
+		    $.each(selectedPaths, function(index, value) {
+		    	$(".selectedFilesListDisplay").append("<p>"+value+"</p>");
+		    });
+		    $(".selectedFilesDiv").show();
+		    
+		    if(selectedPaths.length == 1) {
+			  $("#destinationPathId").val(selectedPaths);
+		     }
+	} 
+	
+}
 
 $("#download-btn").click(function(e){
 	e.preventDefault();
@@ -141,7 +190,7 @@ $("#download-btn").click(function(e){
 		 $("#download-modal").find("#message").show();
 	}
 	
-	else if(searchType == 's3' || searchType == 'async' || selectedFiles) {
+	else if(searchType == 's3' || searchType == 'async' || searchType == 'drive'  || selectedFiles) {
 		d.bucketName = $("#downloadBucketName").val();
 		d.s3Path = $("#downloadS3Path").val();
 	    d.accessKey = $("#downloadAccessKey").val();
@@ -149,6 +198,7 @@ $("#download-btn").click(function(e){
 	    d.region = 	$("#downloadRegion").val();	
 	    d.endPointName = $("#endPointName").val();
 		d.endPointLocation = $("#endPointLocation").val();
+		d.drivePath = $("#drivePath").val();
 		
 		var url;
 		if(selectedFiles) {
@@ -170,11 +220,17 @@ $("#download-btn").click(function(e){
 		        	validate = false;
 		        }          
 		    });
+		} else if(searchType == 'drive') {
+			$('div#driveDiv input[type="text"]').each(function(){
+		        if(!$(this).val()){
+		        	validate = false;
+		        }          
+		    });
 		}
 	
 		if(!validate) {
-			 $("#download-modal").find('.downloadErrorMsg').html("Enter all the criteria.");
-			 $("#download-modal").find("#message").show();
+			 $('.downloadErrorMsg').html("Enter all the criteria.");
+			 $("#message").show();
 		} else {
 					   								
 			$.ajax({
@@ -190,10 +246,10 @@ $("#download-btn").click(function(e){
 					 $("#spinner").hide();
 			         $("#dimmer").hide();
 					 console.log('SUCCESS: ', msg);
-					 $("#download-modal").find('.downloadErrorMsg').html("");
-					 $("#download-modal").find("#message").hide();
-					 $("#download-modal").find('.downloadSuccessMsg').html(msg.message);
-					 $("#download-modal").find("#successBlockDownload").show();
+					 $('.downloadErrorMsg').html("");
+					 $("#message").hide();
+					 $('.downloadSuccessMsg').html(msg.message);
+					 $("#successBlockDownload").show();
 				 },
 				error : function(e) {
 					 console.log('ERROR: ', e);
@@ -211,8 +267,8 @@ $("#download-btn").click(function(e){
 	        }          
 	    });
 		if(!validate) {
-			 $("#download-modal").find('.downloadErrorMsg').html("Enter all the criteria.");
-			 $("#download-modal").find("#message").show();
+			 $('.downloadErrorMsg').html("Enter all the criteria.");
+			 $("#message").show();
 		} else {
 		  $('#downloadSyncForm').attr('action', '/downloadsync');
 		  $("#downloadSyncForm").submit();
@@ -355,6 +411,13 @@ $("#bulkDoeDataFile").change(function (e) {
 
 });
 
+
+$("#driveAuthlink").click(function(e){
+	var params= {type:$("#downloadType").val(),downloadFilePath:$("#selectedFilesList").val()}
+
+	 invokeAjax('/download','GET',params,postGoogleDriveFunction,null,null,'text');
+});
+
 $("#primaryGlobusButton").click(function(e){
 	
 	var d = {};
@@ -365,6 +428,18 @@ $("#primaryGlobusButton").click(function(e){
 	 invokeAjax('/upload','GET',d,postUploadGlobusFunction,null,null,'text');
 });
 
+$("#driveUploadAuthlink").click(function(e){
+	var d = {};
+	d.institutionPath =$("#instituteList").val();
+	d.studyPath = $("#studyList").val();
+	d.dataSetPath = $("#dataList").val();
+    d.action ="Drive";
+	 invokeAjax('/upload','GET',d,postUploadGlobusFunction,null,null,'text');
+});
+
+function postGoogleDriveFunction(data,status) {
+	location.replace(data);
+}
 $(".addNewMetaDataForDataFiles").click(function(e){
 	addNewMetaDataRowsForDataFile($(this));
 });
@@ -418,4 +493,11 @@ $(document).on('change', '#editPublicAccess', function() {
 
 $(document).on('click', '.notifyUsersLink', function(){
 	notifyUsersFunction($(this).attr('notify_permissions'));
+});
+
+$(document).on('click', '#pickerUploadLink', function(){
+	loadUploadPicker();
+});
+$(document).on('click', '#pickerLink', function(){
+	loadDownloadPicker();
 });

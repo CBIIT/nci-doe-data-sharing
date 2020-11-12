@@ -10,13 +10,12 @@
 
 <body>
 
-        
  <a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>       
         
 <div class="wrapper">
 
-    <!-- HEADER -->
-<div th:if= "${loggedOnUser != null}">
+  <!-- HEADER -->
+    <div th:if= "${loggedOnUser != null}">
     <div th:replace="fragments/header :: header">Header and nav goes here</div>
     </div>
     <div th:if= "${loggedOnUser == null}">
@@ -28,14 +27,14 @@
  <!-- Content -->
      <div role="main" id="content">
         <div class="card-body tab-content text-left" id="pills-tabContent">
-            <div th:replace="fragments/search :: search">Search Tab</div>
-            <div th:replace="fragments/modal-dialogs :: modal-dialogs">modal dialogs</div>
+             <div th:replace="fragments/downloadFragment :: downloadFragment">Download Tab</div>
+              <div th:replace="fragments/modal-dialogs :: modal-dialogs">modal dialogs</div>
              <div id="spinner" class="spinner" style="text-align: center; display: none;">
                 <img id="img-spinner" th:src="@{/images/giphy.gif}" alt="Loading"/>
              </div>
            <div id="dimmer" style="display: none;"></div> 
         </div>
-         <a aria-label="return to top" href="javascript:void();" id="return-to-top"><i
+          <a aria-label="return to top" href="javascript:void();" id="return-to-top"><i
         class="fa fa-caret-up fa-2x mt-2 mb-3 ml-3 mr-2 text-white"></i></a>
     </div>    
  <!-- End content -->
@@ -57,6 +56,7 @@
     var selfMetadata;
     var loggedOnUserInfo = /*[[${loggedOnUser}]]*/ 'undefined';
     var isUploader = /*[[${isUploader}]]*/ 'undefined';
+    var oauthToken = [[${accessToken}]]
     /*]]>*/
 
 </script>

@@ -2,6 +2,7 @@ package gov.nih.nci.doe.web.controller;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpHeaders;
@@ -9,11 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import gov.nih.nci.doe.web.model.UploadCollectionModel;
+import gov.nih.nci.doe.web.service.DoeAuthorizationService;
 import gov.nih.nci.doe.web.util.MiscUtil;
 
 
@@ -30,9 +32,13 @@ public class UploadController extends AbstractDoeController {
 	@Value("${doe.basePath}")
 	private String basePath;
 	
+	@Autowired
+	DoeAuthorizationService doeAuthorizationService;
+	
 
-      @RequestMapping(method = RequestMethod.GET)
-	  public ResponseEntity<?> home(HttpSession session,@RequestHeader HttpHeaders headers, UploadCollectionModel uploadCollectionModel) throws Exception {
+	  @GetMapping
+	  public ResponseEntity<?> home(HttpSession session,@RequestHeader HttpHeaders headers, 
+			  UploadCollectionModel uploadCollectionModel) throws Exception {
 		  
 		session.setAttribute("basePathSelected", basePath);
 		session.removeAttribute("GlobusEndpoint");
@@ -42,12 +48,31 @@ public class UploadController extends AbstractDoeController {
 		session.setAttribute("datafilePath",uploadCollectionModel.getDataSetPath());
 		session.setAttribute("institutePath",uploadCollectionModel.getInstitutionPath());
 		session.setAttribute("studyPath",uploadCollectionModel.getStudyPath());
+		session.removeAttribute("fileIds");
+		session.removeAttribute("folderIds");
+		session.removeAttribute("accessToken");
+		session.removeAttribute("authorized");
 		
-		final String percentEncodedReturnURL = MiscUtil.performUrlEncoding(
-				this.webServerName + "/addbulk");
 		
 		
-		return new ResponseEntity<>("https://app.globus.org/file-manager?method=GET&action=" + percentEncodedReturnURL, HttpStatus.OK);
+		 if (uploadCollectionModel.getAction() != null && uploadCollectionModel.getAction().equalsIgnoreCase("Drive")) {
+	          
+	          String returnURL = this.webServerName + "/addbulk";
+	          try {
+	            return new ResponseEntity<>(doeAuthorizationService.authorize(returnURL), HttpStatus.OK);
+	          } catch (Exception e) {
+	            log.error("error", "Failed to redirect to Google for authorization: " + e.getMessage());
+	            e.printStackTrace();
+	          }
+	          
+	        } else {
+	        	final String percentEncodedReturnURL = MiscUtil.performUrlEncoding(
+	    				this.webServerName + "/addbulk");
+	    		
+	    		
+	    		return new ResponseEntity<>("https://app.globus.org/file-manager?method=GET&action=" + percentEncodedReturnURL, HttpStatus.OK);
 
+	        }
+		 return null;
 	  }
 }

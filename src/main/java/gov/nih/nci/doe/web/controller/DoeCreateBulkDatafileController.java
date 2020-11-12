@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeDatafileModel;
+import gov.nih.nci.doe.web.service.DoeAuthorizationService;
 import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO;
@@ -57,17 +58,36 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	@Autowired
 	TaskManagerService taskManagerService;
 		
+	@Value("${gov.nih.nci.hpc.web.server}")
+	private String webServerName;
+	
+	@Autowired
+	DoeAuthorizationService doeAuthorizationService;
 	
 	@GetMapping
 	public String home(Model model, HttpSession session, HttpServletRequest request) {
 
-		
+		String code = request.getParameter("code");
+		 if (code != null) {
+	            //Return from Google Drive Authorization
+	            final String returnURL = this.webServerName + "/addbulk";
+	            try {
+	              String accessToken = doeAuthorizationService.getToken(code, returnURL);
+	              session.setAttribute("accessToken", accessToken);
+	              model.addAttribute("accessToken", accessToken);
+	            } catch (Exception e) {
+	              model.addAttribute("error", "Failed to redirect to Google for authorization: " + e.getMessage());
+	              e.printStackTrace();
+	            }
+	            model.addAttribute("authorized", "true");            
+	        }
+
 		if(request.getParameterNames().hasMoreElements()) {
 		  setInputParameters(request, session,model);
 		} else {
 			clearSessionAttrs(session);
 		}
-		
+		 
 		model.addAttribute("basePathSelected", basePath);
 		return "upload";
 	}

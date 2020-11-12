@@ -2,6 +2,7 @@ package gov.nih.nci.doe.web.controller;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -106,7 +107,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
     					TaskManager t = results.stream().filter(x -> download.getTaskId().equals(x.getTaskId())).findAny().orElse(null);
     					String path = download.getPath();
     					
-    					if(StringUtils.isEmpty(path) || StringUtils.isBlank(path)) {
+    					if((StringUtils.isEmpty(path) || StringUtils.isBlank(path)) && CollectionUtils.isNotEmpty(download.getItems())) {
     						path = download.getItems().get(0).getPath();
     					}
     					String[] collectionNames = path.split("/");

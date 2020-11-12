@@ -1,13 +1,11 @@
 package gov.nih.nci.doe.web.service.impl;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.mail.internet.InternetAddress;
 import org.apache.velocity.VelocityContext;
@@ -148,7 +146,7 @@ public class MailServiceImpl implements MailService {
 					
 					helper.setText(body.toString(), true);
 					helper.setSubject(subject);
-					helper.setFrom(new InternetAddress(from, fromDisplay));
+					helper.setFrom(new InternetAddress(from));
 
 					log.info("invoking mailSender");
 					log.info("Sending email to -> " + toAdds + "; cc -> " + ccAdds );
@@ -157,9 +155,7 @@ public class MailServiceImpl implements MailService {
 
 				} catch (final VelocityException e) {
 					log.error("VelocityException", e);
-				} catch (final IOException e) {
-					log.error("IOException", e);
-				} catch (final Exception e) {
+				}  catch (final Exception e) {
 					log.error("================================================================================");
 					log.error(e.getMessage(), e);
 					log.error("=====> Failed sending message: " + body.toString());

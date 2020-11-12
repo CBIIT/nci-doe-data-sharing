@@ -118,7 +118,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
            $(".downloadLink").click(function(e){
         	   var path = $(this).attr('data-path');
         	   var fileName = $(this).attr('data-fileName');  
-        	   $("#download-modal").find(".selectedFilesDiv").show();
+        	   //$("#download-modal").find(".selectedFilesDiv").show();
                downloadFunction(path,fileName);
              });
            
@@ -441,8 +441,8 @@ function renderDownload(data, type, row,accessgroups,permissions) {
 	downdloadFileName = path.substring(n+1);	
 	
 	html += "<a aria-label='download link' class='btn btn-link btn-sm downloadLink' href='javascript:void(0);' " +
-	       "data-toggle='modal' data-backdrop='static' data-keyboard='false' data-fileName = " + downdloadFileName + " data-path=" + row.download + " " +
-	        "data-target='#download-modal'><i class='fa fa-download' data-toggle='tooltip' title='Download File' aria-hidden='true'></i></a>";
+	       "data-fileName = " + downdloadFileName + " data-path=" + row.download + " " +
+	        "><i class='fa fa-download' data-toggle='tooltip' title='Download File' aria-hidden='true'></i></a>";
 
 	if(row.selfMetadata && row.selfMetadata.length > 0) {
 		var metadata = JSON.stringify(row.selfMetadata);
@@ -466,58 +466,20 @@ function renderDownload(data, type, row,accessgroups,permissions) {
 
 
 function downloadFunction(path,fileName) {
-	$("#download-modal").find(".selectedFilesListDisplay").html("");
-	$("#download-modal").find(".selectedFilesListDisplay").append("<p>"+path+"</p>");
-	 $("#download-modal").find("#selectedFilesList").val("");
-	$("#download-modal").find("#destinationPathId").val(path);	
-	$("#download-modal").find("#message").hide();
-	$("#download-modal").find('.downloadErrorMsg').html("");
-	
-	if(fileName && fileName != "null") {
-		$("#download-modal").find("#syncRadioSet").show();
-		$("#download-modal").find("#informationalText").html("This page allows you to download the " +
-				"selected data file either synchronously to your computer or asynchronously " +
-				"to Globus endpoint location or an S3 bucket.");
-		$("#download-modal").find("#SyncDiv").show();
-		$("#download-modal").find("#searchTypeSync").click();
-		$("#download-modal").find("#downloadType").val("data_object");
-		$("#download-modal").find("#downloadFileNameVal").val(fileName);
-		$("#download-modal").find("#downloadFileName").val(fileName);
-	    $("#download-modal").find("div#AsyncDiv input[type='text']").val("");
-	    $("#download-modal").find("div#s3Div input[type='text']").val("");
-	} 
+	location.replace('/downloadTab?selectedPaths='+path+'&&fileName='+fileName+'&&downloadAsyncType=data_object');
 }
 
 function onClickOfBulkDownloadBtn() {
-	$("#download-modal").find(".selectedFilesListDisplay").html("");
-	$("#download-modal").find("#message").hide();
-	$("#download-modal").find('.downloadErrorMsg').html("");
-	$("#download-modal").find("#informationalText").html("This page allows you to download the " +
-			"selected data files " +
-			"asynchronously to a Globus endpoint location or an S3 bucket.");
-	 var selectedPaths = [];
-	    $("#dataSetTable tbody input[type=checkbox]:checked").each(function () {
-	    	selectedPaths.push($(this).attr('id'));
-	    });
-	    $("#download-modal").find("#selectedFilesList").val(selectedPaths);
-	    
-	    $.each(selectedPaths, function(index, value) {
-	    	$("#download-modal").find(".selectedFilesListDisplay").append("<p>"+value+"</p>");
-	    });
-	    
-	    if(selectedPaths.length == 1) {
-	    	  $("#download-modal").find("#destinationPathId").val(selectedPaths);
-	    	  $("#download-modal").find("#downloadType").val("data_object");
-	    } else  {
-	    	$("#download-modal").find("#downloadType").val("datafiles");
-	    }
-	    $("#download-modal").find("div#AsyncDiv input[type='text']").val("");
-	    $("#download-modal").find("div#s3Div input[type='text']").val("");
-	    $("#download-modal").find("#SyncDiv").hide();
-		$("#download-modal").find("#syncRadioSet").hide();
-		$("#download-modal").find(".selectedFilesDiv").show();
-	    $("#download-modal").modal('show');
-	    
+	var selectedPaths = [];
+    $("#dataSetTable tbody input[type=checkbox]:checked").each(function () {
+    	selectedPaths.push($(this).attr('id'));
+    });
+
+    if(selectedPaths.length == 1) {
+  	location.replace('/downloadTab?selectedPaths='+selectedPaths+'&&downloadAsyncType=data_object');
+  } else  {
+  	location.replace('/downloadTab?selectedPaths='+selectedPaths+'&&downloadAsyncType=datafiles');
+  }	    
 }
 
 

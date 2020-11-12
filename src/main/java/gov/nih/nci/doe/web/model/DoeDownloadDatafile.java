@@ -14,9 +14,18 @@ public class DoeDownloadDatafile {
 	private String searchType;
 	private String downloadType;
 	private String selectedPaths;
+	private String drivePath;
 
 	
 	
+
+	public String getDrivePath() {
+		return drivePath;
+	}
+
+	public void setDrivePath(String drivePath) {
+		this.drivePath = drivePath;
+	}
 
 	public String getSelectedPaths() {
 		return selectedPaths;

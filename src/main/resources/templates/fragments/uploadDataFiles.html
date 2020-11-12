@@ -39,6 +39,13 @@
 										onchange="displayDataFileSection('s3')">&nbsp;&nbsp; Transfer from S3</label>
 										</div>
                          </div>
+                         
+                         <div class="form-group">
+										<div class="pull-left" style="margin-left: 15px">
+										<label class="uploadLabels radio-inline"><input type="radio" name="datafileTypeUpload" id="datafileTypeDriveUpload" value="drive" 
+										onchange="displayDataFileSection('drive')">&nbsp;&nbsp; Google Drive</label>
+										</div>
+                         </div>
                         
 								
                 <div class="col-md-12 col-sm-12" id="singleFileDataUploadSection" style="display:none;">
@@ -102,6 +109,23 @@
 									<span id="${endpoint_path}" th:text="${endpoint_path}" style="font-weight: normal;"></span></label>
 									<br />
 							</div>
+							</div>	
+							
+							
+							
+							<div class="form-group col-lg-12 col-md-12" id="displayDriveUploadDiv" 
+							style="display:none;">
+                               <div class="form-group" style="margin-left: 13px">
+								<button type="button" class="btn btn-primary" id="driveUploadAuthlink"
+								onClick="return refreshAttributes('Drive')">
+								Authorize DOE to Access Your Google Drive</button>
+								</div>
+								
+                            <div class="col-sm-12 column" id="driveDiv">
+							  <a href="#" id="pickerUploadLink">
+							  Select Data from Google Drive</a>
+							</div>
+                            
 							</div>	
 							
 							   <div class="form-group col-lg-12 col-md-12" id="displayS3UploadDiv" style="display:none;background-color: #E0F0F4;padding-bottom: 20px;">

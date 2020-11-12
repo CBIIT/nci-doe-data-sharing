@@ -499,14 +499,22 @@ function display(value) {
 		$("#AsyncDiv").show();
 		$("#SyncDiv").hide();
 		$("#s3Div").hide();
+		$("#driveDiv").hide();
 	} else if (value == "sync") {
 		$("#SyncDiv").show();
 		$("#AsyncDiv").hide();
 		$("#s3Div").hide();
+		$("#driveDiv").hide();
+	} else if (value == "drive") {
+		$("#SyncDiv").hide();
+		$("#AsyncDiv").hide();
+		$("#s3Div").hide();
+		$("#driveDiv").show();
 	} else {
 		$("#SyncDiv").hide();
 		$("#AsyncDiv").hide();
 		$("#s3Div").show();
+		$("#driveDiv").hide();
 	}
 }
 

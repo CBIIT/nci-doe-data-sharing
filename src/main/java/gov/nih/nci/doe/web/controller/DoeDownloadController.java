@@ -1,16 +1,6 @@
-/**
- * DoeDownloadController.java
- *
- * Copyright SVG, Inc.
- * Copyright Leidos Biomedical Research, Inc
- * 
- * Distributed under the OSI-approved BSD 3-Clause License.
- * See https://ncisvn.nci.nih.gov/svn/HPC_Data_Management/branches/hpc-prototype-dev/LICENSE.txt for details.
- */
 package gov.nih.nci.doe.web.controller;
 
 import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -20,10 +10,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -33,6 +28,7 @@ import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeDownloadDatafile;
 import gov.nih.nci.doe.web.model.Views;
 import gov.nih.nci.doe.web.service.TaskManagerService;
+import gov.nih.nci.doe.web.service.DoeAuthorizationService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.datatransfer.HpcDownloadTaskType;
 import gov.nih.nci.hpc.domain.datatransfer.HpcFileLocation;
@@ -40,6 +36,7 @@ import gov.nih.nci.hpc.domain.datatransfer.HpcGlobusDownloadDestination;
 import gov.nih.nci.hpc.domain.datatransfer.HpcS3Account;
 import gov.nih.nci.hpc.domain.datatransfer.HpcS3DownloadDestination;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO;
+import gov.nih.nci.hpc.domain.datatransfer.HpcGoogleDriveDownloadDestination;
 
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -54,14 +51,52 @@ public class DoeDownloadController extends AbstractDoeController {
 	private String dataObjectServiceURL;
 	@Value("${gov.nih.nci.hpc.server.v2.collection}")
 	private String collectionServiceURL;
-	
-
-	
     @Autowired
     TaskManagerService taskManagerService;
-    
+        
 
-	
+    @GetMapping
+	public ResponseEntity<?> home(Model model,@RequestParam(value = "type",required = false) String type,
+	@RequestParam(value = "downloadFilePath",required = false) String downloadFilePath, HttpSession session, HttpServletRequest request) {
+
+		String action = "Drive";
+		String downloadType = request.getParameter("type");
+		
+		String code = request.getParameter("code");
+        if (code != null) {
+            //Return from Google Drive Authorization
+            downloadType = (String)session.getAttribute("downloadType");
+            final String returnURL = this.webServerName + "/downloadTab";
+            try {
+              String accessToken = doeAuthorizationService.getToken(code, returnURL);
+              session.setAttribute("accessToken", accessToken);
+              model.addAttribute("accessToken", accessToken);
+            } catch (Exception e) {
+              model.addAttribute("error", "Failed to redirect to Google for authorization: " + e.getMessage());
+              e.printStackTrace();
+            }
+            model.addAttribute("asyncSearchType", "drive");
+            model.addAttribute("transferType", "drive");
+            model.addAttribute("authorized", "true");
+            
+        }
+
+
+		if (action.equals("Drive")) {
+			 session.setAttribute("downloadType", downloadType);
+  	        String returnURL = this.webServerName + "/downloadTab";
+  	        try {
+              return new ResponseEntity<>(doeAuthorizationService.authorize(returnURL), HttpStatus.OK);
+            } catch (Exception e) {
+              model.addAttribute("error", "Failed to redirect to Google for authorization: " + e.getMessage());
+              e.printStackTrace();
+            }
+        }
+
+		
+		return null;
+    	
+    }
 	/**
 	 * POST action to initiate asynchronous download.
 	 * 
@@ -119,6 +154,16 @@ public class DoeDownloadController extends AbstractDoeController {
 				destination.setAccount(account);
 				dto.setS3DownloadDestination(destination);
 			}
+			else if (downloadFile.getSearchType() != null && downloadFile.getSearchType().equals("drive")) {
+  			    String accessToken = (String)session.getAttribute("accessToken");
+  			    HpcGoogleDriveDownloadDestination destination = new HpcGoogleDriveDownloadDestination();
+                HpcFileLocation location = new HpcFileLocation();
+                location.setFileContainerId("MyDrive");
+                location.setFileId(downloadFile.getDrivePath().trim());
+                destination.setDestinationLocation(location);
+                destination.setAccessToken(accessToken);
+                dto.setGoogleDriveDownloadDestination(destination);
+            }
             final String downloadTaskType = "collection".equals(downloadFile.
                     getDownloadType()) ? HpcDownloadTaskType.COLLECTION.name() :
                         HpcDownloadTaskType.DATA_OBJECT.name();
