@@ -173,8 +173,11 @@ public class DoeDownloadController extends AbstractDoeController {
               //store the task ID in DB if logged on user exists
               if(loggedOnUser != null) {
 
+            	  if(taskId !=null && taskId.indexOf("Download request is not successful:")!= -1) {
+            		  result.setMessage(taskId);
+            	  } else {
                   taskManagerService.saveTransfer(taskId,"Download",downloadFile.getDownloadType(),name,getLoggedOnUserInfo());  
-                String transferType = downloadFile.getSearchType().equals("async") ? "Globus":"S3";
+                  String transferType = downloadFile.getSearchType().equals("async") ? "Globus":"S3";
                   //store the auditing info
                   AuditingModel audit = new AuditingModel();
                   audit.setName(loggedOnUser);
@@ -184,10 +187,10 @@ public class DoeDownloadController extends AbstractDoeController {
                   audit.setPath(downloadFile.getDestinationPath());
                   audit.setTaskId(taskId);
                   auditingService.saveAuditInfo(audit);
-                  
+                  result.setMessage("Asynchronous download request is submitted successfully! Task ID: " + taskId);
               }
-              
-              result.setMessage("Asynchronous download request is submitted successfully! Task ID: " + taskId);
+       
+            }
               return result;
 		} catch (DoeWebException e) {
 			result.setMessage("Download request is not successful: " + e.getMessage());

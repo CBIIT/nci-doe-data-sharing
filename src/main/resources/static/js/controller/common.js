@@ -246,10 +246,20 @@ $("#download-btn").click(function(e){
 					 $("#spinner").hide();
 			         $("#dimmer").hide();
 					 console.log('SUCCESS: ', msg);
-					 $('.downloadErrorMsg').html("");
-					 $("#message").hide();
-					 $('.downloadSuccessMsg').html(msg.message);
-					 $("#successBlockDownload").show();
+					 
+					 if(msg && msg.indexOf("Download request is not successful:") != -1) {
+						 $('.downloadErrorMsg').html(msg.message);
+						 $("#message").show();
+						 $('.downloadSuccessMsg').html("");
+						 $("#successBlockDownload").hide();
+					 } else {
+						 $('.downloadSuccessMsg').html(msg.message);
+						 $("#successBlockDownload").show();
+						 $('.downloadErrorMsg').html("");
+						 $("#message").hide();
+					 }
+					
+					
 				 },
 				error : function(e) {
 					 console.log('ERROR: ', e);
