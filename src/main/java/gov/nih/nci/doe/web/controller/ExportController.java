@@ -55,13 +55,7 @@ public class ExportController extends AbstractDoeController{
 						List<String> result = new ArrayList<String>();
 					  HpcDataObjectListDTO datafiles = DoeClientUtil.getDatafiles(authToken, serviceURL, 
 							  path, false, true,sslCertPath, sslCertPassword);
-					  
-					  String parentPath = path.substring(0, path.lastIndexOf('/'));
-					 
-					  
-					  HpcCollectionListDTO parentData =  DoeClientUtil.getCollection(authToken, collectionURL, 
-							  parentPath, false, sslCertPath,sslCertPassword);
-					  
+
 						if (datafiles != null && datafiles.getDataObjects() != null &&
 								!datafiles.getDataObjects().isEmpty()) {
 							HpcDataObjectDTO dataFile = datafiles.getDataObjects().get(0);
@@ -75,11 +69,21 @@ public class ExportController extends AbstractDoeController{
 								
 								
 						}
+							if (!StringUtils.isEmpty(isParent) && isParent.equalsIgnoreCase("true")) {
+								for (HpcMetadataEntry entry : dataFile.getMetadataEntries().getParentMetadataEntries()) {
+									if(headers.contains(entry.getAttribute())) {
+										result.add(entry.getValue());
+									} else {
+										headers.add(entry.getAttribute());
+										result.add(entry.getValue());
+									}
+							    }
+							}
 						
 				      }
 						
 
-						if (!StringUtils.isEmpty(isParent) && isParent.equalsIgnoreCase("true") &&  
+						/*if (!StringUtils.isEmpty(isParent) && isParent.equalsIgnoreCase("true") &&  
 								parentData != null && parentData.getCollections() != null
 									&& !parentData.getCollections().isEmpty()) {
 							HpcCollectionDTO dataFile = parentData.getCollections().get(0);
@@ -92,7 +96,7 @@ public class ExportController extends AbstractDoeController{
 								}	
 						}
 						
-				      }
+				      }*/
 						rows.add(result);
 						
 				 }
