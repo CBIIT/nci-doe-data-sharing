@@ -2,8 +2,6 @@ package gov.nih.nci.doe.web.controller;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import gov.nih.nci.doe.web.model.UploadCollectionModel;
-import gov.nih.nci.doe.web.service.DoeAuthorizationService;
 import gov.nih.nci.doe.web.util.MiscUtil;
 
 
@@ -26,15 +23,6 @@ import gov.nih.nci.doe.web.util.MiscUtil;
 @RequestMapping("/upload")
 public class UploadController extends AbstractDoeController {
 
-	@Value("${gov.nih.nci.hpc.web.server}")
-	private String webServerName;
-	
-	@Value("${doe.basePath}")
-	private String basePath;
-	
-	@Autowired
-	DoeAuthorizationService doeAuthorizationService;
-	
 
 	  @GetMapping
 	  public ResponseEntity<?> home(HttpSession session,@RequestHeader HttpHeaders headers, 

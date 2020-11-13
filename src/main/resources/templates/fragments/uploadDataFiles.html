@@ -115,6 +115,7 @@
 							
 							<div class="form-group col-lg-12 col-md-12" id="displayDriveUploadDiv" 
 							style="display:none;">
+							<div th:if="${authorized != null}" class="alert-success" style="margin-left: 13px" ><i class="fa fa-check">&nbsp;</i>Access Token successfully generated</div>
                                <div class="form-group" style="margin-left: 13px">
 								<button type="button" class="btn btn-primary" id="driveUploadAuthlink"
 								onClick="return refreshAttributes('Drive')">
@@ -166,20 +167,30 @@
 							</div>
 							
 														
-                             <div th:if="${fileNames != null}"  id="selectedFilesDiv" class="form-group col-lg-12 col-md-12">
+                             <!--<div th:if="${fileNames != null}"  id="selectedFilesDiv"
+                              class="form-group col-lg-12 col-md-12">-->
+                             <div class="form-group col-lg-12 col-md-12" id="fileNamesDiv" 
+							th:style="${fileNames != null ? 'display:block' : 'display:none'}">
                              <label for="fileName">Selected Files:</label>
                             <div class="form-group col-lg-12 col-md-12">                             
                              <ul> 
                                 <li th:each="fileName:${fileNames}" th:text="${fileName}"></li>
                               </ul>
-                          </div>                        
+                          </div>  
+                          <input th:if="${fileIds != null}" type="hidden" name="fileIds" th:value="${fileId}"
+							th:each="fileId : ${fileIds}"/>                      
                         </div>
                              
-                    <div th:if="${folderNames != null}"  id="selectedFoldersDiv" class="form-group col-lg-12 col-md-12">
+                    <!--<div th:if="${folderNames != null}"  id="selectedFoldersDiv" 
+                    class="form-group col-lg-12 col-md-12">-->
+                    <div class="form-group col-lg-12 col-md-12" id="folderNamesDiv" 
+					th:style="${folderNames != null ? 'display:block' : 'display:none'}">
                        <label for="folderName">Selected Folders:</label>                          
                           <ul> 
                                <li th:each="folderName:${folderNames}" th:text="${folderName}"></li>
                           </ul>
+                          <input th:if="${folderIds != null}" type="hidden" name="folderIds" th:value="${folderId}"
+																	th:each="folderId : ${folderIds}"/>
                     </div>     
                      </div>
                  </form>

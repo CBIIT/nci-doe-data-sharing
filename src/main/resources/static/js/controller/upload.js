@@ -206,8 +206,8 @@ function clearRegisterDataDiv() {
 	$("#registerBulkDataForm").hide();
 	$("#displayGlobusUploadDiv").hide();
 	$("#displayS3UploadDiv").hide();
-	$("#selectedFoldersDiv").html("");
-	$("#selectedFilesDiv").html("");
+	$("#folderNamesDiv").html("");
+	$("#fileNamesDiv").html("");
 	$("#globusEndPointInformation").html("");
 }
 
@@ -565,8 +565,8 @@ function displayDataFileSection(value) {
 		$("#registerBulkDataForm").show();		
 			$("#displayGlobusUploadDiv").show();
 			$("#displayS3UploadDiv").hide();	
-			$("#selectedFilesDiv").show();
-			$("#selectedFoldersDiv").show();
+			$("#fileNamesDiv").show();
+			$("#folderNamesDiv").show();
 			$("#displayDriveUploadDiv").hide();
 	} else if(value == 's3'){
 			$("#singleFileDataUploadSection").hide();
@@ -574,8 +574,8 @@ function displayDataFileSection(value) {
 			$("#registerBulkDataForm").show();
 			$("#displayGlobusUploadDiv").hide();
 			$("#displayS3UploadDiv").show();
-			$("#selectedFilesDiv").hide();
-			$("#selectedFoldersDiv").hide();
+			$("#fileNamesDiv").hide();
+			$("#folderNamesDiv").hide();
 			$("#displayDriveUploadDiv").hide();
 		} else if(value == 'drive'){
 			$("#singleFileDataUploadSection").hide();
@@ -583,8 +583,8 @@ function displayDataFileSection(value) {
 			$("#registerBulkDataForm").show();
 			$("#displayGlobusUploadDiv").hide();
 			$("#displayS3UploadDiv").hide();
-			$("#selectedFilesDiv").hide();
-			$("#selectedFoldersDiv").hide();
+			$("#fileNamesDiv").hide();
+			$("#folderNamesDiv").hide();
 			$("#displayDriveUploadDiv").show();
 		}
 	
