@@ -113,7 +113,8 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	@SuppressWarnings("unchecked")
 	@PostMapping
 	@ResponseBody
-	public String createDatafile(@Valid DoeDatafileModel doeDataFileModel, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+	public String createDatafile(@Valid DoeDatafileModel doeDataFileModel,  Model model, 
+			HttpSession session, HttpServletRequest request, HttpServletResponse response) {
 		
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		String user = getLoggedOnUserInfo();
@@ -137,6 +138,9 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 					}
 				}
 							
+				if(request.getParameterNames().hasMoreElements()) {
+					  setInputParameters(request, session,model);
+					}
 			HpcBulkDataObjectRegistrationRequestDTO registrationDTO = constructV2BulkRequest(request, session,
 					doeDataFileModel.getPath().trim());
 			String bulkType = request.getParameter("uploadType");

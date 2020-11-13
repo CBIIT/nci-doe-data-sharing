@@ -163,6 +163,16 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			else
 				session.setAttribute("GlobusEndpointFolders", folderNames);
 
+			if (fileIds.isEmpty())
+				  fileIds = (List<String>) session.getAttribute("fileIds");
+		        else
+		            session.setAttribute("fileIds", fileIds);
+
+		        if (folderIds.isEmpty())
+		          folderIds = (List<String>) session.getAttribute("folderIds");
+		        else
+		            session.setAttribute("folderIds", folderIds);
+		        
 			if (endPoint != null)
 				model.addAttribute("async", true);
 
