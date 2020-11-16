@@ -22,15 +22,23 @@ function loadUploadTab() {
 				$("#addBulkDataFiles").show();
 				$("#uploadDataFilesTab").show();
 				$('input[name=datafileTypeUpload]:checked').val();
-				$("#datafileTypeGlobusUpload").prop("checked", true);
 				$("#singleFileDataUploadSection").hide();
 				$("#bulkFileUploadSection").show();
 				$("#registerFileBtnsDiv").show();		
 				$(".registerBulkDataFileSuccess").hide();
 				$(".registerBulkDataFile").html("");
 				$("#registerBulkDataForm").show();
-				$("#displayGlobusUploadDiv").show();
 				$("#displayS3UploadDiv").hide();
+				var uploadAsyncType = $("#uploadAsyncType").val();
+				if(uploadAsyncType && uploadAsyncType == 'drive') {
+					$("#datafileTypeDriveUpload").prop("checked", true);
+					$("#displayGlobusUploadDiv").hide();
+					$("#displayDriveUploadDiv").show();
+				} else {
+					$("#datafileTypeGlobusUpload").prop("checked", true);
+					$("#displayGlobusUploadDiv").show();
+					$("#displayDriveUploadDiv").hide();
+				}
 			}
 			
 		}
@@ -499,7 +507,10 @@ function registerBulkDataFile() {
 			$(".uploadBulkDataErrorMsg").html("Enter all the required fields.")
 		} else if(bulkUploadType == 'globus' && !$("#globusEndPointInformation").length) {
 			$(".uploadBulkDataError").show();
-			$(".uploadBulkDataErrorMsg").html("Select Globus End point information.")
+			$(".uploadBulkDataErrorMsg").html("Select globus end point information.")
+		} else if(bulkUploadType == 'drive' && (!$("#fileNamesDiv").length || !$("#folderNamesDiv").length )) {
+			$(".uploadBulkDataError").show();
+			$(".uploadBulkDataErrorMsg").html("Select google drive information.")
 		}
 		else if(dataFilePath) {	
 			$("#uploadType").val(bulkUploadType);

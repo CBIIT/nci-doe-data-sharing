@@ -62,7 +62,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 		 if (code != null) {
 	            //Return from Google Drive Authorization
 	            final String returnURL = this.webServerName + "/addbulk";
-	            model.addAttribute("uploadType", "drive");
+	            model.addAttribute("uploadAsyncType", "drive");
 	            try {
 	              String accessToken = doeAuthorizationService.getToken(code, returnURL);
 	              session.setAttribute("accessToken", accessToken);
