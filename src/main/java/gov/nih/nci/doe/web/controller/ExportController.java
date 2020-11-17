@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.doe.web.util.ExcelExportProc;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
-import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
 
@@ -81,22 +79,6 @@ public class ExportController extends AbstractDoeController{
 							}
 						
 				      }
-						
-
-						/*if (!StringUtils.isEmpty(isParent) && isParent.equalsIgnoreCase("true") &&  
-								parentData != null && parentData.getCollections() != null
-									&& !parentData.getCollections().isEmpty()) {
-							HpcCollectionDTO dataFile = parentData.getCollections().get(0);
-							for (HpcMetadataEntry entry : dataFile.getMetadataEntries().getSelfMetadataEntries()) {
-								if(headers.contains(entry.getAttribute())) {
-									result.add(entry.getValue());
-								} else {
-									headers.add(entry.getAttribute());
-									result.add(entry.getValue());
-								}	
-						}
-						
-				      }*/
 						rows.add(result);
 						
 				 }
