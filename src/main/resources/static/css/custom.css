@@ -378,7 +378,7 @@ background-size: cover;
 }
 
 #nci-brand{
-z-index: 1010;
+z-index: 0;
 width: 100%;
 background-color: #DDDDDD;
 height: 50px;

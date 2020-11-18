@@ -292,9 +292,7 @@ ul.footer li{float:left; display:inline;justify-content: center; text-align: cen
         white-space: nowrap;
     }
     .navbar-dark .navbar-toggler{background-color:#00467f;}
-    #nci-brand{
-        z-index:1010;
-    }
+    
     .navbar-dark .navbar-brand{
         margin-top:0px;
     }
