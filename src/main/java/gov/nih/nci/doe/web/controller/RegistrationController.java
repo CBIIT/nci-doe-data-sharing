@@ -51,7 +51,7 @@ public class RegistrationController extends AbstractDoeController {
 		} 
 		else if(!status.equals(PasswordStatusCode.SUCCESS)) {
 			log.info("Password validation failed...");
-			return new ResponseEntity<>("Enter a valid password.", HttpStatus.OK);
+			return new ResponseEntity<>("Enter a password with valid length and format. Refer to Password Constraints.", HttpStatus.OK);
 		}  else {
 			//register the user in the system			
 			DoeUsers user = authService.register(register);

@@ -51,7 +51,7 @@ public class ResetPasswordController extends AbstractDoeController {
 		
 		if(emailAddr == null || StringUtils.isEmpty(emailAddr)) {
 			log.error("User ID is required.");
-			return new ResponseEntity<>("Email Address is required.", HttpStatus.OK);
+			return new ResponseEntity<>("Enter an email address.", HttpStatus.OK);
 			
 		} 
 

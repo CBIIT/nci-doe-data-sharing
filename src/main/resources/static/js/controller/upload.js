@@ -363,7 +363,7 @@ function registerCollection() {
 	
 	if(!usermetaDataEntered) {
 		validate = false;
-		$("#registerCollectionModal").find(".registerErrorMsg").append("Enter the values for all collection Metadata.");
+		$("#registerCollectionModal").find(".registerErrorMsg").append("Enter the values for all collection m	etadata.");
 		$("#registerCollectionModal").find(".registerMsgErrorBlock").show();
 	}
 	
@@ -451,7 +451,7 @@ function registerBulkDataFile() {
 		
 		if(!file || !dataFilePath) {
 			$(".uploadBulkDataError").show();
-			$(".uploadBulkDataErrorMsg").html("upload data source file.")
+			$(".uploadBulkDataErrorMsg").html("Upload data source file.")
 		}
 		else if(dataFilePath && file) {	
 			$("#registerDataFileForm").attr('dataFilePath', dataFilePath);	 

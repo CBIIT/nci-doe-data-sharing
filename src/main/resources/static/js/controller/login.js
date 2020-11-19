@@ -19,10 +19,10 @@ function validateUserLogin() {
 		},
 		messages: {
 			 username: {
-			    	required: "Email Address is required."
+			    	required: "Enter an email address."
 			    },
 			password: {
-		        required: "Password is required.",
+		        required: "Enter a password.",
 		    },
 		   
 		},
@@ -52,26 +52,26 @@ function postLoginFunction(data,status) {
 	if("loginFailure" == data) {
 		
 		$(".errorBlockLogin").show();
-		$(".errorMsgLogin").html("Invalid Credentials");
+		$(".errorMsgLogin").html("Enter valid credentials.");
 		
 	} else if("inValidEmail" == data) {
 		
 		$(".errorBlockLogin").show();
-		$(".errorMsgLogin").html("Provide an email address.");
+		$(".errorMsgLogin").html("Enter an email address.");
 		
 	} else if("inValidPassword" == data) {
 		
 		$(".errorBlockLogin").show();
-		$(".errorMsgLogin").html("Provide password.");
+		$(".errorMsgLogin").html("Enter a password.");
 		
 	} else if("loginlocked" == data) {
 		
 		$(".errorBlockLogin").show();
-		$(".errorMsgLogin").html("Maximum attempts of login Exceeded. Request a password via forgot password.");
+		$(".errorMsgLogin").html("Maximum login attempts exceeded. Request a password via forgot password.");
 		
 	} else if("loginInactivated" == data) {
 		$(".errorBlockLogin").show();
-		$(".errorMsgLogin").html("Account not activated.");
+		$(".errorMsgLogin").html("Check your email inbox for an activation link.");
 		
 	} else {
 		location.replace("/");

@@ -58,10 +58,10 @@ function callRegisterFormValidation() {
 		  },
 		  messages: { 
 			  id_user_email: {
-				  validEmail: "Invalid email address."
+				  validEmail: "Enter a valid email address."
 			  },
 			  id_password_confirm: {
-				  isPasswordAndConfirmPasswordEqual: "Password and Confirm Password values do not match."
+				  isPasswordAndConfirmPasswordEqual: "Enter matching values for Password and Confirm Password."
 			  },
 		  },
 		  submitHandler: function(form) {
@@ -85,7 +85,7 @@ function postRegisterFunction(data, status) {
 		$('#btnRegister').prop('disabled',false);
 		$(".errorBlockRegister").hide();
 		$(".successBlockRegister").show();
-		$(".successMsgRegister").html("An activation link has been sent your email.");
+		$(".successMsgRegister").html("Check your email inbox for an activation link.");
 	} else  {
 		$('#btnRegister').prop('disabled',false);
 		$(".successBlockRegister").hide();
@@ -112,7 +112,7 @@ function validateForgotPassword () {
 		  },
 		  messages: { 
 			  forgot_password_confirm: {
-				  isPswdEqual: "Password and Confirm Password values do not match."
+				  isPswdEqual: "Enter matching values for Password and Confirm Password."
 			  },
 		  },
 		  submitHandler: function(form) {

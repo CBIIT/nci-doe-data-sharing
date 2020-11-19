@@ -34,19 +34,19 @@ public class ForgotPasswordController extends AbstractDoeController {
 		
 		if(forgotPassword.getEmailAddrr() == null || StringUtils.isEmpty(forgotPassword.getEmailAddrr())) {
 			log.error("User ID is required.");
-			return new ResponseEntity<>("Email Address is required.", HttpStatus.OK);
+			return new ResponseEntity<>("Enter an email address.", HttpStatus.OK);
 			
 		} else if(forgotPassword.getPassword() == null || StringUtils.isEmpty(forgotPassword.getPassword())) {
 			log.info("Enter password.");
-			return new ResponseEntity<>("Enter password.", HttpStatus.OK);
+			return new ResponseEntity<>("Enter a password.", HttpStatus.OK);
 			
 		} else if(forgotPassword.getConfirmPassword() == null || StringUtils.isEmpty(forgotPassword.getConfirmPassword())) {
-			log.info("Enter the confirmation for password.");
-			return new ResponseEntity<>("Enter the confirmation for password.", HttpStatus.OK);
+			log.info("Repeat your password to confirm.");
+			return new ResponseEntity<>("Repeat your password to confirm.", HttpStatus.OK);
 			
 		} else if(!authService.doesUsernameExist(forgotPassword.getEmailAddrr().trim().toLowerCase())) {
 			log.info("Email not found to reset password");
-			return new ResponseEntity<>("Email address not found.", HttpStatus.OK);
+			return new ResponseEntity<>("Enter a valid email address.", HttpStatus.OK);
 		} 
 
 		log.info("About to set a new password for user ID {}", forgotPassword.getEmailAddrr());
@@ -66,7 +66,7 @@ public class ForgotPasswordController extends AbstractDoeController {
 			if(PasswordStatusCode.INVALID_FORMAT == status || PasswordStatusCode.INVALID_LENGTH == status) { 
 				return new ResponseEntity<>("Password is in invalid length or format", HttpStatus.OK);
 			} if(PasswordStatusCode.NEW_PASSWD_SAME_AS_PREV_PASSWD == status) { 
-				return new ResponseEntity<>("Password is same as current one. Enter a new password", HttpStatus.OK);
+				return new ResponseEntity<>("Enter a password with valid length and format. Refer to Password Constraints.", HttpStatus.OK);
 			}   else {
 				return new ResponseEntity<>(status, HttpStatus.OK);
 			}
