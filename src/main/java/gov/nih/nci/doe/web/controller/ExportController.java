@@ -52,16 +52,16 @@ public class ExportController extends AbstractDoeController{
 				 for(String path :paths) {
 						List<String> result = new ArrayList<String>();
 					  HpcDataObjectListDTO datafiles = DoeClientUtil.getDatafiles(authToken, serviceURL, 
-							  path, false, true,sslCertPath, sslCertPassword);
+							  path, true, true,sslCertPath, sslCertPassword);
 
 						if (datafiles != null && datafiles.getDataObjects() != null &&
 								!datafiles.getDataObjects().isEmpty()) {
 							HpcDataObjectDTO dataFile = datafiles.getDataObjects().get(0);
 							for (HpcMetadataEntry entry : dataFile.getMetadataEntries().getSelfMetadataEntries()) {
-								if(headers.contains(entry.getAttribute())) {
+								if(headers.contains("Dataobject" + "_" + entry.getAttribute())) {
 									result.add(entry.getValue());
 								} else {
-									headers.add(entry.getAttribute());
+									headers.add("Dataobject" + "_" + entry.getAttribute());
 									result.add(entry.getValue());
 								}
 								
@@ -69,10 +69,10 @@ public class ExportController extends AbstractDoeController{
 						}
 							if (!StringUtils.isEmpty(isParent) && isParent.equalsIgnoreCase("true")) {
 								for (HpcMetadataEntry entry : dataFile.getMetadataEntries().getParentMetadataEntries()) {
-									if(headers.contains(entry.getAttribute())) {
+									if(headers.contains(entry.getLevelLabel() + "_" + entry.getAttribute())) {
 										result.add(entry.getValue());
 									} else {
-										headers.add(entry.getAttribute());
+										headers.add(entry.getLevelLabel() + "_" + entry.getAttribute());
 										result.add(entry.getValue());
 									}
 							    }
