@@ -186,7 +186,7 @@ NAVIGATIONS
 	padding-right: 1rem; padding-left: 1rem;font-weight:bold;font-size: 14px;
 	}
 	
-.navbar-dark .navbar-nav .nav-link {
+.navbar .navbar-nav .nav-link {
 	font-size: 12px;
     font-family: 'nunito_sansbold';
     }
@@ -198,13 +198,13 @@ NAVIGATIONS
     padding-bottom: 2px;
     color: #000;
 }
-.navbar-dark .navbar-nav .nav-link{color:#fff;text-transform:none;float:right}
+.navbar .navbar-nav .nav-link{color:#fff;text-transform:none;float:right}
 .nav-link {display: block;padding: 1rem 1rem;}
 #navbarDropdown.dropdown-menu{margin: .125rem -150px 0!important; width:250px!important;}
 .navbar-light .navbar-nav .nav-link{color:#000;font-weight: bold;font-size: 14px;}
 .navbar-light .navbar-nav .nav-link:hover{color:#7f8990;background-color:#eee;}
 /*gloabl navigation */
-#topNav.navbar-dark .navbar-nav .nav-link {text-transform:normal; font-size:12px;}
+#topNav.navbar .navbar-nav .nav-link {text-transform:normal; font-size:12px;}
 .fa-users-cog{font-size:19px;}
 #globalNav.card{border-radius: 0px}
 #globalNav .navbar-nav li.active > a {background-color: #616A70!important; font-weight:600; color: #fff;min-height:50px;border-bottom:1px solid #e5e5e5;}
@@ -269,7 +269,7 @@ ul.footer li{float:left; display:inline;justify-content: center; text-align: cen
     }
 } 
 @media (max-width: 550px){
-    .nav-bar .nabar-toggler{background-color: #00467f;}
+    .nav-bar .nabar-toggler
      #changeUserMenu.dropdown-menu {
     margin-left: -50px!important;
          
@@ -291,9 +291,8 @@ ul.footer li{float:left; display:inline;justify-content: center; text-align: cen
         /*text-transform: uppercase;*/
         white-space: nowrap;
     }
-    .navbar-dark .navbar-toggler{background-color:#00467f;}
-    
-    .navbar-dark .navbar-brand{
+
+    .navbar .navbar-brand{
         margin-top:0px;
     }
    
