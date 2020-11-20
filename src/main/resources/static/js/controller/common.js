@@ -249,7 +249,7 @@ $("#download-btn").click(function(e){
 			         $("#dimmer").hide();
 					 console.log('SUCCESS: ', msg);
 					 
-					 if(msg && msg.indexOf("Download request is not successful:") != -1) {
+					 if(msg && msg.message && msg.message.indexOf("Download request is not successful:") != -1) {
 						 $('.downloadErrorMsg').html(msg.message);
 						 $("#message").show();
 						 $('.downloadSuccessMsg').html("");
