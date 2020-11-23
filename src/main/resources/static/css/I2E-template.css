@@ -233,6 +233,9 @@ i.fa .fa-info-circle{display:inline-block!important;color:green!important; font-
 .dropdown-toggle::after{display:none;}
 .appnameWrapper{justify-content: center; position:absolute!important;z-index:-1;}
 
+.navbar .navbar-toggler:focus {
+   	outline: none !important;
+}
 
 /*--===============================================================================
 footer
@@ -291,7 +294,7 @@ ul.footer li{float:left; display:inline;justify-content: center; text-align: cen
         /*text-transform: uppercase;*/
         white-space: nowrap;
     }
-
+	
     .navbar .navbar-brand{
         margin-top:0px;
     }
