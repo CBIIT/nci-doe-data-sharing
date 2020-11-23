@@ -110,10 +110,12 @@ public class TaskManagerCotroller extends AbstractDoeController {
     					if((StringUtils.isEmpty(path) || StringUtils.isBlank(path)) && CollectionUtils.isNotEmpty(download.getItems())) {
     						path = download.getItems().get(0).getPath();
     					}
+    					if(StringUtils.isNotEmpty(path)) {
     					String[] collectionNames = path.split("/");
     					task.setProgName(collectionNames[2]);
     					task.setStudyName(collectionNames[3]);
-    					task.setDataSetName(collectionNames[4]);	
+    					task.setDataSetName(collectionNames[4]);
+    					}
     							
     					
     	    			task.setTaskId(download.getTaskId());
