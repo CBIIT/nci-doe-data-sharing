@@ -141,6 +141,7 @@ var asyncSearchType = $("#asyncSearchType").val();
 		$(".selectedFilesListDisplay").append("<p>"+selectedPathsString+"</p>");
 		$(".selectedFilesDiv").show();
 		$("#destinationPathId").val(selectedPathsString);
+		$("#drivePath").val(downloadFileName);
 		$("#informationalText").html("This page allows you to download the " +
 				"selected data file either synchronously to your computer or asynchronously " +
 				"to Globus endpoint location or an S3 bucket.");

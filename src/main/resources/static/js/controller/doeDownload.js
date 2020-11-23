@@ -58,7 +58,7 @@ function constructPath(fileId, path) {
 			if (resp.parents[0]) {
 				if (resp.parents[0].isRoot) {
 					console.log('The user selected: ' + path);
-					if(downloadType == "datafile")
+					if(downloadType == "data_object")
 						path = path + downloadFileName;
 					$("#drivePath").val(path);
 				} else {

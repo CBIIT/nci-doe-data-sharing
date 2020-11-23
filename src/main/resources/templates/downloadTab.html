@@ -56,7 +56,10 @@
     var selfMetadata;
     var loggedOnUserInfo = /*[[${loggedOnUser}]]*/ 'undefined';
     var isUploader = /*[[${isUploader}]]*/ 'undefined';
-    var oauthToken = [[${accessToken}]]
+    var oauthToken = [[${accessToken}]];
+    var downloadType = [[${downloadAsyncType}]];
+    var downloadFilePath = [[${selectedPathsString}]];
+    var downloadFileName = downloadFilePath.split('/').pop();
     /*]]>*/
 
 </script>

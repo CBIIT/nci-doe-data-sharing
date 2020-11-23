@@ -101,7 +101,7 @@ public class HomeController extends AbstractDoeController {
 			 }
 			 
 			 if(StringUtils.isNotEmpty(returnToSearch)) {
-				 model.addAttribute("true", returnToSearch);
+				 model.addAttribute("returnToSearch", "true");
 			 }
 			 
 			return "searchTab";
