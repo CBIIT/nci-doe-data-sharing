@@ -9,8 +9,11 @@ $(document).ready(function () {
 	 $('body').tooltip({selector: '[data-toggle="tooltip"]'});
 	 var dmeDataId = $("#dmeDataId").val();
 	 var doiId = $("#doi").val();
+	 var returnToSearch = $("#returnToSearch").val();
 	 if(dmeDataId || doiId) {
 		 populateSearchCriteria('datasetUrl');
+	 } else if(returnToSearch) {
+		 populateSearchCriteria('displayAllResults');
 	 }
 });
 function populateSearchCriteria(searchType) {

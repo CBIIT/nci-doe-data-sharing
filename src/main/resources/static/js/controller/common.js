@@ -365,6 +365,9 @@ $(".backToSearch").click(function(e){
 	$("#editCollectionFragment").hide();
 });
 
+$("#backtoSearch").click(function(e){
+	location.replace("/searchTab?returnToSearch=true");
+});
 
 $('body').on('click', 'a.button.closeBtn', function () {
     $(this).closest('div.popover').popover('hide');
