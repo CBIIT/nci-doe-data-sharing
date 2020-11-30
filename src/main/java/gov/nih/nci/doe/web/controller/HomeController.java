@@ -158,6 +158,7 @@ public class HomeController extends AbstractDoeController {
 			 }
 			 
 		        if (code != null) {
+		        	log.info("return Authorization code from google for download tab" + code);
 		        	 code = request.getParameter("code");
 		        	 if(code != null) {
 		            //Return from Google Drive Authorization
@@ -168,6 +169,7 @@ public class HomeController extends AbstractDoeController {
 		            final String returnURL = this.webServerName + "/downloadTab";
 		            try {
 		              String accessToken = doeAuthorizationService.getToken(code, returnURL);
+		              log.info("access token for download tab" + accessToken);
 		              session.setAttribute("accessToken", accessToken);
 		              model.addAttribute("accessToken", accessToken);
 		            } catch (Exception e) {

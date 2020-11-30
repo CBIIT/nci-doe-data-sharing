@@ -63,6 +63,7 @@ public class DoeDownloadController extends AbstractDoeController {
 		String downloadType = request.getParameter("type");
 		
 		String code = request.getParameter("code");
+		log.info("code from download" +  code);
         if (code != null) {
             //Return from Google Drive Authorization
             downloadType = (String)session.getAttribute("downloadType");
