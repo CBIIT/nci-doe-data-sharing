@@ -83,6 +83,10 @@ public abstract class AbstractDoeController {
     @Value("${gov.nih.nci.hpc.web.server}")
    	String webServerName;
        
+    @Value("${gov.nih.nci.hpc.drive.clientid}")
+     String clientId;
+    @Value("${gov.nih.nci.hpc.drive.clientsecret}")
+     String clientSecret;
 
 	protected Logger log = LoggerFactory.getLogger(this.getClass());
 
