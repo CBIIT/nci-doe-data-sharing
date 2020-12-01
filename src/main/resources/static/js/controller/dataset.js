@@ -158,27 +158,9 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
         	
            });
            
-           $("#downloadSelectedMetadata").click(function(e){
-        	   bootbox.confirm({
-          		    message: "Do you wish to include parent metadata also?",
-          		    buttons: {
-          		        confirm: {
-          		            label: 'Yes',
-          		            className: 'btn-success'
-          		        },
-          		        cancel: {
-          		            label: 'No',
-          		            className: 'btn-danger'
-          		        }
-          		    },
-          		    callback: function (result) {
-          		    	if(result == true) {
-          		    		 exportDataObjectMetadata('true');
-          		    	} else if(result == false) {
-          		    		 exportDataObjectMetadata('false');
-          		    	}   
-          		    }
-          		});
+          // $("#downloadSelectedMetadata").click(function(e){
+        $('#downloadSelectedMetadata').unbind('click').bind('click', function() {
+        	   exportDataObjectMetadata();
         	  
            });
            
@@ -424,12 +406,38 @@ function renderFileSize(data, type, row) {
 	return row.fileSize;
 	
 }
-function exportDataObjectMetadata(isParent) {
-	var selectedPaths = [];
-    $("#dataSetTable tbody input[type=checkbox]:checked").each(function () {
-    	selectedPaths.push($(this).attr('id'));
-    });
-	window.open('/export?isParent='+isParent+'&&selectedPaths='+selectedPaths, '_self');
+function exportDataObjectMetadata() {
+	   bootbox.confirm({
+ 		    message: "Do you wish to include parent metadata also?",
+ 		    buttons: {
+ 		        confirm: {
+ 		            label: 'Yes',
+ 		            className: 'btn-success'
+ 		        },
+ 		        cancel: {
+ 		            label: 'No',
+ 		            className: 'btn-danger'
+ 		        }
+ 		    },
+ 		    callback: function (result) {
+ 		    	if(result == true) {
+ 		    		 //exportDataObjectMetadata('true');
+ 		    		var selectedPaths = [];
+ 		    	    $("#dataSetTable tbody input[type=checkbox]:checked").each(function () {
+ 		    	    	selectedPaths.push($(this).attr('id'));
+ 		    	    });
+ 		    		window.open('/export?isParent=true&&selectedPaths='+selectedPaths, '_self');
+ 		    	} else if(result == false) {
+ 		    		// exportDataObjectMetadata('false');
+ 		    		var selectedPaths = [];
+ 		    	    $("#dataSetTable tbody input[type=checkbox]:checked").each(function () {
+ 		    	    	selectedPaths.push($(this).attr('id'));
+ 		    	    });
+ 		    		window.open('/export?isParent=false&&selectedPaths='+selectedPaths, '_self');
+ 		    	}   
+ 		    }
+ 		});
+	
 }
 
 function renderDownload(data, type, row,accessgroups,permissions) {
