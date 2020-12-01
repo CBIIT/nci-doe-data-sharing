@@ -59,6 +59,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	public String home(Model model, HttpSession session, HttpServletRequest request) {
 
 		String code = request.getParameter("code");
+		 model.addAttribute("clientId", clientId);
 		 if (code != null) {
 	            //Return from Google Drive Authorization
 	            final String returnURL = this.webServerName + "/addbulk";

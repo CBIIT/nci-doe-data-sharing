@@ -4,7 +4,7 @@
 var developerKey = 'AIzaSyDUlmQM6zthuhrlH9J0GaKQpk49XRWGPkA';
 
 // The Client ID obtained from the Google API Console. Replace with your own Client ID.
-var clientId = "380839902969-444n7bnntgi67d76mk6o61q0ok0tdsb0.apps.googleusercontent.com"
+//var clientId = "380839902969-444n7bnntgi67d76mk6o61q0ok0tdsb0.apps.googleusercontent.com"
 
 // Replace with your own project number from console.developers.google.com.
 // See "Project number" under "IAM & Admin" > "Settings"

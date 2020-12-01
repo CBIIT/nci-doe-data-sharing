@@ -143,7 +143,7 @@ public class HomeController extends AbstractDoeController {
 			 model.addAttribute("selectedPathsString", selectedPaths);
 			 model.addAttribute("downloadAsyncType", downloadAsyncType);
 			 model.addAttribute("fileName", fileName);
-			 
+			 model.addAttribute("clientId", clientId);
 			 if(StringUtils.isNotEmpty(selectedPaths)) {
 		      session.setAttribute("selectedPathsString", selectedPaths);
 			 }
