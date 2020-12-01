@@ -1,23 +1,49 @@
+
+// The Browser API key obtained from the Google API Console.
+// Replace with your own Browser API key, or your own key.
+var developerKey = 'AIzaSyDUlmQM6zthuhrlH9J0GaKQpk49XRWGPkA';
+
+// The Client ID obtained from the Google API Console. Replace with your own Client ID.
+var clientId = "380839902969-444n7bnntgi67d76mk6o61q0ok0tdsb0.apps.googleusercontent.com"
+
+// Replace with your own project number from console.developers.google.com.
+// See "Project number" under "IAM & Admin" > "Settings"
+var appId = "380839902969";
 var scope = [ 'https://www.googleapis.com/auth/drive.file' ];
 var pickerApiLoaded = false;
+var oauthToken;
 
 function loadDownloadPicker() {
+	gapi.load('auth', {'callback': onAuthApiLoad});
 	gapi.load('picker', {
 		'callback' : onDownloadPickerApiLoad
 	});
-	gapi.load('client', start);
+	gapi.load('client');
 }
+
+function onAuthApiLoad() {
+    window.gapi.auth.authorize(
+        {
+          'client_id': clientId,
+          'scope': scope,
+          'immediate': false
+        },
+        handleAuthResult);
+  }
 
 function onDownloadPickerApiLoad() {
 	pickerApiLoaded = true;
 	createDownloadPicker();
 }
 
-function start() {
-	gapi.client.setToken({
-		access_token : oauthToken
-	})
-}
+function handleAuthResult(authResult) {
+    if (authResult && !authResult.error) {
+      oauthToken = authResult.access_token;
+      $("#accessToken").val(oauthToken);
+      createUploadPicker();
+    }
+  }
+
 
 function createDownloadPicker() {
 	if (pickerApiLoaded && oauthToken) {
