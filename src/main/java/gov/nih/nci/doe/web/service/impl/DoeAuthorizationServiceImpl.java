@@ -58,9 +58,10 @@ public class DoeAuthorizationServiceImpl implements DoeAuthorizationService {
 
   @Override
   public String authorize(String redirectUri) throws Exception {
+	  logger.info("authorize redirectUri: " + redirectUri);
     GoogleAuthorizationCodeRequestUrl url = flow.newAuthorizationUrl();
     String redirectUrl = url.setRedirectUri(redirectUri).setAccessType("offline").build();
-    logger.debug("redirectUrl, " + redirectUrl);
+    logger.info("redirectUrl: , " + redirectUrl);
     return redirectUrl;
   }
 
