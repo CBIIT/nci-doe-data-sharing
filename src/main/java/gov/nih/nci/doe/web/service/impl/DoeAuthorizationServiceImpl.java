@@ -44,6 +44,7 @@ public class DoeAuthorizationServiceImpl implements DoeAuthorizationService {
   private Logger logger = LoggerFactory.getLogger(DoeAuthorizationServiceImpl.class);
   private GoogleAuthorizationCodeFlow flow;
 
+
   @PostConstruct
   public void init() throws Exception {
 
@@ -64,9 +65,11 @@ public class DoeAuthorizationServiceImpl implements DoeAuthorizationService {
   }
 
   public String getToken(String code, String redirectUri) throws Exception {
+	  logger.info("getting token with code  " + code + " and redirect url: " + redirectUri);
     // exchange the code against the access token and refresh token
     GoogleTokenResponse tokenResponse =
         flow.newTokenRequest(code).setRedirectUri(redirectUri).execute();
+    logger.info("token response " + tokenResponse);
     return tokenResponse.getAccessToken();
   }
 }
