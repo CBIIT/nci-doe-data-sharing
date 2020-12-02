@@ -14,7 +14,7 @@ function refreshDataSetDataTable(dataSetPath,metadata,accessgroups,permissions,c
 function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permissions,collections) {
     $('#dataSetTable').DataTable({
     	 "paging": true,
-         "ordering": true,
+         "ordering": false,
          "info": true,
         "pageLength": 25,
         oLanguage: {
@@ -280,8 +280,8 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
                 targets: 0,
                 "visible": isVisible,
             },
-            {"targets": 0, "orderable": false},
-            {"targets": -1, "orderable": false},
+            //{"targets": 0, "orderable": false},
+            //{"targets": -1, "orderable": false},
             { "visible": isVisible, "targets": 3}],
         "dom": '<"top"lip>rt<"bottom"p>',
 

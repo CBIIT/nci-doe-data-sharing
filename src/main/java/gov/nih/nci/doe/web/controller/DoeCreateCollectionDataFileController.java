@@ -212,7 +212,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		List<String> globusEndpointFolders = (List<String>) session.getAttribute("GlobusEndpointFolders");
 		List<String> googleDriveFileIds = (List<String>) session.getAttribute("fileIds");
         List<String> googleDriveFolderIds = (List<String>) session.getAttribute("folderIds");
-        String accessToken = (String) request.getParameter("accessToken");
+        String accessToken = (String) session.getAttribute("accessToken");
 
 		
 		String bulkType = (String)request.getParameter("uploadType");

@@ -138,7 +138,7 @@ public class DoeDownloadFilesController extends AbstractDoeController {
                 location.setFileContainerId("MyDrive");
                 location.setFileId(downloadFile.getDrivePath().trim());
                 destination.setDestinationLocation(location);
-                destination.setAccessToken(downloadFile.getAccessToken());
+                destination.setAccessToken(accessToken);
                 dto.setGoogleDriveDownloadDestination(destination);
             }
 
