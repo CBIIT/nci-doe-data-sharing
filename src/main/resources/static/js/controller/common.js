@@ -136,7 +136,7 @@ var asyncSearchType = $("#asyncSearchType").val();
 			"asynchronously to a Globus endpoint location, an S3 bucket, or Google Drive.");
 } else if(selectedPathsString && downloadType && (downloadType == 'data_object' || downloadType == 'datafiles')) {
 
-	if(downloadFileName && downloadFileName != "null") {
+	if(downloadFileName && downloadFileName != "null" && downloadType == 'data_object') {
 		$("#syncRadioSet").show();
 		$(".selectedFilesListDisplay").append("<p>"+selectedPathsString+"</p>");
 		$(".selectedFilesDiv").show();
