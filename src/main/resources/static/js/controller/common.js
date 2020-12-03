@@ -202,7 +202,7 @@ $("#download-btn").click(function(e){
 	    d.endPointName = $("#endPointName").val();
 		d.endPointLocation = $("#endPointLocation").val();
 		d.drivePath = $("#drivePath").val();
-		//d.accessToken = $("#accessToken").val();
+		d.accessToken = $("#accessToken").val();
 		
 		var url;
 		if(selectedFiles) {
