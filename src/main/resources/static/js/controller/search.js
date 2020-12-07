@@ -46,7 +46,7 @@ function populateSearchCriteria(searchType) {
 			operators.push("LIKE");
 
 	} 
-	 if(searchType == 'advSearchBtn')  {
+	 //if(searchType == 'advSearchBtn')  {
 		var rowId = 3;
 		$(".filteritem").each(function(){
 			var attrName = $(this).find("div.filtertext").text();
@@ -85,7 +85,7 @@ function populateSearchCriteria(searchType) {
 			  }
 			
 		});	
-	}
+	//}
 	 
 	 if(searchType == 'datasetUrl') {
 		 var rowId = 3;

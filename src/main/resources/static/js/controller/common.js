@@ -55,34 +55,25 @@ $(document).ready(function () {
 	    
 $("#searchBtn").click(function(e){
 	e.preventDefault();	
-	//$(".errorFilterCriteria").hide();
 	populateSearchCriteria('simpleSearch');
-	/*if(!$("#attributeVal").val()) {
-		$(".keywordError").show();
-	} else {
-		$(".keywordError").hide();
-		
-	}*/
 });
 
-$("#displayAllResults").click(function(e){
+/*$("#displayAllResults").click(function(e){
 	e.preventDefault();
-	//$(".keywordError").hide();
-	//$(".errorFilterCriteria").hide();
    populateSearchCriteria('displayAllResults');
-});
+});*/
 
 $("#advSearchBtn").click(function(e){
 	e.preventDefault();
-	//$(".keywordError").hide();
-	var advLength = $("div#metadatalisting .filteritem").length;
-		  /* if (advLength == 0){
-			$(".errorFilterCriteria").show();
-		} else { 
-			 $(".errorFilterCriteria").hide();
-			
-		}*/	
-	 populateSearchCriteria('advSearchBtn');
+	populateSearchCriteria('advSearchBtn');
+});
+
+$(document).keypress(function(event){	
+	var keycode = (event.keyCode ? event.keyCode : event.which);
+	if(keycode == '13'){
+		 populateSearchCriteria('displayAllResults');
+	}
+
 });
 
 $("#downloadSelected").click(function(e){

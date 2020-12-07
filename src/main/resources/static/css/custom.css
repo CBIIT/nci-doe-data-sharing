@@ -1085,6 +1085,16 @@ text-align: center;
     background-size: 100% 100%;
 }
 
+#advSearchDiv {
+	margin-top: 32px;
+    background-color: rgb(221, 233, 247);
+    padding: 10px;
+    max-width: 80%;
+    margin-left: 160px;
+    display:none;
+}
+
+
 .multiDownloadIcon {
     background-image: url(/static/img/dcc/icon-multidownload.png);
     background-size: 25px 25px;
