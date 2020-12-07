@@ -207,7 +207,8 @@ function retrieveCollections($this, selectedIndex,action) {
 
 function clearRegisterDataDiv() {
 	$('input[name=datafileTypeUpload]').prop('checked', false);
-	//$('input[name=bulkUploadType]').prop('checked', false);
+	$("#doeDataFile").val("");
+	$("#newMetaDataTableForSingleFile tbody").html("");
 	$("#singleFileDataUploadSection").hide();
 	$("#bulkFileUploadSection").hide();
 	$("#registerFileBtnsDiv").hide();			
