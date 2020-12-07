@@ -129,6 +129,40 @@ aria-labelledby="forgotPasswordLabel">
     </div>
     
     
+    <div id="createAssetModal" class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog" aria-hidden="false">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="modal-title">Specify the type of collection</p>
+                       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="clearfix createAssetSuccessBlock" style="display: none;margin-left:10px;width:90%;">
+                    <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
+                        <div class="alert alert-success">
+                            <h6 class="createAssetMsg"></h6>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-body drilldown-content">               
+                  <div class="row row-buffer">
+                      <label for="createAssetCollectionType">Collection Type: </label>
+                          <select class="simple-select2" multiple="multiple" id="createAssetCollectionType"
+                           name="createAssetCollectionType" style="width:70%">
+                           </select>
+                  </div>                    
+                  <div class="row row-buffer" style="text-align: end;">
+                      <div class="col-sm-12" style="margin-bottom: 10px;">
+                        <button type="button" class="btn btn-default pull-right" data-dismiss="modal"> Close</button>
+                          <button class="btn btn-primary pull-right" id="btnSelectAssetType"> Select</button>
+                          </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
     <div class="modal" id="registerCollectionModal" role="dialog" tabindex="-1" aria-hidden="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -157,7 +191,7 @@ aria-labelledby="forgotPasswordLabel">
                         </div>
                     </div>
                 </div>  
-                 
+                 <input type="hidden" name="assetType" id="assetType"/> 
                  <input type="hidden" name="path" id="newCollectionPath"/>   
                   <input type="hidden" id="parentCollectionType"/>   
                   <input type="hidden" id="parentAccessGroup"/>
@@ -215,9 +249,10 @@ aria-labelledby="forgotPasswordLabel">
                 </div>
           
             </div>
-            <div class="form-group" style="margin-top:35px;margin-bottom:15px;padding: 5px;">
-                                <input type="button" value="Close" style="margin-left: -12px;" class="btn btn-default float-right mr-4 mb-4" data-dismiss="modal">
-                                <input type="button" value="Register" class="btn btn-primary float-right mr-4 mb-4" id="registerCollectionBtn">
+            <div class="form-group" style="margin-top:35px;margin-bottom:15px;padding: 5px;text-align:center">
+            
+           <input type="button" value="Register" data-dismiss="modal" class="btn btn-primary mr-4 mb-4" id="registerCollectionBtn">
+           <input type="button" value="Close" style="margin-left: -12px;" class="btn btn-default mr-4 mb-4 closeButtons" data-dismiss="modal">
            </div> 
              </form>
         </div>

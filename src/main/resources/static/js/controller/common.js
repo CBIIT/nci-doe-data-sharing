@@ -419,6 +419,11 @@ $("#bulkDoeDataFile").change(function (e) {
 
 });
 
+$("#btnSelectAssetType").click(function(e){
+	var assetType = $("#createAssetModal").find("#createAssetCollectionType option:selected").val();
+	$("#registerCollectionModal").find("#assetType").val(assetType);
+	openUploadModal('studyList');
+});
 
 $("#driveAuthlink").click(function(e){
 	var params= {type:$("#downloadType").val(),downloadFilePath:$("#selectedFilesList").val()}

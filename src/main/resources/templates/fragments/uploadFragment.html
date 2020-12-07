@@ -11,7 +11,7 @@
     <p style="font-size: 20px;font-family: latoregular;
     font-size: 25px;padding-top: 5px;">Upload Data</p></div>
     
-     <div class="form-row jumbotron pt-2 pb-2 mb-2" style="border: 1px solid #E87B05;background-color: #F4F4F4;">
+     <div class="form-row jumbotron pt-2 pb-2 mb-2" style="border: 1px solid #E87B05;background-color: #F4F4F4;max-width: 80%;">
           <div class="form-row col-md-12 col-sm-12" id="uploadSubFragmentTab" style="margin-top: 20px;">
              
 <input type="hidden" th:value="${basePathSelected}" id="basePath"/>
@@ -30,47 +30,50 @@
                           </div>
                       </div> 
                 
-                        <div class="form-row">
-                             <div class="form-group col-lg-6 col-md-6">
-                               <label class="uploadLabels" for="attributeVal">Select Program &nbsp;&nbsp;<a href="#" 
-                               class="addDeleteUploadLabels" id="addNewInstitute" 
-                               onclick="openUploadModal('basePath')" data-backdrop="static" data-keyboard="false" >
-                               <i class="fal fa-plus-circle"></i> Register New Program</a> &nbsp;&nbsp;
-                               <a href="#" style="display:none;" class="addDeleteUploadLabels" id="deleteProgram" onclick="functionDelete('instituteList','Program')">
-                               <i class="fal fa-minus-circle"></i> Delete Program</a>
-                               </label>
+                        <div class="form-group">
+                             <div class="form-row col-lg-6 col-md-6">
+                               <label class="uploadLabels" for="attributeVal">Select Program &nbsp;&nbsp;
                                 <select class="simple-select2"  id="instituteList" name="instituteList" style="width:70%" 
                                 onchange="retrieveCollections('instituteList', this.options[this.selectedIndex],'onChange');">
-                                </select>
+                                </select></label>
+                                
+                                <div class="form-group" style="margin-left: 105px;padding: 10px;"><a href="#" 
+                               class="addDeleteUploadLabels" id="addNewInstitute" 
+                               onclick="openUploadModal('basePath')" data-backdrop="static" data-keyboard="false" >
+                               <img src="images/Uploads.add.png" th:src="@{/images/Uploads.add.png}" class="uploadslogo" alt="register">Register New Program</a> &nbsp;&nbsp;
+                               <a href="#" style="display:none;" class="addDeleteUploadLabels" id="deleteProgram" onclick="functionDelete('instituteList','Program')">
+                               <img src="images/Uploads.delete.png" th:src="@{/images/Uploads.delete.png}" class="uploadslogo" alt="delete"> Delete Program</a></div>
+                                
                             </div>
-                            <div class="form-group col-lg-6 col-md-6" id="studyListDiv" style="display:none;">
-                                <label class="uploadLabels" for="attributeVal">Select Study &nbsp;&nbsp;<a href="#" class="addDeleteUploadLabels" 
-                                id="addNewStudy" 
-                                onclick="openUploadModal('instituteList')" data-backdrop="static" data-keyboard="false">
-                                <i class="fal fa-plus-circle"></i> Register New Study</a>
-                                <a href="#" style="display:none;" id="deleteStudy" class="addDeleteUploadLabels" onclick="functionDelete('studyList','Study')">
-                               <i class="fal fa-minus-circle"></i> Delete Study</a>
-                                </label>
+                            <div class="form-row col-lg-6 col-md-6" id="studyListDiv" style="display:none;">
+                                <label class="uploadLabels" for="attributeVal">Select Study &nbsp;&nbsp;
+                                
                                 <select class="simple-select2"  id="studyList" name="studyList" style="width:70%"
                                 onchange="retrieveCollections('studyList', this.options[this.selectedIndex],'onChange');">
-                                </select>
+                                </select></label>
+                                
+                                <div class="form-group" style="margin-left: 105px;padding: 10px;"><a href="#" class="addDeleteUploadLabels" 
+                                id="addNewStudy" 
+                                onclick="openUploadModal('instituteList')" data-backdrop="static" data-keyboard="false">
+                                <img src="images/Uploads.add.png" th:src="@{/images/Uploads.add.png}" class="uploadslogo" alt="register"> Register New Study</a>
+                                <a href="#" style="display:none;" id="deleteStudy" class="addDeleteUploadLabels" onclick="functionDelete('studyList','Study')">
+                               <img src="images/Uploads.delete.png" th:src="@{/images/Uploads.delete.png}" class="uploadslogo" alt="delete"> Delete Study</a></div>
                             </div>
                             
-                             <div class="form-group col-lg-6 col-md-12" id="dataSetListDiv" style="display:none;">
-                          <label class="uploadLabels" for="attributeVal">Select Dataset &nbsp;&nbsp;<a href="#" class="addDeleteUploadLabels" 
-                          id="addNewDataSet" 
-                          onclick="openUploadModal('studyList')" data-backdrop="static" data-keyboard="false">
-                          <i class="fal fa-plus-circle"></i> Register New Dataset</a>
-                             <a href="#" style="display:none;" class="addDeleteUploadLabels" id="deleteDataSet" onclick="functionDelete('dataList','Dataset')">
-                               <i class="fal fa-minus-circle"></i> Delete Dataset</a>
-                          </label>
+                             <div class="form-row col-lg-6 col-md-12" id="dataSetListDiv" style="display:none;">
+                          <label class="uploadLabels" for="attributeVal">Select Asset &nbsp;&nbsp;
+                        
                                 <select class="simple-select2"  id="dataList" name="dataList" style="width:70%"
                                 onchange="retrieveCollections('dataList', this.options[this.selectedIndex],'onChange');">
-                                </select>
+                                </select>  </label>
+                                
+                               <div class="form-group" style="margin-left: 105px;padding: 10px;"><a href="#" class="addDeleteUploadLabels" 
+                          id="addNewDataSet" data-toggle="modal" data-target="#createAssetModal" data-backdrop="static" data-keyboard="false">
+                          <img src="images/Uploads.add.png" th:src="@{/images/Uploads.add.png}" class="uploadslogo" alt="register"> Register New Asset</a>
+                             <a href="#" style="display:none;" class="addDeleteUploadLabels" id="deleteDataSet" onclick="functionDelete('dataList','Dataset')">
+                               <img src="images/Uploads.delete.png" th:src="@{/images/Uploads.delete.png}" class="uploadslogo" alt="delete"> Delete Asset</a></div>
                             </div>
-                            <div class="form-group col-lg-6 col-md-12" style="margin-top: 32px;">                          
-                            <input type="button" id="addBulkDataFiles" class=" btn btn-primary float-left" value="Upload Data" style="display:none;margin-left:15px;">
-                            </div>
+                            
                             <div class="col-md-12 col-sm-12" id="dataListDiv" style="display:none;margin-top:30px;">
                               <div class="form-row" style="height:190px;position:relative;">
                              <div class="form-group col-lg-8 col-md-12" 
@@ -82,6 +85,10 @@
                             
                         </div>
                     </div> 
+                    
+                    <div class="form-group col-lg-6 col-md-12" style="margin-top: 32px;text-align: center;">                          
+                            <input type="button" id="addBulkDataFiles" class=" btn btn-primary" value="Upload Data" style="display:none;margin-left:15px;">
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -211,6 +211,17 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 	background-color: #E87B05!important;
 }
 
+#registerCollectionBtn {
+	width: 7%;
+    border-radius: 10px;
+}
+.closeButtons {
+	margin-left: -12px;
+    background-color: #E87B05!important;
+    color: #fff;
+    width: 5%;
+    border-radius: 10px;
+}
 .datasetDetailsheader {
 	font-size: 22px;
     font-weight: 500;
@@ -229,6 +240,12 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
   font-size: 14px;
 }
 
+#primaryGlobusButton{
+	background-color: #E87B05;
+    color: #fff !important;
+    border-radius: 15px;
+    width: 300px;
+}
 
 button.share-link-copy-button {
 	border: none;
@@ -316,10 +333,13 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before
     background-image: url(/images/modac.hero.jpg);
     width: 1000px;
     background-repeat: no-repeat;
-    background-size: 2000px 600px;
+    background-size: 100% 600px;
     height:450px;
 }
 
+.uploadslogo {
+	width:15px;
+}
 .underlineLinks {
 	text-decoration: underline !important;
 }
