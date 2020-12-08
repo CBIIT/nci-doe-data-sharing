@@ -15,12 +15,19 @@ public class HpcDatafileSearchResultDetailed {
 	private String permission;
 	private String name;
 	private String fileSize;
+	private Integer fileSizeActual;
 	private List<KeyValueBean> selfMetadata;
 	private List<KeyValueBean> systemMetadata;
 	HpcMetadataEntries metadataEntries;
 	
 	 
-	 
+	public Integer getFileSizeActual() {
+		return fileSizeActual;
+	}
+
+	public void setFileSizeActual(Integer fileSizeActual) {
+		this.fileSizeActual = fileSizeActual;
+	}
 
 	public String getFileSize() {
 		return fileSize;

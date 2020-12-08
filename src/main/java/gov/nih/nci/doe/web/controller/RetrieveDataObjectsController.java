@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -28,7 +30,6 @@ import com.fasterxml.jackson.databind.MappingJsonFactory;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-
 import gov.nih.nci.doe.web.constants.SystemAttributesList;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.HpcDatafileSearchResultDetailed;
@@ -167,9 +168,12 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 				returnResult.setSelfMetadata(getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),"DataObject", systemAttrs));
 				returnResult.setSystemMetadata(getSystemMetaData(result.getMetadataEntries().getSelfMetadataEntries(),"DataObject", systemAttrs));
 				returnResult.setFileSize(addHumanReadableSize(getAttributeValue("source_file_size", result.getMetadataEntries().getSelfMetadataEntries(),"DataObject")));
+				returnResult.setFileSizeActual(Integer.valueOf(getAttributeValue(
+						"source_file_size", result.getMetadataEntries().getSelfMetadataEntries(),"DataObject")));
 				returnResults.add(returnResult);
 			}
 			
+			Collections.sort(returnResults, Comparator.comparing(HpcDatafileSearchResultDetailed::getFileSizeActual));
 			return returnResults;
 		
 	}

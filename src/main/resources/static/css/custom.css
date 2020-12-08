@@ -282,7 +282,7 @@ table.dataTable thead .sorting_asc {
 
 }
 
-/*table#manageTasksTable thead .sorting,table#dataSetTable thead .sorting {
+table#manageTasksTable thead .sorting,table#dataSetTable thead .sorting {
    	background-image: url(/images/Sort-up.icon.svg) !important;
    	background-size: 16px 19px;
 }
@@ -299,7 +299,7 @@ table#manageTasksTable thead .sorting_desc,table#dataSetTable thead .sorting_des
 	background-image: url(/images/Sort-down.icon.svg) !important;
    	background-size: 16px 19px;
 
-}*/
+}
 
 table#dataSetTable thead tr th.select-checkbox {
     background-image: none!important;
