@@ -163,12 +163,12 @@ table#dataSetMetaData tr:nth-child(odd) td{
 table#dataSetMetaData tr:nth-child(even) td{
 	background-color: #FBFBFB!important;
 }
-table#newMetaDataTable tr:nth-child(odd) td{
+/*table#newMetaDataTable tr:nth-child(odd) td{
 	background-color: #E0F0F4!important;
 }
 table#newMetaDataTable tr:nth-child(even) td{
 	background-color: #FBFBFB!important;
-}
+}*/
 
 table#searchResultTable tr.odd td{background-color: #FBFBFB!important;}
 table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
@@ -245,6 +245,17 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
     color: #fff !important;
     border-radius: 15px;
     width: 300px;
+}
+
+ol#dataListing > li {
+  list-style-type: none;
+  counter-increment: item;
+}
+
+ol#dataListing > li:before {
+  padding-right: 0.5em;
+  font-weight: bold;
+  content: counter(item) ".";
 }
 
 button.share-link-copy-button {

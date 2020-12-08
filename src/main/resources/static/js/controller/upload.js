@@ -301,7 +301,7 @@ function retrieveCollectionList(data,status) {
 	 $("#registerCollectionModal").find("#registerCollectionBtn").val("Register " + collectionType);
 	 $("#registerCollectionModal").find("#collectionMetaDataLabel").text(collectionType + " Metadata");
 	 $("#registerCollectionModal").find("#registerModalTitle").html("Register " + collectionType + " Collection");
-	 $("#registerCollectionModal").find("#addNewMetaData").html("<i class='fal fa-plus-circle'></i>&nbsp;Add " + collectionType + " Metadata");
+	 $("#registerCollectionModal").find("#addNewMetaData").html("<img src='images/Uploads.add.png' th:src='@{/images/Uploads.add.png}' class='uploadslogo' alt='add metadata'>&nbsp;Add " + collectionType + " Metadata");
 	 $("#registerCollectionModal").modal('show');
 	 var collectionPath = $("#registerCollectionModal").find("#collectionPath").val();
 		

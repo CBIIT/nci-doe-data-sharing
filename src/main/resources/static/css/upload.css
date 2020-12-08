@@ -1,3 +1,15 @@
 .select2-container--default .select2-selection--single .select2-selection__arrow b {
     border-color: #E87B05 transparent transparent transparent !important;
 }
+table#newMetaDataTableForSingleFile tbody tr td {
+	background-color: #E0F0F4;
+}
+
+table#newMetaDataTableForSingleFile thead tr th {
+	background-color: #194F85;
+
+}
+
+.btn-primary{
+   background-color: #194F85!important;
+}
