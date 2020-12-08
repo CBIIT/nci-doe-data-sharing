@@ -13,3 +13,12 @@ table#newMetaDataTableForSingleFile thead tr th {
 .btn-primary{
    background-color: #194F85!important;
 }
+
+table#newMetaDataTable tbody tr td {
+	background-color: #E0F0F4;
+}
+
+table#newMetaDataTable thead tr th {
+	background-color: #194F85;
+
+}

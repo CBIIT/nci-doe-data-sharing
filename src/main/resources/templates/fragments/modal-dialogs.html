@@ -149,12 +149,14 @@ aria-labelledby="forgotPasswordLabel">
                       <label for="createAssetCollectionType">Collection Type: </label>
                           <select class="simple-select2" multiple="multiple" id="createAssetCollectionType"
                            name="createAssetCollectionType" style="width:70%">
+                           <option value="Dataset">Dataset</option>
+                           <option value="Model">Model</option>
                            </select>
                   </div>                    
                   <div class="row row-buffer" style="text-align: end;">
                       <div class="col-sm-12" style="margin-bottom: 10px;">
                         <button type="button" class="btn btn-default pull-right" data-dismiss="modal"> Close</button>
-                          <button class="btn btn-primary pull-right" id="btnSelectAssetType"> Select</button>
+                          <button class="btn btn-primary pull-right"  data-dismiss="modal" id="btnSelectAssetType"> Select</button>
                           </div>
                   </div>
                 </div>
@@ -251,7 +253,7 @@ aria-labelledby="forgotPasswordLabel">
             </div>
             <div class="form-group" style="margin-top:35px;margin-bottom:15px;padding: 5px;text-align:center">
             
-           <input type="button" value="Register" data-dismiss="modal" class="btn btn-primary mr-4 mb-4" id="registerCollectionBtn">
+           <input type="button" value="Register" class="btn btn-primary mr-4 mb-4" id="registerCollectionBtn">
            <input type="button" value="Close" style="margin-left: -12px;" class="btn btn-default mr-4 mb-4 closeButtons" data-dismiss="modal">
            </div> 
              </form>

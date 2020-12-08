@@ -291,9 +291,22 @@ function addNewMetaDataRowsForDataFile($this) {
 
 
 function retrieveCollectionList(data,status) {	
-	 var collectionType = data[0].key;
+	var assetType = $("#registerCollectionModal").find("#assetType").val();
+	var collectionType;
+	var parentAccessGrp;
+	$.each(data, function (key, val) {
+		if(val.key == "parentAccessGroup")
+		   parentAccessGrp = val.value;
+		
+		if(assetType && val.key == assetType) {
+			collectionType = val.key;
+		} 
+	});
+	if(!collectionType) {
+		collectionType = data[0].key;
+      }
 	 var parent = data[0].value;
-	 var parentAccessGrp = data[1].value;
+	 //var parentAccessGrp = data[1].value;
 	 $("#registerCollectionModal").find('#parentCollectionLabel').text(parent + " Collection Name");
 	 $("#registerCollectionModal").find("#parentCollectionType").val(parent);
 	 $("#registerCollectionModal").find("#parentAccessGroup").val(parentAccessGrp);
