@@ -28,7 +28,6 @@ import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeDownloadDatafile;
 import gov.nih.nci.doe.web.model.Views;
 import gov.nih.nci.doe.web.service.TaskManagerService;
-import gov.nih.nci.doe.web.service.DoeAuthorizationService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.datatransfer.HpcDownloadTaskType;
 import gov.nih.nci.hpc.domain.datatransfer.HpcFileLocation;
@@ -47,8 +46,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @EnableAutoConfiguration
 @RequestMapping("/download")
 public class DoeDownloadController extends AbstractDoeController {
-	@Value("${gov.nih.nci.hpc.server.v2.dataObject}")
-	private String dataObjectServiceURL;
+
 	@Value("${gov.nih.nci.hpc.server.v2.collection}")
 	private String collectionServiceURL;
     @Autowired

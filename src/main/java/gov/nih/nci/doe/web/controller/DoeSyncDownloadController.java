@@ -55,8 +55,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @EnableAutoConfiguration
 @RequestMapping("/downloadsync")
 public class DoeSyncDownloadController extends AbstractDoeController {
-  @Value("${gov.nih.nci.hpc.server.dataObject}")
-  private String dataObjectServiceURL;
+  
 
   /**
    * POST action for sync download
@@ -115,18 +114,6 @@ public class DoeSyncDownloadController extends AbstractDoeController {
   }
 
 
-  public void downloadToUrl(String urlStr, int bufferSize, String fileName,
-      HttpServletResponse response) {
-    try {
-      WebClient client = DoeClientUtil.getWebClient(urlStr, null, null);
-      Response restResponse = client.invoke("GET", null);
-      response.setContentType("application/octet-stream");
-      response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
-      IOUtils.copy((InputStream) restResponse.getEntity(), response.getOutputStream());
-    } catch (IOException e) {
-      throw new DoeWebException(e);
-    }
-  }
 
 
   private Resource handleDownloadProblem(Response restResponse)

@@ -1,5 +1,7 @@
 package gov.nih.nci.doe.web.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -8,9 +10,12 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.cxf.jaxrs.client.WebClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
+import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.domain.MetaDataPermissions;
 import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeResponse;
@@ -52,6 +58,9 @@ public abstract class AbstractDoeController {
 	protected String sslCertPath;
 	@Value("${gov.nih.nci.hpc.ssl.cert.password}")
 	protected String sslCertPassword;
+	
+	@Value("${gov.nih.nci.hpc.server.dataObject}")
+	  public String dataObjectServiceURL;
 	
 	@Autowired
 	public AuthenticateService authenticateService;
@@ -343,5 +352,19 @@ public abstract class AbstractDoeController {
 				}
 				return "No Permissions";
 	}
+	
+	  public void downloadToUrl(String urlStr, int bufferSize, String fileName,
+		      HttpServletResponse response) {
+		    try {
+		      WebClient client = DoeClientUtil.getWebClient(urlStr, null, null);
+		      Response restResponse = client.invoke("GET", null);
+		      response.setContentType("application/octet-stream");
+		      response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+		      IOUtils.copy((InputStream) restResponse.getEntity(), response.getOutputStream());
+		    } catch (IOException e) {
+		      throw new DoeWebException(e);
+		    }
+		  }
+
 
 }
