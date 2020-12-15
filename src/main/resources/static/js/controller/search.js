@@ -13,7 +13,24 @@ $(document).ready(function () {
 	 if(dmeDataId || doiId) {
 		 populateSearchCriteria('datasetUrl');
 	 } else if(returnToSearch) {
-		 populateSearchCriteria('displayAllResults');
+		 var search = $("#searchQuery").val();
+		 var list= JSON.parse(search);
+		 for (var i = 1; i < list.attrName.length; i++) {
+			 var iskeyWordSearch = list.iskeyWordSearch[i];
+			 var isAdvancedSearch = list.isAdvancedSearch[i];
+			 if(iskeyWordSearch == true) {
+				 var attrval = list.attrValue[i];
+				 var newAttrVal = attrval.replaceAll('%', '');
+				 $("#attributeVal").val(newAttrVal);
+			 }
+			 if(isAdvancedSearch == true) {
+				 	var attrval = list.attrValue[i];
+				 	var newAttrVal = attrval.replaceAll('%', '');
+				 	var attrName = list.attrName[i];
+				 	addValueToSelected(null,attrName,newAttrVal);
+				 }
+		 }
+		 populateSearchCriteria(null);
 	 }
 });
 function populateSearchCriteria(searchType) {
@@ -28,6 +45,8 @@ function populateSearchCriteria(searchType) {
 	var isExcludeParentMetadata = [];
 	var rowIds = [];
 	var operators = [];
+	var iskeyWordSearch = [];
+	var isAdvancedSearch= []
 
 	attrNames.push("collection_type");
 	attrValues.push("Dataset");
@@ -35,7 +54,9 @@ function populateSearchCriteria(searchType) {
 	isExcludeParentMetadata.push(false);
 	rowIds.push(1);
 	operators.push("EQUAL");
-			
+	iskeyWordSearch.push(false);
+	isAdvancedSearch.push(false);
+	
 		
 	 if($("#attributeVal").val()) {
 		    attrNames.push("ANY");
@@ -44,9 +65,11 @@ function populateSearchCriteria(searchType) {
 			isExcludeParentMetadata.push(false);
 			rowIds.push(2);
 			operators.push("LIKE");
+			iskeyWordSearch.push(true);
+			isAdvancedSearch.push(false);
 
 	} 
-	 //if(searchType == 'advSearchBtn')  {
+
 		var rowId = 3;
 		$(".filteritem").each(function(){
 			var attrName = $(this).find("div.filtertext").text();
@@ -60,6 +83,8 @@ function populateSearchCriteria(searchType) {
 						rowIds.push(rowId);
 						isExcludeParentMetadata.push(false);
 						operators.push("TIMESTAMP_GREATER_OR_EQUAL");
+						iskeyWordSearch.push(false);
+						isAdvancedSearch.push(true);
 						rowId =  rowId + 1 ;  
 				  }
 				  
@@ -70,6 +95,8 @@ function populateSearchCriteria(searchType) {
 						rowIds.push(rowId);
 						isExcludeParentMetadata.push(false);
 						operators.push("TIMESTAMP_LESS_OR_EQUAL");
+						iskeyWordSearch.push(false);
+						isAdvancedSearch.push(true);
 						rowId =  rowId + 1 ;  
 				  }
 				  
@@ -81,12 +108,13 @@ function populateSearchCriteria(searchType) {
 					rowIds.push(rowId);
 					isExcludeParentMetadata.push(false);
 					operators.push("LIKE");
+					iskeyWordSearch.push(false);
+					isAdvancedSearch.push(true);
 					rowId =  rowId + 1 ;
 			  }
 			
 		});	
-	//}
-	 
+
 	 if(searchType == 'datasetUrl') {
 		 var rowId = 3;
 		 var attrVal = $("#dmeDataId").val();
@@ -98,7 +126,8 @@ function populateSearchCriteria(searchType) {
 			 attrNames.push('doi');
 			 attrValues.push('%' + attrVal1 + '%' );
 		 }
-		
+		    iskeyWordSearch.push(false);
+			isAdvancedSearch.push(false);
 			levelValues.push("Dataset");
 			rowIds.push(rowId);
 			isExcludeParentMetadata.push(false);
@@ -112,6 +141,8 @@ function populateSearchCriteria(searchType) {
 		search_criteria_json.rowId = rowIds.join();	
 		search_criteria_json.level = levelValues.join();
 		search_criteria_json.isExcludeParentMetadata = isExcludeParentMetadata.join();
+		search_criteria_json.iskeyWordSearch = iskeyWordSearch.join();
+		search_criteria_json.isAdvancedSearch = isAdvancedSearch.join();
 		search_criteria_json.operator = operators.join();
 		refreshDataTable();
 }
@@ -148,6 +179,8 @@ function dataTableInit(isVisible) {
                d.attrValue =search_criteria_json.attrValue;
                d.rowId = search_criteria_json.rowId;
                d.isExcludeParentMetadata = search_criteria_json.isExcludeParentMetadata;
+               d.iskeyWordSearch = search_criteria_json.iskeyWordSearch;
+               d.isAdvancedSearch = search_criteria_json.isAdvancedSearch;
                d.operator = search_criteria_json.operator;
             },
             "dataSrc": function (data) {
@@ -524,18 +557,31 @@ function display(value) {
 
 
 
-function addValueToSelected(optionVal) {
-    if ($(optionVal).attr('value') === '' || $(optionVal).attr('value') === 'ANY')
+function addValueToSelected(optionVal,selectedValueText,attrval) {
+	
+	var fieldPath;
+	
+	if(selectedValueText) {		
+		fieldPath = selectedValueText;
+	} else {
+	   fieldPath = optionVal.value;
+	}
+	if(!attrval){
+		attrval = "";
+	}
+	
+	
+    if (fieldPath === '' || fieldPath === 'ANY')
         return;
     var $metadatalist = $('#metadatalisting');
-    var fieldPath = $(optionVal).attr('value');
+   
     var mdIdentifier = fieldPath.replace(new RegExp('\\.|/|\\s|\\[|\\]', 'g'), '_');
     var rowId = 'filterItemList_' + mdIdentifier;
     var $rowdiv = $('<div class="row filteritem" style="margin-top: 9px;margin-bottom: 10px;" id="' + rowId + '"/>');
     $metadatalist.append($rowdiv);
     var $coldiv = $('<div class="col-sm-5" />');
     $rowdiv.append($coldiv);
-    var $selectdiv = $('<div class="filtertext">' + $(optionVal).text() + '</div>');
+    var $selectdiv = $('<div class="filtertext">' + fieldPath + '</div>');
     $coldiv.append($selectdiv);
 
     var $inputColumn = $('<div class="col-sm-7">');
@@ -543,13 +589,13 @@ function addValueToSelected(optionVal) {
     $inputColumn.append($inputGroup);
     $rowdiv.append($inputColumn);
     
-    if (/.*Date.*/.test($(optionVal).text())) {
+    if (/.*Date.*/.test(fieldPath)) {
     	var $dateColumn = $('<div class="form-row><div class="form-group" style="padding-right: 50px;">'
     			+'<label>From: <input type="date" class="fromDate" id="from_' + fieldPath + '" > </label></div> <div class="form-group" '
     			+'style=" padding-left: 50px;"> <label>To: <input type="date" class="toDate" id="To_' + fieldPath + '"> </label></div></div>');
     	$inputGroup.append($dateColumn);
     } else {
-    	var advancedSearchInput = $('<input type="text" data-value="' + fieldPath + '" data-type="'
+    	var advancedSearchInput = $('<input type="text" value="'+ attrval +'" data-value="' + fieldPath + '" data-type="'
     	        + $(optionVal).attr('data-type') + '" id="metadatasearch_' + mdIdentifier
     	        + '" class="form-control" placeholder="Enter a keyword..."'
     	        + ' title="Enter a Search Keyword or Phrase" aria-label="Enter a Search Keyword or Phrase"'
@@ -563,7 +609,7 @@ function addValueToSelected(optionVal) {
     	    
     $("#advSearchDiv").show();
 
-    removeOptionFromAdvancedSearchSelector(rowId, $(optionVal).attr('value'));
+    removeOptionFromAdvancedSearchSelector(rowId, fieldPath);
 }
 
 

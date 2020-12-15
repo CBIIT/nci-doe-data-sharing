@@ -32,15 +32,20 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+
+
 import gov.nih.nci.doe.web.domain.LookUp;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.DoeSearchResult;
 import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.service.ConsortiumService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
+import gov.nih.nci.doe.web.util.HibernateProxyTypeAdapter;
 import gov.nih.nci.doe.web.util.LambdaUtils;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQueryOperator;
@@ -140,6 +145,12 @@ public class SearchController extends AbstractDoeController {
 				
 			if (restResponse.getStatus() == 200) {
 				session.setAttribute("compoundQuery", compoundQuery);
+				GsonBuilder b = new GsonBuilder();
+		     	b.registerTypeAdapterFactory(HibernateProxyTypeAdapter.FACTORY);
+		     	Gson gson = b.create();
+		     	String searchQuery = gson.toJson(search);
+				session.setAttribute("searchQuery", searchQuery);
+				log.info("Search query" + search);
 				if (search.getSearchType() != null && search.getSearchType().equals("dataobject")) {
 					results = processResponseResults(systemAttrs, restResponse);
 					return new ResponseEntity<>(results, HttpStatus.OK);

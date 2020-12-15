@@ -15,7 +15,8 @@
                             <div class="form-group col-lg-8 col-md-8 mx-auto" style="float: right;margin-top: 33px;">
                                 <input type="hidden" th:value="${dmeDataId}" id="dmeDataId"/>
                                 <input type="hidden" th:value="${doi}" id="doi"/>
-                                 <input type="hidden" th:value="${returnToSearch}" id="returnToSearch"/>
+                                 <input type="hidden" th:value="${searchQuery}" id="searchQuery"/>
+                                  <input type="hidden" th:value="${returnToSearch}" id="returnToSearch"/>
                                 <input type="text" placeholder="Search MoDaC" style="height: 112%;
                                 margin-top:10px;border: 2px solid #E87B05;border-radius: 
                                 26px;float: right;" id="attributeVal" class="form-control">
@@ -28,26 +29,16 @@
                                 right: 25px;height: 29px;width: 57px;font-size: 18px;background-color: #E87B05;border-radius: 13px;
                                 text-align: center;" id="searchBtn">
                                 <img src="/images/arrow-white-large.svg" style="width: 29px;"></span>
-                                
-                                
-                                <!--  <label style="margin-left: 320px;display:none; float: left; height: 5px;" 
-                                class="error keywordError">Enter one or more keywords.</label>-->
                                  <br>
                               </div>
                             <div class="form-row col-lg-12 col-md-12" style="margin-top: 50px;">
                             <div class="form-group col-md-4 col-sm-12"></div>
-                            <!--<div class="form-group col-lg-4 col-md-5 mx-auto" style="text-align: center;align-content: center;">
-                               <a href="#" id="displayAllResults" style="color: #C06400;font-family: Inter;font-size: 17px;">
-                               Display All Results &nbsp;&nbsp; <span data-toggle="tooltip" title="Search" 
-                               style="position: absolute;height: 26px;width: 44px;
-                               font-size: 16px;background-color: #E87B05;border-radius: 10px;">
-                               <img src="/images/arrow-white-large.svg" style="width: 20px;"></span></a></div>  -->
                        <div id="advancedsearchCollapse" class="form-group col-md-6 col-sm-12" style="margin-top: -15px;">
                     <div class="col-md-12 col-sm-12">
                         <div class="form-row">
                              <div class="form-group col-lg-8 col-md-12">
                                 <label for="metadatalist" style="color: #C06400;font-family: Inter;font-size: 17px;font-weight:200;">Filter Results By: 
-                                 <select class="simple-select2"  id="metadatalist" name="metadatalist" style="width:70%" onchange="addValueToSelected(this.options[this.selectedIndex]);">
+                                 <select class="simple-select2"  id="metadatalist" name="metadatalist" style="width:70%" onchange="addValueToSelected(this.options[this.selectedIndex],null,null);">
                                 </select></label>
                             </div>
                         </div>

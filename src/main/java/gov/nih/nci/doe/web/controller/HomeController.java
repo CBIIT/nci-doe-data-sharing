@@ -101,6 +101,9 @@ public class HomeController extends AbstractDoeController {
 			 }
 			 
 			 if(StringUtils.isNotEmpty(returnToSearch)) {
+				 String query = (String)session.getAttribute("searchQuery");
+				 log.info("searchQuery search tab" + query);
+				 model.addAttribute("searchQuery", query);
 				 model.addAttribute("returnToSearch", "true");
 			 }
 			 

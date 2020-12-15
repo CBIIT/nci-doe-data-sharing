@@ -12,7 +12,29 @@ public class DoeSearch {
 	private int pageNumber=1;
 	private int pageSize=100;
 	private boolean[] isExcludeParentMetadata;
+	private boolean[] iskeyWordSearch;
+	private boolean[] isAdvancedSearch;
 	
+	
+	
+	
+
+	public boolean[] getIskeyWordSearch() {
+		return iskeyWordSearch;
+	}
+
+	public void setIskeyWordSearch(boolean[] iskeyWordSearch) {
+		this.iskeyWordSearch = iskeyWordSearch;
+	}
+
+	public boolean[] getIsAdvancedSearch() {
+		return isAdvancedSearch;
+	}
+
+	public void setIsAdvancedSearch(boolean[] isAdvancedSearch) {
+		this.isAdvancedSearch = isAdvancedSearch;
+	}
+
 	public String[] getRowId() {
 		return rowId;
 	}
