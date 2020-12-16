@@ -6,42 +6,41 @@
 </head>
 <body>
  <div class="M-4 p-4 mx-auto" id="myAccount" th:fragment="myaccount" style="
-    width: 800px;height: 600px;margin-left: 350px;">
+    width: 700px;height: 600px;margin-left: 350px;">
   
-        <div class="form-row jumbotron pt-2 pb-2 mb-2" style="
-    background-color: #6496C6;border: 0 solid #000000;
-    box-sizing: border-box;opacity: 0.96;border-radius: 11px;height: 432px;">
-                 <form role="form" id="update-profile-form" style="width: 100%;">
-                        <h3 style="text-align: center;
-    color: #fff;">MY ACCOUNT</h3>
-    <hr/>
+        <div class="form-row jumbotron pt-2 pb-2 mb-2" id="myAccountSubTab">
+           <form role="form" id="update-profile-form" style="width: 100%;">
+               <h3 style="text-align: center;font-family: latoregular;padding-top: 18px;
+                   padding-bottom: 14px;font-size: 26px;color: #fff;">MY ACCOUNT</h3>
+  
+             <hr style="color: #214C75;">
                     <br>
                        
-                        <div class="row row-buffer">
+                        <div class="row row-buffer" style="margin-top: 10px;">
                             <div class="col-lg-4">
-                              <label class="infoLabel" for="firstNameTxt">First Name<span class="required">*</span></label>
+                              <label class="infoLabel" for="firstNameTxt">First Name<span>*</span></label>
                             </div>
                             <div class="col-lg-8">
-                              <input type="text" id="firstNameTxt" name="firstNameTxt" maxlength="50" class="form-control defaultFocus">
+                              <input type="text" id="firstNameTxt" name="firstNameTxt" maxlength="50" class="form-control defaultFocus myaccountTextbox">
                                 
                             </div>
                         </div>
                         
                  <div class="row row-buffer">
                             <div class="col-lg-4">
-                          <label class="infoLabel" for="lastNameTxt">Last Name <span class="required">*</span></label>
+                          <label class="infoLabel" for="lastNameTxt">Last Name <span>*</span></label>
                             </div>
                             <div class="col-lg-8">
-                            <input type="text" id="lastNameTxt" name="lastNameTxt" maxlength="20" class="form-control defaultFocus">
+                            <input type="text" id="lastNameTxt" name="lastNameTxt" maxlength="20" class="form-control defaultFocus myaccountTextbox">
                                 
                             </div>
                         </div>
                          <div class="row row-buffer">
                             <div class="col-lg-4">
-                          <label class="infoLabel" for="institutionTxt">Institution / Organization  <span class="required">*</span></label>
+                          <label class="infoLabel" for="institutionTxt">Institution / Organization  <span>*</span></label>
                             </div>
                             <div class="col-lg-8">
-                          <input type="text" id="institutionTxt" name="institutionTxt" maxlength="20" class="form-control defaultFocus">
+                          <input type="text" id="institutionTxt" name="institutionTxt" maxlength="20" class="form-control defaultFocus myaccountTextbox">
                                 
                             </div>
                         </div>
@@ -51,33 +50,31 @@
                              <label class="infoLabel" for="emailAddrTxt">Email Address </label>
                             </div>
                             <div class="col-lg-8">
-                             <span id="emailAddrTxt" style="background-color: #dddddd;" th:text="${loggedOnUser}" 
-                             class="form-control defaultFocus"></span>                       
+                             <span id="emailAddrTxt" style="background-color: #A1C1DB;color: #000000;" th:text="${loggedOnUser}" 
+                             class="form-control defaultFocus myaccountTextbox"></span>                       
                                 
                             </div>
                         </div>
                         
                          
-                   <div class="row row-buffer">
+                   <div class="row row-buffer" style="padding-bottom: 38px;">
                             <div class="col-lg-4">
                              <label class="infoLabel" for="groupNames">Group Names </label>
                             </div>
                             <div class="col-lg-8">
-                             <span id="groupNames" style="background-color: #dddddd;"
-                             class="form-control defaultFocus"></span>                       
+                             <span id="groupNames" style="background-color: #A1C1DB;color: #000000;"
+                             class="form-control defaultFocus myaccountTextbox"></span>                       
                                 
                             </div>
                         </div>
     
-                        <hr>
-                        <div class="row" style="justify-content: center;">                      
+                       <hr style="color: #214C75;">
+                        <div class="row" style="justify-content: center;margin-top: 30px;">                      
                             <div class="col-xs-3 col-sm-3 col-md-3">
-                                <a class="btn btn-success btn-block" style="background-color: #FFF6BB !important;
-                             color: #1C5886;border-radius: 8px;" th:href="@{/}">Cancel</a>
+                                <a class="btn btn-success btn-block"  th:href="@{/}" id="cancelUpdate">CANCEL</a>
                             </div>
                             <div class="col-xs-3 col-sm-3 col-md-3">
-                                <a class="btn btn-primary btn-block" style="background-color: #C6FFF4 !important;
-                       color: #1C5886;border-radius: 8px;" id="btnUpdateProfile" href="javascript:void(0);">Update</a>
+                                <a class="btn btn-primary btn-block"  id="btnUpdateProfile" href="javascript:void(0);">UPDATE</a>
                             </div>
                         </div>
                 </form>

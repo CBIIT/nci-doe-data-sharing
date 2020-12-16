@@ -249,21 +249,40 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 
 #loginSubTab{
 	width: 680px;
-	margin-tp:50px;
+	margin-top:50px;
     background-color: #6496C6;
     border: 2.5px solid #214C75;
     box-sizing: border-box;opacity: 0.96;
     border-radius: 11px;
-    height: 470px;
+    height: 500px;
 }
-
+#myAccountSubTab {
+	    background-color: #6496C6;
+	    border: 0 solid #000000;
+    box-sizing: border-box;
+    opacity: 0.96;border-radius: 11px;
+    height: 618px;
+    width:590px;
+    margin-top:50px;
+    border: 2.5px solid #214C75;
+}
+#changePswdSubTab {
+	border: 2.5px solid #214C75;
+	  margin-top:50px;
+	    background-color: #6496C6;
+    box-sizing: border-box;
+    opacity: 0.96;
+    border-radius: 11px;
+    height: 635px;
+    width: 600px;
+}
 #registrationTab {
 background-color: rgb(100, 150, 198);
     box-sizing: border-box;
     border: 2.5px solid #214C75;
     opacity: 0.96;
     border-radius: 11px;
-   height: 695px;
+   height: 730px;
     margin-top: 50px;
     width: 838px;
     display:none;
@@ -291,6 +310,48 @@ background-color: rgb(100, 150, 198);
     font-family: 'latoregular';
     width: 154px;
     height: 38px;
+}
+#btnUpdateProfile{
+	width: 154px;
+    height: 38px;
+      border-radius: 12px;
+      margin-left: 45px;
+        font-family: 'latoregular';
+        background-color: #C6FFF4 !important;
+        color: #1C5886;
+}
+#cancelUpdate {
+	width: 154px;
+    height: 38px;
+      border-radius: 12px;
+      margin-left: -8px;
+        font-family: 'latoregular';
+        background-color: #FFF6BB !important;
+      color: #1C5886;
+}
+
+#btnforgotPassword{
+	width: 154px;
+    height: 38px;
+      border-radius: 12px;
+      font-family: 'latoregular';
+      margin-left: 45px;
+      background-color: #C6FFF4 !important;
+      color: #1C5886;
+}
+#cancelPassword{
+	width: 154px;
+    height: 38px;
+      border-radius: 12px;
+      font-family: 'latoregular';
+       margin-left: -8px;
+       background-color: #FFF6BB !important;
+       color: #1C5886;
+}
+label.infoLabel {
+    font-size: 14px;
+    font-family: inter_medium;
+    color:#4e8bc6;
 }
 #driveUploadAuthlink {
 	background-color: #E87B05!important;
@@ -592,6 +653,17 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
     padding-left: 26px;
 }
 
+.myaccountTextbox{
+
+    border: 0 solid #000000;
+    background-color: #FFFFFF;
+    width: 100%;
+    height: 40px;
+    padding-top: 14px;
+    border-radius: 22px;
+    padding-left: 26px;
+    font-family: 'inter_medium';
+}
 .TextField-floatingLabel-qefpP {
 	position: absolute;
     left: 2.75rem;
@@ -1210,7 +1282,7 @@ text-align: center;
 }
 
 .row-buffer {
-    padding-top: 10px;
+    padding-top: 18px;
 }
 .required {
     display: inline-block;
