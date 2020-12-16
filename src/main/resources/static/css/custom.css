@@ -247,6 +247,62 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
     width: 300px;
 }
 
+#loginSubTab{
+	width: 680px;
+	margin-tp:50px;
+    background-color: #6496C6;
+    border: 2.5px solid #214C75;
+    box-sizing: border-box;opacity: 0.96;
+    border-radius: 11px;
+    height: 470px;
+}
+
+#registrationTab {
+background-color: rgb(100, 150, 198);
+    box-sizing: border-box;
+    border: 2.5px solid #214C75;
+    opacity: 0.96;
+    border-radius: 11px;
+   height: 695px;
+    margin-top: 50px;
+    width: 838px;
+    display:none;
+}
+#returnToLoginForm {
+	font-family:inter_medium;
+	font-size:13px;
+	color:#03233C;
+}
+#btnRegister {
+	background-color: #C6FFF4 !important;
+    color: #1C5886;
+    font-size: 15px;
+    border-radius: 12px;
+    height: 38px;
+    width: 154px;
+    font-family: 'latoregular';
+    margin-left: 83px;
+}
+#loginButton{
+	    background-color: #C6FFF4 !important;
+    color: #1C5886;
+    font-size: 15px;
+    border-radius: 12px;
+    font-family: 'latoregular';
+    width: 154px;
+    height: 38px;
+}
+#driveUploadAuthlink {
+	background-color: #E87B05!important;
+    color: #fff !important;
+    border-radius: 15px;
+    width: 300px;
+}
+#pickerUploadLink{
+	color: #E87B05;
+    margin-left: 15px;
+}
+
 ol#dataListing > li {
   list-style-type: none;
   counter-increment: item;
@@ -542,6 +598,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
     top: 2px;
     font-size: 11px;
     color: #000;
+    font-family: 'inter_medium';
 }
 
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
@@ -557,6 +614,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 }
 .loginFieldsTextBox::placeholder {
     color: #4E8BC6!important;
+    font-family:inter_medium;
+    font-size:14px;
 }
 
 #attributeVal::placeholder {

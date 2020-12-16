@@ -110,7 +110,17 @@ FONTS, FONT AWESOME, FONT SOURCE SANS PRO
         url("../fonts/SourceSansPro-SemiBold.ttf") format("truetype");
 }
 
+@font-face {
+    font-family: "inter_medium";
+    font-style: normal;
+    src:url("../fonts/Inter-medium.ttf") format("truetype");
+}
 
+@font-face {
+    font-family: "inter_regular";
+    font-style: normal;
+    src:url("../fonts/Inter-Regular.ttf") format("truetype");
+}
 
 body{
     background: rgb(255,255,255); /* Old browsers */
