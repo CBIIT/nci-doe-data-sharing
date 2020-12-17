@@ -322,19 +322,18 @@ invokeAjax('/user-info','GET',{emailAddr:$("#emailAddrTxt").text()},postGetUserI
 
 
 $("#btnUpdateProfile").click(function(e){
-	var d= {};
+	validateUpdateProfile();
+	/*var d= {};
 	d.firstName = $("#firstNameTxt").val();
 	d.lastName = $("#lastNameTxt").val();
 	d.institution = $("#institutionTxt").val();
 	d.emailAddrr = $("#emailAddrTxt").text();
 	
-	invokeAjax('/user-info','POST',JSON.stringify(d),postUpdateUserFunction,null,null,'text');
+	invokeAjax('/user-info','POST',JSON.stringify(d),postUpdateUserFunction,null,null,'text');*/
 });
 
 
 $("#resetAdvSearchBtn").click(function(e){
-	//$(".keywordError").hide();
-	//$(".errorFilterCriteria").hide();
 	 $('#metadatalisting').empty();
 	 $("#searchResultsDiv").hide();
 	 $("#advSearchDiv").hide();
@@ -343,8 +342,6 @@ $("#resetAdvSearchBtn").click(function(e){
 });
 
 $("#resetBtn").click(function(e){
-	//$(".keywordError").hide();
-	//$(".errorFilterCriteria").hide();
 	$("#attributeVal").val("");
 	 $("#searchResultsDiv").hide();
 	 $("#advSearchDiv").hide();

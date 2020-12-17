@@ -261,7 +261,7 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 	    border: 0 solid #000000;
     box-sizing: border-box;
     opacity: 0.96;border-radius: 11px;
-    height: 618px;
+    height: 676px;
     width:590px;
     margin-top:50px;
     border: 2.5px solid #214C75;
@@ -273,7 +273,7 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
     box-sizing: border-box;
     opacity: 0.96;
     border-radius: 11px;
-    height: 635px;
+    height: 667px;
     width: 600px;
 }
 #registrationTab {

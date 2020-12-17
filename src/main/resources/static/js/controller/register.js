@@ -98,6 +98,34 @@ function postRegistrationFailure(url, params, status, error, data) {
 	alert(error);
 }
 
+function validateUpdateProfile(){
+	$("#update-profile-form").validate({
+		  rules: {			  
+			  firstNameTxt: {
+				  required: true
+			  },
+			  lastNameTxt: {
+				  required: true,
+			  },
+			  institutionTxt: {
+				  required: true,
+			  },
+		  },
+		  submitHandler: function(form) {
+			$('#btnUpdateProfile').prop('disabled',true);
+			$("#spinner").show();
+          $("#dimmer").show();
+          var d= {};
+      	d.firstName = $("#firstNameTxt").val();
+      	d.lastName = $("#lastNameTxt").val();
+      	d.institution = $("#institutionTxt").val();
+      	d.emailAddrr = $("#emailAddrTxt").text();
+      	
+      	invokeAjax('/user-info','POST',JSON.stringify(d),postUpdateUserFunction,null,null,'text')
+		  },
+	});
+}
+
 function validateForgotPassword () {
 	jQuery.validator.addMethod("isPswdEqual", checkPasswordEquality);
 	$("#forgot-password-form").validate({
