@@ -348,6 +348,13 @@ background-color: rgb(100, 150, 198);
        background-color: #FFF6BB !important;
        color: #1C5886;
 }
+
+#footer_items{
+	color: #fff;
+    font-family: Inter;
+    font-size: 13px;
+    line-height: 30px;
+}
 label.infoLabel {
     font-size: 14px;
     font-family: inter_medium;
@@ -373,6 +380,37 @@ ol#dataListing > li:before {
   padding-right: 0.5em;
   font-weight: bold;
   content: counter(item) ".";
+}
+
+.nci-wordmark::before {
+    content: 'National Cancer Institute';
+    display: block;
+    font-size: 25px;
+    line-height: 22px;
+    padding-bottom: 5px;
+}
+.nci-wordmark::after {
+    content: 'at the National Institutes of Health';
+    font-size: 16px;
+    margin-left: -30px;
+}
+.nci-wordmark {
+    display: inline-block;
+    font-family: latoregular,sans-serif;
+    font-weight: 500;
+    min-width: 280px;
+    color: #fff;
+}
+
+#footer_subDiv{
+	height: 43px;
+    width: 343px;
+    color: #FFFFFF;
+    font-family: inter_regular;
+    font-size: 15px;
+    letter-spacing: 1px;
+    line-height: 12px;
+    font-weight: lighter;
 }
 
 button.share-link-copy-button {
