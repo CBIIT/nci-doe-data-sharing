@@ -58,11 +58,6 @@ $("#searchBtn").click(function(e){
 	populateSearchCriteria('simpleSearch');
 });
 
-/*$("#displayAllResults").click(function(e){
-	e.preventDefault();
-   populateSearchCriteria('displayAllResults');
-});*/
-
 $("#advSearchBtn").click(function(e){
 	e.preventDefault();
 	populateSearchCriteria('advSearchBtn');
@@ -323,13 +318,6 @@ invokeAjax('/user-info','GET',{emailAddr:$("#emailAddrTxt").text()},postGetUserI
 
 $("#btnUpdateProfile").click(function(e){
 	validateUpdateProfile();
-	/*var d= {};
-	d.firstName = $("#firstNameTxt").val();
-	d.lastName = $("#lastNameTxt").val();
-	d.institution = $("#institutionTxt").val();
-	d.emailAddrr = $("#emailAddrTxt").text();
-	
-	invokeAjax('/user-info','POST',JSON.stringify(d),postUpdateUserFunction,null,null,'text');*/
 });
 
 
