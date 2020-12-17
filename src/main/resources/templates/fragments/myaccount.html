@@ -6,7 +6,7 @@
 </head>
 <body>
  <div class="M-4 p-4 mx-auto" id="myAccount" th:fragment="myaccount" style="
-    width: 700px;height: 600px;margin-left: 350px;">
+    width: 700px;height: 685px;margin-left: 350px;">
   
         <div class="form-row jumbotron pt-2 pb-2 mb-2" id="myAccountSubTab">
            <form role="form" id="update-profile-form" style="width: 100%;">
@@ -18,7 +18,7 @@
                        
                         <div class="row row-buffer" style="margin-top: 10px;">
                             <div class="col-lg-4">
-                              <label class="infoLabel" for="firstNameTxt">First Name<span>*</span></label>
+                              <label class="infoLabel" for="firstNameTxt">First Name <span>*</span></label>
                             </div>
                             <div class="col-lg-8">
                               <input type="text" id="firstNameTxt" name="firstNameTxt" maxlength="50" class="form-control defaultFocus myaccountTextbox">
@@ -74,7 +74,7 @@
                                 <a class="btn btn-success btn-block"  th:href="@{/}" id="cancelUpdate">CANCEL</a>
                             </div>
                             <div class="col-xs-3 col-sm-3 col-md-3">
-                                <a class="btn btn-primary btn-block"  id="btnUpdateProfile" href="javascript:void(0);">UPDATE</a>
+                                <button class="btn btn-primary btn-block"  id="btnUpdateProfile">UPDATE</button>
                             </div>
                         </div>
                 </form>
