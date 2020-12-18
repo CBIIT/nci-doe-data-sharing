@@ -458,14 +458,25 @@ function cancelAndReturnToUploadTab() {
 
 function registerBulkDataFile() {
 	var uploadType = $('input[name=datafileTypeUpload]:checked').val();
+	var usermetaDataEntered = true;
 	
 	if(uploadType == 'singleData') {
 		var file = $("#doeDataFile").val();
 		var dataFilePath = $("#dataFilePath").val();
 		
+		$('table#newMetaDataTableForSingleFile input[type="text"]').each(function(){
+			var name = $(this).val();
+		        if(!name){
+		        	usermetaDataEntered = false;
+		        } 
+			});
+		
 		if(!file || !dataFilePath) {
 			$(".uploadBulkDataError").show();
 			$(".uploadBulkDataErrorMsg").html("Upload data source file.")
+		} else if(!usermetaDataEntered) {
+			$(".uploadBulkDataError").show();
+			$(".uploadBulkDataErrorMsg").html("Enter the values for all file metadata.");
 		}
 		else if(dataFilePath && file) {	
 			$("#registerDataFileForm").attr('dataFilePath', dataFilePath);	 
