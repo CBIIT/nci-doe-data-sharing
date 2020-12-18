@@ -67,7 +67,6 @@ public class DoeCreateDatafileController extends DoeCreateCollectionDataFileCont
 		
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		String user = getLoggedOnUserInfo();
-
 		String checksum = request.getParameter("checksum");
 		if (checksum == null || checksum.isEmpty())
 			checksum = (String) request.getAttribute("checksum");
@@ -76,7 +75,7 @@ public class DoeCreateDatafileController extends DoeCreateCollectionDataFileCont
 		if(path != null) {
 			doeDataFileModel.setPath(path.trim());
 		}
-
+         try {
 			if (doeDataFileModel.getPath() == null || doeDataFileModel.getPath().trim().length() == 0)
 				return  "Invald Data file path";
 			// Validate parent path
@@ -113,9 +112,11 @@ public class DoeCreateDatafileController extends DoeCreateCollectionDataFileCont
 			}
 
 			clearSessionAttrs(session);
-		
-		
-        return "Error in registration.";
+            return "Error in registration.";
+          } catch(Exception e) {
+        	   log.error("failed to register data file" +e);
+  			  return e.getMessage();
+            }
 		
 	}
 

@@ -129,7 +129,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			doeDataFileModel.setPath(doeDataFileModel.getPath().trim());
 			
 			// Validate parent path
-				
+			try {
 				if (StringUtils.isNotEmpty(dataFilePath)) {
 					HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, collectionServiceURL, dataFilePath, true, sslCertPath,
 										sslCertPassword);
@@ -187,7 +187,11 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 				
 			}
 
-		return null;
+		      return "Error in registration";
+	    } catch(Exception e) {
+	    	log.error("Failed to bulk register data files due to: " +e);
+			return e.getMessage();
+	    }
 	}
 
 }

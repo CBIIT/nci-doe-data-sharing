@@ -497,13 +497,21 @@ function registerBulkDataFile() {
 					 success : function(msg) {
 						 $("#spinner").hide();
 				         $("#dimmer").hide();
-						 console.log('SUCCESS: ', msg);
-						 $(".registerBulkDataFile").html(msg);
-						 $(".registerBulkDataFileSuccess").show();
-						 $('body,html').animate({scrollTop: 0 }, 500); 
-						 $("#uploadDataFilesTab").hide();
-						 clearRegisterDataDiv();
-						 cancelAndReturnToUploadTab();
+				    	 if(msg && msg.indexOf("The system has registered your file") != -1) {
+							 console.log('SUCCESS: ', msg);
+							 $('body,html').animate({scrollTop: 0 }, 500);
+							 $(".uploadBulkDataError").hide();
+							 $(".uploadBulkDataErrorMsg").html("");
+							 $(".registerBulkDataFile").html(msg);
+							 $(".registerBulkDataFileSuccess").show();
+							 $("#uploadDataFilesTab").hide();
+							 clearRegisterDataDiv();
+							 cancelAndReturnToUploadTab();
+						 } else {
+							 console.log('ERROR: ', msg);	
+							 $(".uploadBulkDataError").show();
+							 $(".uploadBulkDataErrorMsg").html(msg); 
+						 }
 						 
 					 },
 					error : function(e) {
@@ -552,15 +560,22 @@ function registerBulkDataFile() {
 				 success : function(msg) {
 					 $("#spinner").hide();
 			         $("#dimmer").hide();
-					 console.log('SUCCESS: ', msg);
-					 $('body,html').animate({scrollTop: 0 }, 500);
-					 $(".uploadBulkDataError").hide();
-					 $(".uploadBulkDataErrorMsg").html("");
-					 $(".registerBulkDataFile").html(msg);
-					 $(".registerBulkDataFileSuccess").show();
-					 $("#uploadDataFilesTab").hide();
-					 clearRegisterDataDiv();
-					 cancelAndReturnToUploadTab();		 
+			    	 if(msg && msg.indexOf("Your bulk data file registration request has the following task ID") != -1) {
+			    		 console.log('SUCCESS: ', msg);
+						 $('body,html').animate({scrollTop: 0 }, 500);
+						 $(".uploadBulkDataError").hide();
+						 $(".uploadBulkDataErrorMsg").html("");
+						 $(".registerBulkDataFile").html(msg);
+						 $(".registerBulkDataFileSuccess").show();
+						 $("#uploadDataFilesTab").hide();
+						 clearRegisterDataDiv();
+						 cancelAndReturnToUploadTab();	
+			    	 } else {
+			    		 console.log('ERROR: ', e);	
+						 $(".uploadBulkDataError").show();
+						 $(".uploadBulkDataErrorMsg").html(msg);
+			    	 }
+					 	 
 				 },
 				error : function(e) {
 					$("#spinner").hide();
