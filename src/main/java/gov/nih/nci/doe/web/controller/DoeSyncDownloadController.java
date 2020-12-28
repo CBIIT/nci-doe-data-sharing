@@ -57,6 +57,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class DoeSyncDownloadController extends AbstractDoeController {
   
 
+	 @Value("${gov.nih.nci.hpc.server.dataObject}")
+	  private String dataObjectServiceURL;
+	 
   /**
    * POST action for sync download
    * 

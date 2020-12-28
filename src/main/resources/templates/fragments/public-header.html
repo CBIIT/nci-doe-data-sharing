@@ -26,6 +26,10 @@
         <img src="images/nci_logo.png" th:src="@{/images/nci_logo.png}" class="logoImg" alt="National Cancer Institute"></a>
     </div>
     
+ <div th:if= "${downtimeMessage!= null}"class="col-md-12" style="color: red;font-size: 17px;font-weight: bold;text-align: center;">
+    <span th:text="${downtimeMessage}"></span>
+    </div>
+    
     <nav id="nci-brand" class="navbar navbar-expand-lg bg-default ml-auto">
     
     <!--on small media collapse icon-->

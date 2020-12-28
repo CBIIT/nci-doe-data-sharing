@@ -51,6 +51,9 @@ public class DoeDownloadController extends AbstractDoeController {
 	private String collectionServiceURL;
     @Autowired
     TaskManagerService taskManagerService;
+    
+    @Value("${gov.nih.nci.hpc.server.v2.dataObject}")
+	private String dataObjectServiceURL;
         
 
     @GetMapping
@@ -113,6 +116,7 @@ public class DoeDownloadController extends AbstractDoeController {
 	public AjaxResponseBody download(@RequestBody @Valid DoeDownloadDatafile downloadFile, 
 			HttpSession session, HttpServletRequest request,
 			HttpServletResponse response) {
+		log.info("download file" + downloadFile.getSelectedPaths());
 		AjaxResponseBody result = new AjaxResponseBody();
 		try {
 			String authToken = null;
@@ -132,6 +136,7 @@ public class DoeDownloadController extends AbstractDoeController {
       final String serviceURL = UriComponentsBuilder.fromHttpUrl(basisURL)
         .path("/{dme-archive-path}/download").buildAndExpand(downloadFile
         .getDestinationPath()).encode().toUri().toURL().toExternalForm();
+      log.info("download service url " + serviceURL);
 			HpcDownloadRequestDTO dto = new HpcDownloadRequestDTO();
 			if (downloadFile.getSearchType() != null && downloadFile.getSearchType().equals("async")) {
 				HpcGlobusDownloadDestination destination = new HpcGlobusDownloadDestination();

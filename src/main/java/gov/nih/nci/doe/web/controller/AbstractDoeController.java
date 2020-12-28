@@ -58,9 +58,7 @@ public abstract class AbstractDoeController {
 	protected String sslCertPath;
 	@Value("${gov.nih.nci.hpc.ssl.cert.password}")
 	protected String sslCertPassword;
-	
-	@Value("${gov.nih.nci.hpc.server.dataObject}")
-	  public String dataObjectServiceURL;
+
 	
 	@Autowired
 	public AuthenticateService authenticateService;
