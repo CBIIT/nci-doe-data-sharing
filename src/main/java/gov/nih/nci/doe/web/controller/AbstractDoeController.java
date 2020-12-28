@@ -82,6 +82,9 @@ public abstract class AbstractDoeController {
 	 
 	@Value("${doe.basePath}")
 	String basePath;
+	
+	@Value("${doe.downtime.message}")
+	String downtimeMessage;
     
     @Value("${gov.nih.nci.hpc.server.collection}")
 	private String serviceURL;
@@ -119,6 +122,15 @@ public abstract class AbstractDoeController {
 			}
 			return null;
 	    }
+	  
+	  @ModelAttribute("downtimeMessage")
+	   public String getDowntimeMessage() {
+		  
+		  if(StringUtils.isNotEmpty(downtimeMessage) && StringUtils.isNotBlank(downtimeMessage)) {
+			  return downtimeMessage;
+		  }
+		  return null;
+	  }
 	  
 	  @ModelAttribute("firstName")
 	    public String getLoggedOnUserFirstName() {
