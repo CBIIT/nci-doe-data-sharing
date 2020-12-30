@@ -129,9 +129,9 @@ public class TaskManagerCotroller extends AbstractDoeController {
     						List<String> message = new ArrayList<String>();
     						download.getItems().stream().forEach(x -> message.add(x.getMessage()));    						
     						task.setTransferStatus("Failed (" + String.join(",", message) + ")" + 
-    					"<strong><a class='btn btn-link btn-sm' aria-label='Retry download' href='#' "
+    					"<strong><a style='border: none;background-color: #F39530; height: 23px;width: 37px;border-radius: 11px;float: right;' class='btn btn-link btn-sm' aria-label='Retry download' href='#' "
     								+ "onclick='retryDownload(\"" + download.getTaskId() + "\" ,\"" + t.getTaskName() + "\", \"" + t.getDownloadType() + "\")'>"
-    										+ "<i class='fa fa-repeat' title='Retry' aria-hidden='true'></i></a></strong>");
+    										+ "<img style='height: 13px;width: 13px;margin-top: -14px;' src='images/Status.refresh_icon-01.png' th:src='@{/images/Status.refresh_icon-01.png}' alt='Status refresh'></a></strong>");
     					} else if(download.getResult() != null && download.getResult().value().equals("COMPLETED")) {
     						task.setTransferStatus("Completed");
     					} else {
@@ -176,9 +176,9 @@ public class TaskManagerCotroller extends AbstractDoeController {
     						upload.getFailedItems().stream().forEach(x -> message.add(x.getMessage()));
     						
     						task.setTransferStatus("Failed (" + String.join(",", message) + ")" + 
-    								"<strong><a class='btn btn-link btn-sm' aria-label='Retry Upload' href='#'"
+    								"<strong><a style='border: none;background-color: #F39530;height: 23px;width: 37px;border-radius: 11px;float: right;' class='btn btn-link btn-sm' aria-label='Retry Upload' href='#'"
     								+ "onclick='retryUpload(\"" + upload.getTaskId() + "\" ,\"" + t.getTaskName() + "\")'>"
-    								+ "<i class='fa fa-repeat' title='Retry' aria-hidden='true'></i></a></strong>");
+    								+ "<img style='height: 13px;width: 13px;margin-top: -14px;' src='images/Status.refresh_icon-01.png' th:src='@{/images/Status.refresh_icon-01.png}' alt='Status refresh'></a></strong>");
     					} 
     					if(StringUtils.isNotEmpty(path)) {
     					 String[] collectionNames = path.split("/");
