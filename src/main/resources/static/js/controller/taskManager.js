@@ -179,11 +179,11 @@ function openPopOverDisplay($this) {
                 "<div class='popover-body'> <div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
                 "<div class='divTableBody'>";
 
-            var content = "<div class='divTableRow'><div class='divTableCell'>Program Name</div>" +
+            var content = "<div class='divTableRow'><div class='divTableCell'><b>Program Name: </b></div>" +
                         "<div class='divTableCell'>" + programName + "</div></div><div class='divTableRow'>" +
-                        "<div class='divTableCell'>Study Name</div>" +
+                        "<div class='divTableCell'><b>Study Name: </b></div>" +
                         "<div class='divTableCell'>" + studyName + "</div></div><div class='divTableRow'>" +
-                        "<div class='divTableCell'>Dataset Name</div>" +
+                        "<div class='divTableCell'><b>Dataset Name: </b></div>" +
                         "<div class='divTableCell'>" + datasetName + "</div></div>";
                 
             
