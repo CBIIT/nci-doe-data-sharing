@@ -36,8 +36,6 @@ import com.fasterxml.jackson.databind.introspect.AnnotationIntrospectorPair;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
-
-import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.DoeDownloadDatafile;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadResponseDTO;
@@ -76,7 +74,7 @@ public class DoeSyncDownloadController extends AbstractDoeController {
 		   @Valid DoeDownloadDatafile downloadFile, HttpSession session, HttpServletRequest request,
       HttpServletResponse response) {
     try {
-      String authToken = (String) session.getAttribute("hpcUserToken");
+      String authToken = (String) session.getAttribute("writeAccessUserToken");
       if (authToken == null) {
         return null;
       }
