@@ -1295,11 +1295,12 @@ text-align: center;
 
 #advSearchDiv {
 	margin-top: 32px;
-    background-color: rgb(221, 233, 247);
     padding: 10px;
     max-width: 80%;
     margin-left: 160px;
     display:none;
+    background-color: #DDE9F7;
+    border-radius: 12px;
 }
 
 
