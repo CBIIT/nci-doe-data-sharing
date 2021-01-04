@@ -73,7 +73,7 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 		String requestUri = request.getRequestURI();		
 		final String authorization = request.getHeader("Authorization");
 		
-		if (StringUtils.isNotEmpty(requestUri) && requestUri.contains("/v2") && authorization != null && 
+		if (StringUtils.isNotEmpty(requestUri) && requestUri.contains("/api") && authorization != null && 
 			authorization.toLowerCase().startsWith("basic")) {
 		    // Authorization: Basic base64credentials
 		    String base64Credentials = authorization.substring("Basic".length()).trim();
