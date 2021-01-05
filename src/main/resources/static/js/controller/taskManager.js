@@ -183,7 +183,7 @@ function openPopOverDisplay($this) {
                         "<div class='divTableCell'>" + programName + "</div></div><div class='divTableRow'>" +
                         "<div class='divTableCell'><b>Study Name: </b></div>" +
                         "<div class='divTableCell'>" + studyName + "</div></div><div class='divTableRow'>" +
-                        "<div class='divTableCell'><b>Dataset Name: </b></div>" +
+                        "<div class='divTableCell'><b>Asset Name: </b></div>" +
                         "<div class='divTableCell'>" + datasetName + "</div></div>";
                 
             

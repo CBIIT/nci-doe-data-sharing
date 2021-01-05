@@ -49,7 +49,7 @@ function populateSearchCriteria(searchType) {
 	var isAdvancedSearch= []
 
 	attrNames.push("collection_type");
-	attrValues.push("Dataset");
+	attrValues.push("Asset");
 	levelValues.push("ANY");
 	isExcludeParentMetadata.push(false);
 	rowIds.push(1);
@@ -128,7 +128,7 @@ function populateSearchCriteria(searchType) {
 		 }
 		    iskeyWordSearch.push(false);
 			isAdvancedSearch.push(false);
-			levelValues.push("Dataset");
+			levelValues.push("Asset");
 			rowIds.push(rowId);
 			isExcludeParentMetadata.push(false);
 			operators.push("LIKE");
@@ -413,14 +413,14 @@ function renderDataSetName(data, type, row){
 			checkboxHtml += "<input aria-label='radio' type='radio' id=" + row.dataSetPath + " class='selectRadioForDataSet'/>";
 		}
 		if(row.dataSetPermissionRole && row.dataSetPermissionRole != 'No Permissions') {
-			editDataSetHtml = "<span class='editCollectionMetadata' selectedCollection = 'Dataset' data-fileName = '" + row.dataSetName + "' collectionId  = '" + row.dataSetCollectionId + "' " +
+			editDataSetHtml = "<span class='editCollectionMetadata' selectedCollection = 'Asset' data-fileName = '" + row.dataSetName + "' collectionId  = '" + row.dataSetCollectionId + "' " +
 			"permissions_role = '" + row.dataSetPermissionRole + "'" +
 			" metadata_path  = '" + row.dataSetPath+ "' metadata_set = '" + data  + "'>" +
-           "<i class='fa fa-edit' data-toggle='tooltip' title='Edit Dataset Metadata'></i></span>";
+           "<i class='fa fa-edit' data-toggle='tooltip' title='Edit Asset Metadata'></i></span>";
 			if(row.dataSetPermissionRole == 'Owner') {
 				editDataSetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collection_name = '" + row.dataSetName + "' collectionId  = '" + row.dataSetCollectionId + "' " +
-			    "permissions_groups ='"+ JSON.stringify(permissions) + "'  selectedCollection = 'Dataset' access_groups  = '" + row.dataLevelAccessGroups+ "' metadata_path  = '" + row.dataSetPath+ "'>" +
-                 "<i class='fa fa-users' data-toggle='tooltip' title='Edit Dataset Access Permissions'></i></span>";
+			    "permissions_groups ='"+ JSON.stringify(permissions) + "'  selectedCollection = 'Asset' access_groups  = '" + row.dataLevelAccessGroups+ "' metadata_path  = '" + row.dataSetPath+ "'>" +
+                 "<i class='fa fa-users' data-toggle='tooltip' title='Edit Asset Access Permissions'></i></span>";
 			}
 		}
 			

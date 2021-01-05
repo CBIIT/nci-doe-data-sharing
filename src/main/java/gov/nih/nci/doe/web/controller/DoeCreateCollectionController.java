@@ -150,7 +150,10 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 	 * @return
 	 */
 	@GetMapping
-	 public ResponseEntity<List<DoeMetadataAttrEntry>> getCollectionAttributes(@RequestParam(value = "selectedPath") String selectedPath,@RequestParam(value = "collectionType") String collectionType,
+	 public ResponseEntity<List<DoeMetadataAttrEntry>> getCollectionAttributes(
+			 @RequestParam(value = "selectedPath") String selectedPath,
+			 @RequestParam(value = "collectionType") String collectionType,
+			 @RequestParam(value = "assetType") String assetType,
 			HttpSession session, HttpServletRequest request, HttpServletResponse response) {
 		
 		
@@ -158,7 +161,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 		
 		try {   	   
     	   if(selectedPath != null) {
-    		   metadataEntries =  populateFormAttributes(request, session, basePath, collectionType, true);
+    		   metadataEntries =  populateFormAttributes(request, session, basePath, collectionType,assetType, true);
     		    
     		    return new ResponseEntity<>(metadataEntries, HttpStatus.OK);
     	   }

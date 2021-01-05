@@ -424,7 +424,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 
 	@SuppressWarnings("unchecked")
 	protected List<DoeMetadataAttrEntry> populateFormAttributes(HttpServletRequest request, HttpSession session,
-			 String basePath, String collectionType, boolean refresh) {
+			 String basePath, String collectionType, String assetType, boolean refresh) {
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 
 		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
@@ -447,10 +447,19 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		List<DoeMetadataAttrEntry> metadataEntries = new ArrayList<DoeMetadataAttrEntry>();
 		List<String> attributeNames = new ArrayList<String>();
 		if (rules != null && !rules.isEmpty()) {
-			for (HpcMetadataValidationRule rule : rules) {
-				if ((rule.getMandatory()
-						&& (rule.getCollectionTypes().contains(collectionType) || rule.getCollectionTypes().isEmpty()))
-						&& !rule.getAttribute().equals("collection_type")) {
+        	for (HpcMetadataValidationRule rule : rules) {
+				if ((rule.getCollectionTypes().contains(collectionType) || rule.getCollectionTypes().isEmpty()) 
+						&& !rule.getAttribute().equals("collection_type") && !rule.getAttribute().equals("asset_type")) {
+					log.info("get HpcMetadataValidationRule:" + rule);
+					Boolean isValid = true;
+					if(StringUtils.isNotEmpty(rule.getControllerValue()) && StringUtils.isNotEmpty(rule.getControllerAttribute())
+							&& rule.getControllerValue().equalsIgnoreCase(assetType)) {
+						isValid = true;
+					} else if(StringUtils.isNotEmpty(rule.getControllerValue()) && StringUtils.isNotEmpty(rule.getControllerAttribute())
+							&& !rule.getControllerValue().equalsIgnoreCase(assetType)) {
+						isValid = false;
+					}
+					if(Boolean.TRUE.equals(isValid)) {
 					DoeMetadataAttrEntry entry = new DoeMetadataAttrEntry();
 					entry.setAttrName(rule.getAttribute());
 					attributeNames.add(rule.getAttribute());
@@ -469,6 +478,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 					}
 					entry.setDescription(rule.getDescription());
 					metadataEntries.add(entry);
+					}
 				}
 			}
 		}

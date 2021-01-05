@@ -85,7 +85,7 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 					  name = downloadFile.getSelectedPaths().substring(downloadFile.getSelectedPaths().lastIndexOf('/') + 1); 
 					 List<TaskManager> taskList = taskManagerService.getTaskDetails(loggedOnUser,name);
 					 if(CollectionUtils.isNotEmpty(taskList) && taskList.size() > maxLimit) {
-						 result.setMessage(" You have exceeded the maximum number of download attempts for this dataset."
+						 result.setMessage(" You have exceeded the maximum number of download attempts for this asset."
 						 		+ " Please contact <a href='mailto:modac-support@mail.nih.gov?'>modac-support@mail.nih.gov</a> for assistance.");
 							return result; 
 					 }

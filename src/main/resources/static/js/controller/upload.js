@@ -124,7 +124,7 @@ function postSuccessDeleteCollection(data,collectionType) {
 			loadJsonData('/browse/collection', $("#studyList"), true, params, null, null, "key", "value");
 			retrieveCollections('studyList','ANY','deleteAction');
 			
-		} else if(collectionType == 'Dataset' || collectionType == 'Model') {
+		} else if(collectionType == 'Asset') {
 			var params= {selectedPath:$("#studyList").val(),refreshNode:'true'};
 			 loadJsonData('/browse/collection', $("#dataList"), true, params, null, null, "key", "value");
 				retrieveCollections('dataList','ANY','deleteAction');
@@ -298,9 +298,9 @@ function retrieveCollectionList(data,status) {
 		if(val.key == "parentAccessGroup")
 		   parentAccessGrp = val.value;
 		
-		if(assetType && val.key == assetType) {
+		/*if(assetType && val.key == assetType) {
 			collectionType = val.key;
-		} 
+		} */
 	});
 	if(!collectionType) {
 		collectionType = data[0].key;
@@ -319,7 +319,7 @@ function retrieveCollectionList(data,status) {
 	 var collectionPath = $("#registerCollectionModal").find("#collectionPath").val();
 		
 	 if(collectionType && collectionPath) {
-		var params1= {selectedPath:collectionPath,collectionType:collectionType};
+		var params1= {selectedPath:collectionPath,collectionType:collectionType,assetType:assetType};
 		invokeAjax('/addCollection','GET',params1,constructNewCollectionMetaDataSet,null,null,null);		
 	} 	
 } 
@@ -422,7 +422,7 @@ function postSuccessRegisterCollection(data,collectionType) {
 			var params= {selectedPath:$("#instituteList").val(),refreshNode:'true'};
 			loadJsonData('/browse/collection', $("#studyList"), true, params, displaySuccessMsg, null, "key", "value");
 			
-		} else if(collectionType == 'Dataset' || collectionType == 'Model') {
+		} else if(collectionType == 'Asset') {
 			var params= {selectedPath:$("#studyList").val(),refreshNode:'true'};
 			 loadJsonData('/browse/collection', $("#dataList"), true, params, displaySuccessMsg, null, "key", "value");
 		}
