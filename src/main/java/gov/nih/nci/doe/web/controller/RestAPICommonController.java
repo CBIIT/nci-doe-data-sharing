@@ -5,16 +5,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.http.MediaType;
-
 
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDownloadRequestDTO;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -36,11 +35,14 @@ public class RestAPICommonController extends AbstractDoeController{
 	 @Value("${gov.nih.nci.hpc.server.v2.dataObject}")
 	 private String dataObjectAsyncServiceURL;
 	 
-	 @PostMapping(value="/dataObject/download")
-	 public ResponseEntity<?> synchronousDownload(@RequestHeader HttpHeaders headers, HttpSession session,
-			 HttpServletResponse response,
-	 @RequestParam(value ="path", required=false) String path) {
-
+	 @PostMapping(value="/dataObject/**/download")
+	 public ResponseEntity<?> synchronousDownload(@RequestHeader HttpHeaders headers, 
+			 HttpServletRequest request, HttpSession session,
+			 HttpServletResponse response) {
+		 
+		 String path = request.getRequestURI().split(request.getContextPath() + "/dataObject/")[1];
+		 Integer index=path.lastIndexOf('/');
+		 path = path.substring(0,index);
 		 log.info("download sync:");
 	     log.info("Headers: {}", headers);
 	     log.info("pathName: " +path);
@@ -83,15 +85,19 @@ public class RestAPICommonController extends AbstractDoeController{
 	 }
 	 
 	 
-	 @PostMapping(value="/v2/dataObject/download",consumes= {MediaType.APPLICATION_JSON_VALUE}, 
+	 @PostMapping(value="/v2/dataObject/**/download",consumes= {MediaType.APPLICATION_JSON_VALUE}, 
      produces= {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_OCTET_STREAM_VALUE})
 	 public String synchronousDownload(@RequestHeader HttpHeaders headers, HttpSession session,
-			 HttpServletResponse response,
-			@RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO downloadRequest, 
-	 @RequestParam(value ="path", required=false) String path) {
+			 HttpServletResponse response,HttpServletRequest request,
+			@RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO downloadRequest) {
 
 		 log.info("download async:");
 	     log.info("Headers: {}", headers);
+	     
+	     String path = request.getRequestURI().split(request.getContextPath() + "/dataObject/")[1];
+		 Integer index=path.lastIndexOf('/');
+		 path = path.substring(0,index);
+		 
 	     log.info("pathName: " +path);
 
 	      try {
