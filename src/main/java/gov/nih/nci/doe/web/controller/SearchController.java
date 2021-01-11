@@ -203,7 +203,7 @@ public class SearchController extends AbstractDoeController {
 			returnResult.setStudyPermissionRole(getPermissionRole(user,studyCollectionId,loggedOnUserPermissions));
 			returnResult.setProgramPermissionRole(getPermissionRole(user,programCollectionId,loggedOnUserPermissions));
 			returnResult.setDataSetPath(result.getCollection().getCollectionName());
-            returnResult.setDataSetName(getAttributeValue("dataset_name", result.getMetadataEntries().getSelfMetadataEntries(),"Asset"));
+            returnResult.setDataSetName(getAttributeValue("asset_name", result.getMetadataEntries().getSelfMetadataEntries(),"Asset"));
             returnResult.setDataSetDescription(getAttributeValue("description", result.getMetadataEntries().getSelfMetadataEntries(),"Asset"));
             returnResult.setStudyPath(studyPath);
             returnResult.setInstitutePath(programPath);
