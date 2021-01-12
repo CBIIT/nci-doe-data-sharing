@@ -449,7 +449,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		if (rules != null && !rules.isEmpty()) {
         	for (HpcMetadataValidationRule rule : rules) {
 				if ((rule.getCollectionTypes().contains(collectionType) || rule.getCollectionTypes().isEmpty()) 
-						&& !rule.getAttribute().equals("collection_type") && !rule.getAttribute().equals("asset_type")) {
+						&& !rule.getAttribute().equals("collection_type")) {
 					log.info("get HpcMetadataValidationRule:" + rule);
 					Boolean isValid = true;
 					if(StringUtils.isNotEmpty(rule.getControllerValue()) && StringUtils.isNotEmpty(rule.getControllerAttribute())

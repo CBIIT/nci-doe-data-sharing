@@ -243,6 +243,7 @@ function contructDataListDiv(data,status) {
 function constructNewCollectionMetaDataSet(data,status) {
 	$("#newMetaDataTable tbody").html("");
 	var parentAccessgrp = $("#registerCollectionModal").find("#parentAccessGroup").val();
+	var assetType = $("#registerCollectionModal").find("#assetType").val();
 	$.each(data, function(key, value) {	
 		if(value.attrName  =='access_group') {
 			if(!parentAccessgrp || (parentAccessgrp && parentAccessgrp == "public")) {	
@@ -258,6 +259,11 @@ function constructNewCollectionMetaDataSet(data,status) {
 	        			'<input type="text" placeholder="Required" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'" value ="'+ parentAccessgrp+'"' +
 	        			'disabled="disabled" style="width:70%;background-color: #dddddd;"><input type="hidden" name="zAttrStr_'+value.attrName+'" value ="'+ parentAccessgrp+'"/> &nbsp;&nbsp;<i class="fas fa-question-circle"><span>Access group inherited from parent.</span></i></td></tr>'); 
 			}
+	   } else if(value.attrName == 'asset_type') {
+		   $("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+       			'data-placement="right" title="'+value.description+'"></i></td><td>'+
+       			'<input type="text" disabled="disabled" aria-label="value of meta data" value ="'+ assetType +'" name="zAttrStr_'+value.attrName+'"' +
+       			'style="width:70%;"></td></tr>');
 	   } else {
 		 	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
         			'data-placement="right" title="'+value.description+'"></i></td><td>'+
@@ -297,16 +303,13 @@ function retrieveCollectionList(data,status) {
 	$.each(data, function (key, val) {
 		if(val.key == "parentAccessGroup")
 		   parentAccessGrp = val.value;
-		
-		/*if(assetType && val.key == assetType) {
-			collectionType = val.key;
-		} */
 	});
+	
 	if(!collectionType) {
 		collectionType = data[0].key;
-      }
+    }
+	
 	 var parent = data[0].value;
-	 //var parentAccessGrp = data[1].value;
 	 $("#registerCollectionModal").find('#parentCollectionLabel').text(parent + " Collection Name");
 	 $("#registerCollectionModal").find("#parentCollectionType").val(parent);
 	 $("#registerCollectionModal").find("#parentAccessGroup").val(parentAccessGrp);
