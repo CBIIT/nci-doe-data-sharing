@@ -20,7 +20,6 @@ import com.fasterxml.jackson.databind.introspect.AnnotationIntrospectorPair;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
-
 import org.springframework.http.MediaType;
 
 import gov.nih.nci.doe.web.model.DoeUsersModel;
@@ -32,10 +31,13 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDownloadRequestDTO;
+import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
+import gov.nih.nci.hpc.dto.error.HpcExceptionDTO;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,9 +49,11 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.cxf.jaxrs.ext.multipart.Attachment;
+import org.apache.cxf.jaxrs.ext.multipart.ContentDisposition;
+import org.apache.cxf.jaxrs.ext.multipart.MultipartBody;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @CrossOrigin
@@ -65,6 +69,11 @@ public class RestAPICommonController extends AbstractDoeController{
 	 
 	 @Value("${gov.nih.nci.hpc.server.collection}")
 	 private String serviceURL;
+	 
+	 @Value("${gov.nih.nci.hpc.server.search.collection.compound}")
+		private String compoundCollectionSearchServiceURL;
+		@Value("${gov.nih.nci.hpc.server.search.dataobject.compound}")
+		private String compoundDataObjectSearchServiceURL;
 	 
 	 @PostMapping(value="/dataObject/**/download")
 	 public ResponseEntity<?> synchronousDownload(@RequestHeader HttpHeaders headers, 
@@ -324,13 +333,157 @@ public class RestAPICommonController extends AbstractDoeController{
 	 }
 	    
 	    @PutMapping(value="/v2/dataObject/**",consumes= {MediaType.MULTIPART_FORM_DATA_VALUE},produces= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
-		public Response registerDataObject(@RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationRequestDTO dataObjectRegistration,
+		public String registerDataObject(@RequestHeader HttpHeaders headers, HttpSession session,
+				 HttpServletResponse response,HttpServletRequest request, 
+				 @RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationRequestDTO dataObjectRegistration,
 				MultipartFile dataObjectInputStream) {
-	    	
-					return null;
-	    	
+	       	log.info("download async:");
+		     log.info("Headers: {}", headers);
+		     
+		     String path = request.getRequestURI().split(request.getContextPath() + "/collection/")[1];		 
+		     log.info("pathName: " +path);
+		     
+		      try {
+		          String authToken = (String) session.getAttribute("writeAccessUserToken");
+		          log.info("authToken: " + authToken);
+		          
+		          if (authToken == null) {
+		            return null;
+		          }
+		          
+		          String doeLogin = (String) session.getAttribute("doeLogin");
+		          log.info("doeLogin: " + doeLogin);
+		          if (doeLogin == null) {
+		            return null;
+		          }
+		        if(StringUtils.isNotEmpty(doeLogin) && Boolean.TRUE.equals(isUploader(doeLogin))) {
+		      	    String parentPath = null;
+					parentPath = path.substring(0, path.lastIndexOf('/'));
+					
+					if (!parentPath.isEmpty()) {
+						HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, serviceURL, parentPath, true, sslCertPath,sslCertPassword);
+						Boolean isValidPermissions = verifyCollectionPermissions(doeLogin,parentPath,parentCollectionDto);
+						if (Boolean.FALSE.equals(isValidPermissions)) {
+								return "Insufficient privileges to add data files.";
+							}
+					   }
+					
+	    	       WebClient client = DoeClientUtil.getWebClient(UriComponentsBuilder
+	    	        .fromHttpUrl(dataObjectServiceURL).path("/{dme-archive-path}").buildAndExpand(
+	    	        path).encode().toUri().toURL().toExternalForm(), sslCertPath, sslCertPassword);
+	    	      client.type(MediaType.MULTIPART_FORM_DATA_VALUE).accept(MediaType.APPLICATION_JSON_VALUE);
+	    	      List<Attachment> atts = new LinkedList<Attachment>();
+	    	      atts.add(new org.apache.cxf.jaxrs.ext.multipart.Attachment("dataObjectRegistration",
+	    	          "application/json", dataObjectRegistration));
+	    	      ContentDisposition cd2 =
+	    	          new ContentDisposition("attachment;filename=" + dataObjectInputStream.getName());
+	    	      atts.add(new org.apache.cxf.jaxrs.ext.multipart.Attachment("dataObject",
+	    	    		  dataObjectInputStream.getInputStream(), cd2));
+
+	    	      client.header("Authorization", "Bearer " + authToken);
+
+	    	      Response restResponse = client.put(new MultipartBody(atts));
+	    	      if (restResponse.getStatus() == 201) {
+	    	    	  log.debug("rest response in register data file " +restResponse.getStatus());
+	    	        return "registered data file";
+	    	      } else {
+	    	        ObjectMapper mapper = new ObjectMapper();
+	    	        AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
+	    	            new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
+	    	            new JacksonAnnotationIntrospector());
+	    	        mapper.setAnnotationIntrospector(intr);
+	    	        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+	    	        MappingJsonFactory factory = new MappingJsonFactory(mapper);
+	    	        JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+
+	    	        HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
+	    	        log.error("failed to register data file" +exception);
+	    	        return "error in registration";
+	    	        
+	    	        } 
+		          }
+		      }catch (Exception e) {
+		               log.error("error in download" + e);
+		          }
+		      return "error in registration";
 	     }
 	    
+	    @PostMapping(value="/collection/query",consumes= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE},
+	    produces= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
+	    public HpcCollectionListDTO queryCollections(@RequestHeader HttpHeaders headers, HttpSession session,
+				 HttpServletResponse response,HttpServletRequest request, HpcCompoundMetadataQueryDTO compoundMetadataQuery) {
+	    	
+	    	 String authToken = (String) session.getAttribute("writeAccessUserToken");
+	          log.info("authToken: " + authToken);
+	          
+	          if (authToken == null) {
+	            return null;
+	          }
+	          compoundMetadataQuery.setDetailedResponse(true);
+	    	 UriComponentsBuilder ucBuilder  = UriComponentsBuilder.fromHttpUrl(compoundCollectionSearchServiceURL);		     		    
+		    
+		    if (ucBuilder == null) {
+			      return null;
+			}
+
+		    ucBuilder.queryParam("returnParent", Boolean.TRUE);
+		    String requestURL;
+			try {
+				requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
+				 WebClient client = DoeClientUtil.getWebClient(requestURL, sslCertPath, sslCertPassword);
+					client.header("Authorization", "Bearer " + authToken);	
+					Response restResponse = client.invoke("POST", compoundMetadataQuery);
+					if (restResponse.getStatus() == 200) {
+						MappingJsonFactory factory = new MappingJsonFactory();
+						JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+						HpcCollectionListDTO collections = parser.readValueAs(HpcCollectionListDTO.class);
+						return collections;
+					}
+			} catch (Exception e) {
+				log.error("error in download" + e);
+			}
+
+		   return null;
+	    }
+	    
+	    @PostMapping(value="/dataObject/query",consumes= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE},
+	    	    produces= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
+	    public HpcDataObjectListDTO queryDataObjects(@RequestHeader HttpHeaders headers, HttpSession session,
+				 HttpServletResponse response,HttpServletRequest request,@RequestParam("returnParent") Boolean returnParent,
+	  		  HpcCompoundMetadataQueryDTO compoundMetadataQuery) {
+	    	 String authToken = (String) session.getAttribute("writeAccessUserToken");
+	          log.info("authToken: " + authToken);
+	          
+	          if (authToken == null) {
+	            return null;
+	          }
+	          compoundMetadataQuery.setDetailedResponse(true);
+	    	 UriComponentsBuilder ucBuilder  = UriComponentsBuilder.fromHttpUrl(compoundDataObjectSearchServiceURL);		     		    
+		    
+		    if (ucBuilder == null) {
+			      return null;
+			}
+
+		    ucBuilder.queryParam("returnParent", Boolean.TRUE);
+		    String requestURL;
+			try {
+				requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
+				 WebClient client = DoeClientUtil.getWebClient(requestURL, sslCertPath, sslCertPassword);
+					client.header("Authorization", "Bearer " + authToken);	
+					Response restResponse = client.invoke("POST", compoundMetadataQuery);
+					if (restResponse.getStatus() == 200) {
+						MappingJsonFactory factory = new MappingJsonFactory();
+						JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+						HpcDataObjectListDTO dataObjects = parser.readValueAs(HpcDataObjectListDTO.class);
+						return dataObjects;
+					}
+			} catch (Exception e) {
+				log.error("error in download" + e);
+			}
+
+		   return null;
+	    }
 	    
 	    private Boolean verifyCollectionPermissions(String loggedOnUser, String parentPath,HpcCollectionListDTO parentCollectionDto) {
 
