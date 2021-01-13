@@ -86,7 +86,7 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 		    String password = values[1];
 		    LoginStatusCode status = authService.authenticateExternalUser(userName, password);
 		    if(status == LoginStatusCode.LOGIN_SUCCESS) {
-		    	session.setAttribute("doeLogin", "true");
+		    	session.setAttribute("doeLogin", userName);
 		    	String authToken = DoeClientUtil.getAuthenticationToken(writeAccessUserName, writeAccessUserPassword,authenticateURL);
 				session.setAttribute("writeAccessUserToken", authToken);
 		    }
