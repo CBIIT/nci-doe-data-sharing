@@ -198,7 +198,7 @@ public class RestAPICommonController extends AbstractDoeController{
 	          }
 
 	          return DoeClientUtil.getDatafiles(authToken, dataObjectServiceURL, 
-					  path, false, includeAcl,sslCertPath, sslCertPassword);
+					  path, true, includeAcl,sslCertPath, sslCertPassword);
 	        	 
 	      } catch (Exception e) {
 	          log.error("error in download" + e);
