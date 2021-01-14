@@ -13,31 +13,29 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.introspect.AnnotationIntrospectorPair;
-import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
-import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
 import org.springframework.http.MediaType;
 
+import gov.nih.nci.doe.web.DoeWebException;
+import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.model.KeyValueBean;
+import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectRegistrationRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDownloadRequestDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationResponseDTO;
 import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
-import gov.nih.nci.hpc.dto.error.HpcExceptionDTO;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,9 +47,7 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
-import org.apache.cxf.jaxrs.ext.multipart.Attachment;
-import org.apache.cxf.jaxrs.ext.multipart.ContentDisposition;
-import org.apache.cxf.jaxrs.ext.multipart.MultipartBody;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -71,9 +67,16 @@ public class RestAPICommonController extends AbstractDoeController{
 	 private String serviceURL;
 	 
 	 @Value("${gov.nih.nci.hpc.server.search.collection.compound}")
-		private String compoundCollectionSearchServiceURL;
-		@Value("${gov.nih.nci.hpc.server.search.dataobject.compound}")
-		private String compoundDataObjectSearchServiceURL;
+	 private String compoundCollectionSearchServiceURL;
+	 
+	 @Value("${gov.nih.nci.hpc.server.search.dataobject.compound}")
+	 private String compoundDataObjectSearchServiceURL;
+	 
+	 @Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
+	 private String bulkRegistrationURL;
+	 
+	 @Autowired
+	TaskManagerService taskManagerService;
 	 
 	 @PostMapping(value="/dataObject/**/download")
 	 public ResponseEntity<?> synchronousDownload(@RequestHeader HttpHeaders headers, 
@@ -233,7 +236,7 @@ public class RestAPICommonController extends AbstractDoeController{
 		public String registerCollection(@RequestHeader HttpHeaders headers, HttpSession session,
 				 HttpServletResponse response,HttpServletRequest request,
 				 @RequestBody @Valid HpcCollectionRegistrationDTO collectionRegistration) {
-	    	log.info("download async:");
+	    	log.info("register collection:");
 		     log.info("Headers: {}", headers);
 		     
 		     String path = request.getRequestURI().split(request.getContextPath() + "/collection/")[1];		 
@@ -272,18 +275,38 @@ public class RestAPICommonController extends AbstractDoeController{
 								return "Invalid parent in Collection Path";
 						}
 						
-		              WebClient client = DoeClientUtil.getWebClient(UriComponentsBuilder
-		                .fromHttpUrl(serviceURL).path("/{dme-archive-path}")
-		                .buildAndExpand(path).encode().toUri().toURL().toExternalForm(),sslCertPath, sslCertPassword);
-		              client.header("Authorization", "Bearer " + authToken);
-
-		              Response restResponse = client.invoke("PUT", collectionRegistration);
-		              if (restResponse.getStatus() == 200 || restResponse.getStatus() == 201) {
-		                return "Collection created";
-		              } 
+							// Validate Collection path
+							try {
+								HpcCollectionListDTO collection = DoeClientUtil.getCollection(authToken, serviceURL,
+                                                                  path, false, true, sslCertPath, sslCertPassword);
+								if (collection != null && collection.getCollections() != null && CollectionUtils.isNotEmpty(collection.getCollections())) {
+									 return "Collection already exists: " + path;
+								}
+							} catch (DoeWebException e) {
+								log.debug("Error in validating collection path" + e.getMessage());	
+							}
+							try {
+								boolean created = DoeClientUtil.updateCollection(authToken, serviceURL, collectionRegistration,
+										path, sslCertPath, sslCertPassword);
+								if (created) {	
+									//after collection is created, store the permissions.
+									String progList = request.getParameter("metaDataPermissionsList");
+										log.info("selected permissions" + progList);
+										HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL, 
+												path, false, sslCertPath,sslCertPassword);
+										if (collections != null && collections.getCollections() != null
+												&& !CollectionUtils.isEmpty(collections.getCollections())) {
+											HpcCollectionDTO collection = collections.getCollections().get(0);
+											metaDataPermissionService.savePermissionsList(getLoggedOnUserInfo(),progList,collection.getCollection().getCollectionId(),path);
+										}
+									return  "Collection is created!";
+								} 
+							} catch (Exception e) {
+								log.debug("Error in create collection" + e.getMessage());
+							} 
 		          }
 		        } catch (Exception e) {
-	               log.error("error in download" + e);
+	               log.error("error in create collection" + e);
 	          }
 	       return null;
 	 }
@@ -291,9 +314,9 @@ public class RestAPICommonController extends AbstractDoeController{
 	    @PutMapping(value="/v2/dataObject/**",consumes= {MediaType.MULTIPART_FORM_DATA_VALUE},produces= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
 		public String registerDataObject(@RequestHeader HttpHeaders headers, HttpSession session,
 				 HttpServletResponse response,HttpServletRequest request, 
-				 @RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationRequestDTO dataObjectRegistration,
-				MultipartFile dataObjectInputStream) {
-	       	log.info("download async:");
+				 @RequestBody @Valid HpcDataObjectRegistrationRequestDTO dataObjectRegistration,
+				 @RequestParam("doeDataFile") MultipartFile doeDataFile) {
+	       	log.info("register data files:");
 		     log.info("Headers: {}", headers);
 		     
 		     String path = request.getRequestURI().split(request.getContextPath() + "/collection/")[1];		 
@@ -323,48 +346,90 @@ public class RestAPICommonController extends AbstractDoeController{
 								return "Insufficient privileges to add data files.";
 							}
 					   }
-					
-	    	       WebClient client = DoeClientUtil.getWebClient(UriComponentsBuilder
-	    	        .fromHttpUrl(dataObjectServiceURL).path("/{dme-archive-path}").buildAndExpand(
-	    	        path).encode().toUri().toURL().toExternalForm(), sslCertPath, sslCertPassword);
-	    	      client.type(MediaType.MULTIPART_FORM_DATA_VALUE).accept(MediaType.APPLICATION_JSON_VALUE);
-	    	      List<Attachment> atts = new LinkedList<Attachment>();
-	    	      atts.add(new org.apache.cxf.jaxrs.ext.multipart.Attachment("dataObjectRegistration",
-	    	          "application/json", dataObjectRegistration));
-	    	      ContentDisposition cd2 =
-	    	          new ContentDisposition("attachment;filename=" + dataObjectInputStream.getName());
-	    	      atts.add(new org.apache.cxf.jaxrs.ext.multipart.Attachment("dataObject",
-	    	    		  dataObjectInputStream.getInputStream(), cd2));
 
-	    	      client.header("Authorization", "Bearer " + authToken);
-
-	    	      Response restResponse = client.put(new MultipartBody(atts));
-	    	      if (restResponse.getStatus() == 201) {
-	    	    	  log.debug("rest response in register data file " +restResponse.getStatus());
-	    	        return "registered data file";
-	    	      } else {
-	    	        ObjectMapper mapper = new ObjectMapper();
-	    	        AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
-	    	            new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
-	    	            new JacksonAnnotationIntrospector());
-	    	        mapper.setAnnotationIntrospector(intr);
-	    	        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-	    	        MappingJsonFactory factory = new MappingJsonFactory(mapper);
-	    	        JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-
-	    	        HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
-	    	        log.error("failed to register data file" +exception);
-	    	        return "error in registration";
-	    	        
-	    	        } 
-		          }
-		      }catch (Exception e) {
+					boolean created =  DoeClientUtil.registerDatafile(authToken, doeDataFile, dataObjectServiceURL, dataObjectRegistration,
+							path, sslCertPath, sslCertPassword);
+					if(created) {
+						
+						//store the auditing info
+		                AuditingModel audit = new AuditingModel();
+		                audit.setName(doeLogin);
+		                audit.setOperation("Upload Single File");
+		                audit.setStartTime(new Date());
+		                audit.setPath(path);
+		                auditingService.saveAuditInfo(audit);
+		                
+						return "The system has registered your file.";
+					}	    	        		          
+		             }  
+		      }     catch (Exception e) {
 		               log.error("error in download" + e);
 		          }
 		      return "error in registration";
 	     }
 	    
+	    @PutMapping(value="/v2/registration",consumes= {MediaType.MULTIPART_FORM_DATA_VALUE},produces= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
+		public String registerBulkDataObjects(@RequestHeader HttpHeaders headers, HttpSession session,
+				 HttpServletResponse response,HttpServletRequest request,
+				 @RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO bulkDataObjectRegistrationRequest) {
+	    	log.info("register data files:");
+		     log.info("Headers: {}", headers);
+		     
+		     String path = request.getRequestURI().split(request.getContextPath() + "/collection/")[1];		 
+		     log.info("pathName: " +path);
+		     
+		      try {
+		          String authToken = (String) session.getAttribute("writeAccessUserToken");
+		          log.info("authToken: " + authToken);
+		          
+		          if (authToken == null) {
+		            return null;
+		          }
+		          
+		          String doeLogin = (String) session.getAttribute("doeLogin");
+		          log.info("doeLogin: " + doeLogin);
+		          if (doeLogin == null) {
+		            return null;
+		          }
+		        if(StringUtils.isNotEmpty(doeLogin) && Boolean.TRUE.equals(isUploader(doeLogin))) {
+		      	    String parentPath = null;
+					parentPath = path.substring(0, path.lastIndexOf('/'));
+					
+					if (!parentPath.isEmpty()) {
+						HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, serviceURL, parentPath, true, sslCertPath,sslCertPassword);
+						Boolean isValidPermissions = verifyCollectionPermissions(doeLogin,parentPath,parentCollectionDto);
+						if (Boolean.FALSE.equals(isValidPermissions)) {
+								return "Insufficient privileges to add data files.";
+							}
+					   }
+
+					HpcBulkDataObjectRegistrationResponseDTO responseDTO = DoeClientUtil.registerBulkDatafiles(authToken,
+							bulkRegistrationURL, bulkDataObjectRegistrationRequest, sslCertPath, sslCertPassword);
+					
+					if (responseDTO != null) {				
+						    String taskId = responseDTO.getTaskId();
+						    String name = path.substring(path.lastIndexOf('/') + 1);
+						    taskManagerService.saveTransfer(taskId,"Upload",null,name,doeLogin);
+						    
+						    //store the auditing info
+			                  AuditingModel audit = new AuditingModel();
+			                  audit.setName(doeLogin);
+			                  audit.setOperation("Upload");
+			                  audit.setStartTime(new Date());
+			                  audit.setPath(path);
+			                  audit.setTaskId(taskId);
+			                  auditingService.saveAuditInfo(audit);
+			                  
+							return "Your bulk data file registration request has the following task ID: " +taskId;			
+				
+						
+					}	    	        		          
+		             }  
+		      }     catch (Exception e) {
+		               log.error("error in download" + e);
+		          }
+		      return "error in registration";
+	    }
 	    @PostMapping(value="/collection/query",consumes= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE},
 	    produces= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
 	    public HpcCollectionListDTO queryCollections(@RequestHeader HttpHeaders headers, HttpSession session,
