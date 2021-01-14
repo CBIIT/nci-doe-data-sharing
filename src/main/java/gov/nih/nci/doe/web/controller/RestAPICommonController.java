@@ -193,33 +193,9 @@ public class RestAPICommonController extends AbstractDoeController{
 	          if (authToken == null) {
 	            return null;
 	          }
-	          
-	          
-	          final UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(
-	        		  dataObjectAsyncServiceURL).path("/{dme-archive-path}").queryParam("list", Boolean.valueOf(true));
-	        	      
-	        	ucBuilder.queryParam("includeAcl", Boolean.toString(includeAcl));
-	        	final String serviceURL = ucBuilder.buildAndExpand(path).encode().toUri().toURL().toExternalForm();
-	        		  
-	        	WebClient client = DoeClientUtil.getWebClient(serviceURL, sslCertPath, sslCertPassword);
-	        	client.header("Authorization", "Bearer " + authToken);
-	        	Response restResponse = client.invoke("GET", null);	      
-	            log.info("rest response:" + restResponse.getStatus());
-	            
-	          if (restResponse.getStatus() == 200) {
-	        	  ObjectMapper mapper = new ObjectMapper();
-	              AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
-	                  new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
-	                  new JacksonAnnotationIntrospector());
-	              mapper.setAnnotationIntrospector(intr);
-	              mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-	              MappingJsonFactory factory = new MappingJsonFactory(mapper);
-	              JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-
-	              HpcDataObjectListDTO datafiles = parser.readValueAs(HpcDataObjectListDTO.class);
-	              return datafiles;
-	          }
+	          return DoeClientUtil.getDatafiles(authToken, dataObjectServiceURL, 
+					  path, false, includeAcl,sslCertPath, sslCertPassword);
 	        	 
 	      } catch (Exception e) {
 	          log.error("error in download" + e);
@@ -244,29 +220,9 @@ public class RestAPICommonController extends AbstractDoeController{
 	            return null;
 	          }
 	          
+	          return  DoeClientUtil.getCollection(authToken, serviceURL, 
+						path, list, sslCertPath,sslCertPassword);
 	         
-	          final UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(
-	        		  serviceURL).path("/{dme-archive-path}");
-
-	        	 ucBuilder.queryParam("list", Boolean.toString(list));
-	        	 final String serviceURL = ucBuilder.buildAndExpand(path).encode().toUri()
-	        	  .toURL().toExternalForm();
-	        		  
-	          WebClient client = DoeClientUtil.getWebClient(serviceURL, sslCertPath, sslCertPassword);
-	          client.header("Authorization", "Bearer " + authToken);
-	          Response restResponse = client.invoke("GET", null);
-	          if (restResponse.getStatus() == 200) {
-	        	  ObjectMapper mapper = new ObjectMapper();
-	        	  AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
-	        	  new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
-	        	  new JacksonAnnotationIntrospector());
-	        	  mapper.setAnnotationIntrospector(intr);
-	        	  mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-	        	  MappingJsonFactory factory = new MappingJsonFactory(mapper);
-	        	  JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-	        	  HpcCollectionListDTO collections = parser.readValueAs(HpcCollectionListDTO.class);
-	        	  return collections;
-	         }
 	        } catch (Exception e) {
                log.error("error in download" + e);
           }
