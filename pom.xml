@@ -46,6 +46,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-boot-starter</artifactId>
+			<version>3.0.0</version>
+		</dependency>
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
@@ -207,7 +212,7 @@
    			<groupId>com.google.api-client</groupId>
    			<artifactId>google-api-client</artifactId>
    			<version>${google-drive-sdk.version}</version>
-		</dependency>        
+		</dependency> 
     </dependencies>
     <build>
         <plugins>
