@@ -263,7 +263,7 @@ function constructNewCollectionMetaDataSet(data,status) {
 		   $("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
        			'data-placement="right" title="'+value.description+'"></i></td><td>'+
        			'<input type="text" disabled="disabled" aria-label="value of meta data" value ="'+ assetType +'" name="zAttrStr_'+value.attrName+'"' +
-       			'style="width:70%;"></td></tr>');
+       			'style="width:70%;"><input type="hidden" name="zAttrStr_'+value.attrName+'" value ="'+ assetType +'"/> </td></tr>');
 	   } else {
 		 	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
         			'data-placement="right" title="'+value.description+'"></i></td><td>'+
