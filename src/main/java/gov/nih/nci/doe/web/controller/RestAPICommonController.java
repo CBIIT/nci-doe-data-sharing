@@ -297,7 +297,7 @@ public class RestAPICommonController extends AbstractDoeController{
 										if (collections != null && collections.getCollections() != null
 												&& !CollectionUtils.isEmpty(collections.getCollections())) {
 											HpcCollectionDTO collection = collections.getCollections().get(0);
-											metaDataPermissionService.savePermissionsList(getLoggedOnUserInfo(),progList,collection.getCollection().getCollectionId(),path);
+											metaDataPermissionService.savePermissionsList(doeLogin,progList,collection.getCollection().getCollectionId(),path);
 										}
 									return  "Collection is created!";
 								} 
