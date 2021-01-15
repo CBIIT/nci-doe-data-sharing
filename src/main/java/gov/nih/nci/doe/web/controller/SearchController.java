@@ -128,6 +128,7 @@ public class SearchController extends AbstractDoeController {
 		try {			
 			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search);
 			compoundQuery.setDetailedResponse(true);
+			log.info("search compund query" + compoundQuery);
 			serviceURL = compoundDataObjectSearchServiceURL;
 			
 			 UriComponentsBuilder ucBuilder  = UriComponentsBuilder.fromHttpUrl(compoundDataObjectSearchServiceURL);		     		    

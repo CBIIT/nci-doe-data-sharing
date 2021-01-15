@@ -119,6 +119,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 			      return null;
 			    }
 
+		    log.info("retrieve data objects compund query" +compoundQuery);
 		    ucBuilder.pathSegment(path.substring(1, path.length()));
 		    final String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
 		    WebClient client = DoeClientUtil.getWebClient(requestURL, sslCertPath, sslCertPassword);

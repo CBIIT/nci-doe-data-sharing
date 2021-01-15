@@ -433,7 +433,7 @@ public class RestAPICommonController extends AbstractDoeController{
 	    @PostMapping(value="/collection/query",consumes= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE},
 	    produces= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
 	    public HpcCollectionListDTO queryCollections(@RequestHeader HttpHeaders headers, HttpSession session,
-				 HttpServletResponse response,HttpServletRequest request, HpcCompoundMetadataQueryDTO compoundMetadataQuery) {
+				 HttpServletResponse response,HttpServletRequest request, @RequestBody @Valid HpcCompoundMetadataQueryDTO compoundMetadataQuery) {
 	    	
 	    	 String authToken = (String) session.getAttribute("writeAccessUserToken");
 	          log.info("authToken: " + authToken);
@@ -472,7 +472,7 @@ public class RestAPICommonController extends AbstractDoeController{
 	    	    produces= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
 	    public HpcDataObjectListDTO queryDataObjects(@RequestHeader HttpHeaders headers, HttpSession session,
 				 HttpServletResponse response,HttpServletRequest request,@RequestParam("returnParent") Boolean returnParent,
-	  		  HpcCompoundMetadataQueryDTO compoundMetadataQuery) {
+				 @RequestBody @Valid HpcCompoundMetadataQueryDTO compoundMetadataQuery) {
 	    	 String authToken = (String) session.getAttribute("writeAccessUserToken");
 	          log.info("authToken: " + authToken);
 	          
