@@ -32,9 +32,7 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectRegistrationRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDownloadRequestDTO;
-import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationResponseDTO;
 import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
 
 import java.io.InputStream;
@@ -445,7 +443,7 @@ public class RestAPICommonController extends AbstractDoeController{
 		      return "error in registration";
 	     }
 	    
-	    @PutMapping(value="/v2/registration",consumes= {MediaType.MULTIPART_FORM_DATA_VALUE},produces= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
+	   /* @PutMapping(value="/v2/registration",consumes= {MediaType.MULTIPART_FORM_DATA_VALUE},produces= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
 		public String registerBulkDataObjects(@RequestHeader HttpHeaders headers, HttpSession session,
 				 HttpServletResponse response,HttpServletRequest request,
 				 @RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO bulkDataObjectRegistrationRequest) {
@@ -506,7 +504,7 @@ public class RestAPICommonController extends AbstractDoeController{
 		               log.error("error in download" + e);
 		          }
 		      return "error in registration";
-	    }
+	    }*/
 	    
 	    @PostMapping(value="/collection/query",consumes= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE},
 	    	    produces= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
@@ -528,16 +526,17 @@ public class RestAPICommonController extends AbstractDoeController{
 	          String doeLogin = (String) session.getAttribute("doeLogin");
 	          log.info("doeLogin: " + doeLogin);
 	          
-	         if(StringUtils.isNotEmpty(doeLogin)) {
+	         
 	        	 HpcCompoundMetadataQuery query = compoundMetadataQuery.getCompoundQuery();
 	        	// add criteria for access group public and other prog names for logged on user.
 	       	  List<KeyValueBean> loggedOnUserPermissions = new ArrayList<>();
-	       		
-	       	DoeUsersModel user = authenticateService.getUserInfo(doeLogin);
-			 if(user != null && !StringUtils.isEmpty(user.getProgramName())) {
-				 List<String> progList = Arrays.asList(user.getProgramName().split(","));
-				 progList.stream().forEach(e -> loggedOnUserPermissions.add(new KeyValueBean(e, e))); 
-			 }
+	       	  if(StringUtils.isNotEmpty(doeLogin)) {
+	       	    DoeUsersModel user = authenticateService.getUserInfo(doeLogin);
+			       if(user != null && !StringUtils.isEmpty(user.getProgramName())) {
+				        List<String> progList = Arrays.asList(user.getProgramName().split(","));
+				        progList.stream().forEach(e -> loggedOnUserPermissions.add(new KeyValueBean(e, e))); 
+			        }
+	       	    }
 			 
 	       		HpcCompoundMetadataQuery query1 = new HpcCompoundMetadataQuery();
 	       		query1.setOperator(HpcCompoundMetadataQueryOperator.OR);
@@ -576,7 +575,7 @@ public class RestAPICommonController extends AbstractDoeController{
 	       		query2.getCompoundQueries().add(query);
 
 	       		compoundMetadataQuery.setCompoundQuery(query2);
-	         }
+	         
 	          compoundMetadataQuery.setDetailedResponse(true);
 	    	 UriComponentsBuilder ucBuilder  = UriComponentsBuilder.fromHttpUrl(compoundCollectionSearchServiceURL);		     		    
 		    
@@ -625,16 +624,17 @@ public class RestAPICommonController extends AbstractDoeController{
 	          String doeLogin = (String) session.getAttribute("doeLogin");
 	          log.info("doeLogin: " + doeLogin);
 	          
-	          if(StringUtils.isNotEmpty(doeLogin) && Boolean.TRUE.equals(returnParent)) {
+	          if(Boolean.TRUE.equals(returnParent)) {
 		        	 HpcCompoundMetadataQuery query = compoundMetadataQuery.getCompoundQuery();
 		        	// add criteria for access group public and other prog names for logged on user.
 		       	  List<KeyValueBean> loggedOnUserPermissions = new ArrayList<>();
-		       		
-		       	DoeUsersModel user = authenticateService.getUserInfo(doeLogin);
-				 if(user != null && !StringUtils.isEmpty(user.getProgramName())) {
-					 List<String> progList = Arrays.asList(user.getProgramName().split(","));
-					 progList.stream().forEach(e -> loggedOnUserPermissions.add(new KeyValueBean(e, e))); 
-				 }
+		       		if(StringUtils.isNotEmpty(doeLogin)) {
+		             	DoeUsersModel user = authenticateService.getUserInfo(doeLogin);
+				        if(user != null && !StringUtils.isEmpty(user.getProgramName())) {
+					     List<String> progList = Arrays.asList(user.getProgramName().split(","));
+					    progList.stream().forEach(e -> loggedOnUserPermissions.add(new KeyValueBean(e, e))); 
+				        }
+		       		}
 				 
 		       		HpcCompoundMetadataQuery query1 = new HpcCompoundMetadataQuery();
 		       		query1.setOperator(HpcCompoundMetadataQueryOperator.OR);
