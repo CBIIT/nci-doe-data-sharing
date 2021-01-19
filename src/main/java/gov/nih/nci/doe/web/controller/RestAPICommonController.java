@@ -625,9 +625,55 @@ public class RestAPICommonController extends AbstractDoeController{
 	          String doeLogin = (String) session.getAttribute("doeLogin");
 	          log.info("doeLogin: " + doeLogin);
 	          
-	         if(StringUtils.isNotEmpty(doeLogin)) {
-	        	 
-	         }
+	          if(StringUtils.isNotEmpty(doeLogin) && Boolean.TRUE.equals(returnParent)) {
+		        	 HpcCompoundMetadataQuery query = compoundMetadataQuery.getCompoundQuery();
+		        	// add criteria for access group public and other prog names for logged on user.
+		       	  List<KeyValueBean> loggedOnUserPermissions = new ArrayList<>();
+		       		
+		       	DoeUsersModel user = authenticateService.getUserInfo(doeLogin);
+				 if(user != null && !StringUtils.isEmpty(user.getProgramName())) {
+					 List<String> progList = Arrays.asList(user.getProgramName().split(","));
+					 progList.stream().forEach(e -> loggedOnUserPermissions.add(new KeyValueBean(e, e))); 
+				 }
+				 
+		       		HpcCompoundMetadataQuery query1 = new HpcCompoundMetadataQuery();
+		       		query1.setOperator(HpcCompoundMetadataQueryOperator.OR);
+		       		List<HpcMetadataQuery> queries1 = new ArrayList<HpcMetadataQuery>();
+		       		
+		       		// perform OR operation of public access and logged on users access groups 
+		       		HpcMetadataQuery q = new HpcMetadataQuery();
+		       		HpcMetadataQueryLevelFilter levelFilter = new HpcMetadataQueryLevelFilter();
+		       		levelFilter.setLabel("Asset");
+		       		levelFilter.setOperator(HpcMetadataQueryOperator.EQUAL);
+		       		q.setLevelFilter(levelFilter);
+		       		q.setAttribute("access_group");
+		       		q.setValue("public");
+		       		q.setOperator(HpcMetadataQueryOperator.EQUAL);
+		       		queries1.add(q);
+
+		       		for(KeyValueBean x :loggedOnUserPermissions) {
+		       			HpcMetadataQuery q1 = new HpcMetadataQuery();
+		       			HpcMetadataQueryLevelFilter levelFilter1 = new HpcMetadataQueryLevelFilter();
+		       			levelFilter1.setLabel("Asset");
+		       		    levelFilter1.setOperator(HpcMetadataQueryOperator.EQUAL);
+		       			q1.setAttribute("access_group");
+		       			q1.setValue("%"+x.getValue()+"%");
+		       			q1.setLevelFilter(levelFilter1);
+		       			q1.setOperator(HpcMetadataQueryOperator.LIKE);
+		       			queries1.add(q1);
+		       		}
+
+		       		query1.getQueries().addAll(queries1);
+		       		
+		       		
+		       		//perform and operation of query and query1
+		       		HpcCompoundMetadataQuery query2 = new HpcCompoundMetadataQuery();
+		       		query2.setOperator(HpcCompoundMetadataQueryOperator.AND);
+		       		query2.getCompoundQueries().add(query1);
+		       		query2.getCompoundQueries().add(query);
+
+		       		compoundMetadataQuery.setCompoundQuery(query2);
+		         }
 	          compoundMetadataQuery.setDetailedResponse(true);
 	    	 UriComponentsBuilder ucBuilder  = UriComponentsBuilder.fromHttpUrl(compoundDataObjectSearchServiceURL);		     		    
 		    
