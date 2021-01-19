@@ -87,6 +87,9 @@ public abstract class AbstractDoeController {
     @Value("${gov.nih.nci.hpc.server.collection}")
 	private String serviceURL;
     
+    @Value("${doe.show.api-docs:false}")
+    boolean showApiDocs;
+    
     @Autowired
    	DoeAuthorizationService doeAuthorizationService;
        
@@ -128,6 +131,11 @@ public abstract class AbstractDoeController {
 			  return downtimeMessage;
 		  }
 		  return null;
+	  }
+	  
+	  @ModelAttribute("showApiDocs")
+	   public boolean getShowApiDocs() {
+		  return showApiDocs;
 	  }
 	  
 	  @ModelAttribute("firstName")

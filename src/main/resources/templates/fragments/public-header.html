@@ -57,7 +57,8 @@
                     </a>
                     <div class="dropdown-menu" style="margin-top:6px !important;margin-left: 33px;background-color: #1D90FF;">
                         <a class="dropdown-item" id="about-tab" th:href="@{/aboutTab}">About MoDaC</a>
-                         <a class="dropdown-item" target="_blank" href="https://wiki.nci.nih.gov/display/MoDaCdoc">User Guide</a>
+                        <a th:if= "${showApiDocs}" class="dropdown-item" id="api-docs" target="_blank" th:href="@{/swagger-ui/?urls.primaryName=api-docs#/modac-rest-api}">API Documentation</a>
+                        <a class="dropdown-item" target="_blank" href="https://wiki.nci.nih.gov/display/MoDaCdoc">User Guide</a>
                         <a class="dropdown-item" href="mailto:modac-support@mail.nih.gov?">Contact</a>
                     </div>
 
