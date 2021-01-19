@@ -84,11 +84,18 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 		    final String[] values = credentials.split(":", 2);
 		    String userName = values[0];
 		    String password = values[1];
-		    LoginStatusCode status = authService.authenticateExternalUser(userName, password);
-		    if(status == LoginStatusCode.LOGIN_SUCCESS) {
+		    if(StringUtils.isEmpty(userName) && StringUtils.isEmpty(password) &&
+		    		(requestUri.contains("/dataObject/query") || requestUri.contains("/collection/query") ||
+		    				requestUri.contains("/v2/dataObject/") || requestUri.contains("/collection/"))) {
+		    	String authToken = DoeClientUtil.getAuthenticationToken(readOnlyUserName, readOnlyUserPassword,authenticateURL);
+				session.setAttribute("hpcUserToken", authToken);
+		    } else {
+		      LoginStatusCode status = authService.authenticateExternalUser(userName, password);
+		       if(status == LoginStatusCode.LOGIN_SUCCESS) {
 		    	session.setAttribute("doeLogin", userName);
 		    	String authToken = DoeClientUtil.getAuthenticationToken(writeAccessUserName, writeAccessUserPassword,authenticateURL);
 				session.setAttribute("writeAccessUserToken", authToken);
+		      }
 		    }
 		}
 		 

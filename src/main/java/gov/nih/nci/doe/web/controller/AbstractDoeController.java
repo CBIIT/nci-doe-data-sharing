@@ -178,154 +178,7 @@ public abstract class AbstractDoeController {
 			return entryList;
 		}
 		
-		 @GetMapping(value = "/metaDataPermissionsList")
-		 public ResponseEntity<?>  getMetaDataPermissionsList()  { 
-			 log.info("get meta data permissions list");
-			 String loggedOnUser = getLoggedOnUserInfo();
-			 List<KeyValueBean> keyValueBeanResults = new ArrayList<>();
-			 if(!StringUtils.isEmpty(loggedOnUser)) {
-				 DoeUsersModel user = authenticateService.getUserInfo(loggedOnUser);
-				 if(user != null && !StringUtils.isEmpty(user.getProgramName())) {
-					 List<String> progList = Arrays.asList(user.getProgramName().split(","));
-					 progList.stream().forEach(e -> keyValueBeanResults.add(new KeyValueBean(e, e))); 
-				 }
-			 }
-			 return new ResponseEntity<>(keyValueBeanResults, null, HttpStatus.OK);
-		 }
-		 
-		 @PostMapping(value = "/metaDataPermissionsList")
-		 @ResponseBody
-		 public String savePermissionsList(HttpSession session,@RequestHeader HttpHeaders headers,
-					@RequestParam(value = "collectionId") String collectionId,
-					  @RequestParam(value = "selectedPermissions[]", required = false) String[] selectedPermissions)  { 
-			 log.info("get meta data permissions list");
-			 String loggedOnUser = getLoggedOnUserInfo();
-			 
-			 List<String> newSelectedPermissionList = selectedPermissions == null ? new ArrayList<String>() : Arrays.asList(selectedPermissions);
-			 List<MetaDataPermissions> existingPermissionsList = metaDataPermissionService.getAllGroupMetaDataPermissionsByCollectionId(Integer.valueOf(collectionId));
-		     List<String> oldPermissionsList = LambdaUtils.map(existingPermissionsList, MetaDataPermissions::getUserGroupId);
-		            
-		     if (CollectionUtils.isEmpty(oldPermissionsList) && !CollectionUtils.isEmpty(newSelectedPermissionList) && 
-		    		 StringUtils.isNotBlank(collectionId)) {
-		                // save the new set of permissions
-		    	 metaDataPermissionService.savePermissionsList(loggedOnUser, String.join(",", newSelectedPermissionList), Integer.valueOf(collectionId),null);
-		     } else {
-		                List<String> deletedPermissions = new ArrayList<String>();
-		                List<String> addedPermissions = new ArrayList<String>();
 
-		                deletedPermissions = oldPermissionsList.stream()
-		                    .filter(e -> !newSelectedPermissionList.contains(e)).filter(value -> value != null)
-		                    .collect(Collectors.toList());
-
-		                addedPermissions = newSelectedPermissionList.stream()
-		                    .filter(e -> !oldPermissionsList.contains(e))
-		                    .collect(Collectors.toList());  
-				
-				metaDataPermissionService.deletePermissionsList(loggedOnUser, deletedPermissions, Integer.valueOf(collectionId));  
-		        metaDataPermissionService.savePermissionsList(loggedOnUser, String.join(",", addedPermissions), Integer.valueOf(collectionId),null);
-
-		     }			 
-			 return "SUCCESS";
-		 }
-		 
-		 
-		 @GetMapping(value = "/getPermissionByCollectionId")
-		 public ResponseEntity<?>  getPermissionsByCollectionId(HttpSession session,@RequestHeader HttpHeaders headers,
-					@RequestParam(value = "collectionId") String collectionId)  { 
-			 log.info("get meta data permissions list by collection id");
-			 List<KeyValueBean> keyValueBeanResults = new ArrayList<>();
-			
-			 List<MetaDataPermissions> permissionsList = metaDataPermissionService.getAllGroupMetaDataPermissionsByCollectionId(Integer.valueOf(collectionId));
-				 if(CollectionUtils.isNotEmpty(permissionsList)) {
-					 permissionsList.stream().forEach(e -> keyValueBeanResults.add(new KeyValueBean(e.getUserGroupId(), e.getUserGroupId()))); 
-				 }
-			 return new ResponseEntity<>(keyValueBeanResults, null, HttpStatus.OK);
-		 }
-		
-		 @GetMapping(value = "/notifyUsers")
-		 @ResponseBody
-		 public String notifyUsersForUpdateAccessDicp(HttpSession session,@RequestHeader HttpHeaders headers, 
-				 PermissionsModel permissionGroups) throws Exception  { 
-			 log.info("notify users");
-			 log.info("permissionGroups" + permissionGroups);
-			 List<String> collectionOwnersList = new ArrayList<String>();
-			 //notify users
-			 MetaDataPermissions perm = null;
-			 if("study".equalsIgnoreCase(permissionGroups.getSelectedCollection())) {
-				  perm = metaDataPermissionService.getMetaDataPermissionsOwnerByCollectionId
-						 (Integer.valueOf(permissionGroups.getProgCollectionId()));
-				  collectionOwnersList.add(perm.getUserGroupId());
-			 } else if("Asset".equalsIgnoreCase(permissionGroups.getSelectedCollection())) {
-				 perm = metaDataPermissionService.getMetaDataPermissionsOwnerByCollectionId
-						 (Integer.valueOf(permissionGroups.getStudyCollectionId()));
-				 MetaDataPermissions progPermissions = metaDataPermissionService.getMetaDataPermissionsOwnerByCollectionId
-						 (Integer.valueOf(permissionGroups.getProgCollectionId()));
-				 collectionOwnersList.add(perm.getUserGroupId());
-				 collectionOwnersList.add(progPermissions.getUserGroupId());
-			 }
-			 
-			 
-			 mailService.sendNotifyUsersForAccessGroups(collectionOwnersList);
-
-			 return "SUCCESS";
-		 }
-		 
-		 
-		 @GetMapping(value = "/updateAccessGroupMetaData")
-		 public ResponseEntity<?> saveAccessGroup(HttpSession session,@RequestHeader HttpHeaders headers,
-					 PermissionsModel permissionGroups)  { 
-			 log.info("get meta data permissions list");
-			 Boolean isUpdate = false;
-			  if("program".equalsIgnoreCase(permissionGroups.getSelectedCollection())) {
-				 isUpdate = true;
-			 } else if("study".equalsIgnoreCase(permissionGroups.getSelectedCollection())) {
-				 if("public".equalsIgnoreCase(permissionGroups.getProgramLevelAccessGroups())) {
-					 isUpdate = true;
-				 } else if(!"public".equalsIgnoreCase(permissionGroups.getProgramLevelAccessGroups()) && 
-						 permissionGroups.getSelectedAccessGroups().contains(permissionGroups.getProgramLevelAccessGroups())) {
-					 isUpdate = true;
-				 }
-			 } else if("Asset".equalsIgnoreCase(permissionGroups.getSelectedCollection())) {
-				 if("public".equalsIgnoreCase(permissionGroups.getProgramLevelAccessGroups()) && 
-					"public".equalsIgnoreCase(permissionGroups.getStudyLevelAccessGroups())) {
-					 isUpdate = true;
-				 } else if(permissionGroups.getSelectedAccessGroups().contains(permissionGroups.getStudyLevelAccessGroups())) {
-					 isUpdate = true;
-				 }
-			 }
-			  
-			 if(Boolean.TRUE.equals(isUpdate)) {
-			 String loggedOnUser = getLoggedOnUserInfo();
-			 String authToken = (String) session.getAttribute("writeAccessUserToken");
-			 HpcCollectionRegistrationDTO dto = new HpcCollectionRegistrationDTO();
-			 List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
-			 HpcMetadataEntry entry = new HpcMetadataEntry();
-				entry.setAttribute("access_group");
-				if(permissionGroups.getSelectedAccessGroups().isEmpty()) {
-					entry.setValue("public");
-				} else {
-					entry.setValue(permissionGroups.getSelectedAccessGroups());
-				}
-			
-				metadataEntries.add(entry);
-			 dto.getMetadataEntries().addAll(metadataEntries);
-				boolean updated = DoeClientUtil.updateCollection(authToken, serviceURL, dto,
-						permissionGroups.getPath(), sslCertPath, sslCertPassword);
-				if (updated) {
-					 //store the auditing info
-	                  AuditingModel audit = new AuditingModel();
-	                  audit.setName(loggedOnUser);
-	                  audit.setOperation("Edit Meta Data");
-	                  audit.setStartTime(new Date());
-	                  audit.setPath(permissionGroups.getPath());
-	                  auditingService.saveAuditInfo(audit);
-				}
-				
-			 } else {
-				 return new ResponseEntity<>("Permission group cannot be updated", HttpStatus.OK);
-			 }
-			 return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
-		 }
 		 
 		 
 	public String getAttributeValue(String attrName, List<HpcMetadataEntry> list,String levelName) {
@@ -375,6 +228,18 @@ public abstract class AbstractDoeController {
 		      throw new DoeWebException(e);
 		    }
 		  }
-
+	  public ResponseEntity<?>  getMetaDataPermissionsList()  { 
+			 log.info("get meta data permissions list");
+			 String loggedOnUser = getLoggedOnUserInfo();
+			 List<KeyValueBean> keyValueBeanResults = new ArrayList<>();
+			 if(!StringUtils.isEmpty(loggedOnUser)) {
+				 DoeUsersModel user = authenticateService.getUserInfo(loggedOnUser);
+				 if(user != null && !StringUtils.isEmpty(user.getProgramName())) {
+					 List<String> progList = Arrays.asList(user.getProgramName().split(","));
+					 progList.stream().forEach(e -> keyValueBeanResults.add(new KeyValueBean(e, e))); 
+				 }
+			 }
+			 return new ResponseEntity<>(keyValueBeanResults, null, HttpStatus.OK);
+		 }
 
 }
