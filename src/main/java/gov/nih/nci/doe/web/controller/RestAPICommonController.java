@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -389,7 +390,7 @@ public class RestAPICommonController extends AbstractDoeController{
 	    @PutMapping(value="/v2/dataObject/**")
 		public String registerDataObject(@RequestHeader HttpHeaders headers, HttpSession session,
 				 HttpServletResponse response,HttpServletRequest request, 
-				 @RequestBody @Valid @Multipart gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationRequestDTO dataObjectRegistration,
+				 @RequestPart("dataObjectRegistration") @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationRequestDTO dataObjectRegistration,
 				 @RequestBody(required=false) @Valid MultipartFile doeDataFile) {
 	       	log.info("register data files:");
 		     log.info("Headers: {}", headers);
