@@ -606,7 +606,7 @@ public class RestAPICommonController extends AbstractDoeController{
 	    
 	    @PostMapping(value="/dataObject/query",consumes= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE},
 	    	    produces= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
-	    public HpcDataObjectListDTO queryDataObjects(@RequestHeader HttpHeaders headers, HttpSession session,
+	    public ResponseEntity<?> queryDataObjects(@RequestHeader HttpHeaders headers, HttpSession session,
 				 HttpServletResponse response,HttpServletRequest request,@RequestParam("returnParent") Boolean returnParent,
 				 @RequestBody @Valid HpcCompoundMetadataQueryDTO compoundMetadataQuery) {
 	    	 
@@ -635,7 +635,7 @@ public class RestAPICommonController extends AbstractDoeController{
 			      return null;
 			}
 
-		    ucBuilder.queryParam("returnParent", Boolean.TRUE);
+		    ucBuilder.queryParam("returnParent", returnParent);
 		    String requestURL;
 			try {
 				requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
@@ -645,8 +645,13 @@ public class RestAPICommonController extends AbstractDoeController{
 					if (restResponse.getStatus() == 200) {
 						MappingJsonFactory factory = new MappingJsonFactory();
 						JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-						HpcDataObjectListDTO dataObjects = parser.readValueAs(HpcDataObjectListDTO.class);
-						return dataObjects;
+						if(Boolean.TRUE.equals(returnParent)) {
+							HpcCollectionListDTO dataObjects = parser.readValueAs(HpcCollectionListDTO.class);
+							return new ResponseEntity<>(dataObjects, HttpStatus.OK);
+						} else if(Boolean.FALSE.equals(returnParent)) {
+							HpcDataObjectListDTO dataObjects = parser.readValueAs(HpcDataObjectListDTO.class);
+							return new ResponseEntity<>(dataObjects, HttpStatus.OK);
+						}
 					}
 			} catch (Exception e) {
 				log.error("error in download" + e);
