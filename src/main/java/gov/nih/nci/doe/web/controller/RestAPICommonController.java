@@ -52,6 +52,7 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -387,15 +388,15 @@ public class RestAPICommonController extends AbstractDoeController{
 	       return null;
 	 }
 	    
-	    @PutMapping(value="/v2/dataObject/**",consumes= {MediaType.MULTIPART_FORM_DATA_VALUE},produces= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
+	    @PutMapping(value="/v2/dataObject/**")
 		public String registerDataObject(@RequestHeader HttpHeaders headers, HttpSession session,
 				 HttpServletResponse response,HttpServletRequest request, 
-				 @RequestBody @Valid HpcDataObjectRegistrationRequestDTO dataObjectRegistration,
-				 @RequestParam("doeDataFile") MultipartFile doeDataFile) {
+				 @RequestBody @Valid @Multipart gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationRequestDTO dataObjectRegistration,
+				 @RequestBody(required=false) @Valid MultipartFile doeDataFile) {
 	       	log.info("register data files:");
 		     log.info("Headers: {}", headers);
 		     
-		     String path = request.getRequestURI().split(request.getContextPath() + "/collection/")[1];		 
+		     String path = request.getRequestURI().split(request.getContextPath() + "/v2/dataObject/")[1];		 
 		     log.info("pathName: " +path);
 		     
 		      try {
@@ -451,7 +452,7 @@ public class RestAPICommonController extends AbstractDoeController{
 	    	log.info("register data files:");
 		     log.info("Headers: {}", headers);
 		     
-		     String path = request.getRequestURI().split(request.getContextPath() + "/collection/")[1];		 
+		     String path = request.getRequestURI().split(request.getContextPath() + "/v2/registration/")[1];		 
 		     log.info("pathName: " +path);
 		     
 		      try {
@@ -506,8 +507,9 @@ public class RestAPICommonController extends AbstractDoeController{
 		          }
 		      return "error in registration";
 	    }
+	    
 	    @PostMapping(value="/collection/query",consumes= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE},
-	    produces= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
+	    	    produces= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
 	    public HpcCollectionListDTO queryCollections(@RequestHeader HttpHeaders headers, HttpSession session,
 				 HttpServletResponse response,HttpServletRequest request, 
 				 @RequestBody @Valid HpcCompoundMetadataQueryDTO compoundMetadataQuery) {

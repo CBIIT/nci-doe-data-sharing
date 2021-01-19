@@ -486,7 +486,7 @@ public class DoeClientUtil {
   }
 
   public static boolean registerDatafile(String token, MultipartFile hpcDatafile,
-      String hpcDatafileURL, HpcDataObjectRegistrationRequestDTO datafileDTO, String path,
+      String hpcDatafileURL, gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationRequestDTO datafileDTO, String path,
       String hpcCertPath, String hpcCertPassword) {
 	  
 	  log.debug("Register data file for path: " + path);
@@ -541,6 +541,63 @@ public class DoeClientUtil {
       throw new DoeWebException(e.getMessage());
     }
   }
+  
+  public static boolean registerDatafile(String token, MultipartFile hpcDatafile,
+	      String hpcDatafileURL, HpcDataObjectRegistrationRequestDTO datafileDTO, String path,
+	      String hpcCertPath, String hpcCertPassword) {
+		  
+		  log.debug("Register data file for path: " + path);
+	    try {
+	      try {
+	        HpcDataObjectListDTO datafile =
+	            getDatafiles(token, hpcDatafileURL, path, false, hpcCertPath, hpcCertPassword);
+	        if (datafile != null && datafile.getDataObjectPaths() != null
+	            && datafile.getDataObjectPaths().size() > 0)
+	          throw new DoeWebException("Failed to create. Data file already exists: " + path);
+	      } catch (DoeWebException e) {
+	        // Data file is not there!
+	    	  log.error("failed to get data file" +e);
+	      }
+
+	      WebClient client = DoeClientUtil.getWebClient(UriComponentsBuilder
+	        .fromHttpUrl(hpcDatafileURL).path("/{dme-archive-path}").buildAndExpand(
+	        path).encode().toUri().toURL().toExternalForm(), hpcCertPath,
+	        hpcCertPassword);
+	      client.type(MediaType.MULTIPART_FORM_DATA_VALUE).accept(MediaType.APPLICATION_JSON_VALUE);
+	      List<Attachment> atts = new LinkedList<Attachment>();
+	      atts.add(new org.apache.cxf.jaxrs.ext.multipart.Attachment("dataObjectRegistration",
+	          "application/json", datafileDTO));
+	      ContentDisposition cd2 =
+	          new ContentDisposition("attachment;filename=" + hpcDatafile.getName());
+	      atts.add(new org.apache.cxf.jaxrs.ext.multipart.Attachment("dataObject",
+	          hpcDatafile.getInputStream(), cd2));
+
+	      client.header("Authorization", "Bearer " + token);
+
+	      Response restResponse = client.put(new MultipartBody(atts));
+	      if (restResponse.getStatus() == 201) {
+	    	  //add log.debug
+	        return true;
+	      } else {
+	        ObjectMapper mapper = new ObjectMapper();
+	        AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
+	            new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
+	            new JacksonAnnotationIntrospector());
+	        mapper.setAnnotationIntrospector(intr);
+	        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+	        MappingJsonFactory factory = new MappingJsonFactory(mapper);
+	        JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+
+	        HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
+	        log.error("failed to register data file" +exception);
+	        throw new DoeWebException(exception.getMessage());
+	      }
+	    } catch (Exception e) {
+	      log.error("failed to register data file" +e);
+	      throw new DoeWebException(e.getMessage());
+	    }
+	  }
 
   public static HpcBulkDataObjectRegistrationResponseDTO registerBulkDatafiles(String token,
 	      String hpcDatafileURL, HpcBulkDataObjectRegistrationRequestDTO datafileDTO,
