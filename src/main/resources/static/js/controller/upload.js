@@ -138,6 +138,7 @@ function retrieveCollections($this, selectedIndex,action) {
 	var params;
 	var selectedValue;
 	if(action  == 'onChange') {
+		$("#" +selectTarget+ " option[value='ANY']").remove();
 		 selectedValue = selectedIndex.value;
 		 params = {selectedPath:selectedIndex.value};
 	} else {
