@@ -25,6 +25,7 @@ import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQueryOperator;
+import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataQuery;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataQueryLevelFilter;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataQueryOperator;
@@ -115,7 +116,7 @@ public class RestAPICommonController extends AbstractDoeController{
 	          HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, 
 						serviceURL, parentPath, true, sslCertPath, sslCertPassword);
 	          HpcCollectionDTO result = collectionDto.getCollections().get(0);
-	          String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries(),"Asset");
+	          String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
 	          
 	          if(StringUtils.isNotEmpty(accessGrp) && "public".equalsIgnoreCase(accessGrp)) {
 	        	  isPermissions = true;
@@ -183,7 +184,7 @@ public class RestAPICommonController extends AbstractDoeController{
 	          HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, 
 						serviceURL, path, true, sslCertPath, sslCertPassword);
 	          HpcCollectionDTO result = collectionDto.getCollections().get(0);
-	          String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries(),"Asset");
+	          String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
 	          
 	          if(StringUtils.isNotEmpty(accessGrp) && "public".equalsIgnoreCase(accessGrp)) {
 	        	  isPermissions = true;
@@ -242,7 +243,7 @@ public class RestAPICommonController extends AbstractDoeController{
 	          HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, 
 						serviceURL, path, true, sslCertPath, sslCertPassword);
 	          HpcCollectionDTO result = collectionDto.getCollections().get(0);
-	          String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries(),"Asset");
+	          String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
 	          
 	          if(StringUtils.isNotEmpty(accessGrp) && "public".equalsIgnoreCase(accessGrp)) {
 	        	  isPermissions = true;
@@ -283,10 +284,11 @@ public class RestAPICommonController extends AbstractDoeController{
 	          Boolean isPermissions = false;
 	          String doeLogin = (String) session.getAttribute("doeLogin");
 	          log.info("doeLogin: " + doeLogin);
-	          HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, 
-						serviceURL, path, true, sslCertPath, sslCertPassword);
+	          HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL,path, list, sslCertPath,sslCertPassword);
+	          
+	          
 	          HpcCollectionDTO result = collectionDto.getCollections().get(0);
-	          String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries(),"Asset");
+	          String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
 	          
 	          if(StringUtils.isNotEmpty(accessGrp) && "public".equalsIgnoreCase(accessGrp)) {
 	        	  isPermissions = true;
@@ -296,10 +298,10 @@ public class RestAPICommonController extends AbstractDoeController{
 	             }
 	          if(Boolean.TRUE.equals(isPermissions)) {
 	          
-	          return  DoeClientUtil.getCollection(authToken, serviceURL, 
-						path, list, sslCertPath,sslCertPassword);
-	          }
-	          return null;
+	        	  return collectionDto;
+	          } 
+	            return null;
+	          
 	         
 	        } catch (Exception e) {
                log.error("error in download" + e);
@@ -422,6 +424,7 @@ public class RestAPICommonController extends AbstractDoeController{
 							}
 					   }
 
+			            
 					boolean created =  DoeClientUtil.registerDatafile(authToken, doeDataFile, dataObjectAsyncServiceURL, dataObjectRegistration,
 							path, sslCertPath, sslCertPassword);
 					if(created) {
@@ -739,4 +742,16 @@ public class RestAPICommonController extends AbstractDoeController{
 	    	 
 	    	 return false;
 	    }
+	    
+	    public String getAttributeValue(String attrName, List<HpcMetadataEntry> list) {
+			if (list == null)
+				return null;
+			
+			HpcMetadataEntry entry =  list.stream().filter(e -> e.getAttribute().equalsIgnoreCase(attrName)).
+					findAny().orElse(null);
+			if(entry !=null) {
+				return entry.getValue();
+			}
+			return null;
+}
 }
