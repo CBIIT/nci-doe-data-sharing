@@ -10,8 +10,7 @@ import com.fasterxml.jackson.databind.introspect.AnnotationIntrospectorPair;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
-
-import antlr.StringUtils;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.AjaxResponseBody;
 import gov.nih.nci.hpc.domain.datamanagement.HpcPermission;
@@ -501,16 +500,23 @@ public class DoeClientUtil {
         // Data file is not there!
     	  log.error("failed to get data file" +e);
       }
-
+      ObjectMapper mapper1 = new ObjectMapper();
+      mapper1.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+      String json = mapper1.writeValueAsString(datafileDTO);
+      
       WebClient client = DoeClientUtil.getWebClient(UriComponentsBuilder
         .fromHttpUrl(hpcDatafileURL).path("/{dme-archive-path}").buildAndExpand(
         path).encode().toUri().toURL().toExternalForm(), hpcCertPath,
         hpcCertPassword);
+      
       client.type(MediaType.MULTIPART_FORM_DATA_VALUE).accept(MediaType.APPLICATION_JSON_VALUE);
+      
       List<Attachment> atts = new LinkedList<Attachment>();
       atts.add(new org.apache.cxf.jaxrs.ext.multipart.Attachment("dataObjectRegistration",
-          "application/json", datafileDTO));
+          "application/json", json));
+      
       if(hpcDatafile != null) {
+    	  
       ContentDisposition cd2 =
           new ContentDisposition("attachment;filename=" + hpcDatafile.getName());
       atts.add(new org.apache.cxf.jaxrs.ext.multipart.Attachment("dataObject",

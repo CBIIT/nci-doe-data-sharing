@@ -58,6 +58,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/api")
@@ -240,8 +241,12 @@ public class RestAPICommonController extends AbstractDoeController{
 	          Boolean isPermissions = false;
 	          String doeLogin = (String) session.getAttribute("doeLogin");
 	          log.info("doeLogin: " + doeLogin);
+	          String parentPath = null;
+				parentPath = path.substring(0, path.lastIndexOf('/'));
+				
+				if (!parentPath.isEmpty()) {
 	          HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, 
-						serviceURL, path, true, sslCertPath, sslCertPassword);
+						serviceURL, parentPath, true, sslCertPath, sslCertPassword);
 	          HpcCollectionDTO result = collectionDto.getCollections().get(0);
 	          String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
 	          
@@ -255,6 +260,7 @@ public class RestAPICommonController extends AbstractDoeController{
 	            return DoeClientUtil.getDatafiles(authToken, dataObjectServiceURL, 
 					  path, true, includeAcl,sslCertPath, sslCertPassword);
 	          } 
+				}
 	          
 	          return null;
 	        	 
@@ -284,7 +290,8 @@ public class RestAPICommonController extends AbstractDoeController{
 	          Boolean isPermissions = false;
 	          String doeLogin = (String) session.getAttribute("doeLogin");
 	          log.info("doeLogin: " + doeLogin);
-	          HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL,path, list, sslCertPath,sslCertPassword);
+	          HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL,path, 
+	        		  false,list,true, sslCertPath,sslCertPassword);
 	          
 	          
 	          HpcCollectionDTO result = collectionDto.getCollections().get(0);
