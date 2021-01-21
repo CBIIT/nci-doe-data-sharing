@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
 
-
+import antlr.StringUtils;
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.AjaxResponseBody;
 import gov.nih.nci.hpc.domain.datamanagement.HpcPermission;
@@ -510,10 +510,12 @@ public class DoeClientUtil {
       List<Attachment> atts = new LinkedList<Attachment>();
       atts.add(new org.apache.cxf.jaxrs.ext.multipart.Attachment("dataObjectRegistration",
           "application/json", datafileDTO));
+      if(hpcDatafile != null) {
       ContentDisposition cd2 =
           new ContentDisposition("attachment;filename=" + hpcDatafile.getName());
       atts.add(new org.apache.cxf.jaxrs.ext.multipart.Attachment("dataObject",
           hpcDatafile.getInputStream(), cd2));
+      }
 
       client.header("Authorization", "Bearer " + token);
 

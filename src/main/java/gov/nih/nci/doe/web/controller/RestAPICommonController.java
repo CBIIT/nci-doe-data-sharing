@@ -51,7 +51,6 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
-import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -423,7 +422,7 @@ public class RestAPICommonController extends AbstractDoeController{
 							}
 					   }
 
-					boolean created =  DoeClientUtil.registerDatafile(authToken, doeDataFile, dataObjectServiceURL, dataObjectRegistration,
+					boolean created =  DoeClientUtil.registerDatafile(authToken, doeDataFile, dataObjectAsyncServiceURL, dataObjectRegistration,
 							path, sslCertPath, sslCertPassword);
 					if(created) {
 						
