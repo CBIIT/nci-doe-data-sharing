@@ -258,7 +258,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
                 responsivePriority: 1
             },
             
-            {"data": "fileSizeActual", "render": function (data, type, row) {
+            {"data": "fileSize", "render": function (data, type, row) {
                 return renderFileSize(data, type, row);
             },
             responsivePriority: 4
@@ -282,6 +282,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
             },
             {"targets": 0, "orderable": false},
             {"targets": -1, "orderable": false},
+            {"targets":2,"type":"file-size"},
             { "visible": isVisible, "targets": 3}],
         "dom": '<"top"lip>rt<"bottom"p>',
 
@@ -295,6 +296,32 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
         }
     });
 }
+
+$.fn.dataTable.ext.type.order['file-size-pre'] = function ( data ) {
+    var matches = data.match( /^(\d+(?:\.\d+)?)\s*([a-z]+)/i );
+    var multipliers = {
+        b:  1,
+        bytes: 1,
+        kb: 1000,
+        kib: 1024,
+        mb: 1000000,
+        mib: 1048576,
+        gb: 1000000000,
+        gib: 1073741824,
+        tb: 1000000000000,
+        tib: 1099511627776,
+        pb: 1000000000000000,
+        pib: 1125899906842624
+    };
+
+    if (matches) {
+        var multiplier = multipliers[matches[2].toLowerCase()];
+        return parseFloat( matches[1] ) * multiplier;
+    } else {
+        return -1;
+    }
+}
+
 
 function renderSelect(data, type, row) {
 	var selectHtml = "<input type='checkbox' id='" + row.path + "' class='dt-checkboxes selectIndividualCheckbox' aria-label='select'/>";

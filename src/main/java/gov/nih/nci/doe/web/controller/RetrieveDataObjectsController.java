@@ -182,7 +182,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 	private String addHumanReadableSize(String value) {
 		if(StringUtils.isNotEmpty(value)) {
         String humanReadableSize = FileUtils.byteCountToDisplaySize(Long.parseLong(value));
-        return value + " (" + humanReadableSize + ")";
+        return humanReadableSize;
 		}
 		
 		return null;
@@ -192,13 +192,13 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 	        String displaySize;
 
 	        if (size / ONE_GB > 0) {
-	            displaySize = String.valueOf(size / ONE_GB) + " GB";
+	            displaySize = String.valueOf(size / ONE_GB) + "gb";
 	        } else if (size / ONE_MB > 0) {
-	            displaySize = String.valueOf(size / ONE_MB) + " MB";
+	            displaySize = String.valueOf(size / ONE_MB) + "mb";
 	        } else if (size / ONE_KB > 0) {
-	            displaySize = String.valueOf(size / ONE_KB) + " KB";
+	            displaySize = String.valueOf(size / ONE_KB) + "kb";
 	        } else {
-	            displaySize = String.valueOf(size) + " bytes";
+	            displaySize = String.valueOf(size) + "bytes";
 	        }
 	        return displaySize;
 	    }
