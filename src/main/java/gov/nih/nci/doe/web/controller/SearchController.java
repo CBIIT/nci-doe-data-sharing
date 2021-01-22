@@ -442,6 +442,11 @@ public class SearchController extends AbstractDoeController {
 		     	
 		     	attrNamesList.addAll(userDefinedMetadaList);
 		     	
+		     	Set<String> duplicates = new HashSet<>(); 
+		     	duplicates.addAll(attrNamesList); 
+		     	attrNamesList.clear();  
+		     	attrNamesList.addAll(duplicates); 
+		        
 		     	attrNamesList.stream().forEach(e -> keyValueBeanResults.add(new KeyValueBean(e, e))); 
 		     	keyValueBeanResults.sort(Comparator.comparing(KeyValueBean::getKey,String.CASE_INSENSITIVE_ORDER));
 				

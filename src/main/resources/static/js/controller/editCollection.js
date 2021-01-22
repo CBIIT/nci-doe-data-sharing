@@ -10,7 +10,7 @@ function constructCollectionMetData(metadata,metaDataPath,isDataObject,permissio
 	 $("#editUserMetadataFileName").html(fileName);
 	var data = metadata;
 	$.each(data, function(key, value) {	
-		if(value.key.indexOf("_identifier") != -1) {
+		if(value.key.indexOf("_identifier") != -1 || value.key.indexOf("asset_type") != -1) {
 			$("#userMetaData tbody").append('<tr><td>' + value.displayName + '</td><td><input type="text" disabled="true" aria-label="value of meta data" name="zAttrStr_'+value.key+'" style="width:70%;" value="' + value.value + '"></td></tr>');
 		} else {
           $("#userMetaData tbody").append('<tr><td>' + value.displayName + '</td><td><input type="text" aria-label="value of meta data" name="zAttrStr_'+value.key+'" style="width:70%;" value="' + value.value + '"></td></tr>');
