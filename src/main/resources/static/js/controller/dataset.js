@@ -75,6 +75,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
         	$("#selectedProgramName").text(collectionSet.programName);
         	$("#selectedStudyName").text(collectionSet.studyName);
         	$("#selectedDataSetName").text(collectionSet.datasetName);
+        	$("#selectedAssetPath").text(dataSetPath);
         	
         	 $(".selectAll").change(function (e) {
                  var table = $(e.target).closest('table');
@@ -157,7 +158,21 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
         	
            });
            
-          // $("#downloadSelectedMetadata").click(function(e){
+           var clipboard = new ClipboardJS('.share_path_copy');
+
+    	   clipboard.on('success', function(e) {
+      	     console.log(e);
+      	     $(e.trigger).tooltip('hide').attr('data-original-title', 'Copied').tooltip('show');
+      	     setTimeout(function() {
+                   $(e.trigger).tooltip('hide');
+                   $(e.trigger).attr('data-original-title', 'Copy to Clipboard');
+                     }, 2000);
+      	  
+      	   });
+
+    	   clipboard.on('error', function(e) {
+    	     console.log(e);
+    	   });
         $('#downloadSelectedMetadata').unbind('click').bind('click', function() {
         	   exportDataObjectMetadata();
         	  
@@ -495,7 +510,10 @@ function renderDownload(data, type, row,accessgroups,permissions) {
 	
 	html += "<a aria-label='download link' class='btn btn-link btn-sm downloadMetadata'  data_path  = '" + path + "' href='javascript:void(0);' " +
      "><i class='fas fa-file-export' data-toggle='tooltip' title='Download Metadata'></i></a>";
-	
+		
+	html += "<button type='button' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='bottom' " +
+			"title='Copy path to clipboard' data-clipboard-text='"+ row.path + "'>" +
+			"<i class='fas fa-copy'></i></button>";
 	return html;
 
 }

@@ -171,6 +171,8 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 				returnResult.setFileSize(addHumanReadableSize(getAttributeValue("source_file_size", result.getMetadataEntries().getSelfMetadataEntries(),"DataObject")));
 				returnResult.setFileSizeActual(Integer.valueOf(getAttributeValue(
 						"source_file_size", result.getMetadataEntries().getSelfMetadataEntries(),"DataObject")));
+				returnResult.setUuid(getAttributeValue(
+						"uuid", result.getMetadataEntries().getSelfMetadataEntries(),"DataObject"));
 				returnResults.add(returnResult);
 			}
 			
