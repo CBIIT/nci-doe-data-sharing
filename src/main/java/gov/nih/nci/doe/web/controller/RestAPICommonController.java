@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.http.MediaType;
 
 import gov.nih.nci.doe.web.DoeWebException;
@@ -85,6 +88,74 @@ public class RestAPICommonController extends AbstractDoeController{
 	 @Autowired
 	TaskManagerService taskManagerService;
 	 
+	 
+	 @PostMapping(value="/dataObject/**/generateDownloadRequestURL")
+	 public String generateDownloadRequestURL(@RequestHeader HttpHeaders headers, 
+			 HttpServletRequest request, HttpSession session,
+			 HttpServletResponse response) {
+		 String path = request.getRequestURI().split(request.getContextPath() + "/dataObject/")[1];
+		 Integer index=path.lastIndexOf('/');
+		 path = path.substring(0,index);
+		 log.info("download sync:");
+	     log.info("Headers: {}", headers);
+	     log.info("pathName: " +path);
+	      try {
+	          String authToken = (String) session.getAttribute("writeAccessUserToken");
+	          log.info("authToken: " + authToken);
+	          if (authToken == null) {
+	            return null;
+	          }
+	          String doeLogin = (String) session.getAttribute("doeLogin");
+	          log.info("doeLogin: " + doeLogin);
+	          if (doeLogin == null) {
+	            return null;
+	          }
+
+	          Boolean isPermissions = false;
+	          String parentPath = null;
+      		if (path.lastIndexOf('/') != -1) {
+					parentPath = path.substring(0, path.lastIndexOf('/'));
+      		}
+	          HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, 
+						serviceURL, parentPath, true, sslCertPath, sslCertPassword);
+	          HpcCollectionDTO result = collectionDto.getCollections().get(0);
+	          String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
+	          
+	          if(StringUtils.isNotEmpty(accessGrp) && "public".equalsIgnoreCase(accessGrp)) {
+	        	  isPermissions = true;
+	          } else if(StringUtils.isNotEmpty(accessGrp) && !"public".equalsIgnoreCase(accessGrp) 
+	        		  && Boolean.TRUE.equals(verifyCollectionPermissions(doeLogin,path,collectionDto))){
+	        		   isPermissions = true;   
+	             }
+	          if(Boolean.TRUE.equals(isPermissions)) {   	
+	          final String serviceURL = UriComponentsBuilder.fromHttpUrl(
+	            this.dataObjectServiceURL).path("/{dme-archive-path}/generateDownloadRequestURL")
+	            .buildAndExpand(path).encode().toUri()
+	            .toURL().toExternalForm();
+
+	          final HpcDownloadRequestDTO dto = new HpcDownloadRequestDTO();
+	          dto.setGenerateDownloadRequestURL(true);
+
+	          WebClient client = DoeClientUtil.getWebClient(serviceURL, sslCertPath, sslCertPassword);
+	          client.header("Authorization", "Bearer " + authToken);
+
+	          Response restResponse = client.invoke("POST", dto);
+	          log.info("rest response:" + restResponse.getStatus());
+	          if (restResponse.getStatus() == 200) {
+	        	  MappingJsonFactory factory = new MappingJsonFactory();
+				  JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+	        	  HpcDataObjectDownloadResponseDTO dataObject = parser.readValueAs(HpcDataObjectDownloadResponseDTO.class);
+	        	  ObjectMapper mapper = new ObjectMapper();
+	        	  mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+	              return mapper.writeValueAsString(dataObject);
+	            }   
+	          }
+	          return null;
+	      } catch (Exception e) {
+	          log.error("error in download" + e);
+	      }
+	        return null;
+	 }
 	 @PostMapping(value="/dataObject/**/download")
 	 public ResponseEntity<?> asynchronousDownload(@RequestHeader HttpHeaders headers, 
 			 HttpServletRequest request, HttpSession session,
