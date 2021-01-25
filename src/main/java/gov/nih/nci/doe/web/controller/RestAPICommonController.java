@@ -295,7 +295,7 @@ public class RestAPICommonController extends AbstractDoeController{
 	 
 	 @GetMapping(value="/v2/dataObject/**", produces= {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_OCTET_STREAM_VALUE})
 	  public HpcDataObjectListDTO getDataObject(@RequestHeader HttpHeaders headers, HttpSession session,
-				 HttpServletResponse response,HttpServletRequest request, @RequestParam("includeAcl") Boolean includeAcl) {
+				 HttpServletResponse response,HttpServletRequest request, @RequestParam(required=false) Boolean includeAcl) {
 
 		 log.info("get dataobject:");
 	     log.info("Headers: {}", headers);	     
@@ -328,6 +328,9 @@ public class RestAPICommonController extends AbstractDoeController{
 	        		   isPermissions = true;   
 	             }
 	          if(Boolean.TRUE.equals(isPermissions)) {
+	        	  if(includeAcl == null) {
+	        		  includeAcl = false;
+	        	  }
 	            return DoeClientUtil.getDatafiles(authToken, dataObjectServiceURL, 
 					  path, true, includeAcl,sslCertPath, sslCertPassword);
 	          } 
