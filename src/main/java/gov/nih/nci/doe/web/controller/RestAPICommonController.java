@@ -32,7 +32,9 @@ import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataQuery;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataQueryLevelFilter;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataQueryOperator;
+import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectDownloadResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDownloadResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadResponseDTO;
@@ -61,6 +63,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+/**
+* Rest API Common Controller.
+ *
+ * @author <a href="mailto:mounica.ganta@nih.gov">Mounica Ganta</a>
+ *
+ */
 
 @CrossOrigin
 @RestController
@@ -70,11 +78,17 @@ public class RestAPICommonController extends AbstractDoeController{
 	 @Value("${gov.nih.nci.hpc.server.dataObject}")
 	 private String dataObjectServiceURL;
 	 
+	 @Value("${gov.nih.nci.hpc.server.v2.download}")
+	 private String bulkDownloadUrl;
+	 
 	 @Value("${gov.nih.nci.hpc.server.v2.dataObject}")
 	 private String dataObjectAsyncServiceURL;
 	 
 	 @Value("${gov.nih.nci.hpc.server.collection}")
 	 private String serviceURL;
+	 
+	 @Value("${gov.nih.nci.hpc.server.v2.collection}")
+	 private String collectionUrl;
 	 
 	 @Value("${gov.nih.nci.hpc.server.search.collection.compound}")
 	 private String compoundCollectionSearchServiceURL;
@@ -88,12 +102,19 @@ public class RestAPICommonController extends AbstractDoeController{
 	 @Autowired
 	 TaskManagerService taskManagerService;
 	 
-	 
+	 /**
+	  * Returns the preassigned Url.
+	  *
+	  * @param path The path.
+	  * @return The REST service response.
+	  */
 	 @PostMapping(value="/dataObject/**/generateDownloadRequestURL")
 	 public String generateDownloadRequestURL(@RequestHeader HttpHeaders headers, 
 	   HttpServletRequest request, HttpSession session,HttpServletResponse response) {
 		 
 		 log.info("generateDownloadRequestURL");
+		 
+		 //getting path param from request URI.
 		 String path = request.getRequestURI().split(request.getContextPath() + "/dataObject/")[1];
 		 Integer index=path.lastIndexOf('/');
 		 path = path.substring(0,index);
@@ -102,15 +123,22 @@ public class RestAPICommonController extends AbstractDoeController{
 	     log.info("pathName: " +path);
 	     
 	      try {
+	    	  
+	    	  //getting write access token for download request URL
 	          String authToken = (String) session.getAttribute("writeAccessUserToken");
 	          log.info("authToken: " + authToken);
 	          if (authToken == null) {
+	        	  // return response code for authtoken
 	            return null;
 	          }
+	          
+	          // verifying modac authentication.
 	          String doeLogin = (String) session.getAttribute("doeLogin");
 	          log.info("doeLogin: " + doeLogin);
 	          if (doeLogin == null) {
-	            return null;
+	        	  return null;
+	        	  //return repsonse code for not authorized.
+	        	  //return new ResponseEntity<>("Error in download", HttpStatus.OK);
 	          }
 
 	          Boolean isPermissions = false;
@@ -124,12 +152,11 @@ public class RestAPICommonController extends AbstractDoeController{
 	          HpcCollectionDTO result = collectionDto.getCollections().get(0);
 	          String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
 	          
-	          if(StringUtils.isNotEmpty(accessGrp) && "public".equalsIgnoreCase(accessGrp)) {
+	          //verify group or owner permissions on the collection path 
+	          if(StringUtils.isNotEmpty(accessGrp) && ("public".equalsIgnoreCase(accessGrp) || 
+	        		  Boolean.TRUE.equals(hasCollectionPermissions(doeLogin,parentPath,collectionDto)))) {
 	        	  isPermissions = true;
-	          } else if(StringUtils.isNotEmpty(accessGrp) && !"public".equalsIgnoreCase(accessGrp) 
-	        		  && Boolean.TRUE.equals(verifyCollectionPermissions(doeLogin,path,collectionDto))){
-	        		   isPermissions = true;   
-	          }
+	          } 
 	          
 	          if(Boolean.TRUE.equals(isPermissions)) {   	
 	            final String requestUrl = UriComponentsBuilder.fromHttpUrl(
@@ -153,6 +180,7 @@ public class RestAPICommonController extends AbstractDoeController{
 	              return mapper.writeValueAsString(dataObject);
 	            }   
 	          }
+	          
 	          return null;
 	      } catch (Exception e) {
 	          log.error("error in download" + e);
@@ -160,15 +188,125 @@ public class RestAPICommonController extends AbstractDoeController{
 	        return null;
 	 }
 	 
+	 @PostMapping(value="/v2/download")
+	 public ResponseEntity<?> downloadDataObjectsOrCollections(@RequestHeader HttpHeaders headers, 
+			 HttpServletRequest request, HttpSession session,HttpServletResponse response,
+			 @RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectDownloadRequestDTO downloadRequest) {
+		 
+		 log.info("download collection:");
+	     log.info("Headers: {}", headers);
+	     try {
+	          String authToken = (String) session.getAttribute("writeAccessUserToken");
+	          log.info("authToken: " + authToken);
+	          if (authToken == null) {
+	            return null;
+	          }
+	          String doeLogin = (String) session.getAttribute("doeLogin");
+	          log.info("doeLogin: " + doeLogin);
+	          if (doeLogin == null) {
+	            return null;
+	          }
+	          String requestURL;
+	          UriComponentsBuilder ucBuilder  = UriComponentsBuilder.fromHttpUrl(bulkDownloadUrl);		     		    
+			    
+			    if (ucBuilder == null) {
+				      return null;
+				}
+			    requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
+				WebClient client = DoeClientUtil.getWebClient(requestURL, sslCertPath, sslCertPassword);
+				client.header("Authorization", "Bearer " + authToken);	
+				Response restResponse = client.invoke("POST", downloadRequest);
+
+	            log.info("rest response:" + restResponse.getStatus());
+	            if (restResponse.getStatus() == 200) {
+	            	HpcBulkDataObjectDownloadResponseDTO downloadDTO =
+		        	          (HpcBulkDataObjectDownloadResponseDTO) DoeClientUtil.getObject(restResponse,HpcBulkDataObjectDownloadResponseDTO.class);
+		        	  String taskId = "Unknown";
+		              if (downloadDTO != null)
+		                taskId = downloadDTO.getTaskId();
+		              return new ResponseEntity<>("taskId: " + taskId, HttpStatus.OK);	          
+	            }   
+	          
+	          return new ResponseEntity<>("Error in download", HttpStatus.OK);
+	      } catch (Exception e) {
+	          log.error("error in download" + e);
+	      }
+	        return null;
+	     
+	 }
+	 
+	 @PostMapping(value="/v2/collection/**/download")
+	 public ResponseEntity<?> collectionDownload(@RequestHeader HttpHeaders headers, 
+			 HttpServletRequest request, HttpSession session,HttpServletResponse response,
+			 @RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO downloadRequest) {
+		 
+		 log.info("download collection:");
+		 String path = request.getRequestURI().split(request.getContextPath() + "/v2/collection/")[1];
+		 Integer index=path.lastIndexOf('/');
+		 path = path.substring(0,index);
+		 
+	     log.info("Headers: {}", headers);
+	     log.info("pathName: " +path);
+	     
+	     try {
+	          String authToken = (String) session.getAttribute("writeAccessUserToken");
+	          log.info("authToken: " + authToken);
+	          if (authToken == null) {
+	            return null;
+	          }
+	          String doeLogin = (String) session.getAttribute("doeLogin");
+	          log.info("doeLogin: " + doeLogin);
+	          if (doeLogin == null) {
+	            return null;
+	          }
+
+	          Boolean isPermissions = false;
+
+	          HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, 
+						serviceURL, path, true, sslCertPath, sslCertPassword);
+	          
+	          HpcCollectionDTO result = collectionDto.getCollections().get(0);
+	          String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
+	          
+	          if(StringUtils.isNotEmpty(accessGrp) && ("public".equalsIgnoreCase(accessGrp) || 
+	        		  Boolean.TRUE.equals(hasCollectionPermissions(doeLogin,path,collectionDto)))) {
+	        	  isPermissions = true;
+	          } 
+	          
+	          if(Boolean.TRUE.equals(isPermissions)) {   	
+	             final String requestUrl = UriComponentsBuilder.fromHttpUrl(
+	              this.collectionUrl).path("/{dme-archive-path}/download")
+	              .buildAndExpand(path).encode().toUri().toURL().toExternalForm();
+
+	          WebClient client = DoeClientUtil.getWebClient(requestUrl, sslCertPath, sslCertPassword);
+	          client.header("Authorization", "Bearer " + authToken);
+
+	          Response restResponse = client.invoke("POST", downloadRequest);
+	          log.info("rest response:" + restResponse.getStatus());
+	            if (restResponse.getStatus() == 200) {
+	            	HpcCollectionDownloadResponseDTO downloadDTO =
+		        	          (HpcCollectionDownloadResponseDTO) DoeClientUtil.getObject(restResponse,HpcCollectionDownloadResponseDTO.class);
+		        	  String taskId = "Unknown";
+		              if (downloadDTO != null)
+		                taskId = downloadDTO.getTaskId();
+		              return new ResponseEntity<>("taskId: " + taskId, HttpStatus.OK);	          
+	            }   
+	          }
+	          return new ResponseEntity<>("Error in download", HttpStatus.OK);
+	      } catch (Exception e) {
+	          log.error("error in download" + e);
+	      }
+	        return null;
+	 }
 	 
 	 @PostMapping(value="/dataObject/**/download")
 	 public ResponseEntity<?> asynchronousDownload(@RequestHeader HttpHeaders headers, 
 			 HttpServletRequest request, HttpSession session,HttpServletResponse response) {
 		 
+		 log.info("download async:");
 		 String path = request.getRequestURI().split(request.getContextPath() + "/dataObject/")[1];
 		 Integer index=path.lastIndexOf('/');
 		 path = path.substring(0,index);
-		 log.info("download sync:");
 	     log.info("Headers: {}", headers);
 	     log.info("pathName: " +path);
 
@@ -196,12 +334,10 @@ public class RestAPICommonController extends AbstractDoeController{
 	          HpcCollectionDTO result = collectionDto.getCollections().get(0);
 	          String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
 	          
-	          if(StringUtils.isNotEmpty(accessGrp) && "public".equalsIgnoreCase(accessGrp)) {
+	          if(StringUtils.isNotEmpty(accessGrp) && ("public".equalsIgnoreCase(accessGrp) || 
+	        		  Boolean.TRUE.equals(hasCollectionPermissions(doeLogin,parentPath,collectionDto)))) {
 	        	  isPermissions = true;
-	          } else if(StringUtils.isNotEmpty(accessGrp) && !"public".equalsIgnoreCase(accessGrp) 
-	        		  && Boolean.TRUE.equals(verifyCollectionPermissions(doeLogin,path,collectionDto))){
-	        		   isPermissions = true;   
-	          }
+	          } 
 	          
 	          if(Boolean.TRUE.equals(isPermissions)) {   	
 	             final String requestUrl = UriComponentsBuilder.fromHttpUrl(
@@ -258,19 +394,22 @@ public class RestAPICommonController extends AbstractDoeController{
 	            return null;
 	          }
 
+	          String parentPath = null;
+     		   if (path.lastIndexOf('/') != -1) {
+					parentPath = path.substring(0, path.lastIndexOf('/'));
+     		   }
+     		   
 	          Boolean isPermissions = false;
 	          HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, 
-						serviceURL, path, true, sslCertPath, sslCertPassword);
+						serviceURL, parentPath, true, sslCertPath, sslCertPassword);
 	          
 	          HpcCollectionDTO result = collectionDto.getCollections().get(0);
 	          String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
 	          
-	          if(StringUtils.isNotEmpty(accessGrp) && "public".equalsIgnoreCase(accessGrp)) {
+	          if(StringUtils.isNotEmpty(accessGrp) && ("public".equalsIgnoreCase(accessGrp) || 
+	        		  Boolean.TRUE.equals(hasCollectionPermissions(doeLogin,parentPath,collectionDto)))) {
 	        	  isPermissions = true;
-	          } else if(StringUtils.isNotEmpty(accessGrp) && !"public".equalsIgnoreCase(accessGrp) 
-	        		  && Boolean.TRUE.equals(verifyCollectionPermissions(doeLogin,path,collectionDto))){
-	        		   isPermissions = true;   
-	          }
+	          } 
 	          
 	        if(Boolean.TRUE.equals(isPermissions)) {
 	          final String requestUrl = UriComponentsBuilder.fromHttpUrl(this.dataObjectAsyncServiceURL)
@@ -288,8 +427,6 @@ public class RestAPICommonController extends AbstractDoeController{
 	              if (downloadDTO != null)
 	                taskId = downloadDTO.getTaskId();
 	              return "taskId: " + taskId;
-	          }    else {
-	        	  return "error in download";
 	          }
 	        }
 	          return "error in download";
@@ -333,7 +470,7 @@ public class RestAPICommonController extends AbstractDoeController{
 	          if(StringUtils.isNotEmpty(accessGrp) && "public".equalsIgnoreCase(accessGrp)) {
 	        	  isPermissions = true;
 	          } else if(StringUtils.isNotEmpty(accessGrp) && !"public".equalsIgnoreCase(accessGrp) && 
-	        		  StringUtils.isNotEmpty(doeLogin) && Boolean.TRUE.equals(verifyCollectionPermissions(doeLogin,path,collectionDto))){
+	        		  StringUtils.isNotEmpty(doeLogin) && Boolean.TRUE.equals(hasCollectionPermissions(doeLogin,path,collectionDto))){
 	        		   isPermissions = true;   
 	          }
 	          
@@ -383,7 +520,7 @@ public class RestAPICommonController extends AbstractDoeController{
 	          if(StringUtils.isNotEmpty(accessGrp) && "public".equalsIgnoreCase(accessGrp)) {
 	        	  isPermissions = true;
 	          } else if(StringUtils.isNotEmpty(accessGrp) && !"public".equalsIgnoreCase(accessGrp) && 
-	        		  StringUtils.isNotEmpty(doeLogin) && Boolean.TRUE.equals(verifyCollectionPermissions(doeLogin,path,collectionDto))){
+	        		  StringUtils.isNotEmpty(doeLogin) && Boolean.TRUE.equals(hasCollectionPermissions(doeLogin,path,collectionDto))){
 	        		   isPermissions = true;   
 	          }
 	          
@@ -432,7 +569,7 @@ public class RestAPICommonController extends AbstractDoeController{
 					  if(!parentPath.equalsIgnoreCase(basePath)) {
 						  HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, 
 							  serviceURL, parentPath, true, sslCertPath, sslCertPassword);
-						  Boolean isValidPermissions = verifyCollectionPermissions(doeLogin,parentPath,parentCollectionDto);
+						  Boolean isValidPermissions = hasCollectionPermissions(doeLogin,parentPath,parentCollectionDto);
 							  if (Boolean.FALSE.equals(isValidPermissions)) {
 								 return "Insufficient privileges to create collection";
 							  }
@@ -508,7 +645,7 @@ public class RestAPICommonController extends AbstractDoeController{
 					
 				  if (!parentPath.isEmpty()) {
 						HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, serviceURL, parentPath, true, sslCertPath,sslCertPassword);
-						Boolean isValidPermissions = verifyCollectionPermissions(doeLogin,parentPath,parentCollectionDto);
+						Boolean isValidPermissions = hasCollectionPermissions(doeLogin,parentPath,parentCollectionDto);
 						if (Boolean.FALSE.equals(isValidPermissions)) {
 								return "Insufficient privileges to add data files.";
 						}
@@ -734,7 +871,7 @@ public class RestAPICommonController extends AbstractDoeController{
 		   return null;
 	    }
 	    
-	    private Boolean verifyCollectionPermissions(String loggedOnUser, String parentPath,HpcCollectionListDTO parentCollectionDto) {
+	    private Boolean hasCollectionPermissions(String loggedOnUser, String parentPath,HpcCollectionListDTO parentCollectionDto) {
 
 			 List<KeyValueBean> keyValueBeanResults = new ArrayList<>();
 			 if(!StringUtils.isEmpty(loggedOnUser)) {
