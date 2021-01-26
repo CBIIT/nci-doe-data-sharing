@@ -425,7 +425,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 
 	@SuppressWarnings("unchecked")
 	protected List<DoeMetadataAttrEntry> populateFormAttributes(HttpServletRequest request, HttpSession session,
-			 String basePath, String collectionType, String assetType, boolean refresh) {
+			 String basePath, String collectionType, String assetType, boolean refresh) throws DoeWebException{
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 
 		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");

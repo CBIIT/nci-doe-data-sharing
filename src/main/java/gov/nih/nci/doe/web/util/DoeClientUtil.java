@@ -102,7 +102,7 @@ public class DoeClientUtil {
 	}
 
 	public static String getBasePath(String authToken, String serviceURL, String parent, String sslCertPath,
-			String sslCertPassword, HpcDataManagementModelDTO modelDTO) throws DoeWebException{
+			String sslCertPassword, HpcDataManagementModelDTO modelDTO) throws DoeWebException {
 		HpcCollectionListDTO collectionListDTO = DoeClientUtil.getCollection(authToken, serviceURL, parent, true,
 				sslCertPath, sslCertPassword);
 		if (collectionListDTO != null && collectionListDTO.getCollections() != null) {
@@ -225,7 +225,7 @@ public class DoeClientUtil {
 	}
 
 	public static HpcDataManagementModelDTO getDOCModel(String token, String hpcModelURL, String hpcCertPath,
-			String hpcCertPassword) throws DoeWebException{
+			String hpcCertPassword) throws DoeWebException {
 
 		WebClient client = DoeClientUtil.getWebClient(hpcModelURL, hpcCertPath, hpcCertPassword);
 		client.header("Authorization", "Bearer " + token);
@@ -251,17 +251,18 @@ public class DoeClientUtil {
 	}
 
 	public static List<String> getDOCs(String token, String hpcModelURL, String hpcCertPath, String hpcCertPassword,
-			HttpSession session) throws DoeWebException{
+			HttpSession session) throws DoeWebException {
 		List<String> docs = new ArrayList<String>();
 		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
 		if (modelDTO == null) {
 			modelDTO = DoeClientUtil.getDOCModel(token, hpcModelURL, hpcCertPath, hpcCertPassword);
-			if (modelDTO != null)
-				session.setAttribute("userDOCModel", modelDTO);
-		}
 
-		for (HpcDocDataManagementRulesDTO docDTO : modelDTO.getDocRules())
-			docs.add(docDTO.getDoc());
+		}
+		if (modelDTO != null) {
+			session.setAttribute("userDOCModel", modelDTO);
+			for (HpcDocDataManagementRulesDTO docDTO : modelDTO.getDocRules())
+				docs.add(docDTO.getDoc());
+		}
 		return docs;
 	}
 
@@ -278,12 +279,12 @@ public class DoeClientUtil {
 	}
 
 	public static HpcCollectionListDTO getCollection(String token, String hpcCollectionlURL, String path, boolean list,
-			String hpcCertPath, String hpcCertPassword) throws DoeWebException{
+			String hpcCertPath, String hpcCertPassword) throws DoeWebException {
 		return getCollection(token, hpcCollectionlURL, path, false, list, false, hpcCertPath, hpcCertPassword);
 	}
 
 	public static HpcCollectionListDTO getCollection(String token, String hpcCollectionlURL, String path,
-			boolean children, boolean list, String hpcCertPath, String hpcCertPassword) throws DoeWebException{
+			boolean children, boolean list, String hpcCertPath, String hpcCertPassword) throws DoeWebException {
 		return getCollection(token, hpcCollectionlURL, path, children, list, false, hpcCertPath, hpcCertPassword);
 	}
 
@@ -315,10 +316,9 @@ public class DoeClientUtil {
 				MappingJsonFactory factory = new MappingJsonFactory(mapper);
 				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 
-				HpcCollectionListDTO collections = parser.readValueAs(HpcCollectionListDTO.class);
-				return collections;
+				return parser.readValueAs(HpcCollectionListDTO.class);
 			} else {
-				// log error
+				log.error("Failed to get collection! No READ access!");
 				throw new DoeWebException("Failed to get collection! No READ access!");
 			}
 
@@ -329,12 +329,12 @@ public class DoeClientUtil {
 	}
 
 	public static HpcDataObjectListDTO getDatafiles(String token, String hpcDatafileURL, String path, boolean list,
-			String hpcCertPath, String hpcCertPassword) throws DoeWebException{
+			String hpcCertPath, String hpcCertPassword) throws DoeWebException {
 		return getDatafiles(token, hpcDatafileURL, path, list, false, hpcCertPath, hpcCertPassword);
 	}
 
 	public static HpcDataObjectListDTO getDatafiles(String token, String hpcDatafileURL, String path, boolean list,
-			boolean includeAcl, String hpcCertPath, String hpcCertPassword) throws DoeWebException{
+			boolean includeAcl, String hpcCertPath, String hpcCertPassword) throws DoeWebException {
 		try {
 			final String url2Apply = UriComponentsBuilder.fromHttpUrl(hpcDatafileURL).path("/{dme-archive-path}")
 					.queryParam("list", Boolean.valueOf(list)).queryParam("includeAcl", Boolean.valueOf(includeAcl))
@@ -367,8 +367,8 @@ public class DoeClientUtil {
 	}
 
 	public static boolean createCollection(String token, String hpcCollectionURL,
-			HpcCollectionRegistrationDTO collectionDTO, String path, String hpcCertPath, String hpcCertPassword) 
-					throws DoeWebException{
+			HpcCollectionRegistrationDTO collectionDTO, String path, String hpcCertPath, String hpcCertPassword)
+			throws DoeWebException {
 		try {
 			HpcCollectionListDTO collection = getCollection(token, hpcCollectionURL, path, false, hpcCertPath,
 					hpcCertPassword);
@@ -407,8 +407,8 @@ public class DoeClientUtil {
 	}
 
 	public static boolean updateCollection(String token, String hpcCollectionURL,
-			HpcCollectionRegistrationDTO collectionDTO, String path, String hpcCertPath, String hpcCertPassword) 
-					throws DoeWebException{
+			HpcCollectionRegistrationDTO collectionDTO, String path, String hpcCertPath, String hpcCertPassword)
+			throws DoeWebException {
 		try {
 			WebClient client = DoeClientUtil
 					.getWebClient(
@@ -441,7 +441,7 @@ public class DoeClientUtil {
 	}
 
 	public static String deleteCollection(String token, String hpcCollectionURL, String collectionPath,
-			String hpcCertPath, String hpcCertPassword) throws DoeWebException{
+			String hpcCertPath, String hpcCertPassword) throws DoeWebException {
 		try {
 			WebClient client = DoeClientUtil.getWebClient(
 					UriComponentsBuilder.fromHttpUrl(hpcCollectionURL).path("/{dme-archive-path}")
@@ -474,7 +474,7 @@ public class DoeClientUtil {
 
 	public static boolean registerDatafile(String token, MultipartFile hpcDatafile, String hpcDatafileURL,
 			gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationRequestDTO datafileDTO, String path,
-			String hpcCertPath, String hpcCertPassword) throws DoeWebException{
+			String hpcCertPath, String hpcCertPassword) throws DoeWebException {
 
 		log.debug("Register data file for path: " + path);
 		try {
@@ -539,8 +539,8 @@ public class DoeClientUtil {
 	}
 
 	public static boolean registerDatafile(String token, MultipartFile hpcDatafile, String hpcDatafileURL,
-			HpcDataObjectRegistrationRequestDTO datafileDTO, String path, String hpcCertPath, 
-			String hpcCertPassword) throws DoeWebException{
+			HpcDataObjectRegistrationRequestDTO datafileDTO, String path, String hpcCertPath, String hpcCertPassword)
+			throws DoeWebException {
 
 		log.debug("Register data file for path: " + path);
 		try {
@@ -548,7 +548,7 @@ public class DoeClientUtil {
 				HpcDataObjectListDTO datafile = getDatafiles(token, hpcDatafileURL, path, false, hpcCertPath,
 						hpcCertPassword);
 				if (datafile != null && datafile.getDataObjectPaths() != null
-						&& datafile.getDataObjectPaths().size() > 0)
+						&& !CollectionUtils.isEmpty(datafile.getDataObjectPaths()))
 					throw new DoeWebException("Failed to create. Data file already exists: " + path);
 			} catch (DoeWebException e) {
 				// Data file is not there!
@@ -596,8 +596,8 @@ public class DoeClientUtil {
 	}
 
 	public static HpcBulkDataObjectRegistrationResponseDTO registerBulkDatafiles(String token, String hpcDatafileURL,
-			HpcBulkDataObjectRegistrationRequestDTO datafileDTO, String hpcCertPath, String hpcCertPassword) 
-					throws DoeWebException{
+			HpcBulkDataObjectRegistrationRequestDTO datafileDTO, String hpcCertPath, String hpcCertPassword)
+			throws DoeWebException {
 		try {
 			WebClient client = DoeClientUtil.getWebClient(hpcDatafileURL, hpcCertPath, hpcCertPassword);
 			client.header("Authorization", "Bearer " + token);
@@ -629,7 +629,7 @@ public class DoeClientUtil {
 	public static gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationResponseDTO registerBulkDatafiles(
 			String token, String hpcDatafileURL,
 			gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO datafileDTO,
-			String hpcCertPath, String hpcCertPassword) throws DoeWebException{
+			String hpcCertPath, String hpcCertPassword) throws DoeWebException {
 		try {
 			WebClient client = DoeClientUtil.getWebClient(hpcDatafileURL, hpcCertPath, hpcCertPassword);
 			client.header("Authorization", "Bearer " + token);
@@ -660,8 +660,8 @@ public class DoeClientUtil {
 	}
 
 	public static boolean updateDatafile(String token, String hpcDatafileURL,
-			HpcDataObjectRegistrationRequestDTO datafileDTO, String path, String hpcCertPath, 
-			String hpcCertPassword) throws DoeWebException{
+			HpcDataObjectRegistrationRequestDTO datafileDTO, String path, String hpcCertPath, String hpcCertPassword)
+			throws DoeWebException {
 		try {
 			WebClient client = DoeClientUtil
 					.getWebClient(
@@ -699,7 +699,7 @@ public class DoeClientUtil {
 	}
 
 	public static HpcUserPermsForCollectionsDTO getPermissionForCollections(String token, String hpcServiceURL,
-			String userId, Object[] basePaths, String hpcCertPath, String hpcCertPassword) throws DoeWebException{
+			String userId, Object[] basePaths, String hpcCertPath, String hpcCertPassword) throws DoeWebException {
 		try {
 			UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(hpcServiceURL).pathSegment(userId);
 			if (null != basePaths && 0 < basePaths.length) {
@@ -722,7 +722,7 @@ public class DoeClientUtil {
 	}
 
 	public static String deleteDatafile(String token, String hpcDatafileURL, String path, String hpcCertPath,
-			String hpcCertPassword) throws DoeWebException{
+			String hpcCertPassword) throws DoeWebException {
 		try {
 			WebClient client = DoeClientUtil
 					.getWebClient(
@@ -755,7 +755,7 @@ public class DoeClientUtil {
 	}
 
 	public static HpcDownloadSummaryDTO getDownloadSummary(String token, String hpcQueryURL, String hpcCertPath,
-			String hpcCertPassword) throws DoeWebException{
+			String hpcCertPassword) throws DoeWebException {
 
 		WebClient client = DoeClientUtil.getWebClient(hpcQueryURL, hpcCertPath, hpcCertPassword);
 		client.header("Authorization", "Bearer " + token);
@@ -782,7 +782,8 @@ public class DoeClientUtil {
 	}
 
 	public static HpcRegistrationSummaryDTO getRegistrationSummary(String token, String hpcQueryURL,
-			MultiValueMap<String, String> queryParamsMap, String hpcCertPath, String hpcCertPassword) throws DoeWebException{
+			MultiValueMap<String, String> queryParamsMap, String hpcCertPath, String hpcCertPassword)
+			throws DoeWebException {
 		try {
 			WebClient client = DoeClientUtil.getWebClient(UriComponentsBuilder.fromHttpUrl(hpcQueryURL)
 					.queryParams(queryParamsMap).build().encode().toUri().toURL().toExternalForm(), hpcCertPath,
@@ -808,7 +809,8 @@ public class DoeClientUtil {
 	}
 
 	public static HpcBulkDataObjectDownloadResponseDTO downloadFiles(String token, String hpcQueryURL,
-			HpcBulkDataObjectDownloadRequestDTO dto, String hpcCertPath, String hpcCertPassword) throws DoeWebException{
+			HpcBulkDataObjectDownloadRequestDTO dto, String hpcCertPath, String hpcCertPassword)
+			throws DoeWebException {
 		HpcBulkDataObjectDownloadResponseDTO response = null;
 		try {
 			log.debug("download files for path" + hpcCertPath);
@@ -848,7 +850,7 @@ public class DoeClientUtil {
 	}
 
 	public static AjaxResponseBody downloadDataFile(String token, String serviceURL, HpcDownloadRequestDTO dto,
-			String downloadType, String hpcCertPath, String hpcCertPassword) throws IOException,DoeWebException {
+			String downloadType, String hpcCertPath, String hpcCertPassword) throws IOException, DoeWebException {
 
 		log.debug("download files for path" + hpcCertPath + " and download type " + downloadType);
 		AjaxResponseBody result = new AjaxResponseBody();
@@ -886,7 +888,7 @@ public class DoeClientUtil {
 	}
 
 	public static HpcBulkDataObjectRegistrationStatusDTO getDataObjectRegistrationTask(String token, String hpcQueryURL,
-			String taskId, String hpcCertPath, String hpcCertPassword) throws DoeWebException{
+			String taskId, String hpcCertPath, String hpcCertPassword) throws DoeWebException {
 		try {
 
 			log.debug("get data object registration task" + hpcCertPath + " and task Id " + taskId);
@@ -916,7 +918,7 @@ public class DoeClientUtil {
 	}
 
 	public static HpcDataObjectDownloadStatusDTO getDataObjectDownloadTask(String token, String hpcQueryURL,
-			String hpcCertPath, String hpcCertPassword) throws DoeWebException{
+			String hpcCertPath, String hpcCertPassword) throws DoeWebException {
 
 		log.debug("get data object download task" + hpcCertPath);
 		WebClient client = DoeClientUtil.getWebClient(hpcQueryURL, hpcCertPath, hpcCertPassword);
@@ -956,7 +958,7 @@ public class DoeClientUtil {
 	}
 
 	public static HpcCollectionDownloadStatusDTO getDataObjectsDownloadTask(String token, String hpcQueryURL,
-			String hpcCertPath, String hpcCertPassword) throws DoeWebException{
+			String hpcCertPath, String hpcCertPassword) throws DoeWebException {
 
 		log.debug("get data object downloads " + hpcCertPath);
 		WebClient client = DoeClientUtil.getWebClient(hpcQueryURL, hpcCertPath, hpcCertPassword);
@@ -996,7 +998,7 @@ public class DoeClientUtil {
 	}
 
 	public static HpcMetadataAttributesListDTO getMetadataAttrNames(String token, String hpcMetadataAttrsURL,
-			String hpcCertPath, String hpcCertPassword) throws DoeWebException{
+			String hpcCertPath, String hpcCertPassword) throws DoeWebException {
 
 		String url = hpcMetadataAttrsURL;
 
@@ -1023,7 +1025,7 @@ public class DoeClientUtil {
 		}
 	}
 
-	public static <T> Object getObject(Response response, Class<T> objectClass) throws DoeWebException{
+	public static <T> Object getObject(Response response, Class<T> objectClass) throws DoeWebException {
 		ObjectMapper mapper = new ObjectMapper();
 		AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
 				new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()), new JacksonAnnotationIntrospector());
@@ -1041,7 +1043,7 @@ public class DoeClientUtil {
 	}
 
 	public static void populateBasePaths(HttpSession session, HpcDataManagementModelDTO modelDTO, String authToken,
-			String userId, String collectionURL, String sslCertPath, String sslCertPassword) throws DoeWebException{
+			String userId, String collectionURL, String sslCertPath, String sslCertPassword) throws DoeWebException {
 
 		Set<String> basePaths = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
 		final List<String> docRulesBasePaths = new ArrayList<>();
@@ -1065,13 +1067,13 @@ public class DoeClientUtil {
 
 	private static Properties appProperties;
 
-	private static void initApplicationProperties() throws DoeWebException{
+	private static void initApplicationProperties() throws DoeWebException {
 		if (null == appProperties) {
 			loadApplicationProperties();
 		}
 	}
 
-	private static void loadApplicationProperties() throws DoeWebException{
+	private static void loadApplicationProperties() throws DoeWebException {
 		Properties theProperties = new Properties();
 		try {
 			theProperties.load(DoeClientUtil.class.getResourceAsStream("/application.properties"));
