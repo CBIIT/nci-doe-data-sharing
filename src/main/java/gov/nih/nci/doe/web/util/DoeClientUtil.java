@@ -32,6 +32,7 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectRegistrationRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDocDataManagementRulesDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO;
+import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDownloadSummaryDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcMetadataAttributesListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcRegistrationSummaryDTO;
@@ -41,6 +42,7 @@ import gov.nih.nci.hpc.dto.security.HpcAuthenticationResponseDTO;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -351,6 +353,58 @@ public class DoeClientUtil {
 		}
 	}
 
+	public static Response getDataObjectQuery(String token, String compoundDataObjectSearchServiceURL,
+			Boolean returnParent, String sslCertPath, String sslCertPassword,
+			HpcCompoundMetadataQueryDTO compoundMetadataQuery) throws MalformedURLException, DoeWebException {
+
+		log.info("get data objects query");
+		try {
+			UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(compoundDataObjectSearchServiceURL);
+			ucBuilder.queryParam("returnParent", returnParent);
+			String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
+			WebClient client = DoeClientUtil.getWebClient(requestURL, sslCertPath, sslCertPassword);
+			client.header("Authorization", "Bearer " + token);
+			Response restResponse = client.invoke("POST", compoundMetadataQuery);
+			if (restResponse.getStatus() == 201 || restResponse.getStatus() == 200) {
+				return restResponse;
+			} else {
+				log.error("Failed to query data objects");
+				String errorMessage = getErrorMessage(restResponse);
+				throw new DoeWebException(errorMessage, restResponse.getStatus());
+			}
+		} catch (Exception e) {
+			log.error("Failed to query data objects");
+			throw new DoeWebException(e);
+		}
+
+	}
+
+	public static Response getCollectionSearchQuery(String authToken, String compoundCollectionSearchServiceURL,
+			String sslCertPath, String sslCertPassword, HpcCompoundMetadataQueryDTO compoundMetadataQuery)
+			throws MalformedURLException, DoeWebException {
+		try {
+			log.info("get collections for search");
+			UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(compoundCollectionSearchServiceURL);
+			ucBuilder.queryParam("returnParent", Boolean.TRUE);
+			String requestURL;
+			requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
+			WebClient client = DoeClientUtil.getWebClient(requestURL, sslCertPath, sslCertPassword);
+			client.header("Authorization", "Bearer " + authToken);
+			Response restResponse = client.invoke("POST", compoundMetadataQuery);
+			if (restResponse.getStatus() == 201 || restResponse.getStatus() == 200) {
+				return restResponse;
+			} else {
+				log.error("Failed to query collection");
+				String errorMessage = getErrorMessage(restResponse);
+				throw new DoeWebException(errorMessage, restResponse.getStatus());
+			}
+		} catch (Exception e) {
+			log.error("Failed to query collection");
+			throw new DoeWebException(e);
+		}
+
+	}
+
 	public static boolean createCollection(String token, String hpcCollectionURL,
 			HpcCollectionRegistrationDTO collectionDTO, String path, String hpcCertPath, String hpcCertPassword)
 			throws DoeWebException {
@@ -375,7 +429,7 @@ public class DoeClientUtil {
 				log.error("Failed to create collection");
 				String errorMessage = getErrorMessage(restResponse);
 				throw new DoeWebException(errorMessage, restResponse.getStatus());
-				
+
 			}
 		} catch (Exception e) {
 			log.error("Failed to create collection due to: " + e);
@@ -546,7 +600,7 @@ public class DoeClientUtil {
 				log.info("Failed to bulk register data files");
 				String errorMessage = getErrorMessage(restResponse);
 				throw new DoeWebException(errorMessage, restResponse.getStatus());
-				
+
 			}
 		} catch (Exception e) {
 			log.error("Failed to bulk register data files due to: " + e);
@@ -756,7 +810,7 @@ public class DoeClientUtil {
 				taskId = downloadDTO.getTaskId();
 			result.setMessage(taskId);
 			return result;
-		} else {			
+		} else {
 			try {
 				String errorMessage = getErrorMessage(restResponse);
 				throw new DoeWebException(errorMessage, restResponse.getStatus());

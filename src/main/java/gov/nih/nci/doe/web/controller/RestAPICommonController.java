@@ -311,6 +311,8 @@ public class RestAPICommonController extends AbstractDoeController {
 	}
 
 	/**
+	 * asynchronousDownload
+	 * 
 	 * 
 	 */
 	@PostMapping(value = "/dataObject/**/download")
@@ -456,6 +458,12 @@ public class RestAPICommonController extends AbstractDoeController {
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
 	}
 
+	/**
+	 * get data object
+	 * 
+	 * @param includeAcl
+	 * 
+	 */
 	@GetMapping(value = "/v2/dataObject/**", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_OCTET_STREAM_VALUE })
 	public ResponseEntity<?> getDataObject(@RequestHeader HttpHeaders headers, HttpSession session,
@@ -502,6 +510,12 @@ public class RestAPICommonController extends AbstractDoeController {
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
 	}
 
+	/**
+	 * get collection
+	 * 
+	 * @param includeAcl
+	 * @param list
+	 */
 	@GetMapping(value = "/collection/**", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_OCTET_STREAM_VALUE })
 	public ResponseEntity<?> getCollection(@RequestHeader HttpHeaders headers, HttpSession session,
@@ -543,6 +557,11 @@ public class RestAPICommonController extends AbstractDoeController {
 
 	}
 
+	/**
+	 * register collection
+	 * 
+	 * @param collectionRegistration
+	 */
 	@PutMapping(value = "/collection/**")
 	public ResponseEntity<?> registerCollection(@RequestHeader HttpHeaders headers, HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
@@ -620,6 +639,13 @@ public class RestAPICommonController extends AbstractDoeController {
 
 	}
 
+	/**
+	 * register data object
+	 * 
+	 * @param doeDataFile
+	 * @param dataObjectRegistration
+	 * 
+	 */
 	@PutMapping(value = "/v2/dataObject/**")
 	public ResponseEntity<?> registerDataObject(@RequestHeader HttpHeaders headers, HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
@@ -712,15 +738,11 @@ public class RestAPICommonController extends AbstractDoeController {
 
 		HpcCompoundMetadataQuery query2 = getCompoundQuery(doeLogin, compoundMetadataQuery);
 		compoundMetadataQuery.setCompoundQuery(query2);
-
 		compoundMetadataQuery.setDetailedResponse(true);
-		UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(compoundCollectionSearchServiceURL);
-		ucBuilder.queryParam("returnParent", Boolean.TRUE);
-		String requestURL;
-		requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
-		WebClient client = DoeClientUtil.getWebClient(requestURL, sslCertPath, sslCertPassword);
-		client.header("Authorization", "Bearer " + authToken);
-		Response restResponse = client.invoke("POST", compoundMetadataQuery);
+		
+		Response restResponse  = DoeClientUtil.getCollectionSearchQuery(authToken,compoundCollectionSearchServiceURL,
+				sslCertPath, sslCertPassword,compoundMetadataQuery);
+		
 		if (restResponse.getStatus() == 200) {
 			MappingJsonFactory factory = new MappingJsonFactory();
 			JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
@@ -772,14 +794,12 @@ public class RestAPICommonController extends AbstractDoeController {
 			compoundMetadataQuery.setCompoundQuery(query2);
 		}
 		compoundMetadataQuery.setDetailedResponse(true);
-		UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(compoundDataObjectSearchServiceURL);
-		ucBuilder.queryParam("returnParent", returnParent);
-		String requestURL;
-		requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
-		WebClient client = DoeClientUtil.getWebClient(requestURL, sslCertPath, sslCertPassword);
-		client.header("Authorization", "Bearer " + authToken);
-		Response restResponse = client.invoke("POST", compoundMetadataQuery);
-		if (restResponse.getStatus() == 200) {
+		
+		Response restResponse = DoeClientUtil.getDataObjectQuery(authToken,compoundDataObjectSearchServiceURL,returnParent,
+				                     sslCertPath, sslCertPassword,compoundMetadataQuery);
+		
+
+		if (restResponse.getStatus() == 200 || restResponse.getStatus() == 201) {
 			MappingJsonFactory factory = new MappingJsonFactory();
 			JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 			if (Boolean.TRUE.equals(returnParent)) {
@@ -796,9 +816,10 @@ public class RestAPICommonController extends AbstractDoeController {
 	private Boolean hasCollectionPermissions(String loggedOnUser, String parentPath,
 			HpcCollectionListDTO parentCollectionDto) {
 
-		// add comments
+		log.info("has collection permssions for " + loggedOnUser + " path: " + parentPath);
 		List<KeyValueBean> keyValueBeanResults = new ArrayList<>();
 		if (!StringUtils.isEmpty(loggedOnUser)) {
+			// get logged on user prog list to keyvaluebean list
 			DoeUsersModel user = authenticateService.getUserInfo(loggedOnUser);
 			if (user != null && !StringUtils.isEmpty(user.getProgramName())) {
 				List<String> progList = Arrays.asList(user.getProgramName().split(","));
@@ -806,6 +827,7 @@ public class RestAPICommonController extends AbstractDoeController {
 			}
 		}
 
+		// verify collection path permissions
 		if (!parentPath.equalsIgnoreCase(basePath) && parentCollectionDto != null
 				&& parentCollectionDto.getCollections() != null
 				&& !CollectionUtils.isEmpty(parentCollectionDto.getCollections())) {
@@ -822,6 +844,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	}
 
 	private Boolean isUploader(String emailAddr) {
+		log.info("is uploader for : " + emailAddr);
 		if (!StringUtils.isEmpty(emailAddr)) {
 			DoeUsersModel user = authenticateService.getUserInfo(emailAddr);
 			if (user.getIsWrite() != null && user.getIsWrite()) {
@@ -846,6 +869,8 @@ public class RestAPICommonController extends AbstractDoeController {
 
 	public HpcCompoundMetadataQuery getCompoundQuery(String doeLogin,
 			HpcCompoundMetadataQueryDTO compoundMetadataQuery) {
+
+		// get compound query for additional access groups.
 		HpcCompoundMetadataQuery query = compoundMetadataQuery.getCompoundQuery();
 		List<KeyValueBean> loggedOnUserPermissions = new ArrayList<>();
 		if (StringUtils.isNotEmpty(doeLogin)) {
