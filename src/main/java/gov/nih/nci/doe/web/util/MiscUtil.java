@@ -59,7 +59,7 @@ public class MiscUtil {
     }
 
 
-  public static String urlEncodeDmePath(String argThePath) {
+  public static String urlEncodeDmePath(String argThePath) throws DoeWebException{
       String encodedDmePath = null;
       if (null == argThePath) {
         encodedDmePath = null;

@@ -59,7 +59,8 @@ public class DoeCollectionController extends AbstractDoeController {
 	 * @return
 	 */
 	@PostMapping
-	public @ResponseBody String updateCollection(@Valid DoeCollectionModel doeCollection, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+	public @ResponseBody String updateCollection(@Valid DoeCollectionModel doeCollection, 
+			HttpSession session, HttpServletRequest request, HttpServletResponse response) throws DoeWebException{
 
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 			String loggedOnUser = getLoggedOnUserInfo();
@@ -110,7 +111,7 @@ public class DoeCollectionController extends AbstractDoeController {
 	}
 
 
-	private HpcCollectionRegistrationDTO constructRequest(HttpServletRequest request) {
+	private HpcCollectionRegistrationDTO constructRequest(HttpServletRequest request) throws DoeWebException{
 		Enumeration<String> params = request.getParameterNames();
 		HpcCollectionRegistrationDTO dto = new HpcCollectionRegistrationDTO();
 		List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
@@ -145,7 +146,7 @@ public class DoeCollectionController extends AbstractDoeController {
 	}
 
 	
-    private HpcDataObjectRegistrationRequestDTO constructDataRequest(HttpServletRequest request) {
+    private HpcDataObjectRegistrationRequestDTO constructDataRequest(HttpServletRequest request) throws DoeWebException{
 		Enumeration<String> params = request.getParameterNames();
 		HpcDataObjectRegistrationRequestDTO dto = new HpcDataObjectRegistrationRequestDTO();
 		List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
