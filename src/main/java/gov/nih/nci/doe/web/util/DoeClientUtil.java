@@ -142,18 +142,9 @@ public class DoeClientUtil {
 		try {
 
 			if (restResponse.getStatus() != 200) {
-				ObjectMapper mapper = new ObjectMapper();
-				AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
-						new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
-						new JacksonAnnotationIntrospector());
-				mapper.setAnnotationIntrospector(intr);
-				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-				MappingJsonFactory factory = new MappingJsonFactory(mapper);
-				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-
-				HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
-				throw new DoeWebException("Authentication failed: " + exception.getMessage());
+				log.error("Authentication failed");
+				String errorMessage = getErrorMessage(restResponse);
+				throw new DoeWebException(errorMessage, restResponse.getStatus());
 			}
 			MappingJsonFactory factory = new MappingJsonFactory();
 			JsonParser parser;
@@ -174,18 +165,9 @@ public class DoeClientUtil {
 		try {
 
 			if (restResponse.getStatus() != 200) {
-				ObjectMapper mapper = new ObjectMapper();
-				AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
-						new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
-						new JacksonAnnotationIntrospector());
-				mapper.setAnnotationIntrospector(intr);
-				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-				MappingJsonFactory factory = new MappingJsonFactory(mapper);
-				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-
-				HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
-				throw new DoeWebException("Authentication failed: " + exception.getMessage());
+				log.error("Authentication failed");
+				String errorMessage = getErrorMessage(restResponse);
+				throw new DoeWebException(errorMessage, restResponse.getStatus());
 			}
 			MappingJsonFactory factory = new MappingJsonFactory();
 			JsonParser parser;
@@ -319,7 +301,8 @@ public class DoeClientUtil {
 				return parser.readValueAs(HpcCollectionListDTO.class);
 			} else {
 				log.error("Failed to get collection! No READ access!");
-				throw new DoeWebException("Failed to get collection! No READ access!");
+				String errorMessage = getErrorMessage(restResponse);
+				throw new DoeWebException(errorMessage, restResponse.getStatus());
 			}
 
 		} catch (Exception e) {
@@ -357,7 +340,9 @@ public class DoeClientUtil {
 				HpcDataObjectListDTO datafiles = parser.readValueAs(HpcDataObjectListDTO.class);
 				return datafiles;
 			} else {
-				throw new DoeWebException("File does not exist or you do not have READ access.");
+				log.error("File does not exist or you do not have READ access.");
+				String errorMessage = getErrorMessage(restResponse);
+				throw new DoeWebException(errorMessage, restResponse.getStatus());
 			}
 
 		} catch (Exception e) {
@@ -387,18 +372,10 @@ public class DoeClientUtil {
 			if (restResponse.getStatus() == 201) {
 				return true;
 			} else {
-				ObjectMapper mapper = new ObjectMapper();
-				AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
-						new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
-						new JacksonAnnotationIntrospector());
-				mapper.setAnnotationIntrospector(intr);
-				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-				MappingJsonFactory factory = new MappingJsonFactory(mapper);
-				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-
-				HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
-				throw new DoeWebException("Failed to create collection: " + exception.getMessage());
+				log.error("Failed to create collection");
+				String errorMessage = getErrorMessage(restResponse);
+				throw new DoeWebException(errorMessage, restResponse.getStatus());
+				
 			}
 		} catch (Exception e) {
 			log.error("Failed to create collection due to: " + e);
@@ -406,7 +383,7 @@ public class DoeClientUtil {
 		}
 	}
 
-	public static boolean updateCollection(String token, String hpcCollectionURL,
+	public static Integer updateCollection(String token, String hpcCollectionURL,
 			HpcCollectionRegistrationDTO collectionDTO, String path, String hpcCertPath, String hpcCertPassword)
 			throws DoeWebException {
 		try {
@@ -419,20 +396,11 @@ public class DoeClientUtil {
 
 			Response restResponse = client.invoke("PUT", collectionDTO);
 			if (restResponse.getStatus() == 200 || restResponse.getStatus() == 201) {
-				return true;
+				// rerurn response.getStatus
+				return restResponse.getStatus();
 			} else {
-				ObjectMapper mapper = new ObjectMapper();
-				AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
-						new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
-						new JacksonAnnotationIntrospector());
-				mapper.setAnnotationIntrospector(intr);
-				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-				MappingJsonFactory factory = new MappingJsonFactory(mapper);
-				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-
-				HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
-				throw new DoeWebException(exception.getMessage());
+				String errorMessage = getErrorMessage(restResponse);
+				throw new DoeWebException(errorMessage, restResponse.getStatus());
 			}
 		} catch (Exception e) {
 			log.error("failed to update collection " + e);
@@ -453,18 +421,8 @@ public class DoeClientUtil {
 			if (restResponse.getStatus() == 200) {
 				return "SUCCESS";
 			} else {
-				ObjectMapper mapper = new ObjectMapper();
-				AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
-						new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
-						new JacksonAnnotationIntrospector());
-				mapper.setAnnotationIntrospector(intr);
-				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-				MappingJsonFactory factory = new MappingJsonFactory(mapper);
-				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-
-				HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
-				return exception.getMessage();
+				String errorMessage = getErrorMessage(restResponse);
+				throw new DoeWebException(errorMessage, restResponse.getStatus());
 			}
 		} catch (Exception e) {
 			log.error("Failed to delete collection due to: " + e);
@@ -472,7 +430,7 @@ public class DoeClientUtil {
 		}
 	}
 
-	public static boolean registerDatafile(String token, MultipartFile hpcDatafile, String hpcDatafileURL,
+	public static Integer registerDatafile(String token, MultipartFile hpcDatafile, String hpcDatafileURL,
 			gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationRequestDTO datafileDTO, String path,
 			String hpcCertPath, String hpcCertPassword) throws DoeWebException {
 
@@ -514,23 +472,12 @@ public class DoeClientUtil {
 			client.header("Authorization", "Bearer " + token);
 
 			Response restResponse = client.put(new MultipartBody(atts));
-			if (restResponse.getStatus() == 201) {
-				// add log.debug
-				return true;
+			if (restResponse.getStatus() == 201 || restResponse.getStatus() == 200) {
+				log.info("response status" + restResponse.getStatus());
+				return restResponse.getStatus();
 			} else {
-				ObjectMapper mapper = new ObjectMapper();
-				AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
-						new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
-						new JacksonAnnotationIntrospector());
-				mapper.setAnnotationIntrospector(intr);
-				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-				MappingJsonFactory factory = new MappingJsonFactory(mapper);
-				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-
-				HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
-				log.error("failed to register data file" + exception);
-				throw new DoeWebException(exception.getMessage());
+				String errorMessage = getErrorMessage(restResponse);
+				throw new DoeWebException(errorMessage, restResponse.getStatus());
 			}
 		} catch (Exception e) {
 			log.error("failed to register data file" + e);
@@ -575,19 +522,8 @@ public class DoeClientUtil {
 				// add log.debug
 				return true;
 			} else {
-				ObjectMapper mapper = new ObjectMapper();
-				AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
-						new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
-						new JacksonAnnotationIntrospector());
-				mapper.setAnnotationIntrospector(intr);
-				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-				MappingJsonFactory factory = new MappingJsonFactory(mapper);
-				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-
-				HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
-				log.error("failed to register data file" + exception);
-				throw new DoeWebException(exception.getMessage());
+				String errorMessage = getErrorMessage(restResponse);
+				throw new DoeWebException(errorMessage, restResponse.getStatus());
 			}
 		} catch (Exception e) {
 			log.error("failed to register data file" + e);
@@ -607,18 +543,10 @@ public class DoeClientUtil {
 				return (HpcBulkDataObjectRegistrationResponseDTO) DoeClientUtil.getObject(restResponse,
 						HpcBulkDataObjectRegistrationResponseDTO.class);
 			} else {
-				ObjectMapper mapper = new ObjectMapper();
-				AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
-						new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
-						new JacksonAnnotationIntrospector());
-				mapper.setAnnotationIntrospector(intr);
-				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-				MappingJsonFactory factory = new MappingJsonFactory(mapper);
-				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-
-				HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
-				throw new DoeWebException("Failed to bulk register data files: " + exception.getMessage());
+				log.info("Failed to bulk register data files");
+				String errorMessage = getErrorMessage(restResponse);
+				throw new DoeWebException(errorMessage, restResponse.getStatus());
+				
 			}
 		} catch (Exception e) {
 			log.error("Failed to bulk register data files due to: " + e);
@@ -640,18 +568,9 @@ public class DoeClientUtil {
 						.getObject(restResponse,
 								gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationResponseDTO.class);
 			} else {
-				ObjectMapper mapper = new ObjectMapper();
-				AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
-						new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
-						new JacksonAnnotationIntrospector());
-				mapper.setAnnotationIntrospector(intr);
-				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-				MappingJsonFactory factory = new MappingJsonFactory(mapper);
-				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-
-				HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
-				throw new DoeWebException("Failed to bulk register data files: " + exception.getMessage());
+				log.error("Failed to bulk register data files");
+				String errorMessage = getErrorMessage(restResponse);
+				throw new DoeWebException(errorMessage, restResponse.getStatus());
 			}
 		} catch (Exception e) {
 			log.error("Failed to bulk register data files due to: " + e);
@@ -676,21 +595,12 @@ public class DoeClientUtil {
 			client.header("Authorization", "Bearer " + token);
 
 			Response restResponse = client.put(new MultipartBody(atts));
-			if (restResponse.getStatus() == 200) {
+			if (restResponse.getStatus() == 200 || restResponse.getStatus() == 201) {
 				return true;
 			} else {
-				ObjectMapper mapper = new ObjectMapper();
-				AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
-						new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
-						new JacksonAnnotationIntrospector());
-				mapper.setAnnotationIntrospector(intr);
-				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-				MappingJsonFactory factory = new MappingJsonFactory(mapper);
-				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-
-				HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
-				throw new DoeWebException("Failed to update data file: " + exception.getMessage());
+				log.error("Failed to update data file");
+				String errorMessage = getErrorMessage(restResponse);
+				throw new DoeWebException(errorMessage, restResponse.getStatus());
 			}
 		} catch (Exception e) {
 			log.error("Failed to update data file due to: " + e);
@@ -735,18 +645,8 @@ public class DoeClientUtil {
 			if (restResponse.getStatus() == 200) {
 				return "true";
 			} else {
-				ObjectMapper mapper = new ObjectMapper();
-				AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
-						new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
-						new JacksonAnnotationIntrospector());
-				mapper.setAnnotationIntrospector(intr);
-				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-				MappingJsonFactory factory = new MappingJsonFactory(mapper);
-				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-
-				HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
-				return exception.getMessage();
+				String errorMessage = getErrorMessage(restResponse);
+				throw new DoeWebException(errorMessage, restResponse.getStatus());
 			}
 		} catch (Exception e) {
 			log.error("failed to delete data file" + e);
@@ -829,18 +729,8 @@ public class DoeClientUtil {
 				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 				response = parser.readValueAs(HpcBulkDataObjectDownloadResponseDTO.class);
 			} else {
-				ObjectMapper mapper = new ObjectMapper();
-				AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
-						new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
-						new JacksonAnnotationIntrospector());
-				mapper.setAnnotationIntrospector(intr);
-				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-				MappingJsonFactory factory = new MappingJsonFactory(mapper);
-				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-
-				HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
-				throw new DoeWebException(exception.getMessage());
+				String errorMessage = getErrorMessage(restResponse);
+				throw new DoeWebException(errorMessage, restResponse.getStatus());
 			}
 		} catch (Exception e) {
 			log.error("Failed to submit download request: " + e);
@@ -866,19 +756,10 @@ public class DoeClientUtil {
 				taskId = downloadDTO.getTaskId();
 			result.setMessage(taskId);
 			return result;
-		} else {
-			ObjectMapper mapper = new ObjectMapper();
-			AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
-					new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()), new JacksonAnnotationIntrospector());
-			mapper.setAnnotationIntrospector(intr);
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-			MappingJsonFactory factory = new MappingJsonFactory(mapper);
-			JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+		} else {			
 			try {
-				HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
-				result.setMessage("Download request is not successful: " + exception.getMessage());
-				return result;
+				String errorMessage = getErrorMessage(restResponse);
+				throw new DoeWebException(errorMessage, restResponse.getStatus());
 			} catch (Exception e) {
 				log.debug("Download request is not successful: " + e);
 				result.setMessage("Download request is not successful: " + e.getMessage());
@@ -1086,5 +967,19 @@ public class DoeClientUtil {
 		} catch (IOException e) {
 			throw new DoeWebException("Unable to load application properties!", e);
 		}
+	}
+
+	private static String getErrorMessage(Response restResponse) throws IOException {
+		ObjectMapper mapper = new ObjectMapper();
+		AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
+				new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()), new JacksonAnnotationIntrospector());
+		mapper.setAnnotationIntrospector(intr);
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+		MappingJsonFactory factory = new MappingJsonFactory(mapper);
+		JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+
+		HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
+		return exception.getMessage();
 	}
 }

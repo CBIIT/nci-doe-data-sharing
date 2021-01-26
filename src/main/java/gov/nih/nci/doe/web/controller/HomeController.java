@@ -331,9 +331,9 @@ public class HomeController extends AbstractDoeController {
 			
 				metadataEntries.add(entry);
 			 dto.getMetadataEntries().addAll(metadataEntries);
-				boolean updated = DoeClientUtil.updateCollection(authToken, serviceURL, dto,
+				Integer restResponse = DoeClientUtil.updateCollection(authToken, serviceURL, dto,
 						permissionGroups.getPath(), sslCertPath, sslCertPassword);
-				if (updated) {
+				if (restResponse == 200 || restResponse == 201) {
 					 //store the auditing info
 	                  AuditingModel audit = new AuditingModel();
 	                  audit.setName(loggedOnUser);

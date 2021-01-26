@@ -5,6 +5,18 @@ public class DoeWebException extends Exception {
 	/**
 	 * 
 	 */
+	
+	private Integer statusCode;
+	
+	
+	public Integer getStatusCode() {
+		return statusCode;
+	}
+
+	public void setStatusCode(Integer statusCode) {
+		this.statusCode = statusCode;
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	public DoeWebException() {
@@ -25,5 +37,6 @@ public class DoeWebException extends Exception {
 	
 	public DoeWebException(String message, Integer statusCode) {
 		super(message);
+		setStatusCode(statusCode);
 	}
 }

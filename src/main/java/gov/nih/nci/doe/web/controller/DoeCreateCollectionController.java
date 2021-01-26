@@ -251,9 +251,9 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 			log.debug("Error in validating collection path" + e.getMessage());	
 		}
 		try {
-			boolean created = DoeClientUtil.updateCollection(authToken, serviceURL, registrationDTO,
+			Integer restResponse = DoeClientUtil.updateCollection(authToken, serviceURL, registrationDTO,
 					doeCollection.getPath(), sslCertPath, sslCertPassword);
-			if (created) {	
+			if (restResponse == 200 || restResponse == 201) {	
 				//after collection is created, store the permissions.
 				String progList = request.getParameter("metaDataPermissionsList");
 					log.info("selected permissions" + progList);

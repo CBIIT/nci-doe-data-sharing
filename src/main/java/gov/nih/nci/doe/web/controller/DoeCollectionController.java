@@ -88,9 +88,9 @@ public class DoeCollectionController extends AbstractDoeController {
 				
 			} else {
 				HpcCollectionRegistrationDTO registrationDTO = constructRequest(request);
-				boolean updated = DoeClientUtil.updateCollection(authToken, serviceURL, registrationDTO,
+				Integer restResponse = DoeClientUtil.updateCollection(authToken, serviceURL, registrationDTO,
 						doeCollection.getPath(), sslCertPath, sslCertPassword);
-				if (updated) {
+				if (restResponse == 200 || restResponse == 201) {
 					session.removeAttribute("selectedUsers");
 					 //store the auditing info
 	                  AuditingModel audit = new AuditingModel();
