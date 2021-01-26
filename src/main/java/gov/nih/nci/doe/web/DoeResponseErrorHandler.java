@@ -40,7 +40,8 @@ public class DoeResponseErrorHandler implements ResponseErrorHandler {
 			DoeWebException exception = new DoeWebException(
 					"Error Code: " + dto.getErrorType() + " Reason: " + dto.getMessage());
 			throw exception;
-		} catch (JAXBException e) {
+		} catch (JAXBException | DoeWebException e) {
+			log.error(e.getMessage());
 		}
 
 	}

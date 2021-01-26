@@ -94,14 +94,22 @@ public abstract class AbstractDoeController {
 	@ExceptionHandler({ Exception.class})
 	public @ResponseBody DoeResponse handleUncaughtException(Exception ex, WebRequest request,
 			HttpServletResponse response) {
-		log.info("Converting Uncaught exception to RestResponse : " + ex.getMessage());
+		log.error("Converting Uncaught exception to RestResponse : " + ex.getMessage());
 
 		response.setHeader("Content-Type", "application/json");
 		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		return new DoeResponse("Error occurred", "Invalid input or system error");
 		
 	}
-
+	@ExceptionHandler({ DoeWebException.class})
+	public @ResponseBody DoeResponse handleDoeWebException(Exception ex, WebRequest request,
+			HttpServletResponse response) {
+		log.error("Converting DoeWeb exception to RestResponse : " + ex.getMessage());
+		response.setHeader("Content-Type", "application/json");		
+		return new DoeResponse("Error occurred", "Invalid input or system error");
+		
+	}
+	
 	  @ModelAttribute("loggedOnUser")
 	    public String getLoggedOnUserInfo() {
 		  Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -213,7 +221,7 @@ public abstract class AbstractDoeController {
 	}
 	
 	  public void downloadToUrl(String urlStr, int bufferSize, String fileName,
-		      HttpServletResponse response) {
+		      HttpServletResponse response) throws DoeWebException{
 		    try {
 		      WebClient client = DoeClientUtil.getWebClient(urlStr, null, null);
 		      Response restResponse = client.invoke("GET", null);

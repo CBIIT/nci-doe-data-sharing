@@ -30,6 +30,8 @@ import com.fasterxml.jackson.databind.MappingJsonFactory;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+
+import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.constants.SystemAttributesList;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.HpcDatafileSearchResultDetailed;
@@ -83,7 +85,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 
 	@GetMapping
 	    public ResponseEntity<?> search(HttpSession session,@RequestHeader HttpHeaders headers, DoeSearch search,
-	    		@RequestParam(value = "path") String path) {
+	    		@RequestParam(value = "path") String path) throws DoeWebException{
 		
 		String authToken = (String) session.getAttribute("hpcUserToken");
 		HpcCompoundMetadataQueryDTO compoundQuery  = (HpcCompoundMetadataQueryDTO) session.getAttribute("compoundQuery");

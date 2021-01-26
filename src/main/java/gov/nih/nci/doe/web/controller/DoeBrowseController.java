@@ -3,7 +3,6 @@ package gov.nih.nci.doe.web.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.DoeBrowserEntry;
 import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
@@ -32,7 +32,6 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
-
 
 /**
  * <p>
@@ -55,19 +54,19 @@ public class DoeBrowseController extends AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.dataObject}")
 	private String serviceURL;
-	
+
 	// The logger instance.
 	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
-	
 
 	@GetMapping(value = "/metaData", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getUserMetaDataByPath(@RequestParam(value = "selectedPath") String selectedPath,
-			@RequestParam(value = "levelName") String levelName,@RequestParam(value = "isDataObject") String isDataObject,
-			HttpSession session, HttpServletRequest request, HttpServletResponse response) {
-		
+			@RequestParam(value = "levelName") String levelName,
+			@RequestParam(value = "isDataObject") String isDataObject, HttpSession session, HttpServletRequest request,
+			HttpServletResponse response) throws DoeWebException {
+
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		List<KeyValueBean> entryList = new ArrayList<KeyValueBean>();
-		
+
 		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
 		if (modelDTO == null) {
 			modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL, sslCertPath, sslCertPassword);
@@ -80,243 +79,239 @@ public class DoeBrowseController extends AbstractDoeController {
 		systemAttrs.add("collection_type");
 		systemAttrs.add("access_group");
 		session.setAttribute("systemAttrs", systemAttrs);
-		
+
 		try {
-			if (selectedPath!= null) {
-				if(StringUtils.isNotEmpty(isDataObject) && isDataObject.equalsIgnoreCase("false")) {
-				// Get collection
-				HpcCollectionListDTO collections =  DoeClientUtil.getCollection(authToken, collectionURL, 
-						selectedPath, false, sslCertPath,sslCertPassword);
-				if (collections != null && collections.getCollections() != null
-						&& !collections.getCollections().isEmpty()) {
-					HpcCollectionDTO collection = collections.getCollections().get(0);					
-					for (HpcMetadataEntry entry : collection.getMetadataEntries().getSelfMetadataEntries()) {						
+			if (selectedPath != null) {
+				if (StringUtils.isNotEmpty(isDataObject) && isDataObject.equalsIgnoreCase("false")) {
+					// Get collection
+					HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, collectionURL,
+							selectedPath, false, sslCertPath, sslCertPassword);
+					if (collections != null && collections.getCollections() != null
+							&& !collections.getCollections().isEmpty()) {
+						HpcCollectionDTO collection = collections.getCollections().get(0);
+						for (HpcMetadataEntry entry : collection.getMetadataEntries().getSelfMetadataEntries()) {
 							if (systemAttrs != null && !systemAttrs.contains(entry.getAttribute())) {
-								String attrName = lookUpService.getDisplayName(levelName,entry.getAttribute());
+								String attrName = lookUpService.getDisplayName(levelName, entry.getAttribute());
 								KeyValueBean k = null;
-								if(!StringUtils.isEmpty(attrName)) {
-									 k = new KeyValueBean(entry.getAttribute(),attrName, entry.getValue());
+								if (!StringUtils.isEmpty(attrName)) {
+									k = new KeyValueBean(entry.getAttribute(), attrName, entry.getValue());
 								} else {
-									 k = new KeyValueBean(entry.getAttribute(),entry.getAttribute(), entry.getValue());
+									k = new KeyValueBean(entry.getAttribute(), entry.getAttribute(), entry.getValue());
 								}
-											
+
 								entryList.add(k);
 							}
-							
-						
+
+						}
+					}
+
+				} else {
+					HpcDataObjectListDTO datafiles = DoeClientUtil.getDatafiles(authToken, serviceURL, selectedPath,
+							false, true, sslCertPath, sslCertPassword);
+					if (datafiles != null && datafiles.getDataObjects() != null
+							&& !datafiles.getDataObjects().isEmpty()) {
+						HpcDataObjectDTO dataFile = datafiles.getDataObjects().get(0);
+						for (HpcMetadataEntry entry : dataFile.getMetadataEntries().getSelfMetadataEntries()) {
+							if (systemAttrs != null && !systemAttrs.contains(entry.getAttribute())) {
+								String attrName = lookUpService.getDisplayName(levelName, entry.getAttribute());
+								KeyValueBean k = null;
+								if (!StringUtils.isEmpty(attrName)) {
+									k = new KeyValueBean(entry.getAttribute(), attrName, entry.getValue());
+								} else {
+									k = new KeyValueBean(entry.getAttribute(), entry.getAttribute(), entry.getValue());
+								}
+
+								entryList.add(k);
+							}
+
+						}
+
 					}
 				}
-					
-				} else {
-				  HpcDataObjectListDTO datafiles = DoeClientUtil.getDatafiles(authToken, serviceURL, 
-						  selectedPath, false, true,sslCertPath, sslCertPassword);
-					if (datafiles != null && datafiles.getDataObjects() != null &&
-							!datafiles.getDataObjects().isEmpty()) {
-						HpcDataObjectDTO dataFile = datafiles.getDataObjects().get(0);
-						for (HpcMetadataEntry entry : dataFile.getMetadataEntries().getSelfMetadataEntries()) {						
-							if (systemAttrs != null && !systemAttrs.contains(entry.getAttribute())) {
-								String attrName = lookUpService.getDisplayName(levelName,entry.getAttribute());
-								KeyValueBean k = null;
-								if(!StringUtils.isEmpty(attrName)) {
-									 k = new KeyValueBean(entry.getAttribute(),attrName, entry.getValue());
-								} else {
-									 k = new KeyValueBean(entry.getAttribute(),entry.getAttribute(), entry.getValue());
-								}
-											
-								entryList.add(k);
-							}
-							
-						
-					}
-					
-			  }
 			}
-		  }
 		} catch (Exception e) {
 			String errMsg = "Failed to get metadata: " + e.getMessage();
 			logger.error(errMsg, e);
-		} 
-		 return new ResponseEntity<>(entryList, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(entryList, HttpStatus.OK);
 	}
-	
-	
 
 	@GetMapping(value = "/getAccessgroups", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getAccessgroups(@RequestParam(value = "selectedPath") String selectedPath,
-			@RequestParam(value = "levelName") String levelName,
-			HttpSession session, HttpServletRequest request, HttpServletResponse response) {
-		
+			@RequestParam(value = "levelName") String levelName, HttpSession session, HttpServletRequest request,
+			HttpServletResponse response) throws DoeWebException {
+
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		List<KeyValueBean> entryList = new ArrayList<KeyValueBean>();
-		
+
 		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
 		if (modelDTO == null) {
 			modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL, sslCertPath, sslCertPassword);
 			session.setAttribute("userDOCModel", modelDTO);
 		}
-		
+
 		try {
-			if (selectedPath!= null) {
+			if (selectedPath != null) {
 				// Get collection
-				HpcCollectionListDTO collections =  DoeClientUtil.getCollection(authToken, collectionURL, 
-						selectedPath, true, sslCertPath,sslCertPassword);
+				HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, collectionURL, selectedPath,
+						true, sslCertPath, sslCertPassword);
 				if (collections != null && collections.getCollections() != null
 						&& !collections.getCollections().isEmpty()) {
-					HpcCollectionDTO collection = collections.getCollections().get(0);			
-					HpcMetadataEntry selectedEntry =  collection.getMetadataEntries().getSelfMetadataEntries().stream().
-							filter(e -> e.getAttribute().equalsIgnoreCase("access_group")).
-							findAny().orElse(null);
-					if(selectedEntry !=null) {
-						entryList.add(new KeyValueBean("selectedEntry",selectedEntry.getValue()));
+					HpcCollectionDTO collection = collections.getCollections().get(0);
+					HpcMetadataEntry selectedEntry = collection.getMetadataEntries().getSelfMetadataEntries().stream()
+							.filter(e -> e.getAttribute().equalsIgnoreCase("access_group")).findAny().orElse(null);
+					if (selectedEntry != null) {
+						entryList.add(new KeyValueBean("selectedEntry", selectedEntry.getValue()));
 					}
-					
-					HpcMetadataEntry programEntry =  collection.getMetadataEntries().getParentMetadataEntries().stream().
-							filter(e -> e.getAttribute().equalsIgnoreCase("access_group") && 
-							e.getLevelLabel().equalsIgnoreCase("program")).
-							findAny().orElse(null);
-					if(programEntry !=null) {
-						entryList.add(new KeyValueBean("programLevelAccessGroups",programEntry.getValue()));
+
+					HpcMetadataEntry programEntry = collection.getMetadataEntries().getParentMetadataEntries().stream()
+							.filter(e -> e.getAttribute().equalsIgnoreCase("access_group")
+									&& e.getLevelLabel().equalsIgnoreCase("program"))
+							.findAny().orElse(null);
+					if (programEntry != null) {
+						entryList.add(new KeyValueBean("programLevelAccessGroups", programEntry.getValue()));
 					}
-					
-					HpcMetadataEntry studyEntry =  collection.getMetadataEntries().getParentMetadataEntries().stream().
-							filter(e -> e.getAttribute().equalsIgnoreCase("access_group") && 
-									e.getLevelLabel().equalsIgnoreCase("study")).
-							findAny().orElse(null);
-					if(studyEntry !=null) {
-						entryList.add(new KeyValueBean("studyLevelAccessGroups",studyEntry.getValue()));
+
+					HpcMetadataEntry studyEntry = collection.getMetadataEntries().getParentMetadataEntries().stream()
+							.filter(e -> e.getAttribute().equalsIgnoreCase("access_group")
+									&& e.getLevelLabel().equalsIgnoreCase("study"))
+							.findAny().orElse(null);
+					if (studyEntry != null) {
+						entryList.add(new KeyValueBean("studyLevelAccessGroups", studyEntry.getValue()));
 					}
 				}
 			}
 		} catch (Exception e) {
 			String errMsg = "Failed to get metadata: " + e.getMessage();
 			logger.error(errMsg, e);
-		} 
-		 return new ResponseEntity<>(entryList, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(entryList, HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/collection", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> browseCollection(@RequestParam(value = "selectedPath") String selectedPath, 
-			@RequestParam(required = false) String refreshNode,HttpSession session, HttpServletRequest request, HttpServletResponse response) {
-		
+	public ResponseEntity<?> browseCollection(@RequestParam(value = "selectedPath") String selectedPath,
+			@RequestParam(required = false) String refreshNode, HttpSession session, HttpServletRequest request,
+			HttpServletResponse response) {
+
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		DoeBrowserEntry browserEntry = (DoeBrowserEntry) session.getAttribute("browserEntry");
 		List<KeyValueBean> results = new ArrayList<>();
 		boolean getChildren = false;
 		boolean refresh = false;
-           
-		if(!StringUtils.isEmpty(refreshNode)) {
-	          getChildren = true;
-	          refresh = true;
-        }
-		
+
+		if (!StringUtils.isEmpty(refreshNode)) {
+			getChildren = true;
+			refresh = true;
+		}
+
 		try {
-			if (selectedPath!= null) {
-				browserEntry = getTreeNodes(selectedPath.trim(), browserEntry,authToken,getChildren, true, refresh);
+			if (selectedPath != null) {
+				browserEntry = getTreeNodes(selectedPath.trim(), browserEntry, authToken, getChildren, true, refresh);
 
 				browserEntry = trimPath(browserEntry, browserEntry.getName());
 				String name = browserEntry.getName().substring(browserEntry.getName().lastIndexOf('/') + 1);
 				browserEntry.setName(name);
-				List<DoeBrowserEntry> children = browserEntry.getChildren(); 
-				
-				children.stream().forEach(e -> {if(e.getFullPath() != null && StringUtils.isNotEmpty(e.getFullPath().trim())) {results.add(new KeyValueBean(e.getFullPath(), e.getName()));}}); 
+				List<DoeBrowserEntry> children = browserEntry.getChildren();
+
+				children.stream().forEach(e -> {
+					if (e.getFullPath() != null && StringUtils.isNotEmpty(e.getFullPath().trim())) {
+						results.add(new KeyValueBean(e.getFullPath(), e.getName()));
+					}
+				});
 			}
 		} catch (Exception e) {
 			String errMsg = "Failed to browse: " + e.getMessage();
 			logger.error(errMsg, e);
-		} 
-		 return new ResponseEntity<>(results, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(results, HttpStatus.OK);
 	}
 
-	
-  /**
-   * GET operation on Browse. Invoked under the following conditions:
-   * - Builds initial tree (/browse?base)
-   * - When the refresh screen button is clicked (/browse?refresh)
-   * - When a bookmark is selected (/browse?refresh&path=/some_path/some_collection_or_file)
-   * - When the browse icon is clicked from the details page (/browse?refresh=1&path=/some_path/some_collection)
-   *
-   * @param q
-   * @param model
-   * @param bindingResult
-   * @param session
-   * @param request
-   * @return
-   */
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> get(HttpSession session, HttpServletRequest request) {
+	/**
+	 * GET operation on Browse. Invoked under the following conditions: - Builds
+	 * initial tree (/browse?base) - When the refresh screen button is clicked
+	 * (/browse?refresh) - When a bookmark is selected
+	 * (/browse?refresh&path=/some_path/some_collection_or_file) - When the browse
+	 * icon is clicked from the details page
+	 * (/browse?refresh=1&path=/some_path/some_collection)
+	 *
+	 * @param q
+	 * @param model
+	 * @param bindingResult
+	 * @param session
+	 * @param request
+	 * @return
+	 */
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> get(HttpSession session, HttpServletRequest request) {
 
-    // Verify User session
-    String authToken = (String) session.getAttribute("writeAccessUserToken");
-    if (authToken == null) {
-      return null;
-    }
-    
-    List<KeyValueBean> results = new ArrayList<>();
-    String path  = basePath;
-    
-    // If browser tree nodes are cached, return cached data. If not, query
-    // browser tree nodes based on the base path and cache it.
-    try {
-      if (path != null) {
-        path = path.trim();
+		// Verify User session
+		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		if (authToken == null) {
+			return null;
+		}
 
-        DoeBrowserEntry browserEntry = (DoeBrowserEntry) session.getAttribute("browserEntry");
-        if (browserEntry == null) {
-          browserEntry = new DoeBrowserEntry();
-          browserEntry.setCollection(true);
-          browserEntry.setFullPath(path);
-          browserEntry.setId(path);
-          browserEntry.setName(path);
-          browserEntry = getTreeNodes(path, browserEntry, authToken, false, true, false);
-          if (request.getParameter("base") == null)
-            browserEntry = addPathEntries(path, browserEntry);
-          browserEntry = trimPath(browserEntry, browserEntry.getName());
-          session.setAttribute("browserEntry", browserEntry);
-        }
+		List<KeyValueBean> results = new ArrayList<>();
+		String path = basePath;
 
-        if (browserEntry != null) { 
-        	List<DoeBrowserEntry> children = browserEntry.getChildren();        	
-        	children.stream().forEach(e -> results.add(new KeyValueBean(e.getFullPath(), e.getName())));               
-        } 
-      }
-      
-      return new ResponseEntity<>(results, HttpStatus.OK);
-    } catch (Exception e) {
-    	String errMsg = "Failed to get tree. Reason: " + e.getMessage();     
-        logger.error(errMsg, e);
-        
-    }
-    
-    return new ResponseEntity<>(results, HttpStatus.NO_CONTENT);
-  }
+		// If browser tree nodes are cached, return cached data. If not, query
+		// browser tree nodes based on the base path and cache it.
+		try {
+			if (path != null) {
+				path = path.trim();
 
+				DoeBrowserEntry browserEntry = (DoeBrowserEntry) session.getAttribute("browserEntry");
+				if (browserEntry == null) {
+					browserEntry = new DoeBrowserEntry();
+					browserEntry.setCollection(true);
+					browserEntry.setFullPath(path);
+					browserEntry.setId(path);
+					browserEntry.setName(path);
+					browserEntry = getTreeNodes(path, browserEntry, authToken, false, true, false);
+					if (request.getParameter("base") == null)
+						browserEntry = addPathEntries(path, browserEntry);
+					browserEntry = trimPath(browserEntry, browserEntry.getName());
+					session.setAttribute("browserEntry", browserEntry);
+				}
 
-  private DoeBrowserEntry addPathEntries(String path, DoeBrowserEntry browserEntry) {
-    if (path.indexOf("/") != -1) {
-      String[] paths = path.split("/");
-      for (int i = paths.length - 2; i >= 0; i--) {
-        if (paths[i].isEmpty())
-          continue;
-        browserEntry = addPathEntry(path, paths[i], browserEntry);
-      }
-    }
-    return browserEntry;
-  }
+				if (browserEntry != null) {
+					List<DoeBrowserEntry> children = browserEntry.getChildren();
+					children.stream().forEach(e -> results.add(new KeyValueBean(e.getFullPath(), e.getName())));
+				}
+			}
 
+			return new ResponseEntity<>(results, HttpStatus.OK);
+		} catch (Exception e) {
+			String errMsg = "Failed to get tree. Reason: " + e.getMessage();
+			logger.error(errMsg, e);
 
-  private DoeBrowserEntry addPathEntry(String fullPath, String path, DoeBrowserEntry childEntry) {
-    DoeBrowserEntry entry = new DoeBrowserEntry();
-    String entryPath = fullPath.substring(0, (fullPath.indexOf('/' + path) + ('/' + path).length()));
-    entry.setCollection(true);
-    entry.setId(entryPath);
-    entry.setFullPath(entryPath);
-    entry.setPopulated(true);
-    entry.setName(path);
-    entry.getChildren().add(childEntry);
-    return entry;
-  }
+		}
 
+		return new ResponseEntity<>(results, HttpStatus.NO_CONTENT);
+	}
 
+	private DoeBrowserEntry addPathEntries(String path, DoeBrowserEntry browserEntry) {
+		if (path.indexOf("/") != -1) {
+			String[] paths = path.split("/");
+			for (int i = paths.length - 2; i >= 0; i--) {
+				if (paths[i].isEmpty())
+					continue;
+				browserEntry = addPathEntry(path, paths[i], browserEntry);
+			}
+		}
+		return browserEntry;
+	}
+
+	private DoeBrowserEntry addPathEntry(String fullPath, String path, DoeBrowserEntry childEntry) {
+		DoeBrowserEntry entry = new DoeBrowserEntry();
+		String entryPath = fullPath.substring(0, (fullPath.indexOf('/' + path) + ('/' + path).length()));
+		entry.setCollection(true);
+		entry.setId(entryPath);
+		entry.setFullPath(entryPath);
+		entry.setPopulated(true);
+		entry.setName(path);
+		entry.getChildren().add(childEntry);
+		return entry;
+	}
 
 	private DoeBrowserEntry getSelectedEntry(String path, DoeBrowserEntry browserEntry) {
 		if (browserEntry == null)
@@ -329,10 +324,10 @@ public class DoeBrowseController extends AbstractDoeController {
 			if (childEntry.getFullPath() != null && childEntry.getFullPath().equals(path))
 				return childEntry;
 			else {
-				//Drill down childEntry, but only if this child entry
-				//happens to be an ancestor of the path we are looking for
-				//Else we proceed to next childEntry
-				if(childEntry.getFullPath() != null && path.contains(childEntry.getFullPath())) {
+				// Drill down childEntry, but only if this child entry
+				// happens to be an ancestor of the path we are looking for
+				// Else we proceed to next childEntry
+				if (childEntry.getFullPath() != null && path.contains(childEntry.getFullPath())) {
 					DoeBrowserEntry entry = getSelectedEntry(path, childEntry);
 					if (entry != null)
 						return entry;
@@ -342,10 +337,8 @@ public class DoeBrowseController extends AbstractDoeController {
 		return null;
 	}
 
-
 	/**
-	 * Get child Tree nodes for selected tree node and merge it with cached
-	 * nodes
+	 * Get child Tree nodes for selected tree node and merge it with cached nodes
 	 *
 	 * @param path
 	 * @param browserEntry
@@ -356,11 +349,11 @@ public class DoeBrowseController extends AbstractDoeController {
 	 * @return
 	 */
 	private DoeBrowserEntry getTreeNodes(String path, DoeBrowserEntry browserEntry, String authToken,
-			boolean getChildren, boolean partial, boolean refresh) {
+			boolean getChildren, boolean partial, boolean refresh) throws DoeWebException {
 
 		path = path.trim();
 		DoeBrowserEntry selectedEntry = getSelectedEntry(path, browserEntry);
-		if(refresh && selectedEntry != null) {
+		if (refresh && selectedEntry != null) {
 			selectedEntry.setPopulated(false);
 		}
 
@@ -368,77 +361,72 @@ public class DoeBrowseController extends AbstractDoeController {
 			return partial ? selectedEntry : browserEntry;
 		if (selectedEntry != null && selectedEntry.getChildren() != null)
 			selectedEntry.getChildren().clear();
-		if (selectedEntry == null)
-		{
+		if (selectedEntry == null) {
 			selectedEntry = new DoeBrowserEntry();
 			selectedEntry.setName(path);
 		}
-			//If partial is true or refresh is true, then it means we need to
-			//retrieve info on the selectedEntry also along with it's child list
-			//Else, we only get the child list, since we already have the
-			//info about the selectedEntry.
-			HpcCollectionListDTO collections = DoeClientUtil.getCollection(
-					authToken, collectionURL, path, 
-					partial || refresh ? false : true, partial || refresh,
-					sslCertPath, sslCertPassword);
+		// If partial is true or refresh is true, then it means we need to
+		// retrieve info on the selectedEntry also along with it's child list
+		// Else, we only get the child list, since we already have the
+		// info about the selectedEntry.
+		HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, collectionURL, path,
+				partial || refresh ? false : true, partial || refresh, sslCertPath, sslCertPassword);
 
-			for (HpcCollectionDTO collectionDTO : collections.getCollections()) {
-				HpcCollection collection = collectionDTO.getCollection();
-				
-				if(collection.getAbsolutePath() != null) {
-					selectedEntry.setFullPath(collection.getAbsolutePath());
-					selectedEntry.setId(collection.getAbsolutePath());
-					selectedEntry.setName(collection.getCollectionName());
-				}
+		for (HpcCollectionDTO collectionDTO : collections.getCollections()) {
+			HpcCollection collection = collectionDTO.getCollection();
 
-				//This will ensure that the next time we access this path
-				//we dont read again from DB, unless an explicit refresh 
-				//request has been made
-				selectedEntry.setPopulated(true);
-				
-				selectedEntry.setCollection(true);
-				for (HpcCollectionListingEntry listEntry : collection.getSubCollections()) {
-					DoeBrowserEntry listChildEntry = new DoeBrowserEntry();
-					listChildEntry.setCollection(true);
-					listChildEntry.setFullPath(listEntry.getPath());
-					listChildEntry.setId(listEntry.getPath());
-					listChildEntry.setName(listEntry.getPath());
-					listChildEntry.setPopulated(false);
-					if (getChildren)
-						listChildEntry = getTreeNodes(listEntry.getPath(), listChildEntry, authToken, false, partial,
-								false);
-					else {
-						DoeBrowserEntry emptyEntry = new DoeBrowserEntry();
-						emptyEntry.setName("");
-						listChildEntry.getChildren().add(emptyEntry);
-					}
-					selectedEntry.getChildren().add(listChildEntry);
-				}
-				for (HpcCollectionListingEntry listEntry : collection.getDataObjects()) {
-					selectedEntry.setCollection(true);
-					DoeBrowserEntry listChildEntry = new DoeBrowserEntry();
-					listChildEntry.setCollection(false);
-					listChildEntry.setFullPath(listEntry.getPath());
-					listChildEntry.setId(listEntry.getPath());
-					listChildEntry.setName(listEntry.getPath());
-					listChildEntry.setPopulated(true);
-					selectedEntry.getChildren().add(listChildEntry);
-				}
-				if (selectedEntry.getChildren() == null || selectedEntry.getChildren().isEmpty()) {
-					DoeBrowserEntry listChildEntry = new DoeBrowserEntry();
-					listChildEntry.setCollection(false);
-					listChildEntry.setFullPath(" ");
-					listChildEntry.setId(" ");
-					listChildEntry.setName(" ");
-					listChildEntry.setPopulated(true);
-					selectedEntry.getChildren().add(listChildEntry);
-				}
+			if (collection.getAbsolutePath() != null) {
+				selectedEntry.setFullPath(collection.getAbsolutePath());
+				selectedEntry.setId(collection.getAbsolutePath());
+				selectedEntry.setName(collection.getCollectionName());
 			}
-		
-		
+
+			// This will ensure that the next time we access this path
+			// we dont read again from DB, unless an explicit refresh
+			// request has been made
+			selectedEntry.setPopulated(true);
+
+			selectedEntry.setCollection(true);
+			for (HpcCollectionListingEntry listEntry : collection.getSubCollections()) {
+				DoeBrowserEntry listChildEntry = new DoeBrowserEntry();
+				listChildEntry.setCollection(true);
+				listChildEntry.setFullPath(listEntry.getPath());
+				listChildEntry.setId(listEntry.getPath());
+				listChildEntry.setName(listEntry.getPath());
+				listChildEntry.setPopulated(false);
+				if (getChildren)
+					listChildEntry = getTreeNodes(listEntry.getPath(), listChildEntry, authToken, false, partial,
+							false);
+				else {
+					DoeBrowserEntry emptyEntry = new DoeBrowserEntry();
+					emptyEntry.setName("");
+					listChildEntry.getChildren().add(emptyEntry);
+				}
+				selectedEntry.getChildren().add(listChildEntry);
+			}
+			for (HpcCollectionListingEntry listEntry : collection.getDataObjects()) {
+				selectedEntry.setCollection(true);
+				DoeBrowserEntry listChildEntry = new DoeBrowserEntry();
+				listChildEntry.setCollection(false);
+				listChildEntry.setFullPath(listEntry.getPath());
+				listChildEntry.setId(listEntry.getPath());
+				listChildEntry.setName(listEntry.getPath());
+				listChildEntry.setPopulated(true);
+				selectedEntry.getChildren().add(listChildEntry);
+			}
+			if (selectedEntry.getChildren() == null || selectedEntry.getChildren().isEmpty()) {
+				DoeBrowserEntry listChildEntry = new DoeBrowserEntry();
+				listChildEntry.setCollection(false);
+				listChildEntry.setFullPath(" ");
+				listChildEntry.setId(" ");
+				listChildEntry.setName(" ");
+				listChildEntry.setPopulated(true);
+				selectedEntry.getChildren().add(listChildEntry);
+			}
+		}
+
 		return partial ? selectedEntry : browserEntry;
 	}
-
 
 	private DoeBrowserEntry trimPath(DoeBrowserEntry entry, String parentPath) {
 		for (DoeBrowserEntry child : entry.getChildren()) {

@@ -57,7 +57,8 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 
 	
 	@GetMapping(value = "/collectionTypes", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<KeyValueBean>> populateCollectionTypes(HttpSession session,@RequestParam(value = "parent") String parent, Model model) {
+	public ResponseEntity<List<KeyValueBean>> populateCollectionTypes(HttpSession session,
+			@RequestParam(value = "parent") String parent, Model model) throws DoeWebException{
 		
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 
@@ -190,7 +191,8 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 	 */
 	@PostMapping
 	@ResponseBody
-	public String createCollection(@Valid DoeCollectionModel doeCollection, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+	public String createCollection(@Valid DoeCollectionModel doeCollection, HttpSession session, 
+			HttpServletRequest request, HttpServletResponse response) throws DoeWebException{
 		
 		String authToken = (String) session.getAttribute("writeAccessUserToken");	
 		String[] path = request.getParameterValues("path");

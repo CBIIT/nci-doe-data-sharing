@@ -38,7 +38,7 @@ import com.google.gson.GsonBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
-
+import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.domain.LookUp;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.DoeSearchResult;
@@ -106,7 +106,7 @@ public class SearchController extends AbstractDoeController {
 	
 	    @GetMapping
 	    public ResponseEntity<?> search(HttpSession session,@RequestHeader HttpHeaders headers,
-	    		HttpServletRequest request, DoeSearch search) {
+	    		HttpServletRequest request, DoeSearch search) throws DoeWebException{
 		
 		String authToken = (String) session.getAttribute("hpcUserToken");
 		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");

@@ -359,7 +359,8 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		return dto;
 	}
 
-	protected List<HpcMetadataEntry> getMetadataEntries(HttpServletRequest request, HttpSession session, String path) {
+	protected List<HpcMetadataEntry> getMetadataEntries(HttpServletRequest request, HttpSession session, 
+			String path) throws DoeWebException{
 		Enumeration<String> params = request.getParameterNames();
 		List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
 

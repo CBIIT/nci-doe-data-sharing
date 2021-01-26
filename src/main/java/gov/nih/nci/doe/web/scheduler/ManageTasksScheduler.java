@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.controller.AbstractDoeController;
 import gov.nih.nci.doe.web.domain.Auditing;
 import gov.nih.nci.doe.web.repository.AuditingRepository;
@@ -43,7 +44,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 	AuditingRepository auditingRepository;
 	
 	  @Scheduled(cron = "${doe.scheduler.cron.auditing}")
-	  public void updateAuditingService() {
+	  public void updateAuditingService() throws DoeWebException{
 		  
 		  String authToken = DoeClientUtil.getAuthenticationToken(writeAccessUserName, writeAccessUserPassword,authenticateURL);
 		  

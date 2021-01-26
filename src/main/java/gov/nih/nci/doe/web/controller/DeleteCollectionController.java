@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.domain.MetaDataPermissions;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
@@ -33,7 +34,7 @@ public class DeleteCollectionController extends AbstractDoeController{
 	@PostMapping
 	@ResponseBody
 	public String deletCollection(@RequestParam(value = "collPath") String collPath,
-			HttpSession session,@RequestHeader HttpHeaders headers) {
+			HttpSession session,@RequestHeader HttpHeaders headers) throws DoeWebException{
 		
 		   String authToken = (String) session.getAttribute("writeAccessUserToken");
 		   String userInfo = getLoggedOnUserInfo();

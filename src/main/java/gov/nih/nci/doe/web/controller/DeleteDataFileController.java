@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 
 
@@ -28,7 +29,7 @@ public class DeleteDataFileController extends AbstractDoeController{
 	@PostMapping(value = "/datafile")
 	@ResponseBody
 	public String deleteObject(@RequestParam(value = "deletepath") String deletepath,
-			HttpSession session,@RequestHeader HttpHeaders headers) {
+			HttpSession session,@RequestHeader HttpHeaders headers) throws DoeWebException{
 		
 		   String authToken = (String) session.getAttribute("writeAccessUserToken");
           			if (deletepath == null) {

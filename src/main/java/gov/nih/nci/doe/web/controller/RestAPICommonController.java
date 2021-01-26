@@ -64,7 +64,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 /**
-* Rest API Common Controller.
+ * Rest API Common Controller.
  *
  * @author <a href="mailto:mounica.ganta@nih.gov">Mounica Ganta</a>
  *
@@ -73,847 +73,860 @@ import org.springframework.http.ResponseEntity;
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/api")
-public class RestAPICommonController extends AbstractDoeController{
-	
-	 @Value("${gov.nih.nci.hpc.server.dataObject}")
-	 private String dataObjectServiceURL;
-	 
-	 @Value("${gov.nih.nci.hpc.server.v2.download}")
-	 private String bulkDownloadUrl;
-	 
-	 @Value("${gov.nih.nci.hpc.server.v2.dataObject}")
-	 private String dataObjectAsyncServiceURL;
-	 
-	 @Value("${gov.nih.nci.hpc.server.collection}")
-	 private String serviceURL;
-	 
-	 @Value("${gov.nih.nci.hpc.server.v2.collection}")
-	 private String collectionUrl;
-	 
-	 @Value("${gov.nih.nci.hpc.server.search.collection.compound}")
-	 private String compoundCollectionSearchServiceURL;
-	 
-	 @Value("${gov.nih.nci.hpc.server.search.dataobject.compound}")
-	 private String compoundDataObjectSearchServiceURL;
-	 
-	 @Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
-	 private String bulkRegistrationURL;
-	 
-	 @Autowired
-	 TaskManagerService taskManagerService;
-	 
-	 /**
-	  * Returns the preassigned Url.
-	  *
-	  * @param path The path.
-	  * @return The REST service response.
-	  */
-	 @PostMapping(value="/dataObject/**/generateDownloadRequestURL")
-	 public String generateDownloadRequestURL(@RequestHeader HttpHeaders headers, 
-	   HttpServletRequest request, HttpSession session,HttpServletResponse response) {
-		 
-		 log.info("generateDownloadRequestURL");
-		 
-		 //getting path param from request URI.
-		 String path = request.getRequestURI().split(request.getContextPath() + "/dataObject/")[1];
-		 Integer index=path.lastIndexOf('/');
-		 path = path.substring(0,index);
-		 log.info("download sync:");
-	     log.info("Headers: {}", headers);
-	     log.info("pathName: " +path);
-	     
-	      try {
-	    	  
-	    	  //getting write access token for download request URL
-	          String authToken = (String) session.getAttribute("writeAccessUserToken");
-	          log.info("authToken: " + authToken);
-	          if (authToken == null) {
-	        	  // return response code for authtoken
-	            return null;
-	          }
-	          
-	          // verifying modac authentication.
-	          String doeLogin = (String) session.getAttribute("doeLogin");
-	          log.info("doeLogin: " + doeLogin);
-	          if (doeLogin == null) {
-	        	  return null;
-	        	  //return repsonse code for not authorized.
-	        	  //return new ResponseEntity<>("Error in download", HttpStatus.OK);
-	          }
+public class RestAPICommonController extends AbstractDoeController {
 
-	          Boolean isPermissions = false;
-	          String parentPath = null;
-      		  if (path.lastIndexOf('/') != -1) {
-					parentPath = path.substring(0, path.lastIndexOf('/'));
-      		  }
-	          HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, 
-						serviceURL, parentPath, true, sslCertPath, sslCertPassword);
-	          
-	          HpcCollectionDTO result = collectionDto.getCollections().get(0);
-	          String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
-	          
-	          //verify group or owner permissions on the collection path 
-	          if(StringUtils.isNotEmpty(accessGrp) && ("public".equalsIgnoreCase(accessGrp) || 
-	        		  Boolean.TRUE.equals(hasCollectionPermissions(doeLogin,parentPath,collectionDto)))) {
-	        	  isPermissions = true;
-	          } 
-	          
-	          if(Boolean.TRUE.equals(isPermissions)) {   	
-	            final String requestUrl = UriComponentsBuilder.fromHttpUrl(
-	               this.dataObjectServiceURL).path("/{dme-archive-path}/generateDownloadRequestURL")
-	               .buildAndExpand(path).encode().toUri().toURL().toExternalForm();
+	@Value("${gov.nih.nci.hpc.server.dataObject}")
+	private String dataObjectServiceURL;
 
-	          final HpcDownloadRequestDTO dto = new HpcDownloadRequestDTO();
-	          dto.setGenerateDownloadRequestURL(true);
+	@Value("${gov.nih.nci.hpc.server.v2.download}")
+	private String bulkDownloadUrl;
 
-	          WebClient client = DoeClientUtil.getWebClient(requestUrl, sslCertPath, sslCertPassword);
-	          client.header("Authorization", "Bearer " + authToken);
+	@Value("${gov.nih.nci.hpc.server.v2.dataObject}")
+	private String dataObjectAsyncServiceURL;
 
-	          Response restResponse = client.invoke("POST", dto);
-	          log.info("rest response:" + restResponse.getStatus());
-	          if (restResponse.getStatus() == 200) {
-	        	  MappingJsonFactory factory = new MappingJsonFactory();
-				  JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-	        	  HpcDataObjectDownloadResponseDTO dataObject = parser.readValueAs(HpcDataObjectDownloadResponseDTO.class);
-	        	  ObjectMapper mapper = new ObjectMapper();
-	        	  mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-	              return mapper.writeValueAsString(dataObject);
-	            }   
-	          }
-	          
-	          return null;
-	      } catch (Exception e) {
-	          log.error("error in download" + e);
-	      }
-	        return null;
-	 }
-	 
-	 @PostMapping(value="/v2/download")
-	 public ResponseEntity<?> downloadDataObjectsOrCollections(@RequestHeader HttpHeaders headers, 
-			 HttpServletRequest request, HttpSession session,HttpServletResponse response,
-			 @RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectDownloadRequestDTO downloadRequest) {
-		 
-		 log.info("download collection:");
-	     log.info("Headers: {}", headers);
-	     try {
-	          String authToken = (String) session.getAttribute("writeAccessUserToken");
-	          log.info("authToken: " + authToken);
-	          if (authToken == null) {
-	            return null;
-	          }
-	          String doeLogin = (String) session.getAttribute("doeLogin");
-	          log.info("doeLogin: " + doeLogin);
-	          if (doeLogin == null) {
-	            return null;
-	          }
-	          String requestURL;
-	          UriComponentsBuilder ucBuilder  = UriComponentsBuilder.fromHttpUrl(bulkDownloadUrl);		     		    
-			    
-			    if (ucBuilder == null) {
-				      return null;
+	@Value("${gov.nih.nci.hpc.server.collection}")
+	private String serviceURL;
+
+	@Value("${gov.nih.nci.hpc.server.v2.collection}")
+	private String collectionUrl;
+
+	@Value("${gov.nih.nci.hpc.server.search.collection.compound}")
+	private String compoundCollectionSearchServiceURL;
+
+	@Value("${gov.nih.nci.hpc.server.search.dataobject.compound}")
+	private String compoundDataObjectSearchServiceURL;
+
+	@Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
+	private String bulkRegistrationURL;
+
+	@Autowired
+	TaskManagerService taskManagerService;
+
+	/**
+	 * Returns the preassigned Url.
+	 *
+	 * @param path The path.
+	 * @return The REST service response.
+	 */
+	@PostMapping(value = "/dataObject/**/generateDownloadRequestURL")
+	public ResponseEntity<?> generateDownloadRequestURL(@RequestHeader HttpHeaders headers, HttpServletRequest request,
+			HttpSession session, HttpServletResponse response) throws DoeWebException {
+
+		log.info("generateDownloadRequestURL");
+
+		// getting path param from request URI.
+		String path = request.getRequestURI().split(request.getContextPath() + "/dataObject/")[1];
+		Integer index = path.lastIndexOf('/');
+		path = path.substring(0, index);
+		log.info("download sync:");
+		log.info("Headers: {}", headers);
+		log.info("pathName: " + path);
+
+		try {
+
+			// getting write access token for download request URL
+			String authToken = (String) session.getAttribute("writeAccessUserToken");
+			log.info("authToken: " + authToken);
+			if (authToken == null) {
+				throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
+			}
+
+			// verifying MoDaC authentication.
+			String doeLogin = (String) session.getAttribute("doeLogin");
+			log.info("doeLogin: " + doeLogin);
+			if (doeLogin == null) {
+				throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
+			}
+
+			Boolean isPermissions = false;
+			String parentPath = null;
+			if (path.lastIndexOf('/') != -1) {
+				parentPath = path.substring(0, path.lastIndexOf('/'));
+			}
+			HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, parentPath, true,
+					sslCertPath, sslCertPassword);
+
+			HpcCollectionDTO result = collectionDto.getCollections().get(0);
+			String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
+
+			// verify group or owner permissions on the collection path
+			if (StringUtils.isNotEmpty(accessGrp) && ("public".equalsIgnoreCase(accessGrp)
+					|| Boolean.TRUE.equals(hasCollectionPermissions(doeLogin, parentPath, collectionDto)))) {
+				isPermissions = true;
+			}
+
+			if (Boolean.TRUE.equals(isPermissions)) {
+				final String requestUrl = UriComponentsBuilder.fromHttpUrl(this.dataObjectServiceURL)
+						.path("/{dme-archive-path}/generateDownloadRequestURL").buildAndExpand(path).encode().toUri()
+						.toURL().toExternalForm();
+
+				final HpcDownloadRequestDTO dto = new HpcDownloadRequestDTO();
+				dto.setGenerateDownloadRequestURL(true);
+
+				WebClient client = DoeClientUtil.getWebClient(requestUrl, sslCertPath, sslCertPassword);
+				client.header("Authorization", "Bearer " + authToken);
+
+				Response restResponse = client.invoke("POST", dto);
+				log.info("rest response:" + restResponse.getStatus());
+				if (restResponse.getStatus() == 200) {
+					MappingJsonFactory factory = new MappingJsonFactory();
+					JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+					HpcDataObjectDownloadResponseDTO dataObject = parser
+							.readValueAs(HpcDataObjectDownloadResponseDTO.class);
+					ObjectMapper mapper = new ObjectMapper();
+					mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+					return new ResponseEntity<>(mapper.writeValueAsString(dataObject), HttpStatus.OK);
 				}
-			    requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
-				WebClient client = DoeClientUtil.getWebClient(requestURL, sslCertPath, sslCertPassword);
-				client.header("Authorization", "Bearer " + authToken);	
-				Response restResponse = client.invoke("POST", downloadRequest);
+			}
 
-	            log.info("rest response:" + restResponse.getStatus());
-	            if (restResponse.getStatus() == 200) {
-	            	HpcBulkDataObjectDownloadResponseDTO downloadDTO =
-		        	          (HpcBulkDataObjectDownloadResponseDTO) DoeClientUtil.getObject(restResponse,HpcBulkDataObjectDownloadResponseDTO.class);
-		        	  String taskId = "Unknown";
-		              if (downloadDTO != null)
-		                taskId = downloadDTO.getTaskId();
-		              return new ResponseEntity<>("taskId: " + taskId, HttpStatus.OK);	          
-	            }   
-	          
-	          return new ResponseEntity<>("Error in download", HttpStatus.OK);
-	      } catch (Exception e) {
-	          log.error("error in download" + e);
-	      }
-	        return null;
-	     
-	 }
-	 
-	 @PostMapping(value="/v2/collection/**/download")
-	 public ResponseEntity<?> collectionDownload(@RequestHeader HttpHeaders headers, 
-			 HttpServletRequest request, HttpSession session,HttpServletResponse response,
-			 @RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO downloadRequest) {
-		 
-		 log.info("download collection:");
-		 String path = request.getRequestURI().split(request.getContextPath() + "/v2/collection/")[1];
-		 Integer index=path.lastIndexOf('/');
-		 path = path.substring(0,index);
-		 
-	     log.info("Headers: {}", headers);
-	     log.info("pathName: " +path);
-	     
-	     try {
-	          String authToken = (String) session.getAttribute("writeAccessUserToken");
-	          log.info("authToken: " + authToken);
-	          if (authToken == null) {
-	            return null;
-	          }
-	          String doeLogin = (String) session.getAttribute("doeLogin");
-	          log.info("doeLogin: " + doeLogin);
-	          if (doeLogin == null) {
-	            return null;
-	          }
+			throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
 
-	          Boolean isPermissions = false;
+		} catch (Exception e) {
+			log.error("error in download" + e);
 
-	          HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, 
-						serviceURL, path, true, sslCertPath, sslCertPassword);
-	          
-	          HpcCollectionDTO result = collectionDto.getCollections().get(0);
-	          String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
-	          
-	          if(StringUtils.isNotEmpty(accessGrp) && ("public".equalsIgnoreCase(accessGrp) || 
-	        		  Boolean.TRUE.equals(hasCollectionPermissions(doeLogin,path,collectionDto)))) {
-	        	  isPermissions = true;
-	          } 
-	          
-	          if(Boolean.TRUE.equals(isPermissions)) {   	
-	             final String requestUrl = UriComponentsBuilder.fromHttpUrl(
-	              this.collectionUrl).path("/{dme-archive-path}/download")
-	              .buildAndExpand(path).encode().toUri().toURL().toExternalForm();
+		}
+		throw new DoeWebException("Invalid Input", HttpServletResponse.SC_BAD_REQUEST);
+	}
 
-	          WebClient client = DoeClientUtil.getWebClient(requestUrl, sslCertPath, sslCertPassword);
-	          client.header("Authorization", "Bearer " + authToken);
+	@PostMapping(value = "/v2/download")
+	public ResponseEntity<?> downloadDataObjectsOrCollections(@RequestHeader HttpHeaders headers,
+			HttpServletRequest request, HttpSession session, HttpServletResponse response,
+			@RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectDownloadRequestDTO downloadRequest) {
 
-	          Response restResponse = client.invoke("POST", downloadRequest);
-	          log.info("rest response:" + restResponse.getStatus());
-	            if (restResponse.getStatus() == 200) {
-	            	HpcCollectionDownloadResponseDTO downloadDTO =
-		        	          (HpcCollectionDownloadResponseDTO) DoeClientUtil.getObject(restResponse,HpcCollectionDownloadResponseDTO.class);
-		        	  String taskId = "Unknown";
-		              if (downloadDTO != null)
-		                taskId = downloadDTO.getTaskId();
-		              return new ResponseEntity<>("taskId: " + taskId, HttpStatus.OK);	          
-	            }   
-	          }
-	          return new ResponseEntity<>("Error in download", HttpStatus.OK);
-	      } catch (Exception e) {
-	          log.error("error in download" + e);
-	      }
-	        return null;
-	 }
-	 
-	 @PostMapping(value="/dataObject/**/download")
-	 public ResponseEntity<?> asynchronousDownload(@RequestHeader HttpHeaders headers, 
-			 HttpServletRequest request, HttpSession session,HttpServletResponse response) {
-		 
-		 log.info("download async:");
-		 String path = request.getRequestURI().split(request.getContextPath() + "/dataObject/")[1];
-		 Integer index=path.lastIndexOf('/');
-		 path = path.substring(0,index);
-	     log.info("Headers: {}", headers);
-	     log.info("pathName: " +path);
+		log.info("download collection:");
+		log.info("Headers: {}", headers);
+		try {
+			String authToken = (String) session.getAttribute("writeAccessUserToken");
+			log.info("authToken: " + authToken);
+			if (authToken == null) {
+				return null;
+			}
+			String doeLogin = (String) session.getAttribute("doeLogin");
+			log.info("doeLogin: " + doeLogin);
+			if (doeLogin == null) {
+				return null;
+			}
+			String requestURL;
+			UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(bulkDownloadUrl);
 
-	      try {
-	          String authToken = (String) session.getAttribute("writeAccessUserToken");
-	          log.info("authToken: " + authToken);
-	          if (authToken == null) {
-	            return null;
-	          }
-	          String doeLogin = (String) session.getAttribute("doeLogin");
-	          log.info("doeLogin: " + doeLogin);
-	          if (doeLogin == null) {
-	            return null;
-	          }
+			if (ucBuilder == null) {
+				return null;
+			}
+			requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
+			WebClient client = DoeClientUtil.getWebClient(requestURL, sslCertPath, sslCertPassword);
+			client.header("Authorization", "Bearer " + authToken);
+			Response restResponse = client.invoke("POST", downloadRequest);
 
-	          Boolean isPermissions = false;
-	          String parentPath = null;
-      		   if (path.lastIndexOf('/') != -1) {
-					parentPath = path.substring(0, path.lastIndexOf('/'));
-      		   }
-      		   
-	          HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, 
-						serviceURL, parentPath, true, sslCertPath, sslCertPassword);
-	          
-	          HpcCollectionDTO result = collectionDto.getCollections().get(0);
-	          String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
-	          
-	          if(StringUtils.isNotEmpty(accessGrp) && ("public".equalsIgnoreCase(accessGrp) || 
-	        		  Boolean.TRUE.equals(hasCollectionPermissions(doeLogin,parentPath,collectionDto)))) {
-	        	  isPermissions = true;
-	          } 
-	          
-	          if(Boolean.TRUE.equals(isPermissions)) {   	
-	             final String requestUrl = UriComponentsBuilder.fromHttpUrl(
-	              this.dataObjectServiceURL).path("/{dme-archive-path}/download")
-	              .buildAndExpand(path).encode().toUri().toURL().toExternalForm();
+			log.info("rest response:" + restResponse.getStatus());
+			if (restResponse.getStatus() == 200) {
+				HpcBulkDataObjectDownloadResponseDTO downloadDTO = (HpcBulkDataObjectDownloadResponseDTO) DoeClientUtil
+						.getObject(restResponse, HpcBulkDataObjectDownloadResponseDTO.class);
+				String taskId = "Unknown";
+				if (downloadDTO != null)
+					taskId = downloadDTO.getTaskId();
+				return new ResponseEntity<>("taskId: " + taskId, HttpStatus.OK);
+			}
 
-	          final HpcDownloadRequestDTO dto = new HpcDownloadRequestDTO();
-	          dto.setGenerateDownloadRequestURL(true);
+			return new ResponseEntity<>("Error in download", HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("error in download" + e);
+		}
+		return null;
 
-	          WebClient client = DoeClientUtil.getWebClient(requestUrl, sslCertPath, sslCertPassword);
-	          client.header("Authorization", "Bearer " + authToken);
+	}
 
-	          Response restResponse = client.invoke("POST", dto);
-	          log.info("rest response:" + restResponse.getStatus());
-	            if (restResponse.getStatus() == 200) {
-	                HpcDataObjectDownloadResponseDTO downloadDTO =
-	                  (HpcDataObjectDownloadResponseDTO) DoeClientUtil.getObject(
-	                  restResponse, HpcDataObjectDownloadResponseDTO.class);
-	                downloadToUrl(downloadDTO.getDownloadRequestURL(), 1000000,"test", response);	          
-	            }   
-	          }
-	          return new ResponseEntity<>("Error in download", HttpStatus.OK);
-	      } catch (Exception e) {
-	          log.error("error in download" + e);
-	      }
-	        return null;
-	 }
-	 
-	 
-	 @PostMapping(value="/v2/dataObject/**/download",consumes= {MediaType.APPLICATION_JSON_VALUE}, 
-     produces= {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_OCTET_STREAM_VALUE})
-	 public String synchronousDownload(@RequestHeader HttpHeaders headers, HttpSession session,
-			 HttpServletResponse response,HttpServletRequest request,
+	@PostMapping(value = "/v2/collection/**/download")
+	public ResponseEntity<?> collectionDownload(@RequestHeader HttpHeaders headers, HttpServletRequest request,
+			HttpSession session, HttpServletResponse response,
 			@RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO downloadRequest) {
 
-		 log.info("download async:" +downloadRequest);
-	     log.info("Headers: {}", headers);
-	     
-	     String path = request.getRequestURI().split(request.getContextPath() + "/v2/dataObject/")[1];
-		 Integer index=path.lastIndexOf('/');
-		 path = path.substring(0,index);
-		 
-	     log.info("pathName: " +path);
+		log.info("download collection:");
+		String path = request.getRequestURI().split(request.getContextPath() + "/v2/collection/")[1];
+		Integer index = path.lastIndexOf('/');
+		path = path.substring(0, index);
 
-	      try {
-	          String authToken = (String) session.getAttribute("writeAccessUserToken");
-	          log.info("authToken: " + authToken);
-	          if (authToken == null) {
-	            return null;
-	          }
-	          String doeLogin = (String) session.getAttribute("doeLogin");
-	          log.info("doeLogin: " + doeLogin);
-	          if (doeLogin == null) {
-	            return null;
-	          }
+		log.info("Headers: {}", headers);
+		log.info("pathName: " + path);
 
-	          String parentPath = null;
-     		   if (path.lastIndexOf('/') != -1) {
-					parentPath = path.substring(0, path.lastIndexOf('/'));
-     		   }
-     		   
-	          Boolean isPermissions = false;
-	          HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, 
-						serviceURL, parentPath, true, sslCertPath, sslCertPassword);
-	          
-	          HpcCollectionDTO result = collectionDto.getCollections().get(0);
-	          String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
-	          
-	          if(StringUtils.isNotEmpty(accessGrp) && ("public".equalsIgnoreCase(accessGrp) || 
-	        		  Boolean.TRUE.equals(hasCollectionPermissions(doeLogin,parentPath,collectionDto)))) {
-	        	  isPermissions = true;
-	          } 
-	          
-	        if(Boolean.TRUE.equals(isPermissions)) {
-	          final String requestUrl = UriComponentsBuilder.fromHttpUrl(this.dataObjectAsyncServiceURL)
-	        	        .path("/{dme-archive-path}/download").buildAndExpand(path).encode().toUri().toURL().toExternalForm();
-
-	          WebClient client = DoeClientUtil.getWebClient(requestUrl, sslCertPath, sslCertPassword);
-	          client.header("Authorization", "Bearer " + authToken);
-
-	          Response restResponse = client.invoke("POST", downloadRequest);
-	          log.info("rest response:" + restResponse.getStatus());
-	          if (restResponse.getStatus() == 200) {
-	        	  HpcDataObjectDownloadResponseDTO downloadDTO =
-	        	          (HpcDataObjectDownloadResponseDTO) DoeClientUtil.getObject(restResponse,HpcDataObjectDownloadResponseDTO.class);
-	        	  String taskId = "Unknown";
-	              if (downloadDTO != null)
-	                taskId = downloadDTO.getTaskId();
-	              return "taskId: " + taskId;
-	          }
-	        }
-	          return "error in download";
-	      } catch (Exception e) {
-	          log.error("error in download" + e);
-	      }
-	        return null;
-	 }
-	 
-	 @GetMapping(value="/v2/dataObject/**", produces= {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_OCTET_STREAM_VALUE})
-	  public HpcDataObjectListDTO getDataObject(@RequestHeader HttpHeaders headers, HttpSession session,
-				 HttpServletResponse response,HttpServletRequest request, @RequestParam(required=false) Boolean includeAcl) {
-
-		 log.info("get dataobject:");
-	     log.info("Headers: {}", headers);	     
-	     String path = request.getRequestURI().split(request.getContextPath() + "/v2/dataObject/")[1];
-	     log.info("pathName: " +path);
-	     log.info("query params: includeAcl: " +includeAcl);
-
-	      try {
-	          String authToken = (String) session.getAttribute("writeAccessUserToken");
-	          log.info("authToken: " + authToken);
-	          
-	          if (authToken == null) {
-	            return null;
-	          }
-	          
-	          Boolean isPermissions = false;
-	          String doeLogin = (String) session.getAttribute("doeLogin");
-	          log.info("doeLogin: " + doeLogin);
-	          String parentPath = null;
-			  parentPath = path.substring(0, path.lastIndexOf('/'));
-				
-			if (!parentPath.isEmpty()) {
-	          HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, 
-						serviceURL, parentPath, true, sslCertPath, sslCertPassword);
-	          
-	          HpcCollectionDTO result = collectionDto.getCollections().get(0);
-	          String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
-	          
-	          if(StringUtils.isNotEmpty(accessGrp) && "public".equalsIgnoreCase(accessGrp)) {
-	        	  isPermissions = true;
-	          } else if(StringUtils.isNotEmpty(accessGrp) && !"public".equalsIgnoreCase(accessGrp) && 
-	        		  StringUtils.isNotEmpty(doeLogin) && Boolean.TRUE.equals(hasCollectionPermissions(doeLogin,path,collectionDto))){
-	        		   isPermissions = true;   
-	          }
-	          
-	          if(Boolean.TRUE.equals(isPermissions)) {
-	            return DoeClientUtil.getDatafiles(authToken, dataObjectServiceURL, 
-					  path, true, includeAcl,sslCertPath, sslCertPassword);
-	          } 
-		    }
-	          
-	          return null;
-	        	 
-	      } catch (Exception e) {
-	          log.error("error in download" + e);
-	      }
-	        return null;
-	 }
-	 
-	 @GetMapping(value="/collection/**", produces= {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_OCTET_STREAM_VALUE})
-	 public HpcCollectionListDTO getCollection(@RequestHeader HttpHeaders headers, HttpSession session,
-			 HttpServletResponse response,HttpServletRequest request, @RequestParam(required=false) Boolean list,
-			 @RequestParam(required=false) Boolean includeAcl ) {
-		 
-		 log.info("download async:");
-	     log.info("Headers: {}", headers);
-	     log.info("query params: includeAcl: " +includeAcl + ", list: " +list);
-	     String path = request.getRequestURI().split(request.getContextPath() + "/collection/")[1];		 
-	     log.info("pathName: " +path);
-
-	      try {
-	          String authToken = (String) session.getAttribute("writeAccessUserToken");
-	          log.info("authToken: " + authToken);
-	          
-	          if (authToken == null) {
-	            return null;
-	          }
-	          
-	          Boolean isPermissions = false;
-	          String doeLogin = (String) session.getAttribute("doeLogin");
-	          log.info("doeLogin: " + doeLogin);
-	          HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL,path, 
-	        		  false,list,includeAcl, sslCertPath,sslCertPassword);
-	          
-	          
-	          HpcCollectionDTO result = collectionDto.getCollections().get(0);
-	          String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
-	          
-	          if(StringUtils.isNotEmpty(accessGrp) && "public".equalsIgnoreCase(accessGrp)) {
-	        	  isPermissions = true;
-	          } else if(StringUtils.isNotEmpty(accessGrp) && !"public".equalsIgnoreCase(accessGrp) && 
-	        		  StringUtils.isNotEmpty(doeLogin) && Boolean.TRUE.equals(hasCollectionPermissions(doeLogin,path,collectionDto))){
-	        		   isPermissions = true;   
-	          }
-	          
-	          if(Boolean.TRUE.equals(isPermissions)) {	          
-	        	  return collectionDto;
-	          } 
-	            return null;	          
-	         
-	        } catch (Exception e) {
-               log.error("error in download" + e);
-          }
-       return null;
-   }
-	 
-    @PutMapping(value="/collection/**")
-	public String registerCollection(@RequestHeader HttpHeaders headers, HttpSession session,
-				 HttpServletResponse response,HttpServletRequest request,
-				 @RequestBody @Valid HpcCollectionRegistrationDTO collectionRegistration) {
-    	
-	     log.info("register collection: " +collectionRegistration);
-		 log.info("Headers: {}", headers);
-		 String path = request.getRequestURI().split(request.getContextPath() + "/collection/")[1];		 
-		 log.info("pathName: " +path);
-		     
-		  try {
-		       String authToken = (String) session.getAttribute("writeAccessUserToken");
-		       log.info("authToken: " + authToken);
-		          
-		       if (authToken == null) {
-		          return null;
-		        }
-		        
-		       String doeLogin = (String) session.getAttribute("doeLogin");
-		       log.info("doeLogin: " + doeLogin);
-		       if (doeLogin == null) {
-		            return null;
-		       }
-		      if(StringUtils.isNotEmpty(doeLogin) && Boolean.TRUE.equals(isUploader(doeLogin))) {
-		         String parentPath = null;
-		            if (path.lastIndexOf('/') != -1) {
-						parentPath = path.substring(0, path.lastIndexOf('/'));
-		        	} else {
-						parentPath = path;
-					}
-				   if (!parentPath.isEmpty()) {
-					  if(!parentPath.equalsIgnoreCase(basePath)) {
-						  HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, 
-							  serviceURL, parentPath, true, sslCertPath, sslCertPassword);
-						  Boolean isValidPermissions = hasCollectionPermissions(doeLogin,parentPath,parentCollectionDto);
-							  if (Boolean.FALSE.equals(isValidPermissions)) {
-								 return "Insufficient privileges to create collection";
-							  }
-						    }
-				   } else {				
-							return "Invalid parent in Collection Path";
-				   }
-						
-					// Validate Collection path
-				try {
-					 HpcCollectionListDTO collection = DoeClientUtil.getCollection(authToken, serviceURL,
-                                                        path, false, true, sslCertPath, sslCertPassword);
-					   if (collection != null && collection.getCollections() != null && CollectionUtils.isNotEmpty(collection.getCollections())) {
-						   return "Collection already exists: " + path;
-						}
-					} catch (DoeWebException e) {
-						log.debug("Error in validating collection path" + e.getMessage());	
-					}
-			    try {
-					boolean created = DoeClientUtil.updateCollection(authToken, serviceURL, collectionRegistration,
-										path, sslCertPath, sslCertPassword);
-					  if (created) {	
-					     	//after collection is created, store the permissions.
-						 String progList = request.getParameter("metaDataPermissionsList");
-						 log.info("selected permissions" + progList);
-						 HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL, 
-												path, false, sslCertPath,sslCertPassword);
-						 if (collections != null && collections.getCollections() != null
-							 && !CollectionUtils.isEmpty(collections.getCollections())) {
-							   HpcCollectionDTO collection = collections.getCollections().get(0);
-							   metaDataPermissionService.savePermissionsList(doeLogin,progList,collection.getCollection().getCollectionId(),path);
-						}
-					    return  "Collection is created!";
-					 } 
-				 } catch (Exception e) {
-					log.debug("Error in create collection" + e.getMessage());
-				} 
-		     }
-		  } catch (Exception e) {
-	               log.error("error in create collection" + e);
-	    }
-	       return null;
-	 }
-	    
-	    @PutMapping(value="/v2/dataObject/**")
-		public String registerDataObject(@RequestHeader HttpHeaders headers, HttpSession session,
-				 HttpServletResponse response,HttpServletRequest request, 
-				 @RequestPart("dataObjectRegistration") @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationRequestDTO dataObjectRegistration,
-				 @RequestBody(required=false) @Valid MultipartFile doeDataFile) {
-	    	
-	       	 log.info("register data files: " +dataObjectRegistration);
-	       	 log.info("multipart file: " +doeDataFile );
-		     log.info("Headers: {}", headers);
-		     String path = request.getRequestURI().split(request.getContextPath() + "/v2/dataObject/")[1];		 
-		     log.info("pathName: " +path);
-		     
-		    try {
-		          String authToken = (String) session.getAttribute("writeAccessUserToken");
-		          log.info("authToken: " + authToken);
-		          
-		          if (authToken == null) {
-		            return null;
-		          }
-		          
-		          String doeLogin = (String) session.getAttribute("doeLogin");
-		          log.info("doeLogin: " + doeLogin);
-		            if (doeLogin == null) {
-		              return null;
-		            }
-		       if(StringUtils.isNotEmpty(doeLogin) && Boolean.TRUE.equals(isUploader(doeLogin))) {
-		      	    String parentPath = null;
-					parentPath = path.substring(0, path.lastIndexOf('/'));
-					
-				  if (!parentPath.isEmpty()) {
-						HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, serviceURL, parentPath, true, sslCertPath,sslCertPassword);
-						Boolean isValidPermissions = hasCollectionPermissions(doeLogin,parentPath,parentCollectionDto);
-						if (Boolean.FALSE.equals(isValidPermissions)) {
-								return "Insufficient privileges to add data files.";
-						}
-				   }
-			            
-				boolean created =  DoeClientUtil.registerDatafile(authToken, doeDataFile, dataObjectAsyncServiceURL, dataObjectRegistration,
-							path, sslCertPath, sslCertPassword);
-				if(created) {						
-						//store the auditing info
-		                AuditingModel audit = new AuditingModel();
-		                audit.setName(doeLogin);
-		                audit.setOperation("Upload Single File");
-		                audit.setStartTime(new Date());
-		                audit.setPath(path);
-		                auditingService.saveAuditInfo(audit);
-		                
-						return "The system has registered your file.";
-					}	    	        		          
-		        }  
-		      }     catch (Exception e) {
-		               log.error("error in download" + e);
-		   }
-		      return "error in registration";
-	     }
-	    
-	    @PostMapping(value="/collection/query",consumes= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE},
-	    	    produces= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
-	    public HpcCollectionListDTO queryCollections(@RequestHeader HttpHeaders headers, HttpSession session,
-				 HttpServletResponse response,HttpServletRequest request, 
-				 @RequestBody @Valid HpcCompoundMetadataQueryDTO compoundMetadataQuery) {
-	    	
-	    	log.info("search collection query: " + compoundMetadataQuery);
-	    	String authToken = (String) session.getAttribute("hpcUserToken");
-	    	if(StringUtils.isEmpty(authToken)) {
-	    	 authToken = (String) session.getAttribute("writeAccessUserToken");
-	    	}	    	
-	          
-	    	  log.info("authToken: " + authToken);
-	          
-	          if (authToken == null) {
-	            return null;
-	          }
-
-	          String doeLogin = (String) session.getAttribute("doeLogin");
-	          log.info("doeLogin: " + doeLogin);
-	          	         
-	          HpcCompoundMetadataQuery query = compoundMetadataQuery.getCompoundQuery();
-	        	// add criteria for access group public and other prog names for logged on user.
-	       	  List<KeyValueBean> loggedOnUserPermissions = new ArrayList<>();
-	       	  if(StringUtils.isNotEmpty(doeLogin)) {
-	       	    DoeUsersModel user = authenticateService.getUserInfo(doeLogin);
-			       if(user != null && !StringUtils.isEmpty(user.getProgramName())) {
-				        List<String> progList = Arrays.asList(user.getProgramName().split(","));
-				        progList.stream().forEach(e -> loggedOnUserPermissions.add(new KeyValueBean(e, e))); 
-			        }
-	       	    }
-			 
-	       		HpcCompoundMetadataQuery query1 = new HpcCompoundMetadataQuery();
-	       		query1.setOperator(HpcCompoundMetadataQueryOperator.OR);
-	       		List<HpcMetadataQuery> queries1 = new ArrayList<HpcMetadataQuery>();
-	       		
-	       		// perform OR operation of public access and logged on users access groups 
-	       		HpcMetadataQuery q = new HpcMetadataQuery();
-	       		HpcMetadataQueryLevelFilter levelFilter = new HpcMetadataQueryLevelFilter();
-	       		levelFilter.setLabel("Asset");
-	       		levelFilter.setOperator(HpcMetadataQueryOperator.EQUAL);
-	       		q.setLevelFilter(levelFilter);
-	       		q.setAttribute("access_group");
-	       		q.setValue("public");
-	       		q.setOperator(HpcMetadataQueryOperator.EQUAL);
-	       		queries1.add(q);
-
-	       		for(KeyValueBean x :loggedOnUserPermissions) {
-	       			HpcMetadataQuery q1 = new HpcMetadataQuery();
-	       			HpcMetadataQueryLevelFilter levelFilter1 = new HpcMetadataQueryLevelFilter();
-	       			levelFilter1.setLabel("Asset");
-	       		    levelFilter1.setOperator(HpcMetadataQueryOperator.EQUAL);
-	       			q1.setAttribute("access_group");
-	       			q1.setValue("%"+x.getValue()+"%");
-	       			q1.setLevelFilter(levelFilter1);
-	       			q1.setOperator(HpcMetadataQueryOperator.LIKE);
-	       			queries1.add(q1);
-	       		}
-
-	       		query1.getQueries().addAll(queries1);
-	       		
-	       		
-	       		//perform and operation of query and query1
-	       		HpcCompoundMetadataQuery query2 = new HpcCompoundMetadataQuery();
-	       		query2.setOperator(HpcCompoundMetadataQueryOperator.AND);
-	       		query2.getCompoundQueries().add(query1);
-	       		query2.getCompoundQueries().add(query);
-
-	       		compoundMetadataQuery.setCompoundQuery(query2);
-	         
-	          compoundMetadataQuery.setDetailedResponse(true);
-	    	 UriComponentsBuilder ucBuilder  = UriComponentsBuilder.fromHttpUrl(compoundCollectionSearchServiceURL);		     		    
-		    
-		    if (ucBuilder == null) {
-			      return null;
-			}
-
-		    ucBuilder.queryParam("returnParent", Boolean.TRUE);
-		    String requestURL;
-			try {
-				requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
-				 WebClient client = DoeClientUtil.getWebClient(requestURL, sslCertPath, sslCertPassword);
-					client.header("Authorization", "Bearer " + authToken);	
-					Response restResponse = client.invoke("POST", compoundMetadataQuery);
-					if (restResponse.getStatus() == 200) {
-						MappingJsonFactory factory = new MappingJsonFactory();
-						JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-						return parser.readValueAs(HpcCollectionListDTO.class);
-						
-					}
-			} catch (Exception e) {
-				log.error("error in download" + e);
-			}
-
-		   return null;
-	    }
-	    
-	    @PostMapping(value="/dataObject/query",consumes= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE},
-	    	    produces= {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
-	    public ResponseEntity<?> queryDataObjects(@RequestHeader HttpHeaders headers, HttpSession session,
-				 HttpServletResponse response,HttpServletRequest request,@RequestParam(required=false) Boolean returnParent,
-				 @RequestBody @Valid HpcCompoundMetadataQueryDTO compoundMetadataQuery) {
-	    	 
-	    	log.info("search data object query: " +compoundMetadataQuery );
-	    	String authToken = (String) session.getAttribute("hpcUserToken");
-	    	if(StringUtils.isEmpty(authToken)) {
-	    	authToken = (String) session.getAttribute("writeAccessUserToken");
-	    	}
-	    	
-	          log.info("authToken: " + authToken);
-	          
-	          if (authToken == null) {
-	            return null;
-	          }
-	          
-	          String doeLogin = (String) session.getAttribute("doeLogin");
-	          log.info("doeLogin: " + doeLogin);
-	          
-	          if(Boolean.TRUE.equals(returnParent)) {
-		        	 HpcCompoundMetadataQuery query = compoundMetadataQuery.getCompoundQuery();
-		        	// add criteria for access group public and other prog names for logged on user.
-		       	  List<KeyValueBean> loggedOnUserPermissions = new ArrayList<>();
-		       		if(StringUtils.isNotEmpty(doeLogin)) {
-		             	DoeUsersModel user = authenticateService.getUserInfo(doeLogin);
-				        if(user != null && !StringUtils.isEmpty(user.getProgramName())) {
-					     List<String> progList = Arrays.asList(user.getProgramName().split(","));
-					    progList.stream().forEach(e -> loggedOnUserPermissions.add(new KeyValueBean(e, e))); 
-				        }
-		       		}
-				 
-		       		HpcCompoundMetadataQuery query1 = new HpcCompoundMetadataQuery();
-		       		query1.setOperator(HpcCompoundMetadataQueryOperator.OR);
-		       		List<HpcMetadataQuery> queries1 = new ArrayList<HpcMetadataQuery>();
-		       		
-		       		// perform OR operation of public access and logged on users access groups 
-		       		HpcMetadataQuery q = new HpcMetadataQuery();
-		       		HpcMetadataQueryLevelFilter levelFilter = new HpcMetadataQueryLevelFilter();
-		       		levelFilter.setLabel("Asset");
-		       		levelFilter.setOperator(HpcMetadataQueryOperator.EQUAL);
-		       		q.setLevelFilter(levelFilter);
-		       		q.setAttribute("access_group");
-		       		q.setValue("public");
-		       		q.setOperator(HpcMetadataQueryOperator.EQUAL);
-		       		queries1.add(q);
-
-		       		for(KeyValueBean x :loggedOnUserPermissions) {
-		       			HpcMetadataQuery q1 = new HpcMetadataQuery();
-		       			HpcMetadataQueryLevelFilter levelFilter1 = new HpcMetadataQueryLevelFilter();
-		       			levelFilter1.setLabel("Asset");
-		       		    levelFilter1.setOperator(HpcMetadataQueryOperator.EQUAL);
-		       			q1.setAttribute("access_group");
-		       			q1.setValue("%"+x.getValue()+"%");
-		       			q1.setLevelFilter(levelFilter1);
-		       			q1.setOperator(HpcMetadataQueryOperator.LIKE);
-		       			queries1.add(q1);
-		       		}
-
-		       		query1.getQueries().addAll(queries1);
-		       		
-		       		
-		       		//perform and operation of query and query1
-		       		HpcCompoundMetadataQuery query2 = new HpcCompoundMetadataQuery();
-		       		query2.setOperator(HpcCompoundMetadataQueryOperator.AND);
-		       		query2.getCompoundQueries().add(query1);
-		       		query2.getCompoundQueries().add(query);
-
-		       		compoundMetadataQuery.setCompoundQuery(query2);
-		         }
-	          compoundMetadataQuery.setDetailedResponse(true);
-	    	  UriComponentsBuilder ucBuilder  = UriComponentsBuilder.fromHttpUrl(compoundDataObjectSearchServiceURL);		     		    
-		    
-		      if (ucBuilder == null) {
-			      return null;
-			  }
-
-		    ucBuilder.queryParam("returnParent", returnParent);
-		    String requestURL;
-			try {
-				requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
-				 WebClient client = DoeClientUtil.getWebClient(requestURL, sslCertPath, sslCertPassword);
-					client.header("Authorization", "Bearer " + authToken);	
-					Response restResponse = client.invoke("POST", compoundMetadataQuery);
-					if (restResponse.getStatus() == 200) {
-						MappingJsonFactory factory = new MappingJsonFactory();
-						JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-						if(Boolean.TRUE.equals(returnParent)) {
-							HpcCollectionListDTO dataObjects = parser.readValueAs(HpcCollectionListDTO.class);
-							return new ResponseEntity<>(dataObjects, HttpStatus.OK);
-						} else {
-							HpcDataObjectListDTO dataObjects = parser.readValueAs(HpcDataObjectListDTO.class);
-							return new ResponseEntity<>(dataObjects, HttpStatus.OK);
-						}
-					}
-			} catch (Exception e) {
-				log.error("error in download" + e);
-			}
-
-		   return null;
-	    }
-	    
-	    private Boolean hasCollectionPermissions(String loggedOnUser, String parentPath,HpcCollectionListDTO parentCollectionDto) {
-
-			 List<KeyValueBean> keyValueBeanResults = new ArrayList<>();
-			 if(!StringUtils.isEmpty(loggedOnUser)) {
-				 DoeUsersModel user = authenticateService.getUserInfo(loggedOnUser);
-				 if(user != null && !StringUtils.isEmpty(user.getProgramName())) {
-					 List<String> progList = Arrays.asList(user.getProgramName().split(","));
-					 progList.stream().forEach(e -> keyValueBeanResults.add(new KeyValueBean(e, e))); 
-				 }
-			 }
-
-			 if (!parentPath.equalsIgnoreCase(basePath) && parentCollectionDto != null && parentCollectionDto.getCollections() != null
-						&& !CollectionUtils.isEmpty(parentCollectionDto.getCollections())) {
-					HpcCollectionDTO collection = parentCollectionDto.getCollections().get(0);				
-					String role = getPermissionRole(loggedOnUser,collection.getCollection().getCollectionId(),keyValueBeanResults);
-					if(StringUtils.isNotEmpty(role) && (role.equalsIgnoreCase("Owner")|| role.equalsIgnoreCase("Group User"))) {
-						return true;
-					} 
-			    }
-				return false;
-	    	
-	    }
-	    
-	private Boolean isUploader(String emailAddr) {
-	    	 if(!StringUtils.isEmpty(emailAddr)) {
-				  DoeUsersModel user =  authenticateService.getUserInfo(emailAddr);
-				  if(user.getIsWrite() != null && user.getIsWrite()) {
-					return true;  
-				  }
-			  }
-	    	 
-	    	 return false;
-	    }
-	    
-	private String getAttributeValue(String attrName, List<HpcMetadataEntry> list) {
-			if (list == null)
+		try {
+			String authToken = (String) session.getAttribute("writeAccessUserToken");
+			log.info("authToken: " + authToken);
+			if (authToken == null) {
 				return null;
-			
-			HpcMetadataEntry entry =  list.stream().filter(e -> e.getAttribute().equalsIgnoreCase(attrName)).
-					findAny().orElse(null);
-			if(entry !=null) {
-				return entry.getValue();
+			}
+			String doeLogin = (String) session.getAttribute("doeLogin");
+			log.info("doeLogin: " + doeLogin);
+			if (doeLogin == null) {
+				return null;
+			}
+
+			Boolean isPermissions = false;
+
+			HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, path, true,
+					sslCertPath, sslCertPassword);
+
+			HpcCollectionDTO result = collectionDto.getCollections().get(0);
+			String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
+
+			if (StringUtils.isNotEmpty(accessGrp) && ("public".equalsIgnoreCase(accessGrp)
+					|| Boolean.TRUE.equals(hasCollectionPermissions(doeLogin, path, collectionDto)))) {
+				isPermissions = true;
+			}
+
+			if (Boolean.TRUE.equals(isPermissions)) {
+				final String requestUrl = UriComponentsBuilder.fromHttpUrl(this.collectionUrl)
+						.path("/{dme-archive-path}/download").buildAndExpand(path).encode().toUri().toURL()
+						.toExternalForm();
+
+				WebClient client = DoeClientUtil.getWebClient(requestUrl, sslCertPath, sslCertPassword);
+				client.header("Authorization", "Bearer " + authToken);
+
+				Response restResponse = client.invoke("POST", downloadRequest);
+				log.info("rest response:" + restResponse.getStatus());
+				if (restResponse.getStatus() == 200) {
+					HpcCollectionDownloadResponseDTO downloadDTO = (HpcCollectionDownloadResponseDTO) DoeClientUtil
+							.getObject(restResponse, HpcCollectionDownloadResponseDTO.class);
+					String taskId = "Unknown";
+					if (downloadDTO != null)
+						taskId = downloadDTO.getTaskId();
+					return new ResponseEntity<>("taskId: " + taskId, HttpStatus.OK);
+				}
+			}
+			return new ResponseEntity<>("Error in download", HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("error in download" + e);
+		}
+		return null;
+	}
+
+	@PostMapping(value = "/dataObject/**/download")
+	public ResponseEntity<?> asynchronousDownload(@RequestHeader HttpHeaders headers, HttpServletRequest request,
+			HttpSession session, HttpServletResponse response) {
+
+		log.info("download async:");
+		String path = request.getRequestURI().split(request.getContextPath() + "/dataObject/")[1];
+		Integer index = path.lastIndexOf('/');
+		path = path.substring(0, index);
+		log.info("Headers: {}", headers);
+		log.info("pathName: " + path);
+
+		try {
+			String authToken = (String) session.getAttribute("writeAccessUserToken");
+			log.info("authToken: " + authToken);
+			if (authToken == null) {
+				return null;
+			}
+			String doeLogin = (String) session.getAttribute("doeLogin");
+			log.info("doeLogin: " + doeLogin);
+			if (doeLogin == null) {
+				return null;
+			}
+
+			Boolean isPermissions = false;
+			String parentPath = null;
+			if (path.lastIndexOf('/') != -1) {
+				parentPath = path.substring(0, path.lastIndexOf('/'));
+			}
+
+			HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, parentPath, true,
+					sslCertPath, sslCertPassword);
+
+			HpcCollectionDTO result = collectionDto.getCollections().get(0);
+			String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
+
+			if (StringUtils.isNotEmpty(accessGrp) && ("public".equalsIgnoreCase(accessGrp)
+					|| Boolean.TRUE.equals(hasCollectionPermissions(doeLogin, parentPath, collectionDto)))) {
+				isPermissions = true;
+			}
+
+			if (Boolean.TRUE.equals(isPermissions)) {
+				final String requestUrl = UriComponentsBuilder.fromHttpUrl(this.dataObjectServiceURL)
+						.path("/{dme-archive-path}/download").buildAndExpand(path).encode().toUri().toURL()
+						.toExternalForm();
+
+				final HpcDownloadRequestDTO dto = new HpcDownloadRequestDTO();
+				dto.setGenerateDownloadRequestURL(true);
+
+				WebClient client = DoeClientUtil.getWebClient(requestUrl, sslCertPath, sslCertPassword);
+				client.header("Authorization", "Bearer " + authToken);
+
+				Response restResponse = client.invoke("POST", dto);
+				log.info("rest response:" + restResponse.getStatus());
+				if (restResponse.getStatus() == 200) {
+					HpcDataObjectDownloadResponseDTO downloadDTO = (HpcDataObjectDownloadResponseDTO) DoeClientUtil
+							.getObject(restResponse, HpcDataObjectDownloadResponseDTO.class);
+					downloadToUrl(downloadDTO.getDownloadRequestURL(), 1000000, "test", response);
+				}
+			}
+			return new ResponseEntity<>("Error in download", HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("error in download" + e);
+		}
+		return null;
+	}
+
+	@PostMapping(value = "/v2/dataObject/**/download", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE })
+	public String synchronousDownload(@RequestHeader HttpHeaders headers, HttpSession session,
+			HttpServletResponse response, HttpServletRequest request,
+			@RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO downloadRequest) {
+
+		log.info("download async:" + downloadRequest);
+		log.info("Headers: {}", headers);
+
+		String path = request.getRequestURI().split(request.getContextPath() + "/v2/dataObject/")[1];
+		Integer index = path.lastIndexOf('/');
+		path = path.substring(0, index);
+
+		log.info("pathName: " + path);
+
+		try {
+			String authToken = (String) session.getAttribute("writeAccessUserToken");
+			log.info("authToken: " + authToken);
+			if (authToken == null) {
+				return null;
+			}
+			String doeLogin = (String) session.getAttribute("doeLogin");
+			log.info("doeLogin: " + doeLogin);
+			if (doeLogin == null) {
+				return null;
+			}
+
+			String parentPath = null;
+			if (path.lastIndexOf('/') != -1) {
+				parentPath = path.substring(0, path.lastIndexOf('/'));
+			}
+
+			Boolean isPermissions = false;
+			HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, parentPath, true,
+					sslCertPath, sslCertPassword);
+
+			HpcCollectionDTO result = collectionDto.getCollections().get(0);
+			String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
+
+			if (StringUtils.isNotEmpty(accessGrp) && ("public".equalsIgnoreCase(accessGrp)
+					|| Boolean.TRUE.equals(hasCollectionPermissions(doeLogin, parentPath, collectionDto)))) {
+				isPermissions = true;
+			}
+
+			if (Boolean.TRUE.equals(isPermissions)) {
+				final String requestUrl = UriComponentsBuilder.fromHttpUrl(this.dataObjectAsyncServiceURL)
+						.path("/{dme-archive-path}/download").buildAndExpand(path).encode().toUri().toURL()
+						.toExternalForm();
+
+				WebClient client = DoeClientUtil.getWebClient(requestUrl, sslCertPath, sslCertPassword);
+				client.header("Authorization", "Bearer " + authToken);
+
+				Response restResponse = client.invoke("POST", downloadRequest);
+				log.info("rest response:" + restResponse.getStatus());
+				if (restResponse.getStatus() == 200) {
+					HpcDataObjectDownloadResponseDTO downloadDTO = (HpcDataObjectDownloadResponseDTO) DoeClientUtil
+							.getObject(restResponse, HpcDataObjectDownloadResponseDTO.class);
+					String taskId = "Unknown";
+					if (downloadDTO != null)
+						taskId = downloadDTO.getTaskId();
+					return "taskId: " + taskId;
+				}
+			}
+			return "error in download";
+		} catch (Exception e) {
+			log.error("error in download" + e);
+		}
+		return null;
+	}
+
+	@GetMapping(value = "/v2/dataObject/**", produces = { MediaType.APPLICATION_JSON_VALUE,
+			MediaType.APPLICATION_OCTET_STREAM_VALUE })
+	public HpcDataObjectListDTO getDataObject(@RequestHeader HttpHeaders headers, HttpSession session,
+			HttpServletResponse response, HttpServletRequest request,
+			@RequestParam(required = false) Boolean includeAcl) {
+
+		log.info("get dataobject:");
+		log.info("Headers: {}", headers);
+		String path = request.getRequestURI().split(request.getContextPath() + "/v2/dataObject/")[1];
+		log.info("pathName: " + path);
+		log.info("query params: includeAcl: " + includeAcl);
+
+		try {
+			String authToken = (String) session.getAttribute("writeAccessUserToken");
+			log.info("authToken: " + authToken);
+
+			if (authToken == null) {
+				return null;
+			}
+
+			Boolean isPermissions = false;
+			String doeLogin = (String) session.getAttribute("doeLogin");
+			log.info("doeLogin: " + doeLogin);
+			String parentPath = null;
+			parentPath = path.substring(0, path.lastIndexOf('/'));
+
+			if (!parentPath.isEmpty()) {
+				HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, parentPath,
+						true, sslCertPath, sslCertPassword);
+
+				HpcCollectionDTO result = collectionDto.getCollections().get(0);
+				String accessGrp = getAttributeValue("access_group",
+						result.getMetadataEntries().getSelfMetadataEntries());
+
+				if (StringUtils.isNotEmpty(accessGrp) && "public".equalsIgnoreCase(accessGrp)) {
+					isPermissions = true;
+				} else if (StringUtils.isNotEmpty(accessGrp) && !"public".equalsIgnoreCase(accessGrp)
+						&& StringUtils.isNotEmpty(doeLogin)
+						&& Boolean.TRUE.equals(hasCollectionPermissions(doeLogin, path, collectionDto))) {
+					isPermissions = true;
+				}
+
+				if (Boolean.TRUE.equals(isPermissions)) {
+					return DoeClientUtil.getDatafiles(authToken, dataObjectServiceURL, path, true, includeAcl,
+							sslCertPath, sslCertPassword);
+				}
+			}
+
+			return null;
+
+		} catch (Exception e) {
+			log.error("error in download" + e);
+		}
+		return null;
+	}
+
+	@GetMapping(value = "/collection/**", produces = { MediaType.APPLICATION_JSON_VALUE,
+			MediaType.APPLICATION_OCTET_STREAM_VALUE })
+	public HpcCollectionListDTO getCollection(@RequestHeader HttpHeaders headers, HttpSession session,
+			HttpServletResponse response, HttpServletRequest request, @RequestParam(required = false) Boolean list,
+			@RequestParam(required = false) Boolean includeAcl) {
+
+		log.info("download async:");
+		log.info("Headers: {}", headers);
+		log.info("query params: includeAcl: " + includeAcl + ", list: " + list);
+		String path = request.getRequestURI().split(request.getContextPath() + "/collection/")[1];
+		log.info("pathName: " + path);
+
+		try {
+			String authToken = (String) session.getAttribute("writeAccessUserToken");
+			log.info("authToken: " + authToken);
+
+			if (authToken == null) {
+				return null;
+			}
+
+			Boolean isPermissions = false;
+			String doeLogin = (String) session.getAttribute("doeLogin");
+			log.info("doeLogin: " + doeLogin);
+			HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, path, false, list,
+					includeAcl, sslCertPath, sslCertPassword);
+
+			HpcCollectionDTO result = collectionDto.getCollections().get(0);
+			String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
+
+			if (StringUtils.isNotEmpty(accessGrp) && "public".equalsIgnoreCase(accessGrp)) {
+				isPermissions = true;
+			} else if (StringUtils.isNotEmpty(accessGrp) && !"public".equalsIgnoreCase(accessGrp)
+					&& StringUtils.isNotEmpty(doeLogin)
+					&& Boolean.TRUE.equals(hasCollectionPermissions(doeLogin, path, collectionDto))) {
+				isPermissions = true;
+			}
+
+			if (Boolean.TRUE.equals(isPermissions)) {
+				return collectionDto;
 			}
 			return null;
-    }
+
+		} catch (Exception e) {
+			log.error("error in download" + e);
+		}
+		return null;
+	}
+
+	@PutMapping(value = "/collection/**")
+	public String registerCollection(@RequestHeader HttpHeaders headers, HttpSession session,
+			HttpServletResponse response, HttpServletRequest request,
+			@RequestBody @Valid HpcCollectionRegistrationDTO collectionRegistration) {
+
+		log.info("register collection: " + collectionRegistration);
+		log.info("Headers: {}", headers);
+		String path = request.getRequestURI().split(request.getContextPath() + "/collection/")[1];
+		log.info("pathName: " + path);
+
+		try {
+			String authToken = (String) session.getAttribute("writeAccessUserToken");
+			log.info("authToken: " + authToken);
+
+			if (authToken == null) {
+				return null;
+			}
+
+			String doeLogin = (String) session.getAttribute("doeLogin");
+			log.info("doeLogin: " + doeLogin);
+			if (doeLogin == null) {
+				return null;
+			}
+			if (StringUtils.isNotEmpty(doeLogin) && Boolean.TRUE.equals(isUploader(doeLogin))) {
+				String parentPath = null;
+				if (path.lastIndexOf('/') != -1) {
+					parentPath = path.substring(0, path.lastIndexOf('/'));
+				} else {
+					parentPath = path;
+				}
+				if (!parentPath.isEmpty()) {
+					if (!parentPath.equalsIgnoreCase(basePath)) {
+						HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
+								parentPath, true, sslCertPath, sslCertPassword);
+						Boolean isValidPermissions = hasCollectionPermissions(doeLogin, parentPath,
+								parentCollectionDto);
+						if (Boolean.FALSE.equals(isValidPermissions)) {
+							return "Insufficient privileges to create collection";
+						}
+					}
+				} else {
+					return "Invalid parent in Collection Path";
+				}
+
+				// Validate Collection path
+				try {
+					HpcCollectionListDTO collection = DoeClientUtil.getCollection(authToken, serviceURL, path, false,
+							true, sslCertPath, sslCertPassword);
+					if (collection != null && collection.getCollections() != null
+							&& CollectionUtils.isNotEmpty(collection.getCollections())) {
+						return "Collection already exists: " + path;
+					}
+				} catch (DoeWebException e) {
+					log.debug("Error in validating collection path" + e.getMessage());
+				}
+				try {
+					boolean created = DoeClientUtil.updateCollection(authToken, serviceURL, collectionRegistration,
+							path, sslCertPath, sslCertPassword);
+					if (created) {
+						// after collection is created, store the permissions.
+						String progList = request.getParameter("metaDataPermissionsList");
+						log.info("selected permissions" + progList);
+						HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL, path,
+								false, sslCertPath, sslCertPassword);
+						if (collections != null && collections.getCollections() != null
+								&& !CollectionUtils.isEmpty(collections.getCollections())) {
+							HpcCollectionDTO collection = collections.getCollections().get(0);
+							metaDataPermissionService.savePermissionsList(doeLogin, progList,
+									collection.getCollection().getCollectionId(), path);
+						}
+						return "Collection is created!";
+					}
+				} catch (Exception e) {
+					log.debug("Error in create collection" + e.getMessage());
+				}
+			}
+		} catch (Exception e) {
+			log.error("error in create collection" + e);
+		}
+		return null;
+	}
+
+	@PutMapping(value = "/v2/dataObject/**")
+	public String registerDataObject(@RequestHeader HttpHeaders headers, HttpSession session,
+			HttpServletResponse response, HttpServletRequest request,
+			@RequestPart("dataObjectRegistration") @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationRequestDTO dataObjectRegistration,
+			@RequestBody(required = false) @Valid MultipartFile doeDataFile) {
+
+		log.info("register data files: " + dataObjectRegistration);
+		log.info("multipart file: " + doeDataFile);
+		log.info("Headers: {}", headers);
+		String path = request.getRequestURI().split(request.getContextPath() + "/v2/dataObject/")[1];
+		log.info("pathName: " + path);
+
+		try {
+			String authToken = (String) session.getAttribute("writeAccessUserToken");
+			log.info("authToken: " + authToken);
+
+			if (authToken == null) {
+				return null;
+			}
+
+			String doeLogin = (String) session.getAttribute("doeLogin");
+			log.info("doeLogin: " + doeLogin);
+			if (doeLogin == null) {
+				return null;
+			}
+			if (StringUtils.isNotEmpty(doeLogin) && Boolean.TRUE.equals(isUploader(doeLogin))) {
+				String parentPath = null;
+				parentPath = path.substring(0, path.lastIndexOf('/'));
+
+				if (!parentPath.isEmpty()) {
+					HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
+							parentPath, true, sslCertPath, sslCertPassword);
+					Boolean isValidPermissions = hasCollectionPermissions(doeLogin, parentPath, parentCollectionDto);
+					if (Boolean.FALSE.equals(isValidPermissions)) {
+						return "Insufficient privileges to add data files.";
+					}
+				}
+
+				boolean created = DoeClientUtil.registerDatafile(authToken, doeDataFile, dataObjectAsyncServiceURL,
+						dataObjectRegistration, path, sslCertPath, sslCertPassword);
+				if (created) {
+					// store the auditing info
+					AuditingModel audit = new AuditingModel();
+					audit.setName(doeLogin);
+					audit.setOperation("Upload Single File");
+					audit.setStartTime(new Date());
+					audit.setPath(path);
+					auditingService.saveAuditInfo(audit);
+
+					return "The system has registered your file.";
+				}
+			}
+		} catch (Exception e) {
+			log.error("error in download" + e);
+		}
+		return "error in registration";
+	}
+
+	@PostMapping(value = "/collection/query", consumes = { MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE,
+					MediaType.APPLICATION_JSON_VALUE })
+	public HpcCollectionListDTO queryCollections(@RequestHeader HttpHeaders headers, HttpSession session,
+			HttpServletResponse response, HttpServletRequest request,
+			@RequestBody @Valid HpcCompoundMetadataQueryDTO compoundMetadataQuery) {
+
+		log.info("search collection query: " + compoundMetadataQuery);
+		String authToken = (String) session.getAttribute("hpcUserToken");
+		if (StringUtils.isEmpty(authToken)) {
+			authToken = (String) session.getAttribute("writeAccessUserToken");
+		}
+
+		log.info("authToken: " + authToken);
+
+		if (authToken == null) {
+			return null;
+		}
+
+		String doeLogin = (String) session.getAttribute("doeLogin");
+		log.info("doeLogin: " + doeLogin);
+
+		HpcCompoundMetadataQuery query = compoundMetadataQuery.getCompoundQuery();
+		// add criteria for access group public and other prog names for logged on user.
+		List<KeyValueBean> loggedOnUserPermissions = new ArrayList<>();
+		if (StringUtils.isNotEmpty(doeLogin)) {
+			DoeUsersModel user = authenticateService.getUserInfo(doeLogin);
+			if (user != null && !StringUtils.isEmpty(user.getProgramName())) {
+				List<String> progList = Arrays.asList(user.getProgramName().split(","));
+				progList.stream().forEach(e -> loggedOnUserPermissions.add(new KeyValueBean(e, e)));
+			}
+		}
+
+		HpcCompoundMetadataQuery query1 = new HpcCompoundMetadataQuery();
+		query1.setOperator(HpcCompoundMetadataQueryOperator.OR);
+		List<HpcMetadataQuery> queries1 = new ArrayList<HpcMetadataQuery>();
+
+		// perform OR operation of public access and logged on users access groups
+		HpcMetadataQuery q = new HpcMetadataQuery();
+		HpcMetadataQueryLevelFilter levelFilter = new HpcMetadataQueryLevelFilter();
+		levelFilter.setLabel("Asset");
+		levelFilter.setOperator(HpcMetadataQueryOperator.EQUAL);
+		q.setLevelFilter(levelFilter);
+		q.setAttribute("access_group");
+		q.setValue("public");
+		q.setOperator(HpcMetadataQueryOperator.EQUAL);
+		queries1.add(q);
+
+		for (KeyValueBean x : loggedOnUserPermissions) {
+			HpcMetadataQuery q1 = new HpcMetadataQuery();
+			HpcMetadataQueryLevelFilter levelFilter1 = new HpcMetadataQueryLevelFilter();
+			levelFilter1.setLabel("Asset");
+			levelFilter1.setOperator(HpcMetadataQueryOperator.EQUAL);
+			q1.setAttribute("access_group");
+			q1.setValue("%" + x.getValue() + "%");
+			q1.setLevelFilter(levelFilter1);
+			q1.setOperator(HpcMetadataQueryOperator.LIKE);
+			queries1.add(q1);
+		}
+
+		query1.getQueries().addAll(queries1);
+
+		// perform and operation of query and query1
+		HpcCompoundMetadataQuery query2 = new HpcCompoundMetadataQuery();
+		query2.setOperator(HpcCompoundMetadataQueryOperator.AND);
+		query2.getCompoundQueries().add(query1);
+		query2.getCompoundQueries().add(query);
+
+		compoundMetadataQuery.setCompoundQuery(query2);
+
+		compoundMetadataQuery.setDetailedResponse(true);
+		UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(compoundCollectionSearchServiceURL);
+
+		if (ucBuilder == null) {
+			return null;
+		}
+
+		ucBuilder.queryParam("returnParent", Boolean.TRUE);
+		String requestURL;
+		try {
+			requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
+			WebClient client = DoeClientUtil.getWebClient(requestURL, sslCertPath, sslCertPassword);
+			client.header("Authorization", "Bearer " + authToken);
+			Response restResponse = client.invoke("POST", compoundMetadataQuery);
+			if (restResponse.getStatus() == 200) {
+				MappingJsonFactory factory = new MappingJsonFactory();
+				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+				return parser.readValueAs(HpcCollectionListDTO.class);
+
+			}
+		} catch (Exception e) {
+			log.error("error in download" + e);
+		}
+
+		return null;
+	}
+
+	@PostMapping(value = "/dataObject/query", consumes = { MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE,
+					MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<?> queryDataObjects(@RequestHeader HttpHeaders headers, HttpSession session,
+			HttpServletResponse response, HttpServletRequest request,
+			@RequestParam(required = false) Boolean returnParent,
+			@RequestBody @Valid HpcCompoundMetadataQueryDTO compoundMetadataQuery) {
+
+		log.info("search data object query: " + compoundMetadataQuery);
+		String authToken = (String) session.getAttribute("hpcUserToken");
+		if (StringUtils.isEmpty(authToken)) {
+			authToken = (String) session.getAttribute("writeAccessUserToken");
+		}
+
+		log.info("authToken: " + authToken);
+
+		if (authToken == null) {
+			return null;
+		}
+
+		String doeLogin = (String) session.getAttribute("doeLogin");
+		log.info("doeLogin: " + doeLogin);
+
+		if (Boolean.TRUE.equals(returnParent)) {
+			HpcCompoundMetadataQuery query = compoundMetadataQuery.getCompoundQuery();
+			// add criteria for access group public and other prog names for logged on user.
+			List<KeyValueBean> loggedOnUserPermissions = new ArrayList<>();
+			if (StringUtils.isNotEmpty(doeLogin)) {
+				DoeUsersModel user = authenticateService.getUserInfo(doeLogin);
+				if (user != null && !StringUtils.isEmpty(user.getProgramName())) {
+					List<String> progList = Arrays.asList(user.getProgramName().split(","));
+					progList.stream().forEach(e -> loggedOnUserPermissions.add(new KeyValueBean(e, e)));
+				}
+			}
+
+			HpcCompoundMetadataQuery query1 = new HpcCompoundMetadataQuery();
+			query1.setOperator(HpcCompoundMetadataQueryOperator.OR);
+			List<HpcMetadataQuery> queries1 = new ArrayList<HpcMetadataQuery>();
+
+			// perform OR operation of public access and logged on users access groups
+			HpcMetadataQuery q = new HpcMetadataQuery();
+			HpcMetadataQueryLevelFilter levelFilter = new HpcMetadataQueryLevelFilter();
+			levelFilter.setLabel("Asset");
+			levelFilter.setOperator(HpcMetadataQueryOperator.EQUAL);
+			q.setLevelFilter(levelFilter);
+			q.setAttribute("access_group");
+			q.setValue("public");
+			q.setOperator(HpcMetadataQueryOperator.EQUAL);
+			queries1.add(q);
+
+			for (KeyValueBean x : loggedOnUserPermissions) {
+				HpcMetadataQuery q1 = new HpcMetadataQuery();
+				HpcMetadataQueryLevelFilter levelFilter1 = new HpcMetadataQueryLevelFilter();
+				levelFilter1.setLabel("Asset");
+				levelFilter1.setOperator(HpcMetadataQueryOperator.EQUAL);
+				q1.setAttribute("access_group");
+				q1.setValue("%" + x.getValue() + "%");
+				q1.setLevelFilter(levelFilter1);
+				q1.setOperator(HpcMetadataQueryOperator.LIKE);
+				queries1.add(q1);
+			}
+
+			query1.getQueries().addAll(queries1);
+
+			// perform and operation of query and query1
+			HpcCompoundMetadataQuery query2 = new HpcCompoundMetadataQuery();
+			query2.setOperator(HpcCompoundMetadataQueryOperator.AND);
+			query2.getCompoundQueries().add(query1);
+			query2.getCompoundQueries().add(query);
+
+			compoundMetadataQuery.setCompoundQuery(query2);
+		}
+		compoundMetadataQuery.setDetailedResponse(true);
+		UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(compoundDataObjectSearchServiceURL);
+
+		if (ucBuilder == null) {
+			return null;
+		}
+
+		ucBuilder.queryParam("returnParent", returnParent);
+		String requestURL;
+		try {
+			requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
+			WebClient client = DoeClientUtil.getWebClient(requestURL, sslCertPath, sslCertPassword);
+			client.header("Authorization", "Bearer " + authToken);
+			Response restResponse = client.invoke("POST", compoundMetadataQuery);
+			if (restResponse.getStatus() == 200) {
+				MappingJsonFactory factory = new MappingJsonFactory();
+				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+				if (Boolean.TRUE.equals(returnParent)) {
+					HpcCollectionListDTO dataObjects = parser.readValueAs(HpcCollectionListDTO.class);
+					return new ResponseEntity<>(dataObjects, HttpStatus.OK);
+				} else {
+					HpcDataObjectListDTO dataObjects = parser.readValueAs(HpcDataObjectListDTO.class);
+					return new ResponseEntity<>(dataObjects, HttpStatus.OK);
+				}
+			}
+		} catch (Exception e) {
+			log.error("error in download" + e);
+		}
+
+		return null;
+	}
+
+	private Boolean hasCollectionPermissions(String loggedOnUser, String parentPath,
+			HpcCollectionListDTO parentCollectionDto) {
+
+		List<KeyValueBean> keyValueBeanResults = new ArrayList<>();
+		if (!StringUtils.isEmpty(loggedOnUser)) {
+			DoeUsersModel user = authenticateService.getUserInfo(loggedOnUser);
+			if (user != null && !StringUtils.isEmpty(user.getProgramName())) {
+				List<String> progList = Arrays.asList(user.getProgramName().split(","));
+				progList.stream().forEach(e -> keyValueBeanResults.add(new KeyValueBean(e, e)));
+			}
+		}
+
+		if (!parentPath.equalsIgnoreCase(basePath) && parentCollectionDto != null
+				&& parentCollectionDto.getCollections() != null
+				&& !CollectionUtils.isEmpty(parentCollectionDto.getCollections())) {
+			HpcCollectionDTO collection = parentCollectionDto.getCollections().get(0);
+			String role = getPermissionRole(loggedOnUser, collection.getCollection().getCollectionId(),
+					keyValueBeanResults);
+			if (StringUtils.isNotEmpty(role)
+					&& (role.equalsIgnoreCase("Owner") || role.equalsIgnoreCase("Group User"))) {
+				return true;
+			}
+		}
+		return false;
+
+	}
+
+	private Boolean isUploader(String emailAddr) {
+		if (!StringUtils.isEmpty(emailAddr)) {
+			DoeUsersModel user = authenticateService.getUserInfo(emailAddr);
+			if (user.getIsWrite() != null && user.getIsWrite()) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private String getAttributeValue(String attrName, List<HpcMetadataEntry> list) {
+		if (list == null)
+			return null;
+
+		HpcMetadataEntry entry = list.stream().filter(e -> e.getAttribute().equalsIgnoreCase(attrName)).findAny()
+				.orElse(null);
+		if (entry != null) {
+			return entry.getValue();
+		}
+		return null;
+	}
 }

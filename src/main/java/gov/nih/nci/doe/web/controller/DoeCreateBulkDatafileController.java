@@ -56,7 +56,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 
 	
 	@GetMapping
-	public String home(Model model, HttpSession session, HttpServletRequest request) {
+	public String home(Model model, HttpSession session, HttpServletRequest request) throws DoeWebException{
 
 		String code = request.getParameter("code");
 		 model.addAttribute("clientId", clientId);
@@ -88,7 +88,8 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	
 	@ResponseBody
 	@GetMapping(value = "/canEdit", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Boolean isEditpermissions(@RequestParam(value = "selectedPath") String selectedPath, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+	public Boolean isEditpermissions(@RequestParam(value = "selectedPath") String selectedPath, 
+			HttpSession session, HttpServletRequest request, HttpServletResponse response) throws DoeWebException{
 	
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		if (StringUtils.isNotEmpty(selectedPath)) {

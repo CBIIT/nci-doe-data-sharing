@@ -1,6 +1,6 @@
 package gov.nih.nci.doe.web;
 
-public class DoeWebException extends RuntimeException {
+public class DoeWebException extends Exception {
 
 	/**
 	 * 
@@ -21,5 +21,9 @@ public class DoeWebException extends RuntimeException {
 
 	public DoeWebException(Throwable e) {
 		super(e);
+	}
+	
+	public DoeWebException(String message, Integer statusCode) {
+		super(message);
 	}
 }

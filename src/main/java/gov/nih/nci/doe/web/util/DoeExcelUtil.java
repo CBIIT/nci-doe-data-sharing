@@ -29,7 +29,8 @@ public class DoeExcelUtil {
 	public static final String METADATA_SHEET = "Metadata";
 	public static final String TOKENS_SHEET = "Tokens";
 
-	public static HpcBulkMetadataEntries parseBulkMatadataEntries(MultipartFile metadataFile, String collectionPath) throws IOException {
+	public static HpcBulkMetadataEntries parseBulkMatadataEntries(MultipartFile metadataFile, String collectionPath) 
+			throws IOException,DoeWebException {
 		HpcBulkMetadataEntries entries = null;
 		if(metadataFile == null || metadataFile.getName().isEmpty() || metadataFile.getOriginalFilename().isEmpty())
 			return null;
@@ -106,7 +107,7 @@ public class DoeExcelUtil {
 	}
 
 	@SuppressWarnings("deprecation")
-	private static Map<String, Map<String, String>> getMetadataMap(Sheet metadataSheet) {
+	private static Map<String, Map<String, String>> getMetadataMap(Sheet metadataSheet) throws DoeWebException{
 		Map<String, Map<String, String>> metdataSheetMap = new HashMap<String, Map<String, String>>();
 		Iterator<Row> iterator = metadataSheet.iterator();
 
