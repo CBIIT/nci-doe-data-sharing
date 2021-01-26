@@ -370,7 +370,7 @@ public class RestAPICommonController extends AbstractDoeController {
 				HpcDataObjectDownloadResponseDTO downloadDTO = (HpcDataObjectDownloadResponseDTO) DoeClientUtil
 						.getObject(restResponse, HpcDataObjectDownloadResponseDTO.class);
 				downloadToUrl(downloadDTO.getDownloadRequestURL(), 1000000, "test", response);
-				return new ResponseEntity(HttpStatus.OK);
+				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		}
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
@@ -580,7 +580,6 @@ public class RestAPICommonController extends AbstractDoeController {
 							parentPath, true, sslCertPath, sslCertPassword);
 					Boolean isValidPermissions = hasCollectionPermissions(doeLogin, parentPath, parentCollectionDto);
 					if (Boolean.FALSE.equals(isValidPermissions)) {
-
 						throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
 					}
 				}
@@ -614,7 +613,7 @@ public class RestAPICommonController extends AbstractDoeController {
 					log.error("error in save permissions list" + e.getMessage());
 				}
 			}
-			return new ResponseEntity(HttpStatus.valueOf(responseStatus));
+			return new ResponseEntity<>(HttpStatus.valueOf(responseStatus));
 		}
 
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
