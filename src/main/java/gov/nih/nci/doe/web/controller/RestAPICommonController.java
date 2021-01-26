@@ -71,7 +71,6 @@ import org.springframework.http.ResponseEntity;
  * @author <a href="mailto:mounica.ganta@nih.gov">Mounica Ganta</a>
  *
  */
-
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/api")
@@ -182,6 +181,19 @@ public class RestAPICommonController extends AbstractDoeController {
 
 	}
 
+	/**
+	 * 
+	 * download data objects or collection
+	 * 
+	 * @param headers
+	 * @param request
+	 * @param session
+	 * @param response
+	 * @param downloadRequest
+	 * @return
+	 * @throws DoeWebException
+	 * @throws MalformedURLException
+	 */
 	@PostMapping(value = "/v2/download")
 	public ResponseEntity<?> downloadDataObjectsOrCollections(@RequestHeader HttpHeaders headers,
 			HttpServletRequest request, HttpSession session, HttpServletResponse response,
@@ -215,8 +227,12 @@ public class RestAPICommonController extends AbstractDoeController {
 		if (restResponse.getStatus() == 200) {
 			HpcBulkDataObjectDownloadResponseDTO downloadDTO = (HpcBulkDataObjectDownloadResponseDTO) DoeClientUtil
 					.getObject(restResponse, HpcBulkDataObjectDownloadResponseDTO.class);
-			taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "async", "datafiles",
-					getLoggedOnUserInfo());
+			try {
+				taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "async", "datafiles",
+						getLoggedOnUserInfo());
+			} catch (Exception e) {
+				log.error("error in save transfer" + e.getMessage());
+			}
 			return new ResponseEntity<>("taskId: " + downloadDTO.getTaskId(), HttpStatus.OK);
 		}
 
@@ -224,6 +240,11 @@ public class RestAPICommonController extends AbstractDoeController {
 
 	}
 
+	/**
+	 * collection download
+	 * 
+	 * @param downloadRequest
+	 */
 	@PostMapping(value = "/v2/collection/**/download")
 	public ResponseEntity<?> collectionDownload(@RequestHeader HttpHeaders headers, HttpServletRequest request,
 			HttpSession session, HttpServletResponse response,
@@ -277,14 +298,21 @@ public class RestAPICommonController extends AbstractDoeController {
 				HpcCollectionDownloadResponseDTO downloadDTO = (HpcCollectionDownloadResponseDTO) DoeClientUtil
 						.getObject(restResponse, HpcCollectionDownloadResponseDTO.class);
 				String name = path.substring(path.lastIndexOf('/') + 1);
-				taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "async", name,
-						getLoggedOnUserInfo());
+				try {
+					taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "async", name,
+							getLoggedOnUserInfo());
+				} catch (Exception e) {
+					log.error("error in save transfer" + e.getMessage());
+				}
 				return new ResponseEntity<>("taskId: " + downloadDTO.getTaskId(), HttpStatus.OK);
 			}
 		}
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
 	}
 
+	/**
+	 * 
+	 */
 	@PostMapping(value = "/dataObject/**/download")
 	public ResponseEntity<?> asynchronousDownload(@RequestHeader HttpHeaders headers, HttpServletRequest request,
 			HttpSession session, HttpServletResponse response) throws DoeWebException, MalformedURLException {
@@ -348,12 +376,20 @@ public class RestAPICommonController extends AbstractDoeController {
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
 	}
 
+	/**
+	 * synchronous download
+	 * 
+	 * @param downloadRequest
+	 * @throws DoeWebException
+	 * @throws MalformedURLException
+	 * @throws Exception
+	 */
 	@PostMapping(value = "/v2/dataObject/**/download", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE })
 	public ResponseEntity<?> synchronousDownload(@RequestHeader HttpHeaders headers, HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
 			@RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO downloadRequest)
-			throws MalformedURLException, DoeWebException {
+			throws DoeWebException, MalformedURLException {
 
 		log.info("download async:" + downloadRequest);
 		log.info("Headers: {}", headers);
@@ -407,8 +443,13 @@ public class RestAPICommonController extends AbstractDoeController {
 				HpcDataObjectDownloadResponseDTO downloadDTO = (HpcDataObjectDownloadResponseDTO) DoeClientUtil
 						.getObject(restResponse, HpcDataObjectDownloadResponseDTO.class);
 				String name = path.substring(path.lastIndexOf('/') + 1);
-				taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "data_object", name,
-						getLoggedOnUserInfo());
+
+				try {
+					taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "data_object", name,
+							getLoggedOnUserInfo());
+				} catch (Exception e) {
+					log.error("error in save transfer" + e.getMessage());
+				}
 				return new ResponseEntity<>(downloadDTO.getTaskId(), HttpStatus.OK);
 			}
 		}
@@ -566,9 +607,12 @@ public class RestAPICommonController extends AbstractDoeController {
 			if (collections != null && collections.getCollections() != null
 					&& !CollectionUtils.isEmpty(collections.getCollections())) {
 				HpcCollectionDTO collection = collections.getCollections().get(0);
-				// add try catch for save permissionsList and add log.error
-				metaDataPermissionService.savePermissionsList(doeLogin, progList,
-						collection.getCollection().getCollectionId(), path);
+				try {
+					metaDataPermissionService.savePermissionsList(doeLogin, progList,
+							collection.getCollection().getCollectionId(), path);
+				} catch (Exception e) {
+					log.error("error in save permissions list" + e.getMessage());
+				}
 			}
 			return new ResponseEntity(HttpStatus.valueOf(responseStatus));
 		}
@@ -633,13 +677,24 @@ public class RestAPICommonController extends AbstractDoeController {
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
 	}
 
+	/**
+	 * search collections
+	 * 
+	 * @param headers
+	 * @param session
+	 * @param response
+	 * @param request
+	 * @param compoundMetadataQuery
+	 * @return
+	 * @throws DoeWebException
+	 * @throws IOException
+	 */
 	@PostMapping(value = "/collection/query", consumes = { MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE,
 					MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<?> queryCollections(@RequestHeader HttpHeaders headers, HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
-			@RequestBody @Valid HpcCompoundMetadataQueryDTO compoundMetadataQuery)
-			throws DoeWebException,IOException {
+			@RequestBody @Valid HpcCompoundMetadataQueryDTO compoundMetadataQuery) throws DoeWebException, IOException {
 
 		log.info("search collection query: " + compoundMetadataQuery);
 		String authToken = (String) session.getAttribute("hpcUserToken");
@@ -677,6 +732,19 @@ public class RestAPICommonController extends AbstractDoeController {
 
 	}
 
+	/**
+	 * search dataobject
+	 * 
+	 * @param headers
+	 * @param session
+	 * @param response
+	 * @param request
+	 * @param returnParent
+	 * @param compoundMetadataQuery
+	 * @return
+	 * @throws DoeWebException
+	 * @throws IOException
+	 */
 	@PostMapping(value = "/dataObject/query", consumes = { MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE,
 					MediaType.APPLICATION_JSON_VALUE })
