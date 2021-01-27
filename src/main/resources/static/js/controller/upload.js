@@ -276,7 +276,7 @@ function constructNewCollectionMetaDataSet(data,status) {
         	'data-placement="right" title="'+value.description+'"></i></td><td>'+
         	'<select class="simple-select2" style="width:70%;" id="frameworkList" name="zAttrStr_'+value.attrName+'" value="'+value.attrValue+'"></select></td></tr>');
 	    	
-	    	var $select = $("#registerCollectionModal").find("#frameworkList");
+	    	  var $select = $("#registerCollectionModal").find("#frameworkList");
 	    	  if(value.attrValue){
 	    	 	$select.append($('<option></option>').attr('value', value.attrValue).text(value.attrValue));
 	    	  }
@@ -307,8 +307,8 @@ function addNewMetaDataCollection(tableName) {
 	var rowId =  $("#"+tableName + " tbody").length;
 	rowId = rowId +1; 
 	$("#"+tableName + " tbody").append('<tr id="addRow'+rowId+'"><td><input type="text" placeholder="Required" style="width:70%;" ' +
-			 'name="_addAttrName'+rowId+'" aria-label="add new row" id="_addAttrName'+rowId+'"></td><td><input type="text" placeholder="Required" style="width:70%;" id="_addAttrValue'+rowId+'" name="_addAttrValue'+rowId+'" >' +
-	 		'&nbsp;&nbsp;<input class="btn btn-primary pull-right" type="button" value="X" onclick="removeCollectionRow(\'addRow' + rowId + '\')"></td></tr>');
+	'name="_addAttrName'+rowId+'" aria-label="add new row" id="_addAttrName'+rowId+'"></td><td><input type="text" placeholder="Required" style="width:70%;" id="_addAttrValue'+rowId+'" name="_addAttrValue'+rowId+'" >' +
+	'&nbsp;&nbsp;<input class="btn btn-primary pull-right" type="button" value="X" onclick="removeCollectionRow(\'addRow' + rowId + '\')"></td></tr>');
 	 
 	
 }
@@ -318,8 +318,8 @@ function addNewMetaDataRowsForDataFile($this) {
 	rowId = rowId +1; 
 	
 	$this.parent().append('&nbsp;&nbsp;<div id="addDataRow'+rowId+'"><input type="text" style="width:40%;" ' +
-			 'name="_addAttrName'+rowId+'" aria-label="add new row" id="_addAttrName'+rowId+'">&nbsp;<input type="text" style="width:40%;" id="_addAttrValue'+rowId+'" name="_addAttrValue'+rowId+'" >' +
-	 		'&nbsp;&nbsp;<input class="btn btn-primary pull-right" type="button" value="X" onclick="removeCollectionRow(\'addDataRow' + rowId + '\')"></div>');
+	'name="_addAttrName'+rowId+'" aria-label="add new row" id="_addAttrName'+rowId+'">&nbsp;<input type="text" style="width:40%;" id="_addAttrValue'+rowId+'" name="_addAttrValue'+rowId+'" >' +
+	'&nbsp;&nbsp;<input class="btn btn-primary pull-right" type="button" value="X" onclick="removeCollectionRow(\'addDataRow' + rowId + '\')"></div>');
 	
 }
 
