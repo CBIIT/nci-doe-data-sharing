@@ -230,14 +230,14 @@ public class RestAPICommonController extends AbstractDoeController {
 			try {
 				taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "async", "datafiles",
 						getLoggedOnUserInfo());
-				//store the auditing info
-                AuditingModel audit = new AuditingModel();
-                audit.setName(doeLogin);
-                audit.setOperation("Download");
-                audit.setStartTime(new Date());
-                audit.setTransferType("async");
-                audit.setTaskId(downloadDTO.getTaskId());
-                auditingService.saveAuditInfo(audit);
+				// store the auditing info
+				AuditingModel audit = new AuditingModel();
+				audit.setName(doeLogin);
+				audit.setOperation("Download");
+				audit.setStartTime(new Date());
+				audit.setTransferType("async");
+				audit.setTaskId(downloadDTO.getTaskId());
+				auditingService.saveAuditInfo(audit);
 			} catch (Exception e) {
 				log.error("error in save transfer" + e.getMessage());
 			}
@@ -309,15 +309,15 @@ public class RestAPICommonController extends AbstractDoeController {
 				try {
 					taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "async", name,
 							getLoggedOnUserInfo());
-					//store the auditing info
-	                AuditingModel audit = new AuditingModel();
-	                audit.setName(doeLogin);
-	                audit.setOperation("Download");
-	                audit.setStartTime(new Date());
-	                audit.setPath(path);
-	                audit.setTransferType("async");
-	                audit.setTaskId(downloadDTO.getTaskId());
-	                auditingService.saveAuditInfo(audit);
+					// store the auditing info
+					AuditingModel audit = new AuditingModel();
+					audit.setName(doeLogin);
+					audit.setOperation("Download");
+					audit.setStartTime(new Date());
+					audit.setPath(path);
+					audit.setTransferType("async");
+					audit.setTaskId(downloadDTO.getTaskId());
+					auditingService.saveAuditInfo(audit);
 				} catch (Exception e) {
 					log.error("error in save transfer" + e.getMessage());
 				}
@@ -466,15 +466,15 @@ public class RestAPICommonController extends AbstractDoeController {
 				try {
 					taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "data_object", name,
 							getLoggedOnUserInfo());
-					//store the auditing info
-	                AuditingModel audit = new AuditingModel();
-	                audit.setName(doeLogin);
-	                audit.setOperation("Download");
-	                audit.setStartTime(new Date());
-	                audit.setPath(path);
-	                audit.setTransferType("async");
-	                audit.setTaskId(downloadDTO.getTaskId());
-	                auditingService.saveAuditInfo(audit);
+					// store the auditing info
+					AuditingModel audit = new AuditingModel();
+					audit.setName(doeLogin);
+					audit.setOperation("Download");
+					audit.setStartTime(new Date());
+					audit.setPath(path);
+					audit.setTransferType("async");
+					audit.setTaskId(downloadDTO.getTaskId());
+					auditingService.saveAuditInfo(audit);
 				} catch (Exception e) {
 					log.error("error in save transfer" + e.getMessage());
 				}
@@ -528,9 +528,9 @@ public class RestAPICommonController extends AbstractDoeController {
 			}
 
 			if (Boolean.TRUE.equals(isPermissions)) {
-				
-				HpcDataObjectListDTO dataObjectList = DoeClientUtil.getDatafiles(authToken, dataObjectServiceURL, path, true,
-						includeAcl, sslCertPath, sslCertPassword);
+
+				HpcDataObjectListDTO dataObjectList = DoeClientUtil.getDatafiles(authToken, dataObjectServiceURL, path,
+						true, includeAcl, sslCertPath, sslCertPassword);
 				return new ResponseEntity<>(dataObjectList, HttpStatus.OK);
 
 			}
@@ -634,43 +634,35 @@ public class RestAPICommonController extends AbstractDoeController {
 				throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
 			}
 
-			HpcCollectionListDTO collection = DoeClientUtil.getCollection(authToken, serviceURL, path, false, true,
+			Integer responseStatus = DoeClientUtil.updateCollection(authToken, serviceURL, collectionRegistration, path,
 					sslCertPath, sslCertPassword);
-			if (collection != null && collection.getCollections() != null
-					&& CollectionUtils.isNotEmpty(collection.getCollections())) {
-				throw new DoeWebException("Collection Exists", HttpServletResponse.SC_BAD_REQUEST);
-			}
-		}
-
-		Integer responseStatus = DoeClientUtil.updateCollection(authToken, serviceURL, collectionRegistration, path,
-				sslCertPath, sslCertPassword);
-		if (responseStatus == 200 || responseStatus == 201) {
-			// after collection is created, store the permissions.
-			String progList = request.getParameter("metaDataPermissionsList");
-			log.info("selected permissions" + progList);
-			HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL, path, false,
-					sslCertPath, sslCertPassword);
-			if (collections != null && collections.getCollections() != null
-					&& !CollectionUtils.isEmpty(collections.getCollections())) {
-				HpcCollectionDTO collection = collections.getCollections().get(0);
-				try {
-					metaDataPermissionService.savePermissionsList(doeLogin, progList,
-							collection.getCollection().getCollectionId(), path);
-					//store the auditing info
-	                AuditingModel audit = new AuditingModel();
-	                audit.setName(doeLogin);
-	                audit.setOperation("register collection");
-	                audit.setStartTime(new Date());
-	                audit.setPath(path);
-	                audit.setTransferType("async");
-	                auditingService.saveAuditInfo(audit);
-				} catch (Exception e) {
-					log.error("error in save permissions list" + e.getMessage());
+			if (responseStatus == 200 || responseStatus == 201) {
+				// after collection is created, store the permissions.
+				String progList = request.getParameter("metaDataPermissionsList");
+				log.info("selected permissions" + progList);
+				HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL, path, false,
+						sslCertPath, sslCertPassword);
+				if (collections != null && collections.getCollections() != null
+						&& !CollectionUtils.isEmpty(collections.getCollections())) {
+					HpcCollectionDTO collection = collections.getCollections().get(0);
+					try {
+						metaDataPermissionService.savePermissionsList(doeLogin, progList,
+								collection.getCollection().getCollectionId(), path);
+						// store the auditing info
+						AuditingModel audit = new AuditingModel();
+						audit.setName(doeLogin);
+						audit.setOperation("register collection");
+						audit.setStartTime(new Date());
+						audit.setPath(path);
+						audit.setTransferType("async");
+						auditingService.saveAuditInfo(audit);
+					} catch (Exception e) {
+						log.error("error in save permissions list" + e.getMessage());
+					}
 				}
+				return new ResponseEntity<>(HttpStatus.valueOf(responseStatus));
 			}
-			return new ResponseEntity<>(HttpStatus.valueOf(responseStatus));
 		}
-
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
 
 	}
@@ -775,10 +767,10 @@ public class RestAPICommonController extends AbstractDoeController {
 		HpcCompoundMetadataQuery query2 = getCompoundQuery(doeLogin, compoundMetadataQuery);
 		compoundMetadataQuery.setCompoundQuery(query2);
 		compoundMetadataQuery.setDetailedResponse(true);
-		
-		Response restResponse  = DoeClientUtil.getCollectionSearchQuery(authToken,compoundCollectionSearchServiceURL,
-				sslCertPath, sslCertPassword,compoundMetadataQuery);
-		
+
+		Response restResponse = DoeClientUtil.getCollectionSearchQuery(authToken, compoundCollectionSearchServiceURL,
+				sslCertPath, sslCertPassword, compoundMetadataQuery);
+
 		if (restResponse.getStatus() == 200) {
 			MappingJsonFactory factory = new MappingJsonFactory();
 			JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
@@ -830,10 +822,9 @@ public class RestAPICommonController extends AbstractDoeController {
 			compoundMetadataQuery.setCompoundQuery(query2);
 		}
 		compoundMetadataQuery.setDetailedResponse(true);
-		
-		Response restResponse = DoeClientUtil.getDataObjectQuery(authToken,compoundDataObjectSearchServiceURL,returnParent,
-				                     sslCertPath, sslCertPassword,compoundMetadataQuery);
-		
+
+		Response restResponse = DoeClientUtil.getDataObjectQuery(authToken, compoundDataObjectSearchServiceURL,
+				returnParent, sslCertPath, sslCertPassword, compoundMetadataQuery);
 
 		if (restResponse.getStatus() == 200 || restResponse.getStatus() == 201) {
 			MappingJsonFactory factory = new MappingJsonFactory();
