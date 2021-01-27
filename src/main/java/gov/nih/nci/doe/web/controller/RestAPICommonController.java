@@ -230,6 +230,14 @@ public class RestAPICommonController extends AbstractDoeController {
 			try {
 				taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "async", "datafiles",
 						getLoggedOnUserInfo());
+				//store the auditing info
+                AuditingModel audit = new AuditingModel();
+                audit.setName(doeLogin);
+                audit.setOperation("Download");
+                audit.setStartTime(new Date());
+                audit.setTransferType("async");
+                audit.setTaskId(downloadDTO.getTaskId());
+                auditingService.saveAuditInfo(audit);
 			} catch (Exception e) {
 				log.error("error in save transfer" + e.getMessage());
 			}
@@ -301,6 +309,15 @@ public class RestAPICommonController extends AbstractDoeController {
 				try {
 					taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "async", name,
 							getLoggedOnUserInfo());
+					//store the auditing info
+	                AuditingModel audit = new AuditingModel();
+	                audit.setName(doeLogin);
+	                audit.setOperation("Download");
+	                audit.setStartTime(new Date());
+	                audit.setPath(path);
+	                audit.setTransferType("async");
+	                audit.setTaskId(downloadDTO.getTaskId());
+	                auditingService.saveAuditInfo(audit);
 				} catch (Exception e) {
 					log.error("error in save transfer" + e.getMessage());
 				}
@@ -449,6 +466,15 @@ public class RestAPICommonController extends AbstractDoeController {
 				try {
 					taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "data_object", name,
 							getLoggedOnUserInfo());
+					//store the auditing info
+	                AuditingModel audit = new AuditingModel();
+	                audit.setName(doeLogin);
+	                audit.setOperation("Download");
+	                audit.setStartTime(new Date());
+	                audit.setPath(path);
+	                audit.setTransferType("async");
+	                audit.setTaskId(downloadDTO.getTaskId());
+	                auditingService.saveAuditInfo(audit);
 				} catch (Exception e) {
 					log.error("error in save transfer" + e.getMessage());
 				}
@@ -628,6 +654,14 @@ public class RestAPICommonController extends AbstractDoeController {
 				try {
 					metaDataPermissionService.savePermissionsList(doeLogin, progList,
 							collection.getCollection().getCollectionId(), path);
+					//store the auditing info
+	                AuditingModel audit = new AuditingModel();
+	                audit.setName(doeLogin);
+	                audit.setOperation("register collection");
+	                audit.setStartTime(new Date());
+	                audit.setPath(path);
+	                audit.setTransferType("async");
+	                auditingService.saveAuditInfo(audit);
 				} catch (Exception e) {
 					log.error("error in save permissions list" + e.getMessage());
 				}
