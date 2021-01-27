@@ -528,8 +528,10 @@ public class RestAPICommonController extends AbstractDoeController {
 			}
 
 			if (Boolean.TRUE.equals(isPermissions)) {
-				return new ResponseEntity<>(DoeClientUtil.getDatafiles(authToken, dataObjectServiceURL, path, true,
-						includeAcl, sslCertPath, sslCertPassword), HttpStatus.OK);
+				
+				HpcDataObjectListDTO dataObjectList = DoeClientUtil.getDatafiles(authToken, dataObjectServiceURL, path, true,
+						includeAcl, sslCertPath, sslCertPassword);
+				return new ResponseEntity<>(dataObjectList, HttpStatus.OK);
 
 			}
 		}

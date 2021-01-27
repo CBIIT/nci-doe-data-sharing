@@ -273,17 +273,20 @@ public class DoeClientUtil {
 	}
 
 	public static HpcCollectionListDTO getCollection(String token, String hpcCollectionlURL, String path,
-			boolean children, boolean list, boolean includeAcl, String hpcCertPath, String hpcCertPassword)
+			Boolean children, Boolean list, Boolean includeAcl, String hpcCertPath, String hpcCertPassword)
 			throws DoeWebException {
 		try {
 			final UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(hpcCollectionlURL)
 					.path("/{dme-archive-path}");
-			if (children) {
+			if (children != null && children) {
 				ucBuilder.pathSegment("children");
-			} else {
+			}
+			if (list != null) {
 				ucBuilder.queryParam("list", Boolean.toString(list));
 			}
-			ucBuilder.queryParam("includeAcl", Boolean.toString(includeAcl));
+			if (includeAcl != null) {
+				ucBuilder.queryParam("includeAcl", Boolean.toString(includeAcl));
+			}
 			final String serviceURL = ucBuilder.buildAndExpand(path).encode().toUri().toURL().toExternalForm();
 
 			WebClient client = DoeClientUtil.getWebClient(serviceURL, hpcCertPath, hpcCertPassword);
@@ -318,12 +321,22 @@ public class DoeClientUtil {
 		return getDatafiles(token, hpcDatafileURL, path, list, false, hpcCertPath, hpcCertPassword);
 	}
 
-	public static HpcDataObjectListDTO getDatafiles(String token, String hpcDatafileURL, String path, boolean list,
-			boolean includeAcl, String hpcCertPath, String hpcCertPassword) throws DoeWebException {
+	public static HpcDataObjectListDTO getDatafiles(String token, String hpcDatafileURL, String path, Boolean list,
+			Boolean includeAcl, String hpcCertPath, String hpcCertPassword) throws DoeWebException {
 		try {
-			final String url2Apply = UriComponentsBuilder.fromHttpUrl(hpcDatafileURL).path("/{dme-archive-path}")
-					.queryParam("list", Boolean.valueOf(list)).queryParam("includeAcl", Boolean.valueOf(includeAcl))
-					.buildAndExpand(path).encode().toUri().toURL().toExternalForm();
+			
+			final UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(hpcDatafileURL)
+					.path("/{dme-archive-path}");
+			if (list != null) {
+				ucBuilder.queryParam("list", list);
+			}
+			
+			if (includeAcl != null) {
+				ucBuilder.queryParam("includeAcl", Boolean.toString(includeAcl));
+			}
+			final String url2Apply = ucBuilder.buildAndExpand(path).encode().toUri().toURL().toExternalForm();
+			
+					
 			WebClient client = DoeClientUtil.getWebClient(url2Apply, hpcCertPath, hpcCertPassword);
 			client.header("Authorization", "Bearer " + token);
 
