@@ -229,7 +229,7 @@ public class RestAPICommonController extends AbstractDoeController {
 					.getObject(restResponse, HpcBulkDataObjectDownloadResponseDTO.class);
 			try {
 				taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "async", "datafiles",
-						getLoggedOnUserInfo());
+						doeLogin);
 				// store the auditing info
 				AuditingModel audit = new AuditingModel();
 				audit.setName(doeLogin);
@@ -308,7 +308,7 @@ public class RestAPICommonController extends AbstractDoeController {
 				String name = path.substring(path.lastIndexOf('/') + 1);
 				try {
 					taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "async", name,
-							getLoggedOnUserInfo());
+							doeLogin);
 					// store the auditing info
 					AuditingModel audit = new AuditingModel();
 					audit.setName(doeLogin);
@@ -465,7 +465,7 @@ public class RestAPICommonController extends AbstractDoeController {
 
 				try {
 					taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "data_object", name,
-							getLoggedOnUserInfo());
+							doeLogin);
 					// store the auditing info
 					AuditingModel audit = new AuditingModel();
 					audit.setName(doeLogin);
