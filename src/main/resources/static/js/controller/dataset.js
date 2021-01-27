@@ -165,7 +165,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
       	     $(e.trigger).tooltip('hide').attr('data-original-title', 'Copied').tooltip('show');
       	     setTimeout(function() {
                    $(e.trigger).tooltip('hide');
-                   $(e.trigger).attr('data-original-title', 'Copy to Clipboard');
+                   $(e.trigger).attr('data-original-title', 'Copy File Path');
                      }, 2000);
       	  
       	   });
@@ -512,7 +512,7 @@ function renderDownload(data, type, row,accessgroups,permissions) {
      "><i class='fas fa-file-export' data-toggle='tooltip' title='Download Metadata'></i></a>";
 		
 	html += "<button type='button' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='bottom' " +
-			"title='Copy path to clipboard' data-clipboard-text='"+ row.path + "'>" +
+			"title='Copy File Path' data-clipboard-text='"+ row.path + "'>" +
 			"<i class='fas fa-copy'></i></button>";
 	return html;
 
