@@ -239,28 +239,26 @@ function dataTableInit(isVisible) {
         	   var collectionId = $(this).attr('collectionId');
         	   var fileName = $(this).attr('data-fileName');
         	   var selectedCollection = $(this).attr('selectedCollection');
-        	   var params= {selectedPath:metaDataPath,levelName:selectedCollection,isDataObject:false};
-        	   
-   			$.ajax({
-				type : "GET",
-			     url : '/browse/metaData',
-			     contentType : 'application/json',
-				 data : params,
-				 beforeSend: function () {
-			    	   $("#spinner").show();
-			           $("#dimmer").show();
-			       },
-				 success : function(msg) {
-					 $("#spinner").hide();
-			         $("#dimmer").hide();
-			         constructCollectionMetData(msg,metaDataPath,false,permissionsRole,collectionId,fileName);
-				 },
-				error : function(e) {
-					 console.log('ERROR: ', e);
-					 $("#spinner").hide();
-			         $("#dimmer").hide();
-				}
-			});
+        	   var assetType =  $(this).attr('asset_type');
+
+   				$("#userMetaData tbody").html("");
+   				$("#path").val(metaDataPath);
+   				$(".editCollectionSuccess").hide();
+   				$(".editCollectionMsg").html("");
+   				$(".editCollectionError").hide();
+   				$(".editCollectionErrorMsg").html("");
+   				$("#collectionId").val(collectionId);
+   				$("#isDataObject").val(false);
+   				$("#editUserMetadataFileName").html(fileName);
+   			 
+   				if(permissionsRole && permissionsRole == 'Owner') {
+   					$("#updatePermissions").show();
+   				} else {
+   					$("#updatePermissions").hide();
+   				}
+     			 
+   				var params1= {selectedPath:metaDataPath,collectionType:selectedCollection,assetType:assetType,refresh:false};
+   				invokeAjax('/addCollection','GET',params1,constructEditCollectionMetadata,null,null,null);
         	   
            });
            
@@ -413,7 +411,7 @@ function renderDataSetName(data, type, row){
 			checkboxHtml += "<input aria-label='radio' type='radio' id=" + row.dataSetPath + " class='selectRadioForDataSet'/>";
 		}
 		if(row.dataSetPermissionRole && row.dataSetPermissionRole != 'No Permissions') {
-			editDataSetHtml = "<span class='editCollectionMetadata' selectedCollection = 'Asset' data-fileName = '" + row.dataSetName + "' collectionId  = '" + row.dataSetCollectionId + "' " +
+			editDataSetHtml = "<span class='editCollectionMetadata' asset_type = "+ row.assetType+" selectedCollection = 'Asset' data-fileName = '" + row.dataSetName + "' collectionId  = '" + row.dataSetCollectionId + "' " +
 			"permissions_role = '" + row.dataSetPermissionRole + "'" +
 			" metadata_path  = '" + row.dataSetPath+ "' metadata_set = '" + data  + "'>" +
            "<i class='fa fa-edit' data-toggle='tooltip' title='Edit Asset Metadata'></i></span>";

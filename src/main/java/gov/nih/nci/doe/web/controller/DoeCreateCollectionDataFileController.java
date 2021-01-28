@@ -237,7 +237,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				file.setGlobusUploadSource(globusSource);
 				file.setCreateParentCollections(true);
 				file.setPath(path + "/" + fileName);
-				System.out.println(path + "/" + fileName);
+				log.info(path + "/" + fileName);
 				files.add(file);
 			}
 			dto.getDataObjectRegistrationItems().addAll(files);
@@ -256,7 +256,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
                 file.setGoogleDriveUploadSource(googleDriveSource);
                 file.setCreateParentCollections(true);
                 file.setPath(path + "/" + fileName);
-                System.out.println(path + "/" + fileName);
+                log.info(path + "/" + fileName);
                 files.add(file);
             }
             dto.getDataObjectRegistrationItems().addAll(files);
@@ -425,7 +425,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 
 	@SuppressWarnings("unchecked")
 	protected List<DoeMetadataAttrEntry> populateFormAttributes(HttpServletRequest request, HttpSession session,
-			 String basePath, String collectionType, String assetType, boolean refresh) throws DoeWebException{
+			 String basePath, String collectionType, String assetType, boolean refresh,	List<DoeMetadataAttrEntry> cachedEntries) throws DoeWebException{
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 
 		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
@@ -444,7 +444,6 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		}
 
 		HpcCollectionDTO collectionDTO = (HpcCollectionDTO) session.getAttribute("parentCollection");
-		List<DoeMetadataAttrEntry> cachedEntries = (List<DoeMetadataAttrEntry>) session.getAttribute("metadataEntries");
 		List<DoeMetadataAttrEntry> metadataEntries = new ArrayList<DoeMetadataAttrEntry>();
 		List<String> attributeNames = new ArrayList<String>();
 		if (rules != null && !rules.isEmpty()) {

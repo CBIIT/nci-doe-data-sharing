@@ -25,9 +25,16 @@ public class DoeSearchResult {
     private String studyLevelAccessGroups;
     private String programLevelAccessGroups;
     private String dataSetdmeDataId;
+    private String assetType;
     
     
     
+	public String getAssetType() {
+		return assetType;
+	}
+	public void setAssetType(String assetType) {
+		this.assetType = assetType;
+	}
 	public String getDataSetdmeDataId() {
 		return dataSetdmeDataId;
 	}

@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -39,6 +41,11 @@ import gov.nih.nci.doe.web.service.MailService;
 import gov.nih.nci.doe.web.service.MetaDataPermissionsService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
+import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
 
 public abstract class AbstractDoeController {
 
@@ -46,7 +53,13 @@ public abstract class AbstractDoeController {
 	protected String sslCertPath;
 	@Value("${gov.nih.nci.hpc.ssl.cert.password}")
 	protected String sslCertPassword;
+	
+	@Value("${gov.nih.nci.hpc.server.model}")
+	private String hpcModelURL;
 
+	@Value("${gov.nih.nci.hpc.server.dataObject}")
+	private String dataObjectServiceURL;
+	
 	@Autowired
 	public AuthenticateService authenticateService;
 
@@ -250,5 +263,81 @@ public abstract class AbstractDoeController {
 		}
 		return new ResponseEntity<>(keyValueBeanResults, null, HttpStatus.OK);
 	}
+	public List<KeyValueBean> getUserMetaDataAttributesByPath( String selectedPath, String levelName,
+			String isDataObject, HttpSession session, HttpServletRequest request,
+			HttpServletResponse response) throws DoeWebException {
+		
+		log.info("getUserMetaDataAttributesByPath");
+		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		List<KeyValueBean> entryList = new ArrayList<KeyValueBean>();
 
+		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
+		if (modelDTO == null) {
+			modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL, sslCertPath, sslCertPassword);
+			session.setAttribute("userDOCModel", modelDTO);
+		}
+
+		List<String> systemAttrs = modelDTO.getCollectionSystemGeneratedMetadataAttributeNames();
+		List<String> dataObjectsystemAttrs = modelDTO.getDataObjectSystemGeneratedMetadataAttributeNames();
+		systemAttrs.addAll(dataObjectsystemAttrs);
+		systemAttrs.add("collection_type");
+		systemAttrs.add("access_group");
+		session.setAttribute("systemAttrs", systemAttrs);
+
+		try {
+			if (selectedPath != null) {
+				if (StringUtils.isNotEmpty(isDataObject) && isDataObject.equalsIgnoreCase("false")) {
+					// Get collection
+					HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL,
+							selectedPath, false, sslCertPath, sslCertPassword);
+					if (collections != null && collections.getCollections() != null
+							&& !collections.getCollections().isEmpty()) {
+						HpcCollectionDTO collection = collections.getCollections().get(0);
+						for (HpcMetadataEntry entry : collection.getMetadataEntries().getSelfMetadataEntries()) {
+							if (systemAttrs != null && !systemAttrs.contains(entry.getAttribute())) {
+								String attrName = lookUpService.getDisplayName(levelName, entry.getAttribute());
+								KeyValueBean k = null;
+								if (!StringUtils.isEmpty(attrName)) {
+									k = new KeyValueBean(entry.getAttribute(), attrName, entry.getValue());
+								} else {
+									k = new KeyValueBean(entry.getAttribute(), entry.getAttribute(), entry.getValue());
+								}
+
+								entryList.add(k);
+							}
+
+						}
+					}
+
+				} else {
+					HpcDataObjectListDTO datafiles = DoeClientUtil.getDatafiles(authToken, dataObjectServiceURL, selectedPath,
+							false, true, sslCertPath, sslCertPassword);
+					if (datafiles != null && datafiles.getDataObjects() != null
+							&& !datafiles.getDataObjects().isEmpty()) {
+						HpcDataObjectDTO dataFile = datafiles.getDataObjects().get(0);
+						for (HpcMetadataEntry entry : dataFile.getMetadataEntries().getSelfMetadataEntries()) {
+							if (systemAttrs != null && !systemAttrs.contains(entry.getAttribute())) {
+								String attrName = lookUpService.getDisplayName(levelName, entry.getAttribute());
+								KeyValueBean k = null;
+								if (!StringUtils.isEmpty(attrName)) {
+									k = new KeyValueBean(entry.getAttribute(), attrName, entry.getValue());
+								} else {
+									k = new KeyValueBean(entry.getAttribute(), entry.getAttribute(), entry.getValue());
+								}
+
+								entryList.add(k);
+							}
+
+						}
+
+					}
+				}
+			}
+		} catch (Exception e) {
+			String errMsg = "Failed to get metadata: " + e.getMessage();
+			log.error(errMsg, e);
+		}
+		log.info("entry list data :"+ entryList);
+		return entryList;
+	}
 }
