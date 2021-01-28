@@ -613,7 +613,7 @@ function registerBulkDataFile() {
 						 clearRegisterDataDiv();
 						 cancelAndReturnToUploadTab();	
 			    	 } else {
-			    		 console.log('ERROR: ', e);	
+			    		 //console.log('ERROR: ', e);	
 						 $(".uploadBulkDataError").show();
 						 $(".uploadBulkDataErrorMsg").html(msg);
 			    	 }
