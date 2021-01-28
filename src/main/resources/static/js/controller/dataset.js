@@ -490,30 +490,30 @@ function renderDownload(data, type, row,accessgroups,permissions) {
 	var metadata = "";
 	var n = path.lastIndexOf("/");
 	downdloadFileName = path.substring(n+1);	
+	if(row.selfMetadata && row.selfMetadata.length > 0) {
+		var metadata = JSON.stringify(row.selfMetadata);
+	}	
+	
+	html += "<button type='button' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='bottom' " +
+	"title='Copy File Path' data-clipboard-text='"+ row.path + "'>" +
+	"<i class='fas fa-copy'></i></button>";
+	
+	html += "<span class='btn btn-link btn-sm editDataFileCollectionMetadata'  metadata_path  = '" + path + "'" +
+	" metadata_set = '" + metadata  + "' data-fileName = '" + downdloadFileName + "' ><i class='fa fa-edit' data-toggle='tooltip'" +
+	" title='Edit File Metadata'></i></span>";
+	
+	html += "<a aria-label='download link' class='btn btn-link btn-sm downloadMetadata'  data_path  = '" + path + "' href='javascript:void(0);' " +
+    "><i class='fas fa-file-export' data-toggle='tooltip' title='Download File Metadata'></i></a>";
 	
 	html += "<a aria-label='download link' class='btn btn-link btn-sm downloadLink' href='javascript:void(0);' " +
 	       "data-fileName = " + downdloadFileName + " data-path=" + row.download + " " +
 	        "><i class='fa fa-download' data-toggle='tooltip' title='Download File' aria-hidden='true'></i></a>";
-
-	if(row.selfMetadata && row.selfMetadata.length > 0) {
-		var metadata = JSON.stringify(row.selfMetadata);
-	}	
-   
-	html += "<span class='btn btn-link btn-sm editDataFileCollectionMetadata'  metadata_path  = '" + path + "'" +
-				" metadata_set = '" + metadata  + "' data-fileName = '" + downdloadFileName + "' ><i class='fa fa-edit' data-toggle='tooltip'" +
-				" title='Edit File Metadata'></i></span>";
-				
+			
 	if(accessgroups && accessgroups.indexOf("public") == -1 && permissions && permissions == 'Owner') {		
 	 html+="&nbsp;&nbsp;<span data-filePath = '" + path + "' class='btn btn-link btn-sm deleteDataFileBtn'><i class='fas fa-trash' data-toggle='tooltip' title='Delete File'></i></span>";
 
 	}
 	
-	html += "<a aria-label='download link' class='btn btn-link btn-sm downloadMetadata'  data_path  = '" + path + "' href='javascript:void(0);' " +
-     "><i class='fas fa-file-export' data-toggle='tooltip' title='Download Metadata'></i></a>";
-		
-	html += "<button type='button' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='bottom' " +
-			"title='Copy File Path' data-clipboard-text='"+ row.path + "'>" +
-			"<i class='fas fa-copy'></i></button>";
 	return html;
 
 }

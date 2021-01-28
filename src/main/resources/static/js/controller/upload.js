@@ -279,7 +279,10 @@ function constructNewCollectionMetaDataSet(data,status) {
 	    	  var $select = $("#registerCollectionModal").find("#frameworkList");
 	    	  if(value.attrValue){
 	    	 	$select.append($('<option></option>').attr('value', value.attrValue).text(value.attrValue));
+	    	  } else {
+	    	    $select.append($('<option></option>').attr('value', 'Select').text('Select'));
 	    	  }
+	    	  	    	  
 	    	  for (var i = 0; i < value.validValues.length; i++) {
 	    		   $select.append($('<option></option>').attr('value', value.validValues[i]).text(value.validValues[i]));
               }
@@ -399,16 +402,24 @@ function registerCollection() {
 	        if(!name){
 	        	usermetaDataEntered = false;
 	        } 
+	        
+	        
 	        if(name && ($(this).attr('name') == ('zAttrStr_' + collectionType.toLowerCase() + '_' + 'identifier'))) {
 	        	var modifiedName = name.replace(/ /g,"_");
 	        	//collectionName = collectionType + "_" + modifiedName;
 	        	collectionName = modifiedName;
 	        }
 		});
+			$(".simple-select2").each(function(){
+				var name = $(this).val();
+				if(!name  || (name && name == 'Select')) {
+	        	usermetaDataEntered = false;
+	        }
+			});
 	
 	if(!usermetaDataEntered) {
 		validate = false;
-		$("#registerCollectionModal").find(".registerErrorMsg").append("Enter the values for all collection m	etadata.");
+		$("#registerCollectionModal").find(".registerErrorMsg").append("Enter values for all required metadata.");
 		$("#registerCollectionModal").find(".registerMsgErrorBlock").show();
 	}
 	
