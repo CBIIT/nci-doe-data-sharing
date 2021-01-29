@@ -154,7 +154,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 	public ResponseEntity<List<DoeMetadataAttrEntry>> getCollectionAttributes(
 			@RequestParam(value = "selectedPath") String selectedPath,
 			@RequestParam(value = "collectionType") String collectionType,
-			@RequestParam(value = "assetType") String assetType, @RequestParam(required = false) Boolean refresh,
+			@RequestParam(required=false) String assetType, @RequestParam(required = false) Boolean refresh,
 			HttpSession session, HttpServletRequest request, HttpServletResponse response) {
 
 		log.info("get collection attributes" + selectedPath + " ,collectionType:  " + collectionType + ", assetType:"
@@ -164,6 +164,9 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 		try {
 			if (selectedPath != null) {
 				log.info("selected path");
+				if(refresh == null) {
+					refresh = true;
+				}
 				if (refresh != null && !refresh) {
 					log.info("get collection attributes for edit");
 					List<KeyValueBean> entryList =  getUserMetaDataAttributesByPath(selectedPath,
@@ -178,7 +181,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 					}
 				}
 				log.info("cached list: " + cachedEntries);
-				metadataEntries = populateFormAttributes(request, session, basePath, collectionType, assetType, false,
+				metadataEntries = populateFormAttributes(request, session, basePath, collectionType, assetType, refresh,
 						cachedEntries);
 
 				return new ResponseEntity<>(metadataEntries, HttpStatus.OK);

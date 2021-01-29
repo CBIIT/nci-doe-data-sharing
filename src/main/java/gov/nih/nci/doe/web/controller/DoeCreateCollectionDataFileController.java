@@ -28,10 +28,12 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.ui.Model;
 
 import gov.nih.nci.doe.web.DoeWebException;
+import gov.nih.nci.doe.web.domain.TaskManager;
 import gov.nih.nci.doe.web.model.DoeCollectionModel;
 import gov.nih.nci.doe.web.model.DoeMetadataAttrEntry;
 import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
+import gov.nih.nci.doe.web.util.LambdaUtils;
 import gov.nih.nci.hpc.domain.datamanagement.HpcDataHierarchy;
 import gov.nih.nci.hpc.domain.datamanagement.HpcDirectoryScanPathMap;
 import gov.nih.nci.hpc.domain.datatransfer.HpcFileLocation;
@@ -40,6 +42,7 @@ import gov.nih.nci.hpc.domain.datatransfer.HpcS3ScanDirectory;
 import gov.nih.nci.hpc.domain.datatransfer.HpcScanDirectory;
 import gov.nih.nci.hpc.domain.datatransfer.HpcStreamingUploadSource;
 import gov.nih.nci.hpc.domain.datatransfer.HpcUploadSource;
+import gov.nih.nci.hpc.domain.datatransfer.HpcUserDownloadRequest;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataValidationRule;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
@@ -446,10 +449,12 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		HpcCollectionDTO collectionDTO = (HpcCollectionDTO) session.getAttribute("parentCollection");
 		List<DoeMetadataAttrEntry> metadataEntries = new ArrayList<DoeMetadataAttrEntry>();
 		List<String> attributeNames = new ArrayList<String>();
+		log.info("base path rules:" + rules);
+		
 		if (rules != null && !rules.isEmpty()) {
         	for (HpcMetadataValidationRule rule : rules) {
 				if ((rule.getCollectionTypes().contains(collectionType) || rule.getCollectionTypes().isEmpty()) 
-						&& !rule.getAttribute().equals("collection_type")) {
+						&& !rule.getAttribute().equalsIgnoreCase("collection_type")) {
 					log.info("get HpcMetadataValidationRule:" + rule);
 					Boolean isValid = true;
 					if(StringUtils.isNotEmpty(rule.getControllerValue()) && StringUtils.isNotEmpty(rule.getControllerAttribute())
@@ -465,7 +470,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 					attributeNames.add(rule.getAttribute());
 					entry.setAttrValue(getFormAttributeValue(request, "zAttrStr_" + rule.getAttribute(), cachedEntries, "zAttrStr_"));
 					if (entry.getAttrValue() == null) {
-						if (!refresh)
+						if (refresh)
 							entry.setAttrValue(getCollectionAttrValue(collectionDTO, rule.getAttribute()));
 						else
 							entry.setAttrValue(rule.getDefaultValue());
@@ -477,12 +482,29 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 						entry.setValidValues(validValues);
 					}
 					entry.setDescription(rule.getDescription());
+					entry.setMandatory(rule.getMandatory());
 					metadataEntries.add(entry);
 					}
 				}
 			}
 		}
+		
 
+		// Handle custom attributes. If refresh, ignore them
+				if (!refresh) {
+					// add cached entries which are not included in rules
+					List<String> attrNames = LambdaUtils.map(cachedEntries,DoeMetadataAttrEntry::getAttrName);
+					List<String> ruleAttrNames = LambdaUtils.map(rules,HpcMetadataValidationRule::getAttribute);
+	    			 List<String> userDefinedAttrNames = LambdaUtils.filter(attrNames, (String n) ->
+	    			 !ruleAttrNames.contains(n));
+	    			 
+	    			 log.info("user defined attrnames :" + userDefinedAttrNames);
+	    			 for(DoeMetadataAttrEntry x: cachedEntries) {
+	    				 if(userDefinedAttrNames.contains(x.getAttrName())) {
+	    					 metadataEntries.add(x);
+	    				 }
+	    			 }
+				}
 		session.setAttribute("metadataEntries", metadataEntries);
 		return metadataEntries;
 		

@@ -40,7 +40,7 @@ function constructEditCollectionMetadata(data,status) {
 			}
 			
 			$("#userMetaData tbody").append("<tr><td>" + value.attrName + "&nbsp;&nbsp;<i class='fas fa-question-circle' data-toggle='tooltip' " +
-					"data-placement='right' title='"+value.description+"'></i></td><td><input type='text'  aria-label='value of meta data' name='zAttrStr_"+value.attrName+"' style='width:70%;' value='" + attrVal + "'></td></tr>");
+					"data-placement='right' title='"+value.description+"'></i></td><td><input type='text' is_mandatory='"+value.mandatory+"' aria-label='value of meta data' name='zAttrStr_"+value.attrName+"' style='width:70%;' value='" + attrVal + "'></td></tr>");
 
 		} else if(value.validValues != null) {
 			$("#userMetaData tbody").append("<tr><td>" + value.attrName + "&nbsp;&nbsp;<i class='fas fa-question-circle' data-toggle='tooltip' " +
@@ -187,8 +187,9 @@ function updateMetaDataCollection() {
 	var validate = true;
 		var data = $('#collectionForm').serialize();
 		$('form#collectionForm input[type="text"]').each(function(){
-	        if(!$(this).val()){
-	        	validate = false;
+			var ismandatory = $(this).attr('is_mandatory');
+	        if(!$(this).val() && ismandatory && ismandatory != "false" ){
+	        		validate = false;
 	        }          
 	});
 		

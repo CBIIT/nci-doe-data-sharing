@@ -473,26 +473,26 @@ function renderPath(data, type, row) {
 		var checkboxHtml ="";
 				
 		if(row.studyPermissionRole && row.studyPermissionRole != 'No Permissions') {
-			editStudySetHtml = "<span class='editCollectionMetadata' selectedCollection = 'study' data-fileName = '" + row.studyName + "' collectionId  = '" + row.studyCollectionId + "'" +
+			editStudySetHtml = "<span class='editCollectionMetadata' selectedCollection = 'Study' data-fileName = '" + row.studyName + "' collectionId  = '" + row.studyCollectionId + "'" +
 							" permissions_role = '" + row.studyPermissionRole + "' metadata_path  = '" + row.studyPath+ "' " +
 									" metadata_set = '" + study  + "'>" +
 			"<i class='fa fa-edit' data-toggle='tooltip' title='Edit Study Metadata'></i></span>";
 			if(row.studyPermissionRole == 'Owner') {
 				editStudySetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collection_name ='" +row.studyName + "' collectionId  = '" + row.studyCollectionId + "' " +
-			    " permissions_groups ='"+ JSON.stringify(permissions) + "'   selectedCollection = 'study'  access_groups  = '" + row.studyLevelAccessGroups+ "' metadata_path  = '" + row.studyPath+ "'>" +
+			    " permissions_groups ='"+ JSON.stringify(permissions) + "'   selectedCollection = 'Study'  access_groups  = '" + row.studyLevelAccessGroups+ "' metadata_path  = '" + row.studyPath+ "'>" +
                  "<i class='fa fa-users' data-toggle='tooltip' title='Edit Study Access Permissions'></i></span>";
 			}
 		}
 		
 		if(row.programPermissionRole && row.programPermissionRole != 'No Permissions') {
-			editProgramSetHtml = "<span class='editCollectionMetadata' selectedCollection = 'program' data-fileName = '" + row.programName + "' collectionId  = '" + row.programCollectionId + "'" +
+			editProgramSetHtml = "<span class='editCollectionMetadata' selectedCollection = 'Program' data-fileName = '" + row.programName + "' collectionId  = '" + row.programCollectionId + "'" +
 							" permissions_role = '" + row.programPermissionRole + "' metadata_path  = '" + row.institutePath+ "' " +
 									"metadata_set = '" + ins  + "'>" +
 			"<i class='fa fa-edit' data-toggle='tooltip' title='Edit Program Metadata'></i></span>"; 
 			
 			if(row.programPermissionRole == 'Owner') {
 				editProgramSetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collection_name ='" +row.programName + "' collectionId  = '" + row.programCollectionId + "' " +
-			    "permissions_groups ='"+ JSON.stringify(permissions) + "'   selectedCollection = 'program'  access_groups  = '" + row.programLevelAccessGroups+ "' metadata_path  = '" + row.institutePath+ "'>" +
+			    "permissions_groups ='"+ JSON.stringify(permissions) + "'   selectedCollection = 'Program'  access_groups  = '" + row.programLevelAccessGroups+ "' metadata_path  = '" + row.institutePath+ "'>" +
                  "<i class='fa fa-users' data-toggle='tooltip' title='Edit Program Access Permissions'></i></span>";
 			}
 		}

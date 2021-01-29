@@ -10,8 +10,17 @@ public class DoeMetadataAttrEntry {
 	private List<String> validValues = null;
 	private String defaultValue = null;
 	private String description;
+	private Boolean mandatory;
 
 	
+	public Boolean getMandatory() {
+		return mandatory;
+	}
+
+	public void setMandatory(Boolean mandatory) {
+		this.mandatory = mandatory;
+	}
+
 	public List<String> getValidValues() {
 		return validValues;
 	}
