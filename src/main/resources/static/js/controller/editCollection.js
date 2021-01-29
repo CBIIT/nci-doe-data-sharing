@@ -218,7 +218,11 @@ function updateMetaDataCollection() {
 			error : function(e) {
 				$("#spinner").hide();
 		         $("#dimmer").hide();
-				 console.log('ERROR: ', e);				 
+				 console.log('ERROR: ', e);	
+				 $(".editCollectionSuccess").hide();
+				 $(".editCollectionMsg").html("");
+				 $(".editCollectionError").show();
+				 $(".editCollectionErrorMsg").html("Error in update metadata.");
 			}
 		});
 	}
