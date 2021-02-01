@@ -483,6 +483,12 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 					}
 					entry.setDescription(rule.getDescription());
 					entry.setMandatory(rule.getMandatory());
+					 String displayAttrName = lookUpService.getDisplayName(collectionType, rule.getAttribute());
+					 if(StringUtils.isNotEmpty(displayAttrName)) {
+						 entry.setDisplayName(displayAttrName);
+					 } else {
+						 entry.setDisplayName(rule.getAttribute());
+					 }
 					metadataEntries.add(entry);
 					}
 				}
@@ -500,7 +506,13 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 	    			 
 	    			 log.info("user defined attrnames :" + userDefinedAttrNames);
 	    			 for(DoeMetadataAttrEntry x: cachedEntries) {
+	    				 String attrName = lookUpService.getDisplayName(collectionType, x.getAttrName());
 	    				 if(userDefinedAttrNames.contains(x.getAttrName())) {
+	    					 if(StringUtils.isNotEmpty(attrName)) {
+	    						 x.setDisplayName(attrName);
+	    					 } else {
+	    						 x.setDisplayName(x.getAttrName());
+	    					 }
 	    					 metadataEntries.add(x);
 	    				 }
 	    			 }
