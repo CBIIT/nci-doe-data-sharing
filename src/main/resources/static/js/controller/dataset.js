@@ -494,7 +494,7 @@ function renderDownload(data, type, row,accessgroups,permissions) {
 		var metadata = JSON.stringify(row.selfMetadata);
 	}	
 	
-	html += "<button type='button' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='right' " +
+	html += "<button type='button' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' " +
 	"title='Copy File Path' data-clipboard-text='"+ row.path + "'>" +
 	"<i class='fas fa-copy'></i></button>";
 	
