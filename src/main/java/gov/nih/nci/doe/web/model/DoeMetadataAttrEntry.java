@@ -11,18 +11,8 @@ public class DoeMetadataAttrEntry {
 	private String defaultValue = null;
 	private String description;
 	private Boolean mandatory;
-	private String displayName;
 
 	
-	
-	public String getDisplayName() {
-		return displayName;
-	}
-
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
-	}
-
 	public Boolean getMandatory() {
 		return mandatory;
 	}
