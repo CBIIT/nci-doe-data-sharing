@@ -170,15 +170,11 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 				returnResult.setCreatedOn(format.format(result.getDataObject().getCreatedAt().getTime()));
 				returnResult.setSelfMetadata(getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),"DataObject", systemAttrs));
 				returnResult.setSystemMetadata(getSystemMetaData(result.getMetadataEntries().getSelfMetadataEntries(),"DataObject", systemAttrs));
-				returnResult.setFileSize(addHumanReadableSize(getAttributeValue("source_file_size", result.getMetadataEntries().getSelfMetadataEntries(),"DataObject")));
-				returnResult.setFileSizeActual(Integer.valueOf(getAttributeValue(
-						"source_file_size", result.getMetadataEntries().getSelfMetadataEntries(),"DataObject")));
+				returnResult.setFileSize(addHumanReadableSize(getAttributeValue("source_file_size", result.getMetadataEntries().getSelfMetadataEntries(),"DataObject")));			
 				returnResult.setUuid(getAttributeValue(
 						"uuid", result.getMetadataEntries().getSelfMetadataEntries(),"DataObject"));
 				returnResults.add(returnResult);
 			}
-			
-			Collections.sort(returnResults, Comparator.comparing(HpcDatafileSearchResultDetailed::getFileSizeActual));
 			return returnResults;
 		
 	}
@@ -192,20 +188,6 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 		return null;
     }
 	
-	  public static String byteCountToDisplaySize(long size) {
-	        String displaySize;
-
-	        if (size / ONE_GB > 0) {
-	            displaySize = String.valueOf(size / ONE_GB) + "gb";
-	        } else if (size / ONE_MB > 0) {
-	            displaySize = String.valueOf(size / ONE_MB) + "mb";
-	        } else if (size / ONE_KB > 0) {
-	            displaySize = String.valueOf(size / ONE_KB) + "kb";
-	        } else {
-	            displaySize = String.valueOf(size) + "bytes";
-	        }
-	        return displaySize;
-	    }
 	  
 	  public List<KeyValueBean> getSystemMetaData(List<HpcMetadataEntry> list,String levelName, List<String> systemAttrs) {
 			
