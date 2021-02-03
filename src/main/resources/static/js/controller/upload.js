@@ -414,7 +414,7 @@ function registerCollection() {
 				var name = $(this).val();
 				if(name && name == 'Select') {
 	        	usermetaDataEntered = false;
-	        }
+	           }
 			});
 	
 	if(!usermetaDataEntered) {
