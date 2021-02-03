@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import gov.nih.nci.doe.web.constants.BasicAuthRequestUrlList;
 import gov.nih.nci.doe.web.constants.LoginStatusCode;
 import gov.nih.nci.doe.web.service.AuthenticateService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
@@ -39,22 +40,22 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 
 	@Value("${gov.nih.nci.hpc.server.user.authenticate}")
 	private String authenticateURL;
-	
+
 	@Value("${doe.readonly.password}")
 	private String readOnlyUserPassword;
-	
+
 	@Value("${doe.writeaccount.password}")
 	private String writeAccessUserPassword;
-	
+
 	@Value("${doe.readonlyaccount.username}")
 	private String readOnlyUserName;
-	
+
 	@Value("${doe.writeaccount.username}")
 	private String writeAccessUserName;
-	
+
 	@Autowired
 	public AuthenticateService authService;
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -68,61 +69,65 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 			throws Exception {
 
 		HttpSession session = request.getSession();
-		String userToken = (String) session.getAttribute("hpcUserToken");		
+		String userToken = (String) session.getAttribute("hpcUserToken");
 		String writeAccessToken = (String) session.getAttribute("writeAccessUserToken");
-		String requestUri = request.getRequestURI();		
+		String requestUri = request.getRequestURI();
 		final String authorization = request.getHeader("Authorization");
-		
-		if (StringUtils.isNotEmpty(requestUri) && requestUri.contains("/api") && authorization != null && 
-			authorization.toLowerCase().startsWith("basic")) {
-		    // Authorization: Basic base64credentials
-		    String base64Credentials = authorization.substring("Basic".length()).trim();
-		    byte[] credDecoded = Base64.getDecoder().decode(base64Credentials);
-		    String credentials = new String(credDecoded, StandardCharsets.UTF_8);
-		    log.info("credential" + credentials);
-		    // credentials = username:password
-		    final String[] values = credentials.split(":", 2);
-		    String userName = values[0];
-		    String password = values[1];
-		    if(StringUtils.isEmpty(userName) && StringUtils.isEmpty(password) &&
-		    		(requestUri.contains("/dataObject/query") || requestUri.contains("/collection/query") ||
-		    				requestUri.contains("/v2/dataObject/") || requestUri.contains("/collection/"))) {
-		    	String authToken = DoeClientUtil.getAuthenticationToken(readOnlyUserName, readOnlyUserPassword,authenticateURL);
+
+		if (StringUtils.isNotEmpty(requestUri) && requestUri.contains("/api") && authorization != null
+				&& authorization.toLowerCase().startsWith("basic")) {
+			// Authorization: Basic base64credentials
+			String base64Credentials = authorization.substring("Basic".length()).trim();
+			byte[] credDecoded = Base64.getDecoder().decode(base64Credentials);
+			String credentials = new String(credDecoded, StandardCharsets.UTF_8);
+			log.info("credential" + credentials);
+			// credentials = username:password
+			final String[] values = credentials.split(":", 2);
+			String userName = values[0];
+			String password = values[1];
+			if (StringUtils.isEmpty(userName) && StringUtils.isEmpty(password) && 
+					BasicAuthRequestUrlList.requestUrlList.contains(requestUri)) {
+				String authToken = DoeClientUtil.getAuthenticationToken(readOnlyUserName, readOnlyUserPassword,
+						authenticateURL);
 				session.setAttribute("hpcUserToken", authToken);
-		    } else {
-		      LoginStatusCode status = authService.authenticateExternalUser(userName, password);
-		       if(status == LoginStatusCode.LOGIN_SUCCESS) {
-		    	session.setAttribute("doeLogin", userName);
-		    	String authToken = DoeClientUtil.getAuthenticationToken(writeAccessUserName, writeAccessUserPassword,authenticateURL);
-				session.setAttribute("writeAccessUserToken", authToken);
-		      }
-		    }
+			} else {
+				LoginStatusCode status = authService.authenticateExternalUser(userName, password);
+				if (status == LoginStatusCode.LOGIN_SUCCESS) {
+					session.setAttribute("doeLogin", userName);
+					String authToken = DoeClientUtil.getAuthenticationToken(writeAccessUserName,
+							writeAccessUserPassword, authenticateURL);
+					session.setAttribute("writeAccessUserToken", authToken);
+				}
+			}
 		}
-		 
-		if(StringUtils.isBlank(writeAccessToken)) {
-		 try {
-		   Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		   
-			 if(auth != null && auth.isAuthenticated()) {
-				 Boolean isAnonymousUser = auth.getAuthorities().stream().filter(o -> o.getAuthority().equals("ROLE_ANONYMOUS")).findFirst().isPresent();			
-				 if(Boolean.FALSE.equals(isAnonymousUser)) {
-				   String authToken = DoeClientUtil.getAuthenticationToken(writeAccessUserName, writeAccessUserPassword,authenticateURL);
-				   session.setAttribute("writeAccessUserToken", authToken);
-			     }
-			 }
-			} catch(Exception e) {
+
+		if (StringUtils.isBlank(writeAccessToken)) {
+			try {
+				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+				if (auth != null && auth.isAuthenticated()) {
+					Boolean isAnonymousUser = auth.getAuthorities().stream()
+							.anyMatch(o -> o.getAuthority().equals("ROLE_ANONYMOUS"));
+					if (Boolean.FALSE.equals(isAnonymousUser)) {
+						String authToken = DoeClientUtil.getAuthenticationToken(writeAccessUserName,
+								writeAccessUserPassword, authenticateURL);
+						session.setAttribute("writeAccessUserToken", authToken);
+					}
+				}
+			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
 		}
-		
-		if(StringUtils.isBlank(userToken)) {
-		 try {
-			String authToken = DoeClientUtil.getAuthenticationToken(readOnlyUserName, readOnlyUserPassword,authenticateURL);
-			session.setAttribute("hpcUserToken", authToken);
-            log.debug("authentication successfull");
-		 } catch (Exception e) {
-			 log.error(e.getMessage(), e);
-		 }
+
+		if (StringUtils.isBlank(userToken)) {
+			try {
+				String authToken = DoeClientUtil.getAuthenticationToken(readOnlyUserName, readOnlyUserPassword,
+						authenticateURL);
+				session.setAttribute("hpcUserToken", authToken);
+				log.debug("authentication successfull");
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
 		}
 		return super.preHandle(request, response, handler);
 	}

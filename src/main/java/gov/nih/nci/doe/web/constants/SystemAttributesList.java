@@ -4,8 +4,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SystemAttributesList {
-	
-	public static final List<String> dataSystemAttributes = 
-			Arrays.asList("data_transfer_completed", "data_transfer_status","metadata_updated");
-	
+
+	private SystemAttributesList() {
+
+	}
+
+	public static final List<String> dataSystemAttributes = Arrays.asList("data_transfer_completed",
+			"data_transfer_status", "metadata_updated");
+
 }

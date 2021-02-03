@@ -228,8 +228,7 @@ public class RestAPICommonController extends AbstractDoeController {
 			HpcBulkDataObjectDownloadResponseDTO downloadDTO = (HpcBulkDataObjectDownloadResponseDTO) DoeClientUtil
 					.getObject(restResponse, HpcBulkDataObjectDownloadResponseDTO.class);
 			try {
-				taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "async", "datafiles",
-						doeLogin);
+				taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "async", "datafiles", doeLogin);
 				// store the auditing info
 				AuditingModel audit = new AuditingModel();
 				audit.setName(doeLogin);
@@ -307,8 +306,7 @@ public class RestAPICommonController extends AbstractDoeController {
 						.getObject(restResponse, HpcCollectionDownloadResponseDTO.class);
 				String name = path.substring(path.lastIndexOf('/') + 1);
 				try {
-					taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "async", name,
-							doeLogin);
+					taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "async", name, doeLogin);
 					// store the auditing info
 					AuditingModel audit = new AuditingModel();
 					audit.setName(doeLogin);
@@ -464,8 +462,7 @@ public class RestAPICommonController extends AbstractDoeController {
 				String name = path.substring(path.lastIndexOf('/') + 1);
 
 				try {
-					taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "data_object", name,
-							doeLogin);
+					taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "data_object", name, doeLogin);
 					// store the auditing info
 					AuditingModel audit = new AuditingModel();
 					audit.setName(doeLogin);
@@ -838,6 +835,29 @@ public class RestAPICommonController extends AbstractDoeController {
 			}
 		}
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
+	}
+
+	@GetMapping(value = "/authenticate")
+	public ResponseEntity<?> authenticate(@RequestHeader HttpHeaders headers, HttpSession session,
+			HttpServletResponse response, HttpServletRequest request) throws DoeWebException {
+		log.info("get auth token");
+
+		String authToken = (String) session.getAttribute("hpcUserToken");
+		if (StringUtils.isEmpty(authToken)) {
+			authToken = (String) session.getAttribute("writeAccessUserToken");
+		}
+		log.info("authToken: " + authToken);
+
+		if (authToken == null) {
+			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
+		}
+
+		if (StringUtils.isNotEmpty(authToken)) {
+			return new ResponseEntity<>(authToken, HttpStatus.OK);
+		}
+
+		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
+
 	}
 
 	private Boolean hasCollectionPermissions(String loggedOnUser, String parentPath,
