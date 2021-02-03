@@ -285,7 +285,7 @@ public class HomeController extends AbstractDoeController {
 				 collectionOwnersList.add(perm.getUserGroupId());
 				 collectionOwnersList.add(progPermissions.getUserGroupId());
 			 }
-			 
+			 log.info("send notify email to" +collectionOwnersList);
 			 
 			 mailService.sendNotifyUsersForAccessGroups(collectionOwnersList);
 
