@@ -167,8 +167,8 @@ function postSuccessUpdateAccessgroups(data,status){
 		var json = $("#updateAccessPermissionsModal").find("#permissionGroups").val();
 		var perm_group = JSON.parse(json);
 		perm_group.selectedCollection = selectedCollection;
-		if((selectedCollection == 'Asset' && (perm_group.dataSetPermissionRole == perm_group.studyPermissionRole)))
-		    || ((selectedCollection == 'Study' && (perm_group.studyPermissionRole == perm_group.programPermissionRole))){
+		if((selectedCollection == 'Asset' && (perm_group.dataSetPermissionRole == perm_group.studyPermissionRole))
+		    || (selectedCollection == 'Study' && (perm_group.studyPermissionRole == perm_group.programPermissionRole))){
 			$("#updateAccessPermissionsModal").find(".updateAccessMsg").html("This collection inherits access status from the " +
 			"parent collection. You are the owner of the parent collection, so you can make that collection public.");
 		} else {
