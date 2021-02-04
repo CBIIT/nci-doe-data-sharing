@@ -412,7 +412,7 @@ function registerCollection() {
 		});
 			$(".simple-select2").each(function(){
 				var name = $(this).val();
-				if(!name  || (name && name == 'Select')) {
+				if(name && name == 'Select') {
 	        	usermetaDataEntered = false;
 	        }
 			});
