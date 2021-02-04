@@ -292,12 +292,12 @@ function constructNewCollectionMetaDataSet(data,status) {
 	   } else if(value.attrValue){		    
 		 	$("#newMetaDataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
         	'data-placement="right" title="'+value.description+'"></i></td><td>'+
-        	'<input type="text" placeholder="Required" aria-label="value of meta data" value="'+value.attrValue+'" name="zAttrStr_'+value.attrName+'"' +
+        	'<input type="text" is_mandatory="'+value.mandatory+'" placeholder="Required" aria-label="value of meta data" value="'+value.attrValue+'" name="zAttrStr_'+value.attrName+'"' +
         	'style="width:70%;"></td></tr>');
 	   } else {
 			$("#newMetaDataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
         	'data-placement="right" title="'+value.description+'"></i></td><td>'+
-        	'<input type="text" placeholder="Required" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
+        	'<input type="text" is_mandatory="'+value.mandatory+'" placeholder="Required" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
         	'style="width:70%;"></td></tr>');
 		}      
 		
@@ -399,9 +399,10 @@ function registerCollection() {
 	
 	$('table#newMetaDataTable input[type="text"]').each(function(){
 		var name = $(this).val();
-	        if(!name){
+		var ismandatory = $(this).attr('is_mandatory');
+	    if(!name && ismandatory && ismandatory != "false" ){
 	        	usermetaDataEntered = false;
-	        } 
+         }  
 	        
 	        
 	        if(name && ($(this).attr('name') == ('zAttrStr_' + collectionType.toLowerCase() + '_' + 'identifier'))) {
