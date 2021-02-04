@@ -98,9 +98,9 @@ function postSuccessUpdatePermissions(data,status) {
 	
 }
 
-function editAccessPermissions(collectionId,metadata_path,msg,selectedCollection,collectionName) {
+function editAccessPermissions(collectionId,metadata_path,msg,selectedCollection,collectionName,permissions) {
 
-	var permissions={};
+	//var permissions={};
 	$.each(msg, function(key, value) {	
 		if(value.key.indexOf("selectedEntry") != -1) {
 			$("#updateAccessPermissionsModal").find("#accessGroups").val(value.value);
@@ -117,7 +117,7 @@ function editAccessPermissions(collectionId,metadata_path,msg,selectedCollection
 	$("#updateAccessPermissionsModal").find(".updateAccessMsg").html("");
 	$("#updateAccessPermissionsModal").find(".updateAccessGroupsBlock").hide();
 	$("#updateAccessPermissionsModal").find("#updateCollectionId").val(collectionId);		
-	$("#updateAccessPermissionsModal").find("#permissionGroups").val(JSON.stringify(permissions));
+	$("#updateAccessPermissionsModal").find("#permissionGroups").val(permissions);
 	$("#updateAccessPermissionsModal").find("#metadata_path").val(metadata_path);
 	$("#updateAccessPermissionsModal").find("#selectedCollection").val(selectedCollection);
 	$("#updateAccessPermissionsModal").find("#selectedCollectionName").text(collectionName);
@@ -163,23 +163,39 @@ function postSuccessUpdateAccessgroups(data,status){
 		$("#updateAccessPermissionsModal").find(".updateAccessMsg").html("Access group updated.");
 		$("#updateAccessPermissionsModal").find(".updateAccessGroupsBlock").show();
 	} else if(data == 'Permission group cannot be updated') {
+		var selectedCollection = $("#updateAccessPermissionsModal").find("#selectedCollection").val();
 		var json = $("#updateAccessPermissionsModal").find("#permissionGroups").val();
-		$("#updateAccessPermissionsModal").find(".updateAccessMsg").html(
-				"Access group cannot be updated.Click <a class='notifyUsersLink' notify_permissions = '" + json + "' href='#'>here</a> to notify the users to change permissions.");
+		var perm_group = JSON.parse(json);
+		perm_group.selectedCollection = selectedCollection;
+		if((selectedCollection == 'Asset' && (perm_group.dataSetPermissionRole == perm_group.studyPermissionRole)))
+		    || ((selectedCollection == 'Study' && (perm_group.studyPermissionRole == perm_group.programPermissionRole))){
+			$("#updateAccessPermissionsModal").find(".updateAccessMsg").html("This collection inherits access status from the " +
+			"parent collection. You are the owner of the parent collection, so you can make that collection public.");
+		} else {
+			$("#updateAccessPermissionsModal").find(".updateAccessMsg").html(
+					"This collection inherits access status from the parent collection." +
+					" You are not the owner of the parent collection, so you can" +
+					" <a class='notifyUsersLink' notify_permissions = '" + json + "' href='#'>ask that owner</a> to make the " +
+					"collection public.");
+		}
+		
 		$("#updateAccessPermissionsModal").find(".updateAccessGroupsBlock").show();
 	}
 
 }
 
 function notifyUsersFunction(permissions) {
-	var selectedCollection = $("#updateAccessPermissionsModal").find("#selectedCollection").val()
-	permissionGroups.selectedCollection = selectedCollection;
-	invokeAjax('/notifyUsers','GET',JSON.parse(permissions),postSuccessNotifyUsers,null,null,'text');
+	var selectedCollection = $("#updateAccessPermissionsModal").find("#selectedCollection").val();
+	var path = $("#updateAccessPermissionsModal").find("#metadata_path").val();
+	var permGroups = JSON.parse(permissions);
+	permGroups.selectedCollection = selectedCollection;
+	permGroups.path = path;
+	invokeAjax('/notifyUsers','GET',permGroups,postSuccessNotifyUsers,null,null,'text');
 }
 
 function postSuccessNotifyUsers(data,status) {
 	$("#updatePermissionModal").modal('hide');
-	bootbox.alert("the users have been notified.")
+	bootbox.alert("The owner of the parent collection will receive your request by email. You will receive a copy of this request.")
 }
 
 function updateMetaDataCollection() {

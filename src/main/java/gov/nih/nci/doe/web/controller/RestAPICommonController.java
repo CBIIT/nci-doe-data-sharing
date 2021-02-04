@@ -401,8 +401,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 * @throws MalformedURLException
 	 * @throws Exception
 	 */
-	@PostMapping(value = "/v2/dataObject/**/download", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
-			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE })
+	@PostMapping(value = "/v2/dataObject/**/download")
 	public ResponseEntity<?> synchronousDownload(@RequestHeader HttpHeaders headers, HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
 			@RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO downloadRequest)
@@ -459,23 +458,29 @@ public class RestAPICommonController extends AbstractDoeController {
 			if (restResponse.getStatus() == 200) {
 				HpcDataObjectDownloadResponseDTO downloadDTO = (HpcDataObjectDownloadResponseDTO) DoeClientUtil
 						.getObject(restResponse, HpcDataObjectDownloadResponseDTO.class);
-				String name = path.substring(path.lastIndexOf('/') + 1);
 
-				try {
-					taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "data_object", name, doeLogin);
-					// store the auditing info
-					AuditingModel audit = new AuditingModel();
-					audit.setName(doeLogin);
-					audit.setOperation("Download");
-					audit.setStartTime(new Date());
-					audit.setPath(path);
-					audit.setTransferType("async");
-					audit.setTaskId(downloadDTO.getTaskId());
-					auditingService.saveAuditInfo(audit);
-				} catch (Exception e) {
-					log.error("error in save transfer" + e.getMessage());
+				if (StringUtils.isNotEmpty(downloadDTO.getDownloadRequestURL())) {
+					downloadToUrl(downloadDTO.getDownloadRequestURL(), 1000000, "test", response);
+				} else {
+					String name = path.substring(path.lastIndexOf('/') + 1);
+
+					try {
+						taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "data_object", name,
+								doeLogin);
+						// store the auditing info
+						AuditingModel audit = new AuditingModel();
+						audit.setName(doeLogin);
+						audit.setOperation("Download");
+						audit.setStartTime(new Date());
+						audit.setPath(path);
+						audit.setTransferType("async");
+						audit.setTaskId(downloadDTO.getTaskId());
+						auditingService.saveAuditInfo(audit);
+					} catch (Exception e) {
+						log.error("error in save transfer" + e.getMessage());
+					}
+					return new ResponseEntity<>(downloadDTO.getTaskId(), HttpStatus.OK);
 				}
-				return new ResponseEntity<>(downloadDTO.getTaskId(), HttpStatus.OK);
 			}
 		}
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);

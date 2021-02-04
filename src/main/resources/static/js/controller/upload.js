@@ -250,7 +250,7 @@ function constructNewCollectionMetaDataSet(data,status) {
 		if(value.attrName  =='access_group') {
 			
 			if(!parentAccessgrp || (parentAccessgrp && parentAccessgrp == "public")) {	
-		 	   $("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+		 	   $("#newMetaDataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
         	   'data-placement="right" title="'+value.description+'"></i></td><td>'+
         	   '<select class="simple-select2" multiple="multiple" id="accessGroupSelect" name="zAttrStr_'+value.attrName+'"' +
         	   'style="width:70%;"></select> &nbsp;&nbsp;<input type="checkbox" id="publicAccess" checked="false" aria-label="public access" value="public access"/>&nbsp;&nbsp;Public</td></tr>');
@@ -258,21 +258,21 @@ function constructNewCollectionMetaDataSet(data,status) {
 		
 			} else {
 				
-				$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+				$("#newMetaDataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
 	        	'data-placement="right" title="'+value.description+'"></i></td><td>'+
 	        	'<input type="text" placeholder="Required" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'" value ="'+ parentAccessgrp+'"' +
 	        	'disabled="disabled" style="width:70%;background-color: #dddddd;"><input type="hidden" name="zAttrStr_'+value.attrName+'" value ="'+ parentAccessgrp+'"/> &nbsp;&nbsp;<i class="fas fa-question-circle"><span>Access group inherited from parent.</span></i></td></tr>'); 
 			}
 	   } else if(value.attrName == 'asset_type') {
 		   
-		    $("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+		    $("#newMetaDataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
        		'data-placement="right" title="'+value.description+'"></i></td><td>'+
        		'<input type="text" disabled="disabled" aria-label="value of meta data" value ="'+ assetType +'" name="zAttrStr_'+value.attrName+'"' +
        		'style="width:70%;"><input type="hidden" name="zAttrStr_'+value.attrName+'" value ="'+ assetType +'"/> </td></tr>');
 	   
 	   } else if(value.validValues != null){
 		   
-	    	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+	    	$("#newMetaDataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
         	'data-placement="right" title="'+value.description+'"></i></td><td>'+
         	'<select class="simple-select2" style="width:70%;" id="frameworkList" name="zAttrStr_'+value.attrName+'" value="'+value.attrValue+'"></select></td></tr>');
 	    	
@@ -290,12 +290,12 @@ function constructNewCollectionMetaDataSet(data,status) {
 	    	  $select.select2().trigger('change');
 	    	
 	   } else if(value.attrValue){		    
-		 	$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+		 	$("#newMetaDataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
         	'data-placement="right" title="'+value.description+'"></i></td><td>'+
         	'<input type="text" placeholder="Required" aria-label="value of meta data" value="'+value.attrValue+'" name="zAttrStr_'+value.attrName+'"' +
         	'style="width:70%;"></td></tr>');
 	   } else {
-			$("#newMetaDataTable tbody").append('<tr><td>' + value.attrName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+			$("#newMetaDataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
         	'data-placement="right" title="'+value.description+'"></i></td><td>'+
         	'<input type="text" placeholder="Required" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
         	'style="width:70%;"></td></tr>');
