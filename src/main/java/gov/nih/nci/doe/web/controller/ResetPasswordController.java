@@ -54,6 +54,10 @@ public class ResetPasswordController extends AbstractDoeController {
 			return new ResponseEntity<>("Enter an email address.", HttpStatus.OK);
 			
 		} 
+		 if(!authService.doesUsernameExist(emailAddr.trim().toLowerCase())) {
+			 log.error("Email address does not exist.");
+				return new ResponseEntity<>("Email address does not exist.", HttpStatus.OK);
+		}
 
 		log.info("About to send a reset link for user ID {}", emailAddr);
 	   
