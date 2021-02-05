@@ -198,6 +198,8 @@ function updateMetaDataCollection() {
 	});
 		
 		if(!validate) {
+			$(".editCollectionSuccess").hide();
+			 $(".editCollectionMsg").html("");
 			$(".editCollectionError").show();
 			$(".editCollectionErrorMsg").html("Enter all the required metadata.");
 		} else {
