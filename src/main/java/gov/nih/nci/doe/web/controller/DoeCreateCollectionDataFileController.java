@@ -573,7 +573,9 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				} else {
 					entry.setValue(attrValue[0]);
 				}
-				metadataEntries.add(entry);
+				if(StringUtils.isNotEmpty(entry.getValue())) {
+					metadataEntries.add(entry);
+				}
 				
 				attrEntry.setAttrName(attrName);
 				if("zAttrStr_access_group".equalsIgnoreCase(paramName)) {
@@ -582,7 +584,9 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				attrEntry.setAttrValue(attrValue[0]);
 				}
 				attrEntry.setSystemAttr(false);
-				selfMetadataEntries.add(attrEntry);
+				if(StringUtils.isNotEmpty(entry.getValue())) {
+					  selfMetadataEntries.add(attrEntry);
+				}
 			} else if (paramName.startsWith("_addAttrName")) {
 				HpcMetadataEntry entry = new HpcMetadataEntry();
 				String attrId = paramName.substring("_addAttrName".length());

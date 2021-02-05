@@ -33,7 +33,7 @@ function constructEditCollectionMetadata(data,status) {
 			$("#userMetaData tbody").append("<tr><td>" + value.attrName + "&nbsp;&nbsp;<i class='fas fa-question-circle' data-toggle='tooltip' " +
 					"data-placement='right' title='"+value.description+"'></i></td><td><input type='text' disabled='true' aria-label='value of meta data' name='zAttrStr_"+value.attrName+"' style='width:70%;' value='" + value.attrValue + "'></td></tr>");
 			
-		} else if(value.validValues == null && value.attrName.indexOf("access_group") == -1 ) {
+		} else if(value.validValues == null && value.attrName.indexOf("access_group") == -1 && value.attrValue) {
 			var attrVal = value.attrValue;
 			if(!attrVal) {
 				attrVal = "";
