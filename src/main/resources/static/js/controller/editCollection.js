@@ -178,13 +178,14 @@ function postSuccessUpdateAccessgroups(data,status){
 		if((selectedCollection == 'Asset' && (perm_group.dataSetPermissionRole == perm_group.studyPermissionRole))
 		    || (selectedCollection == 'Study' && (perm_group.studyPermissionRole == perm_group.programPermissionRole))){
 			$("#updateAccessPermissionsModal").find(".updateAccessMsg").html("This collection inherits access status from the " +
-			"parent collection. You are the owner of the parent collection, so you can make that collection public.");
+			"parent collection. You are the owner of the parent collection, so you can change the group access for that collection.");
 		} else {
 			$("#updateAccessPermissionsModal").find(".updateAccessMsg").html(
 					"This collection inherits access status from the parent collection." +
 					" You are not the owner of the parent collection, so you can" +
-					" <a class='notifyUsersLink' notify_permissions = '" + json + "' href='#'>ask that owner</a> to make the " +
-					"collection public.");
+					" <a class='notifyUsersLink' notify_permissions = '" + json + "' href='#'>ask that owner</a>" +
+							" to change the group access for that " +
+					"collection.");
 		}
 		
 		$("#updateAccessPermissionsModal").find(".updateAccessGroupsBlock").show();
@@ -203,7 +204,7 @@ function notifyUsersFunction(permissions) {
 
 function postSuccessNotifyUsers(data,status) {
 	$("#updatePermissionModal").modal('hide');
-	bootbox.alert("The owner of the parent collection will receive your request by email. You will receive a copy of this request.")
+	bootbox.alert("MoDaC Support will send the owner of the parent collection your request by email. You will receive a copy of this request.")
 }
 
 function updateMetaDataCollection() {
