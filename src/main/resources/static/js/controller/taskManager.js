@@ -1,4 +1,5 @@
 $(document).ready(function () {
+	$.fn.dataTable.moment("MM/DD/YYYY HH:mm:ss");
 	$("#landing-tab").removeClass('active');
 	$("#search-tab").removeClass('active');
 	$("#manageTasks-tab").addClass('active');
@@ -119,11 +120,33 @@ function dataTableInitTaskManager() {
             return renderTaskName(data, type, row);
         },
         responsivePriority: 1
-    },
-        {"data": "taskDate", "defaultContent": "",responsivePriority: 4},
-        {"data": "taskType", "defaultContent": "",responsivePriority: 5},
+        },
+        {"data": "taskCreatedDate", "render": function (data, type, row) {
+            return renderTaskDate(data, type, row);
+        },
+        responsivePriority: 4
+        },
+        
+        {"data": "taskCompletedDate", "render": function (data, type, row) {
+            return renderTaskCompletedDate(data, type, row);
+        },
+        responsivePriority: 5
+        },
+
+        {"data": "taskType", "defaultContent": "",responsivePriority: 6},
         {"data": "transferStatus", "defaultContent": "",responsivePriority: 2},
         ],
+       
+        "columnDefs": [
+            {className: "td_class_2", "targets": [0]},
+            {className: "td_class_2", "targets": [1]},
+            {className: "td_class_2", "targets": [2]},
+            {className: "td_class_2", "targets": [3]},
+            {className: "td_class_2", "targets": [4]},
+            {className: "td_class_2", "targets": [5]},
+            {className: "td_class_2", "targets": [-1]}
+        ],
+        
         "dom": '<"top"lip>rt<"bottom"p>',
 
         "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
@@ -138,6 +161,13 @@ function dataTableInitTaskManager() {
 }
 
 
+function renderTaskDate(data, type, row) {
+	return moment(data).format("MM/DD/YYYY HH:mm:ss") ;
+}
+
+function renderTaskCompletedDate(data, type, row) {
+	return moment(data).format("MM/DD/YYYY HH:mm:ss");
+}
 function renderTaskName(data, type, row) {
     
 	var html = "";
@@ -195,3 +225,4 @@ function openPopOverDisplay($this) {
         
    
 }
+
