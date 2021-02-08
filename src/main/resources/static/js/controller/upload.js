@@ -295,9 +295,13 @@ function constructNewCollectionMetaDataSet(data,status) {
         	'<input type="text" is_mandatory="'+value.mandatory+'" placeholder="Required" aria-label="value of meta data" value="'+value.attrValue+'" name="zAttrStr_'+value.attrName+'"' +
         	'style="width:70%;"></td></tr>');
 	   } else {
+		   var placeholderValue ="";
+		     if(value.mandatory && value.mandatory == true) {
+		    	 placeholderValue = "Required";
+		     }
 			$("#newMetaDataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
         	'data-placement="right" title="'+value.description+'"></i></td><td>'+
-        	'<input type="text" is_mandatory="'+value.mandatory+'" placeholder="Required" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
+        	'<input type="text" is_mandatory="'+value.mandatory+'" placeholder="'+placeholderValue+'" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
         	'style="width:70%;"></td></tr>');
 		}      
 		
@@ -587,6 +591,9 @@ function registerBulkDataFile() {
 		} else if(bulkUploadType == 'drive' && (!$("#fileNamesDiv").length || !$("#folderNamesDiv").length )) {
 			$(".uploadBulkDataError").show();
 			$(".uploadBulkDataErrorMsg").html("Select google drive information.")
+		} else if((bulkUploadType == 'globus' || bulkUploadType == 'drive') && $("#folderNamesDiv").length)) {
+			$(".uploadBulkDataError").show();
+			$(".uploadBulkDataErrorMsg").html("Select files only.")
 		}
 		else if(dataFilePath) {	
 			$("#uploadType").val(bulkUploadType);
