@@ -1,12 +1,3 @@
-/**
- * DOEUserInterceptor.java
- *
- * Copyright SVG, Inc.
- * Copyright Leidos Biomedical Research, Inc
- * 
- * Distributed under the OSI-approved BSD 3-Clause License.
- * See https://github.com/CBIIT/HPC_DME_APIs/LICENSE.txt for details.
- */
 package gov.nih.nci.doe.web;
 
 import org.apache.commons.lang.StringUtils;
@@ -23,6 +14,10 @@ import gov.nih.nci.doe.web.constants.BasicAuthRequestUrlList;
 import gov.nih.nci.doe.web.constants.LoginStatusCode;
 import gov.nih.nci.doe.web.service.AuthenticateService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import javax.servlet.http.HttpServletRequest;
@@ -30,9 +25,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * <p>
+ * 
  * DOE User Interceptor
- * </p>
+ * 
  */
 @Component
 public class DoeUserInterceptor extends HandlerInterceptorAdapter {
@@ -56,6 +51,9 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 	@Autowired
 	public AuthenticateService authService;
 
+	private static final String USER_ID_TOKEN_CLAIM = "UserName";
+	private static final String JWT_SECRET = "hpc-token-signature-key";
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -77,6 +75,11 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 
 		if (StringUtils.isNotEmpty(requestUri) && requestUri.contains("/api")) {
 
+			String readAuthToken = DoeClientUtil.getAuthenticationToken(readOnlyUserName, readOnlyUserPassword,
+					authenticateURL);
+			String writeAuthToken = DoeClientUtil.getAuthenticationToken(writeAccessUserName,
+					writeAccessUserPassword, authenticateURL);
+			
 			if (authorization != null && authorization.toLowerCase().startsWith("basic")) {
 				// Authorization: Basic base64credentials
 				String base64Credentials = authorization.substring("Basic".length()).trim();
@@ -89,15 +92,23 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 				String password = values[1];
 				LoginStatusCode status = authService.authenticateExternalUser(userName, password);
 				if (status == LoginStatusCode.LOGIN_SUCCESS) {
-					session.setAttribute("doeLogin", userName);
-					String authToken = DoeClientUtil.getAuthenticationToken(writeAccessUserName,
-							writeAccessUserPassword, authenticateURL);
-					session.setAttribute("writeAccessUserToken", authToken);
+					session.setAttribute("doeLogin", userName);					
+					session.setAttribute("writeAccessUserToken", writeAuthToken);
+				}
+			} else if (authorization != null && authorization.toLowerCase().startsWith("bearer")) {
+				String[] authorizations = authorization.split(" ");
+				String token = authorizations[1];
+				Jws<Claims> jwsClaims = Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token);
+				String user = (String) jwsClaims.getBody().get(USER_ID_TOKEN_CLAIM);
+				log.info("token auth type user: " + user);
+				if (StringUtils.isNotEmpty(user) && authService.doesUsernameExist(user.trim().toLowerCase())) {
+					session.setAttribute("writeAccessUserToken", writeAuthToken);
+					session.setAttribute("doeLogin", user);
+				} else {					
+					session.setAttribute("hpcUserToken", readAuthToken);
 				}
 			} else if (Boolean.TRUE.equals(isExistsUrl)) {
-				String authToken = DoeClientUtil.getAuthenticationToken(readOnlyUserName, readOnlyUserPassword,
-						authenticateURL);
-				session.setAttribute("hpcUserToken", authToken);
+				session.setAttribute("hpcUserToken", readAuthToken);
 			}
 
 		} else {

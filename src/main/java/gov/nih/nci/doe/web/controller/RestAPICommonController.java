@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
@@ -47,8 +49,11 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -102,6 +107,10 @@ public class RestAPICommonController extends AbstractDoeController {
 
 	@Autowired
 	TaskManagerService taskManagerService;
+
+	private static final String TOKEN_SUBJECT = "MoDaCAuthenticationToken";
+	private static final String USER_ID_TOKEN_CLAIM = "UserName";
+	private static final String JWT_SECRET = "hpc-token-signature-key";
 
 	/**
 	 * Returns the preassigned Url.
@@ -851,20 +860,25 @@ public class RestAPICommonController extends AbstractDoeController {
 	@GetMapping(value = "/authenticate")
 	public ResponseEntity<?> authenticate(@RequestHeader HttpHeaders headers, HttpSession session,
 			HttpServletResponse response, HttpServletRequest request) throws DoeWebException {
+
 		log.info("get auth token");
+		String doeLogin = (String) session.getAttribute("doeLogin");
+		log.info("doeLogin: " + doeLogin);
+		// Calculate the expiration date.
+		Calendar tokenExpiration = Calendar.getInstance();
 
-		String authToken = (String) session.getAttribute("hpcUserToken");
-		if (StringUtils.isEmpty(authToken)) {
-			authToken = (String) session.getAttribute("writeAccessUserToken");
+		tokenExpiration.add(Calendar.MINUTE, 2160);
+
+		// Prepare the Claims Map.
+		Map<String, Object> claims = new HashMap<>();
+		if (StringUtils.isNotEmpty(doeLogin)) {
+			claims.put(USER_ID_TOKEN_CLAIM, doeLogin);
 		}
-		log.info("authToken: " + authToken);
+		String token = Jwts.builder().setSubject(TOKEN_SUBJECT).setClaims(claims)
+				.setExpiration(tokenExpiration.getTime()).signWith(SignatureAlgorithm.HS256, JWT_SECRET).compact();
 
-		if (authToken == null) {
-			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
-		}
-
-		if (StringUtils.isNotEmpty(authToken)) {
-			return new ResponseEntity<>(authToken, HttpStatus.OK);
+		if (StringUtils.isNotEmpty(token)) {
+			return new ResponseEntity<>(token, HttpStatus.OK);
 		}
 
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
