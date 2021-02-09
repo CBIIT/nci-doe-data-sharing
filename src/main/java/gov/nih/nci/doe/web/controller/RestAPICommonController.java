@@ -504,7 +504,10 @@ public class RestAPICommonController extends AbstractDoeController {
 		log.info("pathName: " + path);
 		log.info("query params: includeAcl: " + includeAcl);
 
-		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		String authToken = (String) session.getAttribute("hpcUserToken");
+		if (StringUtils.isEmpty(authToken)) {
+			authToken = (String) session.getAttribute("writeAccessUserToken");
+		}
 		log.info("authToken: " + authToken);
 
 		if (authToken == null) {
@@ -558,7 +561,10 @@ public class RestAPICommonController extends AbstractDoeController {
 		String path = request.getRequestURI().split(request.getContextPath() + "/collection/")[1];
 		log.info("pathName: " + path);
 
-		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		String authToken = (String) session.getAttribute("hpcUserToken");
+		if (StringUtils.isEmpty(authToken)) {
+			authToken = (String) session.getAttribute("writeAccessUserToken");
+		}
 		log.info("authToken: " + authToken);
 
 		if (authToken == null) {

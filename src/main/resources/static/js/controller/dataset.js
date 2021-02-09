@@ -464,14 +464,12 @@ function exportDataObjectMetadata() {
  		    },
  		    callback: function (result) {
  		    	if(result == true) {
- 		    		 //exportDataObjectMetadata('true');
  		    		var selectedPaths = [];
  		    	    $("#dataSetTable tbody input[type=checkbox]:checked").each(function () {
  		    	    	selectedPaths.push($(this).attr('id'));
  		    	    });
  		    		window.open('/export?isParent=true&&selectedPaths='+selectedPaths, '_self');
  		    	} else if(result == false) {
- 		    		// exportDataObjectMetadata('false');
  		    		var selectedPaths = [];
  		    	    $("#dataSetTable tbody input[type=checkbox]:checked").each(function () {
  		    	    	selectedPaths.push($(this).attr('id'));

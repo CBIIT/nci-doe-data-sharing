@@ -10,6 +10,6 @@ public class BasicAuthRequestUrlList {
 	}
 
 	public static final List<String> requestUrlList = 
-			Arrays.asList("/dataObject/query", "/collection/query",
-			"/v2/dataObject/","/collection/","/authenticate");
+			Arrays.asList("/api/dataObject/query", "/api/collection/query",
+			"/api/v2/dataObject/","/api/collection/","/api/authenticate");
 }
