@@ -15,5 +15,6 @@ public interface MailService {
 	
 	public void sendResetPasswordEmail(String password,String email) throws Exception;
 	
-	public void sendNotifyUsersForAccessGroups(List<String> email,String loggedOnUser, String path) throws Exception;
+	public void sendNotifyUsersForAccessGroups(List<String> email,String loggedOnUser, 
+			String path, String existingAccessGroups, String newAccessGroups) throws Exception;
 }

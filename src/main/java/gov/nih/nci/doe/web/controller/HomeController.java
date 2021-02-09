@@ -3,9 +3,7 @@ package gov.nih.nci.doe.web.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -268,13 +266,16 @@ public class HomeController extends AbstractDoeController {
 		log.info("notify users");
 		log.info("permissionGroups" + permissionGroups);
 		List<String> collectionOwnersList = new ArrayList<String>();
+		String existingAccessGroups = null;
 		// notify users
 		MetaDataPermissions perm = null;
 		if ("study".equalsIgnoreCase(permissionGroups.getSelectedCollection())) {
+			existingAccessGroups = permissionGroups.getStudyLevelAccessGroups();
 			perm = metaDataPermissionService
 					.getMetaDataPermissionsOwnerByCollectionId(Integer.valueOf(permissionGroups.getProgCollectionId()));
 			collectionOwnersList.add(perm.getUserGroupId());
 		} else if ("Asset".equalsIgnoreCase(permissionGroups.getSelectedCollection())) {
+			existingAccessGroups = permissionGroups.getDataLevelAccessGroups();
 			perm = metaDataPermissionService.getMetaDataPermissionsOwnerByCollectionId(
 					Integer.valueOf(permissionGroups.getStudyCollectionId()));
 			MetaDataPermissions progPermissions = metaDataPermissionService
@@ -283,10 +284,11 @@ public class HomeController extends AbstractDoeController {
 			collectionOwnersList.add(progPermissions.getUserGroupId());
 		}
 		log.info("send notify email to" + collectionOwnersList);
-		//remove duplicate emails from collectionOwnersList
+		// remove duplicate emails from collectionOwnersList
 		List<String> newEmailList = collectionOwnersList.stream().distinct().collect(Collectors.toList());
-	     
-		mailService.sendNotifyUsersForAccessGroups(newEmailList,getLoggedOnUserInfo(),permissionGroups.getPath());
+
+		mailService.sendNotifyUsersForAccessGroups(newEmailList, getLoggedOnUserInfo(), 
+				permissionGroups.getPath(),existingAccessGroups, permissionGroups.getSelectedAccessGroups());
 
 		return "SUCCESS";
 	}

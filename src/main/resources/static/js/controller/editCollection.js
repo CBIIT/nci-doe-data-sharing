@@ -163,6 +163,7 @@ function updateAccessGroupsFunction() {
 	permissionGroups.path = path;
 	permissionGroups.selectedCollection = selectedCollection;
 	permissionGroups.selectedAccessGroups = selectedAccessGroups.join();
+	 $("#updateAccessPermissionsModal").find("#permissionGroups").val(JSON.stringify(permissionGroups));
 	invokeAjax('/updateAccessGroupMetaData','GET',permissionGroups,postSuccessUpdateAccessgroups,null,null,'text');
 }
 
@@ -171,12 +172,10 @@ function postSuccessUpdateAccessgroups(data,status){
 		$("#updateAccessPermissionsModal").find(".updateAccessMsg").html("Access group updated.");
 		$("#updateAccessPermissionsModal").find(".updateAccessGroupsBlock").show();
 	} else if(data == 'Permission group cannot be updated') {
-		var selectedCollection = $("#updateAccessPermissionsModal").find("#selectedCollection").val();
 		var json = $("#updateAccessPermissionsModal").find("#permissionGroups").val();
 		var perm_group = JSON.parse(json);
-		perm_group.selectedCollection = selectedCollection;
-		if((selectedCollection == 'Asset' && (perm_group.dataSetPermissionRole == perm_group.studyPermissionRole))
-		    || (selectedCollection == 'Study' && (perm_group.studyPermissionRole == perm_group.programPermissionRole))){
+		if((perm_group.selectedCollection == 'Asset' && (perm_group.dataSetPermissionRole == perm_group.studyPermissionRole))
+		    || (perm_group.selectedCollection == 'Study' && (perm_group.studyPermissionRole == perm_group.programPermissionRole))){
 			$("#updateAccessPermissionsModal").find(".updateAccessMsg").html("This collection inherits access status from the " +
 			"parent collection. You are the owner of the parent collection, so you can change the group access for that collection.");
 		} else {
@@ -194,16 +193,12 @@ function postSuccessUpdateAccessgroups(data,status){
 }
 
 function notifyUsersFunction(permissions) {
-	var selectedCollection = $("#updateAccessPermissionsModal").find("#selectedCollection").val();
-	var path = $("#updateAccessPermissionsModal").find("#metadata_path").val();
 	var permGroups = JSON.parse(permissions);
-	permGroups.selectedCollection = selectedCollection;
-	permGroups.path = path;
 	invokeAjax('/notifyUsers','GET',permGroups,postSuccessNotifyUsers,null,null,'text');
 }
 
 function postSuccessNotifyUsers(data,status) {
-	$("#updatePermissionModal").modal('hide');
+	$("#updateAccessPermissionsModal").modal('hide');
 	bootbox.alert("MoDaC Support will send the owner of the parent collection your request by email. You will receive a copy of this request.")
 }
 
