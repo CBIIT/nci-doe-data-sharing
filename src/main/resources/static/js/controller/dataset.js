@@ -257,7 +257,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,metadata,accessgroups,permis
            });
            initializeToolTips();
            initializePopover();
-           displayPopover();
+           displayPopoverDataSet();
         },
 
         "columns": [
@@ -347,31 +347,22 @@ function renderSelect(data, type, row) {
 function renderDataSetPath(data, type, row) {
 	
 	var html = "";
+	var userMetadata = "";
+	var systemMetadata = "";
+		
 	if(row.systemMetadata && row.systemMetadata.length > 0) {
-		if(row.selfMetadata && row.selfMetadata.length > 0) {
-			var metadata = JSON.stringify(row.selfMetadata);
-			 html+= "<a class='cil_12_no_color button2a' metadata_type = '" + metadata  + "' tabindex='0'" +
-			" data-container='body' data-toggle='popover' data-placement='right' " +
-			"data-trigger='click' data-popover-content='#a01'>" + row.name + "</a>";
-			 var metadata1 = JSON.stringify(row.systemMetadata);
-			 html+= "&nbsp;&nbsp;<a class='cil_12_no_color button2a' " +
-			 		"metadata_context='system_metadata' metadata_type = '" + metadata1  + "' " +
-			 				"tabindex='0'" +
-				" data-container='body' data-toggle='popover' data-placement='right' " +
-				"data-trigger='click' data-popover-content='#a01'><i class='fas fa-info-circle' data-toggle='tooltip' title='Key System Metadata'></i></a>";
-		} else {
-			var metadata = JSON.stringify(row.systemMetadata);
-			 html+= row.name + "&nbsp;&nbsp;<a class='cil_12_no_color button2a' metadata_context='system_metadata' metadata_type = '" + metadata  + "' tabindex='0'" +
-				" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' data-popover-content='#a01'><i class='fas fa-info-circle' data-toggle='tooltip' title='Key System Metadata'></i></a>";
-		}
-	} else if(row.selfMetadata && row.selfMetadata.length > 0) {
-		var metadata = JSON.stringify(row.selfMetadata);
-		 html+= "<a class='cil_12_no_color button2a' metadata_type = '" + metadata  + "' tabindex='0'" +
-		" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' data-popover-content='#a01'>" + row.name + "</a>";
-	} else {
-		 html= row.name;
+		systemMetadata = JSON.stringify(row.systemMetadata);
 	}
 	
+	if(row.selfMetadata && row.selfMetadata.length > 0) {
+		userMetadata = JSON.stringify(row.selfMetadata);
+	}
+	
+	html+= row.name + "&nbsp;&nbsp;<a class='cil_12_no_color button2a' " +
+		   "userMetadata = '" + userMetadata  + "' sys_metadata = '" + systemMetadata  + "' tabindex='0'" +
+	       " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
+	       "data-popover-content='#a01'><i class='fas fa-info-circle' data-toggle='tooltip' title='Metadata'></i></a>";	
+			
 	return html;
 }
 
@@ -390,59 +381,58 @@ function displayPopoverDataSet() {
 function openPopOverDataSet($this) {
     var pop = $this;
     $('.button2a').not($this).popover('hide'); 
-    var metadata = $this.attr('metadata_type');
-    var usermetadata = $this.attr('sys_metadata');
-    var headerTest = 'System Metadata';
+    var userMetadata = $this.attr('userMetadata');
+    var sysMetadata = $this.attr('sys_metadata');
+    var userMetadataList = "";
     
-    var list = JSON.parse(metadata);
-    var list1 = JSON.parse(usermetadata);
-    var ind = "";
-    
-    if(list) {
-    	headerTest = 'User Metadata';
-    	
-       ind = "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\">" +
-                "" + headerTest +" <a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a> </div>" +
-                "<div class='popover-body'> <div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
-                "<div class='divTableBody'><div class='divTableRow'>" +
-                "<div class='divTableHead'>Attribute</div>" + 
-                "<div class='divTableHead'>Value</div></div>";
-
-            var content = "";
-
-            $.each(list, function( key, value ) {	
-                content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
-                        "<div class='divTableCell'>" + value.value + "</div></div>";
-                });
-            
-            var table = ind + content + "</div> </div></div> </div>";
-           
+    if(userMetadata) {
+       userMetadataList = JSON.parse(userMetadata);
     }
-            
-            if(list1) {
-            	headerTest = 'System Metadata';
-                 ind += "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\">" +
-                "" + headerTest +" <a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a> </div>" +
-                "<div class='popover-body'> <div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
+    
+    var sysMetadatalist = JSON.parse(sysMetadata);
+    
+    var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"><div class=\"popover-heading\">" +
+                "Metadata <a class=\"button closeBtn float-right\" href=\"javascript:void(0);\">" +
+                		"<i class=\"fa fa-times\"></i></a> </div><div class='popover-body'>";
+    var table = "";
+    var content = "";
+    
+    if(sysMetadatalist) {
+
+       ind += "<p><b>System Metadata :</b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
                 "<div class='divTableBody'><div class='divTableRow'>" +
                 "<div class='divTableHead'>Attribute</div>" + 
                 "<div class='divTableHead'>Value</div></div>";
 
-
-            $.each(list1, function( key, value ) {	
+            $.each(sysMetadatalist, function( key, value ) {	
                 content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
                         "<div class='divTableCell'>" + value.value + "</div></div>";
-                });
+            });
+            content += "</div> </div>";
+           
+     }
             
-             table += ind + content + "</div> </div></div> </div>";
+    if(userMetadataList) {
+       content += "<br/><p><b>User Metadata :</b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
+                "<div class='divTableBody'><div class='divTableRow'>" +
+                "<div class='divTableHead'>Attribute</div>" + 
+                "<div class='divTableHead'>Value</div></div>";
+
+            $.each(userMetadataList, function( key, value ) {	
+                content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
+                        "<div class='divTableCell'>" + value.value + "</div></div>";
+            });
             
-            }
-            $("#a01").remove();
-            pop.after(table);
-            pop.data('bs.popover').setContent();
-            pop.popover('show');
+            content += "</div> </div>";
+                         
+     }
+     
+     table += ind + content + "</div> </div></div> </div>";
+     $("#a01").remove();
+     pop.after(table);
+     pop.data('bs.popover').setContent();
+     pop.popover('show');
         
-   
 }
 
 function renderFileSize(data, type, row) {
@@ -482,6 +472,7 @@ function exportDataObjectMetadata() {
 }
 
 function renderDownload(data, type, row,accessgroups,permissions) {
+	
 	var downdloadFileName = null;
 	var path = row.path;
 	var html = "";
@@ -489,7 +480,7 @@ function renderDownload(data, type, row,accessgroups,permissions) {
 	var n = path.lastIndexOf("/");
 	downdloadFileName = path.substring(n+1);	
 	if(row.selfMetadata && row.selfMetadata.length > 0) {
-		var metadata = JSON.stringify(row.selfMetadata);
+		 metadata = JSON.stringify(row.selfMetadata);
 	}	
 	
 	html += "<button type='button' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' " +
@@ -528,10 +519,10 @@ function onClickOfBulkDownloadBtn() {
     });
 
     if(selectedPaths.length == 1) {
-  	location.replace('/downloadTab?selectedPaths='+selectedPaths+'&&downloadAsyncType=data_object');
-  } else  {
-  	location.replace('/downloadTab?selectedPaths='+selectedPaths+'&&downloadAsyncType=datafiles');
-  }	    
+  	   location.replace('/downloadTab?selectedPaths='+selectedPaths+'&&downloadAsyncType=data_object');
+    } else {
+  	   location.replace('/downloadTab?selectedPaths='+selectedPaths+'&&downloadAsyncType=datafiles');
+    }	    
 }
 
 
