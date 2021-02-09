@@ -566,7 +566,7 @@ function registerBulkDataFile() {
 				         $("#dimmer").hide();
 						 console.log('ERROR: ', e);			
 						 $(".uploadBulkDataError").show();
-						 $(".uploadBulkDataErrorMsg").html("Error in Registration.");
+						 $(".uploadBulkDataErrorMsg").html(e);
 					}
 				});
 			}
@@ -632,7 +632,7 @@ function registerBulkDataFile() {
 			         $("#dimmer").hide();
 					 console.log('ERROR: ', e);	
 					 $(".uploadBulkDataError").show();
-					 $(".uploadBulkDataErrorMsg").html("Error in Registration.");
+					 $(".uploadBulkDataErrorMsg").html(e);
 				}
 			});
 		}
