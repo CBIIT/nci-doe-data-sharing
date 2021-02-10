@@ -52,7 +52,7 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 	public AuthenticateService authService;
 
 	private static final String USER_ID_TOKEN_CLAIM = "UserName";
-	private static final String JWT_SECRET = "hpc-token-signature-key";
+	private static final String JWT_SECRET = "doe-token-signature-key";
 
 	/*
 	 * (non-Javadoc)
@@ -77,9 +77,9 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 
 			String readAuthToken = DoeClientUtil.getAuthenticationToken(readOnlyUserName, readOnlyUserPassword,
 					authenticateURL);
-			String writeAuthToken = DoeClientUtil.getAuthenticationToken(writeAccessUserName,
-					writeAccessUserPassword, authenticateURL);
-			
+			String writeAuthToken = DoeClientUtil.getAuthenticationToken(writeAccessUserName, writeAccessUserPassword,
+					authenticateURL);
+
 			if (authorization != null && authorization.toLowerCase().startsWith("basic")) {
 				// Authorization: Basic base64credentials
 				String base64Credentials = authorization.substring("Basic".length()).trim();
@@ -92,7 +92,7 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 				String password = values[1];
 				LoginStatusCode status = authService.authenticateExternalUser(userName, password);
 				if (status == LoginStatusCode.LOGIN_SUCCESS) {
-					session.setAttribute("doeLogin", userName);					
+					session.setAttribute("doeLogin", userName);
 					session.setAttribute("writeAccessUserToken", writeAuthToken);
 				}
 			} else if (authorization != null && authorization.toLowerCase().startsWith("bearer")) {
@@ -103,9 +103,8 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 				log.info("token auth type user: " + user);
 				if (StringUtils.isNotEmpty(user) && authService.doesUsernameExist(user.trim().toLowerCase())) {
 					session.setAttribute("writeAccessUserToken", writeAuthToken);
-					session.setAttribute("doeLogin", user);
-				} else {					
 					session.setAttribute("hpcUserToken", readAuthToken);
+					session.setAttribute("doeLogin", user);
 				}
 			} else if (Boolean.TRUE.equals(isExistsUrl)) {
 				session.setAttribute("hpcUserToken", readAuthToken);

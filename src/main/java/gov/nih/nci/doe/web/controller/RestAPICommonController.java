@@ -110,7 +110,10 @@ public class RestAPICommonController extends AbstractDoeController {
 
 	private static final String TOKEN_SUBJECT = "MoDaCAuthenticationToken";
 	private static final String USER_ID_TOKEN_CLAIM = "UserName";
-	private static final String JWT_SECRET = "hpc-token-signature-key";
+	private static final String JWT_SECRET = "doe-token-signature-key";
+	// The authentication token expiration period in minutes.
+	@Value("${doe.service.security.authenticationTokenExpirationPeriod}")
+	private int authenticationTokenExpirationPeriod = 0;
 
 	/**
 	 * Returns the preassigned Url.
@@ -867,7 +870,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		// Calculate the expiration date.
 		Calendar tokenExpiration = Calendar.getInstance();
 
-		tokenExpiration.add(Calendar.MINUTE, 2160);
+		tokenExpiration.add(Calendar.MINUTE, authenticationTokenExpirationPeriod);
 
 		// Prepare the Claims Map.
 		Map<String, Object> claims = new HashMap<>();
