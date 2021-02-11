@@ -397,28 +397,28 @@ function openPopOverDataSet($this) {
     var table = "";
     var content = "";
     
-    if(sysMetadatalist) {
-
-       ind += "<p><b>System Metadata :</b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
-                "<div class='divTableBody'><div class='divTableRow'>" +
-                "<div class='divTableHead'>Attribute</div>" + 
-                "<div class='divTableHead'>Value</div></div>";
-
-            $.each(sysMetadatalist, function( key, value ) {	
-                content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
-                        "<div class='divTableCell'>" + value.value + "</div></div>";
-            });
-            content += "</div> </div>";
-           
-     }
-            
     if(userMetadataList) {
-       content += "<br/><p><b>User Metadata :</b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
+
+       ind += "<p><b>Key System Metadata :</b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
                 "<div class='divTableBody'><div class='divTableRow'>" +
                 "<div class='divTableHead'>Attribute</div>" + 
                 "<div class='divTableHead'>Value</div></div>";
 
             $.each(userMetadataList, function( key, value ) {	
+                content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
+                        "<div class='divTableCell'>" + value.value + "</div></div>";
+            });
+            content += "</div> </div><br/>";
+           
+     }
+            
+    if(sysMetadatalist) {
+       content += "<p><b>User Metadata :</b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
+                "<div class='divTableBody'><div class='divTableRow'>" +
+                "<div class='divTableHead'>Attribute</div>" + 
+                "<div class='divTableHead'>Value</div></div>";
+
+            $.each(sysMetadatalist, function( key, value ) {	
                 content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
                         "<div class='divTableCell'>" + value.value + "</div></div>";
             });
