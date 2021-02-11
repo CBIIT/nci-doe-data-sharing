@@ -162,11 +162,18 @@ function dataTableInitTaskManager() {
 
 
 function renderTaskDate(data, type, row) {
-	return moment(data).format("MM/DD/YYYY HH:mm:ss") ;
+	if(data) {
+		return moment(data).format("MM/DD/YYYY HH:mm:ss") ;
+	}
+	return "N/A"
 }
 
 function renderTaskCompletedDate(data, type, row) {
-	return moment(data).format("MM/DD/YYYY HH:mm:ss");
+	if(data) {
+		return moment(data).format("MM/DD/YYYY HH:mm:ss");
+	}
+	return "N/A";
+	
 }
 function renderTaskName(data, type, row) {
     
