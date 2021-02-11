@@ -29,7 +29,7 @@ function createUploadPicker() {
 		.setOAuthToken(oauthToken).addView(view)
 		.enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
 		.setCallback(uploadPickerCallback).setTitle(
-				"Select files").build();
+				"Select Files").build();
 		picker.setVisible(true);
 	}
 }
