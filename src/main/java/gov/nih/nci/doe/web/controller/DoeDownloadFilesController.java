@@ -79,7 +79,7 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 			String name = null;
 			String loggedOnUser = getLoggedOnUserInfo();
 			if(loggedOnUser != null && !StringUtils.isEmpty(loggedOnUser) && !StringUtils.isBlank(loggedOnUser)) {
-				 authToken = (String) session.getAttribute("writeAccessUserToken");
+				 authToken = (String) session.getAttribute("hpcUserToken");
 				 String[] paths = downloadFile.getSelectedPaths().split(",");
 				 if(paths != null && paths.length == 1) {
 					  name = downloadFile.getSelectedPaths().substring(downloadFile.getSelectedPaths().lastIndexOf('/') + 1); 

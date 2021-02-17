@@ -74,7 +74,7 @@ public class DoeSyncDownloadController extends AbstractDoeController {
 		   @Valid DoeDownloadDatafile downloadFile, HttpSession session, HttpServletRequest request,
       HttpServletResponse response) {
     try {
-      String authToken = (String) session.getAttribute("writeAccessUserToken");
+      String authToken = (String) session.getAttribute("hpcUserToken");
       if (authToken == null) {
         return null;
       }

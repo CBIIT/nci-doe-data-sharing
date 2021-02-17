@@ -41,7 +41,7 @@ public class ExportController extends AbstractDoeController{
             @RequestParam(value="isParent") String isParent)
     		throws Exception {
 		
-		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		String authToken = (String) session.getAttribute("hpcUserToken");
 		List<String> headers = new ArrayList<String>();
 		
 		if(StringUtils.isNotEmpty(selectedPaths)) {

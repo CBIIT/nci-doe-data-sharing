@@ -94,6 +94,7 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 				if (status == LoginStatusCode.LOGIN_SUCCESS) {
 					session.setAttribute("doeLogin", userName);
 					session.setAttribute("writeAccessUserToken", writeAuthToken);
+					session.setAttribute("hpcUserToken", readAuthToken);
 				}
 			} else if (authorization != null && authorization.toLowerCase().startsWith("bearer")) {
 				String[] authorizations = authorization.split(" ");

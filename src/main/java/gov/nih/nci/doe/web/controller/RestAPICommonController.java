@@ -135,7 +135,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		log.info("pathName: " + path);
 
 		// getting write access token for download request URL
-		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		String authToken = (String) session.getAttribute("hpcUserToken");
 		log.info("authToken: " + authToken);
 		if (authToken == null) {
 			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
@@ -215,7 +215,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		log.info("download collection:");
 		log.info("Headers: {}", headers);
 
-		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		String authToken = (String) session.getAttribute("hpcUserToken");
 		log.info("authToken: " + authToken);
 		if (authToken == null) {
 			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
@@ -278,7 +278,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		log.info("Headers: {}", headers);
 		log.info("pathName: " + path);
 
-		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		String authToken = (String) session.getAttribute("hpcUserToken");
 		log.info("authToken: " + authToken);
 		if (authToken == null) {
 			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
@@ -353,7 +353,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		log.info("Headers: {}", headers);
 		log.info("pathName: " + path);
 
-		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		String authToken = (String) session.getAttribute("hpcUserToken");
 		log.info("authToken: " + authToken);
 		if (authToken == null) {
 			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
@@ -428,7 +428,7 @@ public class RestAPICommonController extends AbstractDoeController {
 
 		log.info("pathName: " + path);
 
-		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		String authToken = (String) session.getAttribute("hpcUserToken");
 		log.info("authToken: " + authToken);
 		if (authToken == null) {
 			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
@@ -517,9 +517,6 @@ public class RestAPICommonController extends AbstractDoeController {
 		log.info("query params: includeAcl: " + includeAcl);
 
 		String authToken = (String) session.getAttribute("hpcUserToken");
-		if (StringUtils.isEmpty(authToken)) {
-			authToken = (String) session.getAttribute("writeAccessUserToken");
-		}
 		log.info("authToken: " + authToken);
 
 		if (authToken == null) {
@@ -574,9 +571,6 @@ public class RestAPICommonController extends AbstractDoeController {
 		log.info("pathName: " + path);
 
 		String authToken = (String) session.getAttribute("hpcUserToken");
-		if (StringUtils.isEmpty(authToken)) {
-			authToken = (String) session.getAttribute("writeAccessUserToken");
-		}
 		log.info("authToken: " + authToken);
 
 		if (authToken == null) {
@@ -771,9 +765,7 @@ public class RestAPICommonController extends AbstractDoeController {
 
 		log.info("search collection query: " + compoundMetadataQuery);
 		String authToken = (String) session.getAttribute("hpcUserToken");
-		if (StringUtils.isEmpty(authToken)) {
-			authToken = (String) session.getAttribute("writeAccessUserToken");
-		}
+
 
 		log.info("authToken: " + authToken);
 
@@ -824,10 +816,6 @@ public class RestAPICommonController extends AbstractDoeController {
 
 		log.info("search data object query: " + compoundMetadataQuery);
 		String authToken = (String) session.getAttribute("hpcUserToken");
-		if (StringUtils.isEmpty(authToken)) {
-			authToken = (String) session.getAttribute("writeAccessUserToken");
-		}
-
 		log.info("authToken: " + authToken);
 
 		if (authToken == null) {

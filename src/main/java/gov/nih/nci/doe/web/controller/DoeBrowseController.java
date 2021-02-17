@@ -72,7 +72,7 @@ public class DoeBrowseController extends AbstractDoeController {
 			@RequestParam(value = "levelName") String levelName, HttpSession session, HttpServletRequest request,
 			HttpServletResponse response) throws DoeWebException {
 
-		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		String authToken = (String) session.getAttribute("hpcUserToken");
 		List<KeyValueBean> entryList = new ArrayList<KeyValueBean>();
 
 		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
@@ -124,7 +124,7 @@ public class DoeBrowseController extends AbstractDoeController {
 			@RequestParam(required = false) String refreshNode, HttpSession session, HttpServletRequest request,
 			HttpServletResponse response) {
 
-		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		String authToken = (String) session.getAttribute("hpcUserToken");
 		DoeBrowserEntry browserEntry = (DoeBrowserEntry) session.getAttribute("browserEntry");
 		List<KeyValueBean> results = new ArrayList<>();
 		boolean getChildren = false;
@@ -176,7 +176,7 @@ public class DoeBrowseController extends AbstractDoeController {
 	public ResponseEntity<?> get(HttpSession session, HttpServletRequest request) {
 
 		// Verify User session
-		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		String authToken = (String) session.getAttribute("hpcUserToken");
 		if (authToken == null) {
 			return null;
 		}
