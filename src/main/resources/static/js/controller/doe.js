@@ -105,9 +105,19 @@ function loadJsonData(url, selectTarget, emptyOption, params, successCallback, f
                 $select.append($('<option></option>').attr('value', "ANY").text("Select"));
             }
 
+            var prog = $("#institutePath").val();
+        	var study= $("#studyPath").val();
+        	var asset = $("#datafilePath").val();
+        	
             for (var i = 0; i < data.length; i++) {
-
-                $select.append($('<option></option>').attr('value', data[i][valueField]).text(data[i][textField]));
+            	  var value = data[i][valueField];
+                 if(value == prog || value == study || value == asset) {
+                	 $select.append($('<option selected></option>').attr('value', data[i][valueField]).text(data[i][textField]));
+                 } else {
+                	 $select.append($('<option></option>').attr('value', data[i][valueField]).text(data[i][textField]));
+                 }
+                 
+                
             }
             $select.select2();
             $("#registerCollectionModal").find("#accessGroupSelect").next(".select2-container").hide();

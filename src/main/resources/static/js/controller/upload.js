@@ -51,15 +51,15 @@ function loadUploadTab() {
 }
 
 function postSuccessInsInitialize(data,status) {
-	$('#instituteList').select2("val", $("#institutePath").val());
+	//$('#instituteList').select2("val", $("#institutePath").val());
 }
 
 function postSuccessStudyInitialize(data,status) {
-	$('#studyList').select2("val", $("#studyPath").val());
+	//$('#studyList').select2("val", $("#studyPath").val());
 }
 
 function postSuccessDataSetInitialize(data,status) {
-	$('#dataList').select2("val", $("#datafilePath").val());
+	//$('#dataList').select2("val", $("#datafilePath").val());
 	$("#bulkDataFilePathCollection").val($("#datafilePath").val());
 	
 }
