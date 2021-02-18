@@ -162,9 +162,9 @@ public class DoeCollectionController extends AbstractDoeController {
 				String[] attrValue = request.getParameterValues(paramName);
 				entry.setAttribute(attrName);
 				entry.setValue(attrValue[0]);
-				//if(StringUtils.isNotEmpty(entry.getValue())) {
+				if(StringUtils.isNotEmpty(entry.getValue())) {
 					metadataEntries.add(entry);
-				//}
+				}
 			} else if (paramName.startsWith("_addAttrName")) {
 				HpcMetadataEntry entry = new HpcMetadataEntry();
 				String attrId = paramName.substring("_addAttrName".length());
