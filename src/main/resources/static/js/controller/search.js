@@ -413,13 +413,16 @@ function renderDataSetName(data, type, row){
 					"data-fileName = '" + row.dataSetName + "' collectionId  = '" + row.dataSetCollectionId + "' " +
 			"permissions_role = '" + row.dataSetPermissionRole + "'" +
 			" metadata_path  = '" + row.dataSetPath+ "' metadata_set = '" + search_results_json.assetMetadata  + "'>" +
-           "<i class='fa fa-edit' data-toggle='tooltip' title='Edit Asset Metadata'></i></span>";
+           "<img src='images/Search_EditMetaData.svg' data-toggle='tooltip' title='Edit Asset Metadata' th:src='@{/images/Search_EditMetaData.svg}' " +
+			"style='width:15px;' alt='edit collection'></span>";
 			if(row.dataSetPermissionRole == 'Owner') {
 				editDataSetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collection_name = '" + row.dataSetName + "' " +
 						"collectionId  = '" + row.dataSetCollectionId + "' " +
 			    "permissions_groups ='"+ JSON.stringify(search_results_json) + "'  selectedCollection = 'Asset' " +
 			    		"access_groups  = '" + row.dataLevelAccessGroups+ "' metadata_path  = '" + row.dataSetPath+ "'>" +
-                 "<i class='fa fa-users' data-toggle='tooltip' title='Edit Asset Access Permissions'></i></span>";
+                 "<img src='images/Search_AccessGroups.svg' data-toggle='tooltip' title='Edit Asset Access Permissions' " +
+                 "th:src='@{/images/Search_AccessGroups.svg}' " +
+			     "style='width:15px;' alt='Edit Asset Access Permissions'></span>";
 			}
 		}
 			
@@ -485,13 +488,16 @@ function renderPath(data, type, row) {
 					"data-fileName = '" + row.studyName + "' collectionId  = '" + row.studyCollectionId + "'" +
 							" permissions_role = '" + row.studyPermissionRole + "' metadata_path  = '" + row.studyPath+ "' " +
 									" metadata_set = '" + search_results_json.studyMetadata  + "'>" +
-			"<i class='fa fa-edit' data-toggle='tooltip' title='Edit Study Metadata'></i></span>";
+			"<img src='images/Search_EditMetaData.svg' data-toggle='tooltip' title='Edit Study Metadata' th:src='@{/images/Search_EditMetaData.svg}' " +
+			"style='width:15px;' alt='edit collection'></span>";
 			if(row.studyPermissionRole == 'Owner') {
 				editStudySetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collection_name ='" +row.studyName + "'" +
 						" collectionId  = '" + row.studyCollectionId + "' " +
 			    " permissions_groups ='"+ JSON.stringify(search_results_json) + "'   selectedCollection = 'Study'  " +
 			    		"access_groups  = '" + row.studyLevelAccessGroups+ "' metadata_path  = '" + row.studyPath+ "'>" +
-                 "<i class='fa fa-users' data-toggle='tooltip' title='Edit Study Access Permissions'></i></span>";
+                 "<img src='images/Search_AccessGroups.svg' data-toggle='tooltip' title='Edit Study Access Permissions' " +
+                 "th:src='@{/images/Search_AccessGroups.svg}' " +
+			     "style='width:15px;' alt='Edit Study Access Permissions'</span>";
 			}
 		}
 		
@@ -501,14 +507,17 @@ function renderPath(data, type, row) {
 							" permissions_role = '" + row.programPermissionRole + "' " +
 									"metadata_path  = '" + row.institutePath+ "' " +
 									"metadata_set = '" + search_results_json.progMetadata  + "'>" +
-			"<i class='fa fa-edit' data-toggle='tooltip' title='Edit Program Metadata'></i></span>"; 
+			"<img src='images/Search_EditMetaData.svg' data-toggle='tooltip' title='Edit Program Metadata' th:src='@{/images/Search_EditMetaData.svg}' " +
+			"style='width:15px;' alt='edit collection'></span>"; 
 			
 			if(row.programPermissionRole == 'Owner') {
 				editProgramSetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' " +
 						"collection_name ='" +row.programName + "' collectionId  = '" + row.programCollectionId + "' " +
 			    "permissions_groups ='"+ JSON.stringify(search_results_json) + "'   selectedCollection = 'Program'  " +
 			    		"access_groups  = '" + row.programLevelAccessGroups+ "' metadata_path  = '" + row.institutePath+ "'>" +
-                 "<i class='fa fa-users' data-toggle='tooltip' title='Edit Program Access Permissions'></i></span>";
+                 "<img src='images/Search_AccessGroups.svg' data-toggle='tooltip' title='Edit Program Access Permissions' " +
+                 "th:src='@{/images/Search_AccessGroups.svg}' " +
+			     "style='width:15px;' alt='Edit Program Access Permissions'</span>";
 			}
 		}
 	

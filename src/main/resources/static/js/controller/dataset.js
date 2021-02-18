@@ -488,15 +488,17 @@ function renderDownload(data, type, row,accessgroups,permissions) {
 	"<i class='fas fa-copy'></i></button>";
 	
 	html += "<span class='btn btn-link btn-sm editDataFileCollectionMetadata'  metadata_path  = '" + path + "'" +
-	" metadata_set = '" + metadata  + "' data-fileName = '" + downdloadFileName + "' ><i class='fa fa-edit' data-toggle='tooltip'" +
-	" title='Edit File Metadata'></i></span>";
+	" metadata_set = '" + metadata  + "' data-fileName = '" + downdloadFileName + "' >" +
+			"<img src='images/Search_EditMetaData.svg' data-toggle='tooltip' title='Edit File Metadata' th:src='@{/images/Search_EditMetaData.svg}' " +
+			"style='width:15px;' alt='edit collection'></span>";
 	
 	html += "<a aria-label='download link' class='btn btn-link btn-sm downloadMetadata'  data_path  = '" + path + "' href='javascript:void(0);' " +
     "><i class='fas fa-file-export' data-toggle='tooltip' title='Download File Metadata'></i></a>";
 	
 	html += "<a aria-label='download link' class='btn btn-link btn-sm downloadLink' href='javascript:void(0);' " +
 	       "data-fileName = " + downdloadFileName + " data-path=" + row.download + " " +
-	        "><i class='fa fa-download' data-toggle='tooltip' title='Download File' aria-hidden='true'></i></a>";
+	        "><img src='images/Search_Download.svg' data-toggle='tooltip' title='Download File' th:src='@{/images/Search_Download.svg}' " +
+			"style='width:15px;' alt='download file'></a>";
 			
 	if(accessgroups && accessgroups.indexOf("public") == -1 && permissions && permissions == 'Owner') {		
 	 html+="&nbsp;&nbsp;<span data-filePath = '" + path + "' class='btn btn-link btn-sm deleteDataFileBtn'><i class='fas fa-trash' data-toggle='tooltip' title='Delete File'></i></span>";
