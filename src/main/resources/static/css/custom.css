@@ -178,6 +178,9 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
     display: table-cell;
     padding: 3px 10px;
 }
+.rowAttribute {
+	width:30%!important;
+}
 .fa-users,.fa-trash{
 	  color: #E87B05!important;
 }
