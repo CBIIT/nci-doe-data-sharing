@@ -1,891 +1,367 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "MoDaC API is a set of public rest API to access datasets stored in the repository.",
-    "title": "MoDaC API",
-    "version": "1.0.0"
+    "version": "1.11.0",
+    "description": "This user guide describes how to use the MoDaC API.",
+    "title": "MoDaC API"
   },
-  "host": "fsdmel-modac01t.ncifcrf.gov",
+  "host": "modac.cancer.gov",
   "basePath": "/",
-  "tags": [
-    {
-      "name": "modac-rest-api",
-      "description": "MoDaC Rest API"
-    }
-  ],
   "paths": {
-    "/api/collection/**": {
+    "/api/collection/{path}": {
       "get": {
+        "description": "This service allows you to get information about a specific collection including all of its hierarchical metadata. Use the path parameter to specify the path to the collection of interest. In the output, the collection and selfMetadataEntries elements provide information about the collection you specified, while the parentMetadataEntries element provides information about the collection that contains the collection you specified. If you set the list parameter to true, the subCollections element lists the child collections of this collection and the dataObjects element lists the data objects of this collection. The list parameter is optional and its default is false. \n\n1. **CURL COMMAND**\n  ```\n  curl -k -H \"Content-Type: application/json\" -d @<attributes-file.json> -X GET <server>/collection/{path}?list=[true|false] -H \"Accept: application/json\" -D  <response-header> -o <response-message.json> -u <Your Email ID>\n  \n  ```\n\n  2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k 'https://fsdmel-modac01t.ncifcrf.gov/api/collection/DOE_TEST_Archive/JDACS4C/JDACS4C_Pilot_1/asset_udit?list=true' -D header.txt -o output.txt -u myemailid@nih.gov\n  ```\n",
+        "summary": "Get Collection Information",
         "tags": [
-          "modac-rest-api"
+          "Get Metadata"
         ],
-        "summary": "getCollection",
-        "operationId": "getCollectionUsingGET",
+        "operationId": "CollectionByPathGet",
+        "deprecated": false,
         "produces": [
-          "application/json",
-          "application/octet-stream"
+          "application/json"
         ],
         "parameters": [
           {
-            "name": "creationTime",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "id",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "lastAccessedTime",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
+            "name": "path",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": ".*",
+            "description": ""
           },
           {
             "name": "list",
             "in": "query",
-            "description": "list",
-            "required": true,
-            "type": "boolean"
-          },
-          {
-            "name": "maxInactiveInterval",
-            "in": "query",
             "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "new",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "name": "valueNames",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
+            "type": "boolean",
+            "description": ""
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/HpcCollectionListDTO"
-            }
+            "description": "HTTP/1.1 200 OK\n\nContent-Type: application/json\n\nHPC-API-Version: 1.0.0\n\n{ \"taskId\": 4, \"destination\":    { \"fileContainerId\": \"4a3b132a-815f-11e7-8dff-22000b9923ef\", \"fileId\": \"/coll-many-files-v2-12-09-18\" } }",
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
+            "description": "Authentication Failure: \n\nHTTP/1.1 401 Unauthorized Content-Type: application/json\n\n\nJSON:\n\n{ \"errorType\": \"REQUEST_AUTHENTICATION_FAILED\",\n\n\"message\": \"Access Denied: LDAP authentication failed\",\n\n\"stackTrace\": \"…\" } "
           }
         }
       },
       "put": {
+        "description": "If your user account has the Write or Own permission level on an existing collection in MoDaC, you can upload data to that collection in the following ways: \n\n•  If the collection has any custom metadata, you can update that metadata. \n\n•  If that existing collection has been configured to contain another collection, you can add a collection. \n\n•  If that existing collection has been configured to contain data files, you can add files. \n\nThis service allows you to register a collection with MoDaC. By default, this service expects the containing collection for the collection you are registering to already exist at time of registration. However, you can optionally request that this service create the parent and higher-level collections. To do so, set the ‘createParentCollections’ indicator in the json file to true, and provide a list of metadata to create the parent collections through parentCollectionsBulkMetadataEntries. In this case, this service creates the entire collection hierarchy above the registered collection.\n\n1. **CURL COMMAND**\n  ```\n  curl -k -H \"Content-Type: application/json\" -d @<attributes-file.json> -X PUT <server>/collection/{path} -H \"Accept: application/json\" -D  <response-header> -o <response-message.json> -u <Your NCI User ID>\n  \n  ```\n  2.  **Attributes-file.json Example**\n  ```\n     {\n        \"metadataEntries\": [{\n            \"attribute\": \"study_identifier\",\n            \"value\": \"study_1_udit\"\n          },\n          {\n            \"attribute\": \"collection_type\",\n            \"value\": \"Study\"\n          }\n        ],\n        \"createParentCollections\": true,\n        \"parentCollectionsBulkMetadataEntries\": {\n          \"defaultCollectionMetadataEntries\": [{\n            \"attribute\": \"collection_type\",\n            \"value\": \"Folder\"\n          }]\n        }\n      }\n\n  ```\n  3. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -H \"Content-Type: application/json\" -d @collection.json -X PUT https://fsdmel-modac01t.ncifcrf.gov/api/collection/DOE_TEST_Archive/testnew/1_18_2020 -H \"Accept: application/json\" -D header.txt -o output.json -u us39@georgetown.edu\n  ```\n",
+        "summary": "Register a Collection",
         "tags": [
-          "modac-rest-api"
+          "Upload Data"
         ],
-        "summary": "registerCollection",
-        "operationId": "registerCollectionUsingPUT",
-        "consumes": [
-          "application/json"
-        ],
+        "operationId": "CollectionByPathPut",
+        "deprecated": false,
         "produces": [
-          "*/*"
+          "application/json"
         ],
         "parameters": [
           {
-            "in": "body",
-            "name": "collectionRegistration",
-            "description": "collectionRegistration",
+            "name": "path",
+            "in": "path",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/HpcCollectionRegistrationDTO"
-            }
-          },
-          {
-            "name": "creationTime",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "id",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "lastAccessedTime",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "maxInactiveInterval",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "new",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "name": "valueNames",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
+            "type": "string",
+            "pattern": ".*",
+            "description": ""
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "type": "string"
-            }
+            "description": "HTTP/1.1 200 OK\n\nContent-Type: application/json\n\nHPC-API-Version: 1.0.0\n\n{ \"taskId\": 4, \"destination\":    { \"fileContainerId\": \"4a3b132a-815f-11e7-8dff-22000b9923ef\", \"fileId\": \"/coll-many-files-v2-12-09-18\" } }",
+            "headers": {}
           },
-          "201": {
-            "description": "Created"
+          "400": {
+            "description": "Bad Request"
           },
           "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
+            "description": "Authentication Failure: \n\nHTTP/1.1 401 Unauthorized Content-Type: application/json\n\n\nJSON:\n\n{ \"errorType\": \"REQUEST_AUTHENTICATION_FAILED\",\n\n\"message\": \"Access Denied: LDAP authentication failed\",\n\n\"stackTrace\": \"…\" } "
           }
         }
       }
     },
     "/api/collection/query": {
       "post": {
+        "description": "This service allows you to perform a query for a collection. \n\n  1. **CURL COMMAND TO GET GET A BOOKMARK BY NAME**\n  ```\n  curl -k -H \"Content-Type: application/json\" -d @<attributes-file.json> -X POST <server>/collection/query -H \"Accept: application/json\" -D  <response-header> -o <response-message.json> -u <Your Email ID>\n  \n  ```\n  2.  **Attributes-file.json Example**\n  ```\n         {\n          \"compoundQuery\": {\n          \"operator\": \"AND\",\n          \"queries\": [{\n        \"attribute\": \"access_group\",\n        \"value\": \"public\",\n        \"operator\": \"LIKE\"\n          },\n                         {\n            \"attribute\": \"collection_type\",\n          \"value\": \"Asset\",\n        \"operator\": \"LIKE\"\n          }]},\n              \"detailedResponse\": true,\n            \"page\": 1,\n            \"pageSize\": 100,\n            \"totalCount\": true,\n  \n        }\n\n\n  ```\n  3. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k -H \"Content-Type: application/json\" -d @Attributes-file.json -X POST https://fsdmel-modac01t.ncifcrf.gov/api/collection/query -H \"Accept: application/json\" -D demo2_udit.txt -o output_2_udit.json -u us39@georgetown.edu\n  ``` \n",
+        "summary": "Find Collection by Metadata Query",
         "tags": [
-          "modac-rest-api"
+          "Search Data"
         ],
-        "summary": "queryCollections",
-        "operationId": "queryCollectionsUsingPOST",
-        "consumes": [
-          "application/xml",
+        "operationId": "CollectionQueryPost",
+        "deprecated": false,
+        "produces": [
           "application/json"
         ],
-        "produces": [
-          "application/json",
-          "application/xml"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "compoundMetadataQuery",
-            "description": "compoundMetadataQuery",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/HpcCompoundMetadataQueryDTO"
-            }
-          },
-          {
-            "name": "creationTime",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "id",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "lastAccessedTime",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "maxInactiveInterval",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "new",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "name": "valueNames",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/HpcCollectionListDTO"
-            }
+            "description": "HTTP/1.1 200 OK\n\nContent-Type: application/json\n\nHPC-API-Version: 1.0.0\n\n{ \"taskId\": 4, \"destination\":    { \"fileContainerId\": \"4a3b132a-815f-11e7-8dff-22000b9923ef\", \"fileId\": \"/coll-many-files-v2-12-09-18\" } }",
+            "headers": {}
           },
-          "201": {
-            "description": "Created"
+          "400": {
+            "description": "Bad Request"
           },
           "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
+            "description": "Authentication Failure: \n\nHTTP/1.1 401 Unauthorized Content-Type: application/json\n\n\nJSON:\n\n{ \"errorType\": \"REQUEST_AUTHENTICATION_FAILED\",\n\n\"message\": \"Access Denied: LDAP authentication failed\",\n\n\"stackTrace\": \"…\" } "
           }
         }
       }
     },
-    "/api/dataObject/**/download": {
+    "/api/dataObject/{path}/generateDownloadRequestURL": {
       "post": {
+        "description": "If your user account has the Read, Write, or Own permission level on a collection of data files or a single data file in MoDaC, you can download that data. This service allows you to generate a download request URL to download data file directly from MoDaC.\n\n1. **CURL COMMAND**\n   ```\n   curl -k -H \"Content-Type: application/json\" -X GET <server>/ dataObject/{path}/generateDownloadRequestURL -H \"Accept: application/json\" -D  <response-header> -o <response-message.json> -u <Your NCI User ID>\n  \n   ```\n   2. **EXAMPLE - CURL COMMAND**\n   ```\n   curl -k -H \"Content-Type: application/json\" -X GET https://fsdmel-modac01t.ncifcrf.gov/api/dataObject/DOE_TEST_Archive/testnew/12_1_2020/Data_12_1/bulk_metadata_file2.txt/generateDownloadRequestURL -H \"Accept: application/json\" -D demo1_udit.txt -o output_1_udit.json -u sehgalu2\n   ``` \n",
+        "summary": "Generate a Download Request URL",
         "tags": [
-          "modac-rest-api"
+          "Download Data"
         ],
-        "summary": "synchronousDownload",
-        "operationId": "synchronousDownloadUsingPOST_1",
-        "consumes": [
-          "application/json"
-        ],
+        "operationId": "DataObjectGenerateDownloadRequestURLByPathGet",
+        "deprecated": false,
         "produces": [
-          "*/*"
+          "application/json"
         ],
         "parameters": [
           {
-            "name": "creationTime",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "id",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "lastAccessedTime",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "maxInactiveInterval",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "new",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "name": "valueNames",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
+            "name": "path",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": ".*",
+            "description": ""
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "type": "object"
-            }
+            "headers": {}
           },
-          "201": {
-            "description": "Created"
+          "400": {
+            "description": "Bad Request"
           },
           "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
+            "description": "Authentication Failure: \n\nHTTP/1.1 401 Unauthorized Content-Type: application/json\n\n\nJSON:\n\n{ \"errorType\": \"REQUEST_AUTHENTICATION_FAILED\",\n\n\"message\": \"Access Denied: LDAP authentication failed\",\n\n\"stackTrace\": \"…\" } "
           }
         }
       }
     },
     "/api/dataObject/query": {
       "post": {
+        "description": "This service allows you to perform a query for a data file. You can perform a simple query, or you can combine multiple simple queries into a compound query.\n\nA simple query consists of the following parts: \n\n•  \"attribute\"\n\n•  \"value\"\n\n•  \"operator\"\n\n•  “levelFilter”\n\n•  “attributeMatch”\n\nA compound query consists of the following parts:\n\n1.  Join operator\n\n2.  List of queries (filtering criteria)\n\n3.  List of compound queries (filtering criteria)\n\nA compound query should at least have one simple query that could be part of a list of queries or a list of nested compound queries.\n\nYou can use a join operator to combine multiple simple or compound queries (or both simple and compound). Valid values are as follows: \n\n“AND” \n\n“OR”\n\nConsider the following indicators: \n\n•detailedResponse: By default, the search returns only the path of matched resulted data files. If “detailedResponse=true”, this service returns data files with metadata.\n\n•page: Ask for a specific page of results. By default, the query returns the first 100 results in page 1, the second 100 in page 2, and so on. If omitted, the query fetches page 1. \n\n•totalCount: If you set this indicator to ‘true’, this service returns a total count of data files matching the query regardless of the query limit and page. The default for this indicator is false, so if you omit it, this service does not return a total count. \n\n1. **CURL COMMAND**\n```\ncurl -k -H \"Content-Type: application/json\" -d @<attributes-file.json> -X POST <server>/dataobject/query -H \"Accept: application/json\" -D  <response-header> -o <response-message.json> -u <Your NCI User ID>\n\n```\n2.  **Attributes-file.json Example**\n```\n    {\n    \"compoundQuery\": {\n      \"operator\": \"AND\",\n      \"queries\": [{\n          \"attribute\": \"asset_identifier\",\n          \"value\": \"H1_Selectivity_Assay\",\n          \"operator\": \"LIKE\"\n        },\n        {\n          \"attribute\": \"data_transfer_status\",\n          \"value\": \"ARCHIVED\",\n          \"operator\": \"LIKE\"\n                  }\n                ]\n              },\n          \"page\": 1,\n          \"totalCount\": true\n        }\n\n```\n3. **EXAMPLE - CURL COMMAND**\n```\ncurl -H \"Content-Type: application/json\" -d @dataobjectquery.json -X POST https://fsdmel-modac01t.ncifcrf.gov/api/dataObject/query?returnParent=true -H \"Accept: application/json\" -D header.txt -o output_true.json -u us39@georgetown.edu\n```\n\n",
+        "summary": "Find Data File by Compound Metadata Query",
         "tags": [
-          "modac-rest-api"
+          "Search Data"
         ],
-        "summary": "queryDataObjects",
-        "operationId": "queryDataObjectsUsingPOST",
-        "consumes": [
-          "application/xml",
+        "operationId": "DataObjectQueryPost",
+        "deprecated": false,
+        "produces": [
           "application/json"
         ],
-        "produces": [
-          "application/json",
-          "application/xml"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "compoundMetadataQuery",
-            "description": "compoundMetadataQuery",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/HpcCompoundMetadataQueryDTO"
-            }
-          },
-          {
-            "name": "creationTime",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "id",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "lastAccessedTime",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "maxInactiveInterval",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "new",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "name": "returnParent",
-            "in": "query",
-            "description": "returnParent",
-            "required": true,
-            "type": "boolean"
-          },
-          {
-            "name": "valueNames",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/HpcDataObjectListDTO"
-            }
+            "description": "HTTP/1.1 200 OK\n\nContent-Type: application/json\n\nHPC-API-Version: 1.0.0\n\n{ \"taskId\": 4, \"destination\":    { \"fileContainerId\": \"4a3b132a-815f-11e7-8dff-22000b9923ef\", \"fileId\": \"/coll-many-files-v2-12-09-18\" } }",
+            "headers": {}
           },
-          "201": {
-            "description": "Created"
+          "400": {
+            "description": "Bad Request"
           },
           "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
+            "description": "Authentication Failure: \n\nHTTP/1.1 401 Unauthorized Content-Type: application/json\n\n\nJSON:\n\n{ \"errorType\": \"REQUEST_AUTHENTICATION_FAILED\",\n\n\"message\": \"Access Denied: LDAP authentication failed\",\n\n\"stackTrace\": \"…\" } "
           }
         }
       }
     },
-    "/api/v2/dataObject/**": {
-      "get": {
+    "/api/v2/collection/{path}/download": {
+      "post": {
+        "description": "If your user account has the Read, Write, or Own permission level on a collection of data files or a single data file in MoDaC, you can download that data. This service allows you to transfer a data file from MoDaC to an accessible Globus location (asynchronous download) or an AWS S3 bucket. The path parameter represents the logical path of the collection registered with MoDaC. Provide either a Globus destination which describes the endpoint, or S3 destination which includes S3 bucket and account. \n\nFor a Globus destination, if you set the optional ‘destinationOverwrite’ indicator to ‘true’ and if the destination file exists, this service overwrites the destination file. If you omit this indicator and the destination file exists, then this service rejects the transfer request.  \n\n**Note**: As a prerequisite for downloading data from MoDaC to a Globus endpoint, you must grant write access to the service account. For details, refer to \"Preparing to Use Globus with MoDaC\"  \n\nFor an S3 destination, valid S3 account information is mandatory. \n\n1. **CURL COMMAND**\n ```\n curl -k -H \"Content-Type: application/json\" -d @<Attributes-file.json> -X POST <server>/v2/collection/{path}/download -H \"Accept: application/json\" -D  <response-header> -o <response-message.json> -u <Your Email ID>\n \n ```\n 2.  **Attributes-file.json Example**\n \n ```\n  a. To request a download to a Globus endpoint\n        { \n          \"globusDownloadDestination\": {\n                                \"destinationOverwrite\" : true,\n            \"destinationLocation\": {\n              \"fileContainerId\": \"4a3b132a-815f-11e7-8dff-2\",\n              \"fileId\": \"/coll-Udit-2-15-2021\"\n            }\n          }\n        }\n        \n  b. To request a download to AWS S3\n        { \n          \"s3DownloadDestination\": {\n            \"destinationLocation\": {\n              \"fileContainerId\": \"ccbr-sbg-1\",\n              \"fileId\": \"coll-many-files-12-10-18\"\n            },\n            \"account\" : {\n              \"accessKey\" : \"<insert-access-key\",\n              \"secretKey\" : \"<insert-secret-key\",\n              \"region\" :\"us-east-2\"\n            }\n          }\n        }\n\n\n ```\n 3. **EXAMPLE - CURL COMMAND**\n ```\n curl -k -H \"Content-Type: application/json\" -d @Attributes-file.json -X POST https://fsdmel-modac01t.ncifcrf.gov/api/v2/collection/DOE_TEST_Archive/JDACS4C/JDACS4C_Pilot_1/asset_udit/download -H \"Accept: application/json\" -D header.txt -o output.json -u us39@georgetown.edu\n ```\n",
+        "summary": "Download a Collection (V2)",
         "tags": [
-          "modac-rest-api"
+          "Download Data"
         ],
-        "summary": "getDataObject",
-        "operationId": "getDataObjectUsingGET",
+        "operationId": "V2CollectionDownloadByPathPost",
+        "deprecated": false,
         "produces": [
-          "application/json",
-          "application/octet-stream"
+          "application/json"
         ],
         "parameters": [
           {
-            "name": "creationTime",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "id",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "includeAcl",
-            "in": "query",
-            "description": "includeAcl",
+            "name": "path",
+            "in": "path",
             "required": true,
-            "type": "boolean"
+            "type": "string",
+            "pattern": ".*",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTTP/1.1 200 OK\n\nContent-Type: application/json\n\nHPC-API-Version: 1.0.0\n\n{ \"taskId\": 4, \"destination\":    { \"fileContainerId\": \"4a3b132a-815f-11e7-8dff-22000b9923ef\", \"fileId\": \"/coll-many-files-v2-12-09-18\" } }",
+            "headers": {}
           },
+          "401": {
+            "description": "Authentication Failure: \n\nHTTP/1.1 401 Unauthorized Content-Type: application/json\n\n\nJSON:\n\n{ \"errorType\": \"REQUEST_AUTHENTICATION_FAILED\",\n\n\"message\": \"Access Denied: LDAP authentication failed\",\n\n\"stackTrace\": \"…\" } "
+          }
+        }
+      }
+    },
+    "/api/v2/dataObject/{path}": {
+      "get": {
+        "description": "This service allows you to get information about a specific data file including all of its hierarchical metadata. Use the path parameter to specify the path to the collection of interest. In the output, the dataObject and selfMetadataEntries elements provide information about the file you specified, while the parentMetadataEntries element provides information about the collection that contains the file you specified.\n\n1. **CURL COMMAND**\n\n  ```\n  A) When IncludeAcl is set to true\n  \n  curl -k '<DataObject Path>?includeAcl=true' -D header.txt -o output.txt -u <Your Email Id>\n  \n  B) When IncludeAcl is set to false\n  \n  curl -k '<DataObject Path>?includeAcl=false' -D header.txt -o output.txt -u <Your Email Id>\n  \n  ```\n  2. **EXAMPLE - CURL COMMAND**\n  ```\n  A) When IncludeAcl is set to true\n  \n  curl -k 'https://fsdmel-modac01t.ncifcrf.gov/api/v2/dataObject/DOE_TEST_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data/combined_rnaseq_data_lincs1000_combat?includeAcl=true' -D header.txt -o output.txt -u us39@georgetown.edu\n  \n  B) When IncludeAcl is set to false\n  \n  curl -k 'https://fsdmel-modac01t.ncifcrf.gov/api/v2/dataObject/DOE_TEST_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data/combined_rnaseq_data_lincs1000_combat?includeAcl=false' -D header.txt -o output.txt -u us39@georgetown.edu\n  ```\n",
+        "summary": "Get Data File Information",
+        "tags": [
+          "Get Metadata"
+        ],
+        "operationId": "DataObjectByPathGet",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
           {
-            "name": "lastAccessedTime",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "maxInactiveInterval",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "new",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "name": "valueNames",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
+            "name": "path",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": ".*",
+            "description": ""
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/HpcDataObjectListDTO"
-            }
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
+            "description": "Authentication Failure: \n\nHTTP/1.1 401 Unauthorized Content-Type: application/json\n\n\nJSON:\n\n{ \"errorType\": \"REQUEST_AUTHENTICATION_FAILED\",\n\n\"message\": \"Access Denied: LDAP authentication failed\",\n\n\"stackTrace\": \"…\" } "
           }
         }
       },
       "put": {
+        "description": "If your user account has the Write or Own permission level on an existing collection in MoDaC, you can upload data to that collection in the following ways: \n\n•  If the collection has any custom metadata, you can update that metadata. \n\n•  If that existing collection has been configured to contain another collection, you can add a collection. \n\n•  If that existing collection has been configured to contain data files, you can add files. \n\nThis service allows you to register a data file.\n\n1. **CURL COMMAND**\n ```\n A. Sync Registration \n \ncurl -k -F \"dataObjectRegistration=@<Attributes-File.json>;type=application/json\" -F \"doeDataFile=@<filePath>\" -X PUT <server>/api/v2/dataObject/<collection path>/<file name> -u < Email ID>\n\nB. Async Regitration\ncurl -k -F \"dataObjectRegistration=@globus.json;type=application/json\" -X PUT <server>/api/v2/dataObject/<collection path>/<dataObject Name> -D header.txt -o output.json -u <Your Email ID>\n \n ```\n 2.  **Attributes-file.json Example**\n \n ```\n  A. Sync Upload - Attributes-File.json\n        { \n          \"metadataEntries\": [\n            {\n              \"attribute\": \"description\",\n              \"value\": \"my-dataObject-description\"\n            },\n            {\n              \"attribute\": \"my-second-attribute-name\",\n              \"value\": \"my-second-attribute-value\"\n            }\n          ]\n      }\n      \n  B. Register from Globus - AttributeS-File.json\n  \n         {\n            \"globusUploadSource\": {\n              \"sourceLocation\": {\n                \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n                \"fileId\": \"test.txt\"\n              }\n            },\n            \"metadataEntries\": [{\n              \"attribute\": \"description\",\n              \"value\": \"Tes1\"\n            }, {\n              \"attribute\": \"Asset Type\",\n              \"value\": \"test\"\n            },{\n                          \"attribute\": \"Asset_identifier\",\n                          \"value\": \"test\"\n                  },{\n                          \"attribute\": \"Asset_name\",\n                          \"value\": \"test\"\n                  }]\n          }\n        \n  C. Register from S3 - AttributeS-File.json\n          {\n              \"s3UploadSource\": {\n                \"sourceLocation\": {\n                  \"fileContainerId\": \"s3-bucket-name\",\n                  \"fileId\": \"s3-object-key\"\n                },\n                \"account\" : {\n                  \"accessKey\" : \"aws-access-key\",\n                  \"secretKey\" : \"aws-secret-key\",\n                  \"region\" :\"aws-region\"\n                }\n              },\n              \"metadataEntries\": [\n                {\n                  \"attribute\": \"description\",\n                  \"value\": \"my-file-description\"\n                }, \n                {\n                  \"attribute\": \"my-second-attribute-name\",\n                  \"value\": \"my-second-attribute-description\"\n                }\n              ]\n            }\n\n ```\n 3. **EXAMPLE - CURL COMMAND**\n \n ```\n A. Sync Registration \n curl -k -F \"dataObjectRegistration=@syncupload.json;type=application/json\" -F \"doeDataFile=@header.txt\" -X PUT https://fsdmel-modac01t.ncifcrf.gov/api/v2/dataObject/DOE_TEST_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data/header_udit.txt -u us39@georgetown.edu\n \n A. Aync Registration\n curl -k -F \"dataObjectRegistration=@globus.json;type=application/json\" -X PUT https://fsdmel-modac01t.ncifcrf.gov/api/v2/dataObject/DOE_TEST_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data/test_1_28_2021_globus_new.txt -D header.txt -o output.json -u us39@georgetown.edu\n ```",
+        "summary": "Register Data File",
         "tags": [
-          "modac-rest-api"
+          "Upload Data"
         ],
-        "summary": "registerDataObject",
-        "operationId": "registerDataObjectUsingPUT",
-        "consumes": [
-          "multipart/form-data"
-        ],
+        "operationId": "DataObjectByPathPut",
+        "deprecated": false,
         "produces": [
-          "application/json",
-          "application/xml"
-        ],
-        "parameters": [
-          {
-            "name": "creationTime",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "in": "body",
-            "name": "dataObjectRegistration",
-            "description": "dataObjectRegistration",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/HpcDataObjectRegistrationRequestDTO"
-            }
-          },
-          {
-            "in": "body",
-            "name": "doeDataFile",
-            "description": "doeDataFile",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "binary"
-            }
-          },
-          {
-            "name": "id",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "lastAccessedTime",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "maxInactiveInterval",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "new",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "name": "valueNames",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "string"
-            }
-          },
-          "201": {
-            "description": "Created"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/api/v2/dataObject/**/download": {
-      "post": {
-        "tags": [
-          "modac-rest-api"
-        ],
-        "summary": "synchronousDownload",
-        "operationId": "synchronousDownloadUsingPOST",
-        "consumes": [
           "application/json"
         ],
-        "produces": [
-          "application/json",
-          "application/octet-stream"
-        ],
         "parameters": [
           {
-            "name": "creationTime",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "in": "body",
-            "name": "downloadRequest",
-            "description": "downloadRequest",
+            "name": "path",
+            "in": "path",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/HpcDownloadRequestDTO"
-            }
-          },
-          {
-            "name": "id",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "lastAccessedTime",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "maxInactiveInterval",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "new",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "name": "valueNames",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
+            "type": "string",
+            "pattern": ".*",
+            "description": ""
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "type": "string"
-            }
+            "description": "HTTP/1.1 200 OK\n\nContent-Type: application/json\n\nHPC-API-Version: 1.0.0\n\n{ \"taskId\": 4, \"destination\":    { \"fileContainerId\": \"4a3b132a-815f-11e7-8dff-22000b9923ef\", \"fileId\": \"/coll-many-files-v2-12-09-18\" } }",
+            "headers": {}
           },
-          "201": {
-            "description": "Created"
+          "400": {
+            "description": "Bad Request"
           },
           "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
+            "description": "Authentication Failure: \n\nHTTP/1.1 401 Unauthorized Content-Type: application/json\n\n\nJSON:\n\n{ \"errorType\": \"REQUEST_AUTHENTICATION_FAILED\",\n\n\"message\": \"Access Denied: LDAP authentication failed\",\n\n\"stackTrace\": \"…\" } "
           }
         }
       }
     },
-    "/api/v2/registration": {
-      "put": {
+    "/api/v2/{path}/download/": {
+      "post": {
+        "description": "If your user account has the Read, Write, or Own permission level on a collection of data files or a single data file in MoDaC, you can download that data. This service allows you to transfer a data file from MoDaC to one of the following possible destinations: \n\n• Your file system (synchronous download) \n\n• Globus endpoint (asynchronous download) \n\n• AWS S3 (asynchronous download) \n\nAs a prerequisite for downloading data from MoDaC to a Globus endpoint, you must grant write access to the service account. For details, refer to \"Preparing to Use Globus with MoDaC\"  \n\n1. **CURL COMMAND**\n   ```\n    curl -k -H \"Content-Type: application/json\" -d @<attributes-file.json> -X POST <server>/v2/dataObject/{path:.*}/download -H \"Accept: application/json\" -D  <response-header> -o <response-message.json> -u <Your NCI User ID>\n  \n  2.  **JSON FILE EXAMPLES**\n  ``` \n  a. To request download to FileSystem\n                \n        { \n          \"metadataEntries\": [\n            {\n              \"attribute\": \"description\",\n              \"value\": \"my-dataObject-description\"\n            },\n            {\n              \"attribute\": \"my-second-attribute-name\",\n              \"value\": \"my-second-attribute-value\"\n            }\n          ]\n      }\n\n  \n  b. To request a download to a Globus endpoint\n\n      \n      \"JSON:\n      {\n        \"globusDownloadDestination\": {\n          \"destinationLocation\": {\n          \"fileContainerId\": \"4a3b132a-815f-11e7-8dff-22000b9923ef\",\n            \"fileId\": \"test-2-02-21\"\n          },\n       \"destinationOverwrite\" : true,\n        }\n      }\n     \n      \n c.   To request a download to Amazon S3 bucket\n          {\n            \"s3DownloadDestination\": {\n              \"destinationLocation\": {\n                \"fileContainerId\": \"ccbr-sbg-1\",\n                \"fileId\": \"demo-file-2-2-21\"\n              },\n              \"account\" : {\n                \"accessKey\" : \"***\",\n                \"secretKey\" : \"***\",\n                \"region\" :\"us-east-1\",\n              },\n          \"destinationURL\" : “https://...”\n            }\n          }\n\n\n  \n  ```\n  3. **EXAMPLE - CURL COMMAND to download file to Globus**\n  ```\n  curl -k -H \"Content-Type: application/json\" -d @attributes-file.json -X POST https://fsdmel-modac01t.ncifcrf.gov/api/v2/dataObject/DOE_TEST_Archive/testnew/12_1_2020/Data_12_1/bulk_metadata_file2.xlsx/download -H \"Accept: application/json\" -D header.txt -u us39@georgetown.edu\n  ```\n  \n  \n  4. **EXAMPLE - CURL COMMAND to download file to s3**\n  \n  \n  ```\n  curl -k -H \"Content-Type: application/json\" -d @attributes-file.json -X POST https://fsdmel-modac01t.ncifcrf.gov/api/v2/dataObject/DOE_TEST_Archive/testnew/12_1_2020/Data_12_1/bulk_metadata_file2.xlsx/download -H \"Accept: application/json\" -D header_S3.txt -u us39@georgetown.edu\n  ```\n  \n  \n  \n  5.  **EXAMPLE - CURL COMMAND to download file to FileSystem**\n  ```\n  curl -k -H \"Content-Type: application/json\" -d @attributes-file.json -X POST https://fsdmel-modac01t.ncifcrf.gov/api/v2/dataObject/DOE_TEST_Archive/testnew/12_1_2020/Data_12_1/bulk_metadata_file2.xlsx/download -H \"Accept: application/json\" -D header_local.txt -u us39@georgetown.edu\n  ```\n",
+        "summary": "Download a Data File (V2)",
         "tags": [
-          "modac-rest-api"
+          "Download Data"
         ],
-        "summary": "registerBulkDataObjects",
-        "operationId": "registerBulkDataObjectsUsingPUT",
-        "consumes": [
-          "multipart/form-data"
-        ],
+        "operationId": "V2DataObjectDownloadByPathPost",
+        "deprecated": false,
         "produces": [
-          "application/json",
-          "application/xml"
+          "application/json"
         ],
         "parameters": [
           {
-            "in": "body",
-            "name": "bulkDataObjectRegistrationRequest",
-            "description": "bulkDataObjectRegistrationRequest",
+            "name": "path",
+            "in": "path",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/HpcBulkDataObjectRegistrationRequestDTO"
-            }
-          },
-          {
-            "name": "creationTime",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "id",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "lastAccessedTime",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "maxInactiveInterval",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "new",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "name": "valueNames",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
+            "type": "string",
+            "pattern": ".*",
+            "description": ""
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "type": "string"
-            }
+            "description": "HTTP/1.1 200 OK\n\nContent-Type: application/json\n\nHPC-API-Version: 1.0.0\n\n{ \"taskId\": 4, \"destination\":    { \"fileContainerId\": \"4a3b132a-815f-11e7-8dff-22000b9923ef\", \"fileId\": \"/coll-many-files-v2-12-09-18\" } }",
+            "headers": {}
           },
-          "201": {
-            "description": "Created"
+          "400": {
+            "description": "Bad Request"
           },
           "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
+            "description": "Authentication Failure: \n\nHTTP/1.1 401 Unauthorized Content-Type: application/json\n\n\nJSON:\n\n{ \"errorType\": \"REQUEST_AUTHENTICATION_FAILED\",\n\n\"message\": \"Access Denied: LDAP authentication failed\",\n\n\"stackTrace\": \"…\" } "
           }
         }
       }
     }
   },
   "definitions": {
-    "Calendar": {
+    "HpcBulkDataObjectDownloadRequestDTO": {
       "type": "object",
       "properties": {
-        "calendarType": {
-          "type": "string"
-        },
-        "firstDayOfWeek": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "lenient": {
+        "appendPathToDownloadDestination": {
           "type": "boolean"
         },
-        "minimalDaysInFirstWeek": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "time": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "timeInMillis": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "timeZone": {
-          "$ref": "#/definitions/TimeZone"
-        },
-        "weekDateSupported": {
-          "type": "boolean"
-        },
-        "weekYear": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "weeksInWeekYear": {
-          "type": "integer",
-          "format": "int32"
-        }
-      },
-      "title": "Calendar"
-    },
-    "HpcBulkDataObjectRegistrationRequestDTO": {
-      "type": "object",
-      "properties": {
-        "dataObjectRegistrationItems": {
+        "collectionPaths": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/HpcDataObjectRegistrationItemDTO"
+            "type": "string"
           }
         },
-        "directoryScanRegistrationItems": {
+        "dataObjectPaths": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/HpcDirectoryScanRegistrationItemDTO"
+            "type": "string"
           }
         },
-        "dryRun": {
-          "type": "boolean"
-        },
-        "uiURL": {
-          "type": "string",
+        "globusDownloadDestination": {
           "xml": {
-            "name": "uiURL",
+            "name": "globusDownloadDestination",
             "attribute": false,
             "wrapped": false
-          }
+          },
+          "$ref": "#/definitions/HpcGlobusDownloadDestination"
+        },
+        "googleDriveDownloadDestination": {
+          "xml": {
+            "name": "googleDriveDownloadDestination",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcGoogleDriveDownloadDestination"
+        },
+        "s3DownloadDestination": {
+          "xml": {
+            "name": "s3DownloadDestination",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcS3DownloadDestination"
         }
       },
-      "title": "HpcBulkDataObjectRegistrationRequestDTO",
+      "title": "HpcBulkDataObjectDownloadRequestDTO",
       "xml": {
-        "name": "HpcBulkDataObjectRegistrationRequestDTO",
+        "name": "HpcBulkDataObjectDownloadRequestDTO",
         "attribute": false,
         "wrapped": false
       }
@@ -934,240 +410,6 @@
       "title": "HpcBulkMetadataEntry",
       "xml": {
         "name": "HpcBulkMetadataEntry",
-        "attribute": false,
-        "wrapped": false
-      }
-    },
-    "HpcCollection": {
-      "type": "object",
-      "properties": {
-        "absolutePath": {
-          "type": "string",
-          "xml": {
-            "name": "absolutePath",
-            "attribute": false,
-            "wrapped": false
-          }
-        },
-        "collectionId": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "collectionInheritance": {
-          "type": "string",
-          "xml": {
-            "name": "collectionInheritance",
-            "attribute": false,
-            "wrapped": false
-          }
-        },
-        "collectionMapId": {
-          "type": "string",
-          "xml": {
-            "name": "collectionMapId",
-            "attribute": false,
-            "wrapped": false
-          }
-        },
-        "collectionName": {
-          "type": "string",
-          "xml": {
-            "name": "collectionName",
-            "attribute": false,
-            "wrapped": false
-          }
-        },
-        "collectionOwnerName": {
-          "type": "string",
-          "xml": {
-            "name": "collectionOwnerName",
-            "attribute": false,
-            "wrapped": false
-          }
-        },
-        "collectionOwnerZone": {
-          "type": "string",
-          "xml": {
-            "name": "collectionOwnerZone",
-            "attribute": false,
-            "wrapped": false
-          }
-        },
-        "collectionParentName": {
-          "type": "string",
-          "xml": {
-            "name": "collectionParentName",
-            "attribute": false,
-            "wrapped": false
-          }
-        },
-        "comments": {
-          "type": "string",
-          "xml": {
-            "name": "comments",
-            "attribute": false,
-            "wrapped": false
-          }
-        },
-        "createdAt": {
-          "xml": {
-            "name": "createdAt",
-            "attribute": false,
-            "wrapped": false
-          },
-          "$ref": "#/definitions/Calendar"
-        },
-        "dataObjects": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/HpcCollectionListingEntry"
-          }
-        },
-        "info1": {
-          "type": "string",
-          "xml": {
-            "name": "info1",
-            "attribute": false,
-            "wrapped": false
-          }
-        },
-        "info2": {
-          "type": "string",
-          "xml": {
-            "name": "info2",
-            "attribute": false,
-            "wrapped": false
-          }
-        },
-        "specColType": {
-          "type": "string",
-          "xml": {
-            "name": "specColType",
-            "attribute": false,
-            "wrapped": false
-          }
-        },
-        "subCollections": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/HpcCollectionListingEntry"
-          }
-        }
-      },
-      "title": "HpcCollection",
-      "xml": {
-        "name": "HpcCollection",
-        "attribute": false,
-        "wrapped": false
-      }
-    },
-    "HpcCollectionDTO": {
-      "type": "object",
-      "properties": {
-        "collection": {
-          "xml": {
-            "name": "collection",
-            "attribute": false,
-            "wrapped": false
-          },
-          "$ref": "#/definitions/HpcCollection"
-        },
-        "metadataEntries": {
-          "xml": {
-            "name": "metadataEntries",
-            "attribute": false,
-            "wrapped": false
-          },
-          "$ref": "#/definitions/HpcMetadataEntries"
-        },
-        "permission": {
-          "type": "string",
-          "xml": {
-            "name": "permission",
-            "attribute": false,
-            "wrapped": false
-          },
-          "enum": [
-            "NONE",
-            "OWN",
-            "READ",
-            "WRITE"
-          ]
-        }
-      },
-      "title": "HpcCollectionDTO",
-      "xml": {
-        "name": "HpcCollectionDTO",
-        "attribute": false,
-        "wrapped": false
-      }
-    },
-    "HpcCollectionListDTO": {
-      "type": "object",
-      "properties": {
-        "collectionPaths": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "collections": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/HpcCollectionDTO"
-          }
-        },
-        "limit": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "page": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "totalCount": {
-          "type": "integer",
-          "format": "int32"
-        }
-      },
-      "title": "HpcCollectionListDTO",
-      "xml": {
-        "name": "HpcCollectionListDTO",
-        "attribute": false,
-        "wrapped": false
-      }
-    },
-    "HpcCollectionListingEntry": {
-      "type": "object",
-      "properties": {
-        "createdAt": {
-          "xml": {
-            "name": "createdAt",
-            "attribute": false,
-            "wrapped": false
-          },
-          "$ref": "#/definitions/Calendar"
-        },
-        "dataSize": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "id": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "path": {
-          "type": "string",
-          "xml": {
-            "name": "path",
-            "attribute": false,
-            "wrapped": false
-          }
-        }
-      },
-      "title": "HpcCollectionListingEntry",
-      "xml": {
-        "name": "HpcCollectionListingEntry",
         "attribute": false,
         "wrapped": false
       }
@@ -1280,233 +522,6 @@
         "wrapped": false
       }
     },
-    "HpcDataObject": {
-      "type": "object",
-      "properties": {
-        "absolutePath": {
-          "type": "string",
-          "xml": {
-            "name": "absolutePath",
-            "attribute": false,
-            "wrapped": false
-          }
-        },
-        "collectionId": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "collectionName": {
-          "type": "string",
-          "xml": {
-            "name": "collectionName",
-            "attribute": false,
-            "wrapped": false
-          }
-        },
-        "createdAt": {
-          "xml": {
-            "name": "createdAt",
-            "attribute": false,
-            "wrapped": false
-          },
-          "$ref": "#/definitions/Calendar"
-        },
-        "dataName": {
-          "type": "string",
-          "xml": {
-            "name": "dataName",
-            "attribute": false,
-            "wrapped": false
-          }
-        },
-        "dataOwnerName": {
-          "type": "string",
-          "xml": {
-            "name": "dataOwnerName",
-            "attribute": false,
-            "wrapped": false
-          }
-        },
-        "dataPath": {
-          "type": "string",
-          "xml": {
-            "name": "dataPath",
-            "attribute": false,
-            "wrapped": false
-          }
-        },
-        "dataSize": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "id": {
-          "type": "integer",
-          "format": "int32"
-        }
-      },
-      "title": "HpcDataObject",
-      "xml": {
-        "name": "HpcDataObject",
-        "attribute": false,
-        "wrapped": false
-      }
-    },
-    "HpcDataObjectDTO": {
-      "type": "object",
-      "properties": {
-        "dataObject": {
-          "xml": {
-            "name": "dataObject",
-            "attribute": false,
-            "wrapped": false
-          },
-          "$ref": "#/definitions/HpcDataObject"
-        },
-        "metadataEntries": {
-          "xml": {
-            "name": "metadataEntries",
-            "attribute": false,
-            "wrapped": false
-          },
-          "$ref": "#/definitions/HpcMetadataEntries"
-        },
-        "percentComplete": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "permission": {
-          "type": "string",
-          "xml": {
-            "name": "permission",
-            "attribute": false,
-            "wrapped": false
-          },
-          "enum": [
-            "NONE",
-            "OWN",
-            "READ",
-            "WRITE"
-          ]
-        }
-      },
-      "title": "HpcDataObjectDTO",
-      "xml": {
-        "name": "HpcDataObjectDTO",
-        "attribute": false,
-        "wrapped": false
-      }
-    },
-    "HpcDataObjectListDTO": {
-      "type": "object",
-      "properties": {
-        "dataObjectPaths": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "dataObjects": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/HpcDataObjectDTO"
-          }
-        },
-        "limit": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "page": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "totalCount": {
-          "type": "integer",
-          "format": "int32"
-        }
-      },
-      "title": "HpcDataObjectListDTO",
-      "xml": {
-        "name": "HpcDataObjectListDTO",
-        "attribute": false,
-        "wrapped": false
-      }
-    },
-    "HpcDataObjectRegistrationItemDTO": {
-      "type": "object",
-      "properties": {
-        "callerObjectId": {
-          "type": "string",
-          "xml": {
-            "name": "callerObjectId",
-            "attribute": false,
-            "wrapped": false
-          }
-        },
-        "createParentCollections": {
-          "type": "boolean"
-        },
-        "dataObjectMetadataEntries": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/HpcMetadataEntry"
-          }
-        },
-        "globusUploadSource": {
-          "xml": {
-            "name": "globusUploadSource",
-            "attribute": false,
-            "wrapped": false
-          },
-          "$ref": "#/definitions/HpcGlobusUploadSource"
-        },
-        "googleDriveUploadSource": {
-          "xml": {
-            "name": "googleDriveUploadSource",
-            "attribute": false,
-            "wrapped": false
-          },
-          "$ref": "#/definitions/HpcStreamingUploadSource"
-        },
-        "linkSourcePath": {
-          "type": "string",
-          "xml": {
-            "name": "linkSourcePath",
-            "attribute": false,
-            "wrapped": false
-          }
-        },
-        "parentCollectionsBulkMetadataEntries": {
-          "xml": {
-            "name": "parentCollectionsBulkMetadataEntries",
-            "attribute": false,
-            "wrapped": false
-          },
-          "$ref": "#/definitions/HpcBulkMetadataEntries"
-        },
-        "path": {
-          "type": "string",
-          "xml": {
-            "name": "path",
-            "attribute": false,
-            "wrapped": false
-          }
-        },
-        "s3UploadSource": {
-          "xml": {
-            "name": "s3UploadSource",
-            "attribute": false,
-            "wrapped": false
-          },
-          "$ref": "#/definitions/HpcStreamingUploadSource"
-        }
-      },
-      "title": "HpcDataObjectRegistrationItemDTO",
-      "xml": {
-        "name": "HpcDataObjectRegistrationItemDTO",
-        "attribute": false,
-        "wrapped": false
-      }
-    },
     "HpcDataObjectRegistrationRequestDTO": {
       "type": "object",
       "properties": {
@@ -1529,8 +544,49 @@
         "createParentCollections": {
           "type": "boolean"
         },
+        "extractMetadata": {
+          "type": "boolean"
+        },
+        "extractedMetadataEntries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HpcMetadataEntry"
+          }
+        },
+        "fileSystemUploadSource": {
+          "xml": {
+            "name": "fileSystemUploadSource",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcUploadSource"
+        },
         "generateUploadRequestURL": {
           "type": "boolean"
+        },
+        "globusUploadSource": {
+          "xml": {
+            "name": "globusUploadSource",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcUploadSource"
+        },
+        "googleDriveUploadSource": {
+          "xml": {
+            "name": "googleDriveUploadSource",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcStreamingUploadSource"
+        },
+        "linkSourcePath": {
+          "type": "string",
+          "xml": {
+            "name": "linkSourcePath",
+            "attribute": false,
+            "wrapped": false
+          }
         },
         "metadataEntries": {
           "type": "array",
@@ -1546,136 +602,22 @@
           },
           "$ref": "#/definitions/HpcBulkMetadataEntries"
         },
-        "source": {
+        "s3UploadSource": {
           "xml": {
-            "name": "source",
+            "name": "s3UploadSource",
             "attribute": false,
             "wrapped": false
           },
-          "$ref": "#/definitions/HpcFileLocation"
+          "$ref": "#/definitions/HpcStreamingUploadSource"
+        },
+        "uploadParts": {
+          "type": "integer",
+          "format": "int32"
         }
       },
       "title": "HpcDataObjectRegistrationRequestDTO",
       "xml": {
         "name": "HpcDataObjectRegistrationRequestDTO",
-        "attribute": false,
-        "wrapped": false
-      }
-    },
-    "HpcDirectoryScanPathMap": {
-      "type": "object",
-      "properties": {
-        "fromPath": {
-          "type": "string",
-          "xml": {
-            "name": "fromPath",
-            "attribute": false,
-            "wrapped": false
-          }
-        },
-        "toPath": {
-          "type": "string",
-          "xml": {
-            "name": "toPath",
-            "attribute": false,
-            "wrapped": false
-          }
-        }
-      },
-      "title": "HpcDirectoryScanPathMap",
-      "xml": {
-        "name": "HpcDirectoryScanPathMap",
-        "attribute": false,
-        "wrapped": false
-      }
-    },
-    "HpcDirectoryScanRegistrationItemDTO": {
-      "type": "object",
-      "properties": {
-        "basePath": {
-          "type": "string",
-          "xml": {
-            "name": "basePath",
-            "attribute": false,
-            "wrapped": false
-          }
-        },
-        "bulkMetadataEntries": {
-          "xml": {
-            "name": "bulkMetadataEntries",
-            "attribute": false,
-            "wrapped": false
-          },
-          "$ref": "#/definitions/HpcBulkMetadataEntries"
-        },
-        "callerObjectId": {
-          "type": "string",
-          "xml": {
-            "name": "callerObjectId",
-            "attribute": false,
-            "wrapped": false
-          }
-        },
-        "excludePatterns": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "globusScanDirectory": {
-          "xml": {
-            "name": "globusScanDirectory",
-            "attribute": false,
-            "wrapped": false
-          },
-          "$ref": "#/definitions/HpcGlobusScanDirectory"
-        },
-        "googleDriveScanDirectory": {
-          "xml": {
-            "name": "googleDriveScanDirectory",
-            "attribute": false,
-            "wrapped": false
-          },
-          "$ref": "#/definitions/HpcGoogleDriveScanDirectory"
-        },
-        "includePatterns": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "pathMap": {
-          "xml": {
-            "name": "pathMap",
-            "attribute": false,
-            "wrapped": false
-          },
-          "$ref": "#/definitions/HpcDirectoryScanPathMap"
-        },
-        "patternType": {
-          "type": "string",
-          "xml": {
-            "name": "patternType",
-            "attribute": false,
-            "wrapped": false
-          },
-          "enum": [
-            "REGEX",
-            "SIMPLE"
-          ]
-        },
-        "s3ScanDirectory": {
-          "xml": {
-            "name": "s3ScanDirectory",
-            "attribute": false,
-            "wrapped": false
-          },
-          "$ref": "#/definitions/HpcS3ScanDirectory"
-        }
-      },
-      "title": "HpcDirectoryScanRegistrationItemDTO",
-      "xml": {
-        "name": "HpcDirectoryScanRegistrationItemDTO",
         "attribute": false,
         "wrapped": false
       }
@@ -1780,44 +722,6 @@
         "wrapped": false
       }
     },
-    "HpcGlobusScanDirectory": {
-      "type": "object",
-      "properties": {
-        "directoryLocation": {
-          "xml": {
-            "name": "directoryLocation",
-            "attribute": false,
-            "wrapped": false
-          },
-          "$ref": "#/definitions/HpcFileLocation"
-        }
-      },
-      "title": "HpcGlobusScanDirectory",
-      "xml": {
-        "name": "HpcGlobusScanDirectory",
-        "attribute": false,
-        "wrapped": false
-      }
-    },
-    "HpcGlobusUploadSource": {
-      "type": "object",
-      "properties": {
-        "sourceLocation": {
-          "xml": {
-            "name": "sourceLocation",
-            "attribute": false,
-            "wrapped": false
-          },
-          "$ref": "#/definitions/HpcFileLocation"
-        }
-      },
-      "title": "HpcGlobusUploadSource",
-      "xml": {
-        "name": "HpcGlobusUploadSource",
-        "attribute": false,
-        "wrapped": false
-      }
-    },
     "HpcGoogleDriveDownloadDestination": {
       "type": "object",
       "properties": {
@@ -1841,66 +745,6 @@
       "title": "HpcGoogleDriveDownloadDestination",
       "xml": {
         "name": "HpcGoogleDriveDownloadDestination",
-        "attribute": false,
-        "wrapped": false
-      }
-    },
-    "HpcGoogleDriveScanDirectory": {
-      "type": "object",
-      "properties": {
-        "accessToken": {
-          "type": "string",
-          "xml": {
-            "name": "accessToken",
-            "attribute": false,
-            "wrapped": false
-          }
-        },
-        "directoryLocation": {
-          "xml": {
-            "name": "directoryLocation",
-            "attribute": false,
-            "wrapped": false
-          },
-          "$ref": "#/definitions/HpcFileLocation"
-        }
-      },
-      "title": "HpcGoogleDriveScanDirectory",
-      "xml": {
-        "name": "HpcGoogleDriveScanDirectory",
-        "attribute": false,
-        "wrapped": false
-      }
-    },
-    "HpcMetadataEntries": {
-      "type": "object",
-      "properties": {
-        "parentMetadataEntries": {
-          "type": "array",
-          "xml": {
-            "name": "parentMetadataEntries",
-            "attribute": false,
-            "wrapped": false
-          },
-          "items": {
-            "$ref": "#/definitions/HpcMetadataEntry"
-          }
-        },
-        "selfMetadataEntries": {
-          "type": "array",
-          "xml": {
-            "name": "selfMetadataEntries",
-            "attribute": false,
-            "wrapped": false
-          },
-          "items": {
-            "$ref": "#/definitions/HpcMetadataEntry"
-          }
-        }
-      },
-      "title": "HpcMetadataEntries",
-      "xml": {
-        "name": "HpcMetadataEntries",
         "attribute": false,
         "wrapped": false
       }
@@ -2138,33 +982,6 @@
         "wrapped": false
       }
     },
-    "HpcS3ScanDirectory": {
-      "type": "object",
-      "properties": {
-        "account": {
-          "xml": {
-            "name": "account",
-            "attribute": false,
-            "wrapped": false
-          },
-          "$ref": "#/definitions/HpcS3Account"
-        },
-        "directoryLocation": {
-          "xml": {
-            "name": "directoryLocation",
-            "attribute": false,
-            "wrapped": false
-          },
-          "$ref": "#/definitions/HpcFileLocation"
-        }
-      },
-      "title": "HpcS3ScanDirectory",
-      "xml": {
-        "name": "HpcS3ScanDirectory",
-        "attribute": false,
-        "wrapped": false
-      }
-    },
     "HpcStreamingUploadSource": {
       "type": "object",
       "properties": {
@@ -2262,29 +1079,28 @@
         "wrapped": false
       }
     },
+    "HpcUploadSource": {
+      "type": "object",
+      "properties": {
+        "sourceLocation": {
+          "xml": {
+            "name": "sourceLocation",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcFileLocation"
+        }
+      },
+      "title": "HpcUploadSource",
+      "xml": {
+        "name": "HpcUploadSource",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
     "InputStream": {
       "type": "object",
       "title": "InputStream"
-    },
-    "TimeZone": {
-      "type": "object",
-      "properties": {
-        "displayName": {
-          "type": "string"
-        },
-        "dstsavings": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "id": {
-          "type": "string"
-        },
-        "rawOffset": {
-          "type": "integer",
-          "format": "int32"
-        }
-      },
-      "title": "TimeZone"
     }
   }
 }
