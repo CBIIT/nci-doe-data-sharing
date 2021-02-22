@@ -110,7 +110,10 @@ public class RestAPICommonController extends AbstractDoeController {
 
 	private static final String TOKEN_SUBJECT = "MoDaCAuthenticationToken";
 	private static final String USER_ID_TOKEN_CLAIM = "UserName";
-	private static final String JWT_SECRET = "doe-token-signature-key";
+
+	@Value("${doe.jwt.secret.key}")
+	private String jwtSecretkey;
+
 	// The authentication token expiration period in minutes.
 	@Value("${doe.service.security.authenticationTokenExpirationPeriod}")
 	private int authenticationTokenExpirationPeriod = 0;
@@ -766,7 +769,6 @@ public class RestAPICommonController extends AbstractDoeController {
 		log.info("search collection query: " + compoundMetadataQuery);
 		String authToken = (String) session.getAttribute("hpcUserToken");
 
-
 		log.info("authToken: " + authToken);
 
 		if (authToken == null) {
@@ -866,7 +868,7 @@ public class RestAPICommonController extends AbstractDoeController {
 			claims.put(USER_ID_TOKEN_CLAIM, doeLogin);
 		}
 		String token = Jwts.builder().setSubject(TOKEN_SUBJECT).setClaims(claims)
-				.setExpiration(tokenExpiration.getTime()).signWith(SignatureAlgorithm.HS256, JWT_SECRET).compact();
+				.setExpiration(tokenExpiration.getTime()).signWith(SignatureAlgorithm.HS256, jwtSecretkey).compact();
 
 		if (StringUtils.isNotEmpty(token)) {
 			return new ResponseEntity<>(token, HttpStatus.OK);

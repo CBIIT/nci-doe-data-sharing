@@ -52,7 +52,9 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 	public AuthenticateService authService;
 
 	private static final String USER_ID_TOKEN_CLAIM = "UserName";
-	private static final String JWT_SECRET = "doe-token-signature-key";
+
+	@Value("${doe.jwt.secret.key}")
+	private String jwtSecretkey;
 
 	/*
 	 * (non-Javadoc)
@@ -97,9 +99,10 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 					session.setAttribute("hpcUserToken", readAuthToken);
 				}
 			} else if (authorization != null && authorization.toLowerCase().startsWith("bearer")) {
+				// Authorization: get token from the header
 				String[] authorizations = authorization.split(" ");
 				String token = authorizations[1];
-				Jws<Claims> jwsClaims = Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token);
+				Jws<Claims> jwsClaims = Jwts.parser().setSigningKey(jwtSecretkey).parseClaimsJws(token);
 				String user = (String) jwsClaims.getBody().get(USER_ID_TOKEN_CLAIM);
 				log.info("token auth type user: " + user);
 				if (StringUtils.isNotEmpty(user) && authService.doesUsernameExist(user.trim().toLowerCase())) {
