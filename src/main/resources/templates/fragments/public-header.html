@@ -40,7 +40,7 @@
         <span><i class="fas fa-sign-in-alt"></i></span>
     </button>
 <div id="globalNav" class="offset-md-1 col-md-9 navbar-collapse justify-content-center collapse navbar-collapse col order-last bordered" style="max-height:15%;">
-            <div id="subNav" class="card-header" style="height:50px;">
+            <div id="subNav" class="card-header" style="height:50px;margin-left: 45px;">
         <ul class="nav nav-tabs card-header-tabs" id="subTab" role="tablist" style="font-size:18px;margin-top: -3px;">
             <li class="nav-item" role="tab">
                 <a class="nav-link active" id="landing-tab" th:href="@{/}"role="tab"><u>Home</u></a>
@@ -55,7 +55,7 @@
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                        <u>About</u>
                     </a>
-                    <div class="dropdown-menu" style="margin-top:6px !important;margin-left: 33px;background-color: #1D90FF;">
+                    <div class="dropdown-menu" style="margin-top:5px !important;margin-left: 33px;background-color: #1D90FF;">
                         <a class="dropdown-item" id="about-tab" th:href="@{/aboutTab}">About MoDaC</a>
                         <a th:if= "${showApiDocs}" class="dropdown-item" id="api-docs" target="_blank" th:href="@{/swagger-ui/index.html?urls.primaryName=api-docs#/modac-rest-api}">API Documentation</a>
                         <a class="dropdown-item" target="_blank" href="https://wiki.nci.nih.gov/display/MoDaCdoc">User Guide</a>
