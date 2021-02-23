@@ -1013,6 +1013,9 @@ table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_di
 img.historyImg{width:24px;}
 img:hover{cursor: pointer}
 i.fas.fa-file-plus{font-size: 16px!important;}
+.fas.fa-share{
+	color: #f39530;
+}
 .my_class{background-color: rgba(222, 244, 255, 0.7);}
 
 
