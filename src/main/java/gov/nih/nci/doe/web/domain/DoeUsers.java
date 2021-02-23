@@ -6,11 +6,6 @@ import javax.persistence.*;
 
 import org.hibernate.annotations.Type;
 
-
-
-
-
-
 @Entity
 @Table(name = "DOE_USER_T")
 public class DoeUsers {
@@ -29,112 +24,114 @@ public class DoeUsers {
 	private String programName;
 	private Date createdDate;
 	private Date lastChangedDate;
-	
 
-    public boolean equals(Object object) {
-        if (this == object) {
-            return true;
-        }
-        if (object == null || getClass() != object.getClass()) {
-            return false;
-        }
-        if (!super.equals(object)) {
-            return false;
-        }
+	public boolean equals(Object object) {
+		if (this == object) {
+			return true;
+		}
+		if (object == null || getClass() != object.getClass()) {
+			return false;
+		}
+		if (!super.equals(object)) {
+			return false;
+		}
 
-        DoeUsers that = (DoeUsers) object;
+		DoeUsers that = (DoeUsers) object;
 
-        if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null) {
-            return false;
-        }
-        if (lastName != null ? !lastName.equals(that.lastName) : that.lastName != null) {
-            return false;
-        }
-        if (emailAddrr != null ? !emailAddrr.equals(that.emailAddrr) : that.emailAddrr != null) {
-            return false;
-        }
-        if (password != null ? !password.equals(that.password) : that.password != null) {
-            return false;
-        }
+		if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null) {
+			return false;
+		}
+		if (lastName != null ? !lastName.equals(that.lastName) : that.lastName != null) {
+			return false;
+		}
+		if (emailAddrr != null ? !emailAddrr.equals(that.emailAddrr) : that.emailAddrr != null) {
+			return false;
+		}
+		if (password != null ? !password.equals(that.password) : that.password != null) {
+			return false;
+		}
 
-        return institution != null ? institution.equals(that.institution) : that.institution == null;
+		return institution != null ? institution.equals(that.institution) : that.institution == null;
 
-    }
-    
-    
-    @Id
-    @Column(name = "ID", nullable = false, precision = 0)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "doe_user_seq")
-    @SequenceGenerator(name = "doe_user_seq", sequenceName = "doe_user_seq", allocationSize = 1)
+	}
+
+	@Id
+	@Column(name = "ID", nullable = false, precision = 0)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "doe_user_seq")
+	@SequenceGenerator(name = "doe_user_seq", sequenceName = "doe_user_seq", allocationSize = 1)
 	public Integer getId() {
 		return id;
 	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	
+
 	@Basic
-    @Column(name = "FIRST_NAME")
+	@Column(name = "FIRST_NAME")
 	public String getFirstName() {
 		return firstName;
 	}
+
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
-	
+
 	@Basic
-    @Column(name = "LAST_NAME")
+	@Column(name = "LAST_NAME")
 	public String getLastName() {
 		return lastName;
 	}
+
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	
+
 	@Basic
-    @Column(name = "EMAIL_ADDR")
+	@Column(name = "EMAIL_ADDR")
 	public String getEmailAddrr() {
 		return emailAddrr;
 	}
+
 	public void setEmailAddrr(String emailAddrr) {
 		this.emailAddrr = emailAddrr;
 	}
-	
+
 	@Basic
-    @Column(name = "PASSWORD")
+	@Column(name = "PASSWORD")
 	public String getPassword() {
 		return password;
 	}
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	@Basic
-    @Column(name = "INSTITUTION")
+	@Column(name = "INSTITUTION")
 	public String getInstitution() {
 		return institution;
 	}
+
 	public void setInstitution(String institution) {
 		this.institution = institution;
 	}
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "lockout_date", length = 29)
 	public Date getLockoutDate() {
 		return lockoutDate;
 	}
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CREATED_DATE", length = 29)
 	public Date getCreatedDate() {
 		return createdDate;
 	}
 
-
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
-
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "LAST_UPDATED_DATE", length = 29)
@@ -142,11 +139,9 @@ public class DoeUsers {
 		return lastChangedDate;
 	}
 
-
 	public void setLastChangedDate(Date lastChangedDate) {
 		this.lastChangedDate = lastChangedDate;
 	}
-
 
 	public void setLockoutDate(Date lockoutDate) {
 		this.lockoutDate = lockoutDate;
@@ -160,15 +155,13 @@ public class DoeUsers {
 	public void setLockoutCounter(Integer lockoutCounter) {
 		this.lockoutCounter = lockoutCounter;
 	}
-	
-	
+
 	@Basic
 	@Column(name = "IS_WRITE", nullable = true, length = 1)
 	@Type(type = "yes_no")
-    public Boolean getIsWrite() {
+	public Boolean getIsWrite() {
 		return isWrite;
 	}
-
 
 	public void setIsWrite(Boolean isWrite) {
 		this.isWrite = isWrite;
@@ -181,45 +174,34 @@ public class DoeUsers {
 		return isActivated;
 	}
 
-
 	public void setIsActivated(Boolean isActivated) {
 		this.isActivated = isActivated;
 	}
 
 	@Basic
-    @Column(name = "UUID")
+	@Column(name = "UUID")
 	public String getUuid() {
 		return uuid;
 	}
-
 
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
 
-
 	@Basic
-    @Column(name = "PROGRAM_NAME")
+	@Column(name = "PROGRAM_NAME")
 	public String getProgramName() {
 		return programName;
 	}
-
 
 	public void setProgramName(String programName) {
 		this.programName = programName;
 	}
 
-
 	@Override
-    public String toString() {
-        return "DoeUsers{" +
-            ", firstName='" + firstName + '\'' +
-            ", lastName='" + lastName + '\'' +
-            ", emailAddrr=" + emailAddrr +
-            ", password='" + password + '\'' +
-            ", institution=" + institution +
-             ", lockoutDate=" + institution +
-              ", lockoutCounter=" + institution +
-            '}';
-    }
+	public String toString() {
+		return "DoeUsers{" + ", firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' + ", emailAddrr="
+				+ emailAddrr + ", password='" + password + '\'' + ", institution=" + institution + ", lockoutDate="
+				+ institution + ", lockoutCounter=" + institution + '}';
+	}
 }

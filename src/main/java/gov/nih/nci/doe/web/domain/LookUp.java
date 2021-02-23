@@ -12,7 +12,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-
 @Entity
 @Table(name = "lookup_t")
 public class LookUp implements Serializable {
@@ -28,30 +27,29 @@ public class LookUp implements Serializable {
 	private Integer displayOrder;
 	private String searchCriteriaDisplay;
 	private String searchResultsDisplay;
-	
+
 	public LookUp() {
-		
+
 	}
 
-	public LookUp(String id, String level_name, String attr_name,
-			String display_name) {
+	public LookUp(String id, String level_name, String attr_name, String display_name) {
 		this.id = id;
 		this.levelName = level_name;
 		this.attrName = attr_name;
 		this.displayName = display_name;
 	}
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
 	public String getId() {
 		return id;
 	}
-	
+
 	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Column(name = "level_name", nullable = false, length = 255)
 	public String getLevelName() {
 		return levelName;
@@ -83,17 +81,17 @@ public class LookUp implements Serializable {
 	public String getCreatedBy() {
 		return createdBy;
 	}
-	
+
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created_date", nullable = false, length = 29)
 	public Date getCreatedDate() {
 		return createdDate;
 	}
-	
+
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
@@ -124,7 +122,5 @@ public class LookUp implements Serializable {
 	public void setSearchResultsDisplay(String searchResultsDisplay) {
 		this.searchResultsDisplay = searchResultsDisplay;
 	}
-	
-	
-	
+
 }

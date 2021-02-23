@@ -6,11 +6,6 @@ import javax.persistence.*;
 
 import org.hibernate.annotations.Type;
 
-
-
-
-
-
 @Entity
 @Table(name = "METADATA_PERMISSIONS_T")
 public class MetaDataPermissions {
@@ -22,65 +17,63 @@ public class MetaDataPermissions {
 	private Boolean isGroup;
 	private Boolean isOwner;
 	private Date createdDate;
-	
 
-    public boolean equals(Object object) {
-        if (this == object) {
-            return true;
-        }
-        if (object == null || getClass() != object.getClass()) {
-            return false;
-        }
-        if (!super.equals(object)) {
-            return false;
-        }
+	public boolean equals(Object object) {
+		if (this == object) {
+			return true;
+		}
+		if (object == null || getClass() != object.getClass()) {
+			return false;
+		}
+		if (!super.equals(object)) {
+			return false;
+		}
 
-        MetaDataPermissions that = (MetaDataPermissions) object;
+		MetaDataPermissions that = (MetaDataPermissions) object;
 
-        if (collectionId != null ? !collectionId.equals(that.collectionId) : that.collectionId != null) {
-            return false;
-        }
-        if (userGroupId != null ? !userGroupId.equals(that.userGroupId) : that.userGroupId != null) {
-            return false;
-        }
-        if (isGroup != null ? !isGroup.equals(that.isGroup) : that.isGroup != null) {
-            return false;
-        }
-        if (isOwner != null ? !isOwner.equals(that.isOwner) : that.isOwner != null) {
-            return false;
-        }
+		if (collectionId != null ? !collectionId.equals(that.collectionId) : that.collectionId != null) {
+			return false;
+		}
+		if (userGroupId != null ? !userGroupId.equals(that.userGroupId) : that.userGroupId != null) {
+			return false;
+		}
+		if (isGroup != null ? !isGroup.equals(that.isGroup) : that.isGroup != null) {
+			return false;
+		}
+		if (isOwner != null ? !isOwner.equals(that.isOwner) : that.isOwner != null) {
+			return false;
+		}
 
-        return createdDate != null ? createdDate.equals(that.createdDate) : that.createdDate == null;
+		return createdDate != null ? createdDate.equals(that.createdDate) : that.createdDate == null;
 
-    }
-    
-    @Id
-    @Column(name = "ID", nullable = false, precision = 0)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "METADATA_PERMISSIONS_SEQ")
-    @SequenceGenerator(name = "METADATA_PERMISSIONS_SEQ", sequenceName = "METADATA_PERMISSIONS_SEQ", allocationSize = 1)
+	}
+
+	@Id
+	@Column(name = "ID", nullable = false, precision = 0)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "METADATA_PERMISSIONS_SEQ")
+	@SequenceGenerator(name = "METADATA_PERMISSIONS_SEQ", sequenceName = "METADATA_PERMISSIONS_SEQ", allocationSize = 1)
 	public Integer getId() {
 		return id;
 	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
-    
-    @Column(name = "COLLECTION_ID", precision = 4, scale = 0)
-    public Integer getCollectionId() {
+
+	@Column(name = "COLLECTION_ID", precision = 4, scale = 0)
+	public Integer getCollectionId() {
 		return collectionId;
 	}
-
 
 	public void setCollectionId(Integer collectionId) {
 		this.collectionId = collectionId;
 	}
 
 	@Basic
-    @Column(name = "USER_GROUP_ID")
+	@Column(name = "USER_GROUP_ID")
 	public String getUserGroupId() {
 		return userGroupId;
 	}
-
 
 	public void setUserGroupId(String userGroupId) {
 		this.userGroupId = userGroupId;
@@ -93,7 +86,6 @@ public class MetaDataPermissions {
 		return isGroup;
 	}
 
-
 	public void setIsGroup(Boolean isGroup) {
 		this.isGroup = isGroup;
 	}
@@ -105,7 +97,6 @@ public class MetaDataPermissions {
 		return isOwner;
 	}
 
-
 	public void setIsOwner(Boolean isOwner) {
 		this.isOwner = isOwner;
 	}
@@ -116,14 +107,12 @@ public class MetaDataPermissions {
 		return createdDate;
 	}
 
-
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
 
-
 	@Basic
-    @Column(name = "COLLECTION_PATH")
+	@Column(name = "COLLECTION_PATH")
 	public String getCollectionPath() {
 		return collectionPath;
 	}
@@ -133,14 +122,9 @@ public class MetaDataPermissions {
 	}
 
 	@Override
-    public String toString() {
-        return "MetaDataPermissions{" +
-            ", collectionId='" + collectionId + '\'' +
-            ", userGroupId='" + userGroupId + '\'' +
-            ", isOwner=" + isOwner +
-             ", createdDate=" + createdDate +
-             ", collectionPath=" + collectionPath +
-              ", isGroup=" + isGroup +
-            '}';
-    }
+	public String toString() {
+		return "MetaDataPermissions{" + ", collectionId='" + collectionId + '\'' + ", userGroupId='" + userGroupId
+				+ '\'' + ", isOwner=" + isOwner + ", createdDate=" + createdDate + ", collectionPath=" + collectionPath
+				+ ", isGroup=" + isGroup + '}';
+	}
 }
