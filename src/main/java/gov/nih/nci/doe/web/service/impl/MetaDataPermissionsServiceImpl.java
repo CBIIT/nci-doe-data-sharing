@@ -22,19 +22,12 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 
 	@Autowired
 	private MetaDataPermissionsRepository metaDataPermissionsRepository;
-	
-	@Override
-	 public List<MetaDataPermissions> getAllMetaDataPermissionsByUserId(String userId) {
-		
-		return null;
-		
-	}
 
 	@Override
 	public void savePermissionsList(String user, String progList, Integer collectionId, String collectionPath) {
-		log.info("save permission list for user " + user  + " with prog list " + progList + 
-				" and collection id" + collectionId);
-		
+		log.info("save permission list for user " + user + " with prog list " + progList + " and collection id"
+				+ collectionId);
+
 		MetaDataPermissions permissions = new MetaDataPermissions();
 		permissions.setCollectionId(collectionId);
 		permissions.setCreatedDate(new Date());
@@ -43,25 +36,24 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 		permissions.setUserGroupId(user);
 		permissions.setCollectionPath(collectionPath);
 		metaDataPermissionsRepository.saveAndFlush(permissions);
-		
-		//create for groups
-		if(!StringUtils.isEmpty(progList)) {
-		 List<String> groupNameList = Arrays.asList(progList.split(","));
-		 
-		   Iterator proggrpIterator = groupNameList.iterator();
-	        while (proggrpIterator.hasNext())  {
-	        	String grpName = proggrpIterator.next().toString();
-	    		MetaDataPermissions perm = new MetaDataPermissions();
-	    		perm.setCollectionId(collectionId);
-	    		perm.setCreatedDate(new Date());
-	    		perm.setIsGroup(true);
-	    		perm.setIsOwner(false);
-	    		perm.setUserGroupId(grpName);
-	    		metaDataPermissionsRepository.saveAndFlush(perm);
-	        }
+
+		// create for groups
+		if (!StringUtils.isEmpty(progList)) {
+			List<String> groupNameList = Arrays.asList(progList.split(","));
+
+			Iterator proggrpIterator = groupNameList.iterator();
+			while (proggrpIterator.hasNext()) {
+				String grpName = proggrpIterator.next().toString();
+				MetaDataPermissions perm = new MetaDataPermissions();
+				perm.setCollectionId(collectionId);
+				perm.setCreatedDate(new Date());
+				perm.setIsGroup(true);
+				perm.setIsOwner(false);
+				perm.setUserGroupId(grpName);
+				metaDataPermissionsRepository.saveAndFlush(perm);
+			}
 		}
-		
-		
+
 	}
 
 	@Override
@@ -78,15 +70,16 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 
 	@Override
 	public void deletePermissionsList(String user, List<String> deletedList, Integer collectionId) {
-        Iterator permissionListIterator = deletedList.iterator();
-        while (permissionListIterator.hasNext()) {
-            String permission = permissionListIterator.next().toString();
-            if (permission != null) {
-            	MetaDataPermissions p = metaDataPermissionsRepository.findPermissionByGroupNameAndCollectionId(permission,collectionId);
-            	metaDataPermissionsRepository.delete(p);
-            } 
-        }
-		
+		Iterator permissionListIterator = deletedList.iterator();
+		while (permissionListIterator.hasNext()) {
+			String permission = permissionListIterator.next().toString();
+			if (permission != null) {
+				MetaDataPermissions p = metaDataPermissionsRepository
+						.findPermissionByGroupNameAndCollectionId(permission, collectionId);
+				metaDataPermissionsRepository.delete(p);
+			}
+		}
+
 	}
 
 	@Override
