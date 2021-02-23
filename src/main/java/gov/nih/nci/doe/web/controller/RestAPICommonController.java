@@ -856,24 +856,25 @@ public class RestAPICommonController extends AbstractDoeController {
 	public ResponseEntity<?> authenticate(@RequestHeader HttpHeaders headers, HttpSession session,
 			HttpServletResponse response, HttpServletRequest request) throws DoeWebException {
 
-		log.info("get auth token");
+		log.info("create modac authentication token");
 		String doeLogin = (String) session.getAttribute("doeLogin");
 		log.info("doeLogin: " + doeLogin);
-		// Calculate the expiration date.
-		Calendar tokenExpiration = Calendar.getInstance();
-
-		tokenExpiration.add(Calendar.MINUTE, authenticationTokenExpirationPeriod);
 
 		// Prepare the Claims Map.
 		Map<String, Object> claims = new HashMap<>();
 		if (StringUtils.isNotEmpty(doeLogin)) {
 			claims.put(userIdTokenClaim, doeLogin);
-		}
-		String token = Jwts.builder().setSubject(TOKEN_SUBJECT).setClaims(claims)
-				.setExpiration(tokenExpiration.getTime()).signWith(SignatureAlgorithm.HS256, jwtSecretkey).compact();
+			// Calculate the expiration date.
+			Calendar tokenExpiration = Calendar.getInstance();
+			tokenExpiration.add(Calendar.MINUTE, authenticationTokenExpirationPeriod);
+			// construct JWT token
+			String token = Jwts.builder().setSubject(TOKEN_SUBJECT).setClaims(claims)
+					.setExpiration(tokenExpiration.getTime()).signWith(SignatureAlgorithm.HS256, jwtSecretkey)
+					.compact();
 
-		if (StringUtils.isNotEmpty(token)) {
-			return new ResponseEntity<>(token, HttpStatus.OK);
+			if (StringUtils.isNotEmpty(token)) {
+				return new ResponseEntity<>(token, HttpStatus.OK);
+			}
 		}
 
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);

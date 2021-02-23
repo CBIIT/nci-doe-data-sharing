@@ -103,15 +103,19 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 				// Authorization: get token from the header
 				String[] authorizations = authorization.split(" ");
 				String token = authorizations[1];
+				// get user name from JWT token
 				Jws<Claims> jwsClaims = Jwts.parser().setSigningKey(jwtSecretkey).parseClaimsJws(token);
 				String user = (String) jwsClaims.getBody().get(userIdTokenClaim);
-				log.info("token auth type user: " + user);
+				log.info("token authorization user: " + user);
+				// validate if the user exists in MoDaC system and set the write and read access
+				// tokens to session
 				if (StringUtils.isNotEmpty(user) && authService.doesUsernameExist(user.trim().toLowerCase())) {
 					session.setAttribute("writeAccessUserToken", writeAuthToken);
 					session.setAttribute("hpcUserToken", readAuthToken);
 					session.setAttribute("doeLogin", user);
 				}
 			} else if (Boolean.TRUE.equals(isExistsUrl)) {
+				// verify if API url is applicable to bypass username authorization
 				session.setAttribute("hpcUserToken", readAuthToken);
 			}
 
