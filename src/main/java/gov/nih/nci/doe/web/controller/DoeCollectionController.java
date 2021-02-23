@@ -1,6 +1,4 @@
-
 package gov.nih.nci.doe.web.controller;
-
 
 import java.util.*;
 
@@ -25,12 +23,11 @@ import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectRegistrationRequestDTO;
 
-
 /**
- * <p>
+ *
  * Collection controller. Gets selected collection details. Updates collection
  * metadata.
- * </p>
+ * 
  *
  */
 
@@ -38,15 +35,16 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectRegistrationRequestDTO;
 @EnableAutoConfiguration
 @RequestMapping("/collection")
 public class DoeCollectionController extends AbstractDoeController {
-   
+
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	private String serviceURL;
-	
+
 	@Value("${gov.nih.nci.hpc.server.model}")
 	private String hpcModelURL;
 
 	@Value("${gov.nih.nci.hpc.server.dataObject}")
 	private String serviceDataURL;
+
 	/**
 	 * Update collection
 	 *
@@ -60,59 +58,56 @@ public class DoeCollectionController extends AbstractDoeController {
 	 * @return
 	 */
 	@PostMapping
-	public @ResponseBody String updateCollection(@Valid DoeCollectionModel doeCollection, 
-			HttpSession session, HttpServletRequest request, HttpServletResponse response) throws DoeWebException{
+	public @ResponseBody String updateCollection(@Valid DoeCollectionModel doeCollection, HttpSession session,
+			HttpServletRequest request, HttpServletResponse response) throws DoeWebException {
 
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
-			String loggedOnUser = getLoggedOnUserInfo();
-			String[] path = request.getParameterValues("path");
-			String isDataObject = request.getParameter("isDataObject");
-			
-			
-			if(path[0] != null) {
-				doeCollection.setPath(path[0].trim());
-			}
-			
-			if (doeCollection.getPath() == null || doeCollection.getPath().trim().length() == 0) {
-			  return "Invalid collection path";
+		String loggedOnUser = getLoggedOnUserInfo();
+		String[] path = request.getParameterValues("path");
+		String isDataObject = request.getParameter("isDataObject");
+
+		if (path[0] != null) {
+			doeCollection.setPath(path[0].trim());
+		}
+
+		if (doeCollection.getPath() == null || doeCollection.getPath().trim().length() == 0) {
+			return "Invalid collection path";
+		}
+
+		if (isDataObject != null && isDataObject.equalsIgnoreCase("true")) {
+			HpcDataObjectRegistrationRequestDTO registrationDTO = constructDataRequest(request);
+			boolean updated = DoeClientUtil.updateDatafile(authToken, serviceDataURL, registrationDTO,
+					doeCollection.getPath(), sslCertPath, sslCertPassword);
+			if (updated) {
+				session.removeAttribute("selectedUsers");
+				return "The metadata was successfully updated.";
+
 			}
 
-			if(isDataObject != null && isDataObject.equalsIgnoreCase("true")) {
-				HpcDataObjectRegistrationRequestDTO registrationDTO = constructDataRequest(request);
-				boolean updated = DoeClientUtil.updateDatafile(authToken, serviceDataURL, registrationDTO,
-						doeCollection.getPath(), sslCertPath, sslCertPassword);
-				if (updated) {
-					session.removeAttribute("selectedUsers");
-					return "The metadata was successfully updated.";
-					
-				}
-				
-			} else {
-				HpcCollectionRegistrationDTO registrationDTO = constructRequest(request);
-				Integer restResponse = DoeClientUtil.updateCollection(authToken, serviceURL, registrationDTO,
-						doeCollection.getPath(), sslCertPath, sslCertPassword);
-				if (restResponse == 200 || restResponse == 201) {
-					session.removeAttribute("selectedUsers");
-					 //store the auditing info
-	                  AuditingModel audit = new AuditingModel();
-	                  audit.setName(loggedOnUser);
-	                  audit.setOperation("Edit Meta Data");
-	                  audit.setStartTime(new Date());
-	                  audit.setPath(doeCollection.getPath());
-	                  auditingService.saveAuditInfo(audit);
-					return "The metadata was successfully updated.";
-				}
+		} else {
+			HpcCollectionRegistrationDTO registrationDTO = constructRequest(request);
+			Integer restResponse = DoeClientUtil.updateCollection(authToken, serviceURL, registrationDTO,
+					doeCollection.getPath(), sslCertPath, sslCertPassword);
+			if (restResponse == 200 || restResponse == 201) {
+				session.removeAttribute("selectedUsers");
+				// store the auditing info
+				AuditingModel audit = new AuditingModel();
+				audit.setName(loggedOnUser);
+				audit.setOperation("Edit Meta Data");
+				audit.setStartTime(new Date());
+				audit.setPath(doeCollection.getPath());
+				auditingService.saveAuditInfo(audit);
+				return "The metadata was successfully updated.";
 			}
-			
-		
+		}
+
 		final Map<String, String> paramsMap = new HashMap<>();
-		paramsMap.put("path", doeCollection.getPath());		
+		paramsMap.put("path", doeCollection.getPath());
 		return "ERROR";
-		
+
 	}
 
-
-	private HpcCollectionRegistrationDTO constructRequest(HttpServletRequest request) throws DoeWebException{
+	private HpcCollectionRegistrationDTO constructRequest(HttpServletRequest request) throws DoeWebException {
 		Enumeration<String> params = request.getParameterNames();
 		HpcCollectionRegistrationDTO dto = new HpcCollectionRegistrationDTO();
 		List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
@@ -125,9 +120,9 @@ public class DoeCollectionController extends AbstractDoeController {
 				String[] attrValue = request.getParameterValues(paramName);
 				entry.setAttribute(attrName);
 				entry.setValue(attrValue[0]);
-				//if(StringUtils.isNotEmpty(entry.getValue())) {
+				// if(StringUtils.isNotEmpty(entry.getValue())) {
 				metadataEntries.add(entry);
-				//}
+				// }
 			} else if (paramName.startsWith("_addAttrName")) {
 				HpcMetadataEntry entry = new HpcMetadataEntry();
 				String attrId = paramName.substring("_addAttrName".length());
@@ -148,8 +143,8 @@ public class DoeCollectionController extends AbstractDoeController {
 		return dto;
 	}
 
-	
-    private HpcDataObjectRegistrationRequestDTO constructDataRequest(HttpServletRequest request) throws DoeWebException{
+	private HpcDataObjectRegistrationRequestDTO constructDataRequest(HttpServletRequest request)
+			throws DoeWebException {
 		Enumeration<String> params = request.getParameterNames();
 		HpcDataObjectRegistrationRequestDTO dto = new HpcDataObjectRegistrationRequestDTO();
 		List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
@@ -162,7 +157,7 @@ public class DoeCollectionController extends AbstractDoeController {
 				String[] attrValue = request.getParameterValues(paramName);
 				entry.setAttribute(attrName);
 				entry.setValue(attrValue[0]);
-				if(StringUtils.isNotEmpty(entry.getValue())) {
+				if (StringUtils.isNotEmpty(entry.getValue())) {
 					metadataEntries.add(entry);
 				}
 			} else if (paramName.startsWith("_addAttrName")) {

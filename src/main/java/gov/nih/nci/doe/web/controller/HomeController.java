@@ -39,7 +39,7 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 
 /**
  *
- * DOE root Controller
+ * DOE Home Controller
  *
  *
  */

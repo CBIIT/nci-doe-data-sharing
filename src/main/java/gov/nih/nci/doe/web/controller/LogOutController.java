@@ -10,27 +10,28 @@ import org.springframework.security.web.authentication.logout.CookieClearingLogo
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.authentication.rememberme.AbstractRememberMeServices;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
-	@Controller
-	@EnableAutoConfiguration
-	@RequestMapping("/logOut")
-	public class LogOutController extends AbstractDoeController {
+@Controller
+@EnableAutoConfiguration
+@RequestMapping("/logOut")
+public class LogOutController extends AbstractDoeController {
 
-		@RequestMapping(method = RequestMethod.POST)
-		public ResponseEntity<?> logOut(HttpServletRequest request,HttpServletResponse response) {
-			log.info("log out");
-			 doCommonLogout( request,  response);			 
-			 return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
-		}
+	@PostMapping
+	public ResponseEntity<?> logOut(HttpServletRequest request, HttpServletResponse response) {
+		log.info("log out");
+		doCommonLogout(request, response);
+		return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+	}
 
-		public void doCommonLogout(HttpServletRequest request, HttpServletResponse response) {
-		    CookieClearingLogoutHandler cookieClearingLogoutHandler = new CookieClearingLogoutHandler(AbstractRememberMeServices.SPRING_SECURITY_REMEMBER_ME_COOKIE_KEY);
-		    SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
-		    cookieClearingLogoutHandler.logout(request, response, null);
-		    securityContextLogoutHandler.logout(request, response, null);
-		    request.getSession().removeAttribute("writeAccessUserToken");
-		    log.info("User successfully logged out through hyperlink.");
-		}
+	public void doCommonLogout(HttpServletRequest request, HttpServletResponse response) {
+		CookieClearingLogoutHandler cookieClearingLogoutHandler = new CookieClearingLogoutHandler(
+				AbstractRememberMeServices.SPRING_SECURITY_REMEMBER_ME_COOKIE_KEY);
+		SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
+		cookieClearingLogoutHandler.logout(request, response, null);
+		securityContextLogoutHandler.logout(request, response, null);
+		request.getSession().removeAttribute("writeAccessUserToken");
+		log.info("User successfully logged out through hyperlink.");
+	}
 }

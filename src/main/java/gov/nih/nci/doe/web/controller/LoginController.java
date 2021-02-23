@@ -8,15 +8,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
-
 
 /**
  *
- * DOE root Controller
+ * DOE Login Controller
  *
  *
  */
@@ -25,21 +23,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 @EnableAutoConfiguration
 @RequestMapping("/login")
 public class LoginController extends AbstractDoeController {
-	
-	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<?> loginPage(HttpServletRequest request, HttpServletResponse response, 
+
+	@GetMapping
+	public ResponseEntity<?> loginPage(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam(value = "error", required = false) String error) {
 		log.info("Entering login page");
 		if (null != error) {
-			Exception message = (Exception)request.getSession().getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
-			if(message == null) {
+			Exception message = (Exception) request.getSession().getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
+			if (message == null) {
 				log.debug("empty");
 				return new ResponseEntity<>("ERRORR", HttpStatus.OK);
-			} else if(message.getClass().isAssignableFrom(BadCredentialsException.class)) {
+			} else if (message.getClass().isAssignableFrom(BadCredentialsException.class)) {
 				log.debug(message.getMessage());
 				return new ResponseEntity<>(message.getMessage(), HttpStatus.OK);
 			}
-	    } 
+		}
 		return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
 	}
 }

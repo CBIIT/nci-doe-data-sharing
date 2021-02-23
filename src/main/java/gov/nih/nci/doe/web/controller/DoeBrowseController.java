@@ -32,10 +32,7 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 
 /**
- * <p>
- * Doe Web Browse controller. Builds tree nodes based on user DOC basepath and
- * then builds up the tree based on expanded nodes
- * </p>
+ * MoDaC browse
  *
  */
 
@@ -62,9 +59,10 @@ public class DoeBrowseController extends AbstractDoeController {
 			@RequestParam(value = "isDataObject") String isDataObject, HttpSession session, HttpServletRequest request,
 			HttpServletResponse response) throws DoeWebException {
 
-		 List<KeyValueBean> entryList= getUserMetaDataAttributesByPath(selectedPath,levelName,isDataObject,session,request,response);
+		List<KeyValueBean> entryList = getUserMetaDataAttributesByPath(selectedPath, levelName, isDataObject, session,
+				request, response);
 		return new ResponseEntity<>(entryList, HttpStatus.OK);
-		
+
 	}
 
 	@GetMapping(value = "/getAccessgroups", produces = MediaType.APPLICATION_JSON_VALUE)

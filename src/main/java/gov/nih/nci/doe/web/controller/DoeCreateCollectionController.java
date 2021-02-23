@@ -38,7 +38,7 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementRulesDTO;
 
 /**
- * <p>
+ *
  * Collection controller. Gets selected collection details. Updates collection
  * metadata.
  */
@@ -154,7 +154,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 	public ResponseEntity<List<DoeMetadataAttrEntry>> getCollectionAttributes(
 			@RequestParam(value = "selectedPath") String selectedPath,
 			@RequestParam(value = "collectionType") String collectionType,
-			@RequestParam(required=false) String assetType, @RequestParam(required = false) Boolean refresh,
+			@RequestParam(required = false) String assetType, @RequestParam(required = false) Boolean refresh,
 			HttpSession session, HttpServletRequest request, HttpServletResponse response) {
 
 		log.info("get collection attributes" + selectedPath + " ,collectionType:  " + collectionType + ", assetType:"
@@ -164,14 +164,14 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 		try {
 			if (selectedPath != null) {
 				log.info("selected path");
-				if(refresh == null) {
+				if (refresh == null) {
 					refresh = true;
 				}
 				if (refresh != null && !refresh) {
 					log.info("get collection attributes for edit");
-					List<KeyValueBean> entryList =  getUserMetaDataAttributesByPath(selectedPath,
-							collectionType, "false", session, request, response);
-					
+					List<KeyValueBean> entryList = getUserMetaDataAttributesByPath(selectedPath, collectionType,
+							"false", session, request, response);
+
 					for (KeyValueBean k : entryList) {
 						log.info("get cahced entry list:" + k.getKey() + " ,value:" + k.getValue());
 						DoeMetadataAttrEntry entry = new DoeMetadataAttrEntry();

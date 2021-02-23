@@ -34,7 +34,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 /**
  *
  * DOE Task Manager Controller
@@ -47,167 +46,163 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/tasks")
 public class TaskManagerCotroller extends AbstractDoeController {
 
-    
 	@Autowired
 	TaskManagerService taskManagerService;
-	
+
 	@Value("${gov.nih.nci.hpc.server.download}")
 	private String queryServiceURL;
-	
+
 	@Value("${gov.nih.nci.hpc.server.bulkregistration}")
 	private String registrationServiceUrl;
 
 	SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-	
 
 	@GetMapping
-	public ResponseEntity<?> getStatus(HttpSession session,@RequestHeader HttpHeaders headers, 
+	public ResponseEntity<?> getStatus(HttpSession session, @RequestHeader HttpHeaders headers,
 			HttpServletRequest request, @RequestParam(value = "userId") String userId) {
-		
-		  log.info("get all tasks by user Id");
-		  String authToken = (String) session.getAttribute("writeAccessUserToken");
-		  String readToken = (String) session.getAttribute("hpcUserToken");
-		  try {
-            	List<TaskManager> results = new ArrayList<TaskManager>();
-            	results = taskManagerService.getAllByUserId(userId);            	
-            	List<String> taskIds = LambdaUtils.map(results,TaskManager::getTaskId);
-            	
-                
-            	String serviceURL = queryServiceURL + "?page=" + 1 + "&totalCount=true";
-    			HpcDownloadSummaryDTO downloads = DoeClientUtil.getDownloadSummary(authToken, serviceURL, sslCertPath,
-    					sslCertPassword);
-    			
-    			HpcDownloadSummaryDTO downloads1 = DoeClientUtil.getDownloadSummary(readToken, serviceURL, sslCertPath,
-    					sslCertPassword) ;
-    			
-    			final MultiValueMap<String,String> paramsMap = new LinkedMultiValueMap<>();
-    		      paramsMap.set("totalCount", Boolean.TRUE.toString());
-    			HpcRegistrationSummaryDTO registrations = DoeClientUtil.getRegistrationSummary(authToken, registrationServiceUrl, paramsMap,
-    		        sslCertPath, sslCertPassword);
-  
-    			// get the task end date
-    			
-    			List<HpcUserDownloadRequest> downloadResults = new ArrayList<HpcUserDownloadRequest>();
-    			if(downloads != null) {
-    				downloadResults.addAll(downloads.getActiveTasks());
-        			downloadResults.addAll(downloads.getCompletedTasks());  
-    			}
-    			
-    			if(downloads1 != null) {
-    				downloadResults.addAll(downloads1.getActiveTasks());
-        			downloadResults.addAll(downloads1.getCompletedTasks());  
-    			}
-    			
-    			List<HpcBulkDataObjectRegistrationTaskDTO> uploadResults = new ArrayList<HpcBulkDataObjectRegistrationTaskDTO>();
-    			if(registrations != null) {
-    				uploadResults.addAll(registrations.getActiveTasks());
-    				uploadResults.addAll(registrations.getCompletedTasks());  
-    			}
-    			  			
-    			
-    			 List<HpcUserDownloadRequest> finalTaskIds = LambdaUtils.filter(downloadResults, (HpcUserDownloadRequest n) ->
-    			 taskIds.contains(n.getTaskId()));
-    			
-    			 List<TaskManagerDto> taskResults = new ArrayList<TaskManagerDto>();
-                 
-    			
-    		    for (HpcUserDownloadRequest download : finalTaskIds) {
-    					TaskManagerDto task = new TaskManagerDto();
-    					TaskManager t = results.stream().filter(x -> download.getTaskId().equals(x.getTaskId())).findAny().orElse(null);
-    					String path = download.getPath();
-    					
-    					if((StringUtils.isEmpty(path) || StringUtils.isBlank(path)) && CollectionUtils.isNotEmpty(download.getItems())) {
-    						path = download.getItems().get(0).getPath();
-    					}
-    					if(StringUtils.isNotEmpty(path)) {
-    					String[] collectionNames = path.split("/");
-    					task.setProgName(collectionNames[2]);
-    					task.setStudyName(collectionNames[3]);
-    					task.setDataSetName(collectionNames[4]);
-    					}
-    							
-    					task.setTaskCreatedDate(t.getTaskDate());
-    	    			task.setTaskId(download.getTaskId());
-    	    			task.setTaskCompletedDate(download.getCompleted() != null ? format.format(download.getCompleted().getTime()) : "");
-    					task.setTaskName(t.getTaskName());
-    					task.setUserId(t.getUserId());
-    					task.setTaskType(t.getTaskType());
-    					if(download.getResult() != null && download.getResult().value().equals("FAILED")) {
-    						List<String> message = new ArrayList<String>();
-    						download.getItems().stream().forEach(x -> message.add(x.getMessage()));    						
-    						task.setTransferStatus("Failed (" + String.join(",", message) + ")" + 
-    					"<strong><a style='border: none;background-color: #F39530; height: 23px;width: 37px;border-radius: 11px;float: right;' class='btn btn-link btn-sm' aria-label='Retry download' href='#' "
-    								+ "onclick='retryDownload(\"" + download.getTaskId() + "\" ,\"" + t.getTaskName() + "\", \"" + t.getDownloadType() + "\")'>"
-    										+ "<img style='height: 13px;width: 13px;margin-top: -14px;' src='images/Status.refresh_icon-01.png' th:src='@{/images/Status.refresh_icon-01.png}' alt='Status refresh'></a></strong>");
-    					} else if(download.getResult() != null && download.getResult().value().equals("COMPLETED")) {
-    						task.setTransferStatus("Completed");
-    					} else {
-    						task.setTransferStatus("In Progress");
-    					}
-    					
-    					taskResults.add(task);
-    			}
-    		    
-    		    
-    		    //same for uploads
-    		    
-    			 List<HpcBulkDataObjectRegistrationTaskDTO> finalTaskUploadIds = LambdaUtils.filter(uploadResults, (HpcBulkDataObjectRegistrationTaskDTO n) ->
-    			 taskIds.contains(n.getTaskId()));
-    			
-    			 List<TaskManagerDto> uploadTaskResults = new ArrayList<TaskManagerDto>();
-                 
-    			
-    		    for (HpcBulkDataObjectRegistrationTaskDTO upload : finalTaskUploadIds) {
-    					TaskManagerDto task = new TaskManagerDto();
-    					TaskManager t = results.stream().filter(x -> upload.getTaskId().equals(x.getTaskId())).findAny().orElse(null);
-    					String path = null;
-    	    			task.setTaskId(upload.getTaskId());
-    	    			task.setTaskCreatedDate(t.getTaskDate());
-    	    			task.setTaskCompletedDate(upload.getCompleted() != null ? format.format(upload.getCompleted().getTime()) : "");
-    	    			task.setTaskName(t != null ? t.getTaskName(): "");
-    					task.setUserId(t != null ? t.getUserId() : "");
-    					task.setTaskType(t != null ? t.getTaskType() :"");
-    					if(upload.getResult() == null) {
-    						task.setTransferStatus("In Progress");
-    						 path = upload.getInProgressItems().get(0).getPath();
-        					      					
-    					} else if(Boolean.TRUE.equals(upload.getResult())) {
-    						task.setTransferStatus("Completed");
-    						 path = upload.getCompletedItems().get(0).getPath();
-    					} else if(Boolean.FALSE.equals(upload.getResult())) {
-    						
-    						 path = upload.getFailedItems().get(0).getPath();
-        					
-    						List<String> message = new ArrayList<String>();
-    						upload.getFailedItems().stream().forEach(x -> message.add(x.getMessage()));
-    						
-    						task.setTransferStatus("Failed (" + String.join(",", message) + ")" + 
-    								"<strong><a style='border: none;background-color: #F39530;height: 23px;width: 37px;border-radius: 11px;float: right;' class='btn btn-link btn-sm' aria-label='Retry Upload' href='#'"
-    								+ "onclick='retryUpload(\"" + upload.getTaskId() + "\" ,\"" + t.getTaskName() + "\")'>"
-    								+ "<img style='height: 13px;width: 13px;margin-top: -14px;' src='images/Status.refresh_icon-01.png' th:src='@{/images/Status.refresh_icon-01.png}' alt='Status refresh'></a></strong>");
-    					} 
-    					if(StringUtils.isNotEmpty(path)) {
-    					 String[] collectionNames = path.split("/");
-    					 task.setProgName(collectionNames[2]);
-    					 task.setStudyName(collectionNames[3]);
-    					 task.setDataSetName(collectionNames[4]);
-    					}
-    					uploadTaskResults.add(task);
-    			}
-    		    
-    		    taskResults.addAll(uploadTaskResults);
-    			
-    			return new ResponseEntity<>(taskResults, headers, HttpStatus.OK);
-    			
-             } catch (Exception e) {
-            	 log.error(e.getMessage(), e);
-           }
-		
-         return new ResponseEntity<>(null, headers, HttpStatus.SERVICE_UNAVAILABLE);
-		
+
+		log.info("get all tasks by user Id");
+		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		String readToken = (String) session.getAttribute("hpcUserToken");
+		try {
+			List<TaskManager> results = new ArrayList<TaskManager>();
+			results = taskManagerService.getAllByUserId(userId);
+			List<String> taskIds = LambdaUtils.map(results, TaskManager::getTaskId);
+
+			String serviceURL = queryServiceURL + "?page=" + 1 + "&totalCount=true";
+			HpcDownloadSummaryDTO downloads = DoeClientUtil.getDownloadSummary(authToken, serviceURL, sslCertPath,
+					sslCertPassword);
+
+			HpcDownloadSummaryDTO downloads1 = DoeClientUtil.getDownloadSummary(readToken, serviceURL, sslCertPath,
+					sslCertPassword);
+
+			final MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>();
+			paramsMap.set("totalCount", Boolean.TRUE.toString());
+			HpcRegistrationSummaryDTO registrations = DoeClientUtil.getRegistrationSummary(authToken,
+					registrationServiceUrl, paramsMap, sslCertPath, sslCertPassword);
+
+			// get the task end date
+
+			List<HpcUserDownloadRequest> downloadResults = new ArrayList<HpcUserDownloadRequest>();
+			if (downloads != null) {
+				downloadResults.addAll(downloads.getActiveTasks());
+				downloadResults.addAll(downloads.getCompletedTasks());
+			}
+
+			if (downloads1 != null) {
+				downloadResults.addAll(downloads1.getActiveTasks());
+				downloadResults.addAll(downloads1.getCompletedTasks());
+			}
+
+			List<HpcBulkDataObjectRegistrationTaskDTO> uploadResults = new ArrayList<HpcBulkDataObjectRegistrationTaskDTO>();
+			if (registrations != null) {
+				uploadResults.addAll(registrations.getActiveTasks());
+				uploadResults.addAll(registrations.getCompletedTasks());
+			}
+
+			List<HpcUserDownloadRequest> finalTaskIds = LambdaUtils.filter(downloadResults,
+					(HpcUserDownloadRequest n) -> taskIds.contains(n.getTaskId()));
+
+			List<TaskManagerDto> taskResults = new ArrayList<TaskManagerDto>();
+
+			for (HpcUserDownloadRequest download : finalTaskIds) {
+				TaskManagerDto task = new TaskManagerDto();
+				TaskManager t = results.stream().filter(x -> download.getTaskId().equals(x.getTaskId())).findAny()
+						.orElse(null);
+				String path = download.getPath();
+
+				if ((StringUtils.isEmpty(path) || StringUtils.isBlank(path))
+						&& CollectionUtils.isNotEmpty(download.getItems())) {
+					path = download.getItems().get(0).getPath();
+				}
+				if (StringUtils.isNotEmpty(path)) {
+					String[] collectionNames = path.split("/");
+					task.setProgName(collectionNames[2]);
+					task.setStudyName(collectionNames[3]);
+					task.setDataSetName(collectionNames[4]);
+				}
+
+				task.setTaskCreatedDate(t.getTaskDate());
+				task.setTaskId(download.getTaskId());
+				task.setTaskCompletedDate(
+						download.getCompleted() != null ? format.format(download.getCompleted().getTime()) : "");
+				task.setTaskName(t.getTaskName());
+				task.setUserId(t.getUserId());
+				task.setTaskType(t.getTaskType());
+				if (download.getResult() != null && download.getResult().value().equals("FAILED")) {
+					List<String> message = new ArrayList<String>();
+					download.getItems().stream().forEach(x -> message.add(x.getMessage()));
+					task.setTransferStatus("Failed (" + String.join(",", message) + ")"
+							+ "<strong><a style='border: none;background-color: #F39530; height: 23px;width: 37px;border-radius: 11px;float: right;' class='btn btn-link btn-sm' aria-label='Retry download' href='#' "
+							+ "onclick='retryDownload(\"" + download.getTaskId() + "\" ,\"" + t.getTaskName() + "\", \""
+							+ t.getDownloadType() + "\")'>"
+							+ "<img style='height: 13px;width: 13px;margin-top: -14px;' src='images/Status.refresh_icon-01.png' th:src='@{/images/Status.refresh_icon-01.png}' alt='Status refresh'></a></strong>");
+				} else if (download.getResult() != null && download.getResult().value().equals("COMPLETED")) {
+					task.setTransferStatus("Completed");
+				} else {
+					task.setTransferStatus("In Progress");
+				}
+
+				taskResults.add(task);
+			}
+
+			// same for uploads
+
+			List<HpcBulkDataObjectRegistrationTaskDTO> finalTaskUploadIds = LambdaUtils.filter(uploadResults,
+					(HpcBulkDataObjectRegistrationTaskDTO n) -> taskIds.contains(n.getTaskId()));
+
+			List<TaskManagerDto> uploadTaskResults = new ArrayList<TaskManagerDto>();
+
+			for (HpcBulkDataObjectRegistrationTaskDTO upload : finalTaskUploadIds) {
+				TaskManagerDto task = new TaskManagerDto();
+				TaskManager t = results.stream().filter(x -> upload.getTaskId().equals(x.getTaskId())).findAny()
+						.orElse(null);
+				String path = null;
+				task.setTaskId(upload.getTaskId());
+				task.setTaskCreatedDate(t.getTaskDate());
+				task.setTaskCompletedDate(
+						upload.getCompleted() != null ? format.format(upload.getCompleted().getTime()) : "");
+				task.setTaskName(t != null ? t.getTaskName() : "");
+				task.setUserId(t != null ? t.getUserId() : "");
+				task.setTaskType(t != null ? t.getTaskType() : "");
+				if (upload.getResult() == null) {
+					task.setTransferStatus("In Progress");
+					path = upload.getInProgressItems().get(0).getPath();
+
+				} else if (Boolean.TRUE.equals(upload.getResult())) {
+					task.setTransferStatus("Completed");
+					path = upload.getCompletedItems().get(0).getPath();
+				} else if (Boolean.FALSE.equals(upload.getResult())) {
+
+					path = upload.getFailedItems().get(0).getPath();
+
+					List<String> message = new ArrayList<String>();
+					upload.getFailedItems().stream().forEach(x -> message.add(x.getMessage()));
+
+					task.setTransferStatus("Failed (" + String.join(",", message) + ")"
+							+ "<strong><a style='border: none;background-color: #F39530;height: 23px;width: 37px;border-radius: 11px;float: right;' class='btn btn-link btn-sm' aria-label='Retry Upload' href='#'"
+							+ "onclick='retryUpload(\"" + upload.getTaskId() + "\" ,\"" + t.getTaskName() + "\")'>"
+							+ "<img style='height: 13px;width: 13px;margin-top: -14px;' src='images/Status.refresh_icon-01.png' th:src='@{/images/Status.refresh_icon-01.png}' alt='Status refresh'></a></strong>");
+				}
+				if (StringUtils.isNotEmpty(path)) {
+					String[] collectionNames = path.split("/");
+					task.setProgName(collectionNames[2]);
+					task.setStudyName(collectionNames[3]);
+					task.setDataSetName(collectionNames[4]);
+				}
+				uploadTaskResults.add(task);
+			}
+
+			taskResults.addAll(uploadTaskResults);
+
+			return new ResponseEntity<>(taskResults, headers, HttpStatus.OK);
+
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+
+		return new ResponseEntity<>(null, headers, HttpStatus.SERVICE_UNAVAILABLE);
+
 	}
-	
-
-
 
 }

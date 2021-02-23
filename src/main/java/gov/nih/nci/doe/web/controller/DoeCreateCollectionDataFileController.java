@@ -1,12 +1,3 @@
-/**
- * DoeCollectionController.java
- *
- * Copyright SVG, Inc.
- * Copyright Leidos Biomedical Research, Inc
- * 
- * Distributed under the OSI-approved BSD 3-Clause License.
- * See https://ncisvn.nci.nih.gov/svn/HPC_Data_Management/branches/hpc-prototype-dev/LICENSE.txt for details.
- */
 package gov.nih.nci.doe.web.controller;
 
 import java.nio.file.Path;
@@ -20,7 +11,6 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +18,6 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.ui.Model;
 
 import gov.nih.nci.doe.web.DoeWebException;
-import gov.nih.nci.doe.web.domain.TaskManager;
 import gov.nih.nci.doe.web.model.DoeCollectionModel;
 import gov.nih.nci.doe.web.model.DoeMetadataAttrEntry;
 import gov.nih.nci.doe.web.model.KeyValueBean;
@@ -67,8 +56,6 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 	private String hpcModelURL;
 	@Value("${gov.nih.nci.hpc.server.collection.acl.user}")
 	private String collectionAclURL;
-
-	
 
 	protected void clearSessionAttrs(HttpSession session) {
 		session.removeAttribute("datafilePath");
@@ -116,118 +103,115 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void setInputParameters(HttpServletRequest request, HttpSession session,Model model) {
-			String endPoint = request.getParameter("endpoint_id");
-			String globusPath = request.getParameter("path");
-			List<String> fileNames = new ArrayList<String>();
-			List<String> folderNames = new ArrayList<String>();
-			List<String> fileIds = new ArrayList<String>();
-	        List<String> folderIds = new ArrayList<String>();
-			Enumeration<String> names = request.getParameterNames();
-			String accessToken = (String) session.getAttribute("accessToken");
+	protected void setInputParameters(HttpServletRequest request, HttpSession session, Model model) {
+		String endPoint = request.getParameter("endpoint_id");
+		String globusPath = request.getParameter("path");
+		List<String> fileNames = new ArrayList<String>();
+		List<String> folderNames = new ArrayList<String>();
+		List<String> fileIds = new ArrayList<String>();
+		List<String> folderIds = new ArrayList<String>();
+		Enumeration<String> names = request.getParameterNames();
+		String accessToken = (String) session.getAttribute("accessToken");
 
-			while (names.hasMoreElements()) {
-				String paramName = names.nextElement();
-				if (paramName.startsWith("fileNames") && request.getParameterValues(paramName) != null)
-					fileNames.addAll(Arrays.asList(request.getParameterValues(paramName)));
-				else if (paramName.startsWith("folderNames") && request.getParameterValues(paramName) != null)
-					folderNames.addAll(Arrays.asList(request.getParameterValues(paramName)));
-				else if (paramName.startsWith("fileIds") && request.getParameterValues(paramName) != null)
-	                fileIds.addAll(Arrays.asList(request.getParameterValues(paramName)));
-	            else if (paramName.startsWith("folderIds") && request.getParameterValues(paramName) != null)
-	                folderIds.addAll(Arrays.asList(request.getParameterValues(paramName)));
-				else if (paramName.startsWith("file"))
-	                fileNames.add(request.getParameter(paramName));
-	            else if (paramName.startsWith("folder"))
-	                folderNames.add(request.getParameter(paramName));
-			}
-			
-			if (endPoint == null)
-				endPoint = (String) session.getAttribute("GlobusEndpoint");
-			else
-				session.setAttribute("GlobusEndpoint", endPoint);
+		while (names.hasMoreElements()) {
+			String paramName = names.nextElement();
+			if (paramName.startsWith("fileNames") && request.getParameterValues(paramName) != null)
+				fileNames.addAll(Arrays.asList(request.getParameterValues(paramName)));
+			else if (paramName.startsWith("folderNames") && request.getParameterValues(paramName) != null)
+				folderNames.addAll(Arrays.asList(request.getParameterValues(paramName)));
+			else if (paramName.startsWith("fileIds") && request.getParameterValues(paramName) != null)
+				fileIds.addAll(Arrays.asList(request.getParameterValues(paramName)));
+			else if (paramName.startsWith("folderIds") && request.getParameterValues(paramName) != null)
+				folderIds.addAll(Arrays.asList(request.getParameterValues(paramName)));
+			else if (paramName.startsWith("file"))
+				fileNames.add(request.getParameter(paramName));
+			else if (paramName.startsWith("folder"))
+				folderNames.add(request.getParameter(paramName));
+		}
 
-			model.addAttribute("endpoint_id", endPoint);
+		if (endPoint == null)
+			endPoint = (String) session.getAttribute("GlobusEndpoint");
+		else
+			session.setAttribute("GlobusEndpoint", endPoint);
 
-			if (globusPath == null)
-				globusPath = (String) session.getAttribute("GlobusEndpointPath");
-			else
-				session.setAttribute("GlobusEndpointPath", globusPath);
+		model.addAttribute("endpoint_id", endPoint);
 
-			model.addAttribute("endpoint_path", globusPath);
+		if (globusPath == null)
+			globusPath = (String) session.getAttribute("GlobusEndpointPath");
+		else
+			session.setAttribute("GlobusEndpointPath", globusPath);
 
-			if (fileNames.isEmpty())
-				fileNames = (List<String>) session.getAttribute("GlobusEndpointFiles");
-			else
-				session.setAttribute("GlobusEndpointFiles", fileNames);
+		model.addAttribute("endpoint_path", globusPath);
 
-			if (folderNames.isEmpty())
-				folderNames = (List<String>) session.getAttribute("GlobusEndpointFolders");
-			else
-				session.setAttribute("GlobusEndpointFolders", folderNames);
+		if (fileNames.isEmpty())
+			fileNames = (List<String>) session.getAttribute("GlobusEndpointFiles");
+		else
+			session.setAttribute("GlobusEndpointFiles", fileNames);
 
-			if (fileIds.isEmpty())
-				  fileIds = (List<String>) session.getAttribute("fileIds");
-		        else
-		            session.setAttribute("fileIds", fileIds);
+		if (folderNames.isEmpty())
+			folderNames = (List<String>) session.getAttribute("GlobusEndpointFolders");
+		else
+			session.setAttribute("GlobusEndpointFolders", folderNames);
 
-		        if (folderIds.isEmpty())
-		          folderIds = (List<String>) session.getAttribute("folderIds");
-		        else
-		            session.setAttribute("folderIds", folderIds);
-		        
-			if (endPoint != null)
-				model.addAttribute("async", true);
+		if (fileIds.isEmpty())
+			fileIds = (List<String>) session.getAttribute("fileIds");
+		else
+			session.setAttribute("fileIds", fileIds);
 
-			if (fileNames != null && !fileNames.isEmpty())
-				model.addAttribute("fileNames", fileNames);
+		if (folderIds.isEmpty())
+			folderIds = (List<String>) session.getAttribute("folderIds");
+		else
+			session.setAttribute("folderIds", folderIds);
 
-			if (folderNames != null && !folderNames.isEmpty())
-				model.addAttribute("folderNames", folderNames);
-			
-			if (fileIds != null && !fileIds.isEmpty())
-	            model.addAttribute("fileIds", fileIds);
+		if (endPoint != null)
+			model.addAttribute("async", true);
 
-	        if (folderIds != null && !folderIds.isEmpty())
-	            model.addAttribute("folderIds", folderIds);
-	      
-	        if (accessToken != null) {
-	            model.addAttribute("accessToken", accessToken);
-	            model.addAttribute("authorized", "true");
-	        }
-			
-			model.addAttribute("datafilePath",session.getAttribute("datafilePath"));
-			model.addAttribute("institutePath",session.getAttribute("institutePath"));
-			model.addAttribute("studyPath",session.getAttribute("studyPath"));
+		if (fileNames != null && !fileNames.isEmpty())
+			model.addAttribute("fileNames", fileNames);
+
+		if (folderNames != null && !folderNames.isEmpty())
+			model.addAttribute("folderNames", folderNames);
+
+		if (fileIds != null && !fileIds.isEmpty())
+			model.addAttribute("fileIds", fileIds);
+
+		if (folderIds != null && !folderIds.isEmpty())
+			model.addAttribute("folderIds", folderIds);
+
+		if (accessToken != null) {
+			model.addAttribute("accessToken", accessToken);
+			model.addAttribute("authorized", "true");
+		}
+
+		model.addAttribute("datafilePath", session.getAttribute("datafilePath"));
+		model.addAttribute("institutePath", session.getAttribute("institutePath"));
+		model.addAttribute("studyPath", session.getAttribute("studyPath"));
 
 	}
 
-	
 	@SuppressWarnings("unchecked")
-	protected gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO constructV2BulkRequest(HttpServletRequest request,
-			HttpSession session, String path) {
+	protected gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO constructV2BulkRequest(
+			HttpServletRequest request, HttpSession session, String path) {
 		gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO dto = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO();
-		
+
 		String datafilePath = (String) session.getAttribute("datafilePath");
 		String globusEndpoint = (String) session.getAttribute("GlobusEndpoint");
 		String globusEndpointPath = (String) session.getAttribute("GlobusEndpointPath");
 		List<String> globusEndpointFiles = (List<String>) session.getAttribute("GlobusEndpointFiles");
 		List<String> globusEndpointFolders = (List<String>) session.getAttribute("GlobusEndpointFolders");
 		List<String> googleDriveFileIds = (List<String>) session.getAttribute("fileIds");
-        List<String> googleDriveFolderIds = (List<String>) session.getAttribute("folderIds");
-        String accessToken = (String) session.getAttribute("accessToken");
+		List<String> googleDriveFolderIds = (List<String>) session.getAttribute("folderIds");
+		String accessToken = (String) session.getAttribute("accessToken");
 
-		
-		String bulkType = (String)request.getParameter("uploadType");
-		String bucketName = (String)request.getParameter("bucketName");
-		String s3Path = (String)request.getParameter("s3Path");
-		String accessKey = (String)request.getParameter("accessKey");
-		String secretKey = (String)request.getParameter("secretKey");
-		String region = (String)request.getParameter("region");
-		String s3File = (String)request.getParameter("s3File");
+		String bulkType = (String) request.getParameter("uploadType");
+		String bucketName = (String) request.getParameter("bucketName");
+		String s3Path = (String) request.getParameter("s3Path");
+		String accessKey = (String) request.getParameter("accessKey");
+		String secretKey = (String) request.getParameter("secretKey");
+		String region = (String) request.getParameter("region");
+		String s3File = (String) request.getParameter("s3File");
 		boolean isS3File = s3File != null && s3File.equals("on");
 
-		
 		if (StringUtils.equals(bulkType, "globus") && globusEndpointFiles != null) {
 			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO> files = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO>();
 			for (String fileName : globusEndpointFiles) {
@@ -245,26 +229,25 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			}
 			dto.getDataObjectRegistrationItems().addAll(files);
 		} else if (StringUtils.equals(bulkType, "drive") && googleDriveFileIds != null) {
-            List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO> files = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO>();
-            for (String fileId : googleDriveFileIds) {
-                gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO file = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO();
-                HpcFileLocation source = new HpcFileLocation();
-                source.setFileContainerId("MyDrive");
-                source.setFileId(fileId);
-                Path filePath = Paths.get(globusEndpointFiles.get(googleDriveFileIds.indexOf(fileId)));
-                String fileName = filePath.getFileName().toString();
-                HpcStreamingUploadSource googleDriveSource = new HpcStreamingUploadSource();
-                googleDriveSource.setSourceLocation(source);
-                googleDriveSource.setAccessToken(accessToken);
-                file.setGoogleDriveUploadSource(googleDriveSource);
-                file.setCreateParentCollections(true);
-                file.setPath(path + "/" + fileName);
-                log.info(path + "/" + fileName);
-                files.add(file);
-            }
-            dto.getDataObjectRegistrationItems().addAll(files);
-        }
-
+			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO> files = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO>();
+			for (String fileId : googleDriveFileIds) {
+				gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO file = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO();
+				HpcFileLocation source = new HpcFileLocation();
+				source.setFileContainerId("MyDrive");
+				source.setFileId(fileId);
+				Path filePath = Paths.get(globusEndpointFiles.get(googleDriveFileIds.indexOf(fileId)));
+				String fileName = filePath.getFileName().toString();
+				HpcStreamingUploadSource googleDriveSource = new HpcStreamingUploadSource();
+				googleDriveSource.setSourceLocation(source);
+				googleDriveSource.setAccessToken(accessToken);
+				file.setGoogleDriveUploadSource(googleDriveSource);
+				file.setCreateParentCollections(true);
+				file.setPath(path + "/" + fileName);
+				log.info(path + "/" + fileName);
+				files.add(file);
+			}
+			dto.getDataObjectRegistrationItems().addAll(files);
+		}
 
 		if (StringUtils.equals(bulkType, "globus") && globusEndpointFolders != null) {
 			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO> folders = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO>();
@@ -272,7 +255,8 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO folder = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO();
 				HpcFileLocation source = new HpcFileLocation();
 				source.setFileContainerId(globusEndpoint);
-				String fromPath = globusEndpointPath.endsWith("/") ?  globusEndpointPath + folderName : globusEndpointPath + "/" + folderName;
+				String fromPath = globusEndpointPath.endsWith("/") ? globusEndpointPath + folderName
+						: globusEndpointPath + "/" + folderName;
 				String toPath = "/" + folderName;
 				source.setFileId(fromPath);
 				folder.setBasePath(datafilePath);
@@ -280,7 +264,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				globusDirectory.setDirectoryLocation(source);
 				folder.setGlobusScanDirectory(globusDirectory);
 				folders.add(folder);
-				if(!fromPath.equals(toPath)) {
+				if (!fromPath.equals(toPath)) {
 					HpcDirectoryScanPathMap pathDTO = new HpcDirectoryScanPathMap();
 					pathDTO.setFromPath(fromPath);
 					pathDTO.setToPath(toPath);
@@ -289,34 +273,34 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			}
 			dto.getDirectoryScanRegistrationItems().addAll(folders);
 		}
-		
+
 		if (StringUtils.equals(bulkType, "drive") && googleDriveFolderIds != null) {
-            List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO> folders = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO>();
-            for (String folderId : googleDriveFolderIds) {
-                gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO folder = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO();
-                HpcFileLocation source = new HpcFileLocation();
-                source.setFileContainerId("MyDrive");
-                Path folderPath = Paths.get(globusEndpointFolders.get(googleDriveFolderIds.indexOf(folderId)));
-                String folderName = folderPath.getFileName().toString();
-                String fromPath = "/" + folderPath.toString();
-                String toPath = "/" + folderName;
-                source.setFileId(folderId);
-                folder.setBasePath(datafilePath);
-                HpcGoogleDriveScanDirectory googleDriveDirectory = new HpcGoogleDriveScanDirectory();
-                googleDriveDirectory.setDirectoryLocation(source);
-                googleDriveDirectory.setAccessToken(accessToken);
-                folder.setGoogleDriveScanDirectory(googleDriveDirectory);
-                folders.add(folder);
-                if(!fromPath.equals(toPath)) {
-                    HpcDirectoryScanPathMap pathDTO = new HpcDirectoryScanPathMap();
-                    pathDTO.setFromPath(fromPath);
-                    pathDTO.setToPath(toPath);
-                    folder.setPathMap(pathDTO);
-                }
-                
-            }
-            dto.getDirectoryScanRegistrationItems().addAll(folders);
-        }
+			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO> folders = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO>();
+			for (String folderId : googleDriveFolderIds) {
+				gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO folder = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO();
+				HpcFileLocation source = new HpcFileLocation();
+				source.setFileContainerId("MyDrive");
+				Path folderPath = Paths.get(globusEndpointFolders.get(googleDriveFolderIds.indexOf(folderId)));
+				String folderName = folderPath.getFileName().toString();
+				String fromPath = "/" + folderPath.toString();
+				String toPath = "/" + folderName;
+				source.setFileId(folderId);
+				folder.setBasePath(datafilePath);
+				HpcGoogleDriveScanDirectory googleDriveDirectory = new HpcGoogleDriveScanDirectory();
+				googleDriveDirectory.setDirectoryLocation(source);
+				googleDriveDirectory.setAccessToken(accessToken);
+				folder.setGoogleDriveScanDirectory(googleDriveDirectory);
+				folders.add(folder);
+				if (!fromPath.equals(toPath)) {
+					HpcDirectoryScanPathMap pathDTO = new HpcDirectoryScanPathMap();
+					pathDTO.setFromPath(fromPath);
+					pathDTO.setToPath(toPath);
+					folder.setPathMap(pathDTO);
+				}
+
+			}
+			dto.getDirectoryScanRegistrationItems().addAll(folders);
+		}
 		if (StringUtils.equals(bulkType, "s3") && s3Path != null && isS3File) {
 			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO> files = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO>();
 			gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO file = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO();
@@ -337,8 +321,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			System.out.println(path + "/" + s3FilePath.getFileName());
 			files.add(file);
 			dto.getDataObjectRegistrationItems().addAll(files);
-		}
-		else if (StringUtils.equals(bulkType, "s3") && s3Path != null) {
+		} else if (StringUtils.equals(bulkType, "s3") && s3Path != null) {
 			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO> folders = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO>();
 			gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO folder = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO();
 			HpcFileLocation source = new HpcFileLocation();
@@ -357,13 +340,12 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 
 			dto.getDirectoryScanRegistrationItems().addAll(folders);
 		}
-		
-		
+
 		return dto;
 	}
 
-	protected List<HpcMetadataEntry> getMetadataEntries(HttpServletRequest request, HttpSession session, 
-			String path) throws DoeWebException{
+	protected List<HpcMetadataEntry> getMetadataEntries(HttpServletRequest request, HttpSession session, String path)
+			throws DoeWebException {
 		Enumeration<String> params = request.getParameterNames();
 		List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
 
@@ -395,10 +377,6 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		return metadataEntries;
 	}
 
-
-
-	
-
 	protected List<String> getCollectionTypes(List<HpcMetadataValidationRule> rules) {
 		List<String> collectionTypesSet = new ArrayList<String>();
 		for (HpcMetadataValidationRule rule : rules) {
@@ -424,11 +402,11 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 
 		return types;
 	}
-	
 
 	@SuppressWarnings("unchecked")
 	protected List<DoeMetadataAttrEntry> populateFormAttributes(HttpServletRequest request, HttpSession session,
-			 String basePath, String collectionType, String assetType, boolean refresh,	List<DoeMetadataAttrEntry> cachedEntries) throws DoeWebException{
+			String basePath, String collectionType, String assetType, boolean refresh,
+			List<DoeMetadataAttrEntry> cachedEntries) throws DoeWebException {
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 
 		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
@@ -440,86 +418,86 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		HpcDataManagementRulesDTO basePathRules = DoeClientUtil.getBasePathManagementRules(modelDTO, basePath);
 		if (basePathRules != null) {
 			HpcDataHierarchy dataHierarchy = basePathRules.getDataHierarchy();
-			if(dataHierarchy != null) {
+			if (dataHierarchy != null) {
 				rules = basePathRules.getCollectionMetadataValidationRules();
-			
-		  }
+
+			}
 		}
 
 		HpcCollectionDTO collectionDTO = (HpcCollectionDTO) session.getAttribute("parentCollection");
 		List<DoeMetadataAttrEntry> metadataEntries = new ArrayList<DoeMetadataAttrEntry>();
 		List<String> attributeNames = new ArrayList<String>();
 		log.info("base path rules:" + rules);
-		
+
 		if (rules != null && !rules.isEmpty()) {
-        	for (HpcMetadataValidationRule rule : rules) {
-				if ((rule.getCollectionTypes().contains(collectionType) || rule.getCollectionTypes().isEmpty()) 
+			for (HpcMetadataValidationRule rule : rules) {
+				if ((rule.getCollectionTypes().contains(collectionType) || rule.getCollectionTypes().isEmpty())
 						&& !rule.getAttribute().equalsIgnoreCase("collection_type")) {
 					log.info("get HpcMetadataValidationRule:" + rule);
 					Boolean isValid = true;
-					if(StringUtils.isNotEmpty(rule.getControllerValue()) && StringUtils.isNotEmpty(rule.getControllerAttribute())
+					if (StringUtils.isNotEmpty(rule.getControllerValue())
+							&& StringUtils.isNotEmpty(rule.getControllerAttribute())
 							&& rule.getControllerValue().equalsIgnoreCase(assetType)) {
 						isValid = true;
-					} else if(StringUtils.isNotEmpty(rule.getControllerValue()) && StringUtils.isNotEmpty(rule.getControllerAttribute())
+					} else if (StringUtils.isNotEmpty(rule.getControllerValue())
+							&& StringUtils.isNotEmpty(rule.getControllerAttribute())
 							&& !rule.getControllerValue().equalsIgnoreCase(assetType)) {
 						isValid = false;
 					}
-					if(Boolean.TRUE.equals(isValid)) {
-					DoeMetadataAttrEntry entry = new DoeMetadataAttrEntry();
-					entry.setAttrName(rule.getAttribute());
-					attributeNames.add(rule.getAttribute());
-					entry.setAttrValue(getFormAttributeValue(request, "zAttrStr_" + rule.getAttribute(), cachedEntries, "zAttrStr_"));
-					if (entry.getAttrValue() == null) {
-						if (refresh)
-							entry.setAttrValue(getCollectionAttrValue(collectionDTO, rule.getAttribute()));
-						else
-							entry.setAttrValue(rule.getDefaultValue());
-					}
-					if (rule.getValidValues() != null && !rule.getValidValues().isEmpty()) {
-						List<String> validValues = new ArrayList<String>();
-						for (String value : rule.getValidValues())
-							validValues.add(value);
-						entry.setValidValues(validValues);
-					}
-					entry.setDescription(rule.getDescription());
-					entry.setMandatory(rule.getMandatory());
-					 String displayAttrName = lookUpService.getDisplayName(collectionType, rule.getAttribute());
-					 if(StringUtils.isNotEmpty(displayAttrName)) {
-						 entry.setDisplayName(displayAttrName);
-					 } else {
-						 entry.setDisplayName(rule.getAttribute());
-					 }
-					metadataEntries.add(entry);
+					if (Boolean.TRUE.equals(isValid)) {
+						DoeMetadataAttrEntry entry = new DoeMetadataAttrEntry();
+						entry.setAttrName(rule.getAttribute());
+						attributeNames.add(rule.getAttribute());
+						entry.setAttrValue(getFormAttributeValue(request, "zAttrStr_" + rule.getAttribute(),
+								cachedEntries, "zAttrStr_"));
+						if (entry.getAttrValue() == null) {
+							if (refresh)
+								entry.setAttrValue(getCollectionAttrValue(collectionDTO, rule.getAttribute()));
+							else
+								entry.setAttrValue(rule.getDefaultValue());
+						}
+						if (rule.getValidValues() != null && !rule.getValidValues().isEmpty()) {
+							List<String> validValues = new ArrayList<String>();
+							for (String value : rule.getValidValues())
+								validValues.add(value);
+							entry.setValidValues(validValues);
+						}
+						entry.setDescription(rule.getDescription());
+						entry.setMandatory(rule.getMandatory());
+						String displayAttrName = lookUpService.getDisplayName(collectionType, rule.getAttribute());
+						if (StringUtils.isNotEmpty(displayAttrName)) {
+							entry.setDisplayName(displayAttrName);
+						} else {
+							entry.setDisplayName(rule.getAttribute());
+						}
+						metadataEntries.add(entry);
 					}
 				}
 			}
 		}
-		
 
 		// Handle custom attributes. If refresh, ignore them
-				if (!refresh) {
-					// add cached entries which are not included in rules
-					List<String> attrNames = LambdaUtils.map(cachedEntries,DoeMetadataAttrEntry::getAttrName);
-					List<String> ruleAttrNames = LambdaUtils.map(rules,HpcMetadataValidationRule::getAttribute);
-	    			 List<String> userDefinedAttrNames = LambdaUtils.filter(attrNames, (String n) ->
-	    			 !ruleAttrNames.contains(n));
-	    			 
-	    			 log.info("user defined attrnames :" + userDefinedAttrNames);
-	    			 for(DoeMetadataAttrEntry x: cachedEntries) {
-	    				 String attrName = lookUpService.getDisplayName(collectionType, x.getAttrName());
-	    				 if(userDefinedAttrNames.contains(x.getAttrName())) {
-	    					 if(StringUtils.isNotEmpty(attrName)) {
-	    						 x.setDisplayName(attrName);
-	    					 } else {
-	    						 x.setDisplayName(x.getAttrName());
-	    					 }
-	    					 metadataEntries.add(x);
-	    				 }
-	    			 }
+		if (!refresh) {
+			// add cached entries which are not included in rules
+			List<String> attrNames = LambdaUtils.map(cachedEntries, DoeMetadataAttrEntry::getAttrName);
+			List<String> ruleAttrNames = LambdaUtils.map(rules, HpcMetadataValidationRule::getAttribute);
+			List<String> userDefinedAttrNames = LambdaUtils.filter(attrNames, (String n) -> !ruleAttrNames.contains(n));
+
+			log.info("user defined attrnames :" + userDefinedAttrNames);
+			for (DoeMetadataAttrEntry x : cachedEntries) {
+				String attrName = lookUpService.getDisplayName(collectionType, x.getAttrName());
+				if (userDefinedAttrNames.contains(x.getAttrName())) {
+					if (StringUtils.isNotEmpty(attrName)) {
+						x.setDisplayName(attrName);
+					} else {
+						x.setDisplayName(x.getAttrName());
+					}
+					metadataEntries.add(x);
 				}
+			}
+		}
 		session.setAttribute("metadataEntries", metadataEntries);
 		return metadataEntries;
-		
 
 	}
 
@@ -553,7 +531,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 
 	protected void setCollectionPath(HttpServletRequest request, String parentPath) {
 		String path = request.getParameter("path");
-		if (path != null && !path.isEmpty()) {			
+		if (path != null && !path.isEmpty()) {
 			return;
 		}
 
@@ -564,10 +542,11 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				basePath = (String) request.getAttribute("basePath");
 			else
 				basePath = basePathValues[0];
-		} 
+		}
 	}
 
-	protected HpcCollectionRegistrationDTO constructRequest(HttpServletRequest request, HttpSession session, DoeCollectionModel doeCollection) throws DoeWebException {
+	protected HpcCollectionRegistrationDTO constructRequest(HttpServletRequest request, HttpSession session,
+			DoeCollectionModel doeCollection) throws DoeWebException {
 		Enumeration<String> params = request.getParameterNames();
 		HpcCollectionRegistrationDTO dto = new HpcCollectionRegistrationDTO();
 		List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
@@ -579,25 +558,25 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				DoeMetadataAttrEntry attrEntry = new DoeMetadataAttrEntry();
 				String attrName = paramName.substring("zAttrStr_".length());
 				String[] attrValue = request.getParameterValues(paramName);
-				entry.setAttribute(attrName);				
-				if("zAttrStr_access_group".equalsIgnoreCase(paramName)) {
+				entry.setAttribute(attrName);
+				if ("zAttrStr_access_group".equalsIgnoreCase(paramName)) {
 					entry.setValue(String.join(",", attrValue));
 				} else {
 					entry.setValue(attrValue[0]);
 				}
-				if(StringUtils.isNotEmpty(entry.getValue())) {
+				if (StringUtils.isNotEmpty(entry.getValue())) {
 					metadataEntries.add(entry);
 				}
-								
+
 				attrEntry.setAttrName(attrName);
-				if("zAttrStr_access_group".equalsIgnoreCase(paramName)) {
+				if ("zAttrStr_access_group".equalsIgnoreCase(paramName)) {
 					attrEntry.setAttrValue(String.join(",", attrValue));
 				} else {
-				attrEntry.setAttrValue(attrValue[0]);
+					attrEntry.setAttrValue(attrValue[0]);
 				}
 				attrEntry.setSystemAttr(false);
-				if(StringUtils.isNotEmpty(entry.getValue())) {
-				  selfMetadataEntries.add(attrEntry);
+				if (StringUtils.isNotEmpty(entry.getValue())) {
+					selfMetadataEntries.add(attrEntry);
 				}
 			} else if (paramName.startsWith("_addAttrName")) {
 				HpcMetadataEntry entry = new HpcMetadataEntry();
@@ -618,7 +597,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				attrEntry.setAttrValue(attrValue[0]);
 				attrEntry.setSystemAttr(false);
 				selfMetadataEntries.add(attrEntry);
-			} else if(paramName.startsWith("path")) {
+			} else if (paramName.startsWith("path")) {
 				String[] path = request.getParameterValues(paramName);
 				doeCollection.setPath(path[0]);
 			}
@@ -629,19 +608,21 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		return dto;
 	}
 
-	
 	@SuppressWarnings("unchecked")
 	public Boolean verifyCollectionPermissions(String parentPath, HpcCollectionListDTO parentCollectionDto) {
-		if (!parentPath.equalsIgnoreCase(basePath) && parentCollectionDto != null && parentCollectionDto.getCollections() != null
+		if (!parentPath.equalsIgnoreCase(basePath) && parentCollectionDto != null
+				&& parentCollectionDto.getCollections() != null
 				&& !CollectionUtils.isEmpty(parentCollectionDto.getCollections())) {
 			HpcCollectionDTO collection = parentCollectionDto.getCollections().get(0);
 			List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList().getBody();
-			String role = getPermissionRole(getLoggedOnUserInfo(),collection.getCollection().getCollectionId(),loggedOnUserPermissions);
-			if(StringUtils.isNotEmpty(role) && (role.equalsIgnoreCase("Owner")|| role.equalsIgnoreCase("Group User"))) {
+			String role = getPermissionRole(getLoggedOnUserInfo(), collection.getCollection().getCollectionId(),
+					loggedOnUserPermissions);
+			if (StringUtils.isNotEmpty(role)
+					&& (role.equalsIgnoreCase("Owner") || role.equalsIgnoreCase("Group User"))) {
 				return true;
-			} 
-	    }
+			}
+		}
 		return false;
-    }
+	}
 
 }

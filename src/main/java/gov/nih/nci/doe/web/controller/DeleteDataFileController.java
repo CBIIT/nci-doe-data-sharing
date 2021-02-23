@@ -16,31 +16,29 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 
-
 @Controller
 @EnableAutoConfiguration
 @RequestMapping("/delete")
-public class DeleteDataFileController extends AbstractDoeController{
-	
+public class DeleteDataFileController extends AbstractDoeController {
+
 	@Value("${gov.nih.nci.hpc.server.dataObject}")
 	private String serviceURL;
-	
 
 	@PostMapping(value = "/datafile")
 	@ResponseBody
-	public String deleteObject(@RequestParam(value = "deletepath") String deletepath,
-			HttpSession session,@RequestHeader HttpHeaders headers) throws DoeWebException{
-		
-		   String authToken = (String) session.getAttribute("writeAccessUserToken");
-          			if (deletepath == null) {
-				return "Invalid Data object path!";
-			}
-			String deleted = DoeClientUtil.deleteDatafile(authToken, serviceURL, deletepath, sslCertPath, sslCertPassword);
-			if (StringUtils.isNotEmpty(deleted) && deleted.equalsIgnoreCase("true")) {
-				return "SUCCESS";
-			} else {
-				return "Failed to delete data file." + deleted;
-			}
+	public String deleteObject(@RequestParam(value = "deletepath") String deletepath, HttpSession session,
+			@RequestHeader HttpHeaders headers) throws DoeWebException {
+
+		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		if (deletepath == null) {
+			return "Invalid Data object path!";
+		}
+		String deleted = DoeClientUtil.deleteDatafile(authToken, serviceURL, deletepath, sslCertPath, sslCertPassword);
+		if (StringUtils.isNotEmpty(deleted) && deleted.equalsIgnoreCase("true")) {
+			return "SUCCESS";
+		} else {
+			return "Failed to delete data file." + deleted;
+		}
 	}
 
 }

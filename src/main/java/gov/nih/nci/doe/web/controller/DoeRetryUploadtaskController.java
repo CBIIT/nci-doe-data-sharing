@@ -27,13 +27,12 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectRegistrationItemDTO;
 @RequestMapping("/uploadtask")
 public class DoeRetryUploadtaskController extends AbstractDoeController {
 
-	
 	@Value("${gov.nih.nci.hpc.server.bulkregistration}")
 	private String registrationServiceURL;
-	
+
 	@Autowired
 	TaskManagerService taskManagerService;
-	
+
 	/**
 	 * POST action to retry failed upload files.
 	 * 
@@ -49,13 +48,12 @@ public class DoeRetryUploadtaskController extends AbstractDoeController {
 	@PostMapping
 	@ResponseBody
 	public String retryUpload(@RequestParam(value = "taskId") String taskId,
-			@RequestParam(value = "taskName") String taskName, HttpSession session, 
-			HttpServletRequest request) {
-		
+			@RequestParam(value = "taskName") String taskName, HttpSession session, HttpServletRequest request) {
+
 		AjaxResponseBody result = new AjaxResponseBody();
 		try {
 			String authToken = (String) session.getAttribute("writeAccessUserToken");
-		
+
 			HpcBulkDataObjectRegistrationStatusDTO uploadTask = DoeClientUtil.getDataObjectRegistrationTask(authToken,
 					this.registrationServiceURL, taskId, this.sslCertPath, this.sslCertPassword);
 
@@ -69,14 +67,14 @@ public class DoeRetryUploadtaskController extends AbstractDoeController {
 				for (HpcDataObjectRegistrationItemDTO responseItem : responseDTO.getDataObjectRegistrationItems()) {
 					info.append(responseItem.getPath()).append("<br/>");
 				}
-			    
-			    taskManagerService.saveTransfer(responseDTO.getTaskId(),"Upload",null,taskName,getLoggedOnUserInfo());
-				return "Your bulk data file registration request has the following task ID: <a href='uploadtask?type=&taskId="
-								+ responseDTO.getTaskId() + "'>" + responseDTO.getTaskId() + "</a>";
-			}
-			
 
-		}  catch (Exception e) {
+				taskManagerService.saveTransfer(responseDTO.getTaskId(), "Upload", null, taskName,
+						getLoggedOnUserInfo());
+				return "Your bulk data file registration request has the following task ID: <a href='uploadtask?type=&taskId="
+						+ responseDTO.getTaskId() + "'>" + responseDTO.getTaskId() + "</a>";
+			}
+
+		} catch (Exception e) {
 			log.error("Upload request is not successful: " + e.getMessage(), e);
 			result.setMessage("Upload request is not successful: " + e.getMessage());
 			return result.getMessage();

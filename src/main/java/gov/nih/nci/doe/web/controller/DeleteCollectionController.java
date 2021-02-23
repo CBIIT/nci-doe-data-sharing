@@ -20,57 +20,56 @@ import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 
-
-
 @Controller
 @EnableAutoConfiguration
 @RequestMapping("/deleteCollection")
-public class DeleteCollectionController extends AbstractDoeController{
-	
+public class DeleteCollectionController extends AbstractDoeController {
+
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	private String serviceURL;
-	
 
 	@PostMapping
 	@ResponseBody
-	public String deletCollection(@RequestParam(value = "collPath") String collPath,
-			HttpSession session,@RequestHeader HttpHeaders headers) throws DoeWebException{
-		
-		   String authToken = (String) session.getAttribute("writeAccessUserToken");
-		   String userInfo = getLoggedOnUserInfo();
-		   
-          	if(authToken == null || StringUtils.isEmpty(userInfo)) {
-          		return "Invalid token. Login again.";
-          	}
-          	
-		    if (collPath == null) {
-				return "Invalid Data object path!";
+	public String deletCollection(@RequestParam(value = "collPath") String collPath, HttpSession session,
+			@RequestHeader HttpHeaders headers) throws DoeWebException {
+
+		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		String userInfo = getLoggedOnUserInfo();
+
+		if (authToken == null || StringUtils.isEmpty(userInfo)) {
+			return "Invalid token. Login again.";
+		}
+
+		if (collPath == null) {
+			return "Invalid Data object path!";
+		}
+
+		HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL, collPath, false,
+				sslCertPath, sslCertPassword);
+
+		if (collections != null && collections.getCollections() != null
+				&& !CollectionUtils.isEmpty(collections.getCollections())) {
+
+			HpcCollectionDTO collection = collections.getCollections().get(0);
+			MetaDataPermissions perm = metaDataPermissionService
+					.getMetaDataPermissionsOwnerByCollectionId(collection.getCollection().getCollectionId());
+
+			if (perm != null && perm.getUserGroupId().equalsIgnoreCase(userInfo)) {
+
+				String deleted = DoeClientUtil.deleteCollection(authToken, serviceURL, collPath, sslCertPath,
+						sslCertPassword);
+				if (StringUtils.isNotEmpty(deleted) && deleted.equalsIgnoreCase("SUCCESS")) {
+					return "SUCCESS";
+				} else {
+					return "Failed to delete collection." + deleted;
+				}
+			} else {
+				return "Only the collection owner can delete this.";
 			}
-		    
-		    HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL, 
-		    		collPath, false, sslCertPath,sslCertPassword);
-		    
-			if (collections != null && collections.getCollections() != null
-					&& !CollectionUtils.isEmpty(collections.getCollections())) {
-				
-				HpcCollectionDTO collection = collections.getCollections().get(0);
-				MetaDataPermissions perm = metaDataPermissionService.getMetaDataPermissionsOwnerByCollectionId(collection.getCollection().getCollectionId());
-			    
-				if(perm != null && perm.getUserGroupId().equalsIgnoreCase(userInfo)) {
-					
-			    	String deleted = DoeClientUtil.deleteCollection(authToken, serviceURL, collPath,sslCertPath, sslCertPassword);
-					if (StringUtils.isNotEmpty(deleted) && deleted.equalsIgnoreCase("SUCCESS")) {
-						return "SUCCESS";
-					} else {
-						return "Failed to delete collection." + deleted;
-					}
-			    } else {
-			    	return "Only the collection owner can delete this.";
-			    }
-			}
-				
-			return "Cannot find collection";
-			
+		}
+
+		return "Cannot find collection";
+
 	}
 
 }

@@ -16,7 +16,7 @@ import gov.nih.nci.doe.web.model.ForgotPassword;
 
 /**
  *
- * DOE root Controller
+ * DOE Forgot Password Controller
  *
  *
  */
@@ -26,50 +26,53 @@ import gov.nih.nci.doe.web.model.ForgotPassword;
 @RequestMapping("/forgotPassword")
 public class ForgotPasswordController extends AbstractDoeController {
 
-
-	 @PostMapping
-	public ResponseEntity<?> forgotPassword(
-			@RequestHeader HttpHeaders headers, @RequestBody ForgotPassword forgotPassword) throws Exception {
+	@PostMapping
+	public ResponseEntity<?> forgotPassword(@RequestHeader HttpHeaders headers,
+			@RequestBody ForgotPassword forgotPassword) throws Exception {
 		log.info("forgot password");
-		
-		if(forgotPassword.getEmailAddrr() == null || StringUtils.isEmpty(forgotPassword.getEmailAddrr())) {
+
+		if (forgotPassword.getEmailAddrr() == null || StringUtils.isEmpty(forgotPassword.getEmailAddrr())) {
 			log.error("User ID is required.");
 			return new ResponseEntity<>("Enter an email address.", HttpStatus.OK);
-			
-		} else if(forgotPassword.getPassword() == null || StringUtils.isEmpty(forgotPassword.getPassword())) {
+
+		} else if (forgotPassword.getPassword() == null || StringUtils.isEmpty(forgotPassword.getPassword())) {
 			log.info("Enter password.");
 			return new ResponseEntity<>("Enter a password.", HttpStatus.OK);
-			
-		} else if(forgotPassword.getConfirmPassword() == null || StringUtils.isEmpty(forgotPassword.getConfirmPassword())) {
+
+		} else if (forgotPassword.getConfirmPassword() == null
+				|| StringUtils.isEmpty(forgotPassword.getConfirmPassword())) {
 			log.info("Repeat your password to confirm.");
 			return new ResponseEntity<>("Repeat your password to confirm.", HttpStatus.OK);
-			
-		} else if(!authService.doesUsernameExist(forgotPassword.getEmailAddrr().trim().toLowerCase())) {
+
+		} else if (!authService.doesUsernameExist(forgotPassword.getEmailAddrr().trim().toLowerCase())) {
 			log.info("Email not found to reset password");
 			return new ResponseEntity<>("Enter a valid email address.", HttpStatus.OK);
-		} 
+		}
 
 		log.info("About to set a new password for user ID {}", forgotPassword.getEmailAddrr());
-		
+
 		// validate the user's email address and password.
-		PasswordStatusCode status = authService.saveUserPassword(forgotPassword.getPassword(), forgotPassword.getEmailAddrr(),true);
-		
-		if(PasswordStatusCode.SUCCESS == status) {
-			
+		PasswordStatusCode status = authService.saveUserPassword(forgotPassword.getPassword(),
+				forgotPassword.getEmailAddrr(), true);
+
+		if (PasswordStatusCode.SUCCESS == status) {
+
 			log.info("successfully reset the password...");
 			return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
-			
+
 		} else {
-			
+
 			log.info("failed to reset applicant's password...");
 			// failed to reset the password. set the error message
-			if(PasswordStatusCode.INVALID_FORMAT == status || PasswordStatusCode.INVALID_LENGTH == status) { 
+			if (PasswordStatusCode.INVALID_FORMAT == status || PasswordStatusCode.INVALID_LENGTH == status) {
 				return new ResponseEntity<>("Password is in invalid length or format", HttpStatus.OK);
-			} if(PasswordStatusCode.NEW_PASSWD_SAME_AS_PREV_PASSWD == status) { 
-				return new ResponseEntity<>("Enter a password with valid length and format. Refer to Password Constraints.", HttpStatus.OK);
-			}   else {
+			}
+			if (PasswordStatusCode.NEW_PASSWD_SAME_AS_PREV_PASSWD == status) {
+				return new ResponseEntity<>(
+						"Enter a password with valid length and format. Refer to Password Constraints.", HttpStatus.OK);
+			} else {
 				return new ResponseEntity<>(status, HttpStatus.OK);
 			}
-		}		
+		}
 	}
 }

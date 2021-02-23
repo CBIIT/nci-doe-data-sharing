@@ -31,17 +31,18 @@ import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationReques
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
+
 /**
- * <p>
+ *
  * Add data file controller.
- * </p>
+ *
  */
 
 @Controller
 @EnableAutoConfiguration
 @RequestMapping("/addbulk")
 public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFileController {
-	
+
 	@Value("${gov.nih.nci.hpc.server.dataObject}")
 	private String serviceURL;
 	@Value("${gov.nih.nci.hpc.server.collection}")
@@ -54,50 +55,48 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	@Autowired
 	TaskManagerService taskManagerService;
 
-	
 	@GetMapping
-	public String home(Model model, HttpSession session, HttpServletRequest request) throws DoeWebException{
+	public String home(Model model, HttpSession session, HttpServletRequest request) throws DoeWebException {
 
 		String code = request.getParameter("code");
-		 model.addAttribute("clientId", clientId);
-		 if (code != null) {
-	            //Return from Google Drive Authorization
-	            final String returnURL = this.webServerName + "/addbulk";
-	            model.addAttribute("uploadAsyncType", "drive");
-	            try {
-	              String accessToken = doeAuthorizationService.getToken(code, returnURL);
-	              session.setAttribute("accessToken", accessToken);
-	              model.addAttribute("accessToken", accessToken);
-	            } catch (Exception e) {
-	              model.addAttribute("error", "Failed to redirect to Google for authorization: " + e.getMessage());
-	              e.printStackTrace();
-	            }
-	            model.addAttribute("authorized", "true");            
-	        }
+		model.addAttribute("clientId", clientId);
+		if (code != null) {
+			// Return from Google Drive Authorization
+			final String returnURL = this.webServerName + "/addbulk";
+			model.addAttribute("uploadAsyncType", "drive");
+			try {
+				String accessToken = doeAuthorizationService.getToken(code, returnURL);
+				session.setAttribute("accessToken", accessToken);
+				model.addAttribute("accessToken", accessToken);
+			} catch (Exception e) {
+				model.addAttribute("error", "Failed to redirect to Google for authorization: " + e.getMessage());
+				e.printStackTrace();
+			}
+			model.addAttribute("authorized", "true");
+		}
 
-		if(request.getParameterNames().hasMoreElements()) {
-		  setInputParameters(request, session,model);
+		if (request.getParameterNames().hasMoreElements()) {
+			setInputParameters(request, session, model);
 		} else {
 			clearSessionAttrs(session);
 		}
-		 
+
 		model.addAttribute("basePathSelected", basePath);
 		return "upload";
 	}
-	
-	
+
 	@ResponseBody
 	@GetMapping(value = "/canEdit", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Boolean isEditpermissions(@RequestParam(value = "selectedPath") String selectedPath, 
-			HttpSession session, HttpServletRequest request, HttpServletResponse response) throws DoeWebException{
-	
+	public Boolean isEditpermissions(@RequestParam(value = "selectedPath") String selectedPath, HttpSession session,
+			HttpServletRequest request, HttpServletResponse response) throws DoeWebException {
+
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		if (StringUtils.isNotEmpty(selectedPath)) {
-			HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, 
-					collectionServiceURL, selectedPath, true, sslCertPath,sslCertPassword);
-			return  verifyCollectionPermissions(selectedPath,parentCollectionDto);
+			HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, collectionServiceURL,
+					selectedPath, true, sslCertPath, sslCertPassword);
+			return verifyCollectionPermissions(selectedPath, parentCollectionDto);
 		}
-			return false;
+		return false;
 	}
 
 	/**
@@ -115,43 +114,43 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	@SuppressWarnings("unchecked")
 	@PostMapping
 	@ResponseBody
-	public String createDatafile(@Valid DoeDatafileModel doeDataFileModel,  Model model, 
-			HttpSession session, HttpServletRequest request, HttpServletResponse response) {
-		
+	public String createDatafile(@Valid DoeDatafileModel doeDataFileModel, Model model, HttpSession session,
+			HttpServletRequest request, HttpServletResponse response) {
+
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		String user = getLoggedOnUserInfo();
-			String dataFilePath = request.getParameter("bulkDatafilePath");
-			if(dataFilePath != null) {
+		String dataFilePath = request.getParameter("bulkDatafilePath");
+		if (dataFilePath != null) {
 			doeDataFileModel.setPath(dataFilePath.trim());
-			}
-			if (doeDataFileModel.getPath() == null || doeDataFileModel.getPath().trim().length() == 0)
-				return "Invalid Data file path";
-			
-			doeDataFileModel.setPath(doeDataFileModel.getPath().trim());
-			
-			// Validate parent path
-			try {
-				if (StringUtils.isNotEmpty(dataFilePath)) {
-					HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, collectionServiceURL, dataFilePath, true, sslCertPath,
-										sslCertPassword);
-					Boolean isValidPermissions = verifyCollectionPermissions(dataFilePath,parentCollectionDto);
-					if (Boolean.FALSE.equals(isValidPermissions)) {
-						return "Insufficient privileges to create collection";
-					}
+		}
+		if (doeDataFileModel.getPath() == null || doeDataFileModel.getPath().trim().length() == 0)
+			return "Invalid Data file path";
+
+		doeDataFileModel.setPath(doeDataFileModel.getPath().trim());
+
+		// Validate parent path
+		try {
+			if (StringUtils.isNotEmpty(dataFilePath)) {
+				HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, collectionServiceURL,
+						dataFilePath, true, sslCertPath, sslCertPassword);
+				Boolean isValidPermissions = verifyCollectionPermissions(dataFilePath, parentCollectionDto);
+				if (Boolean.FALSE.equals(isValidPermissions)) {
+					return "Insufficient privileges to create collection";
 				}
-							
-				if(request.getParameterNames().hasMoreElements()) {
-					  setInputParameters(request, session,model);
-					}
+			}
+
+			if (request.getParameterNames().hasMoreElements()) {
+				setInputParameters(request, session, model);
+			}
 			HpcBulkDataObjectRegistrationRequestDTO registrationDTO = constructV2BulkRequest(request, session,
 					doeDataFileModel.getPath().trim());
 			String bulkType = request.getParameter("uploadType");
-			
-			if( CollectionUtils.isEmpty(registrationDTO.getDataObjectRegistrationItems()) &&
-					CollectionUtils.isEmpty(registrationDTO.getDirectoryScanRegistrationItems()))
+
+			if (CollectionUtils.isEmpty(registrationDTO.getDataObjectRegistrationItems())
+					&& CollectionUtils.isEmpty(registrationDTO.getDirectoryScanRegistrationItems()))
 				throw new DoeWebException("No input file(s) / folder(s) are selected");
 			Set<String> basePaths = (Set<String>) session.getAttribute("basePaths");
-			
+
 			if (basePaths == null || basePaths.isEmpty()) {
 				HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
 				if (modelDTO == null) {
@@ -163,36 +162,35 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 						sslCertPassword);
 				basePaths = (Set<String>) session.getAttribute("basePaths");
 			}
-			
+
 			HpcBulkDataObjectRegistrationResponseDTO responseDTO = DoeClientUtil.registerBulkDatafiles(authToken,
 					bulkRegistrationURL, registrationDTO, sslCertPath, sslCertPassword);
-			
-			if (responseDTO != null) {				
-				   clearSessionAttrs(session);
-				    String taskId = responseDTO.getTaskId();
-				    String name = doeDataFileModel.getPath().substring(doeDataFileModel.getPath().lastIndexOf('/') + 1);
-				    taskManagerService.saveTransfer(taskId,"Upload",null,name,user);
-				    
-				    //store the auditing info
-	                  AuditingModel audit = new AuditingModel();
-	                  audit.setName(user);
-	                  audit.setOperation("Upload");
-	                  audit.setStartTime(new Date());
-	                  audit.setTransferType(bulkType);
-	                  audit.setPath(doeDataFileModel.getPath());
-	                  audit.setTaskId(taskId);
-	                  auditingService.saveAuditInfo(audit);
-	                  
-					return "Your bulk data file registration request has the following task ID: " +taskId;			
-		
-				
+
+			if (responseDTO != null) {
+				clearSessionAttrs(session);
+				String taskId = responseDTO.getTaskId();
+				String name = doeDataFileModel.getPath().substring(doeDataFileModel.getPath().lastIndexOf('/') + 1);
+				taskManagerService.saveTransfer(taskId, "Upload", null, name, user);
+
+				// store the auditing info
+				AuditingModel audit = new AuditingModel();
+				audit.setName(user);
+				audit.setOperation("Upload");
+				audit.setStartTime(new Date());
+				audit.setTransferType(bulkType);
+				audit.setPath(doeDataFileModel.getPath());
+				audit.setTaskId(taskId);
+				auditingService.saveAuditInfo(audit);
+
+				return "Your bulk data file registration request has the following task ID: " + taskId;
+
 			}
 
-		      return "Error in registration";
-	    } catch(Exception e) {
-	    	log.error("Failed to bulk register data files due to: " +e);
+			return "Error in registration";
+		} catch (Exception e) {
+			log.error("Failed to bulk register data files due to: " + e);
 			return e.getMessage();
-	    }
+		}
 	}
 
 }

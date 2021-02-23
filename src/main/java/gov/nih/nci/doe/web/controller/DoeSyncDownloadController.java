@@ -1,14 +1,4 @@
-/**
- * DoeSyncDownloadController.java
- *
- * Copyright SVG, Inc. Copyright Leidos Biomedical Research, Inc
- * 
- * Distributed under the OSI-approved BSD 3-Clause License. See
- * https://ncisvn.nci.nih.gov/svn/HPC_Data_Management/branches/hpc-prototype-dev/LICENSE.txt for
- * details.
- */
 package gov.nih.nci.doe.web.controller;
-
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,114 +34,96 @@ import gov.nih.nci.hpc.dto.error.HpcExceptionDTO;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
- * <p>
+ *
  * Controller to manage synchronous download of a data file
- * </p>
+ *
  */
 
 @Controller
 @EnableAutoConfiguration
 @RequestMapping("/downloadsync")
 public class DoeSyncDownloadController extends AbstractDoeController {
-  
 
-	 @Value("${gov.nih.nci.hpc.server.dataObject}")
-	  private String dataObjectServiceURL;
-	 
-  /**
-   * POST action for sync download
-   * 
-   * @param downloadFile
-   * @param model
-   * @param bindingResult
-   * @param session
-   * @param request
-   * @param response
-   * @return
-   */
-  @PostMapping(produces = MediaType.APPLICATION_OCTET_STREAM_VALUE) 
-  public @ResponseBody Resource download(
-		   @Valid DoeDownloadDatafile downloadFile, HttpSession session, HttpServletRequest request,
-      HttpServletResponse response) {
-    try {
-      String authToken = (String) session.getAttribute("hpcUserToken");
-      if (authToken == null) {
-        return null;
-      }
-      final String serviceURL = UriComponentsBuilder.fromHttpUrl(
-        this.dataObjectServiceURL).path("/{dme-archive-path}/download")
-        .buildAndExpand(downloadFile.getDestinationPath()).encode().toUri()
-        .toURL().toExternalForm();
+	@Value("${gov.nih.nci.hpc.server.dataObject}")
+	private String dataObjectServiceURL;
 
-      final HpcDownloadRequestDTO dto = new HpcDownloadRequestDTO();
-      dto.setGenerateDownloadRequestURL(true);
+	/**
+	 * POST action for sync download
+	 * 
+	 * @param downloadFile
+	 * @param model
+	 * @param bindingResult
+	 * @param session
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@PostMapping(produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	public @ResponseBody Resource download(@Valid DoeDownloadDatafile downloadFile, HttpSession session,
+			HttpServletRequest request, HttpServletResponse response) {
+		try {
+			String authToken = (String) session.getAttribute("hpcUserToken");
+			if (authToken == null) {
+				return null;
+			}
+			final String serviceURL = UriComponentsBuilder.fromHttpUrl(this.dataObjectServiceURL)
+					.path("/{dme-archive-path}/download").buildAndExpand(downloadFile.getDestinationPath()).encode()
+					.toUri().toURL().toExternalForm();
 
-      WebClient client = DoeClientUtil.getWebClient(serviceURL, sslCertPath, sslCertPassword);
-      client.header("Authorization", "Bearer " + authToken);
+			final HpcDownloadRequestDTO dto = new HpcDownloadRequestDTO();
+			dto.setGenerateDownloadRequestURL(true);
 
-      Response restResponse = client.invoke("POST", dto);
-            
-      if (restResponse.getStatus() == 200) {
-            HpcDataObjectDownloadResponseDTO downloadDTO =
-              (HpcDataObjectDownloadResponseDTO) DoeClientUtil.getObject(
-              restResponse, HpcDataObjectDownloadResponseDTO.class);
-            downloadToUrl(downloadDTO.getDownloadRequestURL(), 1000000,downloadFile.getDownloadFileName(), response);
-      } else if (restResponse.getStatus() == 400) {
-        dto.setGenerateDownloadRequestURL(false);
-        restResponse = client.invoke("POST", dto);
-        if (restResponse.getStatus() == 200) {
-          handleStreamingDownloadData(downloadFile, response, restResponse);
-        } else {
-          return handleDownloadProblem(restResponse);
-        }
-      } else {
-        return handleDownloadProblem(restResponse);
-      }
-    } catch (Exception e) {
-      return new ByteArrayResource(("Failed to download: " +
-        e.getMessage()).getBytes());
-    }
-    return null;
-  }
+			WebClient client = DoeClientUtil.getWebClient(serviceURL, sslCertPath, sslCertPassword);
+			client.header("Authorization", "Bearer " + authToken);
 
+			Response restResponse = client.invoke("POST", dto);
 
+			if (restResponse.getStatus() == 200) {
+				HpcDataObjectDownloadResponseDTO downloadDTO = (HpcDataObjectDownloadResponseDTO) DoeClientUtil
+						.getObject(restResponse, HpcDataObjectDownloadResponseDTO.class);
+				downloadToUrl(downloadDTO.getDownloadRequestURL(), 1000000, downloadFile.getDownloadFileName(),
+						response);
+			} else if (restResponse.getStatus() == 400) {
+				dto.setGenerateDownloadRequestURL(false);
+				restResponse = client.invoke("POST", dto);
+				if (restResponse.getStatus() == 200) {
+					handleStreamingDownloadData(downloadFile, response, restResponse);
+				} else {
+					return handleDownloadProblem(restResponse);
+				}
+			} else {
+				return handleDownloadProblem(restResponse);
+			}
+		} catch (Exception e) {
+			return new ByteArrayResource(("Failed to download: " + e.getMessage()).getBytes());
+		}
+		return null;
+	}
 
+	private Resource handleDownloadProblem(Response restResponse) throws IOException {
+		ObjectMapper mapper = new ObjectMapper();
+		AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
+				new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()), new JacksonAnnotationIntrospector());
+		mapper.setAnnotationIntrospector(intr);
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-  private Resource handleDownloadProblem(Response restResponse)
-    throws IOException {
-    ObjectMapper mapper = new ObjectMapper();
-    AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
-        new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
-        new JacksonAnnotationIntrospector());
-    mapper.setAnnotationIntrospector(intr);
-    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		MappingJsonFactory factory = new MappingJsonFactory(mapper);
+		JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 
-    MappingJsonFactory factory = new MappingJsonFactory(mapper);
-    JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+		try {
+			HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
+			return new ByteArrayResource(("Failed to download: " + exception.getMessage()).getBytes());
+		} catch (Exception e) {
 
-    try {
-      HpcExceptionDTO exception = parser.readValueAs(HpcExceptionDTO.class);
-      return new ByteArrayResource(("Failed to download: " +
-        exception.getMessage()).getBytes());
-    } catch (Exception e) {
-   
-      return new ByteArrayResource(("Failed to download: " +
-        e.getMessage()).getBytes());
-    }
-  }
+			return new ByteArrayResource(("Failed to download: " + e.getMessage()).getBytes());
+		}
+	}
 
-
-  private @ResponseBody void handleStreamingDownloadData(
-		   @Valid DoeDownloadDatafile
-      downloadFile,
-    HttpServletResponse response,
-    Response restResponse) throws IOException
-  {
-    response.setContentType("application/octet-stream");
-    response.setHeader("Content-Disposition", "attachment; filename=" +
-      downloadFile.getDownloadFileName());
-    IOUtils.copy((InputStream) restResponse.getEntity(),
-      response.getOutputStream());
-  }
+	private @ResponseBody void handleStreamingDownloadData(@Valid DoeDownloadDatafile downloadFile,
+			HttpServletResponse response, Response restResponse) throws IOException {
+		response.setContentType("application/octet-stream");
+		response.setHeader("Content-Disposition", "attachment; filename=" + downloadFile.getDownloadFileName());
+		IOUtils.copy((InputStream) restResponse.getEntity(), response.getOutputStream());
+	}
 
 }
