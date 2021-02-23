@@ -109,7 +109,9 @@ public class RestAPICommonController extends AbstractDoeController {
 	TaskManagerService taskManagerService;
 
 	private static final String TOKEN_SUBJECT = "MoDaCAuthenticationToken";
-	private static final String USER_ID_TOKEN_CLAIM = "UserName";
+
+	@Value("${doe.userid.token.claim}")
+	private String userIdTokenClaim;
 
 	@Value("${doe.jwt.secret.key}")
 	private String jwtSecretkey;
@@ -865,7 +867,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		// Prepare the Claims Map.
 		Map<String, Object> claims = new HashMap<>();
 		if (StringUtils.isNotEmpty(doeLogin)) {
-			claims.put(USER_ID_TOKEN_CLAIM, doeLogin);
+			claims.put(userIdTokenClaim, doeLogin);
 		}
 		String token = Jwts.builder().setSubject(TOKEN_SUBJECT).setClaims(claims)
 				.setExpiration(tokenExpiration.getTime()).signWith(SignatureAlgorithm.HS256, jwtSecretkey).compact();

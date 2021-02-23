@@ -51,7 +51,8 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 	@Autowired
 	public AuthenticateService authService;
 
-	private static final String USER_ID_TOKEN_CLAIM = "UserName";
+	@Value("${doe.userid.token.claim}")
+	private String userIdTokenClaim;
 
 	@Value("${doe.jwt.secret.key}")
 	private String jwtSecretkey;
@@ -103,7 +104,7 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 				String[] authorizations = authorization.split(" ");
 				String token = authorizations[1];
 				Jws<Claims> jwsClaims = Jwts.parser().setSigningKey(jwtSecretkey).parseClaimsJws(token);
-				String user = (String) jwsClaims.getBody().get(USER_ID_TOKEN_CLAIM);
+				String user = (String) jwsClaims.getBody().get(userIdTokenClaim);
 				log.info("token auth type user: " + user);
 				if (StringUtils.isNotEmpty(user) && authService.doesUsernameExist(user.trim().toLowerCase())) {
 					session.setAttribute("writeAccessUserToken", writeAuthToken);
