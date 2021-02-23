@@ -852,6 +852,17 @@ public class RestAPICommonController extends AbstractDoeController {
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
 	}
 
+	/**
+	 * create modac token
+	 * 
+	 * @param headers
+	 * @param session
+	 * @param response
+	 * @param request
+	 * @return token
+	 * @throws DoeWebException
+	 */
+
 	@GetMapping(value = "/authenticate")
 	public ResponseEntity<?> authenticate(@RequestHeader HttpHeaders headers, HttpSession session,
 			HttpServletResponse response, HttpServletRequest request) throws DoeWebException {

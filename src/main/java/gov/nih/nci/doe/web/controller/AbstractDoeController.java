@@ -53,13 +53,13 @@ public abstract class AbstractDoeController {
 	protected String sslCertPath;
 	@Value("${gov.nih.nci.hpc.ssl.cert.password}")
 	protected String sslCertPassword;
-	
+
 	@Value("${gov.nih.nci.hpc.server.model}")
 	private String hpcModelURL;
 
 	@Value("${gov.nih.nci.hpc.server.dataObject}")
 	private String dataObjectServiceURL;
-	
+
 	@Autowired
 	public AuthenticateService authenticateService;
 
@@ -118,11 +118,11 @@ public abstract class AbstractDoeController {
 	public @ResponseBody DoeResponse handleDoeWebException(DoeWebException ex, WebRequest request,
 			HttpServletResponse response) {
 		log.error("Converting DoeWeb exception to RestResponse : " + ex.getMessage());
-		if(ex.getStatusCode() !=null) {
+		if (ex.getStatusCode() != null) {
 			response.setStatus(ex.getStatusCode());
 		} else {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}		
+		}
 		response.setHeader("Content-Type", "application/json");
 		return new DoeResponse("Error occurred", ex.getMessage());
 
@@ -263,10 +263,11 @@ public abstract class AbstractDoeController {
 		}
 		return new ResponseEntity<>(keyValueBeanResults, null, HttpStatus.OK);
 	}
-	public List<KeyValueBean> getUserMetaDataAttributesByPath( String selectedPath, String levelName,
-			String isDataObject, HttpSession session, HttpServletRequest request,
-			HttpServletResponse response) throws DoeWebException {
-		
+
+	public List<KeyValueBean> getUserMetaDataAttributesByPath(String selectedPath, String levelName,
+			String isDataObject, HttpSession session, HttpServletRequest request, HttpServletResponse response)
+			throws DoeWebException {
+
 		log.info("getUserMetaDataAttributesByPath");
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		List<KeyValueBean> entryList = new ArrayList<KeyValueBean>();
@@ -288,8 +289,8 @@ public abstract class AbstractDoeController {
 			if (selectedPath != null) {
 				if (StringUtils.isNotEmpty(isDataObject) && isDataObject.equalsIgnoreCase("false")) {
 					// Get collection
-					HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL,
-							selectedPath, false, sslCertPath, sslCertPassword);
+					HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL, selectedPath,
+							false, sslCertPath, sslCertPassword);
 					if (collections != null && collections.getCollections() != null
 							&& !collections.getCollections().isEmpty()) {
 						HpcCollectionDTO collection = collections.getCollections().get(0);
@@ -310,8 +311,8 @@ public abstract class AbstractDoeController {
 					}
 
 				} else {
-					HpcDataObjectListDTO datafiles = DoeClientUtil.getDatafiles(authToken, dataObjectServiceURL, selectedPath,
-							false, true, sslCertPath, sslCertPassword);
+					HpcDataObjectListDTO datafiles = DoeClientUtil.getDatafiles(authToken, dataObjectServiceURL,
+							selectedPath, false, true, sslCertPath, sslCertPassword);
 					if (datafiles != null && datafiles.getDataObjects() != null
 							&& !datafiles.getDataObjects().isEmpty()) {
 						HpcDataObjectDTO dataFile = datafiles.getDataObjects().get(0);
@@ -337,7 +338,7 @@ public abstract class AbstractDoeController {
 			String errMsg = "Failed to get metadata: " + e.getMessage();
 			log.error(errMsg, e);
 		}
-		log.info("entry list data :"+ entryList);
+		log.info("entry list data :" + entryList);
 		return entryList;
 	}
 }

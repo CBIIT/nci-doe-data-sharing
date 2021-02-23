@@ -287,11 +287,11 @@ public class HomeController extends AbstractDoeController {
 		// remove duplicate emails from collectionOwnersList
 		List<String> newEmailList = collectionOwnersList.stream().distinct().collect(Collectors.toList());
 
-		if(StringUtils.isEmpty(permissionGroups.getSelectedAccessGroups())) {
+		if (StringUtils.isEmpty(permissionGroups.getSelectedAccessGroups())) {
 			permissionGroups.setSelectedAccessGroups("public");
 		}
-		mailService.sendNotifyUsersForAccessGroups(newEmailList, getLoggedOnUserInfo(), 
-				permissionGroups.getPath(),existingAccessGroups, permissionGroups.getSelectedAccessGroups());
+		mailService.sendNotifyUsersForAccessGroups(newEmailList, getLoggedOnUserInfo(), permissionGroups.getPath(),
+				existingAccessGroups, permissionGroups.getSelectedAccessGroups());
 
 		return "SUCCESS";
 	}
