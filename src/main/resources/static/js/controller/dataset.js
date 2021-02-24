@@ -399,7 +399,7 @@ function openPopOverDataSet($this) {
     
     if(userMetadataList) {
 
-       ind += "<p><b>Key System Metadata :</b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
+       ind += "<p><b>Key System Metadata </b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
                 "<div class='divTableBody'><div class='divTableRow'>" +
                 "<div class='divTableHead rowAttribute'>Attribute</div>" + 
                 "<div class='divTableHead'>Value</div></div>";
@@ -413,7 +413,7 @@ function openPopOverDataSet($this) {
      }
             
     if(sysMetadatalist) {
-       content += "<p><b>User Metadata :</b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
+       content += "<p><b>User Metadata </b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
                 "<div class='divTableBody'><div class='divTableRow'>" +
                 "<div class='divTableHead rowAttribute'>Attribute</div>" + 
                 "<div class='divTableHead'>Value</div></div>";
