@@ -1,0 +1,21 @@
+.select2-container .select2-selection--single{
+	background-color: #E87B05;
+}
+[class^='select2'] {
+  border-radius: 10px !important;
+}
+#select2-metadatalist-results {
+	color: #000000;
+    font-family: 'inter_regular';
+    font-size: 15px;
+    font-weight: 500;
+}
+.select2-results__option{
+	font-size:12px!important;
+	font-family:'inter_regular';
+	margin-left:10px;
+}
+
+.select2-results{
+	margin-top: -4px;
+}
