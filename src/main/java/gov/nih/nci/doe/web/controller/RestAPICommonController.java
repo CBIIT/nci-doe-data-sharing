@@ -49,7 +49,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -875,13 +874,10 @@ public class RestAPICommonController extends AbstractDoeController {
 		Map<String, Object> claims = new HashMap<>();
 		if (StringUtils.isNotEmpty(doeLogin)) {
 			claims.put(userIdTokenClaim, doeLogin);
-			// Calculate the expiration date.
-			Calendar tokenExpiration = Calendar.getInstance();
-			tokenExpiration.add(Calendar.MINUTE, authenticationTokenExpirationPeriod);
+
 			// construct JWT token
 			String token = Jwts.builder().setSubject(TOKEN_SUBJECT).setClaims(claims)
-					.setExpiration(tokenExpiration.getTime()).signWith(SignatureAlgorithm.HS256, jwtSecretkey)
-					.compact();
+					.signWith(SignatureAlgorithm.HS256, jwtSecretkey).compact();
 
 			if (StringUtils.isNotEmpty(token)) {
 				return new ResponseEntity<>(token, HttpStatus.OK);
