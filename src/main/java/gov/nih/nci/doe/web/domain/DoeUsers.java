@@ -7,7 +7,7 @@ import javax.persistence.*;
 import org.hibernate.annotations.Type;
 
 @Entity
-@Table(name = "DOE_USER_T")
+@Table(name = "USER_T")
 public class DoeUsers {
 
 	private Integer id;
