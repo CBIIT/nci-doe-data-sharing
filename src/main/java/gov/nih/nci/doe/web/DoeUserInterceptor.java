@@ -83,6 +83,11 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 			String writeAuthToken = DoeClientUtil.getAuthenticationToken(writeAccessUserName, writeAccessUserPassword,
 					authenticateURL);
 
+			// MoDaC Rest API authentication:
+			// Step 1: verify if the user is authentication using username/password, else
+			// Step2: verify if the user is providing a token in the header, else
+			// Step3: verify if the requested API is allowed to bypass authentication.
+			// the above logic should be done in this sequential order.
 			if (authorization != null && authorization.toLowerCase().startsWith("basic")) {
 				// Authorization: Basic base64credentials
 				String base64Credentials = authorization.substring("Basic".length()).trim();
@@ -100,6 +105,7 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 					session.setAttribute("hpcUserToken", readAuthToken);
 				}
 			} else if (authorization != null && authorization.toLowerCase().startsWith("bearer")) {
+
 				// Authorization: get token from the header
 				String[] authorizations = authorization.split(" ");
 				String token = authorizations[1];
@@ -120,7 +126,7 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 			}
 
 		} else {
-
+			// this is used for the browser calls.
 			if (StringUtils.isBlank(writeAccessToken)) {
 				try {
 					Authentication auth = SecurityContextHolder.getContext().getAuthentication();

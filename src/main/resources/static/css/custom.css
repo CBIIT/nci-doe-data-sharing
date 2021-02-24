@@ -507,11 +507,12 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before
 }
 .buttoncontainer {
 	margin-bottom: 110px;
-    background-image: url(/images/modac.hero.jpg);
-    width: 1000px;
+    /*background-image: url(/images/modac.hero.jpg);*/
+    background-image: url(/images/LP-HeroGraphic.jpg);
+   /* width: 1000px;
     background-repeat: no-repeat;
-    background-size: 100% 600px;
-    height:450px;
+    background-size: 100% 600px;*/
+    height:486px;
 }
 
 .uploadslogo {
