@@ -426,7 +426,7 @@ function renderDataSetName(data, type, row){
 			}
 		}
 			
-		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'>" +
+		html += "<div class='col-md-12' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'>" +
 				""+checkboxHtml+"&nbsp;&nbsp;&nbsp;" +
 						"<a href='#' class='dataSetFragment' " +
 			"permissions_role = '" + row.dataSetPermissionRole + "'  collections = '" + JSON.stringify(search_results_json)+ "' " +
@@ -436,7 +436,7 @@ function renderDataSetName(data, type, row){
 			"&nbsp&nbsp;" + editDataSetHtml + "</div></div></div>";
 
 	} else {
-		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'>"+
+		html += "<div class='col-md-12' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'>"+
 		"&nbsp;&nbsp;&nbsp;<a href='#' class='dataSetFragment' collections = '" + JSON.stringify(search_results_json)+ "' " +
 				"permissions_role = '" + row.dataSetPermissionRole + "' access_grp ='"+row.dataLevelAccessGroups +"' " +
 						"metadata_type = '" + search_results_json.assetMetadata  + "' data_set_path = " + row.dataSetPath + ">" +
@@ -521,18 +521,18 @@ function renderPath(data, type, row) {
 			}
 		}
 	
-		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'>" +
+		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;margin-bottom: 20px;'><div class='row'>" +
 				"<div class='col-md-12'></div>" +
-			"<div class='col-md-12' style='margin-left:22px;'>" +
-					"<span class='cil_12_bold_no_color'>" + row.dataSetDescription + "</span>" +
-			"<br></div><div class='col-md-12'><br></div><div class='col-md-12' style='margin-left:22px;'>" +
-			"<span class='cil_12_bold_no_color'>Study: </span><a class='cil_12_no_color button2a' " +
+			"<div class='col-md-12 cil_12_bold_no_color_dataset'>" +
+					"<span>" + row.dataSetDescription + "</span>" +
+			"<br></div><div class='col-md-12' style='margin-left:22px;'>" +
+			"<span class='cil_12_bold_no_color'>STUDY: </span><a class='cil_12_no_color button2a' " +
 			"metadata_type = '" + search_results_json.studyMetadata  + "' tabindex='0'" +
 			" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
 			"data-popover-content='#a01'>" + row.studyName + "</a>" +
 					"&nbsp&nbsp;"+editStudySetHtml+"</div>" +
 			"<div class='col-md-12 top-buffer' style='margin-left:22px;'>" +
-			"<span class='cil_12_bold_no_color'>Program: </span><a class='cil_12_no_color button2a' " +
+			"<span class='cil_12_bold_no_color'>PROGRAM: </span><a class='cil_12_no_color button2a' " +
 			"metadata_type = '" + search_results_json.progMetadata  + "'" +
 					" tabindex='0'" +
 			" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
@@ -540,18 +540,18 @@ function renderPath(data, type, row) {
 					"&nbsp&nbsp;"+editProgramSetHtml+"</div></div></div>";
 
 	} else {
-		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;'><div class='row'>" +
+		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;margin-bottom: 20px;'><div class='row'>" +
 				"<div class='col-md-12'></div>" +
-		"<div class='col-md-12' style='margin-left:22px;'>" +
-				"<span class='cil_12_bold_no_color'>" + row.dataSetDescription + "</span>" +
-		"</a><br></div><div class='col-md-12'><br></div><div class='col-md-12' style='margin-left:22px;'>" +
-		"<span class='cil_12_bold_no_color'>Study: </span><a class='cil_12_no_color button2a'" +
+		"<div class='col-md-12 cil_12_bold_no_color_dataset' >" +
+				"<span>" + row.dataSetDescription + "</span>" +
+		"</a><br></div><div class='col-md-12' style='margin-left:22px;'>" +
+		"<span class='cil_12_bold_no_color'>STUDY: </span><a class='cil_12_no_color button2a'" +
 		" metadata_type = '" + search_results_json.studyMetadata  + "' tabindex='0'" +
 		" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
 		"data-popover-content='#a01'>" + row.studyName + "</a>" +
 				"&nbsp&nbsp;</div>" +
 		"<div class='col-md-12 top-buffer' style='margin-left:22px;'>" +
-		"<span class='cil_12_bold_no_color'>Program: </span><a class='cil_12_no_color button2a' " +
+		"<span class='cil_12_bold_no_color'>PROGRAM: </span><a class='cil_12_no_color button2a' " +
 		"metadata_type = '" + search_results_json.progMetadata  + "' " +
 				"tabindex='0'" +
 		" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
@@ -627,16 +627,16 @@ function addValueToSelected(optionVal,selectedValueText,attrval) {
     			+'style=" padding-left: 50px;"> <label>To: <input type="date" class="toDate" id="To_' + fieldPath + '"> </label></div></div>');
     	$inputGroup.append($dateColumn);
     } else {
-    	var advancedSearchInput = $('<input type="text" value="'+ attrval +'" data-value="' + fieldPath + '" data-type="'
+    	var advancedSearchInput = $('<input type="text" style="border-right: transparent;" value="'+ attrval +'" data-value="' + fieldPath + '" data-type="'
     	        + $(optionVal).attr('data-type') + '" id="metadatasearch_' + mdIdentifier
     	        + '" class="form-control" placeholder="Enter a keyword..."'
     	        + ' title="Enter a Search Keyword or Phrase" aria-label="Enter a Search Keyword or Phrase"'
     	        + ' inputtype="textval"/>');
     	    $inputGroup.append(advancedSearchInput);
     }
-    	    var $inputGroupButton = $('<div class="input-group-btn" />');
+    	    var $inputGroupButton = $('<div class="input-group-btn" style="border-radius: 0px !important;border-left: transparent;margin-left: -3px;"/>');
     	    $inputGroup.append($inputGroupButton);
-    	    $inputGroupButton.append('<input class="btn btn-primary pull-right" style="background-color: #7C7C7C !important;color: #fff;" type="button" ' +
+    	    $inputGroupButton.append('<input class="btn pull-right" style="background-color: #fff!important;color: #7C7C7C" type="button" ' +
     	        'value="X" onclick="removeRowAddOption(\'' + rowId + '\')"/>');
     	    
     $("#advSearchDiv").show();
