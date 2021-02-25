@@ -525,7 +525,7 @@ function renderPath(data, type, row) {
 				"<div class='col-md-12'></div>" +
 			"<div class='col-md-12 cil_12_bold_no_color_dataset'>" +
 					"<span>" + row.dataSetDescription + "</span>" +
-			"<br></div><div class='col-md-12' style='margin-left:22px;'>" +
+			"<br></div><div class='col-md-12' style='margin-left:22px;margin-top: 10px;'>" +
 			"<span class='cil_12_bold_no_color'>STUDY: </span><a class='cil_12_no_color button2a' " +
 			"metadata_type = '" + search_results_json.studyMetadata  + "' tabindex='0'" +
 			" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
@@ -544,7 +544,7 @@ function renderPath(data, type, row) {
 				"<div class='col-md-12'></div>" +
 		"<div class='col-md-12 cil_12_bold_no_color_dataset' >" +
 				"<span>" + row.dataSetDescription + "</span>" +
-		"</a><br></div><div class='col-md-12' style='margin-left:22px;'>" +
+		"</a><br></div><div class='col-md-12' style='margin-left:22px;margin-top: 10px;'>" +
 		"<span class='cil_12_bold_no_color'>STUDY: </span><a class='cil_12_no_color button2a'" +
 		" metadata_type = '" + search_results_json.studyMetadata  + "' tabindex='0'" +
 		" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +

@@ -155,19 +155,35 @@ function postSuccessAccessPermissions(data,status) {
 }
 
 function updateAccessGroupsFunction() {
+	$("#updateAccessPermissionsModal").find(".updateErrorAccessMsg").html("");
+	$("#updateAccessPermissionsModal").find(".errorUpdateAccessGroupsBlock").hide();
+	$("#updateAccessPermissionsModal").find(".updateAccessMsg").html("");
+	$("#updateAccessPermissionsModal").find(".updateAccessGroupsBlock").hide();
 	var selectedAccessGroups = $("#updateAccessPermissionsModal").find("#updateAccessGroupsList").val();
 	var json = $("#updateAccessPermissionsModal").find("#permissionGroups").val();
 	var path = $("#updateAccessPermissionsModal").find("#metadata_path").val();
-	var selectedCollection = $("#updateAccessPermissionsModal").find("#selectedCollection").val();
+	var selectedCollection = $("#updateAccessPermissionsModal").find("#selectedCollection").val();	
 	var permissionGroups = JSON.parse(json);
+	if($("#updateAccessPermissionsModal").find("#editPublicAccess:visible").is(":checked")){
+		permissionGroups.selectedAccessGroups ="public";
+	} else {
+		permissionGroups.selectedAccessGroups = selectedAccessGroups.join();
+	}
 	permissionGroups.path = path;
-	permissionGroups.selectedCollection = selectedCollection;
-	permissionGroups.selectedAccessGroups = selectedAccessGroups.join();
-	 $("#updateAccessPermissionsModal").find("#permissionGroups").val(JSON.stringify(permissionGroups));
-	invokeAjax('/updateAccessGroupMetaData','GET',permissionGroups,postSuccessUpdateAccessgroups,null,null,'text');
+	permissionGroups.selectedCollection = selectedCollection;	
+	$("#updateAccessPermissionsModal").find("#permissionGroups").val(JSON.stringify(permissionGroups));
+	if(!permissionGroups.selectedAccessGroups){
+		$("#updateAccessPermissionsModal").find(".updateErrorAccessMsg").html("Select Access Groups.");
+		$("#updateAccessPermissionsModal").find(".errorUpdateAccessGroupsBlock").show();
+	} else {
+		invokeAjax('/updateAccessGroupMetaData','GET',permissionGroups,postSuccessUpdateAccessgroups,null,null,'text');
+	}
+	
 }
 
 function postSuccessUpdateAccessgroups(data,status){
+	$("#updateAccessPermissionsModal").find(".updateErrorAccessMsg").html("");
+	$("#updateAccessPermissionsModal").find(".errorUpdateAccessGroupsBlock").hide();
 	if(data == 'SUCCESS') {
 		$("#updateAccessPermissionsModal").find(".updateAccessMsg").html("Access group updated.");
 		$("#updateAccessPermissionsModal").find(".updateAccessGroupsBlock").show();
