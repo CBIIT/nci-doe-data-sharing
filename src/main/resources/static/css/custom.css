@@ -271,7 +271,7 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
     border: 2.5px solid #214C75;
     box-sizing: border-box;opacity: 0.96;
     border-radius: 11px;
-    height: 500px;
+    height: 575px;
 }
 #myAccountSubTab {
 	    background-color: #6496C6;
@@ -299,7 +299,7 @@ background-color: rgb(100, 150, 198);
     border: 2.5px solid #214C75;
     opacity: 0.96;
     border-radius: 11px;
-   height: 730px;
+   height: 770px;
     margin-top: 50px;
     width: 838px;
     display:none;
