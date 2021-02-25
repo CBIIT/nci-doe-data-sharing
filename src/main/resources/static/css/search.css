@@ -19,3 +19,33 @@
 .select2-results{
 	margin-top: -4px;
 }
+
+#dataSetMetaData {
+	    width: 100%;
+    margin-left: 48px;
+    font-size: 14px;
+    font-family: 'latoregular';
+    border-color: transparent;
+    margin-top: 13px;
+}
+
+#advancedSearch {
+	background-color:transparent; 
+    border:0px;color: #5099AB !important;font-family: 'latoregular';font-size: 20px;margin-left: 37px;
+    margin-top: 10px;
+    font-weight: 100;
+}
+
+#dataSetTable_length {
+	margin-left: 45px;
+    margin-top: -25px;
+    font-family: 'latoregular';
+}
+#dataSetTable_info {
+	margin-left: 50px;
+    font-family: 'latoregular';
+}
+#dataSetTable{
+	border-color: transparent;
+	font-family: 'latoregular';
+}

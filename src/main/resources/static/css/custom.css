@@ -240,10 +240,10 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
     border-radius: 10px;
 }
 .datasetDetailsheader {
-	font-size: 22px;
-    font-weight: 500;
-    color: #5099AB;
-    font-family: latoregular;
+	color: #5099AB;
+    font-family: 'latoregular';
+    font-size: 24px;
+    margin-left: 46px;
 }
 .divTableHeading {
     background-color: #EEE;
