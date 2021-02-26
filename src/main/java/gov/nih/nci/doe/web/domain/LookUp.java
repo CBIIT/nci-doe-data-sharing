@@ -3,6 +3,7 @@ package gov.nih.nci.doe.web.domain;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "lookup_t")
@@ -27,17 +30,17 @@ public class LookUp implements Serializable {
 	private Integer displayOrder;
 	private String searchCriteriaDisplay;
 	private String searchResultsDisplay;
-	private String isEditable;
+	private Boolean isEditable;
 
 	public LookUp() {
 
 	}
 
-	public LookUp(String id, String level_name, String attr_name, String display_name) {
+	public LookUp(String id, String levelName, String attrName, String displayName) {
 		this.id = id;
-		this.levelName = level_name;
-		this.attrName = attr_name;
-		this.displayName = display_name;
+		this.levelName = levelName;
+		this.attrName = attrName;
+		this.displayName = displayName;
 	}
 
 	@Id
@@ -111,17 +114,19 @@ public class LookUp implements Serializable {
 		return searchCriteriaDisplay;
 	}
 
+	public void setSearchCriteriaDisplay(String searchCriteriaDisplay) {
+		this.searchCriteriaDisplay = searchCriteriaDisplay;
+	}
+
+	@Basic
 	@Column(name = "IS_EDITABLE", nullable = true, length = 1)
-	public String getIsEditable() {
+	@Type(type = "yes_no")
+	public Boolean getIsEditable() {
 		return isEditable;
 	}
 
-	public void setIsEditable(String isEditable) {
+	public void setIsEditable(Boolean isEditable) {
 		this.isEditable = isEditable;
-	}
-
-	public void setSearchCriteriaDisplay(String searchCriteriaDisplay) {
-		this.searchCriteriaDisplay = searchCriteriaDisplay;
 	}
 
 	@Column(name = "search_results_display", nullable = true, length = 1)
