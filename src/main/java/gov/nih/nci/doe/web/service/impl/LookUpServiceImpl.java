@@ -12,31 +12,36 @@ import gov.nih.nci.doe.web.repository.LookUpRepository;
 import gov.nih.nci.doe.web.service.LookUpService;
 
 @Component
-public class LookUpServiceImpl implements LookUpService{
+public class LookUpServiceImpl implements LookUpService {
 
-	  private static final Logger log = LoggerFactory.getLogger(LookUpServiceImpl.class);
-	  
-	    @Autowired
-	    private LookUpRepository lookUpRepository;
+	private static final Logger log = LoggerFactory.getLogger(LookUpServiceImpl.class);
 
-		@Override
-		public String getDisplayName(String levelName, String attrName) {
-			log.info("get display name for " + levelName + " ," + attrName);
-			return lookUpRepository.getDisplayName(levelName, attrName);
-		}
+	@Autowired
+	private LookUpRepository lookUpRepository;
 
-		@Override
-		public List<LookUp> getAllDisplayNames() {
-			return lookUpRepository.findAllBySearchCriteriaDisplay();
-		}
+	@Override
+	public String getDisplayName(String levelName, String attrName) {
+		log.info("get display name for " + levelName + " ," + attrName);
+		return lookUpRepository.getDisplayName(levelName, attrName);
+	}
 
-		@Override
-		public LookUp getLookUpByDisplayName(String displayName) {
-			return lookUpRepository.getLookUpByDisplayName(displayName);
-		}
+	@Override
+	public List<LookUp> getAllDisplayNames() {
+		return lookUpRepository.findAllBySearchCriteriaDisplay();
+	}
 
-		@Override
-		public LookUp getLookUpByAttrName(String attrName) {
-			return lookUpRepository.getLookUpByAttrName(attrName);
-		}
+	@Override
+	public LookUp getLookUpByDisplayName(String displayName) {
+		return lookUpRepository.getLookUpByDisplayName(displayName);
+	}
+
+	@Override
+	public LookUp getLookUpByAttrName(String attrName) {
+		return lookUpRepository.getLookUpByAttrName(attrName);
+	}
+
+	@Override
+	public LookUp getLookUpByLevelAndName(String levelName, String attrName) {
+		return lookUpRepository.getLookUpByLevelAndName(levelName, attrName);
+	}
 }

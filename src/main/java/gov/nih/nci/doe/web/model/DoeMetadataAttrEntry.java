@@ -12,9 +12,16 @@ public class DoeMetadataAttrEntry {
 	private String description;
 	private Boolean mandatory;
 	private String displayName;
+	private Boolean isEditable;
 
-	
-	
+	public Boolean getIsEditable() {
+		return isEditable;
+	}
+
+	public void setIsEditable(Boolean isEditable) {
+		this.isEditable = isEditable;
+	}
+
 	public String getDisplayName() {
 		return displayName;
 	}

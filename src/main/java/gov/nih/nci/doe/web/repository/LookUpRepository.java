@@ -23,5 +23,9 @@ public interface LookUpRepository extends JpaRepository<LookUp, String> {
      
      @Query("select a from LookUp a where a.attrName =?1")	
      public LookUp getLookUpByAttrName(String attrName);
+     
+
+     @Query("select a from LookUp a where a.levelName =?1 and a.attrName =?2")	
+     public LookUp getLookUpByLevelAndName(String levelName, String attrName);
 
 }

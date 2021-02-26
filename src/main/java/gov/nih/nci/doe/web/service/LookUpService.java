@@ -14,4 +14,6 @@ public interface LookUpService {
 	LookUp getLookUpByDisplayName(String displayName);
 	
 	LookUp getLookUpByAttrName(String attrName);
+	
+	LookUp getLookUpByLevelAndName(String levelName, String attrName);
 }

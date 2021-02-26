@@ -59,7 +59,6 @@ function postSuccessStudyInitialize(data,status) {
 }
 
 function postSuccessDataSetInitialize(data,status) {
-	//$('#dataList').select2("val", $("#datafilePath").val());
 	$("#bulkDataFilePathCollection").val($("#datafilePath").val());
 	
 }

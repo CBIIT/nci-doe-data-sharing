@@ -18,6 +18,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.ui.Model;
 
 import gov.nih.nci.doe.web.DoeWebException;
+import gov.nih.nci.doe.web.domain.LookUp;
 import gov.nih.nci.doe.web.model.DoeCollectionModel;
 import gov.nih.nci.doe.web.model.DoeMetadataAttrEntry;
 import gov.nih.nci.doe.web.model.KeyValueBean;
@@ -464,11 +465,13 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 						}
 						entry.setDescription(rule.getDescription());
 						entry.setMandatory(rule.getMandatory());
-						String displayAttrName = lookUpService.getDisplayName(collectionType, rule.getAttribute());
-						if (StringUtils.isNotEmpty(displayAttrName)) {
-							entry.setDisplayName(displayAttrName);
+						LookUp val = lookUpService.getLookUpByLevelAndName(collectionType, rule.getAttribute());
+						if (val != null) {
+							entry.setDisplayName(val.getDisplayName());
+							entry.setIsEditable(Boolean.valueOf(val.getIsEditable()));
 						} else {
 							entry.setDisplayName(rule.getAttribute());
+							entry.setIsEditable(true);
 						}
 						metadataEntries.add(entry);
 					}
@@ -485,12 +488,14 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 
 			log.info("user defined attrnames :" + userDefinedAttrNames);
 			for (DoeMetadataAttrEntry x : cachedEntries) {
-				String attrName = lookUpService.getDisplayName(collectionType, x.getAttrName());
+				LookUp lookUpVal = lookUpService.getLookUpByLevelAndName(collectionType, x.getAttrName());
 				if (userDefinedAttrNames.contains(x.getAttrName())) {
-					if (StringUtils.isNotEmpty(attrName)) {
-						x.setDisplayName(attrName);
+					if (lookUpVal != null) {
+						x.setDisplayName(lookUpVal.getDisplayName());
+						x.setIsEditable(Boolean.valueOf(lookUpVal.getIsEditable()));
 					} else {
 						x.setDisplayName(x.getAttrName());
+						x.setIsEditable(true);
 					}
 					metadataEntries.add(x);
 				}

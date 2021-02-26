@@ -27,6 +27,7 @@ public class LookUp implements Serializable {
 	private Integer displayOrder;
 	private String searchCriteriaDisplay;
 	private String searchResultsDisplay;
+	private String isEditable;
 
 	public LookUp() {
 
@@ -108,6 +109,15 @@ public class LookUp implements Serializable {
 	@Column(name = "search_criteria_display", nullable = true, length = 1)
 	public String getSearchCriteriaDisplay() {
 		return searchCriteriaDisplay;
+	}
+
+	@Column(name = "IS_EDITABLE", nullable = true, length = 1)
+	public String getIsEditable() {
+		return isEditable;
+	}
+
+	public void setIsEditable(String isEditable) {
+		this.isEditable = isEditable;
 	}
 
 	public void setSearchCriteriaDisplay(String searchCriteriaDisplay) {
