@@ -224,9 +224,9 @@ public abstract class AbstractDoeController {
 				List<MetaDataPermissions> permissionList = metaDataPermissionService
 						.getAllMetaDataPermissionsByCollectionId(collectionId);
 				Boolean isOwner = permissionList.stream()
-						.anyMatch(o -> (user.equalsIgnoreCase(o.getUserGroupId()) && o.getIsOwner()));
+						.anyMatch(o -> (o.getUser() != null && user.equalsIgnoreCase(o.getUser().getEmailAddrr())));
 				Boolean isGroupUser = permissionList.stream()
-						.anyMatch(o -> (loggedOnUserPermList.contains(o.getUserGroupId()) && o.getIsGroup()));
+						.anyMatch(o -> (o.getGroup() != null && loggedOnUserPermList.contains(o.getGroup().getGroupName())));
 				if (Boolean.TRUE.equals(isOwner)) {
 					return "Owner";
 				} else if (Boolean.TRUE.equals(isGroupUser)) {

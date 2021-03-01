@@ -2,7 +2,12 @@ package gov.nih.nci.doe.web.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import gov.nih.nci.doe.web.domain.DoeUsers;
+import gov.nih.nci.doe.web.domain.Group;
 import gov.nih.nci.doe.web.domain.MetaDataPermissions;
+import gov.nih.nci.doe.web.repository.DoeUserRepository;
+import gov.nih.nci.doe.web.repository.GroupRepository;
 import gov.nih.nci.doe.web.repository.MetaDataPermissionsRepository;
 import gov.nih.nci.doe.web.service.MetaDataPermissionsService;
 
@@ -22,18 +27,23 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 
 	@Autowired
 	private MetaDataPermissionsRepository metaDataPermissionsRepository;
+	
+	@Autowired
+	private DoeUserRepository doeUserRepository;
+	
+	@Autowired
+	private GroupRepository groupRepository;
 
 	@Override
 	public void savePermissionsList(String user, String progList, Integer collectionId, String collectionPath) {
 		log.info("save permission list for user " + user + " with prog list " + progList + " and collection id"
 				+ collectionId);
 
+		DoeUsers d =  doeUserRepository.getUserInfo(user);
 		MetaDataPermissions permissions = new MetaDataPermissions();
 		permissions.setCollectionId(collectionId);
 		permissions.setCreatedDate(new Date());
-		permissions.setIsGroup(false);
-		permissions.setIsOwner(true);
-		permissions.setUserGroupId(user);
+		permissions.setUser(d);
 		permissions.setCollectionPath(collectionPath);
 		metaDataPermissionsRepository.saveAndFlush(permissions);
 
@@ -44,12 +54,11 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 			Iterator proggrpIterator = groupNameList.iterator();
 			while (proggrpIterator.hasNext()) {
 				String grpName = proggrpIterator.next().toString();
+				Group g = groupRepository.getGroup(grpName);
 				MetaDataPermissions perm = new MetaDataPermissions();
 				perm.setCollectionId(collectionId);
 				perm.setCreatedDate(new Date());
-				perm.setIsGroup(true);
-				perm.setIsOwner(false);
-				perm.setUserGroupId(grpName);
+				perm.setGroup(g);
 				metaDataPermissionsRepository.saveAndFlush(perm);
 			}
 		}

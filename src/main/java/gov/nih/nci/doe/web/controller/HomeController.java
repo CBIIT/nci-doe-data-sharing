@@ -33,7 +33,6 @@ import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.model.PermissionsModel;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
-import gov.nih.nci.doe.web.util.LambdaUtils;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 
@@ -218,7 +217,10 @@ public class HomeController extends AbstractDoeController {
 				: Arrays.asList(selectedPermissions);
 		List<MetaDataPermissions> existingPermissionsList = metaDataPermissionService
 				.getAllGroupMetaDataPermissionsByCollectionId(Integer.valueOf(collectionId));
-		List<String> oldPermissionsList = LambdaUtils.map(existingPermissionsList, MetaDataPermissions::getUserGroupId);
+		List<String> oldPermissionsList = existingPermissionsList.stream().filter(e -> e.getGroup() != null)
+				.map(s -> s.getGroup().getGroupName()).collect(Collectors.toList());
+		// List<String> oldPermissionsList = LambdaUtils.map(existingPermissionsList,
+		// MetaDataPermissions::getGroup);
 
 		if (CollectionUtils.isEmpty(oldPermissionsList) && !CollectionUtils.isEmpty(newSelectedPermissionList)
 				&& StringUtils.isNotBlank(collectionId)) {
@@ -253,8 +255,8 @@ public class HomeController extends AbstractDoeController {
 		List<MetaDataPermissions> permissionsList = metaDataPermissionService
 				.getAllGroupMetaDataPermissionsByCollectionId(Integer.valueOf(collectionId));
 		if (CollectionUtils.isNotEmpty(permissionsList)) {
-			permissionsList.stream()
-					.forEach(e -> keyValueBeanResults.add(new KeyValueBean(e.getUserGroupId(), e.getUserGroupId())));
+			permissionsList.stream().filter(e -> e.getGroup() != null).forEach(e -> keyValueBeanResults
+					.add(new KeyValueBean(e.getGroup().getGroupName(), e.getGroup().getGroupName())));
 		}
 		return new ResponseEntity<>(keyValueBeanResults, null, HttpStatus.OK);
 	}
@@ -273,15 +275,15 @@ public class HomeController extends AbstractDoeController {
 			existingAccessGroups = permissionGroups.getStudyLevelAccessGroups();
 			perm = metaDataPermissionService
 					.getMetaDataPermissionsOwnerByCollectionId(Integer.valueOf(permissionGroups.getProgCollectionId()));
-			collectionOwnersList.add(perm.getUserGroupId());
+			collectionOwnersList.add(perm.getUser().getEmailAddrr());
 		} else if ("Asset".equalsIgnoreCase(permissionGroups.getSelectedCollection())) {
 			existingAccessGroups = permissionGroups.getDataLevelAccessGroups();
 			perm = metaDataPermissionService.getMetaDataPermissionsOwnerByCollectionId(
 					Integer.valueOf(permissionGroups.getStudyCollectionId()));
 			MetaDataPermissions progPermissions = metaDataPermissionService
 					.getMetaDataPermissionsOwnerByCollectionId(Integer.valueOf(permissionGroups.getProgCollectionId()));
-			collectionOwnersList.add(perm.getUserGroupId());
-			collectionOwnersList.add(progPermissions.getUserGroupId());
+			collectionOwnersList.add(perm.getUser().getEmailAddrr());
+			collectionOwnersList.add(progPermissions.getUser().getEmailAddrr());
 		}
 		log.info("send notify email to" + collectionOwnersList);
 		// remove duplicate emails from collectionOwnersList
@@ -307,15 +309,15 @@ public class HomeController extends AbstractDoeController {
 			if ("public".equalsIgnoreCase(permissionGroups.getProgramLevelAccessGroups())) {
 				isUpdate = true;
 			} else if (!"public".equalsIgnoreCase(permissionGroups.getProgramLevelAccessGroups()) && permissionGroups
-					.getSelectedAccessGroups().contains(permissionGroups.getProgramLevelAccessGroups())) {
+					.getProgramLevelAccessGroups().contains(permissionGroups.getSelectedAccessGroups())) {
 				isUpdate = true;
 			}
 		} else if ("Asset".equalsIgnoreCase(permissionGroups.getSelectedCollection())) {
 			if ("public".equalsIgnoreCase(permissionGroups.getProgramLevelAccessGroups())
 					&& "public".equalsIgnoreCase(permissionGroups.getStudyLevelAccessGroups())) {
 				isUpdate = true;
-			} else if (permissionGroups.getSelectedAccessGroups()
-					.contains(permissionGroups.getStudyLevelAccessGroups())) {
+			} else if (permissionGroups.getStudyLevelAccessGroups()
+					.contains(permissionGroups.getSelectedAccessGroups())) {
 				isUpdate = true;
 			}
 		}

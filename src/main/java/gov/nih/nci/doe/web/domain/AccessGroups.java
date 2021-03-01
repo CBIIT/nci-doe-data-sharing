@@ -5,8 +5,8 @@ import java.util.Date;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "METADATA_PERMISSIONS_T")
-public class MetaDataPermissions {
+@Table(name = "ACCESS_GROUP_T")
+public class AccessGroups {
 
 	private Integer id;
 	private Integer collectionId;
@@ -14,6 +14,7 @@ public class MetaDataPermissions {
 	private Group group;
 	private DoeUsers user;
 	private Date createdDate;
+	private Date lastChangedDate;
 
 	public boolean equals(Object object) {
 		if (this == object) {
@@ -26,7 +27,7 @@ public class MetaDataPermissions {
 			return false;
 		}
 
-		MetaDataPermissions that = (MetaDataPermissions) object;
+		AccessGroups that = (AccessGroups) object;
 
 		if (collectionId != null ? !collectionId.equals(that.collectionId) : that.collectionId != null) {
 			return false;
@@ -47,8 +48,8 @@ public class MetaDataPermissions {
 
 	@Id
 	@Column(name = "ID", nullable = false, precision = 0)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "METADATA_PERMISSIONS_SEQ")
-	@SequenceGenerator(name = "METADATA_PERMISSIONS_SEQ", sequenceName = "METADATA_PERMISSIONS_SEQ", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ACCESS_GROUPS_SEQ")
+	@SequenceGenerator(name = "ACCESS_GROUPS_SEQ", sequenceName = "ACCESS_GROUPS_SEQ", allocationSize = 1)
 	public Integer getId() {
 		return id;
 	}
@@ -104,6 +105,16 @@ public class MetaDataPermissions {
 
 	public void setCollectionPath(String collectionPath) {
 		this.collectionPath = collectionPath;
+	}
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "CREATED_DATE", length = 29)
+	public Date getLastChangedDate() {
+		return lastChangedDate;
+	}
+
+	public void setLastChangedDate(Date lastChangedDate) {
+		this.lastChangedDate = lastChangedDate;
 	}
 
 	@Override

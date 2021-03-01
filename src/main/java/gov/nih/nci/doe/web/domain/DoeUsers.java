@@ -1,10 +1,12 @@
 package gov.nih.nci.doe.web.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.*;
 
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.Formula;
 
 @Entity
 @Table(name = "USER_T")
@@ -21,9 +23,11 @@ public class DoeUsers {
 	private Boolean isWrite;
 	private Boolean isActivated;
 	private String uuid;
-	private String programName;
 	private Date createdDate;
 	private Date lastChangedDate;
+	
+	@Transient
+	private List<String> progNamesList;
 
 	public boolean equals(Object object) {
 		if (this == object) {
@@ -188,14 +192,17 @@ public class DoeUsers {
 		this.uuid = uuid;
 	}
 
-	@Basic
-	@Column(name = "PROGRAM_NAME")
-	public String getProgramName() {
-		return programName;
-	}
 
-	public void setProgramName(String programName) {
-		this.programName = programName;
+
+	//@ElementCollection(targetClass = String.class)
+	//@Formula("select GP.GROUP_NAME from GROUP_T AS GP where GP.ID in (select UG.GROUP_ID from USER_GROUP_T AS UG where UG.USER_ID = ID)")
+	@Transient
+	public List<String> getProgNamesList() {
+		return progNamesList;
+	}
+	@Transient
+	public void setProgNamesList(List<String> progNamesList) {
+		this.progNamesList = progNamesList;
 	}
 
 	@Override

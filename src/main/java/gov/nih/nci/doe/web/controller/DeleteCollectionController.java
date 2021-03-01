@@ -54,7 +54,7 @@ public class DeleteCollectionController extends AbstractDoeController {
 			MetaDataPermissions perm = metaDataPermissionService
 					.getMetaDataPermissionsOwnerByCollectionId(collection.getCollection().getCollectionId());
 
-			if (perm != null && perm.getUserGroupId().equalsIgnoreCase(userInfo)) {
+			if (perm != null && perm.getUser().getEmailAddrr().equalsIgnoreCase(userInfo)) {
 
 				String deleted = DoeClientUtil.deleteCollection(authToken, serviceURL, collPath, sslCertPath,
 						sslCertPassword);
