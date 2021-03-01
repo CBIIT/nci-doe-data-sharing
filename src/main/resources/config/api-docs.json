@@ -5,7 +5,7 @@
     "description": "This user guide describes how to use the MoDaC API.",
     "title": "MoDaC API"
   },
-  "host": "https://fsdmel-modac01t.ncifcrf.gov",
+  "host": "fsdmel-modac01t.ncifcrf.gov",
   "basePath": "/",
   "paths": {
     "/api/collection/{path}": {
