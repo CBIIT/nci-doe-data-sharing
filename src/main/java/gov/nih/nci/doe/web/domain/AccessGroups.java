@@ -108,7 +108,7 @@ public class AccessGroups {
 	}
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "CREATED_DATE", length = 29)
+	@Column(name = "LAST_CHANGED_DATE", length = 29)
 	public Date getLastChangedDate() {
 		return lastChangedDate;
 	}
