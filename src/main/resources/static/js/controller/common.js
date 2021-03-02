@@ -11,6 +11,10 @@ $(document).ready(function () {
 	    	$(this).val($(this).val().trim().toLowerCase());
 	    });
 	    
+	    $("#txtResetPswdLink").blur(function() {
+	    	$(this).val($(this).val().trim().toLowerCase());
+	    });
+	    
 	    $(".loginFieldsTextBox").keyup(function() {
 	    	if($(this).val()) {
 	    		$(this).parent().find('.TextField-floatingLabel-qefpP').show();
