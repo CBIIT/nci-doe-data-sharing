@@ -43,7 +43,6 @@ import gov.nih.nci.doe.web.domain.LookUp;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.DoeSearchResult;
 import gov.nih.nci.doe.web.model.KeyValueBean;
-import gov.nih.nci.doe.web.service.ConsortiumService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.doe.web.util.HibernateProxyTypeAdapter;
 import gov.nih.nci.doe.web.util.LambdaUtils;
@@ -96,8 +95,6 @@ public class SearchController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.web.server}")
 	private String webUrl;
 
-	@Autowired
-	ConsortiumService consortiumService;
 
 	@GetMapping
 	public ResponseEntity<?> search(HttpSession session, @RequestHeader HttpHeaders headers, HttpServletRequest request,

@@ -33,6 +33,7 @@ import gov.nih.nci.doe.web.domain.MetaDataPermissions;
 import gov.nih.nci.doe.web.model.DoeResponse;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.model.KeyValueBean;
+import gov.nih.nci.doe.web.service.AccessGroupsService;
 import gov.nih.nci.doe.web.service.AuditingService;
 import gov.nih.nci.doe.web.service.AuthenticateService;
 import gov.nih.nci.doe.web.service.DoeAuthorizationService;
@@ -65,6 +66,9 @@ public abstract class AbstractDoeController {
 
 	@Autowired
 	MetaDataPermissionsService metaDataPermissionService;
+	
+	@Autowired
+	AccessGroupsService accessGroupsService;
 
 	@Autowired
 	public AuditingService auditingService;

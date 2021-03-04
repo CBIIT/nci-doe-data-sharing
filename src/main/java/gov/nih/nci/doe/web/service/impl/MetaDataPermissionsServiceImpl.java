@@ -27,10 +27,10 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 
 	@Autowired
 	private MetaDataPermissionsRepository metaDataPermissionsRepository;
-	
+
 	@Autowired
 	private DoeUserRepository doeUserRepository;
-	
+
 	@Autowired
 	private GroupRepository groupRepository;
 
@@ -39,7 +39,7 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 		log.info("save permission list for user " + user + " with prog list " + progList + " and collection id"
 				+ collectionId);
 
-		DoeUsers d =  doeUserRepository.getUserInfo(user);
+		DoeUsers d = doeUserRepository.getUserInfo(user);
 		MetaDataPermissions permissions = new MetaDataPermissions();
 		permissions.setCollectionId(collectionId);
 		permissions.setCreatedDate(new Date());
@@ -58,6 +58,7 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 				MetaDataPermissions perm = new MetaDataPermissions();
 				perm.setCollectionId(collectionId);
 				perm.setCreatedDate(new Date());
+				perm.setCollectionPath(collectionPath);
 				perm.setGroup(g);
 				metaDataPermissionsRepository.saveAndFlush(perm);
 			}

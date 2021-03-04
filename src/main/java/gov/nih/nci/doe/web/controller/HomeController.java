@@ -347,6 +347,10 @@ public class HomeController extends AbstractDoeController {
 				audit.setStartTime(new Date());
 				audit.setPath(permissionGroups.getPath());
 				auditingService.saveAuditInfo(audit);
+
+				// update in MoDaC DB also
+				accessGroupsService.updateAccessGroups(permissionGroups.getPath(),
+						permissionGroups.getSelectedAccessGroups(),getLoggedOnUserInfo());
 			}
 
 		} else {

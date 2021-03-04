@@ -108,18 +108,17 @@ function postSuccessUpdatePermissions(data,status) {
 
 function editAccessPermissions(collectionId,metadata_path,msg,selectedCollection,collectionName,permissions) {
 
-	//var permissions={};
+
+  var parentAccessGroups;   
 	$.each(msg, function(key, value) {	
 		if(value.key.indexOf("selectedEntry") != -1) {
 			$("#updateAccessPermissionsModal").find("#accessGroups").val(value.value);
 		} 
-			if(value.key.indexOf("studyLevelAccessGroups") != -1) {
-			permissions.studyLevelAccessGroups =value.value;
+			if(value.key.indexOf("parentAccessGroups") != -1) {
+			permissions.parentAccessGroups =value.value;
+			parentAccessGroups = value.value;
 		} 
-			if(value.key.indexOf("programLevelAccessGroups") != -1) {
-            permissions.programLevelAccessGroups = value.value;
-		} 
-		
+	
 	});
 	
 	$("#updateAccessPermissionsModal").find(".updateAccessMsg").html("");
@@ -129,14 +128,37 @@ function editAccessPermissions(collectionId,metadata_path,msg,selectedCollection
 	$("#updateAccessPermissionsModal").find("#metadata_path").val(metadata_path);
 	$("#updateAccessPermissionsModal").find("#selectedCollection").val(selectedCollection);
 	$("#updateAccessPermissionsModal").find("#selectedCollectionName").text(collectionName);
-	$("#updateAccessPermissionsModal").modal('show');	
-	loadJsonData('/metaDataPermissionsList', $("#updateAccessPermissionsModal").find("#updateAccessGroupsList"),
-			false, null, postSuccessAccessPermissions, null, "key", "value"); 
+	$("#updateAccessPermissionsModal").modal('show');
+	
+	var isUpdate = false;
+	if (selectedCollection == "Program" || 
+		(selectedCollection == "Study" || selectedCollection == "Asset" &&  "public" == permissions.parentAccessGroups)) {
+		isUpdate = true;
+	} 
+	
+	if(isUpdate) {
+		loadJsonData('/metaDataPermissionsList', $("#updateAccessPermissionsModal").find("#updateAccessGroupsList"),
+				false, null, postSuccessAccessPermissions, null, "key", "value"); 
+	} else if(parentAccessGroups){
+		
+		var parentAccessGroupsList = parentAccessGroups.split(',');
+		$("#updateAccessPermissionsModal").find("#updateAccessGroupsList").empty();
+		
+		$.each(parentAccessGroupsList, function(index, value) {
+			$("#updateAccessPermissionsModal").find("#updateAccessGroupsList").
+			append($('<option></option>').attr('value', value).text(value));
+	    });
+		
+		$("#updateAccessPermissionsModal").find("#updateAccessGroupsList").select2();
+		postSuccessAccessPermissions(isUpdate,"SUCCESS");
+	}
+	
 }
 
 function postSuccessAccessPermissions(data,status) {
 	var accessGrp = $("#updateAccessPermissionsModal").find("#accessGroups").val();
 	var accessGrpList = accessGrp.split(",");
+	$("#updateAccessPermissionsModal").find("#editPublicAccess").prop("disabled",false);
 	
 	if(accessGrp == 'public') {
 		$("#updateAccessPermissionsModal").find("#updateAccessGroupsList").next(".select2-container").hide();
@@ -146,6 +168,9 @@ function postSuccessAccessPermissions(data,status) {
 	} else {
 		$("#updateAccessPermissionsModal").find("#updateAccessGroupsList").next(".select2-container").show();
 		$("#updateAccessPermissionsModal").find("#editPublicAccess").prop("checked",false);
+		if(!data) {
+			$("#updateAccessPermissionsModal").find("#editPublicAccess").prop("disabled",true);
+		}
 	}
 	
 	 for (var i = 0; i < accessGrpList.length; i++) {

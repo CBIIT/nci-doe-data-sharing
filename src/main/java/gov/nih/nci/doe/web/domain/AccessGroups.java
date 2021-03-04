@@ -5,14 +5,13 @@ import java.util.Date;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "ACCESS_GROUP_T")
+@Table(name = "COLLECTION_ACCESS_GROUP_T")
 public class AccessGroups {
 
 	private Integer id;
 	private Integer collectionId;
 	private String collectionPath;
 	private Group group;
-	private DoeUsers user;
 	private Date createdDate;
 	private Date lastChangedDate;
 
@@ -35,9 +34,7 @@ public class AccessGroups {
 		if (group != null ? !group.equals(that.group) : that.group != null) {
 			return false;
 		}
-		if (user != null ? !user.equals(that.user) : that.user != null) {
-			return false;
-		}
+
 		if (collectionPath != null ? !collectionPath.equals(that.collectionPath) : that.collectionPath != null) {
 			return false;
 		}
@@ -77,16 +74,6 @@ public class AccessGroups {
 		this.group = group;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "USER_ID", referencedColumnName = "ID", nullable = false)
-	public DoeUsers getUser() {
-		return user;
-	}
-
-	public void setUser(DoeUsers user) {
-		this.user = user;
-	}
-
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CREATED_DATE", length = 29)
 	public Date getCreatedDate() {
@@ -106,7 +93,7 @@ public class AccessGroups {
 	public void setCollectionPath(String collectionPath) {
 		this.collectionPath = collectionPath;
 	}
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "LAST_CHANGED_DATE", length = 29)
 	public Date getLastChangedDate() {
@@ -119,8 +106,8 @@ public class AccessGroups {
 
 	@Override
 	public String toString() {
-		return "MetaDataPermissions{" + ", collectionId='" + collectionId + '\'' + ", user='" + user + '\''
-				+ ",createdDate=" + createdDate + ", collectionPath=" + collectionPath + ", group=" + group
-				+ '}';
+		return "MetaDataPermissions{" + ", collectionId='" + collectionId + '\'' + ", lastChangedDate='"
+				+ lastChangedDate + '\'' + ",createdDate=" + createdDate + ", collectionPath=" + collectionPath
+				+ ", group=" + group + '}';
 	}
 }

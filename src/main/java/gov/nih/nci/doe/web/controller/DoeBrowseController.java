@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,6 @@ import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.datamanagement.HpcCollection;
 import gov.nih.nci.hpc.domain.datamanagement.HpcCollectionListingEntry;
-import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
@@ -81,34 +81,44 @@ public class DoeBrowseController extends AbstractDoeController {
 
 		try {
 			if (selectedPath != null) {
-				// Get collection
-				HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, collectionURL, selectedPath,
-						true, sslCertPath, sslCertPassword);
-				if (collections != null && collections.getCollections() != null
-						&& !collections.getCollections().isEmpty()) {
-					HpcCollectionDTO collection = collections.getCollections().get(0);
-					HpcMetadataEntry selectedEntry = collection.getMetadataEntries().getSelfMetadataEntries().stream()
-							.filter(e -> e.getAttribute().equalsIgnoreCase("access_group")).findAny().orElse(null);
-					if (selectedEntry != null) {
-						entryList.add(new KeyValueBean("selectedEntry", selectedEntry.getValue()));
-					}
-
-					HpcMetadataEntry programEntry = collection.getMetadataEntries().getParentMetadataEntries().stream()
-							.filter(e -> e.getAttribute().equalsIgnoreCase("access_group")
-									&& e.getLevelLabel().equalsIgnoreCase("program"))
-							.findAny().orElse(null);
-					if (programEntry != null) {
-						entryList.add(new KeyValueBean("programLevelAccessGroups", programEntry.getValue()));
-					}
-
-					HpcMetadataEntry studyEntry = collection.getMetadataEntries().getParentMetadataEntries().stream()
-							.filter(e -> e.getAttribute().equalsIgnoreCase("access_group")
-									&& e.getLevelLabel().equalsIgnoreCase("study"))
-							.findAny().orElse(null);
-					if (studyEntry != null) {
-						entryList.add(new KeyValueBean("studyLevelAccessGroups", studyEntry.getValue()));
+				List<String> accessGrpList = accessGroupsService.getGroupsByCollectionPath(selectedPath);
+				if (CollectionUtils.isNotEmpty(accessGrpList)) {
+					entryList.add(new KeyValueBean("selectedEntry", String.join(",", accessGrpList)));
+				}
+				if (selectedPath.lastIndexOf('/') != -1
+						&& (levelName.equalsIgnoreCase("Asset") || levelName.equalsIgnoreCase("Study"))) {
+					String parentPath = selectedPath.substring(0, selectedPath.lastIndexOf('/'));
+					List<String> parentGrpAccessGrpList = accessGroupsService.getGroupsByCollectionPath(parentPath);
+					if (CollectionUtils.isNotEmpty(parentGrpAccessGrpList)) {
+						entryList.add(new KeyValueBean("parentAccessGroups", String.join(",", parentGrpAccessGrpList)));
 					}
 				}
+				// Get collection
+				/*
+				 * HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken,
+				 * collectionURL, selectedPath, true, sslCertPath, sslCertPassword); if
+				 * (collections != null && collections.getCollections() != null &&
+				 * !collections.getCollections().isEmpty()) { HpcCollectionDTO collection =
+				 * collections.getCollections().get(0); HpcMetadataEntry selectedEntry =
+				 * collection.getMetadataEntries().getSelfMetadataEntries().stream() .filter(e
+				 * -> e.getAttribute().equalsIgnoreCase("access_group")).findAny().orElse(null);
+				 * if (selectedEntry != null) { entryList.add(new KeyValueBean("selectedEntry",
+				 * selectedEntry.getValue())); }
+				 * 
+				 * HpcMetadataEntry programEntry =
+				 * collection.getMetadataEntries().getParentMetadataEntries().stream() .filter(e
+				 * -> e.getAttribute().equalsIgnoreCase("access_group") &&
+				 * e.getLevelLabel().equalsIgnoreCase("program")) .findAny().orElse(null); if
+				 * (programEntry != null) { entryList.add(new
+				 * KeyValueBean("programLevelAccessGroups", programEntry.getValue())); }
+				 * 
+				 * HpcMetadataEntry studyEntry =
+				 * collection.getMetadataEntries().getParentMetadataEntries().stream() .filter(e
+				 * -> e.getAttribute().equalsIgnoreCase("access_group") &&
+				 * e.getLevelLabel().equalsIgnoreCase("study")) .findAny().orElse(null); if
+				 * (studyEntry != null) { entryList.add(new
+				 * KeyValueBean("studyLevelAccessGroups", studyEntry.getValue())); } }
+				 */
 			}
 		} catch (Exception e) {
 			String errMsg = "Failed to get metadata: " + e.getMessage();

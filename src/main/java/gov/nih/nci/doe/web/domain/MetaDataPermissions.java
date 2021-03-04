@@ -5,7 +5,7 @@ import java.util.Date;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "METADATA_PERMISSIONS_T")
+@Table(name = "COLLECTION_UPDATE_PERMISSIONS_T")
 public class MetaDataPermissions {
 
 	private Integer id;

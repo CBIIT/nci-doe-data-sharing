@@ -180,6 +180,6 @@ function postResetLinkFunction(data,status) {
 	if(data == 'SUCCESS') {		
 	bootbox.alert("A password has been sent successfully!");
 	} else {
-		bootbox.alert("Unknown Error. Contact Technical Support!");
+		bootbox.alert(data);
 	}
 }

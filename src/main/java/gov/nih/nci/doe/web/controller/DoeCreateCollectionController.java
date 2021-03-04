@@ -282,7 +282,16 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 					HpcCollectionDTO collection = collections.getCollections().get(0);
 					metaDataPermissionService.savePermissionsList(getLoggedOnUserInfo(), progList,
 							collection.getCollection().getCollectionId(), doeCollection.getPath());
+
+					// store the access_group metadata in MoDaC DB
+					HpcMetadataEntry selectedEntry = collection.getMetadataEntries().getSelfMetadataEntries().stream()
+							.filter(e -> e.getAttribute().equalsIgnoreCase("access_group")).findAny().orElse(null);
+					if (selectedEntry != null) {
+						accessGroupsService.saveAccessGroups(collection.getCollection().getCollectionId(),
+								doeCollection.getPath(), selectedEntry.getValue(), getLoggedOnUserInfo());
+					}
 				}
+
 				return "Collection is created!";
 			}
 		} catch (Exception e) {
