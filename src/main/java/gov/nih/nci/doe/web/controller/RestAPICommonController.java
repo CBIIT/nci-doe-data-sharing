@@ -15,6 +15,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import springfox.documentation.annotations.ApiIgnore;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
@@ -127,7 +129,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 */
 	@PostMapping(value = "/dataObject/**/generateDownloadRequestURL")
 	public ResponseEntity<?> generateDownloadRequestURL(@RequestHeader HttpHeaders headers, HttpServletRequest request,
-			HttpSession session, HttpServletResponse response) throws DoeWebException, IOException {
+			@ApiIgnore HttpSession session, HttpServletResponse response) throws DoeWebException, IOException {
 
 		log.info("generateDownloadRequestURL");
 
@@ -213,7 +215,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 */
 	@PostMapping(value = "/v2/download")
 	public ResponseEntity<?> downloadDataObjectsOrCollections(@RequestHeader HttpHeaders headers,
-			HttpServletRequest request, HttpSession session, HttpServletResponse response,
+			HttpServletRequest request, @ApiIgnore HttpSession session, HttpServletResponse response,
 			@RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectDownloadRequestDTO downloadRequest)
 			throws DoeWebException, MalformedURLException {
 
@@ -271,7 +273,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 */
 	@PostMapping(value = "/v2/collection/**/download")
 	public ResponseEntity<?> collectionDownload(@RequestHeader HttpHeaders headers, HttpServletRequest request,
-			HttpSession session, HttpServletResponse response,
+			@ApiIgnore HttpSession session, HttpServletResponse response,
 			@RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO downloadRequest)
 			throws DoeWebException, MalformedURLException {
 
@@ -349,7 +351,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 */
 	@PostMapping(value = "/dataObject/**/download")
 	public ResponseEntity<?> asynchronousDownload(@RequestHeader HttpHeaders headers, HttpServletRequest request,
-			HttpSession session, HttpServletResponse response) throws DoeWebException, MalformedURLException {
+			@ApiIgnore HttpSession session, HttpServletResponse response) throws DoeWebException, MalformedURLException {
 
 		log.info("download async:");
 		String path = request.getRequestURI().split(request.getContextPath() + "/dataObject/")[1];
@@ -419,7 +421,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 * @throws Exception
 	 */
 	@PostMapping(value = "/v2/dataObject/**/download")
-	public ResponseEntity<?> synchronousDownload(@RequestHeader HttpHeaders headers, HttpSession session,
+	public ResponseEntity<?> synchronousDownload(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
 			@RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO downloadRequest)
 			throws DoeWebException, MalformedURLException {
@@ -511,7 +513,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 */
 	@GetMapping(value = "/v2/dataObject/**", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_OCTET_STREAM_VALUE })
-	public ResponseEntity<?> getDataObject(@RequestHeader HttpHeaders headers, HttpSession session,
+	public ResponseEntity<?> getDataObject(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
 			@RequestParam(required = false) Boolean includeAcl) throws DoeWebException {
 
@@ -565,7 +567,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 */
 	@GetMapping(value = "/collection/**", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_OCTET_STREAM_VALUE })
-	public ResponseEntity<?> getCollection(@RequestHeader HttpHeaders headers, HttpSession session,
+	public ResponseEntity<?> getCollection(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
 			HttpServletResponse response, HttpServletRequest request, @RequestParam(required = false) Boolean list,
 			@RequestParam(required = false) Boolean includeAcl) throws DoeWebException {
 
@@ -610,7 +612,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 * @param collectionRegistration
 	 */
 	@PutMapping(value = "/collection/**")
-	public ResponseEntity<?> registerCollection(@RequestHeader HttpHeaders headers, HttpSession session,
+	public ResponseEntity<?> registerCollection(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
 			@RequestBody @Valid HpcCollectionRegistrationDTO collectionRegistration) throws DoeWebException {
 
@@ -694,7 +696,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 * 
 	 */
 	@PutMapping(value = "/v2/dataObject/**")
-	public ResponseEntity<?> registerDataObject(@RequestHeader HttpHeaders headers, HttpSession session,
+	public ResponseEntity<?> registerDataObject(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
 			@RequestPart("dataObjectRegistration") @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationRequestDTO dataObjectRegistration,
 			@RequestBody(required = false) @Valid MultipartFile doeDataFile) throws DoeWebException {
@@ -764,7 +766,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	@PostMapping(value = "/collection/query", consumes = { MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE,
 					MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<?> queryCollections(@RequestHeader HttpHeaders headers, HttpSession session,
+	public ResponseEntity<?> queryCollections(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
 			@RequestBody @Valid HpcCompoundMetadataQueryDTO compoundMetadataQuery) throws DoeWebException, IOException {
 
@@ -813,7 +815,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	@PostMapping(value = "/dataObject/query", consumes = { MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE,
 					MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<?> queryDataObjects(@RequestHeader HttpHeaders headers, HttpSession session,
+	public ResponseEntity<?> queryDataObjects(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
 			@RequestParam(required = false) Boolean returnParent,
 			@RequestBody @Valid HpcCompoundMetadataQueryDTO compoundMetadataQuery) throws DoeWebException, IOException {
@@ -864,7 +866,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 */
 
 	@GetMapping(value = "/authenticate")
-	public ResponseEntity<?> authenticate(@RequestHeader HttpHeaders headers, HttpSession session,
+	public ResponseEntity<?> authenticate(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
 			HttpServletResponse response, HttpServletRequest request) throws DoeWebException {
 
 		log.info("create modac authentication token");
