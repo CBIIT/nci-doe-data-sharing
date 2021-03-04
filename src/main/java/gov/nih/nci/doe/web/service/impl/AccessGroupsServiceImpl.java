@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import gov.nih.nci.doe.web.domain.AccessGroups;
 import gov.nih.nci.doe.web.domain.Group;
 import gov.nih.nci.doe.web.repository.AccessGroupsRepository;
-import gov.nih.nci.doe.web.repository.DoeUserRepository;
 import gov.nih.nci.doe.web.repository.GroupRepository;
 import gov.nih.nci.doe.web.service.AccessGroupsService;
 
