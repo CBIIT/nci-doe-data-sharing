@@ -132,7 +132,7 @@ function editAccessPermissions(collectionId,metadata_path,msg,selectedCollection
 	
 	var isUpdate = false;
 	if (selectedCollection == "Program" || 
-		(selectedCollection == "Study" || selectedCollection == "Asset" &&  "public" == permissions.parentAccessGroups)) {
+		(selectedCollection == "Study" || selectedCollection == "Asset" &&  "public" == parentAccessGroups)) {
 		isUpdate = true;
 	} 
 	
@@ -187,7 +187,8 @@ function updateAccessGroupsFunction() {
 	var selectedAccessGroups = $("#updateAccessPermissionsModal").find("#updateAccessGroupsList").val();
 	var json = $("#updateAccessPermissionsModal").find("#permissionGroups").val();
 	var path = $("#updateAccessPermissionsModal").find("#metadata_path").val();
-	var selectedCollection = $("#updateAccessPermissionsModal").find("#selectedCollection").val();	
+	var selectedCollection = $("#updateAccessPermissionsModal").find("#selectedCollection").val();
+	var selectedCollectionId = $("#updateAccessPermissionsModal").find("#updateCollectionId").val();
 	var permissionGroups = JSON.parse(json);
 	if($("#updateAccessPermissionsModal").find("#editPublicAccess:visible").is(":checked")){
 		permissionGroups.selectedAccessGroups ="public";
@@ -196,6 +197,7 @@ function updateAccessGroupsFunction() {
 	}
 	permissionGroups.path = path;
 	permissionGroups.selectedCollection = selectedCollection;	
+	permissionGroups.selectedCollectionId = selectedCollectionId;
 	$("#updateAccessPermissionsModal").find("#permissionGroups").val(JSON.stringify(permissionGroups));
 	if(!permissionGroups.selectedAccessGroups){
 		$("#updateAccessPermissionsModal").find(".updateErrorAccessMsg").html("Select Access Groups.");

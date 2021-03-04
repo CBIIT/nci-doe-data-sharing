@@ -302,60 +302,37 @@ public class HomeController extends AbstractDoeController {
 	public ResponseEntity<?> saveAccessGroup(HttpSession session, @RequestHeader HttpHeaders headers,
 			PermissionsModel permissionGroups) throws DoeWebException {
 		log.info("get meta data permissions list");
-		Boolean isUpdate = false;
-		if ("program".equalsIgnoreCase(permissionGroups.getSelectedCollection())) {
-			isUpdate = true;
-		} else if ("study".equalsIgnoreCase(permissionGroups.getSelectedCollection())) {
-			if ("public".equalsIgnoreCase(permissionGroups.getProgramLevelAccessGroups())) {
-				isUpdate = true;
-			} else if (!"public".equalsIgnoreCase(permissionGroups.getProgramLevelAccessGroups()) && permissionGroups
-					.getProgramLevelAccessGroups().contains(permissionGroups.getSelectedAccessGroups())) {
-				isUpdate = true;
-			}
-		} else if ("Asset".equalsIgnoreCase(permissionGroups.getSelectedCollection())) {
-			if ("public".equalsIgnoreCase(permissionGroups.getProgramLevelAccessGroups())
-					&& "public".equalsIgnoreCase(permissionGroups.getStudyLevelAccessGroups())) {
-				isUpdate = true;
-			} else if (permissionGroups.getStudyLevelAccessGroups()
-					.contains(permissionGroups.getSelectedAccessGroups())) {
-				isUpdate = true;
-			}
-		}
-
-		if (Boolean.TRUE.equals(isUpdate)) {
-			String loggedOnUser = getLoggedOnUserInfo();
-			String authToken = (String) session.getAttribute("writeAccessUserToken");
-			HpcCollectionRegistrationDTO dto = new HpcCollectionRegistrationDTO();
-			List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
-			HpcMetadataEntry entry = new HpcMetadataEntry();
-			entry.setAttribute("access_group");
-			if (permissionGroups.getSelectedAccessGroups().isEmpty()) {
-				entry.setValue("public");
-			} else {
-				entry.setValue(permissionGroups.getSelectedAccessGroups());
-			}
-
-			metadataEntries.add(entry);
-			dto.getMetadataEntries().addAll(metadataEntries);
-			Integer restResponse = DoeClientUtil.updateCollection(authToken, serviceURL, dto,
-					permissionGroups.getPath(), sslCertPath, sslCertPassword);
-			if (restResponse == 200 || restResponse == 201) {
-				// store the auditing info
-				AuditingModel audit = new AuditingModel();
-				audit.setName(loggedOnUser);
-				audit.setOperation("Edit Meta Data");
-				audit.setStartTime(new Date());
-				audit.setPath(permissionGroups.getPath());
-				auditingService.saveAuditInfo(audit);
-
-				// update in MoDaC DB also
-				accessGroupsService.updateAccessGroups(permissionGroups.getPath(),
-						permissionGroups.getSelectedAccessGroups(),getLoggedOnUserInfo());
-			}
-
+		String loggedOnUser = getLoggedOnUserInfo();
+		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		HpcCollectionRegistrationDTO dto = new HpcCollectionRegistrationDTO();
+		List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
+		HpcMetadataEntry entry = new HpcMetadataEntry();
+		entry.setAttribute("access_group");
+		if (permissionGroups.getSelectedAccessGroups().isEmpty()) {
+			entry.setValue("public");
 		} else {
-			return new ResponseEntity<>("Permission group cannot be updated", HttpStatus.OK);
+			entry.setValue(permissionGroups.getSelectedAccessGroups());
 		}
+
+		metadataEntries.add(entry);
+		dto.getMetadataEntries().addAll(metadataEntries);
+		Integer restResponse = DoeClientUtil.updateCollection(authToken, serviceURL, dto, permissionGroups.getPath(),
+				sslCertPath, sslCertPassword);
+		if (restResponse == 200 || restResponse == 201) {
+			// store the auditing info
+			AuditingModel audit = new AuditingModel();
+			audit.setName(loggedOnUser);
+			audit.setOperation("Edit Meta Data");
+			audit.setStartTime(new Date());
+			audit.setPath(permissionGroups.getPath());
+			auditingService.saveAuditInfo(audit);
+
+			// update in MoDaC DB also
+			accessGroupsService.updateAccessGroups(permissionGroups.getPath(),
+					permissionGroups.getSelectedCollectionId(), permissionGroups.getSelectedAccessGroups(),
+					getLoggedOnUserInfo());
+		}
+
 		return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
 	}
 }

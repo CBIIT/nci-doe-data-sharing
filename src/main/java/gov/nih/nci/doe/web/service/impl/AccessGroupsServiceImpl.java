@@ -49,12 +49,14 @@ public class AccessGroupsServiceImpl implements AccessGroupsService {
 			while (grpIterator.hasNext()) {
 				String grpName = grpIterator.next().toString();
 				Group g = groupRepository.getGroup(grpName);
-				AccessGroups groupAccessGroups = new AccessGroups();
-				groupAccessGroups.setCollectionId(collectionId);
-				groupAccessGroups.setCreatedDate(new Date());
-				groupAccessGroups.setCollectionPath(collectionPath);
-				groupAccessGroups.setGroup(g);
-				accessGroupsRepository.saveAndFlush(groupAccessGroups);
+				if (g != null) {
+					AccessGroups groupAccessGroups = new AccessGroups();
+					groupAccessGroups.setCollectionId(collectionId);
+					groupAccessGroups.setCreatedDate(new Date());
+					groupAccessGroups.setCollectionPath(collectionPath);
+					groupAccessGroups.setGroup(g);
+					accessGroupsRepository.saveAndFlush(groupAccessGroups);
+				}
 			}
 		}
 	}
@@ -65,14 +67,13 @@ public class AccessGroupsServiceImpl implements AccessGroupsService {
 	}
 
 	@Override
-	public void updateAccessGroups(String collectionPath, String accessGroups, String userName) {
+	public void updateAccessGroups(String collectionPath, Integer collectionId, String accessGroups, String userName) {
 		log.info("updating access groups for user " + userName + " for collection path: " + collectionPath
 				+ " with new access groups: " + accessGroups);
 
 		// get the existing access groups from ModaC and compare if any updates
 		List<String> existingGroups = accessGroupsRepository.getGroupsByCollectionPath(collectionPath);
 		List<String> newAccessGroups = Arrays.asList(accessGroups.split(","));
-		Integer collectionId = accessGroupsRepository.getCollectionIdFromPath(collectionPath);
 
 		List<String> deletedgroups = existingGroups.stream().filter(e -> !newAccessGroups.contains(e))
 				.filter(value -> value != null).collect(Collectors.toList());
@@ -99,12 +100,14 @@ public class AccessGroupsServiceImpl implements AccessGroupsService {
 			while (grpIterator.hasNext()) {
 				String grpName = grpIterator.next().toString();
 				Group g = groupRepository.getGroup(grpName);
-				AccessGroups groupAccessGroups = new AccessGroups();
-				groupAccessGroups.setCollectionId(collectionId);
-				groupAccessGroups.setCreatedDate(new Date());
-				groupAccessGroups.setCollectionPath(collectionPath);
-				groupAccessGroups.setGroup(g);
-				accessGroupsRepository.saveAndFlush(groupAccessGroups);
+				if (g != null) {
+					AccessGroups groupAccessGroups = new AccessGroups();
+					groupAccessGroups.setCollectionId(collectionId);
+					groupAccessGroups.setCreatedDate(new Date());
+					groupAccessGroups.setCollectionPath(collectionPath);
+					groupAccessGroups.setGroup(g);
+					accessGroupsRepository.saveAndFlush(groupAccessGroups);
+				}
 			}
 		}
 

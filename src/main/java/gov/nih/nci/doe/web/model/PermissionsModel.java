@@ -13,6 +13,15 @@ public class PermissionsModel {
 	private String selectedEntry;
 	private String path;
 	private String parentAccessGroups;
+	private Integer selectedCollectionId;
+
+	public Integer getSelectedCollectionId() {
+		return selectedCollectionId;
+	}
+
+	public void setSelectedCollectionId(Integer selectedCollectionId) {
+		this.selectedCollectionId = selectedCollectionId;
+	}
 
 	public String getParentAccessGroups() {
 		return parentAccessGroups;
