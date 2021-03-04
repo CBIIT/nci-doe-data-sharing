@@ -259,7 +259,7 @@ public class RestAPICommonController extends AbstractDoeController {
 			} catch (Exception e) {
 				log.error("error in save transfer" + e.getMessage());
 			}
-			return new ResponseEntity<>("taskId: " + downloadDTO.getTaskId(), HttpStatus.OK);
+			return new ResponseEntity<>(downloadDTO, HttpStatus.OK);
 		}
 
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
@@ -338,7 +338,7 @@ public class RestAPICommonController extends AbstractDoeController {
 				} catch (Exception e) {
 					log.error("error in save transfer" + e.getMessage());
 				}
-				return new ResponseEntity<>("taskId: " + downloadDTO.getTaskId(), HttpStatus.OK);
+				return new ResponseEntity<>(downloadDTO, HttpStatus.OK);
 			}
 		}
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
@@ -351,7 +351,8 @@ public class RestAPICommonController extends AbstractDoeController {
 	 */
 	@PostMapping(value = "/dataObject/**/download")
 	public ResponseEntity<?> asynchronousDownload(@RequestHeader HttpHeaders headers, HttpServletRequest request,
-			@ApiIgnore HttpSession session, HttpServletResponse response) throws DoeWebException, MalformedURLException {
+			@ApiIgnore HttpSession session, HttpServletResponse response)
+			throws DoeWebException, MalformedURLException {
 
 		log.info("download async:");
 		String path = request.getRequestURI().split(request.getContextPath() + "/dataObject/")[1];
@@ -498,7 +499,7 @@ public class RestAPICommonController extends AbstractDoeController {
 					} catch (Exception e) {
 						log.error("error in save transfer" + e.getMessage());
 					}
-					return new ResponseEntity<>(downloadDTO.getTaskId(), HttpStatus.OK);
+					return new ResponseEntity<>(downloadDTO, HttpStatus.OK);
 				}
 			}
 		}
@@ -552,7 +553,9 @@ public class RestAPICommonController extends AbstractDoeController {
 
 				HpcDataObjectListDTO dataObjectList = DoeClientUtil.getDatafiles(authToken, dataObjectServiceURL, path,
 						true, includeAcl, sslCertPath, sslCertPassword);
-				return new ResponseEntity<>(dataObjectList, HttpStatus.OK);
+				if (dataObjectList != null && CollectionUtils.isNotEmpty(dataObjectList.getDataObjects())) {
+					return new ResponseEntity<>(dataObjectList.getDataObjects(), HttpStatus.OK);
+				}
 
 			}
 		}
@@ -598,8 +601,8 @@ public class RestAPICommonController extends AbstractDoeController {
 			isPermissions = true;
 		}
 
-		if (Boolean.TRUE.equals(isPermissions)) {
-			return new ResponseEntity<>(collectionDto, HttpStatus.OK);
+		if (Boolean.TRUE.equals(isPermissions) && CollectionUtils.isNotEmpty(collectionDto.getCollections())) {
+			return new ResponseEntity<>(collectionDto.getCollections(), HttpStatus.OK);
 
 		}
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
