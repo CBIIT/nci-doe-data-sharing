@@ -64,6 +64,7 @@ import javax.validation.Valid;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -347,12 +348,14 @@ public class RestAPICommonController extends AbstractDoeController {
 	/**
 	 * asynchronousDownload
 	 * 
+	 * @throws IOException
+	 * 
 	 * 
 	 */
 	@PostMapping(value = "/dataObject/**/download")
 	public ResponseEntity<?> asynchronousDownload(@RequestHeader HttpHeaders headers, HttpServletRequest request,
-			@ApiIgnore HttpSession session, HttpServletResponse response)
-			throws DoeWebException, MalformedURLException {
+			@RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO downloadRequest,
+			@ApiIgnore HttpSession session, HttpServletResponse response) throws DoeWebException, IOException {
 
 		log.info("download async:");
 		String path = request.getRequestURI().split(request.getContextPath() + "/dataObject/")[1];
@@ -391,23 +394,22 @@ public class RestAPICommonController extends AbstractDoeController {
 		}
 
 		if (Boolean.TRUE.equals(isPermissions)) {
-			final String requestUrl = UriComponentsBuilder.fromHttpUrl(this.dataObjectServiceURL)
+			final String requestUrl = UriComponentsBuilder.fromHttpUrl(this.dataObjectAsyncServiceURL)
 					.path("/{dme-archive-path}/download").buildAndExpand(path).encode().toUri().toURL()
 					.toExternalForm();
-
-			final HpcDownloadRequestDTO dto = new HpcDownloadRequestDTO();
-			dto.setGenerateDownloadRequestURL(true);
 
 			WebClient client = DoeClientUtil.getWebClient(requestUrl, sslCertPath, sslCertPassword);
 			client.header("Authorization", "Bearer " + authToken);
 
-			Response restResponse = client.invoke("POST", dto);
+			Response restResponse = client.invoke("POST", downloadRequest);
 			log.info("rest response:" + restResponse.getStatus());
 			if (restResponse.getStatus() == 200) {
-				HpcDataObjectDownloadResponseDTO downloadDTO = (HpcDataObjectDownloadResponseDTO) DoeClientUtil
-						.getObject(restResponse, HpcDataObjectDownloadResponseDTO.class);
-				downloadToUrl(downloadDTO.getDownloadRequestURL(), 1000000, "test", response);
+
+				response.setContentType("application/octet-stream");
+				response.setHeader("Content-Disposition", "attachment; filename=" + "test");
+				IOUtils.copy((InputStream) restResponse.getEntity(), response.getOutputStream());
 				return new ResponseEntity<>(HttpStatus.OK);
+
 			}
 		}
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
@@ -912,7 +914,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		}
 
 		// verify collection path permissions
-		if (!parentPath.equalsIgnoreCase(basePath) && parentCollectionDto != null
+		if (!basePath.equalsIgnoreCase(parentPath) && parentCollectionDto != null
 				&& parentCollectionDto.getCollections() != null
 				&& !CollectionUtils.isEmpty(parentCollectionDto.getCollections())) {
 			HpcCollectionDTO collection = parentCollectionDto.getCollections().get(0);
