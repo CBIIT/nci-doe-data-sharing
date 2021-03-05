@@ -481,28 +481,24 @@ public class RestAPICommonController extends AbstractDoeController {
 				HpcDataObjectDownloadResponseDTO downloadDTO = (HpcDataObjectDownloadResponseDTO) DoeClientUtil
 						.getObject(restResponse, HpcDataObjectDownloadResponseDTO.class);
 
-				if (StringUtils.isNotEmpty(downloadDTO.getDownloadRequestURL())) {
-					downloadToUrl(downloadDTO.getDownloadRequestURL(), 1000000, "test", response);
-				} else {
-					String name = path.substring(path.lastIndexOf('/') + 1);
+				String dataObjectName = path.substring(path.lastIndexOf('/') + 1);
 
-					try {
-						taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "data_object", name,
-								doeLogin);
-						// store the auditing info
-						AuditingModel audit = new AuditingModel();
-						audit.setName(doeLogin);
-						audit.setOperation("Download");
-						audit.setStartTime(new Date());
-						audit.setPath(path);
-						audit.setTransferType("async");
-						audit.setTaskId(downloadDTO.getTaskId());
-						auditingService.saveAuditInfo(audit);
-					} catch (Exception e) {
-						log.error("error in save transfer" + e.getMessage());
-					}
-					return new ResponseEntity<>(downloadDTO, HttpStatus.OK);
+				try {
+					taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "data_object", dataObjectName, doeLogin);
+					// store the auditing info
+					AuditingModel audit = new AuditingModel();
+					audit.setName(doeLogin);
+					audit.setOperation("Download");
+					audit.setStartTime(new Date());
+					audit.setPath(path);
+					audit.setTransferType("async");
+					audit.setTaskId(downloadDTO.getTaskId());
+					auditingService.saveAuditInfo(audit);
+				} catch (Exception e) {
+					log.error("error in save transfer" + e.getMessage());
 				}
+				return new ResponseEntity<>(downloadDTO, HttpStatus.OK);
+
 			}
 		}
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
