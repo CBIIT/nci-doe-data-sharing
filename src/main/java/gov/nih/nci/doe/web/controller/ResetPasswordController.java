@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import gov.nih.nci.doe.web.DoeWebException;
+
 /**
  *
  * DOE Reset Password Controller
@@ -48,15 +50,18 @@ public class ResetPasswordController extends AbstractDoeController {
 		}
 
 		log.info("About to send a reset link for user ID {}", emailAddr);
+		try {
+			// generate a random password for the user and store in db
+			String password = generateTempPassword();
+			authService.saveUserPassword(password, emailAddr.trim().toLowerCase(), false);
 
-		// generate a random password for the user and store in db
-		String password = generateTempPassword();
-		authService.saveUserPassword(password, emailAddr.trim().toLowerCase(), false);
+			// send reset email link
+			mailService.sendResetPasswordEmail(password, emailAddr.trim().toLowerCase());
 
-		// send reset email link
-		mailService.sendResetPasswordEmail(password, emailAddr.trim().toLowerCase());
-
-		return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+			return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+		} catch (Exception e) {
+			throw new DoeWebException("Failed to send new password: " + e.getMessage());
+		}
 	}
 
 	private String generateTempPassword() {
