@@ -209,6 +209,7 @@ public class HomeController extends AbstractDoeController {
 	@ResponseBody
 	public String savePermissionsList(HttpSession session, @RequestHeader HttpHeaders headers,
 			@RequestParam(value = "collectionId") String collectionId,
+			@RequestParam(value = "path") String path,
 			@RequestParam(value = "selectedPermissions[]", required = false) String[] selectedPermissions) {
 		log.info("get meta data permissions list");
 		String loggedOnUser = getLoggedOnUserInfo();
@@ -219,14 +220,12 @@ public class HomeController extends AbstractDoeController {
 				.getAllGroupMetaDataPermissionsByCollectionId(Integer.valueOf(collectionId));
 		List<String> oldPermissionsList = existingPermissionsList.stream().filter(e -> e.getGroup() != null)
 				.map(s -> s.getGroup().getGroupName()).collect(Collectors.toList());
-		// List<String> oldPermissionsList = LambdaUtils.map(existingPermissionsList,
-		// MetaDataPermissions::getGroup);
 
 		if (CollectionUtils.isEmpty(oldPermissionsList) && !CollectionUtils.isEmpty(newSelectedPermissionList)
 				&& StringUtils.isNotBlank(collectionId)) {
 			// save the new set of permissions
 			metaDataPermissionService.savePermissionsList(loggedOnUser, String.join(",", newSelectedPermissionList),
-					Integer.valueOf(collectionId), null);
+					Integer.valueOf(collectionId), path);
 		} else {
 			List<String> deletedPermissions = new ArrayList<String>();
 			List<String> addedPermissions = new ArrayList<String>();
@@ -240,7 +239,7 @@ public class HomeController extends AbstractDoeController {
 			metaDataPermissionService.deletePermissionsList(loggedOnUser, deletedPermissions,
 					Integer.valueOf(collectionId));
 			metaDataPermissionService.savePermissionsList(loggedOnUser, String.join(",", addedPermissions),
-					Integer.valueOf(collectionId), null);
+					Integer.valueOf(collectionId), path);
 
 		}
 		return "SUCCESS";
@@ -259,43 +258,6 @@ public class HomeController extends AbstractDoeController {
 					.add(new KeyValueBean(e.getGroup().getGroupName(), e.getGroup().getGroupName())));
 		}
 		return new ResponseEntity<>(keyValueBeanResults, null, HttpStatus.OK);
-	}
-
-	@GetMapping(value = "/notifyUsers")
-	@ResponseBody
-	public String notifyUsersForUpdateAccessDicp(HttpSession session, @RequestHeader HttpHeaders headers,
-			PermissionsModel permissionGroups) throws Exception {
-		log.info("notify users");
-		log.info("permissionGroups" + permissionGroups);
-		List<String> collectionOwnersList = new ArrayList<String>();
-		String existingAccessGroups = null;
-		// notify users
-		MetaDataPermissions perm = null;
-		if ("study".equalsIgnoreCase(permissionGroups.getSelectedCollection())) {
-			existingAccessGroups = permissionGroups.getStudyLevelAccessGroups();
-			perm = metaDataPermissionService
-					.getMetaDataPermissionsOwnerByCollectionId(Integer.valueOf(permissionGroups.getProgCollectionId()));
-			collectionOwnersList.add(perm.getUser().getEmailAddrr());
-		} else if ("Asset".equalsIgnoreCase(permissionGroups.getSelectedCollection())) {
-			existingAccessGroups = permissionGroups.getDataLevelAccessGroups();
-			perm = metaDataPermissionService.getMetaDataPermissionsOwnerByCollectionId(
-					Integer.valueOf(permissionGroups.getStudyCollectionId()));
-			MetaDataPermissions progPermissions = metaDataPermissionService
-					.getMetaDataPermissionsOwnerByCollectionId(Integer.valueOf(permissionGroups.getProgCollectionId()));
-			collectionOwnersList.add(perm.getUser().getEmailAddrr());
-			collectionOwnersList.add(progPermissions.getUser().getEmailAddrr());
-		}
-		log.info("send notify email to" + collectionOwnersList);
-		// remove duplicate emails from collectionOwnersList
-		List<String> newEmailList = collectionOwnersList.stream().distinct().collect(Collectors.toList());
-
-		if (StringUtils.isEmpty(permissionGroups.getSelectedAccessGroups())) {
-			permissionGroups.setSelectedAccessGroups("public");
-		}
-		mailService.sendNotifyUsersForAccessGroups(newEmailList, getLoggedOnUserInfo(), permissionGroups.getPath(),
-				existingAccessGroups, permissionGroups.getSelectedAccessGroups());
-
-		return "SUCCESS";
 	}
 
 	@GetMapping(value = "/updateAccessGroupMetaData")

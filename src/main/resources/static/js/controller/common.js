@@ -494,10 +494,6 @@ $(document).on('change', '#editPublicAccess', function() {
 
 });
 
-$(document).on('click', '.notifyUsersLink', function(){
-	notifyUsersFunction($(this).attr('notify_permissions'));
-});
-
 $(document).on('click', '#pickerUploadLink', function(){
 	loadUploadPicker();
 });

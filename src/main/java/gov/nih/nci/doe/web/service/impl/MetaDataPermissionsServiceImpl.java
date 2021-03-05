@@ -2,6 +2,7 @@ package gov.nih.nci.doe.web.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import gov.nih.nci.doe.web.domain.DoeUsers;
 import gov.nih.nci.doe.web.domain.Group;
@@ -21,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Component
+@Transactional
 public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsService {
 
 	private static final Logger log = LoggerFactory.getLogger(MetaDataPermissionsServiceImpl.class);
@@ -39,14 +41,18 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 		log.info("save permission list for user " + user + " with prog list " + progList + " and collection id"
 				+ collectionId);
 
-		DoeUsers d = doeUserRepository.getUserInfo(user);
-		MetaDataPermissions permissions = new MetaDataPermissions();
-		permissions.setCollectionId(collectionId);
-		permissions.setCreatedDate(new Date());
-		permissions.setUser(d);
-		permissions.setCollectionPath(collectionPath);
-		metaDataPermissionsRepository.saveAndFlush(permissions);
+		MetaDataPermissions ownerPermission = metaDataPermissionsRepository
+				.getMetaDataPermissionsOwnerByCollectionId(collectionId);
 
+		if (ownerPermission == null) {
+			DoeUsers d = doeUserRepository.getUserInfo(user);
+			MetaDataPermissions permissions = new MetaDataPermissions();
+			permissions.setCollectionId(collectionId);
+			permissions.setCreatedDate(new Date());
+			permissions.setUser(d);
+			permissions.setCollectionPath(collectionPath);
+			metaDataPermissionsRepository.saveAndFlush(permissions);
+		}
 		// create for groups
 		if (!StringUtils.isEmpty(progList)) {
 			List<String> groupNameList = Arrays.asList(progList.split(","));

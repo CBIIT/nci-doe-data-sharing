@@ -96,7 +96,7 @@ function postSuccessGetPermissions(data,status) {
 
 function updatePermissionsFunction() {
 	var selectedPermissions = $("#updatePermissionModal").find("#updateMetaDataPermissionsList").val();
-	var params = {selectedPermissions:selectedPermissions,collectionId:$("#collectionId").val()};
+	var params = {selectedPermissions:selectedPermissions,collectionId:$("#collectionId").val(),path:$("#path").val()};
 	invokeAjax('/metaDataPermissionsList','POST',params,postSuccessUpdatePermissions,null,'application/x-www-form-urlencoded; charset=UTF-8','text');
 }
 
@@ -215,34 +215,10 @@ function postSuccessUpdateAccessgroups(data,status){
 		$("#updateAccessPermissionsModal").find(".updateAccessMsg").html("Access group updated.");
 		$("#updateAccessPermissionsModal").find(".updateAccessGroupsBlock").show();
 	} else if(data == 'Permission group cannot be updated') {
-		var json = $("#updateAccessPermissionsModal").find("#permissionGroups").val();
-		var perm_group = JSON.parse(json);
-		if((perm_group.selectedCollection == 'Asset' && (perm_group.dataSetPermissionRole == perm_group.studyPermissionRole))
-		    || (perm_group.selectedCollection == 'Study' && (perm_group.studyPermissionRole == perm_group.programPermissionRole))){
-			$("#updateAccessPermissionsModal").find(".updateAccessMsg").html("This collection inherits access status from the " +
-			"parent collection. You are the owner of the parent collection, so you can change the group access for that collection.");
-		} else {
-			$("#updateAccessPermissionsModal").find(".updateAccessMsg").html(
-					"This collection inherits access status from the parent collection." +
-					" You are not the owner of the parent collection, so you can" +
-					" <a class='notifyUsersLink' notify_permissions = '" + json + "' href='#'>ask that owner</a>" +
-							" to change the group access for that " +
-					"collection.");
-		}
-		
+		$("#updateAccessPermissionsModal").find(".updateAccessMsg").html("Error in updating access group.");
 		$("#updateAccessPermissionsModal").find(".updateAccessGroupsBlock").show();
 	}
 
-}
-
-function notifyUsersFunction(permissions) {
-	var permGroups = JSON.parse(permissions);
-	invokeAjax('/notifyUsers','GET',permGroups,postSuccessNotifyUsers,null,null,'text');
-}
-
-function postSuccessNotifyUsers(data,status) {
-	$("#updateAccessPermissionsModal").modal('hide');
-	bootbox.alert("MoDaC Support will send the owner of the parent collection your request by email. You will receive a copy of this request.")
 }
 
 function updateMetaDataCollection() {
