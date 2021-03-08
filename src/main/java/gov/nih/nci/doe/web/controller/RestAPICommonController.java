@@ -353,7 +353,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 * 
 	 */
 	@PostMapping(value = "/dataObject/**/download")
-	public ResponseEntity<?> asynchronousDownload(@RequestHeader HttpHeaders headers, HttpServletRequest request,
+	public ResponseEntity<?> synchronousDownload(@RequestHeader HttpHeaders headers, HttpServletRequest request,
 			@RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO downloadRequest,
 			@ApiIgnore HttpSession session, HttpServletResponse response) throws DoeWebException, IOException {
 
@@ -424,7 +424,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 * @throws Exception
 	 */
 	@PostMapping(value = "/v2/dataObject/**/download")
-	public ResponseEntity<?> synchronousDownload(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
+	public ResponseEntity<?> asynchronousDownload(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
 			@RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO downloadRequest)
 			throws DoeWebException, MalformedURLException {
@@ -484,8 +484,7 @@ public class RestAPICommonController extends AbstractDoeController {
 				String dataObjectName = path.substring(path.lastIndexOf('/') + 1);
 
 				try {
-					taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "data_object", dataObjectName,
-							doeLogin);
+					taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "data_object", dataObjectName, doeLogin);
 					// store the auditing info
 					AuditingModel audit = new AuditingModel();
 					audit.setName(doeLogin);
@@ -746,7 +745,7 @@ public class RestAPICommonController extends AbstractDoeController {
 				audit.setStartTime(new Date());
 				audit.setPath(path);
 				auditingService.saveAuditInfo(audit);
-
+				
 				return HttpStatus.valueOf(restResponse);
 			}
 		}
