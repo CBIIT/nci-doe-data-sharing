@@ -484,7 +484,8 @@ public class RestAPICommonController extends AbstractDoeController {
 				String dataObjectName = path.substring(path.lastIndexOf('/') + 1);
 
 				try {
-					taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "data_object", dataObjectName, doeLogin);
+					taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "data_object", dataObjectName,
+							doeLogin);
 					// store the auditing info
 					AuditingModel audit = new AuditingModel();
 					audit.setName(doeLogin);
@@ -613,7 +614,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 * @param collectionRegistration
 	 */
 	@PutMapping(value = "/collection/**")
-	public ResponseEntity<?> registerCollection(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
+	public HttpStatus registerCollection(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
 			@RequestBody @Valid HpcCollectionRegistrationDTO collectionRegistration) throws DoeWebException {
 
@@ -682,7 +683,8 @@ public class RestAPICommonController extends AbstractDoeController {
 						log.error("error in save permissions list" + e.getMessage());
 					}
 				}
-				return new ResponseEntity<>(HttpStatus.valueOf(responseStatus));
+
+				return HttpStatus.valueOf(responseStatus);
 			}
 		}
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
@@ -697,7 +699,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 * 
 	 */
 	@PutMapping(value = "/v2/dataObject/**")
-	public ResponseEntity<?> registerDataObject(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
+	public HttpStatus registerDataObject(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
 			@RequestPart("dataObjectRegistration") @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationRequestDTO dataObjectRegistration,
 			@RequestBody(required = false) @Valid MultipartFile doeDataFile) throws DoeWebException {
@@ -745,7 +747,7 @@ public class RestAPICommonController extends AbstractDoeController {
 				audit.setPath(path);
 				auditingService.saveAuditInfo(audit);
 
-				return new ResponseEntity<>(HttpStatus.valueOf(restResponse));
+				return HttpStatus.valueOf(restResponse);
 			}
 		}
 
