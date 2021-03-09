@@ -477,9 +477,12 @@ public class RestAPICommonController extends AbstractDoeController {
 			Response restResponse = client.invoke("POST", downloadRequest);
 			log.info("rest response:" + restResponse.getStatus());
 			if (restResponse.getStatus() == 200) {
+				// verify the content type from restReponse. If the content is of type
+				// application/octet-stream,
+				// it is a sync download
 				Object value = restResponse.getMetadata().getFirst("content-type");
 				if ("application/octet-stream".equalsIgnoreCase(value.toString())) {
-					
+
 					log.info("response content type is application/octet-stream");
 					response.setContentType("application/octet-stream");
 					response.setHeader("Content-Disposition", "attachment; filename=" + "test");
