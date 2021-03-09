@@ -251,7 +251,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 		HpcCollectionRegistrationDTO registrationDTO = null;
 
 		try {
-			registrationDTO = constructRequest(request, session, doeCollection);
+			registrationDTO = constructRequest(request, doeCollection);
 			log.info("collection registrationDto: " + registrationDTO);
 		} catch (DoeWebException e) {
 			log.debug("Error in construct request" + e.getMessage());

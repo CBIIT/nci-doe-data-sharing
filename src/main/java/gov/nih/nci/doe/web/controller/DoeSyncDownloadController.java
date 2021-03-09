@@ -9,7 +9,7 @@ import javax.validation.Valid;
 import javax.ws.rs.core.Response;
 import org.apache.commons.io.IOUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
-import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -28,8 +28,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
 import gov.nih.nci.doe.web.model.DoeDownloadDatafile;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
-import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadResponseDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcDownloadRequestDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO;
 import gov.nih.nci.hpc.dto.error.HpcExceptionDTO;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -43,9 +42,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 @EnableAutoConfiguration
 @RequestMapping("/downloadsync")
 public class DoeSyncDownloadController extends AbstractDoeController {
-
-	@Value("${gov.nih.nci.hpc.server.dataObject}")
-	private String dataObjectServiceURL;
 
 	/**
 	 * POST action for sync download
@@ -66,31 +62,23 @@ public class DoeSyncDownloadController extends AbstractDoeController {
 			if (authToken == null) {
 				return null;
 			}
-			final String serviceURL = UriComponentsBuilder.fromHttpUrl(this.dataObjectServiceURL)
+
+			final String requestUrl = UriComponentsBuilder.fromHttpUrl(dataObjectAsyncServiceURL)
 					.path("/{dme-archive-path}/download").buildAndExpand(downloadFile.getDestinationPath()).encode()
 					.toUri().toURL().toExternalForm();
 
-			final HpcDownloadRequestDTO dto = new HpcDownloadRequestDTO();
-			dto.setGenerateDownloadRequestURL(true);
-
-			WebClient client = DoeClientUtil.getWebClient(serviceURL, sslCertPath, sslCertPassword);
+			WebClient client = DoeClientUtil.getWebClient(requestUrl, sslCertPath, sslCertPassword);
 			client.header("Authorization", "Bearer " + authToken);
-
-			Response restResponse = client.invoke("POST", dto);
+			HpcDownloadRequestDTO downloadRequest = new HpcDownloadRequestDTO();
+			Response restResponse = client.invoke("POST", downloadRequest);
+			log.info("rest response:" + restResponse.getStatus());
 
 			if (restResponse.getStatus() == 200) {
-				HpcDataObjectDownloadResponseDTO downloadDTO = (HpcDataObjectDownloadResponseDTO) DoeClientUtil
-						.getObject(restResponse, HpcDataObjectDownloadResponseDTO.class);
-				downloadToUrl(downloadDTO.getDownloadRequestURL(), 1000000, downloadFile.getDownloadFileName(),
-						response);
-			} else if (restResponse.getStatus() == 400) {
-				dto.setGenerateDownloadRequestURL(false);
-				restResponse = client.invoke("POST", dto);
-				if (restResponse.getStatus() == 200) {
-					handleStreamingDownloadData(downloadFile, response, restResponse);
-				} else {
-					return handleDownloadProblem(restResponse);
-				}
+
+				response.setContentType("application/octet-stream");
+				response.setHeader("Content-Disposition", "attachment; filename=" + downloadFile.getDownloadFileName());
+				IOUtils.copy((InputStream) restResponse.getEntity(), response.getOutputStream());
+
 			} else {
 				return handleDownloadProblem(restResponse);
 			}

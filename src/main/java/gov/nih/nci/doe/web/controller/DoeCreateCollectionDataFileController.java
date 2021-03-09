@@ -32,7 +32,6 @@ import gov.nih.nci.hpc.domain.datatransfer.HpcS3ScanDirectory;
 import gov.nih.nci.hpc.domain.datatransfer.HpcScanDirectory;
 import gov.nih.nci.hpc.domain.datatransfer.HpcStreamingUploadSource;
 import gov.nih.nci.hpc.domain.datatransfer.HpcUploadSource;
-import gov.nih.nci.hpc.domain.datatransfer.HpcUserDownloadRequest;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataValidationRule;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
@@ -404,7 +403,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		return types;
 	}
 
-	@SuppressWarnings("unchecked")
+
 	protected List<DoeMetadataAttrEntry> populateFormAttributes(HttpServletRequest request, HttpSession session,
 			String basePath, String collectionType, String assetType, boolean refresh,
 			List<DoeMetadataAttrEntry> cachedEntries) throws DoeWebException {
@@ -550,7 +549,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		}
 	}
 
-	protected HpcCollectionRegistrationDTO constructRequest(HttpServletRequest request, HttpSession session,
+	protected HpcCollectionRegistrationDTO constructRequest(HttpServletRequest request,
 			DoeCollectionModel doeCollection) throws DoeWebException {
 		Enumeration<String> params = request.getParameterNames();
 		HpcCollectionRegistrationDTO dto = new HpcCollectionRegistrationDTO();

@@ -21,7 +21,7 @@ import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeDatafileModel;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectRegistrationRequestDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationRequestDTO;
 
 /**
  *
@@ -34,8 +34,7 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectRegistrationRequestDTO;
 @RequestMapping("/addDatafile")
 public class DoeCreateDatafileController extends DoeCreateCollectionDataFileController {
 
-	@Value("${gov.nih.nci.hpc.server.dataObject}")
-	private String serviceURL;
+;
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	private String collectionServiceURL;
 
@@ -84,9 +83,9 @@ public class DoeCreateDatafileController extends DoeCreateCollectionDataFileCont
 			HpcDataObjectRegistrationRequestDTO registrationDTO = constructSyncRequest(request, session, path);
 
 			registrationDTO.setChecksum(checksum);
-			boolean created = DoeClientUtil.registerDatafile(authToken, doeDataFile, serviceURL, registrationDTO, path,
+			Integer restResponse = DoeClientUtil.registerDatafile(authToken, doeDataFile, dataObjectAsyncServiceURL, registrationDTO, path,
 					sslCertPath, sslCertPassword);
-			if (created) {
+			if (restResponse == 200 || restResponse == 201) {
 
 				// store the auditing info
 				AuditingModel audit = new AuditingModel();
@@ -113,7 +112,6 @@ public class DoeCreateDatafileController extends DoeCreateCollectionDataFileCont
 
 		HpcDataObjectRegistrationRequestDTO dto = new HpcDataObjectRegistrationRequestDTO();
 		dto.getMetadataEntries().addAll(getMetadataEntries(request, session, path));
-		dto.setSource(null);
 		return dto;
 	}
 

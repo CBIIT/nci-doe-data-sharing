@@ -19,7 +19,6 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.ResponseEntity;
@@ -79,8 +78,6 @@ public class SearchController extends AbstractDoeController {
 	private String compoundCollectionSearchServiceURL;
 	@Value("${gov.nih.nci.hpc.server.search.dataobject.compound}")
 	private String compoundDataObjectSearchServiceURL;
-	@Value("${gov.nih.nci.hpc.server.dataObject}")
-	private String datafileServiceURL;
 	@Value("${gov.nih.nci.hpc.server.model}")
 	private String modelServiceURL;
 	@Value("${gov.nih.nci.hpc.server.metadataattributes}")

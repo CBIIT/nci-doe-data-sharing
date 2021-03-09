@@ -18,17 +18,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.doe.web.util.ExcelExportProc;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
-import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectDTO;
 
 @CrossOrigin
 @Controller
 @EnableAutoConfiguration
 @RequestMapping("/export")
 public class ExportController extends AbstractDoeController {
-
-	@Value("${gov.nih.nci.hpc.server.dataObject}")
-	private String serviceURL;
 
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	private String collectionURL;
@@ -48,13 +44,22 @@ public class ExportController extends AbstractDoeController {
 
 				for (String path : paths) {
 					List<String> result = new ArrayList<String>();
-					HpcDataObjectListDTO datafiles = DoeClientUtil.getDatafiles(authToken, serviceURL, path, true, true,
-							sslCertPath, sslCertPassword);
+					HpcDataObjectDTO datafiles = DoeClientUtil.getDatafiles(authToken, dataObjectAsyncServiceURL, path,
+							true, true, sslCertPath, sslCertPassword);
 
-					if (datafiles != null && datafiles.getDataObjects() != null
-							&& !datafiles.getDataObjects().isEmpty()) {
-						HpcDataObjectDTO dataFile = datafiles.getDataObjects().get(0);
-						for (HpcMetadataEntry entry : dataFile.getMetadataEntries().getSelfMetadataEntries()) {
+					if (datafiles != null && datafiles.getMetadataEntries() != null) {
+						for (HpcMetadataEntry entry : datafiles.getMetadataEntries().getSelfMetadataEntries()
+								.getUserMetadataEntries()) {
+							if (headers.contains("Dataobject" + "_" + entry.getAttribute())) {
+								result.add(entry.getValue());
+							} else {
+								headers.add("Dataobject" + "_" + entry.getAttribute());
+								result.add(entry.getValue());
+							}
+
+						}
+						for (HpcMetadataEntry entry : datafiles.getMetadataEntries().getSelfMetadataEntries()
+								.getSystemMetadataEntries()) {
 							if (headers.contains("Dataobject" + "_" + entry.getAttribute())) {
 								result.add(entry.getValue());
 							} else {
@@ -64,7 +69,7 @@ public class ExportController extends AbstractDoeController {
 
 						}
 						if (!StringUtils.isEmpty(isParent) && isParent.equalsIgnoreCase("true")) {
-							for (HpcMetadataEntry entry : dataFile.getMetadataEntries().getParentMetadataEntries()) {
+							for (HpcMetadataEntry entry : datafiles.getMetadataEntries().getParentMetadataEntries()) {
 								if (headers.contains(entry.getLevelLabel() + "_" + entry.getAttribute())) {
 									result.add(entry.getValue());
 								} else {

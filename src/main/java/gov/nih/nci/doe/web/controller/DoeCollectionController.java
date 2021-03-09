@@ -42,8 +42,6 @@ public class DoeCollectionController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.model}")
 	private String hpcModelURL;
 
-	@Value("${gov.nih.nci.hpc.server.dataObject}")
-	private String serviceDataURL;
 
 	/**
 	 * Update collection
@@ -76,7 +74,7 @@ public class DoeCollectionController extends AbstractDoeController {
 
 		if (isDataObject != null && isDataObject.equalsIgnoreCase("true")) {
 			HpcDataObjectRegistrationRequestDTO registrationDTO = constructDataRequest(request);
-			boolean updated = DoeClientUtil.updateDatafile(authToken, serviceDataURL, registrationDTO,
+			boolean updated = DoeClientUtil.updateDatafile(authToken, dataObjectAsyncServiceURL, registrationDTO,
 					doeCollection.getPath(), sslCertPath, sslCertPassword);
 			if (updated) {
 				session.removeAttribute("selectedUsers");

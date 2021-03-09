@@ -45,8 +45,7 @@ import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectDTO;
 
 public abstract class AbstractDoeController {
 
@@ -58,15 +57,15 @@ public abstract class AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.model}")
 	private String hpcModelURL;
 
-	@Value("${gov.nih.nci.hpc.server.dataObject}")
-	private String dataObjectServiceURL;
+	@Value("${gov.nih.nci.hpc.server.v2.dataObject}")
+	public String dataObjectAsyncServiceURL;
 
 	@Autowired
 	public AuthenticateService authenticateService;
 
 	@Autowired
 	MetaDataPermissionsService metaDataPermissionService;
-	
+
 	@Autowired
 	AccessGroupsService accessGroupsService;
 
@@ -229,8 +228,8 @@ public abstract class AbstractDoeController {
 						.getAllMetaDataPermissionsByCollectionId(collectionId);
 				Boolean isOwner = permissionList.stream()
 						.anyMatch(o -> (o.getUser() != null && user.equalsIgnoreCase(o.getUser().getEmailAddrr())));
-				Boolean isGroupUser = permissionList.stream()
-						.anyMatch(o -> (o.getGroup() != null && loggedOnUserPermList.contains(o.getGroup().getGroupName())));
+				Boolean isGroupUser = permissionList.stream().anyMatch(
+						o -> (o.getGroup() != null && loggedOnUserPermList.contains(o.getGroup().getGroupName())));
 				if (Boolean.TRUE.equals(isOwner)) {
 					return "Owner";
 				} else if (Boolean.TRUE.equals(isGroupUser)) {
@@ -315,23 +314,20 @@ public abstract class AbstractDoeController {
 					}
 
 				} else {
-					HpcDataObjectListDTO datafiles = DoeClientUtil.getDatafiles(authToken, dataObjectServiceURL,
+					HpcDataObjectDTO datafiles = DoeClientUtil.getDatafiles(authToken, dataObjectAsyncServiceURL,
 							selectedPath, false, true, sslCertPath, sslCertPassword);
-					if (datafiles != null && datafiles.getDataObjects() != null
-							&& !datafiles.getDataObjects().isEmpty()) {
-						HpcDataObjectDTO dataFile = datafiles.getDataObjects().get(0);
-						for (HpcMetadataEntry entry : dataFile.getMetadataEntries().getSelfMetadataEntries()) {
-							if (systemAttrs != null && !systemAttrs.contains(entry.getAttribute())) {
-								String attrName = lookUpService.getDisplayName(levelName, entry.getAttribute());
-								KeyValueBean k = null;
-								if (!StringUtils.isEmpty(attrName)) {
-									k = new KeyValueBean(entry.getAttribute(), attrName, entry.getValue());
-								} else {
-									k = new KeyValueBean(entry.getAttribute(), entry.getAttribute(), entry.getValue());
-								}
-
-								entryList.add(k);
+					if (datafiles != null && datafiles.getDataObject() != null) {
+						for (HpcMetadataEntry entry : datafiles.getMetadataEntries().getSelfMetadataEntries()
+								.getUserMetadataEntries()) {
+							String attrName = lookUpService.getDisplayName(levelName, entry.getAttribute());
+							KeyValueBean k = null;
+							if (!StringUtils.isEmpty(attrName)) {
+								k = new KeyValueBean(entry.getAttribute(), attrName, entry.getValue());
+							} else {
+								k = new KeyValueBean(entry.getAttribute(), entry.getAttribute(), entry.getValue());
 							}
+
+							entryList.add(k);
 
 						}
 

@@ -16,6 +16,7 @@ import gov.nih.nci.hpc.domain.datamanagement.HpcPermission;
 import gov.nih.nci.hpc.domain.datamanagement.HpcPermissionForCollection;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectDownloadRequestDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectDownloadResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectRegistrationRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectRegistrationResponseDTO;
@@ -28,7 +29,6 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementRulesDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadStatusDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectRegistrationRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDocDataManagementRulesDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO;
@@ -77,8 +77,9 @@ public class DoeClientUtil {
 	private static final Logger log = LoggerFactory.getLogger(DoeClientUtil.class);
 
 	private DoeClientUtil() {
-		
+
 	}
+
 	public static WebClient getWebClient(String url, String hpcCertPath, String hpcCertPassword) {
 
 		log.debug("get web client for url " + url);
@@ -314,27 +315,26 @@ public class DoeClientUtil {
 		}
 	}
 
-	public static HpcDataObjectListDTO getDatafiles(String token, String hpcDatafileURL, String path, boolean list,
+	public static HpcDataObjectDTO getDatafiles(String token, String hpcDatafileURL, String path, boolean list,
 			String hpcCertPath, String hpcCertPassword) throws DoeWebException {
 		return getDatafiles(token, hpcDatafileURL, path, list, false, hpcCertPath, hpcCertPassword);
 	}
 
-	public static HpcDataObjectListDTO getDatafiles(String token, String hpcDatafileURL, String path, Boolean list,
+	public static HpcDataObjectDTO getDatafiles(String token, String hpcDatafileURL, String path, Boolean list,
 			Boolean includeAcl, String hpcCertPath, String hpcCertPassword) throws DoeWebException {
 		try {
-			
+
 			final UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(hpcDatafileURL)
 					.path("/{dme-archive-path}");
 			if (list != null) {
 				ucBuilder.queryParam("list", list);
 			}
-			
+
 			if (includeAcl != null) {
 				ucBuilder.queryParam("includeAcl", Boolean.toString(includeAcl));
 			}
 			final String url2Apply = ucBuilder.buildAndExpand(path).encode().toUri().toURL().toExternalForm();
-			
-					
+
 			WebClient client = DoeClientUtil.getWebClient(url2Apply, hpcCertPath, hpcCertPassword);
 			client.header("Authorization", "Bearer " + token);
 
@@ -347,10 +347,26 @@ public class DoeClientUtil {
 				mapper.setAnnotationIntrospector(intr);
 				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
+				// ACCEPT_SINGLE_VALUE_AS_ARRAY is a Feature that determines whether
+				// it is acceptable to coerce non-array values to work
+				// with Java collection types. If enabled,
+				// collection deserializers will try to handle non-array values as if they had
+				// "implicit" surrounding JSON array. This feature is meant to be used for
+				// to work with packages that leave out JSON array in cases where there
+				// is just a single element in array.
+				mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+
+				// Feature that determines whether it is acceptable to coerce single
+				// value array (in JSON) values to the corresponding value type.
+				// This is basically the opposite of the ACCEPT_SINGLE_VALUE_AS_ARRAY feature.
+				// If more than one value is found in the array, a JsonMappingException is
+				// thrown.
+				mapper.configure(DeserializationFeature.UNWRAP_SINGLE_VALUE_ARRAYS, true);
+
 				MappingJsonFactory factory = new MappingJsonFactory(mapper);
 				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 
-				return parser.readValueAs(HpcDataObjectListDTO.class);
+				return parser.readValueAs(HpcDataObjectDTO.class);
 			} else {
 				log.error("File does not exist or you do not have READ access.");
 				String errorMessage = getErrorMessage(restResponse);
@@ -497,10 +513,9 @@ public class DoeClientUtil {
 		log.debug("Register data file for path: " + path);
 		try {
 			try {
-				HpcDataObjectListDTO datafile = getDatafiles(token, hpcDatafileURL, path, false, hpcCertPath,
+				HpcDataObjectDTO datafile = getDatafiles(token, hpcDatafileURL, path, false, hpcCertPath,
 						hpcCertPassword);
-				if (datafile != null && datafile.getDataObjectPaths() != null
-						&& !CollectionUtils.isEmpty(datafile.getDataObjectPaths()))
+				if (datafile != null && datafile.getDataObject() != null)
 					throw new DoeWebException("Failed to create. Data file already exists: " + path);
 			} catch (DoeWebException e) {
 				// Data file is not there!
@@ -535,51 +550,6 @@ public class DoeClientUtil {
 			if (restResponse.getStatus() == 201 || restResponse.getStatus() == 200) {
 				log.info("response status" + restResponse.getStatus());
 				return restResponse.getStatus();
-			} else {
-				String errorMessage = getErrorMessage(restResponse);
-				throw new DoeWebException(errorMessage, restResponse.getStatus());
-			}
-		} catch (Exception e) {
-			throw new DoeWebException(e.getMessage());
-		}
-	}
-
-	public static boolean registerDatafile(String token, MultipartFile hpcDatafile, String hpcDatafileURL,
-			HpcDataObjectRegistrationRequestDTO datafileDTO, String path, String hpcCertPath, String hpcCertPassword)
-			throws DoeWebException {
-
-		log.debug("Register data file for path: " + path);
-		try {
-			try {
-				HpcDataObjectListDTO datafile = getDatafiles(token, hpcDatafileURL, path, false, hpcCertPath,
-						hpcCertPassword);
-				if (datafile != null && datafile.getDataObjectPaths() != null
-						&& !CollectionUtils.isEmpty(datafile.getDataObjectPaths()))
-					throw new DoeWebException("Failed to create. Data file already exists: " + path);
-			} catch (DoeWebException e) {
-				// Data file is not there!
-				log.error("failed to get data file" + e);
-			}
-
-			WebClient client = DoeClientUtil
-					.getWebClient(
-							UriComponentsBuilder.fromHttpUrl(hpcDatafileURL).path("/{dme-archive-path}")
-									.buildAndExpand(path).encode().toUri().toURL().toExternalForm(),
-							hpcCertPath, hpcCertPassword);
-			client.type(MediaType.MULTIPART_FORM_DATA_VALUE).accept(MediaType.APPLICATION_JSON_VALUE);
-			List<Attachment> atts = new LinkedList<Attachment>();
-			atts.add(new org.apache.cxf.jaxrs.ext.multipart.Attachment("dataObjectRegistration", "application/json",
-					datafileDTO));
-			ContentDisposition cd2 = new ContentDisposition("attachment;filename=" + hpcDatafile.getName());
-			atts.add(
-					new org.apache.cxf.jaxrs.ext.multipart.Attachment("dataObject", hpcDatafile.getInputStream(), cd2));
-
-			client.header("Authorization", "Bearer " + token);
-
-			Response restResponse = client.put(new MultipartBody(atts));
-			if (restResponse.getStatus() == 201) {
-				// add log.debug
-				return true;
 			} else {
 				String errorMessage = getErrorMessage(restResponse);
 				throw new DoeWebException(errorMessage, restResponse.getStatus());
