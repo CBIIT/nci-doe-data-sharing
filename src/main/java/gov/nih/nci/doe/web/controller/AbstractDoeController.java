@@ -399,6 +399,7 @@ public abstract class AbstractDoeController {
 		log.info("get meta data permissions list for " + permissionGroups.getPath());
 		String loggedOnUser = getLoggedOnUserInfo();
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
+
 		HpcCollectionRegistrationDTO dto = new HpcCollectionRegistrationDTO();
 		// construct dto with attribute access_group
 		List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
@@ -407,6 +408,7 @@ public abstract class AbstractDoeController {
 		entry.setValue(permissionGroups.getSelectedAccessGroups());
 		metadataEntries.add(entry);
 		dto.getMetadataEntries().addAll(metadataEntries);
+
 		Integer restResponse = DoeClientUtil.updateCollection(authToken, serviceURL, dto, permissionGroups.getPath(),
 				sslCertPath, sslCertPassword);
 		log.info("rest response for update collection:" + restResponse);
@@ -444,11 +446,13 @@ public abstract class AbstractDoeController {
 	}
 
 	public ResponseEntity<?> getMetadataPermissionsByCollectionId(String collectionId) {
+
 		log.info("get meta data permissions list by collection id " + collectionId);
 		List<KeyValueBean> keyValueBeanResults = new ArrayList<>();
 
 		List<MetaDataPermissions> permissionsList = metaDataPermissionService
 				.getAllGroupMetaDataPermissionsByCollectionId(Integer.valueOf(collectionId));
+
 		if (CollectionUtils.isNotEmpty(permissionsList)) {
 			permissionsList.stream().filter(e -> e.getGroup() != null).forEach(e -> keyValueBeanResults
 					.add(new KeyValueBean(e.getGroup().getGroupName(), e.getGroup().getGroupName())));
