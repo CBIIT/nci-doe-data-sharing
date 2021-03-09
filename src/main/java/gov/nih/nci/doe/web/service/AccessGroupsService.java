@@ -8,6 +8,7 @@ public interface AccessGroupsService {
 
 	public List<String> getGroupsByCollectionPath(String collectionPath);
 
-	public void updateAccessGroups(String collectionPath, Integer collectionId, String accessGroups, String userName);
+	public void updateAccessGroups(String collectionPath, Integer collectionId, List<String> addedGroups,
+			List<String> deletedgroups);
 
 }

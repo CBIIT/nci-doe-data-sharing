@@ -135,7 +135,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
 					task.setTransferStatus("Failed (" + String.join(",", message) + ")"
 							+ "<strong><a style='border: none;background-color: #F39530; height: 23px;width: 37px;border-radius: 11px;float: right;' class='btn btn-link btn-sm' aria-label='Retry download' href='#' "
 							+ "onclick='retryDownload(\"" + download.getTaskId() + "\" ,\"" + t.getTaskName() + "\", \""
-							+ t.getDownloadType() + "\")'>"
+							+ download.getType().name() + "\")'>"
 							+ "<img style='height: 13px;width: 13px;margin-top: -14px;' src='images/Status.refresh_icon-01.png' th:src='@{/images/Status.refresh_icon-01.png}' alt='Status refresh'></a></strong>");
 				} else if (download.getResult() != null && download.getResult().value().equals("COMPLETED")) {
 					task.setTransferStatus("Completed");

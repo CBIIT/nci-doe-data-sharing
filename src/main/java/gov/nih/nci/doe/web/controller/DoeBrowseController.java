@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +28,6 @@ import gov.nih.nci.hpc.domain.datamanagement.HpcCollection;
 import gov.nih.nci.hpc.domain.datamanagement.HpcCollectionListingEntry;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 
 /**
  * MoDaC browse
@@ -47,7 +45,6 @@ public class DoeBrowseController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.model}")
 	private String hpcModelURL;
 
-
 	// The logger instance.
 	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
@@ -57,50 +54,9 @@ public class DoeBrowseController extends AbstractDoeController {
 			@RequestParam(value = "isDataObject") String isDataObject, HttpSession session, HttpServletRequest request,
 			HttpServletResponse response) throws DoeWebException {
 
-		List<KeyValueBean> entryList = getUserMetaDataAttributesByPath(selectedPath, levelName, isDataObject, session,
-				request, response);
+		List<KeyValueBean> entryList = getUserMetaDataAttributesByPath(selectedPath, levelName, isDataObject, session);
 		return new ResponseEntity<>(entryList, HttpStatus.OK);
 
-	}
-
-	@GetMapping(value = "/getAccessgroups", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getAccessgroups(@RequestParam(value = "selectedPath") String selectedPath,
-			@RequestParam(value = "levelName") String levelName, HttpSession session, HttpServletRequest request,
-			HttpServletResponse response) throws DoeWebException {
-
-		String authToken = (String) session.getAttribute("hpcUserToken");
-		List<KeyValueBean> entryList = new ArrayList<KeyValueBean>();
-
-		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
-		if (modelDTO == null) {
-			modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL, sslCertPath, sslCertPassword);
-			session.setAttribute("userDOCModel", modelDTO);
-		}
-
-		try {
-			if (selectedPath != null) {
-				List<String> accessGrpList = accessGroupsService.getGroupsByCollectionPath(selectedPath);
-				if (CollectionUtils.isNotEmpty(accessGrpList)) {
-					entryList.add(new KeyValueBean("selectedEntry", String.join(",", accessGrpList)));
-				} else {
-					entryList.add(new KeyValueBean("selectedEntry", "public"));
-				}
-				if (selectedPath.lastIndexOf('/') != -1
-						&& (levelName.equalsIgnoreCase("Asset") || levelName.equalsIgnoreCase("Study"))) {
-					String parentPath = selectedPath.substring(0, selectedPath.lastIndexOf('/'));
-					List<String> parentGrpAccessGrpList = accessGroupsService.getGroupsByCollectionPath(parentPath);
-					if (CollectionUtils.isNotEmpty(parentGrpAccessGrpList)) {
-						entryList.add(new KeyValueBean("parentAccessGroups", String.join(",", parentGrpAccessGrpList)));
-					} else {
-						entryList.add(new KeyValueBean("parentAccessGroups", "public"));
-					}
-				}
-			}
-		} catch (Exception e) {
-			String errMsg = "Failed to get metadata: " + e.getMessage();
-			logger.error(errMsg, e);
-		}
-		return new ResponseEntity<>(entryList, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/collection", produces = MediaType.APPLICATION_JSON_VALUE)

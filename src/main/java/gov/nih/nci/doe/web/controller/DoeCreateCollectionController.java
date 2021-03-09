@@ -167,10 +167,10 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 				if (refresh == null) {
 					refresh = true;
 				}
-				if (refresh != null && !refresh) {
+				if (Boolean.FALSE.equals(refresh)) {
 					log.info("get collection attributes for edit");
 					List<KeyValueBean> entryList = getUserMetaDataAttributesByPath(selectedPath, collectionType,
-							"false", session, request, response);
+							"false", session);
 
 					for (KeyValueBean k : entryList) {
 						log.info("get cahced entry list:" + k.getKey() + " ,value:" + k.getValue());

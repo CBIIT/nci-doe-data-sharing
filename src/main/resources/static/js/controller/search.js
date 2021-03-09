@@ -272,7 +272,7 @@ function dataTableInit(isVisible) {
     	   
   			$.ajax({
 				type : "GET",
-			     url : '/browse/getAccessgroups',
+			     url : '/getAccessgroups',
 			     contentType : 'application/json',
 				 data : params,
 				 beforeSend: function () {

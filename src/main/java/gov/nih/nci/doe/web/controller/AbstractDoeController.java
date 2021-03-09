@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
@@ -30,9 +31,11 @@ import org.springframework.web.context.request.WebRequest;
 
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.domain.MetaDataPermissions;
+import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeResponse;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.model.KeyValueBean;
+import gov.nih.nci.doe.web.model.PermissionsModel;
 import gov.nih.nci.doe.web.service.AccessGroupsService;
 import gov.nih.nci.doe.web.service.AuditingService;
 import gov.nih.nci.doe.web.service.AuthenticateService;
@@ -44,6 +47,7 @@ import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectDTO;
 
@@ -253,23 +257,8 @@ public abstract class AbstractDoeController {
 		}
 	}
 
-	public ResponseEntity<?> getMetaDataPermissionsList() {
-		log.info("get meta data permissions list");
-		String loggedOnUser = getLoggedOnUserInfo();
-		List<KeyValueBean> keyValueBeanResults = new ArrayList<>();
-		if (!StringUtils.isEmpty(loggedOnUser)) {
-			DoeUsersModel user = authenticateService.getUserInfo(loggedOnUser);
-			if (user != null && !StringUtils.isEmpty(user.getProgramName())) {
-				List<String> progList = Arrays.asList(user.getProgramName().split(","));
-				progList.stream().forEach(e -> keyValueBeanResults.add(new KeyValueBean(e, e)));
-			}
-		}
-		return new ResponseEntity<>(keyValueBeanResults, null, HttpStatus.OK);
-	}
-
 	public List<KeyValueBean> getUserMetaDataAttributesByPath(String selectedPath, String levelName,
-			String isDataObject, HttpSession session, HttpServletRequest request, HttpServletResponse response)
-			throws DoeWebException {
+			String isDataObject, HttpSession session) throws DoeWebException {
 
 		log.info("getUserMetaDataAttributesByPath");
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
@@ -298,7 +287,7 @@ public abstract class AbstractDoeController {
 							&& !collections.getCollections().isEmpty()) {
 						HpcCollectionDTO collection = collections.getCollections().get(0);
 						for (HpcMetadataEntry entry : collection.getMetadataEntries().getSelfMetadataEntries()) {
-							if (systemAttrs != null && !systemAttrs.contains(entry.getAttribute())) {
+							if (!systemAttrs.contains(entry.getAttribute())) {
 								String attrName = lookUpService.getDisplayName(levelName, entry.getAttribute());
 								KeyValueBean k = null;
 								if (!StringUtils.isEmpty(attrName)) {
@@ -340,5 +329,162 @@ public abstract class AbstractDoeController {
 		}
 		log.info("entry list data :" + entryList);
 		return entryList;
+	}
+
+	public ResponseEntity<?> getMetaDataPermissionsList() {
+		log.info("get meta data permissions list");
+		String loggedOnUser = getLoggedOnUserInfo();
+		List<KeyValueBean> keyValueBeanResults = new ArrayList<>();
+		if (!StringUtils.isEmpty(loggedOnUser)) {
+			DoeUsersModel user = authenticateService.getUserInfo(loggedOnUser);
+			if (user != null && !StringUtils.isEmpty(user.getProgramName())) {
+				List<String> progList = Arrays.asList(user.getProgramName().split(","));
+				progList.stream().forEach(e -> keyValueBeanResults.add(new KeyValueBean(e, e)));
+			}
+		}
+		return new ResponseEntity<>(keyValueBeanResults, null, HttpStatus.OK);
+	}
+
+	public String saveMetaDataPermissionsList(String collectionId, String path, String[] selectedPermissions)
+			throws DoeWebException {
+
+		log.info("get meta data permissions list for collectionId: " + collectionId);
+
+		try {
+			String loggedOnUser = getLoggedOnUserInfo();
+
+			// get the new permissions list
+			List<String> newSelectedPermissionList = selectedPermissions == null ? new ArrayList<String>()
+					: Arrays.asList(selectedPermissions);
+			List<MetaDataPermissions> existingPermissionsList = metaDataPermissionService
+					.getAllGroupMetaDataPermissionsByCollectionId(Integer.valueOf(collectionId));
+
+			// get the existing permissions list
+			List<String> oldPermissionsList = existingPermissionsList.stream().filter(e -> e.getGroup() != null)
+					.map(s -> s.getGroup().getGroupName()).collect(Collectors.toList());
+
+			if (CollectionUtils.isEmpty(oldPermissionsList) && !CollectionUtils.isEmpty(newSelectedPermissionList)
+					&& StringUtils.isNotBlank(collectionId)) {
+
+				// when there are no existing permissions set on the selection and the new
+				// permissions set is not empty
+				metaDataPermissionService.savePermissionsList(loggedOnUser, String.join(",", newSelectedPermissionList),
+						Integer.valueOf(collectionId), path);
+			} else {
+				List<String> deletedPermissions = new ArrayList<String>();
+				List<String> addedPermissions = new ArrayList<String>();
+
+				// get deleted and added permissions list
+				deletedPermissions = oldPermissionsList.stream().filter(e -> !newSelectedPermissionList.contains(e))
+						.filter(value -> value != null).collect(Collectors.toList());
+
+				addedPermissions = newSelectedPermissionList.stream().filter(e -> !oldPermissionsList.contains(e))
+						.collect(Collectors.toList());
+
+				metaDataPermissionService.deletePermissionsList(loggedOnUser, deletedPermissions,
+						Integer.valueOf(collectionId));
+				metaDataPermissionService.savePermissionsList(loggedOnUser, String.join(",", addedPermissions),
+						Integer.valueOf(collectionId), path);
+
+			}
+			return "SUCCESS";
+		} catch (Exception e) {
+			throw new DoeWebException("Failed to save permissions " + e.getMessage());
+		}
+	}
+
+	public ResponseEntity<?> saveCollectionAccessGroup(HttpSession session, PermissionsModel permissionGroups)
+			throws DoeWebException {
+
+		log.info("get meta data permissions list for " + permissionGroups.getPath());
+		String loggedOnUser = getLoggedOnUserInfo();
+		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		HpcCollectionRegistrationDTO dto = new HpcCollectionRegistrationDTO();
+		// construct dto with attribute access_group
+		List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
+		HpcMetadataEntry entry = new HpcMetadataEntry();
+		entry.setAttribute("access_group");
+		entry.setValue(permissionGroups.getSelectedAccessGroups());
+		metadataEntries.add(entry);
+		dto.getMetadataEntries().addAll(metadataEntries);
+		Integer restResponse = DoeClientUtil.updateCollection(authToken, serviceURL, dto, permissionGroups.getPath(),
+				sslCertPath, sslCertPassword);
+		log.info("rest response for update collection:" + restResponse);
+		if (restResponse == 200 || restResponse == 201) {
+			// store the auditing info
+			try {
+				AuditingModel audit = new AuditingModel();
+				audit.setName(loggedOnUser);
+				audit.setOperation("Edit Meta Data");
+				audit.setStartTime(new Date());
+				audit.setPath(permissionGroups.getPath());
+				auditingService.saveAuditInfo(audit);
+
+				// update in MoDaC DB also
+
+				List<String> existingGroups = accessGroupsService.getGroupsByCollectionPath(permissionGroups.getPath());
+				List<String> newAccessGroups = Arrays.asList(permissionGroups.getSelectedAccessGroups().split(","));
+
+				// get the added and deleted groups
+				List<String> deletedgroups = existingGroups.stream().filter(e -> !newAccessGroups.contains(e))
+						.filter(value -> value != null).collect(Collectors.toList());
+
+				List<String> addedGroups = newAccessGroups.stream().filter(e -> !existingGroups.contains(e))
+						.collect(Collectors.toList());
+
+				accessGroupsService.updateAccessGroups(permissionGroups.getPath(),
+						permissionGroups.getSelectedCollectionId(), addedGroups, deletedgroups);
+
+			} catch (Exception e) {
+				throw new DoeWebException(e.getMessage());
+			}
+		}
+
+		return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+	}
+
+	public ResponseEntity<?> getMetadataPermissionsByCollectionId(String collectionId) {
+		log.info("get meta data permissions list by collection id " + collectionId);
+		List<KeyValueBean> keyValueBeanResults = new ArrayList<>();
+
+		List<MetaDataPermissions> permissionsList = metaDataPermissionService
+				.getAllGroupMetaDataPermissionsByCollectionId(Integer.valueOf(collectionId));
+		if (CollectionUtils.isNotEmpty(permissionsList)) {
+			permissionsList.stream().filter(e -> e.getGroup() != null).forEach(e -> keyValueBeanResults
+					.add(new KeyValueBean(e.getGroup().getGroupName(), e.getGroup().getGroupName())));
+		}
+		return new ResponseEntity<>(keyValueBeanResults, null, HttpStatus.OK);
+	}
+
+	public ResponseEntity<?> getCollectionAccessGroups(String selectedPath, String levelName) throws DoeWebException {
+
+		log.info("get Access Groups for path: " + selectedPath);
+		List<KeyValueBean> entryList = new ArrayList<KeyValueBean>();
+
+		try {
+			if (selectedPath != null) {
+				List<String> accessGrpList = accessGroupsService.getGroupsByCollectionPath(selectedPath);
+				if (CollectionUtils.isNotEmpty(accessGrpList)) {
+					entryList.add(new KeyValueBean("selectedEntry", String.join(",", accessGrpList)));
+				} else {
+					entryList.add(new KeyValueBean("selectedEntry", "public"));
+				}
+
+				// get parent access groups also if the collection level is Asset or Study
+				if (selectedPath.lastIndexOf('/') != -1
+						&& (levelName.equalsIgnoreCase("Asset") || levelName.equalsIgnoreCase("Study"))) {
+					String parentPath = selectedPath.substring(0, selectedPath.lastIndexOf('/'));
+					List<String> parentGrpAccessGrpList = accessGroupsService.getGroupsByCollectionPath(parentPath);
+					if (CollectionUtils.isNotEmpty(parentGrpAccessGrpList)) {
+						entryList.add(new KeyValueBean("parentAccessGroups", String.join(",", parentGrpAccessGrpList)));
+					} else {
+						entryList.add(new KeyValueBean("parentAccessGroups", "public"));
+					}
+				}
+			}
+		} catch (Exception e) {
+			throw new DoeWebException(e.getMessage());
+		}
+		return new ResponseEntity<>(entryList, HttpStatus.OK);
 	}
 }

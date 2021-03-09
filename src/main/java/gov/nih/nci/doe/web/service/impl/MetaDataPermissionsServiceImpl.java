@@ -58,9 +58,9 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 		if (!StringUtils.isEmpty(progList)) {
 			List<String> groupNameList = Arrays.asList(progList.split(","));
 
-			Iterator proggrpIterator = groupNameList.iterator();
+			Iterator<String> proggrpIterator = groupNameList.iterator();
 			while (proggrpIterator.hasNext()) {
-				String grpName = proggrpIterator.next().toString();
+				String grpName = proggrpIterator.next();
 				Group g = groupRepository.getGroup(grpName);
 				MetaDataPermissions perm = new MetaDataPermissions();
 				perm.setCollectionId(collectionId);
@@ -88,9 +88,9 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 	@Override
 	public void deletePermissionsList(String user, List<String> deletedList, Integer collectionId) {
 		log.info("deleting permissions" + deletedList + " for user: " + user + "with collectionId: " + collectionId);
-		Iterator permissionListIterator = deletedList.iterator();
+		Iterator<String> permissionListIterator = deletedList.iterator();
 		while (permissionListIterator.hasNext()) {
-			String permission = permissionListIterator.next().toString();
+			String permission = permissionListIterator.next();
 			if (permission != null) {
 				MetaDataPermissions p = metaDataPermissionsRepository
 						.findPermissionByGroupNameAndCollectionId(permission, collectionId);

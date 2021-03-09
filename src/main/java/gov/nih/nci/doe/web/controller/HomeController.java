@@ -1,20 +1,15 @@
 package gov.nih.nci.doe.web.controller;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,14 +22,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import gov.nih.nci.doe.web.DoeWebException;
-import gov.nih.nci.doe.web.domain.MetaDataPermissions;
-import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
-import gov.nih.nci.doe.web.model.KeyValueBean;
+
 import gov.nih.nci.doe.web.model.PermissionsModel;
-import gov.nih.nci.doe.web.util.DoeClientUtil;
-import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
-import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 
 /**
  *
@@ -175,7 +165,6 @@ public class HomeController extends AbstractDoeController {
 			code = request.getParameter("code");
 			if (code != null) {
 				// Return from Google Drive Authorization
-				String downloadType = (String) session.getAttribute("downloadType");
 				selectedPaths = (String) session.getAttribute("selectedPathsString");
 				downloadAsyncType = (String) session.getAttribute("downloadAsyncType");
 				fileName = (String) session.getAttribute("fileName");
@@ -187,7 +176,7 @@ public class HomeController extends AbstractDoeController {
 					model.addAttribute("accessToken", accessToken);
 				} catch (Exception e) {
 					model.addAttribute("error", "Failed to redirect to Google for authorization: " + e.getMessage());
-					e.printStackTrace();
+					log.error("Failed to redirect to google" + e.getMessage());
 				}
 				model.addAttribute("asyncSearchType", "drive");
 				model.addAttribute("transferType", "drive");
@@ -211,107 +200,30 @@ public class HomeController extends AbstractDoeController {
 			@RequestParam(value = "collectionId") String collectionId, @RequestParam(value = "path") String path,
 			@RequestParam(value = "selectedPermissions[]", required = false) String[] selectedPermissions)
 			throws DoeWebException {
-
-		log.info("get meta data permissions list for collectionId: " + collectionId);
-
-		try {
-			String loggedOnUser = getLoggedOnUserInfo();
-
-			// get the new permissions list
-			List<String> newSelectedPermissionList = selectedPermissions == null ? new ArrayList<String>()
-					: Arrays.asList(selectedPermissions);
-			List<MetaDataPermissions> existingPermissionsList = metaDataPermissionService
-					.getAllGroupMetaDataPermissionsByCollectionId(Integer.valueOf(collectionId));
-
-			// get the existing permissions list
-			List<String> oldPermissionsList = existingPermissionsList.stream().filter(e -> e.getGroup() != null)
-					.map(s -> s.getGroup().getGroupName()).collect(Collectors.toList());
-
-			if (CollectionUtils.isEmpty(oldPermissionsList) && !CollectionUtils.isEmpty(newSelectedPermissionList)
-					&& StringUtils.isNotBlank(collectionId)) {
-				// when there are no existing permissions set on the selection and the new
-				// permissions set is not empty
-				metaDataPermissionService.savePermissionsList(loggedOnUser, String.join(",", newSelectedPermissionList),
-						Integer.valueOf(collectionId), path);
-			} else {
-				List<String> deletedPermissions = new ArrayList<String>();
-				List<String> addedPermissions = new ArrayList<String>();
-
-				// get deleted and added permissions list
-				deletedPermissions = oldPermissionsList.stream().filter(e -> !newSelectedPermissionList.contains(e))
-						.filter(value -> value != null).collect(Collectors.toList());
-
-				addedPermissions = newSelectedPermissionList.stream().filter(e -> !oldPermissionsList.contains(e))
-						.collect(Collectors.toList());
-
-				metaDataPermissionService.deletePermissionsList(loggedOnUser, deletedPermissions,
-						Integer.valueOf(collectionId));
-				metaDataPermissionService.savePermissionsList(loggedOnUser, String.join(",", addedPermissions),
-						Integer.valueOf(collectionId), path);
-
-			}
-			return "SUCCESS";
-		} catch (Exception e) {
-			throw new DoeWebException("Failed to save permissions " + e.getMessage());
-		}
+		log.info("save metadata permissions");
+		return saveMetaDataPermissionsList(collectionId, path, selectedPermissions);
 	}
 
 	@GetMapping(value = "/getPermissionByCollectionId")
 	public ResponseEntity<?> getPermissionsByCollectionId(HttpSession session, @RequestHeader HttpHeaders headers,
 			@RequestParam(value = "collectionId") String collectionId) {
-		log.info("get meta data permissions list by collection id");
-		List<KeyValueBean> keyValueBeanResults = new ArrayList<>();
-
-		List<MetaDataPermissions> permissionsList = metaDataPermissionService
-				.getAllGroupMetaDataPermissionsByCollectionId(Integer.valueOf(collectionId));
-		if (CollectionUtils.isNotEmpty(permissionsList)) {
-			permissionsList.stream().filter(e -> e.getGroup() != null).forEach(e -> keyValueBeanResults
-					.add(new KeyValueBean(e.getGroup().getGroupName(), e.getGroup().getGroupName())));
-		}
-		return new ResponseEntity<>(keyValueBeanResults, null, HttpStatus.OK);
+		log.info("get meta data permissions list");
+		return getMetadataPermissionsByCollectionId(collectionId);
 	}
 
 	@GetMapping(value = "/updateAccessGroupMetaData")
 	public ResponseEntity<?> saveAccessGroup(HttpSession session, @RequestHeader HttpHeaders headers,
 			PermissionsModel permissionGroups) throws DoeWebException {
+		log.info("save access Groups");
+		return saveCollectionAccessGroup(session, permissionGroups);
 
-		log.info("get meta data permissions list for " + permissionGroups.getPath());
-		String loggedOnUser = getLoggedOnUserInfo();
-		String authToken = (String) session.getAttribute("writeAccessUserToken");
-		HpcCollectionRegistrationDTO dto = new HpcCollectionRegistrationDTO();
-		List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
-		HpcMetadataEntry entry = new HpcMetadataEntry();
-		entry.setAttribute("access_group");
-		if (permissionGroups.getSelectedAccessGroups().isEmpty()) {
-			entry.setValue("public");
-		} else {
-			entry.setValue(permissionGroups.getSelectedAccessGroups());
-		}
+	}
 
-		metadataEntries.add(entry);
-		dto.getMetadataEntries().addAll(metadataEntries);
-		Integer restResponse = DoeClientUtil.updateCollection(authToken, serviceURL, dto, permissionGroups.getPath(),
-				sslCertPath, sslCertPassword);
-		log.info("rest response for update collection:" + restResponse);
-		if (restResponse == 200 || restResponse == 201) {
-			// store the auditing info
-			try {
-				AuditingModel audit = new AuditingModel();
-				audit.setName(loggedOnUser);
-				audit.setOperation("Edit Meta Data");
-				audit.setStartTime(new Date());
-				audit.setPath(permissionGroups.getPath());
-				auditingService.saveAuditInfo(audit);
-
-				// update in MoDaC DB also
-				accessGroupsService.updateAccessGroups(permissionGroups.getPath(),
-						permissionGroups.getSelectedCollectionId(), permissionGroups.getSelectedAccessGroups(),
-						getLoggedOnUserInfo());
-			} catch (Exception e) {
-				throw new DoeWebException(e.getMessage());
-			}
-		}
-
-		return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+	@GetMapping(value = "/getAccessgroups", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getAccessgroups(@RequestParam(value = "selectedPath") String selectedPath,
+			@RequestParam(value = "levelName") String levelName, HttpSession session, HttpServletRequest request,
+			HttpServletResponse response) throws DoeWebException {
+		log.info("get collection access groups");
+		return getCollectionAccessGroups(selectedPath, levelName);
 	}
 }
