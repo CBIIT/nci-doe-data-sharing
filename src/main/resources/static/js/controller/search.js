@@ -398,50 +398,51 @@ function renderDataSetName(data, type, row){
 	
 	if(isLoggedOnuserExists) {
 		var editDataSetHtml = "";
-		var editStudySetHtml = "";
-		var editProgramSetHtml = "";
-		var checkboxHtml ="";
+		var checkboxHtml = "";
 		
 		if(isUploader && isUploader == true) {
-			checkboxHtml +="<input aria-label='checkbox' type='checkbox' id=" + row.dataSetPath + " " +
-					"class='selectCheckboxForIns'/>";
+			checkboxHtml += "<input aria-label='checkbox' type='checkbox' id=" + row.dataSetPath + " " +
+					        "class='selectCheckboxForIns'/>";
 		} else {
 			checkboxHtml += "<input aria-label='radio' type='radio' id=" + row.dataSetPath + " class='selectRadioForDataSet'/>";
 		}
 		if(row.dataSetPermissionRole && row.dataSetPermissionRole != 'No Permissions') {
 			editDataSetHtml = "<span class='editCollectionMetadata' asset_type = "+ row.assetType+" selectedCollection = 'Asset' " +
-					"data-fileName = '" + row.dataSetName + "' collectionId  = '" + row.dataSetCollectionId + "' " +
-			"permissions_role = '" + row.dataSetPermissionRole + "'" +
-			" metadata_path  = '" + row.dataSetPath+ "' metadata_set = '" + search_results_json.assetMetadata  + "'>" +
-           "<img src='images/Search_EditMetaData.svg' data-toggle='tooltip' title='Edit Asset Metadata' th:src='@{/images/Search_EditMetaData.svg}' " +
-			"style='width:15px;' alt='edit collection'></span>";
+					          "data-fileName = '" + row.dataSetName + "' collectionId  = '" + row.dataSetCollectionId + "' " +
+			                  "permissions_role = '" + row.dataSetPermissionRole + "'" +
+			                  " metadata_path  = '" + row.dataSetPath+ "' metadata_set = '" + search_results_json.assetMetadata  + "'>" +
+                              "<img src='images/Search_EditMetaData.svg' data-toggle='tooltip' title='Edit Asset Metadata' th:src='@{/images/Search_EditMetaData.svg}' " +
+			                  "style='width:15px;' alt='edit collection'></span>";
+			
 			if(row.dataSetPermissionRole == 'Owner') {
 				editDataSetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collection_name = '" + row.dataSetName + "' " +
-						"collectionId  = '" + row.dataSetCollectionId + "' " +
-			    "permissions_groups ='"+ JSON.stringify(search_results_json) + "'  selectedCollection = 'Asset' " +
-			    		"access_groups  = '" + row.dataLevelAccessGroups+ "' metadata_path  = '" + row.dataSetPath+ "'>" +
-                 "<img src='images/Search_AccessGroups.svg' data-toggle='tooltip' title='Edit Asset Access Permissions' " +
-                 "th:src='@{/images/Search_AccessGroups.svg}' " +
-			     "style='width:15px;' alt='Edit Asset Access Permissions'></span>";
+						            "collectionId  = '" + row.dataSetCollectionId + "' " +
+			                        "permissions_groups ='"+ JSON.stringify(search_results_json) + "' " +
+			                        " selectedCollection = 'Asset' " +
+			    		            "access_groups  = '" + row.dataLevelAccessGroups+ "' metadata_path  = '" + row.dataSetPath+ "'>" +
+                                    "<img src='images/Search_AccessGroups.svg' data-toggle='tooltip' " +
+                                    "title='Edit Asset Access Permissions' " +
+                                    "th:src='@{/images/Search_AccessGroups.svg}' " +
+			                        "style='width:15px;' alt='Edit Asset Access Permissions'></span>";
 			}
 		}
 			
 		html += "<div class='col-md-12' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'>" +
 				""+checkboxHtml+"&nbsp;&nbsp;&nbsp;" +
-						"<a href='#' class='dataSetFragment' " +
-			"permissions_role = '" + row.dataSetPermissionRole + "'  collections = '" + JSON.stringify(search_results_json)+ "' " +
-					"access_grp ='"+row.dataLevelAccessGroups +"'" +
-					" metadata_type = '" + search_results_json.assetMetadata  + "' data_set_path = " + row.dataSetPath + ">" +
-							"<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span></a>" +
-			"&nbsp&nbsp;" + editDataSetHtml + "</div></div></div>";
+				"<a href='#' class='dataSetFragment' " +
+			    "permissions_role = '" + row.dataSetPermissionRole + "'  collections = '" + JSON.stringify(search_results_json)+ "' " +
+				"access_grp ='"+row.dataLevelAccessGroups +"'" +
+				" metadata_type = '" + search_results_json.assetMetadata  + "' data_set_path = " + row.dataSetPath + ">" +
+				"<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span></a>" +
+			    "&nbsp&nbsp;" + editDataSetHtml + "</div></div></div>";
 
 	} else {
 		html += "<div class='col-md-12' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'>"+
-		"&nbsp;&nbsp;&nbsp;<a href='#' class='dataSetFragment' collections = '" + JSON.stringify(search_results_json)+ "' " +
+		        "&nbsp;&nbsp;&nbsp;<a href='#' class='dataSetFragment' collections = '" + JSON.stringify(search_results_json)+ "' " +
 				"permissions_role = '" + row.dataSetPermissionRole + "' access_grp ='"+row.dataLevelAccessGroups +"' " +
-						"metadata_type = '" + search_results_json.assetMetadata  + "' data_set_path = " + row.dataSetPath + ">" +
-								"<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span></a>" +
-		"&nbsp&nbsp;</div></div></div>";
+				"metadata_type = '" + search_results_json.assetMetadata  + "' data_set_path = " + row.dataSetPath + ">" +
+				"<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span></a>" +
+		        "&nbsp&nbsp;</div></div></div>";
 	}
 	
 	html+= "<div class='col-md-12' style='margin-left: 21px;'><span class='sharableLink'>Sharable Link: " +
@@ -477,85 +478,84 @@ function renderPath(data, type, row) {
 	search_results_json.programPermissionRole = row.programPermissionRole;
 	
 	if(isLoggedOnuserExists) {
-		var editDataSetHtml = "";
 		var editStudySetHtml = "";
 		var editProgramSetHtml = "";
-		var checkboxHtml ="";
 		
 				
 		if(row.studyPermissionRole && row.studyPermissionRole != 'No Permissions') {
 			editStudySetHtml = "<span class='editCollectionMetadata' selectedCollection = 'Study' " +
-					"data-fileName = '" + row.studyName + "' collectionId  = '" + row.studyCollectionId + "'" +
-							" permissions_role = '" + row.studyPermissionRole + "' metadata_path  = '" + row.studyPath+ "' " +
-									" metadata_set = '" + search_results_json.studyMetadata  + "'>" +
-			"<img src='images/Search_EditMetaData.svg' data-toggle='tooltip' title='Edit Study Metadata' th:src='@{/images/Search_EditMetaData.svg}' " +
-			"style='width:15px;' alt='edit collection'></span>";
-			if(row.studyPermissionRole == 'Owner') {
-				editStudySetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collection_name ='" +row.studyName + "'" +
-						" collectionId  = '" + row.studyCollectionId + "' " +
-			    " permissions_groups ='"+ JSON.stringify(search_results_json) + "'   selectedCollection = 'Study'  " +
-			    		"access_groups  = '" + row.studyLevelAccessGroups+ "' metadata_path  = '" + row.studyPath+ "'>" +
-                 "<img src='images/Search_AccessGroups.svg' data-toggle='tooltip' title='Edit Study Access Permissions' " +
-                 "th:src='@{/images/Search_AccessGroups.svg}' " +
-			     "style='width:15px;' alt='Edit Study Access Permissions'</span>";
+					           "data-fileName = '" + row.studyName + "' collectionId  = '" + row.studyCollectionId + "'" +
+						       " permissions_role = '" + row.studyPermissionRole + "' metadata_path  = '" + row.studyPath+ "' " +
+							   " metadata_set = '" + search_results_json.studyMetadata  + "'>" +
+			                   "<img src='images/Search_EditMetaData.svg' data-toggle='tooltip' title='Edit Study Metadata' th:src='@{/images/Search_EditMetaData.svg}' " +
+			                   "style='width:15px;' alt='edit collection'></span>";
+		if(row.studyPermissionRole == 'Owner') {
+			editStudySetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collection_name ='" +row.studyName + "'" +
+						        " collectionId  = '" + row.studyCollectionId + "' " +
+			                    " permissions_groups ='"+ JSON.stringify(search_results_json) + "'   selectedCollection = 'Study'  " +
+			    		        "access_groups  = '" + row.studyLevelAccessGroups+ "' metadata_path  = '" + row.studyPath+ "'>" +
+                                "<img src='images/Search_AccessGroups.svg' data-toggle='tooltip' title='Edit Study Access Permissions' " +
+                                "th:src='@{/images/Search_AccessGroups.svg}' " +
+			                    "style='width:15px;' alt='Edit Study Access Permissions'</span>";
 			}
 		}
 		
 		if(row.programPermissionRole && row.programPermissionRole != 'No Permissions') {
 			editProgramSetHtml = "<span class='editCollectionMetadata' selectedCollection = 'Program' " +
 					"data-fileName = '" + row.programName + "' collectionId  = '" + row.programCollectionId + "'" +
-							" permissions_role = '" + row.programPermissionRole + "' " +
-									"metadata_path  = '" + row.institutePath+ "' " +
-									"metadata_set = '" + search_results_json.progMetadata  + "'>" +
-			"<img src='images/Search_EditMetaData.svg' data-toggle='tooltip' title='Edit Program Metadata' th:src='@{/images/Search_EditMetaData.svg}' " +
-			"style='width:15px;' alt='edit collection'></span>"; 
+					" permissions_role = '" + row.programPermissionRole + "' " +
+					"metadata_path  = '" + row.institutePath+ "' " +
+					"metadata_set = '" + search_results_json.progMetadata  + "'>" +
+			        "<img src='images/Search_EditMetaData.svg' data-toggle='tooltip' title='Edit Program Metadata' " +
+			        "th:src='@{/images/Search_EditMetaData.svg}' " +
+			        "style='width:15px;' alt='edit collection'></span>"; 
 			
 			if(row.programPermissionRole == 'Owner') {
 				editProgramSetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' " +
-						"collection_name ='" +row.programName + "' collectionId  = '" + row.programCollectionId + "' " +
+				"collection_name ='" +row.programName + "' collectionId  = '" + row.programCollectionId + "' " +
 			    "permissions_groups ='"+ JSON.stringify(search_results_json) + "'   selectedCollection = 'Program'  " +
-			    		"access_groups  = '" + row.programLevelAccessGroups+ "' metadata_path  = '" + row.institutePath+ "'>" +
-                 "<img src='images/Search_AccessGroups.svg' data-toggle='tooltip' title='Edit Program Access Permissions' " +
-                 "th:src='@{/images/Search_AccessGroups.svg}' " +
-			     "style='width:15px;' alt='Edit Program Access Permissions'</span>";
+			    "access_groups  = '" + row.programLevelAccessGroups+ "' metadata_path  = '" + row.institutePath+ "'>" +
+                "<img src='images/Search_AccessGroups.svg' data-toggle='tooltip' title='Edit Program Access Permissions' " +
+                "th:src='@{/images/Search_AccessGroups.svg}' " +
+			    "style='width:15px;' alt='Edit Program Access Permissions'</span>";
 			}
 		}
 	
 		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;margin-bottom: 20px;'><div class='row'>" +
 				"<div class='col-md-12'></div>" +
-			"<div class='col-md-12 cil_12_bold_no_color_dataset'>" +
-					"<span>" + row.dataSetDescription + "</span>" +
-			"<br></div><div class='col-md-12' style='margin-left:22px;margin-top: 10px;'>" +
-			"<span class='cil_12_bold_no_color'>STUDY: </span><a class='cil_12_no_color button2a' " +
-			"metadata_type = '" + search_results_json.studyMetadata  + "' tabindex='0'" +
-			" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
-			"data-popover-content='#a01'>" + row.studyName + "</a>" +
-					"&nbsp&nbsp;"+editStudySetHtml+"</div>" +
-			"<div class='col-md-12 top-buffer' style='margin-left:22px;'>" +
-			"<span class='cil_12_bold_no_color'>PROGRAM: </span><a class='cil_12_no_color button2a' " +
-			"metadata_type = '" + search_results_json.progMetadata  + "'" +
-					" tabindex='0'" +
-			" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
-			"data-popover-content='#a01'>" + row.programName + "</a>" +
-					"&nbsp&nbsp;"+editProgramSetHtml+"</div></div></div>";
+			    "<div class='col-md-12 cil_12_bold_no_color_dataset'>" +
+				"<span>" + row.dataSetDescription + "</span>" +
+			    "<br></div><div class='col-md-12' style='margin-left:22px;margin-top: 10px;'>" +
+			    "<span class='cil_12_bold_no_color'>STUDY: </span><a class='cil_12_no_color button2a' " +
+			    "metadata_type = '" + search_results_json.studyMetadata  + "' tabindex='0'" +
+			    " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
+			    "data-popover-content='#a01'>" + row.studyName + "</a>" +
+				"&nbsp&nbsp;"+editStudySetHtml+"</div>" +
+			    "<div class='col-md-12 top-buffer' style='margin-left:22px;'>" +
+			    "<span class='cil_12_bold_no_color'>PROGRAM: </span><a class='cil_12_no_color button2a' " +
+			    "metadata_type = '" + search_results_json.progMetadata  + "'" +
+				" tabindex='0'" +
+			    " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
+			    "data-popover-content='#a01'>" + row.programName + "</a>" +
+				"&nbsp&nbsp;"+editProgramSetHtml+"</div></div></div>";
 
 	} else {
 		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;margin-bottom: 20px;'><div class='row'>" +
 				"<div class='col-md-12'></div>" +
-		"<div class='col-md-12 cil_12_bold_no_color_dataset' >" +
+		        "<div class='col-md-12 cil_12_bold_no_color_dataset' >" +
 				"<span>" + row.dataSetDescription + "</span>" +
-		"</a><br></div><div class='col-md-12' style='margin-left:22px;margin-top: 10px;'>" +
-		"<span class='cil_12_bold_no_color'>STUDY: </span><a class='cil_12_no_color button2a'" +
-		" metadata_type = '" + search_results_json.studyMetadata  + "' tabindex='0'" +
-		" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
-		"data-popover-content='#a01'>" + row.studyName + "</a>" +
+		        "</a><br></div><div class='col-md-12' style='margin-left:22px;margin-top: 10px;'>" +
+		        "<span class='cil_12_bold_no_color'>STUDY: </span><a class='cil_12_no_color button2a'" +
+		        " metadata_type = '" + search_results_json.studyMetadata  + "' tabindex='0'" +
+		        " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
+		        "data-popover-content='#a01'>" + row.studyName + "</a>" +
 				"&nbsp&nbsp;</div>" +
-		"<div class='col-md-12 top-buffer' style='margin-left:22px;'>" +
-		"<span class='cil_12_bold_no_color'>PROGRAM: </span><a class='cil_12_no_color button2a' " +
-		"metadata_type = '" + search_results_json.progMetadata  + "' " +
+		        "<div class='col-md-12 top-buffer' style='margin-left:22px;'>" +
+		        "<span class='cil_12_bold_no_color'>PROGRAM: </span><a class='cil_12_no_color button2a' " +
+		        "metadata_type = '" + search_results_json.progMetadata  + "' " +
 				"tabindex='0'" +
-		" data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
-		"data-popover-content='#a01'>" + row.programName + "</a>" +
+		        " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
+		        "data-popover-content='#a01'>" + row.programName + "</a>" +
 				"&nbsp&nbsp;</div></div></div>";
 	}
     return html;
@@ -623,21 +623,22 @@ function addValueToSelected(optionVal,selectedValueText,attrval) {
     
     if (/.*Date.*/.test(fieldPath)) {
     	var $dateColumn = $('<div class="form-row><div class="form-group" style="padding-right: 50px;">'
-    			+'<label>From: <input type="date" class="fromDate" id="from_' + fieldPath + '" > </label></div> <div class="form-group" '
-    			+'style=" padding-left: 50px;"> <label>To: <input type="date" class="toDate" id="To_' + fieldPath + '"> </label></div></div>');
+    			          +'<label>From: <input type="date" class="fromDate" id="from_' + fieldPath + '" > </label></div> <div class="form-group" '
+    			          +'style=" padding-left: 50px;"> <label>To: <input type="date" class="toDate" id="To_' + fieldPath + '"> </label></div></div>');
     	$inputGroup.append($dateColumn);
     } else {
     	var advancedSearchInput = $('<input type="text" style="border-right: transparent;" value="'+ attrval +'" data-value="' + fieldPath + '" data-type="'
-    	        + $(optionVal).attr('data-type') + '" id="metadatasearch_' + mdIdentifier
-    	        + '" class="form-control" placeholder="Enter a keyword..."'
-    	        + ' title="Enter a Search Keyword or Phrase" aria-label="Enter a Search Keyword or Phrase"'
-    	        + ' inputtype="textval"/>');
-    	    $inputGroup.append(advancedSearchInput);
+    	                         + $(optionVal).attr('data-type') + '" id="metadatasearch_' + mdIdentifier
+    	                         + '" class="form-control" placeholder="Enter a keyword..."'
+    	                         + ' title="Enter a Search Keyword or Phrase" aria-label="Enter a Search Keyword or Phrase"'
+    	                         + ' inputtype="textval"/>');
+    	$inputGroup.append(advancedSearchInput);
     }
-    	    var $inputGroupButton = $('<div class="input-group-btn" style="border-radius: 0px !important;border-left: transparent;margin-left: -3px;"/>');
-    	    $inputGroup.append($inputGroupButton);
-    	    $inputGroupButton.append('<input class="btn pull-right" style="background-color: #fff!important;color: #7C7C7C" type="button" ' +
-    	        'value="X" onclick="removeRowAddOption(\'' + rowId + '\')"/>');
+     var $inputGroupButton = $('<div class="input-group-btn" style="border-radius: 0px !important;border-left: transparent;margin-left: -3px;"/>');
+    	          
+          $inputGroup.append($inputGroupButton);
+    	  $inputGroupButton.append('<input class="btn pull-right" style="background-color: #fff!important;color: #7C7C7C" type="button" ' +
+    	  'value="X" onclick="removeRowAddOption(\'' + rowId + '\')"/>');
     	    
     $("#advSearchDiv").show();
 
