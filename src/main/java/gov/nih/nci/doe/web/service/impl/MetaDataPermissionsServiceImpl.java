@@ -41,6 +41,7 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 		log.info("save permission list for user " + user + " with prog list " + progList + " and collection id"
 				+ collectionId);
 
+		// create a new record for the owner
 		MetaDataPermissions ownerPermission = metaDataPermissionsRepository
 				.getMetaDataPermissionsOwnerByCollectionId(collectionId);
 
@@ -53,7 +54,7 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 			permissions.setCollectionPath(collectionPath);
 			metaDataPermissionsRepository.saveAndFlush(permissions);
 		}
-		// create for groups
+		// create rows for each group
 		if (!StringUtils.isEmpty(progList)) {
 			List<String> groupNameList = Arrays.asList(progList.split(","));
 
@@ -86,6 +87,7 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 
 	@Override
 	public void deletePermissionsList(String user, List<String> deletedList, Integer collectionId) {
+		log.info("deleting permissions" + deletedList + " for user: " + user + "with collectionId: " + collectionId);
 		Iterator permissionListIterator = deletedList.iterator();
 		while (permissionListIterator.hasNext()) {
 			String permission = permissionListIterator.next().toString();
@@ -100,6 +102,7 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 
 	@Override
 	public MetaDataPermissions getMetaDataPermissionsOwnerByCollectionId(Integer collectionId) {
+		log.info("get owner metadata permissions for collectionId: " + collectionId);
 		return metaDataPermissionsRepository.getMetaDataPermissionsOwnerByCollectionId(collectionId);
 	}
 

@@ -6,7 +6,6 @@ import java.util.List;
 import javax.persistence.*;
 
 import org.hibernate.annotations.Type;
-import org.hibernate.annotations.Formula;
 
 @Entity
 @Table(name = "USER_T")
@@ -25,7 +24,7 @@ public class DoeUsers {
 	private String uuid;
 	private Date createdDate;
 	private Date lastChangedDate;
-	
+
 	@Transient
 	private List<String> progNamesList;
 
@@ -192,14 +191,11 @@ public class DoeUsers {
 		this.uuid = uuid;
 	}
 
-
-
-	//@ElementCollection(targetClass = String.class)
-	//@Formula("select GP.GROUP_NAME from GROUP_T AS GP where GP.ID in (select UG.GROUP_ID from USER_GROUP_T AS UG where UG.USER_ID = ID)")
 	@Transient
 	public List<String> getProgNamesList() {
 		return progNamesList;
 	}
+
 	@Transient
 	public void setProgNamesList(List<String> progNamesList) {
 		this.progNamesList = progNamesList;

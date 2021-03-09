@@ -109,7 +109,6 @@ public class MetaDataPermissions {
 	@Override
 	public String toString() {
 		return "MetaDataPermissions{" + ", collectionId='" + collectionId + '\'' + ", user='" + user + '\''
-				+ ",createdDate=" + createdDate + ", collectionPath=" + collectionPath + ", group=" + group
-				+ '}';
+				+ ",createdDate=" + createdDate + ", collectionPath=" + collectionPath + ", group=" + group + '}';
 	}
 }

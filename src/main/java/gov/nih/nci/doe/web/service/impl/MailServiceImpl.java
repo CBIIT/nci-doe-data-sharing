@@ -204,23 +204,4 @@ public class MailServiceImpl implements MailService {
 
 	}
 
-	@Override
-	public void sendNotifyUsersForAccessGroups(List<String> email, String loggedOnUser, String path,
-			String existingAccessGroups, String newAccessGroups) throws Exception {
-		log.info("Sending an email for access group change");
-
-		final Map<String, Object> params = new HashMap<String, Object>();
-		final List<String> to = new ArrayList<String>();
-		final List<String> cc = new ArrayList<String>();
-		to.addAll(email);
-		cc.add(loggedOnUser);
-		params.put("loggedOnUser", loggedOnUser);
-		params.put("COLLECTION_NAME", path);
-		params.put("existingAccessGroups", existingAccessGroups);
-		params.put("newAccessGroups", newAccessGroups);
-		params.put(CC, cc.toArray(new String[0]));
-		params.put(TO, to.toArray(new String[0]));
-		send("ACCESS_GROUP_EMAIL", params);
-	}
-
 }

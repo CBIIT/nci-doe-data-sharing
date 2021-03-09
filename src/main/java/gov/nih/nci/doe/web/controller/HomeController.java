@@ -208,41 +208,52 @@ public class HomeController extends AbstractDoeController {
 	@PostMapping(value = "/metaDataPermissionsList")
 	@ResponseBody
 	public String savePermissionsList(HttpSession session, @RequestHeader HttpHeaders headers,
-			@RequestParam(value = "collectionId") String collectionId,
-			@RequestParam(value = "path") String path,
-			@RequestParam(value = "selectedPermissions[]", required = false) String[] selectedPermissions) {
-		log.info("get meta data permissions list");
-		String loggedOnUser = getLoggedOnUserInfo();
+			@RequestParam(value = "collectionId") String collectionId, @RequestParam(value = "path") String path,
+			@RequestParam(value = "selectedPermissions[]", required = false) String[] selectedPermissions)
+			throws DoeWebException {
 
-		List<String> newSelectedPermissionList = selectedPermissions == null ? new ArrayList<String>()
-				: Arrays.asList(selectedPermissions);
-		List<MetaDataPermissions> existingPermissionsList = metaDataPermissionService
-				.getAllGroupMetaDataPermissionsByCollectionId(Integer.valueOf(collectionId));
-		List<String> oldPermissionsList = existingPermissionsList.stream().filter(e -> e.getGroup() != null)
-				.map(s -> s.getGroup().getGroupName()).collect(Collectors.toList());
+		log.info("get meta data permissions list for collectionId: " + collectionId);
 
-		if (CollectionUtils.isEmpty(oldPermissionsList) && !CollectionUtils.isEmpty(newSelectedPermissionList)
-				&& StringUtils.isNotBlank(collectionId)) {
-			// save the new set of permissions
-			metaDataPermissionService.savePermissionsList(loggedOnUser, String.join(",", newSelectedPermissionList),
-					Integer.valueOf(collectionId), path);
-		} else {
-			List<String> deletedPermissions = new ArrayList<String>();
-			List<String> addedPermissions = new ArrayList<String>();
+		try {
+			String loggedOnUser = getLoggedOnUserInfo();
 
-			deletedPermissions = oldPermissionsList.stream().filter(e -> !newSelectedPermissionList.contains(e))
-					.filter(value -> value != null).collect(Collectors.toList());
+			// get the new permissions list
+			List<String> newSelectedPermissionList = selectedPermissions == null ? new ArrayList<String>()
+					: Arrays.asList(selectedPermissions);
+			List<MetaDataPermissions> existingPermissionsList = metaDataPermissionService
+					.getAllGroupMetaDataPermissionsByCollectionId(Integer.valueOf(collectionId));
 
-			addedPermissions = newSelectedPermissionList.stream().filter(e -> !oldPermissionsList.contains(e))
-					.collect(Collectors.toList());
+			// get the existing permissions list
+			List<String> oldPermissionsList = existingPermissionsList.stream().filter(e -> e.getGroup() != null)
+					.map(s -> s.getGroup().getGroupName()).collect(Collectors.toList());
 
-			metaDataPermissionService.deletePermissionsList(loggedOnUser, deletedPermissions,
-					Integer.valueOf(collectionId));
-			metaDataPermissionService.savePermissionsList(loggedOnUser, String.join(",", addedPermissions),
-					Integer.valueOf(collectionId), path);
+			if (CollectionUtils.isEmpty(oldPermissionsList) && !CollectionUtils.isEmpty(newSelectedPermissionList)
+					&& StringUtils.isNotBlank(collectionId)) {
+				// when there are no existing permissions set on the selection and the new
+				// permissions set is not empty
+				metaDataPermissionService.savePermissionsList(loggedOnUser, String.join(",", newSelectedPermissionList),
+						Integer.valueOf(collectionId), path);
+			} else {
+				List<String> deletedPermissions = new ArrayList<String>();
+				List<String> addedPermissions = new ArrayList<String>();
 
+				// get deleted and added permissions list
+				deletedPermissions = oldPermissionsList.stream().filter(e -> !newSelectedPermissionList.contains(e))
+						.filter(value -> value != null).collect(Collectors.toList());
+
+				addedPermissions = newSelectedPermissionList.stream().filter(e -> !oldPermissionsList.contains(e))
+						.collect(Collectors.toList());
+
+				metaDataPermissionService.deletePermissionsList(loggedOnUser, deletedPermissions,
+						Integer.valueOf(collectionId));
+				metaDataPermissionService.savePermissionsList(loggedOnUser, String.join(",", addedPermissions),
+						Integer.valueOf(collectionId), path);
+
+			}
+			return "SUCCESS";
+		} catch (Exception e) {
+			throw new DoeWebException("Failed to save permissions " + e.getMessage());
 		}
-		return "SUCCESS";
 	}
 
 	@GetMapping(value = "/getPermissionByCollectionId")
@@ -263,7 +274,8 @@ public class HomeController extends AbstractDoeController {
 	@GetMapping(value = "/updateAccessGroupMetaData")
 	public ResponseEntity<?> saveAccessGroup(HttpSession session, @RequestHeader HttpHeaders headers,
 			PermissionsModel permissionGroups) throws DoeWebException {
-		log.info("get meta data permissions list");
+
+		log.info("get meta data permissions list for " + permissionGroups.getPath());
 		String loggedOnUser = getLoggedOnUserInfo();
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		HpcCollectionRegistrationDTO dto = new HpcCollectionRegistrationDTO();
@@ -280,19 +292,24 @@ public class HomeController extends AbstractDoeController {
 		dto.getMetadataEntries().addAll(metadataEntries);
 		Integer restResponse = DoeClientUtil.updateCollection(authToken, serviceURL, dto, permissionGroups.getPath(),
 				sslCertPath, sslCertPassword);
+		log.info("rest response for update collection:" + restResponse);
 		if (restResponse == 200 || restResponse == 201) {
 			// store the auditing info
-			AuditingModel audit = new AuditingModel();
-			audit.setName(loggedOnUser);
-			audit.setOperation("Edit Meta Data");
-			audit.setStartTime(new Date());
-			audit.setPath(permissionGroups.getPath());
-			auditingService.saveAuditInfo(audit);
+			try {
+				AuditingModel audit = new AuditingModel();
+				audit.setName(loggedOnUser);
+				audit.setOperation("Edit Meta Data");
+				audit.setStartTime(new Date());
+				audit.setPath(permissionGroups.getPath());
+				auditingService.saveAuditInfo(audit);
 
-			// update in MoDaC DB also
-			accessGroupsService.updateAccessGroups(permissionGroups.getPath(),
-					permissionGroups.getSelectedCollectionId(), permissionGroups.getSelectedAccessGroups(),
-					getLoggedOnUserInfo());
+				// update in MoDaC DB also
+				accessGroupsService.updateAccessGroups(permissionGroups.getPath(),
+						permissionGroups.getSelectedCollectionId(), permissionGroups.getSelectedAccessGroups(),
+						getLoggedOnUserInfo());
+			} catch (Exception e) {
+				throw new DoeWebException(e.getMessage());
+			}
 		}
 
 		return new ResponseEntity<>("SUCCESS", HttpStatus.OK);

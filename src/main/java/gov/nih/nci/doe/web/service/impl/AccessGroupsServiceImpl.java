@@ -36,11 +36,10 @@ public class AccessGroupsServiceImpl implements AccessGroupsService {
 
 	@Override
 	public void saveAccessGroups(Integer collectionId, String collectionPath, String accessGroups, String userName) {
-		// save access Groups
 		log.info("Save access groups for " + userName + " for collection id: " + collectionId + " with access groups "
 				+ accessGroups);
 
-		// create for groups
+		// create a record for each access group
 		if (!StringUtils.isEmpty(accessGroups)) {
 			List<String> groupNameList = Arrays.asList(accessGroups.split(","));
 
@@ -62,6 +61,7 @@ public class AccessGroupsServiceImpl implements AccessGroupsService {
 
 	@Override
 	public List<String> getGroupsByCollectionPath(String collectionPath) {
+		log.info("get groups for collection path :" + collectionPath);
 		return accessGroupsRepository.getGroupsByCollectionPath(collectionPath);
 	}
 
