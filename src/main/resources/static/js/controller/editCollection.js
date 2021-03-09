@@ -32,7 +32,7 @@ function constructEditCollectionMetadata(data,status) {
 		if(value.isEditable == false) {
 			$("#userMetaData tbody").append("<tr><td>" + value.displayName + "&nbsp;&nbsp;<i class='fas fa-question-circle'" +
 			"data-toggle='tooltip' " +
-			"data-placement='right' title=\"" + value.description + "\"'></i></td><td><input type='text' disabled='true' " +
+			"data-placement='right' title=\"" + value.description + "\"></i></td><td><input type='text' disabled='true' " +
 			"aria-label='value of meta data' " +
 			"name='zAttrStr_"+value.attrName+"' style='width:70%;' value=\"" + value.attrValue + "\"></td></tr>");
 			
