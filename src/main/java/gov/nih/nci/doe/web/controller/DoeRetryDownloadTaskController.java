@@ -34,6 +34,7 @@ public class DoeRetryDownloadTaskController extends AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.bulkregistration}")
 	private String registrationServiceURL;
+
 	@Value("${gov.nih.nci.hpc.server.download}")
 	private String dataObjectsDownloadServiceURL;
 
@@ -45,9 +46,6 @@ public class DoeRetryDownloadTaskController extends AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.v2.dataObject}")
 	private String dataObjectServiceURL;
-
-	@Value("${gov.nih.nci.hpc.server.download}")
-	private String downloadServiceURL;
 
 	@Value("${gov.nih.nci.hpc.server.v2.download}")
 	private String downloadServiceURL2;
@@ -77,7 +75,7 @@ public class DoeRetryDownloadTaskController extends AbstractDoeController {
 
 				String queryServiceURL = null;
 				if (taskType.equalsIgnoreCase(HpcDownloadTaskType.COLLECTION.name()))
-					queryServiceURL = collectionDownloadServiceURL + "?taskId=" + taskId;
+					queryServiceURL = collectionDownloadServiceURL + "/" + taskId;
 				else
 					queryServiceURL = dataObjectsDownloadServiceURL + "/" + taskId;
 
@@ -119,7 +117,7 @@ public class DoeRetryDownloadTaskController extends AbstractDoeController {
 				return result.getMessage();
 
 			} else if (taskType.equalsIgnoreCase(HpcDownloadTaskType.DATA_OBJECT.name())) {
-				String queryServiceURL = dataObjectDownloadServiceURL + "?taskId=" + taskId;
+				String queryServiceURL = dataObjectDownloadServiceURL + "/" + taskId;
 				HpcDataObjectDownloadStatusDTO downloadTask = DoeClientUtil.getDataObjectDownloadTask(authToken,
 						queryServiceURL, sslCertPath, sslCertPassword);
 				String serviceURL = dataObjectServiceURL + downloadTask.getPath() + "/download";

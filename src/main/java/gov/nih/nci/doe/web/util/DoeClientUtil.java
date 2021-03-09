@@ -18,9 +18,7 @@ import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectDownloadRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectDownloadResponseDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectRegistrationRequestDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectRegistrationResponseDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectRegistrationStatusDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationStatusDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDownloadStatusDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
@@ -32,10 +30,10 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadStatusDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectRegistrationRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDocDataManagementRulesDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcRegistrationSummaryDTO;
 import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDownloadSummaryDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcMetadataAttributesListDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcRegistrationSummaryDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcUserPermsForCollectionsDTO;
 import gov.nih.nci.hpc.dto.error.HpcExceptionDTO;
 import gov.nih.nci.hpc.dto.security.HpcAuthenticationResponseDTO;
@@ -559,28 +557,6 @@ public class DoeClientUtil {
 		}
 	}
 
-	public static HpcBulkDataObjectRegistrationResponseDTO registerBulkDatafiles(String token, String hpcDatafileURL,
-			HpcBulkDataObjectRegistrationRequestDTO datafileDTO, String hpcCertPath, String hpcCertPassword)
-			throws DoeWebException {
-		try {
-			WebClient client = DoeClientUtil.getWebClient(hpcDatafileURL, hpcCertPath, hpcCertPassword);
-			client.header("Authorization", "Bearer " + token);
-
-			Response restResponse = client.invoke("PUT", datafileDTO);
-			if (restResponse.getStatus() == 201 || restResponse.getStatus() == 200) {
-				return (HpcBulkDataObjectRegistrationResponseDTO) DoeClientUtil.getObject(restResponse,
-						HpcBulkDataObjectRegistrationResponseDTO.class);
-			} else {
-				log.info("Failed to bulk register data files");
-				String errorMessage = getErrorMessage(restResponse);
-				throw new DoeWebException(errorMessage, restResponse.getStatus());
-
-			}
-		} catch (Exception e) {
-			throw new DoeWebException("Failed to bulk register data files due to: " + e.getMessage());
-		}
-	}
-
 	public static gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationResponseDTO registerBulkDatafiles(
 			String token, String hpcDatafileURL,
 			gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO datafileDTO,
@@ -791,8 +767,6 @@ public class DoeClientUtil {
 	public static HpcBulkDataObjectRegistrationStatusDTO getDataObjectRegistrationTask(String token, String hpcQueryURL,
 			String taskId, String hpcCertPath, String hpcCertPassword) throws DoeWebException {
 		try {
-
-			log.debug("get data object registration task" + hpcCertPath + " and task Id " + taskId);
 			WebClient client = DoeClientUtil.getWebClient(UriComponentsBuilder.fromHttpUrl(hpcQueryURL)
 					.pathSegment(taskId).build().encode().toUri().toURL().toExternalForm(), hpcCertPath,
 					hpcCertPassword);
@@ -812,8 +786,9 @@ public class DoeClientUtil {
 			MappingJsonFactory factory = new MappingJsonFactory(mapper);
 			JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 			return parser.readValueAs(HpcBulkDataObjectRegistrationStatusDTO.class);
+
 		} catch (Exception e) {
-			throw new DoeWebException("Failed to get data object registration tasks details due to: " + e.getMessage());
+			throw new DoeWebException(e.getMessage());
 		}
 	}
 

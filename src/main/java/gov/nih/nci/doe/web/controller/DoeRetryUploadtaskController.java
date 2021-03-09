@@ -17,17 +17,18 @@ import gov.nih.nci.doe.web.model.AjaxResponseBody;
 import gov.nih.nci.doe.web.model.Views;
 import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
-import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectRegistrationRequestDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectRegistrationResponseDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectRegistrationStatusDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectRegistrationItemDTO;
+
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationResponseDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationStatusDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO;
 
 @Controller
 @EnableAutoConfiguration
 @RequestMapping("/uploadtask")
 public class DoeRetryUploadtaskController extends AbstractDoeController {
 
-	@Value("${gov.nih.nci.hpc.server.bulkregistration}")
+	@Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
 	private String registrationServiceURL;
 
 	@Autowired

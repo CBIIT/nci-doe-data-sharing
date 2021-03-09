@@ -18,15 +18,23 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.domain.TaskManager;
 import gov.nih.nci.doe.web.model.TaskManagerDto;
 import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.doe.web.util.LambdaUtils;
+import gov.nih.nci.hpc.domain.datatransfer.HpcDataTransferType;
+import gov.nih.nci.hpc.domain.datatransfer.HpcDownloadResult;
+import gov.nih.nci.hpc.domain.datatransfer.HpcDownloadTaskType;
 import gov.nih.nci.hpc.domain.datatransfer.HpcUserDownloadRequest;
-import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectRegistrationTaskDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDownloadStatusDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadStatusDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDownloadSummaryDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcRegistrationSummaryDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationStatusDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationTaskDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcRegistrationSummaryDTO;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,17 +57,23 @@ public class TaskManagerCotroller extends AbstractDoeController {
 	@Autowired
 	TaskManagerService taskManagerService;
 
+	@Value("${gov.nih.nci.hpc.server.collection.download}")
+	private String collectionDownloadServiceURL;
+
 	@Value("${gov.nih.nci.hpc.server.download}")
 	private String queryServiceURL;
 
-	@Value("${gov.nih.nci.hpc.server.bulkregistration}")
+	@Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
 	private String registrationServiceUrl;
+
+	@Value("${gov.nih.nci.hpc.server.dataObject.download}")
+	private String dataObjectDownloadServiceURL;
 
 	SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 
 	@GetMapping
 	public ResponseEntity<?> getStatus(HttpSession session, @RequestHeader HttpHeaders headers,
-			HttpServletRequest request, @RequestParam(value = "userId") String userId) {
+			HttpServletRequest request, @RequestParam(value = "userId") String userId) throws DoeWebException {
 
 		log.info("get all tasks by user Id");
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
@@ -130,13 +144,8 @@ public class TaskManagerCotroller extends AbstractDoeController {
 				task.setUserId(t.getUserId());
 				task.setTaskType(t.getTaskType());
 				if (download.getResult() != null && download.getResult().value().equals("FAILED")) {
-					List<String> message = new ArrayList<String>();
-					download.getItems().stream().forEach(x -> message.add(x.getMessage()));
-					task.setTransferStatus("Failed (" + String.join(",", message) + ")"
-							+ "<strong><a style='border: none;background-color: #F39530; height: 23px;width: 37px;border-radius: 11px;float: right;' class='btn btn-link btn-sm' aria-label='Retry download' href='#' "
-							+ "onclick='retryDownload(\"" + download.getTaskId() + "\" ,\"" + t.getTaskName() + "\", \""
-							+ download.getType().name() + "\")'>"
-							+ "<img style='height: 13px;width: 13px;margin-top: -14px;' src='images/Status.refresh_icon-01.png' th:src='@{/images/Status.refresh_icon-01.png}' alt='Status refresh'></a></strong>");
+					retryDownLoadFunc(session, download, task, t);
+
 				} else if (download.getResult() != null && download.getResult().value().equals("COMPLETED")) {
 					task.setTransferStatus("Completed");
 				} else {
@@ -159,7 +168,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
 						.orElse(null);
 				String path = null;
 				task.setTaskId(upload.getTaskId());
-				task.setTaskCreatedDate(t.getTaskDate());
+				task.setTaskCreatedDate(t != null ? t.getTaskDate() : null);
 				task.setTaskCompletedDate(
 						upload.getCompleted() != null ? format.format(upload.getCompleted().getTime()) : "");
 				task.setTaskName(t != null ? t.getTaskName() : "");
@@ -173,16 +182,9 @@ public class TaskManagerCotroller extends AbstractDoeController {
 					task.setTransferStatus("Completed");
 					path = upload.getCompletedItems().get(0).getPath();
 				} else if (Boolean.FALSE.equals(upload.getResult())) {
-
+					retryUploadFunc(session, upload, task, t);
 					path = upload.getFailedItems().get(0).getPath();
 
-					List<String> message = new ArrayList<String>();
-					upload.getFailedItems().stream().forEach(x -> message.add(x.getMessage()));
-
-					task.setTransferStatus("Failed (" + String.join(",", message) + ")"
-							+ "<strong><a style='border: none;background-color: #F39530;height: 23px;width: 37px;border-radius: 11px;float: right;' class='btn btn-link btn-sm' aria-label='Retry Upload' href='#'"
-							+ "onclick='retryUpload(\"" + upload.getTaskId() + "\" ,\"" + t.getTaskName() + "\")'>"
-							+ "<img style='height: 13px;width: 13px;margin-top: -14px;' src='images/Status.refresh_icon-01.png' th:src='@{/images/Status.refresh_icon-01.png}' alt='Status refresh'></a></strong>");
 				}
 				if (StringUtils.isNotEmpty(path)) {
 					String[] collectionNames = path.split("/");
@@ -198,10 +200,98 @@ public class TaskManagerCotroller extends AbstractDoeController {
 			return new ResponseEntity<>(taskResults, headers, HttpStatus.OK);
 
 		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+			throw new DoeWebException("Failed to get tasks " + e.getMessage());
 		}
 
-		return new ResponseEntity<>(null, headers, HttpStatus.SERVICE_UNAVAILABLE);
+	}
+
+	private void retryUploadFunc(HttpSession session, HpcBulkDataObjectRegistrationTaskDTO upload, TaskManagerDto t,
+			TaskManager task) throws DoeWebException {
+
+		String authToken = (String) session.getAttribute("writeAccessUserToken");
+
+		HpcBulkDataObjectRegistrationStatusDTO uploadTask = DoeClientUtil.getDataObjectRegistrationTask(authToken,
+				registrationServiceUrl, upload.getTaskId(), sslCertPath, sslCertPassword);
+		Boolean retry = false;
+		if (uploadTask != null && uploadTask.getTask() != null) {
+			List<HpcDataObjectRegistrationItemDTO> failedRequests = uploadTask.getTask().getFailedItemsRequest();
+			if (failedRequests != null && !failedRequests.isEmpty())
+				retry = true;
+
+			for (HpcDataObjectRegistrationItemDTO dto : failedRequests) {
+				// Retry is not available for S3 based bulk requests
+				if (dto.getGlobusUploadSource() == null) {
+					retry = false;
+					break;
+				}
+			}
+		}
+		if (Boolean.TRUE.equals(retry)) {
+			List<String> message = new ArrayList<String>();
+			upload.getFailedItems().stream().forEach(x -> message.add(x.getMessage()));
+
+			t.setTransferStatus("Failed (" + String.join(",", message) + ")"
+					+ "<strong><a style='border: none;background-color: #F39530;height: 23px;width: 37px;border-radius: 11px;float: right;' class='btn btn-link btn-sm' aria-label='Retry Upload' href='#'"
+					+ "onclick='retryUpload(\"" + upload.getTaskId() + "\" ,\"" + task.getTaskName() + "\")'>"
+					+ "<img style='height: 13px;width: 13px;margin-top: -14px;' src='images/Status.refresh_icon-01.png' th:src='@{/images/Status.refresh_icon-01.png}' alt='Status refresh'></a></strong>");
+		} else {
+			t.setTransferStatus("Failed");
+		}
+	}
+
+	private void retryDownLoadFunc(HttpSession session, HpcUserDownloadRequest download, TaskManagerDto dto,
+			TaskManager task) throws DoeWebException {
+
+		String taskType = download.getType().name();
+		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		String queryUrl = null;
+		Boolean retry = true;
+		if (taskType.equalsIgnoreCase(HpcDownloadTaskType.COLLECTION.name())
+				|| taskType.equalsIgnoreCase(HpcDownloadTaskType.DATA_OBJECT_LIST.name())
+				|| taskType.equalsIgnoreCase(HpcDownloadTaskType.COLLECTION_LIST.name())) {
+
+			if (taskType.equalsIgnoreCase(HpcDownloadTaskType.COLLECTION.name()))
+				queryUrl = collectionDownloadServiceURL + "/" + task.getId();
+			else
+				queryUrl = queryServiceURL + "/" + task.getId();
+			HpcCollectionDownloadStatusDTO downloadTask = DoeClientUtil.getDataObjectsDownloadTask(authToken, queryUrl,
+					sslCertPath, sslCertPassword);
+
+			if (downloadTask != null
+					&& (!CollectionUtils.isEmpty(downloadTask.getFailedItems())
+							|| !CollectionUtils.isEmpty(downloadTask.getCanceledItems()))
+					&& downloadTask.getDestinationType() != null
+					&& (downloadTask.getDestinationType().equals(HpcDataTransferType.S_3)
+							|| downloadTask.getDestinationType().equals(HpcDataTransferType.GOOGLE_DRIVE))) {
+				retry = false;
+			}
+		} else if (taskType.equals(HpcDownloadTaskType.DATA_OBJECT.name())) {
+			queryUrl = dataObjectDownloadServiceURL + "/" + task.getId();
+			HpcDataObjectDownloadStatusDTO downloadTask = DoeClientUtil.getDataObjectDownloadTask(authToken, queryUrl,
+					sslCertPath, sslCertPassword);
+			if (downloadTask.getResult() != null && !downloadTask.getResult().equals(HpcDownloadResult.COMPLETED)) {
+				if (downloadTask.getDestinationType() != null
+						&& downloadTask.getDestinationType().equals(HpcDataTransferType.S_3)
+						|| downloadTask.getDestinationType().equals(HpcDataTransferType.GOOGLE_DRIVE)) {
+					retry = false;
+				}
+			} else {
+				retry = false;
+			}
+		}
+
+		if (Boolean.TRUE.equals(retry)) {
+			List<String> message = new ArrayList<String>();
+			download.getItems().stream().forEach(x -> message.add(x.getMessage()));
+			dto.setTransferStatus("Failed (" + String.join(",", message) + ")"
+					+ "<strong><a style='border: none;background-color: #F39530; height: 23px;width: 37px;border-radius: 11px;float: right;' class='btn btn-link btn-sm' aria-label='Retry download' href='#' "
+					+ "onclick='retryDownload(\"" + download.getTaskId() + "\" ,\"" + task.getTaskName() + "\", \""
+					+ download.getType().name() + "\")'>"
+					+ "<img style='height: 13px;width: 13px;margin-top: -14px;' src='images/Status.refresh_icon-01.png' th:src='@{/images/Status.refresh_icon-01.png}' alt='Status refresh'></a></strong>");
+
+		} else {
+			dto.setTransferStatus("Failed");
+		}
 
 	}
 
