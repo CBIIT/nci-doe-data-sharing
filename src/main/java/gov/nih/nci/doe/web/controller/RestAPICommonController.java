@@ -44,6 +44,7 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDownloadRequestDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectDTO;
 import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
 
 import java.io.IOException;
@@ -90,8 +91,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.v2.download}")
 	private String bulkDownloadUrl;
 
-	@Value("${gov.nih.nci.hpc.server.v2.dataObject}")
-	private String dataObjectAsyncServiceURL;
+	
 
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	private String serviceURL;
@@ -394,7 +394,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		}
 
 		if (Boolean.TRUE.equals(isPermissions)) {
-			final String requestUrl = UriComponentsBuilder.fromHttpUrl(this.dataObjectAsyncServiceURL)
+			final String requestUrl = UriComponentsBuilder.fromHttpUrl(dataObjectAsyncServiceURL)
 					.path("/{dme-archive-path}/download").buildAndExpand(path).encode().toUri().toURL()
 					.toExternalForm();
 
@@ -403,8 +403,12 @@ public class RestAPICommonController extends AbstractDoeController {
 
 			Response restResponse = client.invoke("POST", downloadRequest);
 			log.info("rest response:" + restResponse.getStatus());
-			if (restResponse.getStatus() == 200) {
 
+			if (restResponse.getStatus() == 200) {
+				/*Object value = restResponse.getMetadata().get("content-type");
+				if ("[application/octet-stream]".equalsIgnoreCase(value.toString())) {
+					log.info("response content type is application/octet-stream");
+				}*/
 				response.setContentType("application/octet-stream");
 				response.setHeader("Content-Disposition", "attachment; filename=" + "test");
 				IOUtils.copy((InputStream) restResponse.getEntity(), response.getOutputStream());
@@ -484,7 +488,8 @@ public class RestAPICommonController extends AbstractDoeController {
 				String dataObjectName = path.substring(path.lastIndexOf('/') + 1);
 
 				try {
-					taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "data_object", dataObjectName, doeLogin);
+					taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "data_object", dataObjectName,
+							doeLogin);
 					// store the auditing info
 					AuditingModel audit = new AuditingModel();
 					audit.setName(doeLogin);
@@ -549,10 +554,10 @@ public class RestAPICommonController extends AbstractDoeController {
 
 			if (Boolean.TRUE.equals(isPermissions)) {
 
-				HpcDataObjectListDTO dataObjectList = DoeClientUtil.getDatafiles(authToken, dataObjectServiceURL, path,
+				HpcDataObjectDTO dataObjectList = DoeClientUtil.getDatafiles(authToken, dataObjectAsyncServiceURL, path,
 						true, includeAcl, sslCertPath, sslCertPassword);
-				if (dataObjectList != null && CollectionUtils.isNotEmpty(dataObjectList.getDataObjects())) {
-					return new ResponseEntity<>(dataObjectList.getDataObjects(), HttpStatus.OK);
+				if (dataObjectList != null) {
+					return new ResponseEntity<>(dataObjectList, HttpStatus.OK);
 				}
 
 			}
@@ -613,7 +618,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 * @param collectionRegistration
 	 */
 	@PutMapping(value = "/collection/**")
-	public HttpStatus registerCollection(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
+	public Integer registerCollection(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
 			@RequestBody @Valid HpcCollectionRegistrationDTO collectionRegistration) throws DoeWebException {
 
@@ -683,7 +688,7 @@ public class RestAPICommonController extends AbstractDoeController {
 					}
 				}
 
-				return HttpStatus.valueOf(responseStatus);
+				return responseStatus;
 			}
 		}
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
@@ -698,7 +703,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 * 
 	 */
 	@PutMapping(value = "/v2/dataObject/**")
-	public HttpStatus registerDataObject(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
+	public Integer registerDataObject(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
 			@RequestPart("dataObjectRegistration") @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationRequestDTO dataObjectRegistration,
 			@RequestBody(required = false) @Valid MultipartFile doeDataFile) throws DoeWebException {
@@ -745,8 +750,8 @@ public class RestAPICommonController extends AbstractDoeController {
 				audit.setStartTime(new Date());
 				audit.setPath(path);
 				auditingService.saveAuditInfo(audit);
-				
-				return HttpStatus.valueOf(restResponse);
+
+				return restResponse;
 			}
 		}
 
