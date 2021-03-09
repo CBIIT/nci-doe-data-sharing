@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.apache.commons.io.IOUtils;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -89,8 +90,6 @@ public class RestAPICommonController extends AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.v2.download}")
 	private String bulkDownloadUrl;
-
-	
 
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	private String serviceURL;
@@ -353,7 +352,8 @@ public class RestAPICommonController extends AbstractDoeController {
 	 */
 	@PostMapping(value = "/dataObject/**/download")
 	public ResponseEntity<?> synchronousDownload(@RequestHeader HttpHeaders headers, HttpServletRequest request,
-			@ApiIgnore HttpSession session, HttpServletResponse response) throws DoeWebException, MalformedURLException {
+			@ApiIgnore HttpSession session, HttpServletResponse response)
+			throws DoeWebException, MalformedURLException {
 
 		log.info("download async:");
 		String path = request.getRequestURI().split(request.getContextPath() + "/dataObject/")[1];
@@ -419,14 +419,14 @@ public class RestAPICommonController extends AbstractDoeController {
 	 * 
 	 * @param downloadRequest
 	 * @throws DoeWebException
-	 * @throws MalformedURLException
+	 * @throws IOException
 	 * @throws Exception
 	 */
 	@PostMapping(value = "/v2/dataObject/**/download")
 	public ResponseEntity<?> asynchronousDownload(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
 			@RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO downloadRequest)
-			throws DoeWebException, MalformedURLException {
+			throws DoeWebException, IOException {
 
 		log.info("download async:" + downloadRequest);
 		log.info("Headers: {}", headers);
@@ -477,27 +477,38 @@ public class RestAPICommonController extends AbstractDoeController {
 			Response restResponse = client.invoke("POST", downloadRequest);
 			log.info("rest response:" + restResponse.getStatus());
 			if (restResponse.getStatus() == 200) {
-				HpcDataObjectDownloadResponseDTO downloadDTO = (HpcDataObjectDownloadResponseDTO) DoeClientUtil
-						.getObject(restResponse, HpcDataObjectDownloadResponseDTO.class);
+				Object value = restResponse.getMetadata().getFirst("content-type");
+				if ("application/octet-stream".equalsIgnoreCase(value.toString())) {
+					
+					log.info("response content type is application/octet-stream");
+					response.setContentType("application/octet-stream");
+					response.setHeader("Content-Disposition", "attachment; filename=" + "test");
+					IOUtils.copy((InputStream) restResponse.getEntity(), response.getOutputStream());
+					return new ResponseEntity<>(HttpStatus.OK);
 
-				String dataObjectName = path.substring(path.lastIndexOf('/') + 1);
+				} else {
+					HpcDataObjectDownloadResponseDTO downloadDTO = (HpcDataObjectDownloadResponseDTO) DoeClientUtil
+							.getObject(restResponse, HpcDataObjectDownloadResponseDTO.class);
 
-				try {
-					taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "data_object", dataObjectName,
-							doeLogin);
-					// store the auditing info
-					AuditingModel audit = new AuditingModel();
-					audit.setName(doeLogin);
-					audit.setOperation("Download");
-					audit.setStartTime(new Date());
-					audit.setPath(path);
-					audit.setTransferType("async");
-					audit.setTaskId(downloadDTO.getTaskId());
-					auditingService.saveAuditInfo(audit);
-				} catch (Exception e) {
-					log.error("error in save transfer" + e.getMessage());
+					String dataObjectName = path.substring(path.lastIndexOf('/') + 1);
+
+					try {
+						taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "data_object",
+								dataObjectName, doeLogin);
+						// store the auditing info
+						AuditingModel audit = new AuditingModel();
+						audit.setName(doeLogin);
+						audit.setOperation("Download");
+						audit.setStartTime(new Date());
+						audit.setPath(path);
+						audit.setTransferType("async");
+						audit.setTaskId(downloadDTO.getTaskId());
+						auditingService.saveAuditInfo(audit);
+					} catch (Exception e) {
+						log.error("error in save transfer" + e.getMessage());
+					}
+					return new ResponseEntity<>(downloadDTO, HttpStatus.OK);
 				}
-				return new ResponseEntity<>(downloadDTO, HttpStatus.OK);
 
 			}
 		}
