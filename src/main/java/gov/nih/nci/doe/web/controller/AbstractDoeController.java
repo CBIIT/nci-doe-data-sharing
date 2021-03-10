@@ -332,16 +332,20 @@ public abstract class AbstractDoeController {
 	}
 
 	public ResponseEntity<?> getMetaDataPermissionsList() {
+
 		log.info("get meta data permissions list");
 		String loggedOnUser = getLoggedOnUserInfo();
 		List<KeyValueBean> keyValueBeanResults = new ArrayList<>();
+
 		if (!StringUtils.isEmpty(loggedOnUser)) {
 			DoeUsersModel user = authenticateService.getUserInfo(loggedOnUser);
+
 			if (user != null && !StringUtils.isEmpty(user.getProgramName())) {
 				List<String> progList = Arrays.asList(user.getProgramName().split(","));
 				progList.stream().forEach(e -> keyValueBeanResults.add(new KeyValueBean(e, e)));
 			}
 		}
+
 		return new ResponseEntity<>(keyValueBeanResults, null, HttpStatus.OK);
 	}
 
@@ -412,6 +416,7 @@ public abstract class AbstractDoeController {
 		Integer restResponse = DoeClientUtil.updateCollection(authToken, serviceURL, dto, permissionGroups.getPath(),
 				sslCertPath, sslCertPassword);
 		log.info("rest response for update collection:" + restResponse);
+		
 		if (restResponse == 200 || restResponse == 201) {
 			// store the auditing info
 			try {
