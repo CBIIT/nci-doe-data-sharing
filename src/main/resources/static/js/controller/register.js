@@ -152,12 +152,14 @@ function validateForgotPassword () {
         	forgot_password.password = $("#forgot_password").val();
         	forgot_password.confirmPassword = $("#forgot_password_confirm").val();
         	
-        	invokeAjax('/forgotPassword','POST',JSON.stringify(forgot_password),postForgotPassword,null,null,'text');
+        	invokeAjax('/forgotPassword','POST',JSON.stringify(forgot_password),postForgotPassword,postForgotPasswordFailure,null,'text');
 		  },
 	});
 }
 
-
+function postForgotPasswordFailure(url, params, status, error, data) {
+	bootbox.alert("Unknown Error. Contact Technical Support!");
+}
 
 function postForgotPassword(data,status) {
 	$('#btnforgotPassword').prop('disabled',false);
