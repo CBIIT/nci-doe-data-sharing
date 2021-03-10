@@ -251,9 +251,9 @@ public class TaskManagerCotroller extends AbstractDoeController {
 				|| taskType.equalsIgnoreCase(HpcDownloadTaskType.COLLECTION_LIST.name())) {
 
 			if (taskType.equalsIgnoreCase(HpcDownloadTaskType.COLLECTION.name()))
-				queryUrl = collectionDownloadServiceURL + "/" + task.getId();
+				queryUrl = collectionDownloadServiceURL + "/" + task.getTaskId();
 			else
-				queryUrl = queryServiceURL + "/" + task.getId();
+				queryUrl = queryServiceURL + "/" + task.getTaskId();
 			HpcCollectionDownloadStatusDTO downloadTask = DoeClientUtil.getDataObjectsDownloadTask(authToken, queryUrl,
 					sslCertPath, sslCertPassword);
 
@@ -266,7 +266,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
 				retry = false;
 			}
 		} else if (taskType.equals(HpcDownloadTaskType.DATA_OBJECT.name())) {
-			queryUrl = dataObjectDownloadServiceURL + "/" + task.getId();
+			queryUrl = dataObjectDownloadServiceURL + "/" + task.getTaskId();
 			HpcDataObjectDownloadStatusDTO downloadTask = DoeClientUtil.getDataObjectDownloadTask(authToken, queryUrl,
 					sslCertPath, sslCertPassword);
 			if (downloadTask.getResult() != null && !downloadTask.getResult().equals(HpcDownloadResult.COMPLETED)) {
