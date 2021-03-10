@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
@@ -41,7 +40,6 @@ public class DoeCollectionController extends AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.model}")
 	private String hpcModelURL;
-
 
 	/**
 	 * Update collection
@@ -118,9 +116,8 @@ public class DoeCollectionController extends AbstractDoeController {
 				String[] attrValue = request.getParameterValues(paramName);
 				entry.setAttribute(attrName);
 				entry.setValue(attrValue[0]);
-				// if(StringUtils.isNotEmpty(entry.getValue())) {
+
 				metadataEntries.add(entry);
-				// }
 			} else if (paramName.startsWith("_addAttrName")) {
 				HpcMetadataEntry entry = new HpcMetadataEntry();
 				String attrId = paramName.substring("_addAttrName".length());
@@ -155,9 +152,7 @@ public class DoeCollectionController extends AbstractDoeController {
 				String[] attrValue = request.getParameterValues(paramName);
 				entry.setAttribute(attrName);
 				entry.setValue(attrValue[0]);
-				//if (StringUtils.isNotEmpty(entry.getValue())) {
-					metadataEntries.add(entry);
-				//}
+				metadataEntries.add(entry);
 			} else if (paramName.startsWith("_addAttrName")) {
 				HpcMetadataEntry entry = new HpcMetadataEntry();
 				String attrId = paramName.substring("_addAttrName".length());

@@ -271,15 +271,21 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 		try {
 			Integer restResponse = DoeClientUtil.updateCollection(authToken, serviceURL, registrationDTO,
 					doeCollection.getPath(), sslCertPath, sslCertPassword);
+
 			if (restResponse == 200 || restResponse == 201) {
+
 				// after collection is created, store the permissions.
 				String progList = request.getParameter("metaDataPermissionsList");
 				log.info("selected permissions" + progList);
 				HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL,
 						doeCollection.getPath(), false, sslCertPath, sslCertPassword);
+
 				if (collections != null && collections.getCollections() != null
 						&& !CollectionUtils.isEmpty(collections.getCollections())) {
+
 					HpcCollectionDTO collection = collections.getCollections().get(0);
+
+					// save collection permissions in MoDaC DB
 					metaDataPermissionService.savePermissionsList(getLoggedOnUserInfo(), progList,
 							collection.getCollection().getCollectionId(), doeCollection.getPath());
 
@@ -294,8 +300,8 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 
 				return "Collection is created!";
 			}
-		} catch (Exception e) {
-			log.debug("Error in update collection" + e.getMessage());
+		} catch (DoeWebException e) {
+			throw new DoeWebException("Failed to create collection due to: " + e.getMessage());
 		}
 		return null;
 	}

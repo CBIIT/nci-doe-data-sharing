@@ -59,6 +59,7 @@ public class DeleteCollectionController extends AbstractDoeController {
 				String deleted = DoeClientUtil.deleteCollection(authToken, serviceURL, collPath, sslCertPath,
 						sslCertPassword);
 				if (StringUtils.isNotEmpty(deleted) && deleted.equalsIgnoreCase("SUCCESS")) {
+					// TODO: delete from modac collection permissions and access group tables
 					return "SUCCESS";
 				} else {
 					return "Failed to delete collection." + deleted;
