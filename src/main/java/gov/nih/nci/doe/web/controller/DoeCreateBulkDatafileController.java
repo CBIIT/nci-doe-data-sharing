@@ -56,7 +56,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	TaskManagerService taskManagerService;
 
 	@GetMapping
-	public String home(Model model, HttpSession session, HttpServletRequest request) throws DoeWebException {
+	public String home(Model model, HttpSession session, HttpServletRequest request) throws Exception {
 
 		String code = request.getParameter("code");
 		model.addAttribute("clientId", clientId);
@@ -70,7 +70,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 				model.addAttribute("accessToken", accessToken);
 			} catch (Exception e) {
 				model.addAttribute("error", "Failed to redirect to Google for authorization: " + e.getMessage());
-				e.printStackTrace();
+				log.error("Failed to redirect to Google for authorization: " + e.getMessage());
 			}
 			model.addAttribute("authorized", "true");
 		}

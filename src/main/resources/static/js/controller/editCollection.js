@@ -11,9 +11,9 @@ function constructCollectionMetData(metadata,metaDataPath,isDataObject,permissio
 	var data = metadata;
 	$.each(data, function(key, value) {	
 		if(value.key.indexOf("_identifier") != -1 || value.key.indexOf("asset_type") != -1) {
-			$("#userMetaData tbody").append('<tr><td>' + value.displayName + '</td><td><input type="text" disabled="true" aria-label="value of meta data" name="zAttrStr_'+value.key+'" style="width:70%;" value="' + value.value + '"></td></tr>');
+			$("#userMetaData tbody").append("<tr><td>" + value.displayName + "</td><td><input type='text' disabled='true' aria-label='value of meta data' name='zAttrStr_"+value.key+"' style='width:70%;' value=\"" + value.value + "\"></td></tr>");
 		} else {
-          $("#userMetaData tbody").append('<tr><td>' + value.displayName + '</td><td><input type="text" aria-label="value of meta data" name="zAttrStr_'+value.key+'" style="width:70%;" value="' + value.value + '"></td></tr>');
+          $("#userMetaData tbody").append("<tr><td>" + value.displayName + "</td><td><input type='text' aria-label='value of meta data' name='zAttrStr_"+value.key+"' style='width:70%;' value=\"" + value.value + "\"></td></tr>");
 		}
 		
 	});
@@ -116,7 +116,7 @@ function postSuccessUpdatePermissions(data,status) {
 	
 }
 
-function editAccessPermissions(collectionId,metadata_path,msg,selectedCollection,collectionName,permissions) {
+function editAccessPermissions(collectionId,metadata_path,msg,selectedCollection,collectionName) {
 
 
   var parentAccessGroups;   
@@ -125,16 +125,14 @@ function editAccessPermissions(collectionId,metadata_path,msg,selectedCollection
 			$("#updateAccessPermissionsModal").find("#accessGroups").val(value.value);
 		} 
 			if(value.key.indexOf("parentAccessGroups") != -1) {
-			permissions.parentAccessGroups =value.value;
-			parentAccessGroups = value.value;
-		} 
+			  parentAccessGroups = value.value;
+		}   
 	
 	});
 	
 	$("#updateAccessPermissionsModal").find(".updateAccessMsg").html("");
 	$("#updateAccessPermissionsModal").find(".updateAccessGroupsBlock").hide();
-	$("#updateAccessPermissionsModal").find("#updateCollectionId").val(collectionId);		
-	$("#updateAccessPermissionsModal").find("#permissionGroups").val(permissions);
+	$("#updateAccessPermissionsModal").find("#updateCollectionId").val(collectionId);
 	$("#updateAccessPermissionsModal").find("#metadata_path").val(metadata_path);
 	$("#updateAccessPermissionsModal").find("#selectedCollection").val(selectedCollection);
 	$("#updateAccessPermissionsModal").find("#selectedCollectionName").text(collectionName);
@@ -180,7 +178,7 @@ function postSuccessAccessPermissions(data,status) {
 		$("#updateAccessPermissionsModal").find("#updateAccessGroupsList").next(".select2-container").show();
 		$("#updateAccessPermissionsModal").find("#editPublicAccess").prop("checked",false);
 		if(!data) {
-			$("#updateAccessPermissionsModal").find("#infoTxtForAccessGroups").html("<i class='fas fa-question-circle'> This collection inherits access status from the parent collection.</i>");
+			$("#updateAccessPermissionsModal").find("#infoTxtForAccessGroups").html("<i class='fas fa-question-circle'></i> This collection inherits access status from the parent collection.");
 			$("#updateAccessPermissionsModal").find("#editPublicAccess").prop("disabled",true);
 		}
 	}
@@ -197,11 +195,10 @@ function updateAccessGroupsFunction() {
 	$("#updateAccessPermissionsModal").find(".updateAccessMsg").html("");
 	$("#updateAccessPermissionsModal").find(".updateAccessGroupsBlock").hide();
 	var selectedAccessGroups = $("#updateAccessPermissionsModal").find("#updateAccessGroupsList").val();
-	var json = $("#updateAccessPermissionsModal").find("#permissionGroups").val();
 	var path = $("#updateAccessPermissionsModal").find("#metadata_path").val();
 	var selectedCollection = $("#updateAccessPermissionsModal").find("#selectedCollection").val();
 	var selectedCollectionId = $("#updateAccessPermissionsModal").find("#updateCollectionId").val();
-	var permissionGroups = JSON.parse(json);
+	var permissionGroups = {};
 	if($("#updateAccessPermissionsModal").find("#editPublicAccess:visible").is(":checked")){
 		permissionGroups.selectedAccessGroups ="public";
 	} else {

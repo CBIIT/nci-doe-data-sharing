@@ -113,7 +113,7 @@ public abstract class AbstractDoeController {
 	@ExceptionHandler({ Exception.class })
 	public @ResponseBody DoeResponse handleUncaughtException(Exception ex, WebRequest request,
 			HttpServletResponse response) {
-		log.error("Converting Uncaught exception to RestResponse : " + ex.getMessage(),ex);
+		log.error("Converting Uncaught exception to RestResponse : " + ex.getMessage(), ex);
 
 		response.setHeader("Content-Type", "application/json");
 		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -124,7 +124,7 @@ public abstract class AbstractDoeController {
 	@ExceptionHandler({ DoeWebException.class })
 	public @ResponseBody DoeResponse handleDoeWebException(DoeWebException ex, WebRequest request,
 			HttpServletResponse response) {
-		log.error("Converting DoeWeb exception to RestResponse : " + ex.getMessage(),ex);
+		log.error("Converting DoeWeb exception to RestResponse : " + ex.getMessage(), ex);
 		if (ex.getStatusCode() != null) {
 			response.setStatus(ex.getStatusCode());
 		} else {
@@ -194,10 +194,14 @@ public abstract class AbstractDoeController {
 					&& levelName.equalsIgnoreCase(entry.getLevelLabel())) {
 				String attrName = lookUpService.getDisplayName(levelName, entry.getAttribute());
 				KeyValueBean k = null;
+				// this is a temporary fix to escape json.stringify error with special
+				// characters
+				String updatedString = entry.getValue().replaceAll("[+.^',]", "");
 				if (!StringUtils.isEmpty(attrName)) {
-					k = new KeyValueBean(entry.getAttribute(), attrName, entry.getValue());
+
+					k = new KeyValueBean(entry.getAttribute(), attrName, updatedString);
 				} else {
-					k = new KeyValueBean(entry.getAttribute(), entry.getAttribute(), entry.getValue());
+					k = new KeyValueBean(entry.getAttribute(), entry.getAttribute(), updatedString);
 				}
 
 				entryList.add(k);
@@ -244,8 +248,7 @@ public abstract class AbstractDoeController {
 		return "No Permissions";
 	}
 
-	public void downloadToUrl(String urlStr, String fileName, HttpServletResponse response)
-			throws DoeWebException {
+	public void downloadToUrl(String urlStr, String fileName, HttpServletResponse response) throws DoeWebException {
 		try {
 			WebClient client = DoeClientUtil.getWebClient(urlStr, null, null);
 			Response restResponse = client.invoke("GET", null);
@@ -416,7 +419,7 @@ public abstract class AbstractDoeController {
 		Integer restResponse = DoeClientUtil.updateCollection(authToken, serviceURL, dto, permissionGroups.getPath(),
 				sslCertPath, sslCertPassword);
 		log.info("rest response for update collection:" + restResponse);
-		
+
 		if (restResponse == 200 || restResponse == 201) {
 			// store the auditing info
 			try {
