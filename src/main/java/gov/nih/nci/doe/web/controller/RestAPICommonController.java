@@ -708,7 +708,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	/**
 	 * register data object
 	 * 
-	 * @param doeDataFile
+	 * @param dataObject
 	 * @param dataObjectRegistration
 	 * 
 	 */
