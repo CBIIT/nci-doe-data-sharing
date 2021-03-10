@@ -472,7 +472,6 @@ public class DoeClientUtil {
 
 			Response restResponse = client.invoke("PUT", collectionDTO);
 			if (restResponse.getStatus() == 200 || restResponse.getStatus() == 201) {
-				// rerurn response.getStatus
 				return restResponse.getStatus();
 			} else {
 				String errorMessage = getErrorMessage(restResponse);

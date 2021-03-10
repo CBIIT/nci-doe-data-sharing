@@ -113,7 +113,7 @@ public abstract class AbstractDoeController {
 	@ExceptionHandler({ Exception.class })
 	public @ResponseBody DoeResponse handleUncaughtException(Exception ex, WebRequest request,
 			HttpServletResponse response) {
-		log.error("Converting Uncaught exception to RestResponse : " + ex.getMessage());
+		log.error("Converting Uncaught exception to RestResponse : " + ex.getMessage(),ex);
 
 		response.setHeader("Content-Type", "application/json");
 		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -124,7 +124,7 @@ public abstract class AbstractDoeController {
 	@ExceptionHandler({ DoeWebException.class })
 	public @ResponseBody DoeResponse handleDoeWebException(DoeWebException ex, WebRequest request,
 			HttpServletResponse response) {
-		log.error("Converting DoeWeb exception to RestResponse : " + ex.getMessage());
+		log.error("Converting DoeWeb exception to RestResponse : " + ex.getMessage(),ex);
 		if (ex.getStatusCode() != null) {
 			response.setStatus(ex.getStatusCode());
 		} else {
@@ -244,7 +244,7 @@ public abstract class AbstractDoeController {
 		return "No Permissions";
 	}
 
-	public void downloadToUrl(String urlStr, int bufferSize, String fileName, HttpServletResponse response)
+	public void downloadToUrl(String urlStr, String fileName, HttpServletResponse response)
 			throws DoeWebException {
 		try {
 			WebClient client = DoeClientUtil.getWebClient(urlStr, null, null);

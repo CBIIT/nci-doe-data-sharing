@@ -350,7 +350,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 * 
 	 * 
 	 */
-	@PostMapping(value = "/dataObject/**/download")
+	@PostMapping(value = "/dataObject/**/syncDownload")
 	public ResponseEntity<?> synchronousDownload(@RequestHeader HttpHeaders headers, HttpServletRequest request,
 			@ApiIgnore HttpSession session, HttpServletResponse response)
 			throws DoeWebException, MalformedURLException {
@@ -407,7 +407,7 @@ public class RestAPICommonController extends AbstractDoeController {
 			if (restResponse.getStatus() == 200) {
 				HpcDataObjectDownloadResponseDTO downloadDTO = (HpcDataObjectDownloadResponseDTO) DoeClientUtil
 						.getObject(restResponse, HpcDataObjectDownloadResponseDTO.class);
-				downloadToUrl(downloadDTO.getDownloadRequestURL(), 1000000, "test", response);
+				downloadToUrl(downloadDTO.getDownloadRequestURL(), "test", response);
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		}
@@ -486,6 +486,7 @@ public class RestAPICommonController extends AbstractDoeController {
 					log.info("response content type is application/octet-stream");
 					response.setContentType("application/octet-stream");
 					response.setHeader("Content-Disposition", "attachment; filename=" + "test");
+					//default buffer size is 4k
 					IOUtils.copy((InputStream) restResponse.getEntity(), response.getOutputStream());
 					return new ResponseEntity<>(HttpStatus.OK);
 
@@ -715,10 +716,10 @@ public class RestAPICommonController extends AbstractDoeController {
 	public Integer registerDataObject(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
 			@RequestPart("dataObjectRegistration") @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationRequestDTO dataObjectRegistration,
-			@RequestBody(required = false) @Valid MultipartFile doeDataFile) throws DoeWebException {
+			@RequestBody(required = false) @Valid MultipartFile dataObject) throws DoeWebException {
 
 		log.info("register data files: " + dataObjectRegistration);
-		log.info("multipart file: " + doeDataFile);
+		log.info("multipart file: " + dataObject);
 		log.info("Headers: {}", headers);
 		String path = request.getRequestURI().split(request.getContextPath() + "/v2/dataObject/")[1];
 		log.info("pathName: " + path);
@@ -749,7 +750,7 @@ public class RestAPICommonController extends AbstractDoeController {
 				}
 			}
 
-			Integer restResponse = DoeClientUtil.registerDatafile(authToken, doeDataFile, dataObjectAsyncServiceURL,
+			Integer restResponse = DoeClientUtil.registerDatafile(authToken, dataObject, dataObjectAsyncServiceURL,
 					dataObjectRegistration, path, sslCertPath, sslCertPassword);
 			if (restResponse == 200 || restResponse == 201) {
 				// store the auditing info
