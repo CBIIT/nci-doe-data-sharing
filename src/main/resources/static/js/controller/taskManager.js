@@ -100,7 +100,7 @@ function dataTableInitTaskManager() {
         },
 
         "initComplete": function (settings, json) {
-
+        	$('body').tooltip({selector: '[data-toggle="tooltip"]'});
         },
 
         "drawCallback": function (settings) {

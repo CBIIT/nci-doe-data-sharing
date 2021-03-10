@@ -471,10 +471,13 @@ public abstract class AbstractDoeController {
 				if (CollectionUtils.isNotEmpty(accessGrpList)) {
 					entryList.add(new KeyValueBean("selectedEntry", String.join(",", accessGrpList)));
 				} else {
+					// if no access groups exist, the collection access group is public
 					entryList.add(new KeyValueBean("selectedEntry", "public"));
 				}
 
 				// get parent access groups also if the collection level is Asset or Study
+				// based on parent access group, the collection level access groups can be
+				// restricted. At Program level, there is no restriction.
 				if (selectedPath.lastIndexOf('/') != -1
 						&& (levelName.equalsIgnoreCase("Asset") || levelName.equalsIgnoreCase("Study"))) {
 					String parentPath = selectedPath.substring(0, selectedPath.lastIndexOf('/'));
