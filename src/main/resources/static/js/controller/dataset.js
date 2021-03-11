@@ -16,11 +16,11 @@ function dataTableInitDataSet(isVisible,dataSetPath,accessgroups,permissions,col
     	 "paging": true,
     	 "ordering": true,
          "info": true,
-        "pageLength": 25,
-        oLanguage: {
+         "pageLength": 25,
+         oLanguage: {
             "sSearch": "Filter:"
-        },
-        "ajax": {
+         },
+         "ajax": {
             "url": "/getDataObjects",
             "type": "GET",
             "data": {path:dataSetPath},
@@ -116,44 +116,45 @@ function dataTableInitDataSet(isVisible,dataSetPath,accessgroups,permissions,col
                   }
               });
         	  
-           $(".downloadLink").click(function(e){
-        	   var path = $(this).attr('data-path');
-        	   var fileName = $(this).attr('data-fileName');  
-               downloadFunction(path,fileName);
-             });
+              $(".downloadLink").click(function(e){
+        	     var path = $(this).attr('data-path');
+        	     var fileName = $(this).attr('data-fileName');  
+                 downloadFunction(path,fileName);
+              });
            
-           $("#downloadSelectedDataSet").click(function(e){
-        	   onClickOfBulkDownloadBtn();
-           });
+              $("#downloadSelectedDataSet").click(function(e){
+        	       onClickOfBulkDownloadBtn();
+              });
            
 
-           $(".editDataFileCollectionMetadata").click(function(e){
-        	   $("#searchFragmentDiv").hide();
-        	   $("#dataSetFragment").hide();
-        	   $("#editCollectionFragment").show();
-        	   var metaDataPath = $(this).attr('metadata_path');
-        	   var fileName = $(this).attr('data-fileName');
-        	   var params= {selectedPath:metaDataPath,levelName:'DataObject',isDataObject:true};
-      			$.ajax({
-    				type : "GET",
+               $(".editDataFileCollectionMetadata").click(function(e){
+        	        $("#searchFragmentDiv").hide();
+        	        $("#dataSetFragment").hide();
+        	        $("#editCollectionFragment").show();
+        	        var metaDataPath = $(this).attr('metadata_path');
+        	        var fileName = $(this).attr('data-fileName');
+        	        var params= {selectedPath:metaDataPath,levelName:'DataObject',isDataObject:true};
+      			 
+        	      $.ajax({
+    				 type : "GET",
     			     url : '/browse/metaData',
     			     contentType : 'application/json',
     				 data : params,
     				 beforeSend: function () {
     			    	   $("#spinner").show();
     			           $("#dimmer").show();
-    			       },
+    			     },
     				 success : function(msg) {
     					 $("#spinner").hide();
     			         $("#dimmer").hide();
     			         constructCollectionMetData(msg,metaDataPath,true,null,null,fileName);
     				 },
-    				error : function(e) {
+    				 error : function(e) {
     					 console.log('ERROR: ', e);
     					 $("#spinner").hide();
     			         $("#dimmer").hide();
-    				}
-    			});
+    				 }
+    			   });
         	
            });
            
@@ -172,9 +173,9 @@ function dataTableInitDataSet(isVisible,dataSetPath,accessgroups,permissions,col
     	   clipboard.on('error', function(e) {
     	     console.log(e);
     	   });
-        $('#downloadSelectedMetadata').unbind('click').bind('click', function() {
-        	   exportDataObjectMetadata();
-        	  
+    	   
+           $('#downloadSelectedMetadata').unbind('click').bind('click', function() {
+        	   exportDataObjectMetadata();        	  
            });
            
            $(".downloadMetadata").click(function(e){
@@ -393,31 +394,31 @@ function openPopOverDataSet($this) {
     var sysMetadatalist = JSON.parse(sysMetadata);
     
     var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"><div class=\"popover-heading\">" +
-                "Metadata <a class=\"button closeBtn float-right\" href=\"javascript:void(0);\">" +
-                		"<i class=\"fa fa-times\"></i></a> </div><div class='popover-body'>";
+              "Metadata <a class=\"button closeBtn float-right\" href=\"javascript:void(0);\">" +
+              "<i class=\"fa fa-times\"></i></a> </div><div class='popover-body'>";
     var table = "";
     var content = "";
     
     if(userMetadataList) {
 
        ind += "<p><b>User Metadata </b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
-                "<div class='divTableBody'><div class='divTableRow'>" +
-                "<div class='divTableHead rowAttribute'>Attribute</div>" + 
-                "<div class='divTableHead'>Value</div></div>";
+              "<div class='divTableBody'><div class='divTableRow'>" +
+              "<div class='divTableHead rowAttribute'>Attribute</div>" + 
+              "<div class='divTableHead'>Value</div></div>";
 
-            $.each(userMetadataList, function( key, value ) {	
+              $.each(userMetadataList, function( key, value ) {	
                 content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
                         "<div class='divTableCell'>" + value.value + "</div></div>";
-            });
+               });
             content += "</div> </div><br/>";
            
      }
             
     if(sysMetadatalist) {
        content += "<p><b>Key System Metadata </b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
-                "<div class='divTableBody'><div class='divTableRow'>" +
-                "<div class='divTableHead rowAttribute'>Attribute</div>" + 
-                "<div class='divTableHead'>Value</div></div>";
+                  "<div class='divTableBody'><div class='divTableRow'>" +
+                  "<div class='divTableHead rowAttribute'>Attribute</div>" + 
+                  "<div class='divTableHead'>Value</div></div>";
 
             $.each(sysMetadatalist, function( key, value ) {	
                 content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +

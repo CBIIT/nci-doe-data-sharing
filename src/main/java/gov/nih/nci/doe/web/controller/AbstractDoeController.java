@@ -194,9 +194,9 @@ public abstract class AbstractDoeController {
 					&& levelName.equalsIgnoreCase(entry.getLevelLabel())) {
 				String attrName = lookUpService.getDisplayName(levelName, entry.getAttribute());
 				KeyValueBean k = null;
-				// this is a temporary fix to escape json.stringify error with special
-				// characters
-				String updatedString = entry.getValue().replaceAll("[+.^',]", "");
+				// this is a temporary fix to escape json.stringify error with single and double
+				// quotes
+				String updatedString = entry.getValue().replaceAll("[\"']", "");
 				if (!StringUtils.isEmpty(attrName)) {
 
 					k = new KeyValueBean(entry.getAttribute(), attrName, updatedString);
