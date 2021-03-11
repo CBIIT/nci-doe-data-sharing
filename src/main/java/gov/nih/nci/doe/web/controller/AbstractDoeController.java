@@ -220,7 +220,9 @@ public abstract class AbstractDoeController {
 				e -> e.getAttribute().equalsIgnoreCase(attrName) && levelName.equalsIgnoreCase(e.getLevelLabel()))
 				.findAny().orElse(null);
 		if (entry != null) {
-			return entry.getValue();
+			// this is a temporary fix to escape json.stringify error with single and double
+			// quotes
+			return entry.getValue().replaceAll("[\"']", "");
 		}
 		return null;
 	}
