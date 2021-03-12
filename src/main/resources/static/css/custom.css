@@ -1388,6 +1388,11 @@ text-align: center;
     position: relative;
     top: -0.2em;
 }
+.infoDownload {
+	font-size: 14px;font-weight: bold;font-style: italic;
+	    margin-left: 43px;
+    margin-bottom: 30px;
+}
 
 .drilldown-content {
     margin-left: 18px;
