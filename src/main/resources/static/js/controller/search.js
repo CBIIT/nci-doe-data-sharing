@@ -1,3 +1,4 @@
+
 $(document).ready(function () {
 	$("#landing-tab").removeClass('active');
 	$("#search-tab").addClass('active');
@@ -433,7 +434,7 @@ function renderDataSetName(data, type, row){
 
 	} else {
 		html += "<div class='col-md-12' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'>"+
-		        "&nbsp;&nbsp;&nbsp;<a href='#' class='dataSetFragment' collections = '" + JSON.stringify(search_results_json)+ "' " +
+		        "&nbsp;&nbsp;&nbsp;<a href='#' class='dataSetFragment' asset_metadata= '" + JSON.stringify(row.selfMetadata) + "' collections = '" + JSON.stringify(search_results_json)+ "' " +
 				"permissions_role = '" + row.dataSetPermissionRole + "' access_grp ='"+row.dataLevelAccessGroups +"' " +
 				"data_set_path = " + row.dataSetPath + ">" +
 				"<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span></a>" +
