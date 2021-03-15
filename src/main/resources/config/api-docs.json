@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "version": "1.11.0",
-    "description": "This user guide describes how to use the MoDaC API.",
+    "description": "This user guide describes how to use the MoDaC REST Application Programming Interface.\n\nThe MoDaC REST API provides the ability to upload and download assets,  manage associated metadata, and search for assets against these metadata. Assets include datasets and machine learning models.\n\nA *collection* is a logical directory on MoDaC. A data object represents an individual file. Data objects reside in collections. Collections can also contain other collections. Collections and data objects can be logically structured in a hierarchal manner, depicted with a tree structure with parents and children.\n\nA *metadata attribute* consists of the attribute name and the attribute value. Each object or collection is associated with its required and user defined metadata. The required metadata needs to be provided when the collection or object is first created.\n\nA *collection* is associated with a type, defined by the collection_type attribute.  MoDaC presently supports three collection types – Program, Study and Asset, organized hierarchically.  Program is the top level collection. A Program can contain one or more collections of type Study, and a Study can contain one of more collections of type Asset. The asset_type attribute denotes the type of an Asset. It can take on the value model or dataset.\n\nA *child* entity (collection or data object) always inherits the metadata of its parent and other ancestors in that hierarchy. Child entities can however override the parent metadata. This facilitates advanced searches where the data objects or collections can be searched based on their own metadata or their parent metadata. Searches can also be limited to a specific level in the hierarchy.",
     "title": "MoDaC API"
   },
   "host": "fsdmel-modac01t.ncifcrf.gov",
@@ -10,8 +10,8 @@
   "paths": {
     "/api/collection/{path}": {
       "get": {
-        "description": "This service allows you to get information about a specific collection including all of its hierarchical metadata. Use the path parameter to specify the path to the collection of interest. In the output, the collection and selfMetadataEntries elements provide information about the collection you specified, while the parentMetadataEntries element provides information about the collection that contains the collection you specified. If you set the list parameter to true, the subCollections element lists the child collections of this collection and the dataObjects element lists the data objects of this collection. The list parameter is optional and its default is false. \n\n1. **CURL COMMAND**\n  ```\n  curl -k -H \"Content-Type: application/json\" -d @<attributes-file.json> -X GET <server>/api/collection/{path}?list=[true|false] -H \"Accept: application/json\" -D  <response-header> -o <response-message.json> -u <Your Email ID>\n  \n  ```\n\n  2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k 'https://modac.cancer.gov/api/collection/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/asset_udit?list=true' -D header.txt -o output.txt -u myemailid@nih.gov\n  ```\n",
-        "summary": "Get Collection Information",
+        "description": "This service allows you to get information about a specific collection including all of its hierarchical metadata. Use the path parameter to specify the path to the collection of interest. In the output, the collection and selfMetadataEntries elements provide information about the collection you specified, while the parentMetadataEntries element provides information about the collection that contains the collection you specified. If you set the list parameter to true, the subCollections element lists the child collections of this collection and the dataObjects element lists the data objects of this collection. The list parameter is optional and its default is false. \n\n**Query Params**\n*list* – If set to true, the API will list the child collections and data objects of this collection. This is an optional parameter and default is false\n\n*includeAcl* – If set to true, the API will provide the permission of the requesting user to this collection (READ, WRITE or OWN). This is an optional parameter and the default is false\n\n\n1. **CURL COMMAND**\n  ```\n  curl -k -H \"Content-Type: application/json\" -d @<attributesFile.json> -X GET <server>/api/collection/{path}?list=[true|false]&includeAcl=[true|false] -H \"Accept: application/json\" -D  <response-header> -o <response-message.json> -u <Your Email ID>\n  \n  ```\n\n  2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k 'https://modac.cancer.gov/api/collection/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/asset_user1?list=true&includeAcl=true' -D header.txt -o output.txt -u myemailid@nih.gov\n  ```\n",
+        "summary": "Get collection information.",
         "tags": [
           "Get Metadata"
         ],
@@ -30,16 +30,26 @@
             "description": ""
           },
           {
+            "name": "includeAcl",
+            "in": "query",
+            "description": "includeAcl",
+            "required": false,
+            "type": "boolean"
+          },
+          {
             "name": "list",
             "in": "query",
+            "description": "list",
             "required": false,
-            "type": "boolean",
-            "description": ""
+            "type": "boolean"
           }
         ],
         "responses": {
           "200": {
-            "description": "HTTP/1.1 200 OK\n**Output**:\n\n\n          {\n                \"collections\": [{\n                  \"collection\": {\n                    \"collectionId\": 941408,\n                          \"collectionName\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/asset_udit\",\n                    \"absolutePath\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/asset_udit\",\n                    \"collectionParentName\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1\",\n                    \"collectionOwnerName\": \"ncidoesvct2\",\n                    \"collectionOwnerZone\": \"ncifHpcZone\",\n                    \"collectionMapId\": \"0\",\n                    \"collectionInheritance\": \"1\",\n                    \"comments\": \"\",\n                    \"info1\": \"\",\n                    \"info2\": \"\",\n                    \"createdAt\": \"2021-01-21T06:15:13.000+00:00\",\n                    \"specColType\": \"NORMAL\",\n                    \"subCollections\": [],\n                    \"dataObjects\": [{\n                      \"id\": 941458,\n                      \"path\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/asset_udit/async_upload_completion.png\",\n                      \"dataSize\": 0,\n                      \"createdAt\": null\n                    }, {\n                      \"id\": 941448,\n                      \"path\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/asset_udit/sampelnotes.rtfd.zip\",\n                      \"dataSize\": 0,\n                      \"createdAt\": null\n                    }, {\n                      \"id\": 941434,\n                      \"path\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/asset_udit/test_1_21_2021_1.txt\",\n                      \"dataSize\": 0,\n                      \"createdAt\": null\n                    }]\n                  },\n                  \"metadataEntries\": {\n                    \"selfMetadataEntries\": [{\n                      \"attribute\": \"poc_email\",\n                      \"value\": \"us39@georgetown.edu\",\n                      \"unit\": null,\n                      \"level\": null,\n                      \"levelLabel\": null,\n                      \"collectionId\": null\n                    }, {\n                      \"attribute\": \"access_group\",\n                      \"value\": \"public\",\n                      \"unit\": \"EMPTY_ATTR_UNIT\",\n                      \"level\": 3,\n                      \"levelLabel\": \"Program\",\n                      \"collectionId\": null\n                    }, {\n                      \"attribute\": \"dme_data_id\",\n                      \"value\": \"NCI-DME-MS01-936666\",\n                      \"unit\": \"EMPTY_ATTR_UNIT\",\n                      \"level\": 3,\n                      \"levelLabel\": \"Program\",\n                      \"collectionId\": null\n                    }]\n                  },\n                  \"permission\": \"OWN\"\n                }],\n                \"collectionPaths\": [],\n                \"page\": null,\n                \"limit\": null,\n                \"totalCount\": null\n              }",
+            "schema": {
+              "$ref": "#/definitions/HpcCollectionListDTORes"
+            },
+            "description": "HTTP/1.1 200 OK\n**Output**:\n\n\n         [{\n            \"collection\": {\n              \"collectionId\": 941408,\n              \"collectionName\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/asset_user1\",\n              \"absolutePath\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/asset_user1\",\n              \"collectionParentName\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1\",\n              \"collectionOwnerName\": \"ncidoesvct2\",\n              \"collectionOwnerZone\": \"ncifHpcZone\",\n              \"collectionMapId\": \"0\",\n              \"collectionInheritance\": \"1\",\n              \"comments\": \"\",\n              \"info1\": \"\",\n              \"info2\": \"\",\n              \"createdAt\": \"2021-01-21T06:15:13.000+00:00\",\n              \"specColType\": \"NORMAL\",\n              \"subCollections\": [],\n              \"dataObjects\": [{\n                \"id\": 941458,\n                \"path\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/asset_user1/test_results.xlsx\",\n                \"dataSize\": 0,\n                \"createdAt\": null\n              }, {\n                \"id\": 945090,\n                \"path\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/asset_user1/combined_rna_data_combat.fastq\",\n                \"dataSize\": 0,\n                \"createdAt\": null\n              }, {\n                \"id\": 941448,\n                \"path\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/asset_user1/combined_rnas.rtfd.zip\",\n                \"dataSize\": 0,\n                \"createdAt\": null\n              }, {\n                \"id\": 941434,\n                \"path\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/asset_user1/test_1_21_2021_1.txt\",\n                \"dataSize\": 0,\n                \"createdAt\": null\n              }]\n            },\n            \"metadataEntries\": {\n              \"selfMetadataEntries\": [{\n                \"attribute\": \"test_attribute_1_29_2021\",\n                \"value\": \"Udit_test\",\n                \"unit\": null,\n                \"level\": null,\n                \"levelLabel\": null,\n                \"collectionId\": null\n              }, {\n                \"attribute\": \"metadata_updated\",\n                \"value\": \"02-05-2021 17:16:06\",\n                \"unit\": null,\n                \"level\": null,\n                \"levelLabel\": null,\n                \"collectionId\": null\n              }, {\n                \"attribute\": \"Testing2_5\",\n                \"value\": \"testiing\",\n                \"unit\": null,\n                \"level\": null,\n                \"levelLabel\": null,\n                \"collectionId\": null\n              }],\n              \"parentMetadataEntries\": [{\n                \"attribute\": \"configuration_id\",\n                \"value\": \"8cfbd72f-2509-4ece-a954-88f2d7121998\",\n                \"unit\": \"EMPTY_ATTR_UNIT\",\n                \"level\": 2,\n                \"levelLabel\": \"Study\",\n                \"collectionId\": null\n              }, {\n                \"attribute\": \"dme_data_id\",\n                \"value\": \"936ij672\",\n                \"unit\": \"EMPTY_ATTR_UNIT\",\n                \"level\": 2,\n                \"levelLabel\": \"Study\",\n                \"collectionId\": null\n              }, {\n                \"attribute\": \"metadata_updated\",\n                \"value\": \"01-29-2021 15:17:04\",\n                \"unit\": \"EMPTY_ATTR_UNIT\",\n                \"level\": 2,\n                \"levelLabel\": \"Study\",\n                \"collectionId\": null\n              }, {\n                \"attribute\": \"data_id\",\n                \"value\": \"1343s22r4\",\n                \"unit\": \"EMPTY_ATTR_UNIT\",\n                \"level\": 3,\n                \"levelLabel\": \"Program\",\n                \"collectionId\": null\n              }]\n            },\n            \"permission\": \"READ\"\n          }]",
             "headers": {}
           },
           "400": {
@@ -51,8 +61,8 @@
         }
       },
       "put": {
-        "description": "If you have a MoDaC user account with upload permission, you can add a collection (Program, Study, or Asset) as follows:\n•  If the collection has any custom metadata, you can update that metadata. \n\n•  If that existing collection has been configured to contain another collection, you can add a collection. \n\n•  If that existing collection has been configured to contain data files, you can add files. \n\nBy default, this service expects the containing collection for the collection you are registering to already exist at time of registration. However, you can optionally request that this service create the parent and higher-level collections. To do so, set the ‘createParentCollections’ indicator in the json file to true, and provide a list of metadata to create the parent collections through parentCollectionsBulkMetadataEntries. In this case, this service creates the entire collection hierarchy above the registered collection.\n\n1. **CURL COMMAND**\n  ```\n  curl -k -H \"Content-Type: application/json\" -d @<attributes-file.json> -X PUT <server>/api/collection/{path} -H \"Accept: application/json\" -D  <response-header> -o <response-message.json> -u <Your Email Id>\n  \n  ```\n  2.  **Attributes-file.json Example**\n  ```\n     {\n        \"metadataEntries\": [{\n            \"attribute\": \"study_identifier\",\n            \"value\": \"study_1_udit\"\n          },\n          {\n            \"attribute\": \"collection_type\",\n            \"value\": \"Study\"\n          }\n        ],\n        \"createParentCollections\": true,\n        \"parentCollectionsBulkMetadataEntries\": {\n          \"defaultCollectionMetadataEntries\": [{\n            \"attribute\": \"collection_type\",\n            \"value\": \"Folder\"\n          }]\n        }\n      }\n\n  ```\n  3. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -H \"Content-Type: application/json\" -d @collection.json -X PUT https://modac.cancer.gov/api/collection/NCI_DOE_Archive/testnew/1_18_2020 -H \"Accept: application/json\" -D header.txt -o output.json -u us39@georgetown.edu\n  ```\n",
-        "summary": "Register a Collection",
+        "description": "This service allows you to register an empty collection. If you have a MoDaC user account with upload permission, you can add an empty collection (Program, Study, or Asset). If an existing collection has user metadata, you can update that metadata. If an existing collection has been configured to contain another collection, you can add a collection. \n\n\nBy default, this service expects the containing collection for the collection you are registering to already exist at the time of registration. However, you can optionally request that this service create the parent and higher-level collections. To do so, set the ‘createParentCollections’ indicator in the json file to true, and provide the list of metadata for the parent collections through parentCollectionsBulkMetadataEntries. In this case, this service creates the entire collection hierarchy above the registered collection.\n\n1. **CURL COMMAND**\n  ```\n  curl -k -H \"Content-Type: application/json\" -d @<attributesFile.json> -X PUT <server>/api/collection/{path} -H \"Accept: application/json\" -D  <response-header> -o <response-message.json> -u <Your Email Id>\n  \n  ```\n  2.  **attributesFile.json Example**\n  ```\n     {\n     \"createParentCollections\": true,\n        \"metadataEntries\": [{\n            \"attribute\": \"study_identifier\",\n            \"value\": \"study_1_\"\n          },\n          {\n            \"attribute\": \"collection_type\",\n            \"value\": \"Study\"\n          }\n        ],\n        \n        \"parentCollectionsBulkMetadataEntries\": {\n          \"defaultCollectionMetadataEntries\": [{\n            \"attribute\": \"collection_type\",\n            \"value\": \"Folder\"\n          }]\n        }\n      }\n\n  ```\n  3. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -H \"Content-Type: application/json\" -d @collection.json -X PUT https://modac.cancer.gov/api/collection/NCI_DOE_Archive/testnew/1_18_2020 -H \"Accept: application/json\" -D header.txt -o output.json -u us39@nih.gov\n  ```\n",
+        "summary": "Register an empty collection.",
         "tags": [
           "Upload Data"
         ],
@@ -69,11 +79,20 @@
             "type": "string",
             "pattern": ".*",
             "description": ""
+          },
+          {
+            "in": "body",
+            "name": "collectionRegistration",
+            "description": "collectionRegistration",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/HpcCollectionRegistrationDTO"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "HTTP/1.1 200 OK",
+            "description": "HTTP/1.1 200",
             "headers": {}
           },
           "400": {
@@ -87,8 +106,8 @@
     },
     "/api/collection/query": {
       "post": {
-        "description": "This service allows you to perform a query for a collection. \n\n  1. **CURL COMMAND TO GET GET A BOOKMARK BY NAME**\n  ```\n  curl -k -H \"Content-Type: application/json\" -d @<attributes-file.json> -X POST <server>/api/collection/query -H \"Accept: application/json\" -D  <response-header> -o <response-message.json> -u <Your Email ID>\n  \n  ```\n  2.  **Attributes-file.json Example**\n  ```\n         {\n          \"compoundQuery\": {\n          \"operator\": \"AND\",\n          \"queries\": [{\n        \"attribute\": \"access_group\",\n        \"value\": \"public\",\n        \"operator\": \"LIKE\"\n          },\n                         {\n            \"attribute\": \"collection_type\",\n          \"value\": \"Asset\",\n        \"operator\": \"LIKE\"\n          }]},\n              \"detailedResponse\": true,\n            \"page\": 1,\n            \"pageSize\": 100,\n            \"totalCount\": true,\n  \n        }\n\n\n  ```\n  3. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k -H \"Content-Type: application/json\" -d @Attributes-file.json -X POST https://modac.cancer.gov/api/collection/query -H \"Accept: application/json\" -D demo2_udit.txt -o output_2_udit.json -u us39@georgetown.edu\n  ``` \n",
-        "summary": "Find Collection by Metadata Query",
+        "description": "This service allows you to perform a query for a collection. To do a collection query, first we define the simple query, then we show how to combine multiple simple queries into a compound query.\n\n\n  Simple query is the basic building block of the compound query. It consists of :\n    •  \"attribute\"\n    •  \"value\"\n    •  \"operator\"\n    •  “levelFilter”\n    •  “attributeMatch”\n    \n   Multiple simple queries can be combined to create desired search criteria with a join operator. \n      \n   **Compound Query**:\n      Compound query consists of three parts:\n      1.  Join operator\n      2.  List of queries (filtering criteria)\n      3.  List of Compound queries (filtering criteria)\n      \n  Compound query should at least have one simple query that could be part of list of queries or list of nested compound queries.\n      \n  **Join Operator**:\n      Join operator is used to combine multiple simple or compound queries or both (i.e., simple and compound). Valid values are “AND”, “OR”.\n      \n  **List of queries**:\n      List of queries are collection of one or more simple queries combined with join operator. \n      Example:\n      \n       {\n                \"queries\":  [\n          {\n              \"attribute\": \"name\",\n              \"value\": \"Experiment1\",\n              \"operator\": \"EQUAL\",\n              \"levelFilter\": {\n                  \"level\": 1,\n                  \"operator\": \"EQUAL\"\n              }\n           },\n          {\n              \"attribute\": \"pi_name\",\n              \"value\": \"John Doe\",\n              \"operator\": \"EQUAL\"\n           }\n       ]\n       }\n\n  **List of compound queries**:\n    An optional list of compound query. The top most compound query can include a nested list of compound queries up to 10 nesting levels.\n    \n  This is a nested list of compound queries to support complex search criteria\n  \n  Example:\n    \n                        {\n              \"compoundQuery\": {\n                \"operator\": \"OR\",\n                \"queries\": [{\n                  \"attribute\": \"data_transfer_completed\",\n                  \"value\": \"08-09-2017 22:18:26\",\n                  \"format\": \"MM-DD-YYYHH24:MI:SS\",\n                  \"operator\": \"TIMESTAMP_LESS_THAN\"\n                }]\n              },\n              \"detailedResponse\": false,\n              \"page\": 1,\n              \"totalCount\": true\n            }\n\n  \n  **detailedResponse**: By default, search lists returns only path of matched resulted collections. If “detailedResponse=true”, collections are returned with metadata.\n  **page**: Ask for a specific page of results. By default, the query will return the first 100 results in page 1, the second 100 in page 2, etc. If omitted, page 1 is fetched. \n  **totalCount**: If set to ‘true’, a total count of collections matching the query regardless of the query limit and page will be returned. By default if omitted, this is set to false and no total count will be returned.\n  \n  \n  \n  \n  \n  \n\n  1. **CURL COMMAND TO GET GET A BOOKMARK BY NAME**\n  ```\n  curl -k -H \"Content-Type: application/json\" -d @<attributesFile.json> -X POST <server>/api/collection/query -H \"Accept: application/json\" -D  <response-header> -o <response-message.json> -u <Your Email ID>\n  \n  ```\n  2.  **attributesFile.json Example**\n  ```\n         {\n          \"compoundQuery\": {\n          \"operator\": \"AND\",\n          \"queries\": [{\n        \"attribute\": \"access_group\",\n        \"value\": \"public\",\n        \"operator\": \"LIKE\"\n          },\n                         {\n            \"attribute\": \"collection_type\",\n          \"value\": \"Asset\",\n        \"operator\": \"LIKE\"\n          }]},\n              \"detailedResponse\": true,\n            \"page\": 1,\n            \"pageSize\": 100,\n            \"totalCount\": true,\n  \n        }\n\n\n  ```\n  3. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k -H \"Content-Type: application/json\" -d @attributesFile.json -X POST https://modac.cancer.gov/api/collection/query -H \"Accept: application/json\" -D demo2_.txt -o output_2_.json -u us39@nih.gov\n  ``` \n",
+        "summary": "Find collection by metadata query.",
         "tags": [
           "Search Data"
         ],
@@ -97,10 +116,23 @@
         "produces": [
           "application/json"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "compoundMetadataQuery",
+            "description": "compoundMetadataQuery",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/HpcCompoundMetadataQueryDTO"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "HTTP/1.1 200 OK\n**Output**:\n\n             {\n                \"collections\": [{\n                  \"collection\": {\n                    \"collectionId\": 936753,\n                    \"collectionName\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data\",\n                    \"absolutePath\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data\",\n                    \"collectionParentName\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1\",\n                    \"collectionOwnerName\": \"ncidoesvct2\",\n                    \"collectionOwnerZone\": \"ncifHpcZone\",\n                    \"collectionMapId\": \"0\",\n                    \"collectionInheritance\": \"1\",\n                    \"comments\": null,\n                    \"info1\": null,\n                    \"info2\": null,\n                    \"createdAt\": \"2020-09-24T16:10:22.000+00:00\",\n                    \"specColType\": null,\n                    \"subCollections\": [],\n                    \"dataObjects\": []\n                  },\n                  \"metadataEntries\": {\n                    \"selfMetadataEntries\": [{\n                      \"attribute\": \"configuration_id\",\n                      \"value\": \"8cfbd72f-2509-4ece-a954-88f2d7121998\",\n                      \"unit\": null,\n                      \"level\": 1,\n                      \"levelLabel\": \"Asset\",\n                      \"collectionId\": 936753\n                    }, {\n                      \"attribute\": \"dme_data_id\",\n                      \"value\": \"NCI-DME-MS01-936753\",\n                      \"unit\": null,\n                      \"level\": 1,\n                      \"levelLabel\": \"Asset\",\n                      \"collectionId\": 936753\n                    }, {\n                      \"attribute\": \"poc_email\",\n                      \"value\": \"mounica.ganta@gmail.com\",\n                      \"unit\": null,\n                      \"level\": 1,\n                      \"levelLabel\": \"Asset\",\n                      \"collectionId\": 936753\n                    }, {\n                      \"attribute\": \"access_group\",\n                      \"value\": \"public\",\n                      \"unit\": null,\n                      \"level\": 1,\n                      \"levelLabel\": \"Asset\",\n                      \"collectionId\": 936753\n                    }}]\n                  },\n                  \"permission\": null\n                }],\n                \"collectionPaths\": [],\n                \"page\": 1,\n                \"limit\": 100,\n                \"totalCount\": 71\n              }",
+            "schema": {
+              "$ref": "#/definitions/HpcCollectionListDTORes"
+            },
+            "description": "HTTP/1.1 200 \n**Output**:\n\n             {\n                \"collections\": [{\n                  \"collection\": {\n                    \"collectionId\": 936753,\n                    \"collectionName\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data\",\n                    \"absolutePath\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data\",\n                    \"collectionParentName\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1\",\n                    \"collectionOwnerName\": \"ncidoesvct2\",\n                    \"collectionOwnerZone\": \"ncifHpcZone\",\n                    \"collectionMapId\": \"0\",\n                    \"collectionInheritance\": \"1\",\n                    \"comments\": null,\n                    \"info1\": null,\n                    \"info2\": null,\n                    \"createdAt\": \"2020-09-24T16:10:22.000+00:00\",\n                    \"specColType\": null,\n                    \"subCollections\": [],\n                    \"dataObjects\": []\n                  },\n                  \"metadataEntries\": {\n                    \"selfMetadataEntries\": [{\n                      \"attribute\": \"configuration_id\",\n                      \"value\": \"8cfbd72f-2509-4ece-a954-88f2d7121998\",\n                      \"unit\": null,\n                      \"level\": 1,\n                      \"levelLabel\": \"Asset\",\n                      \"collectionId\": 936753\n                    }, {\n                      \"attribute\": \"dme_data_id\",\n                      \"value\": \"NCI-DME-MS01-936753\",\n                      \"unit\": null,\n                      \"level\": 1,\n                      \"levelLabel\": \"Asset\",\n                      \"collectionId\": 936753\n                    }, {\n                      \"attribute\": \"poc_email\",\n                      \"value\": \"sehgalu2a@nih.gov\",\n                      \"unit\": null,\n                      \"level\": 1,\n                      \"levelLabel\": \"Asset\",\n                      \"collectionId\": 936753\n                    }, {\n                      \"attribute\": \"access_group\",\n                      \"value\": \"public\",\n                      \"unit\": null,\n                      \"level\": 1,\n                      \"levelLabel\": \"Asset\",\n                      \"collectionId\": 936753\n                    }}]\n                  },\n                  \"permission\": null\n                }],\n                \"collectionPaths\": [],\n                \"page\": 1,\n                \"limit\": 100,\n                \"totalCount\": 71\n              }",
             "headers": {}
           },
           "400": {
@@ -114,8 +146,8 @@
     },
     "/api/dataObject/{path}/generateDownloadRequestURL": {
       "post": {
-        "description": "If you have a MoDaC user account, you can download that data. This service allows you to generate a download request URL to download data file directly from MoDaC.\n\n1. **CURL COMMAND**\n   ```\n   curl -k -H \"Content-Type: application/json\" -X GET <server>/api/ dataObject/{path}/generateDownloadRequestURL -H \"Accept: application/json\" -D  <response-header> -o <response-message.json> -u <Your Email Id>\n  \n   ```\n   2. **EXAMPLE - CURL COMMAND**\n   ```\n   curl -k -H \"Content-Type: application/json\" -X GET https://modac.cancer.gov/api/dataObject/NCI_DOE_Archive/testnew/12_1_2020/Data_12_1/bulk_metadata_file2.txt/generateDownloadRequestURL -H \"Accept: application/json\" -D demo1_udit.txt -o output_1_udit.json -u us39@georgetown.edu\n   ``` \n",
-        "summary": "Generate a Download Request URL",
+        "description": "\nThis service allows you to generate a download request URL that can then be used to download the data file directly from MoDaC.\n \n If you have a MoDaC user account, you can download that data.\n\n\n 1. **CURL COMMAND**\n    ```\n    curl -k -H \"Content-Type: application/json\" -X GET <server>/api/ dataObject/{path}/generateDownloadRequestURL -H \"Accept: application/json\" -D  <response-header> -o <response-message.json> -u <Your Email Id>\n   \n    ```\n    2. **EXAMPLE - CURL COMMAND**\n    ```\n    curl -k -H \"Content-Type: application/json\" -X GET https://modac.cancer.gov/api/dataObject/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/asset_user1/File1.fastq/generateDownloadRequestURL -H \"Accept: application/json\" -D demo1_.txt -o output_1_.json -u us39@nih.gov\n    ``` \n",
+        "summary": "Generate a download request URL.",
         "tags": [
           "Download Data"
         ],
@@ -136,7 +168,10 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/HpcDataObjectDownloadResponseDTO"
+            },
+            "description": "HTTP/1.1 200 \n**Output**:\n\n\n    {\n    \"downloadRequestURL\": \"http://s3-nci-north.ha.nci.nih.gov/MoDaC-prod-bucket/NCI_DOE_Archive/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/asset_user1/File1.fastq?X-Amz-Algorithm=AWS4-HMAC-SH-Signature=88b826fc411db2838f3ef1244ace1786ce5dcc7d14ffb78e070f6d131ec0a4e1\"\n    }",
             "headers": {}
           },
           "400": {
@@ -150,8 +185,8 @@
     },
     "/api/dataObject/query": {
       "post": {
-        "description": "This service allows you to perform a query for a data file. You can perform a simple query, or you can combine multiple simple queries into a compound query.\n\nA simple query consists of the following parts: \n\n•  \"attribute\"\n\n•  \"value\"\n\n•  \"operator\"\n\n•  “levelFilter”\n\n•  “attributeMatch”\n\nA compound query consists of the following parts:\n\n1.  Join operator\n\n2.  List of queries (filtering criteria)\n\n3.  List of compound queries (filtering criteria)\n\nA compound query should at least have one simple query that could be part of a list of queries or a list of nested compound queries.\n\nYou can use a join operator to combine multiple simple or compound queries (or both simple and compound). Valid values are as follows: \n\n“AND” \n\n“OR”\n\nConsider the following indicators: \n\n•detailedResponse: By default, the search returns only the path of matched resulted data files. If “detailedResponse=true”, this service returns data files with metadata.\n\n•page: Ask for a specific page of results. By default, the query returns the first 100 results in page 1, the second 100 in page 2, and so on. If omitted, the query fetches page 1. \n\n•totalCount: If you set this indicator to ‘true’, this service returns a total count of data files matching the query regardless of the query limit and page. The default for this indicator is false, so if you omit it, this service does not return a total count. \n\n1. **CURL COMMAND**\n```\ncurl -k -H \"Content-Type: application/json\" -d @<attributes-file.json> -X POST <server>/api/dataobject/query -H \"Accept: application/json\" -D  <response-header> -o <response-message.json> -u <Your Email Id>\n\n```\n2.  **Attributes-file.json Example**\n```\n    {\n    \"compoundQuery\": {\n      \"operator\": \"AND\",\n      \"queries\": [{\n          \"attribute\": \"asset_identifier\",\n          \"value\": \"H1_Selectivity_Assay\",\n          \"operator\": \"LIKE\"\n        },\n        {\n          \"attribute\": \"data_transfer_status\",\n          \"value\": \"ARCHIVED\",\n          \"operator\": \"LIKE\"\n                  }\n                ]\n              },\n          \"page\": 1,\n          \"totalCount\": true\n        }\n\n```\n3. **EXAMPLE - CURL COMMAND**\n```\ncurl -H \"Content-Type: application/json\" -d @dataobjectquery.json -X POST https://modac.cancer.gov/api/dataObject/query?returnParent=true -H \"Accept: application/json\" -D header.txt -o output_true.json -u us39@georgetown.edu\n```\n\n",
-        "summary": "Find Data File by Compound Metadata Query",
+        "description": "This service allows you to perform a query for a data file. You can perform a simple query, or you can combine multiple simple queries into a compound query.\n\nA simple query consists of the following parts: \n\n•  \"attribute\"\n\n•  \"value\"\n\n•  \"operator\"\n\n•  “levelFilter”\n\n•  “attributeMatch”\n\nA compound query consists of the following parts:\n\n1.  Join operator\n\n2.  List of queries (filtering criteria)\n\n3.  List of compound queries (filtering criteria)\n\nA compound query should at least have one simple query that could be part of a list of queries or a list of nested compound queries.\n\nYou can use a join operator to combine multiple simple or compound queries (or both simple and compound). Valid values are as follows: \n\n“AND” \n\n“OR”\n\n\n**The following indicators are available**:\n\n**detailedResponse**: By default, the search returns only the path of matched resulted data files. If “detailedResponse=true”, this service returns data files with metadata.\n\n**page**: Ask for a specific page of results. By default, the query returns the first 100 results in page 1, the second 100 in page 2, and so on. If omitted, the query fetches page 1. \n\n**totalCount**: If you set this indicator to ‘true’, this service returns a total count of data files matching the query regardless of the query limit and page. The default for this indicator is false, so if you omit it, this service does not return a total count. \n\n1. **CURL COMMAND**\n```\ncurl -k -H \"Content-Type: application/json\" -d @<attributesFile.json> -X POST <server>/api/dataobject/query -H \"Accept: application/json\" -D  <response-header> -o <response-message.json> -u <Your Email Id>\n\n```\n2.  **attributesFile.json Example**\n```\n    {\n    \"compoundQuery\": {\n      \"operator\": \"AND\",\n      \"queries\": [{\n          \"attribute\": \"asset_identifier\",\n          \"value\": \"H1_Selectivity_Assay\",\n          \"operator\": \"LIKE\"\n        },\n        {\n          \"attribute\": \"data_transfer_status\",\n          \"value\": \"ARCHIVED\",\n          \"operator\": \"LIKE\"\n                  }\n                ]\n              },\n          \"page\": 1,\n          \"totalCount\": true\n        }\n\n```\n3. **EXAMPLE - CURL COMMAND**\n```\ncurl -H \"Content-Type: application/json\" -d @dataobjectquery.json -X POST https://modac.cancer.gov/api/dataObject/query?returnParent=true -H \"Accept: application/json\" -D header.txt -o output_true.json -u us39@nih.gov\n```\n\n",
+        "summary": "Find data file by compound metadata query.",
         "tags": [
           "Search Data"
         ],
@@ -160,10 +195,23 @@
         "produces": [
           "application/json"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "compoundMetadataQuery",
+            "description": "compoundMetadataQuery",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/HpcCompoundMetadataQueryDTO"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "HTTP/1.1 200 OK\n**Output**: \n\n            {\n                \"dataObjects\": [{\n                  \"dataObject\": {\n                    \"id\": 936762,\n                    \"collectionId\": 936753,\n                    \"dataName\": null,\n                    \"collectionName\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data\",\n                    \"absolutePath\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data/combined_rnaseq_data_combat\",\n                    \"dataSize\": 0,\n                    \"dataPath\": \"/var/lib/irods/iRODS/Vault/home/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data/combined_rnaseq_data_combat\",\n                    \"dataOwnerName\": \"ncif-hpcdm-svc\",\n                    \"createdAt\": \"2020-09-24T16:12:45.000+00:00\"\n                  },\n                  \"metadataEntries\": {\n                    \"selfMetadataEntries\": [{\n                      \"attribute\": \"uuid\",\n                      \"value\": \"5a9b2128-88e2-4c35-8741-b7ba429d1f40\",\n                      \"unit\": null,\n                      \"level\": 1,\n                      \"levelLabel\": \"DataObject\",\n                      \"collectionId\": 936753\n                    }, {\n                      \"attribute\": \"registered_by\",\n                      \"value\": \"ncidoesvct2\",\n                      \"unit\": null,\n                      \"level\": 1,\n                      \"levelLabel\": \"DataObject\",\n                      \"collectionId\": 936753\n                    }, {\n                      \"attribute\": \"registered_by_name\",\n                      \"value\": \"DOE DOE\",\n                      \"unit\": null,\n                      \"level\": 1,\n                      \"levelLabel\": \"DataObject\",\n                      \"collectionId\": 936753\n                    }, {\n                      \"attribute\": \"data_transfer_started\",\n                      \"value\": \"09-24-2020 12:13:12\",\n                      \"unit\": null,\n                      \"level\": 1,\n                      \"levelLabel\": \"DataObject\",\n                      \"collectionId\": 936753\n                    }, {\n                      \"attribute\": \"archive_file_id\",\n                      \"value\": \"NCI_DOE_Archive/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data/combined_rnaseq_data_combat\",\n                      \"unit\": null,\n                      \"level\": 1,\n                      \"levelLabel\": \"DataObject\",\n                      \"collectionId\": 936753\n                    }, {\n                      \"attribute\": \"dme_data_id\",\n                      \"value\": \"NCI-DME-MS01-936753\",\n                      \"unit\": null,\n                      \"level\": 2,\n                      \"levelLabel\": \"Asset\",\n                      \"collectionId\": 936753\n                    }, {\n                      \"attribute\": \"metadata_updated\",\n                      \"value\": \"09-24-2020 12:10:26\",\n                      \"unit\": null,\n                      \"level\": 2,\n                      \"levelLabel\": \"Asset\",\n                      \"collectionId\": 936753\n                    }}]\n                  },\n                  \"percentComplete\": null,\n                  \"permission\": null\n                }],\n                \"dataObjectPaths\": [],\n                \"page\": 1,\n                \"limit\": 100,\n                \"totalCount\": 70",
+            "schema": {
+              "$ref": "#/definitions/HpcDataObjectListDTORes"
+            },
+            "description": "HTTP/1.1 200 \n**Output**: \n\n            {\n                \"dataObjects\": [{\n                  \"dataObject\": {\n                    \"id\": 936762,\n                    \"collectionId\": 936753,\n                    \"dataName\": null,\n                    \"collectionName\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data\",\n                    \"absolutePath\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data/combined_rnaseq_data_combat\",\n                    \"dataSize\": 0,\n                    \"dataPath\": \"/var/lib/irods/iRODS/Vault/home/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data/combined_rnaseq_data_combat\",\n                    \"dataOwnerName\": \"ncif-hpcdm-svc\",\n                    \"createdAt\": \"2020-09-24T16:12:45.000+00:00\"\n                  },\n                  \"metadataEntries\": {\n                    \"selfMetadataEntries\": [{\n                      \"attribute\": \"uuid\",\n                      \"value\": \"5a9b2128-88e2-4c35-8741-b7ba429d1f40\",\n                      \"unit\": null,\n                      \"level\": 1,\n                      \"levelLabel\": \"DataObject\",\n                      \"collectionId\": 936753\n                    }, {\n                      \"attribute\": \"registered_by\",\n                      \"value\": \"ncidoesvct2\",\n                      \"unit\": null,\n                      \"level\": 1,\n                      \"levelLabel\": \"DataObject\",\n                      \"collectionId\": 936753\n                    }, {\n                      \"attribute\": \"registered_by_name\",\n                      \"value\": \"DOE DOE\",\n                      \"unit\": null,\n                      \"level\": 1,\n                      \"levelLabel\": \"DataObject\",\n                      \"collectionId\": 936753\n                    }, {\n                      \"attribute\": \"data_transfer_started\",\n                      \"value\": \"09-24-2020 12:13:12\",\n                      \"unit\": null,\n                      \"level\": 1,\n                      \"levelLabel\": \"DataObject\",\n                      \"collectionId\": 936753\n                    }, {\n                      \"attribute\": \"archive_file_id\",\n                      \"value\": \"NCI_DOE_Archive/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data/combined_rnaseq_data_combat\",\n                      \"unit\": null,\n                      \"level\": 1,\n                      \"levelLabel\": \"DataObject\",\n                      \"collectionId\": 936753\n                    }, {\n                      \"attribute\": \"dme_data_id\",\n                      \"value\": \"NCI-DME-MS01-936753\",\n                      \"unit\": null,\n                      \"level\": 2,\n                      \"levelLabel\": \"Asset\",\n                      \"collectionId\": 936753\n                    }, {\n                      \"attribute\": \"metadata_updated\",\n                      \"value\": \"09-24-2020 12:10:26\",\n                      \"unit\": null,\n                      \"level\": 2,\n                      \"levelLabel\": \"Asset\",\n                      \"collectionId\": 936753\n                    }}]\n                  },\n                  \"percentComplete\": null,\n                  \"permission\": null\n                }],\n                \"dataObjectPaths\": [],\n                \"page\": 1,\n                \"limit\": 100,\n                \"totalCount\": 70",
             "headers": {}
           },
           "400": {
@@ -177,8 +225,8 @@
     },
     "/api/v2/collection/{path}/download": {
       "post": {
-        "description": "If you have a MoDaC user account, you can download that data. This service allows you to transfer a data file from MoDaC to an accessible Globus location (asynchronous download) or an AWS S3 bucket. The path parameter represents the logical path of the collection registered with MoDaC. Provide either a Globus destination which describes the endpoint, or S3 destination which includes S3 bucket and account. \n\nFor a Globus destination, if you set the optional ‘destinationOverwrite’ indicator to ‘true’ and if the destination file exists, this service overwrites the destination file. If you omit this indicator and the destination file exists, then this service rejects the transfer request.  \n\n**Note**: As a prerequisite for downloading data from MoDaC to a Globus endpoint, you must grant write access to the service account. For details, refer to \"Preparing to Use Globus with MoDaC\"  \n\nFor an S3 destination, valid S3 account information is mandatory. \n\n1. **CURL COMMAND**\n ```\n curl -k -H \"Content-Type: application/json\" -d @<Attributes-file.json> -X POST <server>/api/v2/collection/{path}/download -H \"Accept: application/json\" -D  <response-header> -o <response-message.json> -u <Your Email ID>\n \n ```\n 2.  **Attributes-file.json Example**\n \n ```\n  a. To request a download to a Globus endpoint\n        { \n          \"globusDownloadDestination\": {\n                                \"destinationOverwrite\" : true,\n            \"destinationLocation\": {\n              \"fileContainerId\": \"4a3b132a-815f-11e7-8dff-2\",\n              \"fileId\": \"/coll-Udit-2-15-2021\"\n            }\n          }\n        }\n        \n  b. To request a download to AWS S3\n        { \n          \"s3DownloadDestination\": {\n            \"destinationLocation\": {\n              \"fileContainerId\": \"ccbr-sbg-1\",\n              \"fileId\": \"coll-many-files-12-10-18\"\n            },\n            \"account\" : {\n              \"accessKey\" : \"<insert-access-key\",\n              \"secretKey\" : \"<insert-secret-key\",\n              \"region\" :\"us-east-2\"\n            }\n          }\n        }\n\n\n ```\n 3. **EXAMPLE - CURL COMMAND**\n ```\n curl -k -H \"Content-Type: application/json\" -d @Attributes-file.json -X POST https://modac.cancer.gov/api/v2/collection/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/asset_udit/download -H \"Accept: application/json\" -D header.txt -o output.json -u us39@georgetown.edu\n ```\n",
-        "summary": "Download a Collection",
+        "description": "This service allows you to transfer a collection from MoDaC to an accessible Globus Endpoint location (asynchronous download) or AWS S3 bucket (asynchronous download). \n\n**When downloading a collection**:\n\n•  the path parameter represents the logical path of the collection registered with MoDaC.\n\n •  provide either a Globus destination which describes the endpointt or S3 destination which includes S3 bucket and account\n\n\n•  for a Globus destination, if you set the optional ‘destinationOverwrite’ indicator to ‘true’ and if the destination file exists, this service overwrites the destination file. If you omit this indicator and the destination file exists, then this service rejects the transfer request.\n\n\n**Note**:  A MoDaC user account is a pre-requisite for downloading data from MoDaC. Additionally, for downloading to a Globus endpoint, you must grant write access to the service account. For details, refer to [Preparing to Use Globus](https://wiki.nci.nih.gov/display/MoDaCdoc/Preparing+to+Use+Globus) wiki page.\n\n1. **CURL COMMAND**\n ```\n curl -k -H \"Content-Type: application/json\" -d @<Attributes-file.json> -X POST <server>/api/v2/collection/{path}/download -H \"Accept: application/json\" -D  <response-header> -o <response-message.json> -u <Your Email ID>\n \n ```\n 2.  **attributesFile.json Example**\n \n ```\n  a. To request a download to a Globus endpoint\n        { \n          \"globusDownloadDestination\": {\n                                \"destinationOverwrite\" : true,\n            \"destinationLocation\": {\n              \"fileContainerId\": \"4a3b132a-815f-11e7-8dff-2\",\n              \"fileId\": \"/coll-test-2-15-2021\"\n            }\n          }\n        }\n        \n  b. To request a download to AWS S3\n        { \n          \"s3DownloadDestination\": {\n            \"destinationLocation\": {\n              \"fileContainerId\": \"ccbr-sbg-1\",\n              \"fileId\": \"coll-many-files-12-10-18\"\n            },\n            \"account\" : {\n              \"accessKey\" : \"<insert-access-key\",\n              \"secretKey\" : \"<insert-secret-key\",\n              \"region\" :\"us-east-2\"\n            }\n          }\n        }\n\n\n ```\n 3. **EXAMPLE - CURL COMMAND**\n ```\n curl -k -H \"Content-Type: application/json\" -d @attributesFile.json -X POST https://modac.cancer.gov/api/v2/collection/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/asset_/download -H \"Accept: application/json\" -D header.txt -o output.json -u us39@nih.gov\n ```\n",
+        "summary": "Download a collection.",
         "tags": [
           "Download Data"
         ],
@@ -195,11 +243,23 @@
             "type": "string",
             "pattern": ".*",
             "description": ""
+          },
+          {
+            "in": "body",
+            "name": "downloadRequest",
+            "description": "downloadRequest",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/HpcDownloadRequestDTO"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "HTTP/1.1 200 OK",
+            "description": "HTTP/1.1 200",
+            "schema": {
+              "$ref": "#/definitions/HpcCollectionDownloadResponseDTO"
+            },
             "headers": {}
           },
           "401": {
@@ -210,12 +270,12 @@
     },
     "/api/v2/dataObject/{path}": {
       "get": {
-        "description": "This service allows you to get information about a specific data file including all of its hierarchical metadata. Use the path parameter to specify the path to the collection of interest. In the output, the dataObject and selfMetadataEntries elements provide information about the file you specified, while the parentMetadataEntries element provides information about the collection that contains the file you specified.\n\n1. **CURL COMMAND**\n\n  ```\n  A) When IncludeAcl is set to true\n  \n  curl -k '<server>/api/v2/<DataObject Path>?includeAcl=true' -D header.txt -o output.txt -u <Your Email Id>\n  \n  B) When IncludeAcl is set to false\n  \n  curl -k '<server>/api/v2/<DataObject Path>?includeAcl=false' -D header.txt -o output.txt -u <Your Email Id>\n  \n  ```\n  2. **EXAMPLE - CURL COMMAND**\n  ```\n  A) When IncludeAcl is set to true\n  \n  curl -k 'https://modac.cancer.gov/api/v2/dataObject/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data/combined_rnaseq_data_lincs1000_combat?includeAcl=true' -D header.txt -o output.txt -u us39@georgetown.edu\n  \n  B) When IncludeAcl is set to false\n  \n  curl -k 'https://modac.cancer.gov/api/v2/dataObject/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data/combined_rnaseq_data_lincs1000_combat?includeAcl=false' -D header.txt -o output.txt -u us39@georgetown.edu\n  ```\n",
-        "summary": "Get Data File Information",
+        "description": "This service allows you to get information about a specific data file including all of its hierarchical metadata. Use the path parameter to specify the path to the collection of interest. In the output, the dataObject and selfMetadataEntries elements provide information about the file you specified, while the parentMetadataEntries element provides information about the collection that contains the file you specified.\n\n**Query Params**\n*includeAcl* – If set to true, the API will provide the permission of the requesting user to this collection (READ, WRITE or OWN). This is an optional parameter and the default is false\n\n1. **CURL COMMAND**\n\n  ```\n  A) When 'includeAcl' is set to true\n  \n  curl -k '<server>/api/v2/<DataObject Path>?includeAcl=true' -D header.txt -o output.txt -u <Your Email Id>\n  \n  B) When 'includeAcl' is set to false\n  \n  curl -k '<server>/api/v2/<DataObject Path>?includeAcl=false' -D header.txt -o output.txt -u <Your Email Id>\n  \n  ```\n  2. **EXAMPLE - CURL COMMAND**\n  ```\n  A) When 'includeAcl' is set to true\n  \n  curl -k 'https://modac.cancer.gov/api/v2/dataObject/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data/combined_rnaseq_data_lincs1000_combat?includeAcl=true' -D header.txt -o output.txt -u us39@nih.gov\n  \n  B) When 'includeAcl' is set to false\n  \n  curl -k 'https://modac.cancer.gov/api/v2/dataObject/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data/combined_rnaseq_data_lincs1000_combat?includeAcl=false' -D header.txt -o output.txt -u us39@nih.gov\n  ```\n",
+        "summary": "Get data file information.",
         "tags": [
           "Get Metadata"
         ],
-        "operationId": "DataObjectByPathGet",
+        "operationId": "path",
         "deprecated": false,
         "produces": [
           "application/json"
@@ -228,11 +288,21 @@
             "type": "string",
             "pattern": ".*",
             "description": ""
+          },
+          {
+            "name": "includeAcl",
+            "in": "query",
+            "description": "includeAcl",
+            "required": false,
+            "type": "boolean"
           }
         ],
         "responses": {
           "200": {
-            "description": "HTTP/1.1 200 OK\n**Output**:\n\n             {\n                  \"dataObjects\": [{\n                    \"dataObject\": {\n                      \"id\": 936770,\n                      \"collectionId\": 936753,\n                      \"dataName\": null,\n                      \"collectionName\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data\",\n                      \"absolutePath\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data/combined_rnaseq_data_lincs1000_combat\",\n                      \"dataSize\": 0,\n                      \"dataPath\": \"/var/lib/irods/iRODS/Vault/home/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data/combined_rnaseq_data_lincs1000_combat\",\n                      \"dataOwnerName\": \"ncif-hpcdm-svc\",\n                      \"createdAt\": \"2020-09-24T16:13:14.000+00:00\"\n                    },\n                    \"metadataEntries\": {\n                      \"selfMetadataEntries\": [{\n                        \"attribute\": \"data_transfer_status\",\n                        \"value\": \"ARCHIVED\",\n                        \"unit\": null,\n                        \"level\": null,\n                        \"levelLabel\": null,\n                        \"collectionId\": null\n                      }, {\n                        \"attribute\": \"registered_by\",\n                        \"value\": \"ncidoesvct2\",\n                        \"unit\": null,\n                        \"level\": null,\n                        \"levelLabel\": null,\n                        \"collectionId\": null\n                      },  {\n                        \"attribute\": \"program_description\",\n                        \"value\": \"The Joint Design of Advanced Computing Solutions for Cancer (JDACS4C) program was created as part of the Cancer Moonshot to accelerate cancer research using emerging exascale computing capabilities. It is a cross-agency collaboration between NCI and the Department of Energy (DOE). Investigators from NCI and the Frederick National Laboratory for Cancer Research work collaboratively with experts in computational, data, and physical sciences from four DOE national laboratories: Argonne, Los Alamos, Lawrence Livermore, and Oak Ridge.\",\n                        \"unit\": \"EMPTY_ATTR_UNIT\",\n                        \"level\": 4,\n                        \"levelLabel\": \"Program\",\n                        \"collectionId\": null\n                      }, {\n                        \"attribute\": \"program_name\",\n                        \"value\": \"Advanced Computing Solutions for Cancer (JDACS4C)\",\n                        \"unit\": \"EMPTY_ATTR_UNIT\",\n                        \"level\": 4,\n                        \"levelLabel\": \"Program\",\n                        \"collectionId\": null\n                      }, {\n                        \"attribute\": \"dme_data_id\",\n                        \"value\": \"NCI-DME-MS01-936666\",\n                        \"unit\": \"EMPTY_ATTR_UNIT\",\n                        \"level\": 4,\n                        \"levelLabel\": \"Program\",\n                        \"collectionId\": null\n                      }]\n                    },\n                    \"percentComplete\": null,\n                    \"permission\": null\n                  }],\n                  \"dataObjectPaths\": [],\n                  \"page\": null,\n                  \"limit\": null,\n                  \"totalCount\": null\n                }\n                           ",
+            "schema": {
+              "$ref": "#/definitions/HpcDataObjectDTORes"
+            },
+            "description": "HTTP/1.1 200 \n**Output**:\n\n    {\n      \"dataObject\": {\n        \"id\": 936770,\n        \"collectionId\": 936753,\n          \"dataName\": null,\n          \"collectionName\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_1/anl_gene_expression\",\n        \"absolutePath\": \"/NCI_DOE_Archive/JDACS4C/JDACS4C_1/anl_gene_expression/combined_rnaseq_data_lincs1000_combat\",\n        \"dataSize\": 0,\n        \"dataPath\": \"/var/lib/irods/iRODS/Vault/home/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data/combined_rnaseq_data_lincs1000_combat\",\n        \"dataOwnerName\": \"ncif-hpcdm-svc\",\n        \"createdAt\": \"2020-09-24T16:13:14.000+00:00\"\n      },\n      \"metadataEntries\": {\n        \"selfMetadataEntries\": {\n          \"userMetadataEntries\": [{\n            \"attribute\": \"file_description\",\n            \"value\": \"The gene expression datasets for cancer cell lines, generated using RNA-seq, were collected from the following sources: NCI-60, CCLE, and GDSC.\",\n            \"unit\": null,\n            \"level\": null,\n            \"levelLabel\": null,\n            \"collectionId\": null\n          }],\n          \"extractedMetadataEntries\": [],\n          \"systemMetadataEntries\": [{\n            \"attribute\": \"data_transfer_status\",\n            \"value\": \"ARCHIVED\",\n            \"unit\": null,\n            \"level\": null,\n            \"levelLabel\": null,\n            \"collectionId\": null\n          },  {\n            \"attribute\": \"data_transfer_type\",\n            \"value\": \"S_3\",\n            \"unit\": null,\n            \"level\": null,\n            \"levelLabel\": null,\n            \"collectionId\": null\n          }, {\n            \"attribute\": \"registered_by_name\",\n            \"value\": \"DOE DOE\",\n            \"unit\": null,\n            \"level\": null,\n            \"levelLabel\": null,\n            \"collectionId\": null\n          }, {\n            \"attribute\": \"data_transfer_request_id\",\n            \"value\": \"82261466\",\n            \"unit\": null,\n            \"level\": null,\n            \"levelLabel\": null,\n            \"collectionId\": null\n          }]\n        },\n        \"parentMetadataEntries\": [{\n          \"attribute\": \"collection_type\",\n          \"value\": \"Asset\",\n          \"unit\": \"EMPTY_ATTR_UNIT\",\n          \"level\": 2,\n          \"levelLabel\": \"Asset\",\n          \"collectionId\": null\n        }, {\n          \"attribute\": \"asset_type\",\n          \"value\": \"Dataset\",\n          \"unit\": \"EMPTY_ATTR_UNIT\",\n          \"level\": 2,\n          \"levelLabel\": \"Asset\",\n          \"collectionId\": null\n        }, {\"attribute\": \"uuid\",\n          \"value\": \"78fd8e4e-86bd-45db-96ed-997bb09dbc6e\",\n          \"unit\": \"EMPTY_ATTR_UNIT\",\n          \"level\": 2,\n          \"levelLabel\": \"Asset\",\n          \"collectionId\": null\n        },  {\n          \"attribute\": \"registered_by_name\",\n          \"value\": \"DOE DOE\",\n          \"unit\": \"EMPTY_ATTR_UNIT\",\n          \"level\": 4,\n          \"levelLabel\": \"Program\",\n          \"collectionId\": null\n        }]\n      },\n      \"percentComplete\": null,\n      \"permission\": \"READ\"\n        }\n    \n                                               ",
             "headers": {}
           },
           "400": {
@@ -244,8 +314,8 @@
         }
       },
       "put": {
-        "description": "\"If you have permissions to modify an existing collection, you can upload data to that collection in the following ways:\n\n  •  If that existing collection has been configured to contain another\ncollection, you can add a collection. \n\n•  If that existing collection has been configured to contain data files, you can add files. \n•  If the collection has any custom metadata, you can update that metadata. \n\n\n For obtaining upload/modify permissions, please contact modac-support@nih.gov\n\n\n\n1. **CURL COMMAND**\n ```\n A. Sync Registration \n \ncurl -k -F \"dataObjectRegistration=@<Attributes-File.json>;type=application/json\" -F \"dataObject=@<filePath>\" -X PUT <server>/api/v2/dataObject/<collection path>/<file name> -u < Email ID>\n\nB. Async Regitration\ncurl -k -F \"dataObjectRegistration=@globus.json;type=application/json\" -X PUT <server>/api/v2/dataObject/<collection path>/<dataObject Name> -D header.txt -o output.json -u <Your Email ID>\n \n ```\n 2.  **Attributes-file.json Example**\n \n ```\n  A. Sync Upload - Attributes-File.json\n        { \n          \"metadataEntries\": [\n            {\n              \"attribute\": \"description\",\n              \"value\": \"my-dataObject-description\"\n            },\n            {\n              \"attribute\": \"my-second-attribute-name\",\n              \"value\": \"my-second-attribute-value\"\n            }\n          ]\n      }\n      \n  B. Register from Globus - AttributeS-File.json\n  \n         {\n            \"globusUploadSource\": {\n              \"sourceLocation\": {\n                \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n                \"fileId\": \"test.txt\"\n              }\n            },\n            \"metadataEntries\": [{\n              \"attribute\": \"description\",\n              \"value\": \"Tes1\"\n            }, {\n              \"attribute\": \"Asset Type\",\n              \"value\": \"test\"\n            },{\n                          \"attribute\": \"Asset_identifier\",\n                          \"value\": \"test\"\n                  },{\n                          \"attribute\": \"Asset_name\",\n                          \"value\": \"test\"\n                  }]\n          }\n        \n  C. Register from S3 - AttributeS-File.json\n          {\n              \"s3UploadSource\": {\n                \"sourceLocation\": {\n                  \"fileContainerId\": \"s3-bucket-name\",\n                  \"fileId\": \"s3-object-key\"\n                },\n                \"account\" : {\n                  \"accessKey\" : \"aws-access-key\",\n                  \"secretKey\" : \"aws-secret-key\",\n                  \"region\" :\"aws-region\"\n                }\n              },\n              \"metadataEntries\": [\n                {\n                  \"attribute\": \"description\",\n                  \"value\": \"my-file-description\"\n                }, \n                {\n                  \"attribute\": \"my-second-attribute-name\",\n                  \"value\": \"my-second-attribute-description\"\n                }\n              ]\n            }\n\n ```\n 3. **EXAMPLE - CURL COMMAND**\n \n ```\n A. Sync Registration \n curl -k -F \"dataObjectRegistration=@syncupload.json;type=application/json\" -F \"dataObject=@header.txt\" -X PUT https://modac.cancer.gov/api/v2/dataObject/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data/header_udit.txt -u us39@georgetown.edu\n \n A. Aync Registration\n curl -k -F \"dataObjectRegistration=@globus.json;type=application/json\" -X PUT https://modac.cancer.gov/api/v2/dataObject/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data/test_1_28_2021_globus_new.txt -D header.txt -o output.json -u us39@georgetown.edu\n ```",
-        "summary": "Register Data File",
+        "description": "This service allows you to register a data file in a collection. If you have permissions to modify an existing collection, you can upload data to that collection if that existing collection has been configured to contain data files. \n\nYou can upload a data file synchronoulsy (directly from your machine) or asynchronously (from Globus and AWS S3)\n\n\n  For obtaining upload permission or permission to modify the metadata of a file, please contact modac-support@nih.gov\n\n\n\n 1. **CURL COMMAND**\n  ```\n  A. Sync Registration \n  \n curl -k -F\n \"dataObjectRegistration=@<attributesFile.json>;type=application/json\"\n -F \"dataObject=@<filePath>\" -X PUT\n <server>/api/v2/dataObject/<collection path>/<dataObject Name> -u < Email ID>\n\n\n B. Async Registration\n\n curl -k -F \"dataObjectRegistration=@globus.json;type=application/json\"\n -X PUT <server>/api/v2/dataObject/<collection path>/<dataObject Name> -D\n header.txt -o output.json -u <Your Email ID>\n  \n  ```\n  2.  **attributesFile.json Example**\n  \n  ```\n   A. Sync Upload - attributesFile.json\n         { \n           \"metadataEntries\": [\n             {\n               \"attribute\": \"description\",\n               \"value\": \"my-dataObject-description\"\n             },\n             {\n               \"attribute\": \"my-second-attribute-name\",\n               \"value\": \"my-second-attribute-value\"\n             }\n           ]\n       }\n       \n   B. Register from Globus - attributesFile.json\n   \n          {\n             \"globusUploadSource\": {\n               \"sourceLocation\": {\n                 \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n                 \"fileId\": \"test.txt\"\n               }\n             },\n             \"metadataEntries\": [{\n               \"attribute\": \"description\",\n               \"value\": \"Tes1\"\n             }, {\n               \"attribute\": \"Asset Type\",\n               \"value\": \"test\"\n             },{\n                           \"attribute\": \"Asset_identifier\",\n                           \"value\": \"test\"\n                   },{\n                           \"attribute\": \"Asset_name\",\n                           \"value\": \"test\"\n                   }]\n           }\n         \n   C. Register from S3 - attributesFile.json\n           {\n               \"s3UploadSource\": {\n                 \"sourceLocation\": {\n                   \"fileContainerId\": \"s3-bucket-name\",\n                   \"fileId\": \"s3-object-key\"\n                 },\n                 \"account\" : {\n                   \"accessKey\" : \"aws-access-key\",\n                   \"secretKey\" : \"aws-secret-key\",\n                   \"region\" :\"aws-region\"\n                 }\n               },\n               \"metadataEntries\": [\n                 {\n                   \"attribute\": \"description\",\n                   \"value\": \"my-file-description\"\n                 }, \n                 {\n                   \"attribute\": \"my-second-attribute-name\",\n                   \"value\": \"my-second-attribute-description\"\n                 }\n               ]\n             }\n\n  ```\n  3. **EXAMPLE - CURL COMMAND**\n  \n  ```\n  A. Sync Registration \n  curl -k -F \"dataObjectRegistration=@syncupload.json;type=application/json\" -F \"dataObject=@header.txt\" -X PUT https://modac.cancer.gov/api/v2/dataObject/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data/header_.txt -u us39@nih.gov\n  \n  A. Async Registration\n  curl -k -F \"dataObjectRegistration=@globus.json;type=application/json\" -X PUT https://modac.cancer.gov/api/v2/dataObject/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_1/anl_cancer_gene_expression_data/test_1_28_2021_globus_new.txt -D header.txt -o output.json -u us39@nih.gov\n  ```",
+        "summary": "Register data file.",
         "tags": [
           "Upload Data"
         ],
@@ -262,11 +332,27 @@
             "type": "string",
             "pattern": ".*",
             "description": ""
+          },
+          {
+            "in": "body",
+            "name": "dataObjectRegistration",
+            "description": "dataObjectRegistration",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/HpcDataObjectRegistrationRequestDTO"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "HTTP/1.1 200 OK",
+            "headers": {}
+          },
+          "201": {
+            "schema": {
+              "$ref": "#/definitions/HpcDataObjectRes"
+            },
+            "description": "HTTP/1.1 201 Created",
             "headers": {}
           },
           "400": {
@@ -280,8 +366,8 @@
     },
     "/api/v2/dataObject/{path}/download/": {
       "post": {
-        "description": "If you have a MoDaC user account, you can download the data. This service allows you to transfer a data file from MoDaC to one of the following possible destinations: \n\n• Your file system (synchronous download) \n\n• Globus endpoint (asynchronous download) \n\n• AWS S3 (asynchronous download) \n\nAs a prerequisite for downloading data from MoDaC to a Globus endpoint, you must grant write access to the service account. For details, refer to \"Preparing to Use Globus with MoDaC\"  \n\n1. **CURL COMMAND**\n   ```\n    curl -k -H \"Content-Type: application/json\" -d @<attributes-file.json> -X POST <server>/api/v2/dataObject/{path:.*}/download -H \"Accept: application/json\" -D  <response-header> -o <response-message.json> -u <Your Email IdD>\n  \n  2.  **JSON FILE EXAMPLES**\n  ``` \n  a. To request download to FileSystem\n                \n        { \n          \"metadataEntries\": [\n            {\n              \"attribute\": \"description\",\n              \"value\": \"my-dataObject-description\"\n            },\n            {\n              \"attribute\": \"my-second-attribute-name\",\n              \"value\": \"my-second-attribute-value\"\n            }\n          ]\n      }\n\n  \n  b. To request a download to a Globus endpoint\n\n      \n      \"JSON:\n      {\n        \"globusDownloadDestination\": {\n          \"destinationLocation\": {\n          \"fileContainerId\": \"4a3b132a-815f-11e7-8dff-22000b9923ef\",\n            \"fileId\": \"test-2-02-21\"\n          },\n       \"destinationOverwrite\" : true,\n        }\n      }\n     \n      \n c.   To request a download to Amazon S3 bucket\n          {\n            \"s3DownloadDestination\": {\n              \"destinationLocation\": {\n                \"fileContainerId\": \"ccbr-sbg-1\",\n                \"fileId\": \"demo-file-2-2-21\"\n              },\n              \"account\" : {\n                \"accessKey\" : \"***\",\n                \"secretKey\" : \"***\",\n                \"region\" :\"us-east-1\",\n              },\n          \"destinationURL\" : “https://...”\n            }\n          }\n\n\n  \n  ```\n  3. **EXAMPLE - CURL COMMAND to download file to Globus**\n  ```\n  curl -k -H \"Content-Type: application/json\" -d @attributes-file.json -X POST https://modac.cancer.gov/api/v2/dataObject/NCI_DOE_Archive/testnew/12_1_2020/Data_12_1/bulk_metadata_file2.xlsx/download -H \"Accept: application/json\" -D header.txt -u us39@georgetown.edu\n  ```\n  \n  \n  4. **EXAMPLE - CURL COMMAND to download file to s3**\n  \n  \n  ```\n  curl -k -H \"Content-Type: application/json\" -d @attributes-file.json -X POST https://modac.cancer.gov/api/v2/dataObject/NCI_DOE_Archive/testnew/12_1_2020/Data_12_1/bulk_metadata_file2.xlsx/download -H \"Accept: application/json\" -D header_S3.txt -u us39@georgetown.edu\n  ```\n  \n  \n  \n  5.  **EXAMPLE - CURL COMMAND to download file to FileSystem**\n  ```\n  curl -k -H \"Content-Type: application/json\" -d @attributes-file.json -X POST https://modac.cancer.gov/api/v2/dataObject/NCI_DOE_Archive/testnew/12_1_2020/Data_12_1/bulk_metadata_file2.xlsx/download -H \"Accept: application/json\" -D header_local.txt -u us39@georgetown.edu\n  ```\n",
-        "summary": "Download a Data File",
+        "description": "\nThis service allows you to transfer a data file from MoDaC to one of the following possible destinations: \n \n \n\n• Your machine or your file system (synchronous download) \n\n• Globus endpoint (asynchronous download) \n\n• AWS S3 (asynchronous download) \n\n\n  **When downloading a data file**:\n      \n      \n  •  the path parameter represents the logical path of data file registered with MoDaC. \n      \n •  provide either a Globus destination which describes the endpointt or S3 destination which includes S3 bucket and account. \n      \n      \n•  for a Globus destination, if you set the optional ‘destinationOverwrite’ indicator to ‘true’ and if the destination file exists, this service overwrites the destination file. If you omit this indicator and the destination file exists, then this service rejects the transfer request.\n\n\n**Note**:  A MoDaC user account is a pre-requisite for downloading data from MoDaC. Additionally, for downloading to a Globus endpoint, you must grant write access to the service account. For details, refer to [Preparing to Use Globus](https://wiki.nci.nih.gov/display/MoDaCdoc/Preparing+to+Use+Globus) wiki page.\n\n\n1. **CURL COMMAND**\n   ```\n    curl -k -H \"Content-Type: application/json\" -d @<attributesFile.json> -X POST <server>/api/v2/dataObject/{path:.*}/download -H \"Accept: application/json\" -D  <response-header> -o <response-message.json> -u <Your Email IdD>\n  \n  2.  **JSON FILE EXAMPLES**\n  ``` \n  a. To request download to FileSystem\n                \n        { \n          \"metadataEntries\": [\n            {\n              \"attribute\": \"description\",\n              \"value\": \"my-dataObject-description\"\n            },\n            {\n              \"attribute\": \"my-second-attribute-name\",\n              \"value\": \"my-second-attribute-value\"\n            }\n          ]\n      }\n\n  \n  b. To request a download to a Globus endpoint\n\n      \n      \"JSON:\n      {\n        \"globusDownloadDestination\": {\n          \"destinationLocation\": {\n          \"fileContainerId\": \"4a3b132a-815f-11e7-8dff-22000b9923ef\",\n            \"fileId\": \"test-2-02-21\"\n          },\n       \"destinationOverwrite\" : true,\n        }\n      }\n     \n      \n c.   To request a download to Amazon S3 bucket\n          {\n            \"s3DownloadDestination\": {\n              \"destinationLocation\": {\n                \"fileContainerId\": \"ccbr-sbg-1\",\n                \"fileId\": \"demo-file-2-2-21\"\n              },\n              \"account\" : {\n                \"accessKey\" : \"***\",\n                \"secretKey\" : \"***\",\n                \"region\" :\"us-east-1\",\n              },\n          \"destinationURL\" : “https://...”\n            }\n          }\n\n\n  \n  ```\n  3. **EXAMPLE - CURL COMMAND to download file to Globus**\n  ```\n  curl -k -H \"Content-Type: application/json\" -d @attributesFile.json -X POST https://modac.cancer.gov/api/v2/dataObject/NCI_DOE_Archive/testnew/12_1_2020/Data_12_1/bulk_metadata_file2.xlsx/download -H \"Accept: application/json\" -D header.txt -u us39@nih.gov\n  ```\n  \n  \n  4. **EXAMPLE - CURL COMMAND to download file to s3**\n  \n  \n  ```\n  curl -k -H \"Content-Type: application/json\" -d @aattributesFile.json -X POST https://modac.cancer.gov/api/v2/dataObject/NCI_DOE_Archive/testnew/12_1_2020/Data_12_1/bulk_metadata_file2.xlsx/download -H \"Accept: application/json\" -D header_S3.txt -u us39@nih.gov\n  ```\n  \n  \n  \n  5.  **EXAMPLE - CURL COMMAND to download file to FileSystem**\n  ```\n  curl -k -H \"Content-Type: application/json\" -d @attributesFile.json -X POST https://modac.cancer.gov/api/dataObject/NCI_DOE_Archive/testnew/12_1_2020/Data_12_1/bulk_metadata_file2.xlsx/download -H \"Accept: application/json\" -D header_local.txt -u us39@nih.gov\n  ```\n",
+        "summary": "Download a data file.",
         "tags": [
           "Download Data"
         ],
@@ -298,11 +384,23 @@
             "type": "string",
             "pattern": ".*",
             "description": ""
+          },
+          {
+            "in": "body",
+            "name": "downloadRequest",
+            "description": "downloadRequest",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/HpcDownloadRequestDTO"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "HTTP/1.1 200 OK",
+            "description": "HTTP/1.1 200 \n**Output**:\n\n    {\n    \"downloadRequestURL\": \"http://s3-nci-north.ha.nci.nih.gov/NCI_DOE_Archive/testnew/12_1_2020/Data_12_1/bulk_metadata_file2.xlsx?X-Amz-Algorithm=AWS407Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86399&X-Amz-Credential=00fe61fnci-north%2Fs3%2Faws4_request&X-Amz-Signature=b71a2f170a17614377\"\n  }",
+            "schema": {
+              "$ref": "#/definitions/HpcDataObjectDownloadResponseDTO"
+            },
             "headers": {}
           },
           "400": {
@@ -316,8 +414,8 @@
     },
     "/api/v2/download": {
       "post": {
-        "description": "This API transfers a list of collections from MoDaC to another accessible Globus location, AWS S3 bucket, or Google Drive. The caller provides a list of collection paths, and destination information which is the Globus endpoint to download to, the AWS S3 bucket and account, or Google Drive access token and folder name.\n\nNote: Write access right needs to be granted to the service account if a user downloads a data file from Archive to a Globus end point. S3 account must be provided for S3 destination\n\nAn optional ‘appendPathToDownloadDestination’ indicator can be provided. If set to true, the entire object path (as it is in iRODS) will be used when files are created in the download destination, otherwise, just the file name from iRODs is used. By default this indicator is set to true.\n\n\n1. **CURL COMMAND**\n ```\n curl -k -H \"Content-Type: application/json\" -d @<Attributes-file.json> -X POST <server>/api/v2/download -H \"Accept: application/json\" -D  <response-header> -o <response-message.json> -u <Your Email ID>\n \n ```\n 2.  **Attributes-file.json Example**\n \n ```\n  a. To request a download to a Globus endpoint\n        {\n             \"collectionPaths\" : [\n                 \"/NCI_DOE_Archive/udit_test/udit_identifier\",\n                 \"/NCI_DOE_Archive/testnew/12_1_2020/Data_12_1\"\n        ],\n        \"globusDownloadDestination\": {\n                \"destinationOverwrite\" : true,\n                  \"destinationLocation\": {\n                      \"fileContainerId\": \"16572124-19cb-11e9-934d-0f4\",\n                          \"fileId\": \"bulk-collections-1_28_2021_2nd\"\n                        }\n        }\n        }\n        \n  b. To request a download to AWS S3\n        {\n          \"collectionPaths\": [\n            \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_2/Test1\",\n            \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_2/Test2\"\n          ],\n          \"s3DownloadDestination\": {\n          \"destinationLocation\": {\n            \"fileContainerId\": \"ccbr-sbg-1\",\n            \"fileId\": \"eran-collection-bulk-download-08-17-19\"\n          },\n          \"account\": {\n            \"accessKey\": \"your-access-key\",\n            \"secretKey\": \"your-secret-key\",\n            \"region\": \"us-east-2\"\n          }\n        },\n        \"appendPathToDownloadDestination\": true\n      }\n\n\n ```\n 3. **EXAMPLE - CURL COMMAND**\n ```\n curl -k -H \"Content-Type: application/json\" -d @attributes-file.json -X POST https://modac.cancer.gov/api/v2/download -H \"Accept: application/json\" -D header.txt -o output.json -u us39@georgetown.edu\n ```\n",
-        "summary": "Download collection list",
+        "description": "This API transfers a list of collections from MoDaC to another accessible Globus location or to an AWS S3 bucket. The caller provides a list of collection paths, and destination information for their Globus Endpoint or AWS3 bucket where they are looking to download the data to.  \n\n**Note**: For Globus Download, the WRITE per **MODAC-PROD-App-Accts-Pool-NCI_DOE** permission needs to be added to your Globus endpoint. Information on how to add permission to your endpint is located in  [Preparing to Use Globus](https://wiki.nci.nih.gov/display/MoDaCdoc/Preparing+to+Use+Globus) wiki page.\n\nAn optional ‘appendPathToDownloadDestination’ indicator can be provided. If set to true, the entire object path will be used when files are created in the download destination, otherwise, just the file name will be used. By default this indicator is set to true.\n\n\n1. **CURL COMMAND**\n ```\n curl -k -H \"Content-Type: application/json\" -d @<attributesFile.json> -X POST <server>/api/v2/download -H \"Accept: application/json\" -D  <response-header> -o <response-message.json> -u <Your Email ID>\n \n ```\n 2.  **attributesFile.json Example**\n \n ```\n  a. To request a download to a Globus endpoint\n        {\n             \"collectionPaths\" : [\n                 \"/NCI_DOE_Archive/MoDaC_3_4/3_4_2021_identifier\",\n                 \"/NCI_DOE_Archive/MoDaC/12_1_2020/Data_12_1\"\n        ],\n        \"globusDownloadDestination\": {\n                \"destinationOverwrite\" : true,\n                  \"destinationLocation\": {\n                      \"fileContainerId\": \"16572124-19cb-11e9-934d-0f4\",\n                          \"fileId\": \"bulk-collections-1_28_2021_2nd\"\n                        }\n        }\n        }\n        \n  b. To request a download to AWS S3\n        {\n          \"collectionPaths\": [\n            \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_2/Test1\",\n            \"/NCI_DOE_Archive/JDACS4C/JDACS4C_Pilot_2/Test2\"\n          ],\n          \"s3DownloadDestination\": {\n          \"destinationLocation\": {\n            \"fileContainerId\": \"ccbr-sbg-1\",\n            \"fileId\": \"test-collection-bulk-download-08-17-19\"\n          },\n          \"account\": {\n            \"accessKey\": \"your-access-key\",\n            \"secretKey\": \"your-secret-key\",\n            \"region\": \"us-east-2\"\n          }\n        },\n        \"appendPathToDownloadDestination\": true\n      }\n\n\n ```\n 3. **EXAMPLE - CURL COMMAND**\n ```\n curl -k -H \"Content-Type: application/json\" -d @attributesFile.json -X POST https://modac.cancer.gov/api/v2/download -H \"Accept: application/json\" -D header.txt -o output.json -u us39@nih.gov\n ```\n",
+        "summary": "Download objects and collections.",
         "tags": [
           "Download Data"
         ],
@@ -325,10 +423,24 @@
         "produces": [
           "application/json"
         ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "downloadRequest",
+            "description": "downloadRequest",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/HpcBulkDataObjectDownloadRequestDTO"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "HTTP/1.1 200 OK",
-            "headers": {}
+            "description": "HTTP/1.1 200 \n\n**Output**\n\n    {\n      \"taskId\": \"892b11d1-61a5-45ea-ad29-126d733b62da\",\n      \"destinationLocation\": {\n        \"fileContainerId\": \"1657124-19cb-11e9-934d-0e69f4\",\n        \"fileContainerName\": null,\n        \"fileId\": \"collection_3_10_2021\"\n      }\n    }",
+            "headers": {},
+            "schema": {
+              "$ref": "#/definitions/HpcBulkDataObjectDownloadResponseDTO"
+            }
           },
           "401": {
             "description": "Authentication Failure: \n\nHTTP/1.1 401 Unauthorized Content-Type: application/json\n\n\nJSON:\n\n{ \"errorType\": \"REQUEST_AUTHENTICATION_FAILED\",\n\n\"message\": \"Access Denied: LDAP authentication failed\",\n\n\"stackTrace\": \"…\" } "
@@ -388,6 +500,40 @@
         "wrapped": false
       }
     },
+    "HpcBulkDataObjectDownloadResponseDTO": {
+      "type": "object",
+      "properties": {
+        "destinationFile": {
+          "xml": {
+            "name": "destinationFile",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "destinationLocation": {
+          "xml": {
+            "name": "destinationLocation",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcFileLocation"
+        },
+        "taskId": {
+          "type": "string",
+          "xml": {
+            "name": "taskId",
+            "attribute": false,
+            "wrapped": false
+          }
+        }
+      },
+      "title": "HpcBulkDataObjectDownloadResponseDTO",
+      "xml": {
+        "name": "HpcBulkDataObjectDownloadResponseDTO",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
     "HpcBulkMetadataEntries": {
       "type": "object",
       "properties": {
@@ -436,6 +582,252 @@
         "wrapped": false
       }
     },
+    "HpcCollectionDTOReq": {
+      "type": "object",
+      "properties": {
+        "collection": {
+          "xml": {
+            "name": "collection",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcCollectionReq"
+        },
+        "metadataEntries": {
+          "xml": {
+            "name": "metadataEntries",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcMetadataEntriesReq"
+        },
+        "permission": {
+          "type": "string",
+          "xml": {
+            "name": "permission",
+            "attribute": false,
+            "wrapped": false
+          },
+          "enum": [
+            "NONE",
+            "OWN",
+            "READ",
+            "WRITE"
+          ]
+        }
+      },
+      "title": "HpcCollectionDTOReq",
+      "xml": {
+        "name": "HpcCollectionDTO",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcCollectionDTORes": {
+      "type": "object",
+      "properties": {
+        "collection": {
+          "xml": {
+            "name": "collection",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "metadataEntries": {
+          "xml": {
+            "name": "metadataEntries",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcMetadataEntriesRes"
+        },
+        "permission": {
+          "type": "string",
+          "xml": {
+            "name": "permission",
+            "attribute": false,
+            "wrapped": false
+          },
+          "enum": [
+            "NONE",
+            "OWN",
+            "READ",
+            "WRITE"
+          ]
+        }
+      },
+      "title": "HpcCollectionDTORes",
+      "xml": {
+        "name": "HpcCollectionDTO",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcCollectionDownloadResponseDTO": {
+      "type": "object",
+      "properties": {
+        "destinationLocation": {
+          "xml": {
+            "name": "destinationLocation",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcFileLocation"
+        },
+        "taskId": {
+          "type": "string",
+          "xml": {
+            "name": "taskId",
+            "attribute": false,
+            "wrapped": false
+          }
+        }
+      },
+      "title": "HpcCollectionDownloadResponseDTO",
+      "xml": {
+        "name": "HpcCollectionDownloadResponseDTO",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcCollectionListDTOReq": {
+      "type": "object",
+      "properties": {
+        "collectionPaths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "collections": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HpcCollectionDTOReq"
+          }
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "page": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalCount": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "HpcCollectionListDTOReq",
+      "xml": {
+        "name": "HpcCollectionListDTO",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcCollectionListDTORes": {
+      "type": "object",
+      "properties": {
+        "collectionPaths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "collections": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HpcCollectionDTORes"
+          }
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "page": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalCount": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "HpcCollectionListDTORes",
+      "xml": {
+        "name": "HpcCollectionListDTO",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcCollectionListingEntryReq": {
+      "type": "object",
+      "properties": {
+        "createdAt": {
+          "xml": {
+            "name": "createdAt",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "dataSize": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "path": {
+          "type": "string",
+          "xml": {
+            "name": "path",
+            "attribute": false,
+            "wrapped": false
+          }
+        }
+      },
+      "title": "HpcCollectionListingEntryReq",
+      "xml": {
+        "name": "HpcCollectionListingEntry",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcCollectionListingEntryRes": {
+      "type": "object",
+      "properties": {
+        "createdAt": {
+          "xml": {
+            "name": "createdAt",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "dataSize": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "path": {
+          "type": "string",
+          "xml": {
+            "name": "path",
+            "attribute": false,
+            "wrapped": false
+          }
+        }
+      },
+      "title": "HpcCollectionListingEntryRes",
+      "xml": {
+        "name": "HpcCollectionListingEntry",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
     "HpcCollectionRegistrationDTO": {
       "type": "object",
       "properties": {
@@ -460,6 +852,250 @@
       "title": "HpcCollectionRegistrationDTO",
       "xml": {
         "name": "HpcCollectionRegistrationDTO",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcCollectionReq": {
+      "type": "object",
+      "properties": {
+        "absolutePath": {
+          "type": "string",
+          "xml": {
+            "name": "absolutePath",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "collectionId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "collectionInheritance": {
+          "type": "string",
+          "xml": {
+            "name": "collectionInheritance",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "collectionMapId": {
+          "type": "string",
+          "xml": {
+            "name": "collectionMapId",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "collectionName": {
+          "type": "string",
+          "xml": {
+            "name": "collectionName",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "collectionOwnerName": {
+          "type": "string",
+          "xml": {
+            "name": "collectionOwnerName",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "collectionOwnerZone": {
+          "type": "string",
+          "xml": {
+            "name": "collectionOwnerZone",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "collectionParentName": {
+          "type": "string",
+          "xml": {
+            "name": "collectionParentName",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "comments": {
+          "type": "string",
+          "xml": {
+            "name": "comments",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "createdAt": {
+          "xml": {
+            "name": "createdAt",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "dataObjects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HpcCollectionListingEntryReq"
+          }
+        },
+        "info1": {
+          "type": "string",
+          "xml": {
+            "name": "info1",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "info2": {
+          "type": "string",
+          "xml": {
+            "name": "info2",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "specColType": {
+          "type": "string",
+          "xml": {
+            "name": "specColType",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "subCollections": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HpcCollectionListingEntryReq"
+          }
+        }
+      },
+      "title": "HpcCollectionReq",
+      "xml": {
+        "name": "HpcCollection",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcCollectionRes": {
+      "type": "object",
+      "properties": {
+        "absolutePath": {
+          "type": "string",
+          "xml": {
+            "name": "absolutePath",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "collectionId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "collectionInheritance": {
+          "type": "string",
+          "xml": {
+            "name": "collectionInheritance",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "collectionMapId": {
+          "type": "string",
+          "xml": {
+            "name": "collectionMapId",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "collectionName": {
+          "type": "string",
+          "xml": {
+            "name": "collectionName",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "collectionOwnerName": {
+          "type": "string",
+          "xml": {
+            "name": "collectionOwnerName",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "collectionOwnerZone": {
+          "type": "string",
+          "xml": {
+            "name": "collectionOwnerZone",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "collectionParentName": {
+          "type": "string",
+          "xml": {
+            "name": "collectionParentName",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "comments": {
+          "type": "string",
+          "xml": {
+            "name": "comments",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "createdAt": {
+          "xml": {
+            "name": "createdAt",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "dataObjects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HpcCollectionListingEntryRes"
+          }
+        },
+        "info1": {
+          "type": "string",
+          "xml": {
+            "name": "info1",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "info2": {
+          "type": "string",
+          "xml": {
+            "name": "info2",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "specColType": {
+          "type": "string",
+          "xml": {
+            "name": "specColType",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "subCollections": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HpcCollectionListingEntryRes"
+          }
+        }
+      },
+      "title": "HpcCollectionRes",
+      "xml": {
+        "name": "HpcCollection",
         "attribute": false,
         "wrapped": false
       }
@@ -540,6 +1176,211 @@
       "title": "HpcCompoundMetadataQueryDTO",
       "xml": {
         "name": "HpcCompoundMetadataQueryDTO",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcDataObjectDTOReq": {
+      "type": "object",
+      "properties": {
+        "dataObject": {
+          "xml": {
+            "name": "dataObject",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcDataObjectReq"
+        },
+        "metadataEntries": {
+          "xml": {
+            "name": "metadataEntries",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcMetadataEntriesReq"
+        },
+        "percentComplete": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "permission": {
+          "type": "string",
+          "xml": {
+            "name": "permission",
+            "attribute": false,
+            "wrapped": false
+          },
+          "enum": [
+            "NONE",
+            "OWN",
+            "READ",
+            "WRITE"
+          ]
+        }
+      },
+      "title": "HpcDataObjectDTOReq",
+      "xml": {
+        "name": "HpcDataObjectDTO",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcDataObjectDTORes": {
+      "type": "object",
+      "properties": {
+        "dataObject": {
+          "xml": {
+            "name": "dataObject",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcDataObjectRes"
+        },
+        "metadataEntries": {
+          "xml": {
+            "name": "metadataEntries",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcMetadataEntriesRes"
+        },
+        "percentComplete": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "permission": {
+          "type": "string",
+          "xml": {
+            "name": "permission",
+            "attribute": false,
+            "wrapped": false
+          },
+          "enum": [
+            "NONE",
+            "OWN",
+            "READ",
+            "WRITE"
+          ]
+        }
+      },
+      "title": "HpcDataObjectDTORes",
+      "xml": {
+        "name": "HpcDataObjectDTO",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcDataObjectDownloadResponseDTO": {
+      "type": "object",
+      "properties": {
+        "destinationFile": {
+          "xml": {
+            "name": "destinationFile",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "destinationLocation": {
+          "xml": {
+            "name": "destinationLocation",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcFileLocation"
+        },
+        "downloadRequestURL": {
+          "type": "string",
+          "xml": {
+            "name": "downloadRequestURL",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "restoreInProgress": {
+          "type": "boolean"
+        },
+        "taskId": {
+          "type": "string",
+          "xml": {
+            "name": "taskId",
+            "attribute": false,
+            "wrapped": false
+          }
+        }
+      },
+      "title": "HpcDataObjectDownloadResponseDTO",
+      "xml": {
+        "name": "HpcDataObjectDownloadResponseDTO",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcDataObjectListDTOReq": {
+      "type": "object",
+      "properties": {
+        "dataObjectPaths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "dataObjects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HpcDataObjectDTOReq"
+          }
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "page": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalCount": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "HpcDataObjectListDTOReq",
+      "xml": {
+        "name": "HpcDataObjectListDTO",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcDataObjectListDTORes": {
+      "type": "object",
+      "properties": {
+        "dataObjectPaths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "dataObjects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HpcDataObjectDTORes"
+          }
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "page": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalCount": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "HpcDataObjectListDTORes",
+      "xml": {
+        "name": "HpcDataObjectListDTO",
         "attribute": false,
         "wrapped": false
       }
@@ -640,6 +1481,146 @@
       "title": "HpcDataObjectRegistrationRequestDTO",
       "xml": {
         "name": "HpcDataObjectRegistrationRequestDTO",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcDataObjectReq": {
+      "type": "object",
+      "properties": {
+        "absolutePath": {
+          "type": "string",
+          "xml": {
+            "name": "absolutePath",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "collectionId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "collectionName": {
+          "type": "string",
+          "xml": {
+            "name": "collectionName",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "createdAt": {
+          "xml": {
+            "name": "createdAt",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "dataName": {
+          "type": "string",
+          "xml": {
+            "name": "dataName",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "dataOwnerName": {
+          "type": "string",
+          "xml": {
+            "name": "dataOwnerName",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "dataPath": {
+          "type": "string",
+          "xml": {
+            "name": "dataPath",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "dataSize": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "HpcDataObjectReq",
+      "xml": {
+        "name": "HpcDataObject",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcDataObjectRes": {
+      "type": "object",
+      "properties": {
+        "absolutePath": {
+          "type": "string",
+          "xml": {
+            "name": "absolutePath",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "collectionId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "collectionName": {
+          "type": "string",
+          "xml": {
+            "name": "collectionName",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "createdAt": {
+          "xml": {
+            "name": "createdAt",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "dataName": {
+          "type": "string",
+          "xml": {
+            "name": "dataName",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "dataOwnerName": {
+          "type": "string",
+          "xml": {
+            "name": "dataOwnerName",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "dataPath": {
+          "type": "string",
+          "xml": {
+            "name": "dataPath",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "dataSize": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "HpcDataObjectRes",
+      "xml": {
+        "name": "HpcDataObject",
         "attribute": false,
         "wrapped": false
       }
@@ -767,6 +1748,62 @@
       "title": "HpcGoogleDriveDownloadDestination",
       "xml": {
         "name": "HpcGoogleDriveDownloadDestination",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcMetadataEntriesReq": {
+      "type": "object",
+      "properties": {
+        "parentMetadataEntries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HpcMetadataEntry"
+          }
+        },
+        "selfMetadataEntries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HpcMetadataEntry"
+          }
+        }
+      },
+      "title": "HpcMetadataEntriesReq",
+      "xml": {
+        "name": "HpcMetadataEntries",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcMetadataEntriesRes": {
+      "type": "object",
+      "properties": {
+        "parentMetadataEntries": {
+          "type": "array",
+          "xml": {
+            "name": "parentMetadataEntries",
+            "attribute": false,
+            "wrapped": false
+          },
+          "items": {
+            "$ref": "#/definitions/HpcMetadataEntry"
+          }
+        },
+        "selfMetadataEntries": {
+          "type": "array",
+          "xml": {
+            "name": "selfMetadataEntries",
+            "attribute": false,
+            "wrapped": false
+          },
+          "items": {
+            "$ref": "#/definitions/HpcMetadataEntry"
+          }
+        }
+      },
+      "title": "HpcMetadataEntriesRes",
+      "xml": {
+        "name": "HpcMetadataEntries",
         "attribute": false,
         "wrapped": false
       }
@@ -953,6 +1990,9 @@
             "wrapped": false
           }
         },
+        "pathStyleAccessEnabled": {
+          "type": "boolean"
+        },
         "region": {
           "type": "string",
           "xml": {
@@ -965,6 +2005,14 @@
           "type": "string",
           "xml": {
             "name": "secretKey",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "url": {
+          "type": "string",
+          "xml": {
+            "name": "url",
             "attribute": false,
             "wrapped": false
           }
@@ -1123,6 +2171,10 @@
     "InputStream": {
       "type": "object",
       "title": "InputStream"
+    },
+    "Locale": {
+      "type": "object",
+      "title": "Locale"
     }
   }
 }
