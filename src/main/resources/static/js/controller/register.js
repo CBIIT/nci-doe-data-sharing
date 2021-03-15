@@ -121,7 +121,7 @@ function validateUpdateProfile(){
       	d.institution = $("#institutionTxt").val();
       	d.emailAddrr = $("#emailAddrTxt").text();
       	
-      	invokeAjax('/user-info','POST',JSON.stringify(d),postUpdateUserFunction,null,null,'text')
+      	invokeAjax('/user-info','POST',JSON.stringify(d),postUpdateUserFunction,postFailureFunction,null,'text')
 		  },
 	});
 }
@@ -184,4 +184,8 @@ function postResetLinkFunction(data,status) {
 	} else {
 		bootbox.alert(data);
 	}
+}
+
+function postFailureFunction(url, params, status, error, data) {
+	bootbox.alert("Unknown Error. Contact Technical Support!");
 }

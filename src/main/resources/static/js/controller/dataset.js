@@ -153,6 +153,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,accessgroups,permissions,col
     					 console.log('ERROR: ', e);
     					 $("#spinner").hide();
     			         $("#dimmer").hide();
+    			         bootbox.alert("Error in retrieving collection metadata.");
     				 }
     			   });
         	

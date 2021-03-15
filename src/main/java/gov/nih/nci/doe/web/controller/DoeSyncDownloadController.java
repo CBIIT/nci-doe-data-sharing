@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.ws.rs.core.Response;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 
@@ -64,7 +65,7 @@ public class DoeSyncDownloadController extends AbstractDoeController {
 			}
 
 			final String requestUrl = UriComponentsBuilder.fromHttpUrl(dataObjectAsyncServiceURL)
-					.path("/{dme-archive-path}/download").buildAndExpand(downloadFile.getDestinationPath()).encode()
+					.path("{dme-archive-path}/download").buildAndExpand(downloadFile.getDestinationPath()).encode()
 					.toUri().toURL().toExternalForm();
 
 			WebClient client = DoeClientUtil.getWebClient(requestUrl, sslCertPath, sslCertPassword);
@@ -77,7 +78,7 @@ public class DoeSyncDownloadController extends AbstractDoeController {
 
 				response.setContentType("application/octet-stream");
 				response.setHeader("Content-Disposition", "attachment; filename=" + downloadFile.getDownloadFileName());
-				IOUtils.copy((InputStream) restResponse.getEntity(), response.getOutputStream());
+				IOUtils.copy((InputStream) restResponse.getEntity(), response.getOutputStream(), 16000);
 
 			} else {
 				return handleDownloadProblem(restResponse);
@@ -105,13 +106,6 @@ public class DoeSyncDownloadController extends AbstractDoeController {
 
 			return new ByteArrayResource(("Failed to download: " + e.getMessage()).getBytes());
 		}
-	}
-
-	private @ResponseBody void handleStreamingDownloadData(@Valid DoeDownloadDatafile downloadFile,
-			HttpServletResponse response, Response restResponse) throws IOException {
-		response.setContentType("application/octet-stream");
-		response.setHeader("Content-Disposition", "attachment; filename=" + downloadFile.getDownloadFileName());
-		IOUtils.copy((InputStream) restResponse.getEntity(), response.getOutputStream());
 	}
 
 }

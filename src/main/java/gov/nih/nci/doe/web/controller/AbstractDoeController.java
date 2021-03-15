@@ -256,7 +256,7 @@ public abstract class AbstractDoeController {
 			Response restResponse = client.invoke("GET", null);
 			response.setContentType("application/octet-stream");
 			response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
-			IOUtils.copy((InputStream) restResponse.getEntity(), response.getOutputStream());
+			IOUtils.copy((InputStream) restResponse.getEntity(), response.getOutputStream(),16000);
 		} catch (IOException e) {
 			throw new DoeWebException(e);
 		}

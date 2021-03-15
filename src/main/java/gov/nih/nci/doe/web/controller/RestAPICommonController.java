@@ -345,23 +345,24 @@ public class RestAPICommonController extends AbstractDoeController {
 
 	/**
 	 * asynchronousDownload
-	 * 
+	 *
 	 * @throws IOException
 	 * 
 	 * 
 	 */
 	@PostMapping(value = "/dataObject/**/syncDownload")
 	public ResponseEntity<?> synchronousDownload(@RequestHeader HttpHeaders headers, HttpServletRequest request,
-			@ApiIgnore HttpSession session, HttpServletResponse response)
-			throws DoeWebException, MalformedURLException {
+			@ApiIgnore HttpSession session, HttpServletResponse response) throws DoeWebException, IOException {
 
 		log.info("download async:");
+		// getting path param from request URI.
 		String path = request.getRequestURI().split(request.getContextPath() + "/dataObject/")[1];
 		Integer index = path.lastIndexOf('/');
 		path = path.substring(0, index);
 		log.info("Headers: {}", headers);
 		log.info("pathName: " + path);
 
+		// getting write access token for download request URL
 		String authToken = (String) session.getAttribute("hpcUserToken");
 		log.info("authToken: " + authToken);
 		if (authToken == null) {
@@ -374,18 +375,19 @@ public class RestAPICommonController extends AbstractDoeController {
 		if (doeLogin == null) {
 			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
 		}
+
 		Boolean isPermissions = false;
 		String parentPath = null;
 		if (path.lastIndexOf('/') != -1) {
 			parentPath = path.substring(0, path.lastIndexOf('/'));
 		}
-
 		HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, parentPath, true,
 				sslCertPath, sslCertPassword);
 
 		HpcCollectionDTO result = collectionDto.getCollections().get(0);
 		String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
 
+		// verify group or owner permissions on the collection path
 		if (StringUtils.isNotEmpty(accessGrp) && ("public".equalsIgnoreCase(accessGrp)
 				|| Boolean.TRUE.equals(hasCollectionPermissions(doeLogin, parentPath, collectionDto)))) {
 			isPermissions = true;
@@ -393,8 +395,8 @@ public class RestAPICommonController extends AbstractDoeController {
 
 		if (Boolean.TRUE.equals(isPermissions)) {
 			final String requestUrl = UriComponentsBuilder.fromHttpUrl(this.dataObjectServiceURL)
-					.path("/{dme-archive-path}/download").buildAndExpand(path).encode().toUri().toURL()
-					.toExternalForm();
+					.path("/{dme-archive-path}/generateDownloadRequestURL").buildAndExpand(path).encode().toUri()
+					.toURL().toExternalForm();
 
 			final HpcDownloadRequestDTO dto = new HpcDownloadRequestDTO();
 			dto.setGenerateDownloadRequestURL(true);
@@ -405,12 +407,17 @@ public class RestAPICommonController extends AbstractDoeController {
 			Response restResponse = client.invoke("POST", dto);
 			log.info("rest response:" + restResponse.getStatus());
 			if (restResponse.getStatus() == 200) {
-				HpcDataObjectDownloadResponseDTO downloadDTO = (HpcDataObjectDownloadResponseDTO) DoeClientUtil
-						.getObject(restResponse, HpcDataObjectDownloadResponseDTO.class);
-				downloadToUrl(downloadDTO.getDownloadRequestURL(), "test", response);
+				MappingJsonFactory factory = new MappingJsonFactory();
+				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+				HpcDataObjectDownloadResponseDTO dataObject = parser
+						.readValueAs(HpcDataObjectDownloadResponseDTO.class);
+				downloadToUrl(dataObject.getDownloadRequestURL(),
+						dataObject.getDestinationFile() != null ? dataObject.getDestinationFile().getName() : "test",
+						response);
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		}
+
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
 	}
 
@@ -486,8 +493,8 @@ public class RestAPICommonController extends AbstractDoeController {
 					log.info("response content type is application/octet-stream");
 					response.setContentType("application/octet-stream");
 					response.setHeader("Content-Disposition", "attachment; filename=" + "test");
-					//default buffer size is 4k
-					IOUtils.copy((InputStream) restResponse.getEntity(), response.getOutputStream());
+					// default buffer size is 4k
+					IOUtils.copy((InputStream) restResponse.getEntity(), response.getOutputStream(),16000);
 					return new ResponseEntity<>(HttpStatus.OK);
 
 				} else {
