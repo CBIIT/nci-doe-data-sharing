@@ -7,10 +7,10 @@ public interface MailService {
 	public static final String BCC = "bcc";
 	public static final String FROM = "from";
 
-	public void sendRegistrationEmail(String email) throws Exception;
+	public void sendRegistrationEmail(String email);
 
-	public void sendActivationEmail(String webServerName, String email, String uuid) throws Exception;
+	public void sendActivationEmail(String webServerName, String email, String uuid);
 
-	public void sendResetPasswordEmail(String password, String email) throws Exception;
+	public void sendResetPasswordEmail(String password, String email);
 
 }

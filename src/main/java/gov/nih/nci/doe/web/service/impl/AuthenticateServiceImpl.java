@@ -108,9 +108,8 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		return status;
 	}
 
-	@Override
-	@Transactional(readOnly = false)
-	public LoginStatusCode lockOrUnlockUser(final String user, final boolean lock) throws Exception {
+
+	private LoginStatusCode lockOrUnlockUser(final String user, final boolean lock) throws Exception {
 		// sanity check
 		if (user == null) {
 			throw new IllegalArgumentException("User is required");
@@ -157,7 +156,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public String getPassword(String username) throws Exception {
+	public String getPassword(String username) {
 		return doeUserRepository.getPasswordById(username);
 	}
 
@@ -238,7 +237,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public boolean doesUsernameExist(String username) throws Exception {
+	public boolean doesUsernameExist(String username) {
 		DoeUsers user = doeUserRepository.getUserInfo(username);
 		if (user != null) {
 			log.info("user exists" + username);
@@ -249,8 +248,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public PasswordStatusCode saveUserPassword(String rawPassword, String userid, Boolean validatePswd)
-			throws Exception {
+	public PasswordStatusCode saveUserPassword(String rawPassword, String userid, Boolean validatePswd) {
 		log.info("Updating password for user ID: {}", userid);
 		// sanity check
 		if (userid == null || rawPassword == null) {

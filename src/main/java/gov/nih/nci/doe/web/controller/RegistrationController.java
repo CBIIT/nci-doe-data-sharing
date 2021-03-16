@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.constants.PasswordStatusCode;
 import gov.nih.nci.doe.web.domain.DoeUsers;
 import gov.nih.nci.doe.web.model.DoeRegistration;
@@ -39,28 +40,28 @@ public class RegistrationController extends AbstractDoeController {
 
 		log.info("register user");
 
-		// validate the password first
-		PasswordStatusCode status = authService.validatePassword(register.getPassword(), null);
-		if (authService.doesUsernameExist(register.getEmailAddress().trim().toLowerCase())) {
-			log.info("Email already found in the system...");
-			return new ResponseEntity<>("Email address already exists.", HttpStatus.OK);
-		} else if (!status.equals(PasswordStatusCode.SUCCESS)) {
-			log.info("Password validation failed...");
-			return new ResponseEntity<>("Enter a password with valid length and format. Refer to Password Constraints.",
-					HttpStatus.OK);
-		} else {
-			// register the user in the system
-			DoeUsers user = authService.register(register);
-			try {
+		try {
+			// validate the password first
+			PasswordStatusCode status = authService.validatePassword(register.getPassword(), null);
+			if (authService.doesUsernameExist(register.getEmailAddress().trim().toLowerCase())) {
+				log.info("Email already found in the system...");
+				return new ResponseEntity<>("Email address already exists.", HttpStatus.OK);
+			} else if (!status.equals(PasswordStatusCode.SUCCESS)) {
+				log.info("Password validation failed...");
+				return new ResponseEntity<>(
+						"Enter a password with valid length and format. Refer to Password Constraints.", HttpStatus.OK);
+			} else {
+				// register the user in the system
+				DoeUsers user = authService.register(register);
 				// send an activation link after registration
 				mailService.sendActivationEmail(webServerName, register.getEmailAddress(), user.getUuid());
 				return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
-			} catch (Exception e) {
-				log.error(e.getMessage());
+
 			}
+
+		} catch (Exception e) {
+			throw new DoeWebException("Failed to register user: " + e.getMessage());
 		}
-		log.info("Ending of the method register");
-		return new ResponseEntity<>("FAILURE", HttpStatus.OK);
 
 	}
 }

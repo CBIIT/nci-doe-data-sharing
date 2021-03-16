@@ -22,8 +22,6 @@ public class DoeSearchResult {
     private Integer studyCollectionId;
     private Integer programCollectionId;
     private String dataLevelAccessGroups;
-    private String studyLevelAccessGroups;
-    private String programLevelAccessGroups;
     private String dataSetdmeDataId;
     private String assetType;
     
@@ -151,18 +149,7 @@ public class DoeSearchResult {
 	public void setDataLevelAccessGroups(String dataLevelAccessGroups) {
 		this.dataLevelAccessGroups = dataLevelAccessGroups;
 	}
-	public String getStudyLevelAccessGroups() {
-		return studyLevelAccessGroups;
-	}
-	public void setStudyLevelAccessGroups(String studyLevelAccessGroups) {
-		this.studyLevelAccessGroups = studyLevelAccessGroups;
-	}
-	public String getProgramLevelAccessGroups() {
-		return programLevelAccessGroups;
-	}
-	public void setProgramLevelAccessGroups(String programLevelAccessGroups) {
-		this.programLevelAccessGroups = programLevelAccessGroups;
-	}
+
 
     
     

@@ -169,7 +169,7 @@ public class MailServiceImpl implements MailService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public void sendRegistrationEmail(String email) throws Exception {
+	public void sendRegistrationEmail(String email) {
 		log.info("Sending an email for registration");
 		final Map<String, Object> params = new HashMap<String, Object>();
 		final List<String> to = new ArrayList<String>();
@@ -181,7 +181,7 @@ public class MailServiceImpl implements MailService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public void sendActivationEmail(String webServerName, String email, String uuid) throws Exception {
+	public void sendActivationEmail(String webServerName, String email, String uuid) {
 		log.info("Sending an activation email after registration");
 		final Map<String, Object> params = new HashMap<String, Object>();
 		final List<String> to = new ArrayList<String>();
@@ -192,7 +192,7 @@ public class MailServiceImpl implements MailService {
 	}
 
 	@Override
-	public void sendResetPasswordEmail(String password, String email) throws Exception {
+	public void sendResetPasswordEmail(String password, String email) {
 		log.info("Sending an email for password reset" + email);
 
 		final Map<String, Object> params = new HashMap<String, Object>();

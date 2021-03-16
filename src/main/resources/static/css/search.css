@@ -20,6 +20,10 @@
 	margin-top: -4px;
 }
 
+.selectIndividualCheckbox {
+    margin-left: 6px;
+}
+
 #dataSetMetaData {
 	    width: 100%;
     margin-left: 48px;

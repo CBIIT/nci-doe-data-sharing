@@ -36,7 +36,7 @@ public class ResetPasswordController extends AbstractDoeController {
 
 	@GetMapping
 	public ResponseEntity<?> forgotPassword(HttpSession session, @RequestHeader HttpHeaders headers,
-			@RequestParam(value = "emailAddr") String emailAddr) throws Exception {
+			@RequestParam(value = "emailAddr") String emailAddr) throws DoeWebException {
 		log.info("resetting the password for user " + emailAddr);
 
 		if (emailAddr == null || StringUtils.isEmpty(emailAddr)) {
@@ -44,13 +44,14 @@ public class ResetPasswordController extends AbstractDoeController {
 			return new ResponseEntity<>("Enter an email address.", HttpStatus.OK);
 
 		}
-		if (!authService.doesUsernameExist(emailAddr.trim().toLowerCase())) {
-			log.error("Email address does not exist.");
-			return new ResponseEntity<>("Email address does not exist.", HttpStatus.OK);
-		}
 
-		log.info("About to send a reset link for user ID {}", emailAddr);
 		try {
+			if (!authService.doesUsernameExist(emailAddr.trim().toLowerCase())) {
+				log.error("Email address does not exist.");
+				return new ResponseEntity<>("Email address does not exist.", HttpStatus.OK);
+			}
+
+			log.info("About to send a reset link for user ID {}", emailAddr);
 			// generate a random password for the user and store in db
 			String password = generateTempPassword();
 			authService.saveUserPassword(password, emailAddr.trim().toLowerCase(), false);
@@ -95,7 +96,6 @@ public class ResetPasswordController extends AbstractDoeController {
 		splCharRule.setNumberOfCharacters(1);
 
 		List<CharacterRule> rules = Arrays.asList(splCharRule, lowerCaseRule, upperCaseRule, digitRule);
-		String password = gen.generatePassword(8, rules);
-		return password;
+		return gen.generatePassword(8, rules);
 	}
 }

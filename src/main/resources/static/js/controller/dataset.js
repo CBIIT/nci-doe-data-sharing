@@ -486,10 +486,12 @@ function renderDownload(data, type, row,accessgroups,permissions) {
 	        "title='Copy File Path' data-clipboard-text='"+ row.path + "'>" +
 	        "<i class='fas fa-copy'></i></button>";
 	
-	html += "<span class='btn btn-link btn-sm editDataFileCollectionMetadata'  metadata_path  = '" + path + "'" +
+	if(permissions && permissions != 'No Permissions') {
+	  html += "<span class='btn btn-link btn-sm editDataFileCollectionMetadata'  metadata_path  = '" + path + "'" +
 	        "data-fileName = '" + downdloadFileName + "' >" +
 			"<img src='images/Search_EditMetaData.svg' data-toggle='tooltip' title='Edit File Metadata' th:src='@{/images/Search_EditMetaData.svg}' " +
 			"style='width:15px;' alt='edit collection'></span>";
+	}
 	
 	html += "<a aria-label='download link' class='btn btn-link btn-sm downloadMetadata'  data_path  = '" + path + "' href='javascript:void(0);' " +
             "><i class='fas fa-file-export' data-toggle='tooltip' title='Download File Metadata'></i></a>";

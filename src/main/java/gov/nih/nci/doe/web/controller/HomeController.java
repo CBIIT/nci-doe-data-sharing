@@ -43,14 +43,19 @@ public class HomeController extends AbstractDoeController {
 
 	@GetMapping
 	public String index(@RequestParam(value = "token", required = false) String token,
-			@RequestParam(value = "email", required = false) String email) throws Exception {
+			@RequestParam(value = "email", required = false) String email) throws DoeWebException {
 
 		log.info("home page");
-		if (StringUtils.isNotEmpty(token) && StringUtils.isNotEmpty(email)) {
-			String status = authenticateService.confirmRegistration(token, email);
-			if ("SUCCESS".equalsIgnoreCase(status)) {
-				mailService.sendRegistrationEmail(email);
+
+		try {
+			if (StringUtils.isNotEmpty(token) && StringUtils.isNotEmpty(email)) {
+				String status = authenticateService.confirmRegistration(token, email);
+				if ("SUCCESS".equalsIgnoreCase(status)) {
+					mailService.sendRegistrationEmail(email);
+				}
 			}
+		} catch (Exception e) {
+			throw new DoeWebException("Failed to send registration email" + e.getMessage());
 		}
 		return "home";
 

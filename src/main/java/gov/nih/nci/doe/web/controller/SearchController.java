@@ -214,10 +214,6 @@ public class SearchController extends AbstractDoeController {
 					getAttributeValue("study_name", result.getMetadataEntries().getParentMetadataEntries(), "Study"));
 			returnResult.setDataLevelAccessGroups(
 					getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries(), "Asset"));
-			returnResult.setStudyLevelAccessGroups(
-					getAttributeValue("access_group", result.getMetadataEntries().getParentMetadataEntries(), "Study"));
-			returnResult.setProgramLevelAccessGroups(getAttributeValue("access_group",
-					result.getMetadataEntries().getParentMetadataEntries(), "Program"));
 			returnResult.setDataSetdmeDataId(webUrl + "/searchTab?dme_data_id="
 					+ getAttributeValue("dme_data_id", result.getMetadataEntries().getSelfMetadataEntries(), "Asset"));
 			returnResult.setAssetType(

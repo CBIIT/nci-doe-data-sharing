@@ -264,11 +264,11 @@ function dataTableInit(isVisible) {
            });
            
            $(".editAccessGroupPermissions").click(function(e){
-         	   var collectionId = $(this).attr('collectionId');
+         	 var collectionId = $(this).attr('collectionId');
          	 var metaDataPath = $(this).attr('metadata_path');
-         	var selectedCollection = $(this).attr('selectedCollection');
-         	var collectionName = $(this).attr('collection_name');
-     	   var params= {selectedPath:metaDataPath,levelName:selectedCollection};
+         	 var selectedCollection = $(this).attr('selectedCollection');
+         	 var collectionName = $(this).attr('collection_name');
+     	     var params= {selectedPath:metaDataPath,levelName:selectedCollection};
     	   
   			$.ajax({
 				type : "GET",
@@ -381,8 +381,6 @@ function renderDataSetName(data, type, row){
 	var search_results_json = {};
 	
 	search_results_json.dataLevelAccessGroups = row.dataLevelAccessGroups;
-	search_results_json.studyLevelAccessGroups = row.studyLevelAccessGroups;
-	search_results_json.programLevelAccessGroups = row.programLevelAccessGroups;
 	search_results_json.dataCollectionId = row.dataSetCollectionId;
 	search_results_json.studyCollectionId = row.studyCollectionId;
 	search_results_json.progCollectionId = row.programCollectionId;
@@ -390,8 +388,6 @@ function renderDataSetName(data, type, row){
 	search_results_json.studyName = row.studyName;
 	search_results_json.programName = row.programName;
 	search_results_json.dataSetPermissionRole = row.dataSetPermissionRole;
-	search_results_json.studyPermissionRole = row.studyPermissionRole;
-	search_results_json.programPermissionRole = row.programPermissionRole;
 
 	if(isLoggedOnuserExists) {
 		var editDataSetHtml = "";
@@ -415,7 +411,7 @@ function renderDataSetName(data, type, row){
 				editDataSetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collection_name = '" + row.dataSetName + "' " +
 						            "collectionId  = '" + row.dataSetCollectionId + "' " +
 			                        " selectedCollection = 'Asset' " +
-			    		            "access_groups  = '" + row.dataLevelAccessGroups+ "' metadata_path  = '" + row.dataSetPath+ "'>" +
+			    		            "metadata_path  = '" + row.dataSetPath+ "'>" +
                                     "<img src='images/Search_AccessGroups.svg' data-toggle='tooltip' " +
                                     "title='Edit Asset Access Permissions' " +
                                     "th:src='@{/images/Search_AccessGroups.svg}' " +
@@ -458,8 +454,6 @@ function renderPath(data, type, row) {
     var search_results_json = {};
 	
 	search_results_json.dataLevelAccessGroups = row.dataLevelAccessGroups;
-	search_results_json.studyLevelAccessGroups = row.studyLevelAccessGroups;
-	search_results_json.programLevelAccessGroups = row.programLevelAccessGroups;
 	search_results_json.dataCollectionId = row.dataSetCollectionId;
 	search_results_json.studyCollectionId = row.studyCollectionId;
 	search_results_json.progCollectionId = row.programCollectionId;
@@ -467,8 +461,6 @@ function renderPath(data, type, row) {
 	search_results_json.studyName = row.studyName;
 	search_results_json.programName = row.programName;
 	search_results_json.dataSetPermissionRole = row.dataSetPermissionRole;
-	search_results_json.studyPermissionRole = row.studyPermissionRole;
-	search_results_json.programPermissionRole = row.programPermissionRole;
 	
 	if(isLoggedOnuserExists) {
 		var editStudySetHtml = "";
@@ -487,7 +479,7 @@ function renderPath(data, type, row) {
 			editStudySetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collection_name ='" +row.studyName + "'" +
 						        " collectionId  = '" + row.studyCollectionId + "' " +
 			                    " selectedCollection = 'Study'  " +
-			    		        "access_groups  = '" + row.studyLevelAccessGroups+ "' metadata_path  = '" + row.studyPath+ "'>" +
+			    		        "metadata_path  = '" + row.studyPath+ "'>" +
                                 "<img src='images/Search_AccessGroups.svg' data-toggle='tooltip' title='Edit Study Access Permissions' " +
                                 "th:src='@{/images/Search_AccessGroups.svg}' " +
 			                    "style='width:15px;' alt='Edit Study Access Permissions'</span>";
@@ -507,7 +499,7 @@ function renderPath(data, type, row) {
 				editProgramSetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' " +
 				"collection_name ='" +row.programName + "' collectionId  = '" + row.programCollectionId + "' " +
 			    "selectedCollection = 'Program'  " +
-			    "access_groups  = '" + row.programLevelAccessGroups+ "' metadata_path  = '" + row.institutePath+ "'>" +
+			    "metadata_path  = '" + row.institutePath+ "'>" +
                 "<img src='images/Search_AccessGroups.svg' data-toggle='tooltip' title='Edit Program Access Permissions' " +
                 "th:src='@{/images/Search_AccessGroups.svg}' " +
 			    "style='width:15px;' alt='Edit Program Access Permissions'</span>";
