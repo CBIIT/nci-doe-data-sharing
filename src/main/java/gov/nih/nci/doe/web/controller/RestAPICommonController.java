@@ -494,7 +494,7 @@ public class RestAPICommonController extends AbstractDoeController {
 					response.setContentType("application/octet-stream");
 					response.setHeader("Content-Disposition", "attachment; filename=" + "test");
 					// default buffer size is 4k
-					IOUtils.copy((InputStream) restResponse.getEntity(), response.getOutputStream(),16000);
+					IOUtils.copy((InputStream) restResponse.getEntity(), response.getOutputStream(),bufferSize);
 					return new ResponseEntity<>(HttpStatus.OK);
 
 				} else {

@@ -78,7 +78,7 @@ public class DoeSyncDownloadController extends AbstractDoeController {
 
 				response.setContentType("application/octet-stream");
 				response.setHeader("Content-Disposition", "attachment; filename=" + downloadFile.getDownloadFileName());
-				IOUtils.copy((InputStream) restResponse.getEntity(), response.getOutputStream(), 16000);
+				IOUtils.copy((InputStream) restResponse.getEntity(), response.getOutputStream(), bufferSize);
 
 			} else {
 				return handleDownloadProblem(restResponse);
