@@ -142,7 +142,8 @@ function editAccessPermissions(collectionId,metadata_path,msg,selectedCollection
 		}   
 	
 	});
-	
+	$("#updateAccessPermissionsModal").find(".updateErrorAccessMsg").html("");
+	$("#updateAccessPermissionsModal").find(".errorUpdateAccessGroupsBlock").hide();
 	$("#updateAccessPermissionsModal").find(".updateAccessMsg").html("");
 	$("#updateAccessPermissionsModal").find(".updateAccessGroupsBlock").hide();
 	$("#updateAccessPermissionsModal").find("#updateCollectionId").val(collectionId);
