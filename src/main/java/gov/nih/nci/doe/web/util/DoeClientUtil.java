@@ -704,6 +704,102 @@ public class DoeClientUtil {
 		}
 	}
 
+	public static Response asynchronousDownload(String authToken, String dataObjectAsyncServiceURL, String path,
+			String hpcCertPath, String hpcCertPassword, HpcDownloadRequestDTO downloadRequest) throws DoeWebException {
+		try {
+			final String requestUrl = UriComponentsBuilder.fromHttpUrl(dataObjectAsyncServiceURL)
+					.path("/{dme-archive-path}/download").buildAndExpand(path).encode().toUri().toURL()
+					.toExternalForm();
+
+			WebClient client = DoeClientUtil.getWebClient(requestUrl, hpcCertPath, hpcCertPassword);
+			client.header("Authorization", "Bearer " + authToken);
+
+			Response restResponse = client.invoke("POST", downloadRequest);
+			log.info("rest response:" + restResponse.getStatus());
+			if (restResponse.getStatus() == 200) {
+				return restResponse;
+			} else {
+				String errorMessage = getErrorMessage(restResponse);
+				throw new DoeWebException(errorMessage, restResponse.getStatus());
+			}
+		} catch (Exception e) {
+			throw new DoeWebException(e.getMessage());
+		}
+	}
+
+	public static Response downloadCollection(String authToken, String collectionUrl, String path, String hpcCertPath,
+			String hpcCertPassword, HpcDownloadRequestDTO downloadRequest) throws DoeWebException {
+		try {
+			final String requestUrl = UriComponentsBuilder.fromHttpUrl(collectionUrl)
+					.path("/{dme-archive-path}/download").buildAndExpand(path).encode().toUri().toURL()
+					.toExternalForm();
+
+			WebClient client = DoeClientUtil.getWebClient(requestUrl, hpcCertPath, hpcCertPassword);
+			client.header("Authorization", "Bearer " + authToken);
+
+			Response restResponse = client.invoke("POST", downloadRequest);
+			log.info("rest response:" + restResponse.getStatus());
+			if (restResponse.getStatus() == 200) {
+				return restResponse;
+			} else {
+				String errorMessage = getErrorMessage(restResponse);
+				throw new DoeWebException(errorMessage, restResponse.getStatus());
+			}
+		} catch (Exception e) {
+			throw new DoeWebException(e.getMessage());
+		}
+	}
+
+	public static Response downloadDataObjectsOrCollections(String authToken, String bulkDownloadUrl,
+			String hpcCertPath, String hpcCertPassword, HpcBulkDataObjectDownloadRequestDTO downloadRequest)
+			throws DoeWebException {
+		try {
+			String requestURL;
+			UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(bulkDownloadUrl);
+
+			requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
+			WebClient client = DoeClientUtil.getWebClient(requestURL, hpcCertPath, hpcCertPassword);
+			client.header("Authorization", "Bearer " + authToken);
+			Response restResponse = client.invoke("POST", downloadRequest);
+			log.info("rest response:" + restResponse.getStatus());
+			if (restResponse.getStatus() == 200) {
+				return restResponse;
+			} else {
+				String errorMessage = getErrorMessage(restResponse);
+				throw new DoeWebException(errorMessage, restResponse.getStatus());
+			}
+		} catch (Exception e) {
+			throw new DoeWebException(e.getMessage());
+		}
+	}
+	
+	public static Response getPreSignedUrl(String authToken, String dataObjectServiceURL,String path,
+			String hpcCertPath, String hpcCertPassword)
+			throws DoeWebException {
+		try {
+			final String requestUrl = UriComponentsBuilder.fromHttpUrl(dataObjectServiceURL)
+					.path("/{dme-archive-path}/generateDownloadRequestURL").buildAndExpand(path).encode().toUri()
+					.toURL().toExternalForm();
+
+			final gov.nih.nci.hpc.dto.datamanagement.HpcDownloadRequestDTO dto = new gov.nih.nci.hpc.dto.datamanagement.HpcDownloadRequestDTO();
+			dto.setGenerateDownloadRequestURL(true);
+
+			WebClient client = DoeClientUtil.getWebClient(requestUrl, hpcCertPath, hpcCertPassword);
+			client.header("Authorization", "Bearer " + authToken);
+
+			Response restResponse = client.invoke("POST", dto);
+			log.info("rest response:" + restResponse.getStatus());
+			if (restResponse.getStatus() == 200) {
+				return restResponse;
+			} else {
+				String errorMessage = getErrorMessage(restResponse);
+				throw new DoeWebException(errorMessage, restResponse.getStatus());
+			}
+		} catch (Exception e) {
+			throw new DoeWebException(e.getMessage());
+		}
+	}
+
 	public static HpcBulkDataObjectDownloadResponseDTO downloadFiles(String token, String hpcQueryURL,
 			HpcBulkDataObjectDownloadRequestDTO dto, String hpcCertPath, String hpcCertPassword)
 			throws DoeWebException {
@@ -952,7 +1048,7 @@ public class DoeClientUtil {
 		}
 	}
 
-	private static String getErrorMessage(Response restResponse) throws IOException {
+	public static String getErrorMessage(Response restResponse) throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
 				new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()), new JacksonAnnotationIntrospector());

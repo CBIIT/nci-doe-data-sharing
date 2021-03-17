@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.util.UriComponentsBuilder;
 import org.apache.commons.io.IOUtils;
 
 import io.jsonwebtoken.Jwts;
@@ -44,7 +43,6 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcDownloadRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectDTO;
 import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
 
@@ -67,7 +65,6 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -172,17 +169,8 @@ public class RestAPICommonController extends AbstractDoeController {
 		}
 
 		if (Boolean.TRUE.equals(isPermissions)) {
-			final String requestUrl = UriComponentsBuilder.fromHttpUrl(this.dataObjectServiceURL)
-					.path("/{dme-archive-path}/generateDownloadRequestURL").buildAndExpand(path).encode().toUri()
-					.toURL().toExternalForm();
-
-			final HpcDownloadRequestDTO dto = new HpcDownloadRequestDTO();
-			dto.setGenerateDownloadRequestURL(true);
-
-			WebClient client = DoeClientUtil.getWebClient(requestUrl, sslCertPath, sslCertPassword);
-			client.header("Authorization", "Bearer " + authToken);
-
-			Response restResponse = client.invoke("POST", dto);
+			Response restResponse = DoeClientUtil.getPreSignedUrl(authToken, dataObjectServiceURL, path, sslCertPath,
+					sslCertPassword);
 			log.info("rest response:" + restResponse.getStatus());
 			if (restResponse.getStatus() == 200) {
 				MappingJsonFactory factory = new MappingJsonFactory();
@@ -216,7 +204,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	public ResponseEntity<?> downloadDataObjectsOrCollections(@RequestHeader HttpHeaders headers,
 			HttpServletRequest request, @ApiIgnore HttpSession session, HttpServletResponse response,
 			@RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectDownloadRequestDTO downloadRequest)
-			throws DoeWebException, MalformedURLException {
+			throws DoeWebException {
 
 		log.info("download collection:");
 		log.info("Headers: {}", headers);
@@ -233,13 +221,9 @@ public class RestAPICommonController extends AbstractDoeController {
 		if (doeLogin == null) {
 			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
 		}
-		String requestURL;
-		UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(bulkDownloadUrl);
 
-		requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
-		WebClient client = DoeClientUtil.getWebClient(requestURL, sslCertPath, sslCertPassword);
-		client.header("Authorization", "Bearer " + authToken);
-		Response restResponse = client.invoke("POST", downloadRequest);
+		Response restResponse = DoeClientUtil.downloadDataObjectsOrCollections(authToken, bulkDownloadUrl, sslCertPath,
+				sslCertPassword, downloadRequest);
 
 		log.info("rest response:" + restResponse.getStatus());
 		if (restResponse.getStatus() == 200) {
@@ -269,12 +253,13 @@ public class RestAPICommonController extends AbstractDoeController {
 	 * collection download
 	 * 
 	 * @param downloadRequest
+	 * @throws IOException
 	 */
 	@PostMapping(value = "/v2/collection/**/download")
 	public ResponseEntity<?> collectionDownload(@RequestHeader HttpHeaders headers, HttpServletRequest request,
 			@ApiIgnore HttpSession session, HttpServletResponse response,
 			@RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO downloadRequest)
-			throws DoeWebException, MalformedURLException {
+			throws DoeWebException {
 
 		log.info("download collection:");
 		String path = request.getRequestURI().split(request.getContextPath() + "/v2/collection/")[1];
@@ -310,14 +295,9 @@ public class RestAPICommonController extends AbstractDoeController {
 		}
 
 		if (Boolean.TRUE.equals(isPermissions)) {
-			final String requestUrl = UriComponentsBuilder.fromHttpUrl(this.collectionUrl)
-					.path("/{dme-archive-path}/download").buildAndExpand(path).encode().toUri().toURL()
-					.toExternalForm();
 
-			WebClient client = DoeClientUtil.getWebClient(requestUrl, sslCertPath, sslCertPassword);
-			client.header("Authorization", "Bearer " + authToken);
-
-			Response restResponse = client.invoke("POST", downloadRequest);
+			Response restResponse = DoeClientUtil.downloadCollection(authToken, collectionUrl, path, sslCertPath,
+					sslCertPassword, downloadRequest);
 			log.info("rest response:" + restResponse.getStatus());
 			if (restResponse.getStatus() == 200) {
 				HpcCollectionDownloadResponseDTO downloadDTO = (HpcCollectionDownloadResponseDTO) DoeClientUtil
@@ -334,10 +314,11 @@ public class RestAPICommonController extends AbstractDoeController {
 					audit.setTransferType("async");
 					audit.setTaskId(downloadDTO.getTaskId());
 					auditingService.saveAuditInfo(audit);
+
+					return new ResponseEntity<>(downloadDTO, HttpStatus.OK);
 				} catch (Exception e) {
 					log.error("error in save transfer" + e.getMessage());
 				}
-				return new ResponseEntity<>(downloadDTO, HttpStatus.OK);
 			}
 		}
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
@@ -394,17 +375,10 @@ public class RestAPICommonController extends AbstractDoeController {
 		}
 
 		if (Boolean.TRUE.equals(isPermissions)) {
-			final String requestUrl = UriComponentsBuilder.fromHttpUrl(this.dataObjectServiceURL)
-					.path("/{dme-archive-path}/generateDownloadRequestURL").buildAndExpand(path).encode().toUri()
-					.toURL().toExternalForm();
 
-			final HpcDownloadRequestDTO dto = new HpcDownloadRequestDTO();
-			dto.setGenerateDownloadRequestURL(true);
+			Response restResponse = DoeClientUtil.getPreSignedUrl(authToken, dataObjectServiceURL, path, sslCertPath,
+					sslCertPassword);
 
-			WebClient client = DoeClientUtil.getWebClient(requestUrl, sslCertPath, sslCertPassword);
-			client.header("Authorization", "Bearer " + authToken);
-
-			Response restResponse = client.invoke("POST", dto);
 			log.info("rest response:" + restResponse.getStatus());
 			if (restResponse.getStatus() == 200) {
 				MappingJsonFactory factory = new MappingJsonFactory();
@@ -474,14 +448,9 @@ public class RestAPICommonController extends AbstractDoeController {
 		}
 
 		if (Boolean.TRUE.equals(isPermissions)) {
-			final String requestUrl = UriComponentsBuilder.fromHttpUrl(this.dataObjectAsyncServiceURL)
-					.path("/{dme-archive-path}/download").buildAndExpand(path).encode().toUri().toURL()
-					.toExternalForm();
 
-			WebClient client = DoeClientUtil.getWebClient(requestUrl, sslCertPath, sslCertPassword);
-			client.header("Authorization", "Bearer " + authToken);
-
-			Response restResponse = client.invoke("POST", downloadRequest);
+			Response restResponse = DoeClientUtil.asynchronousDownload(authToken, dataObjectAsyncServiceURL, path,
+					sslCertPath, sslCertPassword, downloadRequest);
 			log.info("rest response:" + restResponse.getStatus());
 			if (restResponse.getStatus() == 200) {
 				// verify the content type from restReponse. If the content is of type
@@ -494,7 +463,7 @@ public class RestAPICommonController extends AbstractDoeController {
 					response.setContentType("application/octet-stream");
 					response.setHeader("Content-Disposition", "attachment; filename=" + "test");
 					// default buffer size is 4k
-					IOUtils.copy((InputStream) restResponse.getEntity(), response.getOutputStream(),bufferSize);
+					IOUtils.copy((InputStream) restResponse.getEntity(), response.getOutputStream(), bufferSize);
 					return new ResponseEntity<>(HttpStatus.OK);
 
 				} else {
@@ -515,10 +484,12 @@ public class RestAPICommonController extends AbstractDoeController {
 						audit.setTransferType("async");
 						audit.setTaskId(downloadDTO.getTaskId());
 						auditingService.saveAuditInfo(audit);
+
+						return new ResponseEntity<>(downloadDTO, HttpStatus.OK);
 					} catch (Exception e) {
 						log.error("error in save transfer" + e.getMessage());
 					}
-					return new ResponseEntity<>(downloadDTO, HttpStatus.OK);
+
 				}
 
 			}
