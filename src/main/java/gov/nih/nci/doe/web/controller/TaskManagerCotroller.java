@@ -226,16 +226,16 @@ public class TaskManagerCotroller extends AbstractDoeController {
 				}
 			}
 		}
+		List<String> message = new ArrayList<String>();
+		upload.getFailedItems().stream().forEach(x -> message.add(x.getMessage()));
 		if (Boolean.TRUE.equals(retry)) {
-			List<String> message = new ArrayList<String>();
-			upload.getFailedItems().stream().forEach(x -> message.add(x.getMessage()));
 
 			t.setTransferStatus("Failed (" + String.join(",", message) + ")"
 					+ "<strong><a style='border: none;background-color: #F39530;height: 23px;width: 37px;border-radius: 11px;float: right;' class='btn btn-link btn-sm' aria-label='Retry Upload' href='#'"
 					+ "onclick='retryUpload(\"" + upload.getTaskId() + "\" ,\"" + task.getTaskName() + "\")'>"
 					+ "<img style='height: 13px;width: 13px;margin-top: -14px;' data-toggle='tooltip' title='Retry Upload' src='images/Status.refresh_icon-01.png' th:src='@{/images/Status.refresh_icon-01.png}' alt='Status refresh'></a></strong>");
 		} else {
-			t.setTransferStatus("Failed");
+			t.setTransferStatus("Failed (" + String.join(",", message) + ")");
 		}
 	}
 
@@ -280,9 +280,10 @@ public class TaskManagerCotroller extends AbstractDoeController {
 			}
 		}
 
+		List<String> message = new ArrayList<String>();
+		download.getItems().stream().forEach(x -> message.add(x.getMessage()));
 		if (Boolean.TRUE.equals(retry)) {
-			List<String> message = new ArrayList<String>();
-			download.getItems().stream().forEach(x -> message.add(x.getMessage()));
+
 			dto.setTransferStatus("Failed (" + String.join(",", message) + ")"
 					+ "<strong><a style='border: none;background-color: #F39530; height: 23px;width: 37px;border-radius: 11px;float: right;' class='btn btn-link btn-sm' aria-label='Retry download' href='#' "
 					+ "onclick='retryDownload(\"" + download.getTaskId() + "\" ,\"" + task.getTaskName() + "\", \""
@@ -290,7 +291,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
 					+ "<img style='height: 13px;width: 13px;margin-top: -14px;' data-toggle='tooltip' title='Retry Download' src='images/Status.refresh_icon-01.png' th:src='@{/images/Status.refresh_icon-01.png}' alt='Status refresh'></a></strong>");
 
 		} else {
-			dto.setTransferStatus("Failed");
+			dto.setTransferStatus("Failed (" + String.join(",", message) + ")");
 		}
 
 	}
