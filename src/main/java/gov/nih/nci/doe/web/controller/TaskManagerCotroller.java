@@ -143,13 +143,15 @@ public class TaskManagerCotroller extends AbstractDoeController {
 				task.setTaskName(t.getTaskName());
 				task.setUserId(t.getUserId());
 				task.setTaskType(t.getTaskType());
-				if (download.getResult() != null && download.getResult().value().equals("FAILED")) {
-					retryDownLoadFunc(session, download, task, t);
+				if (download.getResult() == null) {
+					task.setTransferStatus("In Progress");
+				} else if (download.getResult() != null && download.getResult().value().equals("CANCELLED")) {
+					task.setTransferStatus("Cancelled");
 
 				} else if (download.getResult() != null && download.getResult().value().equals("COMPLETED")) {
 					task.setTransferStatus("Completed");
 				} else {
-					task.setTransferStatus("In Progress");
+					retryDownLoadFunc(session, download, task, t);
 				}
 
 				taskResults.add(task);
@@ -209,9 +211,12 @@ public class TaskManagerCotroller extends AbstractDoeController {
 			TaskManager task) throws DoeWebException {
 
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		List<String> message = new ArrayList<String>();
+		upload.getFailedItems().stream().forEach(x -> message.add(x.getMessage()));
 
 		HpcBulkDataObjectRegistrationStatusDTO uploadTask = DoeClientUtil.getDataObjectRegistrationTask(authToken,
 				registrationServiceUrl, upload.getTaskId(), sslCertPath, sslCertPassword);
+
 		Boolean retry = false;
 		if (uploadTask != null && uploadTask.getTask() != null) {
 			List<HpcDataObjectRegistrationItemDTO> failedRequests = uploadTask.getTask().getFailedItemsRequest();
@@ -225,9 +230,11 @@ public class TaskManagerCotroller extends AbstractDoeController {
 					break;
 				}
 			}
+			if (CollectionUtils.isEmpty(message)) {
+				message.add(uploadTask.getTask().getMessage());
+			}
 		}
-		List<String> message = new ArrayList<String>();
-		upload.getFailedItems().stream().forEach(x -> message.add(x.getMessage()));
+
 		if (Boolean.TRUE.equals(retry)) {
 
 			t.setTransferStatus("Failed (" + String.join(",", message) + ")"
@@ -246,6 +253,9 @@ public class TaskManagerCotroller extends AbstractDoeController {
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		String queryUrl = null;
 		Boolean retry = true;
+		List<String> message = new ArrayList<String>();
+		download.getItems().stream().forEach(x -> message.add(x.getMessage()));
+
 		if (taskType.equalsIgnoreCase(HpcDownloadTaskType.COLLECTION.name())
 				|| taskType.equalsIgnoreCase(HpcDownloadTaskType.DATA_OBJECT_LIST.name())
 				|| taskType.equalsIgnoreCase(HpcDownloadTaskType.COLLECTION_LIST.name())) {
@@ -257,6 +267,10 @@ public class TaskManagerCotroller extends AbstractDoeController {
 			HpcCollectionDownloadStatusDTO downloadTask = DoeClientUtil.getDataObjectsDownloadTask(authToken, queryUrl,
 					sslCertPath, sslCertPassword);
 
+			if (CollectionUtils.isEmpty(message)) {
+				message.add(downloadTask.getMessage());
+			}
+
 			if (downloadTask != null
 					&& (!CollectionUtils.isEmpty(downloadTask.getFailedItems())
 							|| !CollectionUtils.isEmpty(downloadTask.getCanceledItems()))
@@ -266,9 +280,13 @@ public class TaskManagerCotroller extends AbstractDoeController {
 				retry = false;
 			}
 		} else if (taskType.equals(HpcDownloadTaskType.DATA_OBJECT.name())) {
+
 			queryUrl = dataObjectDownloadServiceURL + "/" + task.getTaskId();
 			HpcDataObjectDownloadStatusDTO downloadTask = DoeClientUtil.getDataObjectDownloadTask(authToken, queryUrl,
 					sslCertPath, sslCertPassword);
+			if (CollectionUtils.isEmpty(message)) {
+				message.add(downloadTask.getMessage());
+			}
 			if (downloadTask.getResult() != null && !downloadTask.getResult().equals(HpcDownloadResult.COMPLETED)) {
 				if (downloadTask.getDestinationType() != null
 						&& downloadTask.getDestinationType().equals(HpcDataTransferType.S_3)
@@ -280,8 +298,6 @@ public class TaskManagerCotroller extends AbstractDoeController {
 			}
 		}
 
-		List<String> message = new ArrayList<String>();
-		download.getItems().stream().forEach(x -> message.add(x.getMessage()));
 		if (Boolean.TRUE.equals(retry)) {
 
 			dto.setTransferStatus("Failed (" + String.join(",", message) + ")"
