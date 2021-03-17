@@ -165,14 +165,14 @@ function renderTaskDate(data, type, row) {
 	if(data) {
 		return moment(data).format("MM/DD/YYYY HH:mm:ss") ;
 	}
-	return "N/A"
+	return "";
 }
 
 function renderTaskCompletedDate(data, type, row) {
 	if(data) {
 		return moment(data).format("MM/DD/YYYY HH:mm:ss");
 	}
-	return "N/A";
+	return "";
 	
 }
 function renderTaskName(data, type, row) {

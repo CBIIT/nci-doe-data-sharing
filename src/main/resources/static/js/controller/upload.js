@@ -589,7 +589,8 @@ function registerBulkDataFile() {
 		} else if(bulkUploadType == 'drive' && (!$("#fileNamesDiv").length || !$("#folderNamesDiv").length )) {
 			$(".uploadBulkDataError").show();
 			$(".uploadBulkDataErrorMsg").html("Select google drive information.")
-		} else if((bulkUploadType == 'globus' || bulkUploadType == 'drive') && $("input[name=folderIds]").length) {
+		} else if((bulkUploadType == 'drive' && $("input[name=folderIds]").length) || 
+				(bulkUploadType == 'globus' && $("#folderNamesDiv").length)) {
 			$(".uploadBulkDataError").show();
 			$(".uploadBulkDataErrorMsg").html("Select files only.")
 		}
