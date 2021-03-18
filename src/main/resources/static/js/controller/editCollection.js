@@ -287,7 +287,7 @@ function updateMetaDataCollection() {
 				 $(".editCollectionSuccess").hide();
 				 $(".editCollectionMsg").html("");
 				 $(".editCollectionError").show();
-				 $(".editCollectionErrorMsg").html(e);
+				 $(".editCollectionErrorMsg").html(e.responseText);
 			}
 		});
 	}

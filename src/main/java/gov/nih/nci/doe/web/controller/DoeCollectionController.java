@@ -97,8 +97,6 @@ public class DoeCollectionController extends AbstractDoeController {
 			}
 		}
 
-		final Map<String, String> paramsMap = new HashMap<>();
-		paramsMap.put("path", doeCollection.getPath());
 		return "ERROR";
 
 	}

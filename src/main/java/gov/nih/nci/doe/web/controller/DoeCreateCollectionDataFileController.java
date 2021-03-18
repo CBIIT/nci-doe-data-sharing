@@ -403,7 +403,6 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		return types;
 	}
 
-
 	protected List<DoeMetadataAttrEntry> populateFormAttributes(HttpServletRequest request, HttpSession session,
 			String basePath, String collectionType, String assetType, boolean refresh,
 			List<DoeMetadataAttrEntry> cachedEntries) throws DoeWebException {
@@ -435,10 +434,12 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 						&& !rule.getAttribute().equalsIgnoreCase("collection_type")) {
 					log.info("get HpcMetadataValidationRule:" + rule);
 					Boolean isValid = true;
+					Boolean isConditonalMetaData = false;
 					if (StringUtils.isNotEmpty(rule.getControllerValue())
 							&& StringUtils.isNotEmpty(rule.getControllerAttribute())
 							&& rule.getControllerValue().equalsIgnoreCase(assetType)) {
 						isValid = true;
+						isConditonalMetaData = true;
 					} else if (StringUtils.isNotEmpty(rule.getControllerValue())
 							&& StringUtils.isNotEmpty(rule.getControllerAttribute())
 							&& !rule.getControllerValue().equalsIgnoreCase(assetType)) {
@@ -463,11 +464,15 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 							entry.setValidValues(validValues);
 						}
 						entry.setDescription(rule.getDescription());
-						entry.setMandatory(rule.getMandatory());
+						if (Boolean.TRUE.equals(isConditonalMetaData)) {
+							entry.setMandatory(Boolean.TRUE);
+						} else {
+							entry.setMandatory(rule.getMandatory());
+						}
 						LookUp val = lookUpService.getLookUpByLevelAndName(collectionType, rule.getAttribute());
 						if (val != null) {
 							entry.setDisplayName(val.getDisplayName());
-							entry.setIsEditable(Boolean.valueOf(val.getIsEditable()));
+							entry.setIsEditable(val.getIsEditable());
 						} else {
 							entry.setDisplayName(rule.getAttribute());
 							entry.setIsEditable(true);
@@ -491,7 +496,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				if (userDefinedAttrNames.contains(x.getAttrName())) {
 					if (lookUpVal != null) {
 						x.setDisplayName(lookUpVal.getDisplayName());
-						x.setIsEditable(Boolean.valueOf(lookUpVal.getIsEditable()));
+						x.setIsEditable(lookUpVal.getIsEditable());
 					} else {
 						x.setDisplayName(x.getAttrName());
 						x.setIsEditable(true);
