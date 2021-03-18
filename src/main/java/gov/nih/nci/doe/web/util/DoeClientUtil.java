@@ -372,7 +372,7 @@ public class DoeClientUtil {
 			}
 
 		} catch (Exception e) {
-			throw new DoeWebException("error in get data files" + e.getMessage());
+			throw new DoeWebException(e.getMessage());
 		}
 	}
 
@@ -455,7 +455,7 @@ public class DoeClientUtil {
 
 			}
 		} catch (Exception e) {
-			throw new DoeWebException("Failed to create collection due to: " + e.getMessage());
+			throw new DoeWebException(e.getMessage());
 		}
 	}
 
