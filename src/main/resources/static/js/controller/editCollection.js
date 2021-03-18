@@ -180,7 +180,8 @@ function editAccessPermissions(collectionId,metadata_path,msg,selectedCollection
 function postSuccessAccessPermissions(data,status) {
 	var accessGrp = $("#updateAccessPermissionsModal").find("#accessGroups").val();
 	var accessGrpList = accessGrp.split(",");
-	$("#updateAccessPermissionsModal").find("#editPublicAccess").prop("disabled",false);
+	//$("#updateAccessPermissionsModal").find("#editPublicAccess").prop("disabled",false);
+	$("#updateAccessPermissionsModal").find("#publicCheckBox").show();
 	$("#updateAccessPermissionsModal").find("#infoTxtForAccessGroups").html("");
 	
 	if(accessGrp == 'public') {
@@ -194,7 +195,8 @@ function postSuccessAccessPermissions(data,status) {
 		if(!data) {
 			$("#updateAccessPermissionsModal").find("#infoTxtForAccessGroups").html("<i class='fas fa-question-circle' " +
 					"title='This collection inherits access status from the parent collection' data-toggle='tooltip' data-placement='right'></i>");
-			$("#updateAccessPermissionsModal").find("#editPublicAccess").prop("disabled",true);
+			//$("#updateAccessPermissionsModal").find("#editPublicAccess").prop("disabled",true);
+			$("#updateAccessPermissionsModal").find("#publicCheckBox").hide();
 		}
 	}
 	
