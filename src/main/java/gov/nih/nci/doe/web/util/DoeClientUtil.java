@@ -704,7 +704,7 @@ public class DoeClientUtil {
 		}
 	}
 
-	public static Response asynchronousDownload(String authToken, String dataObjectAsyncServiceURL, String path,
+	public static Response syncAndasynchronousDownload(String authToken, String dataObjectAsyncServiceURL, String path,
 			String hpcCertPath, String hpcCertPassword, HpcDownloadRequestDTO downloadRequest) throws DoeWebException {
 		try {
 			final String requestUrl = UriComponentsBuilder.fromHttpUrl(dataObjectAsyncServiceURL)

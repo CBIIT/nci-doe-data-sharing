@@ -404,7 +404,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 * @throws Exception
 	 */
 	@PostMapping(value = "/v2/dataObject/**/download")
-	public ResponseEntity<?> asynchronousDownload(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
+	public ResponseEntity<?> syncAndasynchronousDownload(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
 			@RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO downloadRequest)
 			throws DoeWebException, IOException {
@@ -449,7 +449,7 @@ public class RestAPICommonController extends AbstractDoeController {
 
 		if (Boolean.TRUE.equals(isPermissions)) {
 
-			Response restResponse = DoeClientUtil.asynchronousDownload(authToken, dataObjectAsyncServiceURL, path,
+			Response restResponse = DoeClientUtil.syncAndasynchronousDownload(authToken, dataObjectAsyncServiceURL, path,
 					sslCertPath, sslCertPassword, downloadRequest);
 			log.info("rest response:" + restResponse.getStatus());
 			if (restResponse.getStatus() == 200) {

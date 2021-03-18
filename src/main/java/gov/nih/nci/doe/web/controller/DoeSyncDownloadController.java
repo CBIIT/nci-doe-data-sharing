@@ -9,7 +9,6 @@ import javax.validation.Valid;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.cxf.jaxrs.client.WebClient;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.core.io.ByteArrayResource;
@@ -31,7 +30,6 @@ import gov.nih.nci.doe.web.model.DoeDownloadDatafile;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO;
 import gov.nih.nci.hpc.dto.error.HpcExceptionDTO;
-import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  *
@@ -64,14 +62,9 @@ public class DoeSyncDownloadController extends AbstractDoeController {
 				return null;
 			}
 
-			final String requestUrl = UriComponentsBuilder.fromHttpUrl(dataObjectAsyncServiceURL)
-					.path("{dme-archive-path}/download").buildAndExpand(downloadFile.getDestinationPath()).encode()
-					.toUri().toURL().toExternalForm();
-
-			WebClient client = DoeClientUtil.getWebClient(requestUrl, sslCertPath, sslCertPassword);
-			client.header("Authorization", "Bearer " + authToken);
 			HpcDownloadRequestDTO downloadRequest = new HpcDownloadRequestDTO();
-			Response restResponse = client.invoke("POST", downloadRequest);
+			Response restResponse = DoeClientUtil.syncAndasynchronousDownload(authToken, dataObjectAsyncServiceURL,
+					downloadFile.getDestinationPath(), sslCertPath, sslCertPassword, downloadRequest);
 			log.info("rest response:" + restResponse.getStatus());
 
 			if (restResponse.getStatus() == 200) {
