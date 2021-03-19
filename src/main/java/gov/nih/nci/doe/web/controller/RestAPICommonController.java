@@ -593,7 +593,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		}
 
 		if (Boolean.TRUE.equals(isPermissions) && CollectionUtils.isNotEmpty(collectionDto.getCollections())) {
-			return new ResponseEntity<>(collectionDto.getCollections(), HttpStatus.OK);
+			return new ResponseEntity<>(collectionDto, HttpStatus.OK);
 
 		}
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
