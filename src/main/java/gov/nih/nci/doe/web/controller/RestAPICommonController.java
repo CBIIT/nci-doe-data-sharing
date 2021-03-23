@@ -19,6 +19,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -404,8 +405,8 @@ public class RestAPICommonController extends AbstractDoeController {
 	 * @throws Exception
 	 */
 	@PostMapping(value = "/v2/dataObject/**/download")
-	public ResponseEntity<?> syncAndasynchronousDownload(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
-			HttpServletResponse response, HttpServletRequest request,
+	public ResponseEntity<?> syncAndasynchronousDownload(@RequestHeader HttpHeaders headers,
+			@ApiIgnore HttpSession session, HttpServletResponse response, HttpServletRequest request,
 			@RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO downloadRequest)
 			throws DoeWebException, IOException {
 
@@ -449,8 +450,8 @@ public class RestAPICommonController extends AbstractDoeController {
 
 		if (Boolean.TRUE.equals(isPermissions)) {
 
-			Response restResponse = DoeClientUtil.syncAndasynchronousDownload(authToken, dataObjectAsyncServiceURL, path,
-					sslCertPath, sslCertPassword, downloadRequest);
+			Response restResponse = DoeClientUtil.syncAndasynchronousDownload(authToken, dataObjectAsyncServiceURL,
+					path, sslCertPath, sslCertPassword, downloadRequest);
 			log.info("rest response:" + restResponse.getStatus());
 			if (restResponse.getStatus() == 200) {
 				// verify the content type from restReponse. If the content is of type
@@ -501,13 +502,14 @@ public class RestAPICommonController extends AbstractDoeController {
 	 * get data object
 	 * 
 	 * @param includeAcl
+	 * @throws JsonProcessingException
 	 * 
 	 */
 	@GetMapping(value = "/v2/dataObject/**", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_OCTET_STREAM_VALUE })
 	public ResponseEntity<?> getDataObject(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
-			@RequestParam(required = false) Boolean includeAcl) throws DoeWebException {
+			@RequestParam(required = false) Boolean includeAcl) throws DoeWebException, JsonProcessingException {
 
 		log.info("get dataobject:");
 		log.info("Headers: {}", headers);
@@ -545,7 +547,11 @@ public class RestAPICommonController extends AbstractDoeController {
 				HpcDataObjectDTO dataObjectList = DoeClientUtil.getDatafiles(authToken, dataObjectAsyncServiceURL, path,
 						true, includeAcl, sslCertPath, sslCertPassword);
 				if (dataObjectList != null) {
-					return new ResponseEntity<>(dataObjectList, HttpStatus.OK);
+					ObjectMapper mapper = new ObjectMapper();
+					mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+					mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+					return new ResponseEntity<>(mapper.writeValueAsString(dataObjectList), HttpStatus.OK);
+
 				}
 
 			}
@@ -554,16 +560,15 @@ public class RestAPICommonController extends AbstractDoeController {
 	}
 
 	/**
-	 * get collection
+	 * @throws JsonProcessingException get collection
 	 * 
-	 * @param includeAcl
-	 * @param list
+	 * @param includeAcl @param list @throws
 	 */
 	@GetMapping(value = "/collection/**", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_OCTET_STREAM_VALUE })
 	public ResponseEntity<?> getCollection(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
 			HttpServletResponse response, HttpServletRequest request, @RequestParam(required = false) Boolean list,
-			@RequestParam(required = false) Boolean includeAcl) throws DoeWebException {
+			@RequestParam(required = false) Boolean includeAcl) throws DoeWebException, JsonProcessingException {
 
 		log.info("download async:");
 		log.info("Headers: {}", headers);
@@ -593,7 +598,10 @@ public class RestAPICommonController extends AbstractDoeController {
 		}
 
 		if (Boolean.TRUE.equals(isPermissions) && CollectionUtils.isNotEmpty(collectionDto.getCollections())) {
-			return new ResponseEntity<>(collectionDto, HttpStatus.OK);
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+			mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+			return new ResponseEntity<>(mapper.writeValueAsString(collectionDto), HttpStatus.OK);
 
 		}
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
@@ -787,7 +795,11 @@ public class RestAPICommonController extends AbstractDoeController {
 		if (restResponse.getStatus() == 200) {
 			MappingJsonFactory factory = new MappingJsonFactory();
 			JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-			return new ResponseEntity<>(parser.readValueAs(HpcCollectionListDTO.class), HttpStatus.OK);
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+			mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+			return new ResponseEntity<>(mapper.writeValueAsString(parser.readValueAs(HpcCollectionListDTO.class)),
+					HttpStatus.OK);
 
 		}
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
@@ -838,12 +850,16 @@ public class RestAPICommonController extends AbstractDoeController {
 		if (restResponse.getStatus() == 200 || restResponse.getStatus() == 201) {
 			MappingJsonFactory factory = new MappingJsonFactory();
 			JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+			mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+
 			if (Boolean.TRUE.equals(returnParent)) {
 				HpcCollectionListDTO dataObjects = parser.readValueAs(HpcCollectionListDTO.class);
-				return new ResponseEntity<>(dataObjects, HttpStatus.OK);
+				return new ResponseEntity<>(mapper.writeValueAsString(dataObjects), HttpStatus.OK);
 			} else {
 				HpcDataObjectListDTO dataObjects = parser.readValueAs(HpcDataObjectListDTO.class);
-				return new ResponseEntity<>(dataObjects, HttpStatus.OK);
+				return new ResponseEntity<>(mapper.writeValueAsString(dataObjects), HttpStatus.OK);
 			}
 		}
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
