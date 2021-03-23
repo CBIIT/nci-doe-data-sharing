@@ -1,3 +1,64 @@
-update METADATA_PERMISSIONS_T mt set mt.USER_ID = (select id from USER_T where EMAIL_ADDR = mt.USER_GROUP_ID) where mt.IS_OWNER='Y';
+ALTER TABLE DOE_USER_T
+RENAME COLUMN DOE_USER_T TO USER_T;
 
-update METADATA_PERMISSIONS_T mt set mt.GROUP_ID = (select id from GROUP_T where GROUP_NAME = mt.USER_GROUP_ID) where mt.IS_GROUP='Y';
+
+ALTER TABLE METADATA_PERMISSIONS_T
+RENAME COLUMN METADATA_PERMISSIONS_T TO COLLECTION_UPDATE_PERMISSIONS_T;
+
+ALTER TABLE COLLECTION_UPDATE_PERMISSIONS_T 
+ADD column_name USER_ID NUMBER;
+
+ALTER TABLE COLLECTION_UPDATE_PERMISSIONS_T 
+ADD column_name GROUP_ID NUMBER;
+
+update COLLECTION_UPDATE_PERMISSIONS_T mt set mt.USER_ID = (select id from USER_T where EMAIL_ADDR = mt.USER_GROUP_ID) where mt.IS_OWNER='Y';
+
+update COLLECTION_UPDATE_PERMISSIONS_T mt set mt.GROUP_ID = (select id from GROUP_T where GROUP_NAME = mt.USER_GROUP_ID) where mt.IS_GROUP='Y';
+
+ALTER TABLE METADATA_PERMISSIONS_T
+DROP COLUMN IS_GROUP;
+
+ALTER TABLE METADATA_PERMISSIONS_T
+DROP COLUMN IS_OWNER;
+
+
+INSERT INTO NCI_DOE_DB_T.GROUP_T (ID, GROUP_NAME) VALUES (1, 'Pilot1');
+INSERT INTO NCI_DOE_DB_T.GROUP_T (ID, GROUP_NAME) VALUES (2, 'Pilot2');
+INSERT INTO NCI_DOE_DB_T.GROUP_T (ID, GROUP_NAME) VALUES (3, 'Pilot3');
+INSERT INTO NCI_DOE_DB_T.GROUP_T (ID, GROUP_NAME) VALUES (4, 'JDACS4C');
+INSERT INTO NCI_DOE_DB_T.GROUP_T (ID, GROUP_NAME) VALUES (5, 'ATOM');
+
+
+/* insert into user group mapping */
+DECLARE cursor  cur IS
+SELECT id,program_name from USER_T;
+id NUMBER;
+userId NUMBER;
+groupId NUMBER;
+program_name VARCHAR2(500);
+BEGIN
+FOR REC in cur loop
+userId :=REC.id;
+program_name :=REC.program_name;
+id := 4;
+BEGIN
+      FOR i IN
+      (SELECT trim(regexp_substr(program_name, '[^,]+', 1,LEVEL)) l
+      FROM dual
+       CONNECT BY LEVEL <= regexp_count(program_name, ',')+1
+     ) loop
+          IF i.l is not null THEN
+          SELECT id INTO groupId from GROUP_T where GROUP_NAME =i.l;
+          INSERT INTO USER_GROUP_T (USER_ID, GROUP_ID, ID) VALUES (userId,groupId,id);
+          COMMIT;
+          END IF;
+id := id+1;
+END LOOP;
+END;
+END LOOP;
+END;
+/
+
+
+ALTER TABLE USER_T
+DROP COLUMN PROGRAM_NAME;
