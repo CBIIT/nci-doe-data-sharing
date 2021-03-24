@@ -31,7 +31,7 @@ INSERT INTO NCI_DOE_DB_T.GROUP_T (ID, GROUP_NAME) VALUES (5, 'NEUROCRINE');
 
 /* insert into user group mapping */
 DECLARE cursor  cur IS
-SELECT id,program_name from USER_T;
+SELECT id,program_name from USER_T where program_name IS NOT NULL;
 id NUMBER;
 userId NUMBER;
 groupId NUMBER;
