@@ -21,3 +21,4 @@ alter table COLLECTION_ACCESS_GROUP_T
         primary key (ID)
 /
 
+GRANT INSERT,UPDATE,DELETE ON collection_access_group_t TO MODAC_APP_USER;

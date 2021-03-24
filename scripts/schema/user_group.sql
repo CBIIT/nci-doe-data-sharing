@@ -20,3 +20,4 @@ alter table USER_GROUP_T
         primary key (ID)
 /
 
+GRANT INSERT,UPDATE ON USER_GROUP_T TO MODAC_APP_USER;
