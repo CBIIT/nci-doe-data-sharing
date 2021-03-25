@@ -142,7 +142,7 @@ function postFailureFunction(url, params, status, error, data) {
 }
 
 function returnErrorMessage(data) {
-	if(data) {
+	if(data && data.responseText) {
 	    var errorJson = JSON.parse(data.responseText);
 	    return bootbox.alert(errorJson.message);
 	} else {

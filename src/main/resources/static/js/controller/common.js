@@ -416,7 +416,13 @@ $("#btnSelectAssetType").click(function(e){
 });
 
 $("#driveAuthlink").click(function(e){
-	var params= {type:$("#downloadType").val(),downloadFilePath:$("#selectedFilesList").val()}
+	var params= {type:$("#downloadType").val(),downloadFilePath:$("#selectedFilesList").val(),action:"Drive"}
+
+	 invokeAjax('/download','GET',params,postGoogleDriveFunction,postFailureFunction,null,'text');
+});
+
+$("#downloadGlobuslink").click(function(e){
+	var params= {type:$("#downloadType").val(),downloadFilePath:$("#selectedFilesList").val(),action:"Globus"}
 
 	 invokeAjax('/download','GET',params,postGoogleDriveFunction,postFailureFunction,null,'text');
 });

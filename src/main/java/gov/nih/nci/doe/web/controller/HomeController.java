@@ -146,6 +146,7 @@ public class HomeController extends AbstractDoeController {
 	public String getDownload(Model model, HttpSession session, HttpServletRequest request,
 			@RequestParam(value = "selectedPaths", required = false) String selectedPaths,
 			@RequestParam(value = "code", required = false) String code,
+			@RequestParam(value = "endpoint_id", required = false) String endPointName,
 			@RequestParam(value = "downloadAsyncType", required = false) String downloadAsyncType,
 			@RequestParam(value = "fileName", required = false) String fileName) throws DoeWebException {
 
@@ -189,6 +190,19 @@ public class HomeController extends AbstractDoeController {
 				model.addAttribute("downloadAsyncType", downloadAsyncType);
 				model.addAttribute("fileName", fileName);
 			}
+		} else if(endPointName != null) {
+			//This is return from Globus site
+			selectedPaths = (String) session.getAttribute("selectedPathsString");
+			downloadAsyncType = (String) session.getAttribute("downloadAsyncType");
+			fileName = (String) session.getAttribute("fileName");
+			model.addAttribute("endPointName", endPointName);
+			String endPointLocation = request.getParameter("path");
+			model.addAttribute("endPointLocation", endPointLocation);
+			model.addAttribute("asyncSearchType", "async");
+			model.addAttribute("transferType", "async");
+			model.addAttribute("selectedPathsString", selectedPaths);
+			model.addAttribute("downloadAsyncType", downloadAsyncType);
+			model.addAttribute("fileName", fileName);
 		}
 		return "downloadTab";
 	}

@@ -90,17 +90,18 @@ style="font-size:13px;">
                                      Refer to <a href="https://wiki.nci.nih.gov/display/MoDaCdoc/Preparing+to+Use+Globus" 
                                      target="_blank" title="Link to help document (opens in new tab or window)">Preparing to Use Globus</a> 
                                      for instructions.<span>
-										<label for="endPointName">Globus Endpoint UUID:</label> 
+										<label for="endPointName">Globus Endpoint UUID: <a id="downloadGlobuslink"
+										 href="#">Obtain from Globus (Optional)</a></label> 
 										<input type="hidden" name="actionType" id="actionType" />
 										<input
-											type="text" class="form-control" name="endPointName"
+											type="text" class="form-control" name="endPointName" th:value="${endPointName}"
 											id="endPointName" placeholder="Enter Globus Endpoint UUID" />
 									</div>
 									<div class="col-sm-12 column">
 										<label for="endPointLocation">Globus Endpoint (Destination) Path:</label> 
 										<input
 											type="text" class="form-control"
-											name="endPointLocation" id="endPointLocation"
+											name="endPointLocation" id="endPointLocation" th:value="${endPointLocation}"
 											placeholder="Enter Globus Endpoint Path" size="40" />
 									</div>
 								</div>

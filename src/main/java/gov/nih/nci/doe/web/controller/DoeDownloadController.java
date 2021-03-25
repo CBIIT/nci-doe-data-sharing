@@ -29,6 +29,7 @@ import gov.nih.nci.doe.web.model.DoeDownloadDatafile;
 import gov.nih.nci.doe.web.model.Views;
 import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
+import gov.nih.nci.doe.web.util.MiscUtil;
 import gov.nih.nci.hpc.domain.datatransfer.HpcDownloadTaskType;
 import gov.nih.nci.hpc.domain.datatransfer.HpcFileLocation;
 import gov.nih.nci.hpc.domain.datatransfer.HpcGlobusDownloadDestination;
@@ -54,10 +55,11 @@ public class DoeDownloadController extends AbstractDoeController {
 
 	@GetMapping
 	public ResponseEntity<?> home(Model model, @RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "downloadFilePath", required = false) String downloadFilePath, HttpSession session,
+			@RequestParam(value = "downloadFilePath", required = false) String downloadFilePath,
+			@RequestParam(value = "action", required = false) String action, HttpSession session,
 			HttpServletRequest request) throws DoeWebException {
 
-		String action = "Drive";
+		// String action = "Drive";
 		String downloadType = request.getParameter("type");
 
 		String code = request.getParameter("code");
@@ -86,6 +88,17 @@ public class DoeDownloadController extends AbstractDoeController {
 				return new ResponseEntity<>(doeAuthorizationService.authorize(returnURL), HttpStatus.OK);
 			} catch (Exception e) {
 				throw new DoeWebException("Failed to redirect to Google for authorization: " + e.getMessage());
+			}
+		} else if (action.equals("Globus")) {
+			session.setAttribute("downloadType", downloadType);
+			try {
+				final String percentEncodedReturnURL = MiscUtil.performUrlEncoding(this.webServerName + "/downloadTab");
+
+				return new ResponseEntity<>(
+						"https://app.globus.org/file-manager?method=GET&action=" + percentEncodedReturnURL,
+						HttpStatus.OK);
+			} catch (Exception e) {
+				throw new DoeWebException("Failed to redirect to Globus: " + e.getMessage());
 			}
 		}
 
