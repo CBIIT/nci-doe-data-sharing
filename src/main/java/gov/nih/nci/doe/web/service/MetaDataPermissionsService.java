@@ -15,5 +15,7 @@ public interface MetaDataPermissionsService {
 	public List<MetaDataPermissions> getAllGroupMetaDataPermissionsByCollectionId(Integer collectionId);
 
 	public MetaDataPermissions getMetaDataPermissionsOwnerByCollectionId(Integer collectionId);
+	
+	public void deleteAllPermissionsByCollectionId(String user, Integer collectionId);
 
 }

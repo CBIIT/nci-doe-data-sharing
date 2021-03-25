@@ -1,6 +1,7 @@
 package gov.nih.nci.doe.web.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import gov.nih.nci.doe.web.DoeWebException;
+import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeCollectionModel;
 import gov.nih.nci.doe.web.model.DoeMetadataAttrEntry;
 import gov.nih.nci.doe.web.model.KeyValueBean;
@@ -271,7 +273,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 			if (restResponse == 200 || restResponse == 201) {
 
 				// after collection is created, store the permissions.
-				String progList = request.getParameter("metaDataPermissionsList");
+				String[] progList = request.getParameterValues("metaDataPermissionsList");
 				log.info("selected permissions" + progList);
 				HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL,
 						doeCollection.getPath(), false, sslCertPath, sslCertPassword);
@@ -282,7 +284,9 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 					HpcCollectionDTO collection = collections.getCollections().get(0);
 
 					// save collection permissions in MoDaC DB
-					metaDataPermissionService.savePermissionsList(getLoggedOnUserInfo(), progList,
+
+					metaDataPermissionService.savePermissionsList(getLoggedOnUserInfo(),
+							progList != null ? String.join(",", progList) : null,
 							collection.getCollection().getCollectionId(), doeCollection.getPath());
 
 					// store the access_group metadata in MoDaC DB
@@ -292,6 +296,14 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 						accessGroupsService.saveAccessGroups(collection.getCollection().getCollectionId(),
 								doeCollection.getPath(), selectedEntry.getValue(), getLoggedOnUserInfo());
 					}
+
+					// store the auditing info
+					AuditingModel audit = new AuditingModel();
+					audit.setName(getLoggedOnUserInfo());
+					audit.setOperation("register collection");
+					audit.setStartTime(new Date());
+					audit.setPath(doeCollection.getPath());
+					auditingService.saveAuditInfo(audit);
 				}
 
 				return "Collection is created!";

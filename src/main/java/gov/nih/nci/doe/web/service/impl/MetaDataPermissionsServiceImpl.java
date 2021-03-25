@@ -106,4 +106,14 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 		return metaDataPermissionsRepository.getMetaDataPermissionsOwnerByCollectionId(collectionId);
 	}
 
+	@Override
+	public void deleteAllPermissionsByCollectionId(String user, Integer collectionId) {
+		log.info("get all permissions by collection Id " + collectionId);
+		List<MetaDataPermissions> permissionsList = metaDataPermissionsRepository
+				.getAllMetaDataPermissionsByCollectionId(collectionId);
+		Iterator<MetaDataPermissions> permissionListIterator = permissionsList.iterator();
+		while (permissionListIterator.hasNext()) {
+			metaDataPermissionsRepository.delete(permissionListIterator.next());
+		}
+	}
 }

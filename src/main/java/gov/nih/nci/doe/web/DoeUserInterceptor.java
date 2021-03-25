@@ -150,7 +150,7 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 					String authToken = DoeClientUtil.getAuthenticationToken(readOnlyUserName, readOnlyUserPassword,
 							authenticateURL);
 					session.setAttribute("hpcUserToken", authToken);
-					log.debug("authentication successfull");
+					log.debug("authentication successful");
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);
 				}

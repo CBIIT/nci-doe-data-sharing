@@ -1,5 +1,8 @@
 package gov.nih.nci.doe.web.controller;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.domain.MetaDataPermissions;
+import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
@@ -59,7 +63,26 @@ public class DeleteCollectionController extends AbstractDoeController {
 				String deleted = DoeClientUtil.deleteCollection(authToken, serviceURL, collPath, sslCertPath,
 						sslCertPassword);
 				if (StringUtils.isNotEmpty(deleted) && deleted.equalsIgnoreCase("SUCCESS")) {
-					// TODO: delete from modac collection permissions and access group tables
+
+					// delete from collection permission table
+					metaDataPermissionService.deleteAllPermissionsByCollectionId(getLoggedOnUserInfo(),
+							collection.getCollection().getCollectionId());
+
+					// delete from access group table
+					List<String> existingGroups = accessGroupsService.getGroupsByCollectionPath(collPath);
+					if (CollectionUtils.isNotEmpty(existingGroups)) {
+						accessGroupsService.updateAccessGroups(collPath, collection.getCollection().getCollectionId(),
+								null, existingGroups);
+					}
+
+					// store the auditing info
+					AuditingModel audit = new AuditingModel();
+					audit.setName(getLoggedOnUserInfo());
+					audit.setOperation("delete collection");
+					audit.setStartTime(new Date());
+					audit.setPath(collPath);
+					auditingService.saveAuditInfo(audit);
+
 					return "SUCCESS";
 				} else {
 					return "Failed to delete collection." + deleted;

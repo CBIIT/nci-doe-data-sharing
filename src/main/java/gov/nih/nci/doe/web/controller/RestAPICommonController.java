@@ -669,15 +669,25 @@ public class RestAPICommonController extends AbstractDoeController {
 						&& !CollectionUtils.isEmpty(collections.getCollections())) {
 					HpcCollectionDTO collection = collections.getCollections().get(0);
 					try {
+						// save permissions
 						metaDataPermissionService.savePermissionsList(doeLogin, progList,
 								collection.getCollection().getCollectionId(), path);
+
+						// store the access_group metadata in MoDaC DB
+						HpcMetadataEntry selectedEntry = collection.getMetadataEntries().getSelfMetadataEntries()
+								.stream().filter(e -> e.getAttribute().equalsIgnoreCase("access_group")).findAny()
+								.orElse(null);
+						if (selectedEntry != null) {
+							accessGroupsService.saveAccessGroups(collection.getCollection().getCollectionId(), path,
+									selectedEntry.getValue(), doeLogin);
+						}
+
 						// store the auditing info
 						AuditingModel audit = new AuditingModel();
 						audit.setName(doeLogin);
 						audit.setOperation("register collection");
 						audit.setStartTime(new Date());
 						audit.setPath(path);
-						audit.setTransferType("async");
 						auditingService.saveAuditInfo(audit);
 					} catch (Exception e) {
 						log.error("error in save permissions list" + e.getMessage());
