@@ -46,5 +46,18 @@ END LOOP;
 END;
 /
 
-
 /* drop doe_user_t */
+
+/* populate collection path for existing rows */
+select distinct(COLLECTION_ID) from COLLECTION_UPDATE_PERMISSIONS_T where  COLLECTION_PATH IS NULL;
+
+/* get the collection id from above query */
+select coll_id, SUBSTR(coll_name, 19, LENGTH(coll_name)) from r_coll_main where COLL_ID in (
+7330732
+);
+/* update COLLECTION_UPDATE_PERMISSIONS_T from the above table */
+
+
+
+
+
