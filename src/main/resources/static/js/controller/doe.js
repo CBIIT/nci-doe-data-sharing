@@ -136,3 +136,16 @@ function loadJsonData(url, selectTarget, emptyOption, params, successCallback, f
 
     });
 }
+
+function postFailureFunction(url, params, status, error, data) {
+	returnErrorMessage(data);
+}
+
+function returnErrorMessage(data) {
+	if(data) {
+	    var errorJson = JSON.parse(data.responseText);
+	    return bootbox.alert(errorJson.message);
+	} else {
+		bootbox.alert("Unknown Error. Contact Technical Support!");
+	}
+}

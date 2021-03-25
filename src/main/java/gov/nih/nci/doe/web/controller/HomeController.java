@@ -147,7 +147,7 @@ public class HomeController extends AbstractDoeController {
 			@RequestParam(value = "selectedPaths", required = false) String selectedPaths,
 			@RequestParam(value = "code", required = false) String code,
 			@RequestParam(value = "downloadAsyncType", required = false) String downloadAsyncType,
-			@RequestParam(value = "fileName", required = false) String fileName) {
+			@RequestParam(value = "fileName", required = false) String fileName) throws DoeWebException {
 
 		model.addAttribute("selectedPathsString", selectedPaths);
 		model.addAttribute("downloadAsyncType", downloadAsyncType);
@@ -180,8 +180,7 @@ public class HomeController extends AbstractDoeController {
 					session.setAttribute("accessToken", accessToken);
 					model.addAttribute("accessToken", accessToken);
 				} catch (Exception e) {
-					model.addAttribute("error", "Failed to redirect to Google for authorization: " + e.getMessage());
-					log.error("Failed to redirect to google" + e.getMessage());
+					throw new DoeWebException("Failed to redirect to Google for authorization: " + e.getMessage());
 				}
 				model.addAttribute("asyncSearchType", "drive");
 				model.addAttribute("transferType", "drive");

@@ -185,7 +185,3 @@ function postResetLinkFunction(data,status) {
 		bootbox.alert(data);
 	}
 }
-
-function postFailureFunction(url, params, status, error, data) {
-	bootbox.alert("Unknown Error. Contact Technical Support!");
-}

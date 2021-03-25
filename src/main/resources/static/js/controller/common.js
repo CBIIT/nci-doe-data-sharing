@@ -418,7 +418,7 @@ $("#btnSelectAssetType").click(function(e){
 $("#driveAuthlink").click(function(e){
 	var params= {type:$("#downloadType").val(),downloadFilePath:$("#selectedFilesList").val()}
 
-	 invokeAjax('/download','GET',params,postGoogleDriveFunction,null,null,'text');
+	 invokeAjax('/download','GET',params,postGoogleDriveFunction,postFailureFunction,null,'text');
 });
 
 $("#primaryGlobusButton").click(function(e){
@@ -428,7 +428,7 @@ $("#primaryGlobusButton").click(function(e){
 	d.studyPath = $("#studyList").val();
 	d.dataSetPath = $("#dataList").val();
 
-	 invokeAjax('/upload','GET',d,postUploadGlobusFunction,null,null,'text');
+	 invokeAjax('/upload','GET',d,postUploadGlobusFunction,postFailureFunction,null,'text');
 });
 
 $("#driveUploadAuthlink").click(function(e){
@@ -437,12 +437,13 @@ $("#driveUploadAuthlink").click(function(e){
 	d.studyPath = $("#studyList").val();
 	d.dataSetPath = $("#dataList").val();
     d.action ="Drive";
-	 invokeAjax('/upload','GET',d,postUploadGlobusFunction,null,null,'text');
+	 invokeAjax('/upload','GET',d,postUploadGlobusFunction,postFailureFunction,null,'text');
 });
 
 function postGoogleDriveFunction(data,status) {
 	location.replace(data);
 }
+
 $(".addNewMetaDataForDataFiles").click(function(e){
 	addNewMetaDataRowsForDataFile($(this));
 });

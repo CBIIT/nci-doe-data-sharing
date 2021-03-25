@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.UploadCollectionModel;
 import gov.nih.nci.doe.web.util.MiscUtil;
 
@@ -44,16 +45,20 @@ public class UploadController extends AbstractDoeController {
 			try {
 				return new ResponseEntity<>(doeAuthorizationService.authorize(returnURL), HttpStatus.OK);
 			} catch (Exception e) {
-				log.error("error", "Failed to redirect to Google for authorization: " + e.getMessage());
+				throw new DoeWebException("Failed to redirect to Google for authorization: " + e.getMessage());
 			}
 
 		} else {
-			final String percentEncodedReturnURL = MiscUtil.performUrlEncoding(this.webServerName + "/addbulk");
+			try {
+				final String percentEncodedReturnURL = MiscUtil.performUrlEncoding(this.webServerName + "/addbulk");
 
-			return new ResponseEntity<>(
-					"https://app.globus.org/file-manager?method=GET&action=" + percentEncodedReturnURL, HttpStatus.OK);
+				return new ResponseEntity<>(
+						"https://app.globus.org/file-manager?method=GET&action=" + percentEncodedReturnURL,
+						HttpStatus.OK);
+			} catch (Exception e) {
+				throw new DoeWebException("Failed to redirect to Globus: " + e.getMessage());
+			}
 
 		}
-		return null;
 	}
 }

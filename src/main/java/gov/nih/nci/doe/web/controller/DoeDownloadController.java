@@ -55,7 +55,7 @@ public class DoeDownloadController extends AbstractDoeController {
 	@GetMapping
 	public ResponseEntity<?> home(Model model, @RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "downloadFilePath", required = false) String downloadFilePath, HttpSession session,
-			HttpServletRequest request) {
+			HttpServletRequest request) throws DoeWebException {
 
 		String action = "Drive";
 		String downloadType = request.getParameter("type");
@@ -71,8 +71,7 @@ public class DoeDownloadController extends AbstractDoeController {
 				session.setAttribute("accessToken", accessToken);
 				model.addAttribute("accessToken", accessToken);
 			} catch (Exception e) {
-				model.addAttribute("error", "Failed to redirect to Google for authorization: " + e.getMessage());
-				e.printStackTrace();
+				throw new DoeWebException("Failed to redirect from Google for authorization: " + e.getMessage());
 			}
 			model.addAttribute("asyncSearchType", "drive");
 			model.addAttribute("transferType", "drive");
@@ -86,8 +85,7 @@ public class DoeDownloadController extends AbstractDoeController {
 			try {
 				return new ResponseEntity<>(doeAuthorizationService.authorize(returnURL), HttpStatus.OK);
 			} catch (Exception e) {
-				model.addAttribute("error", "Failed to redirect to Google for authorization: " + e.getMessage());
-				e.printStackTrace();
+				throw new DoeWebException("Failed to redirect to Google for authorization: " + e.getMessage());
 			}
 		}
 

@@ -99,9 +99,8 @@ function functionDelete($this,collectionType) {
 					error : function(e) {
 						 $("#spinner").hide();
 				         $("#dimmer").hide();
-				         console.log('ERROR: ', e);	
-						 var error = JSON.parse(e.responseText);
-						 return bootbox.alert(error.message);
+				         console.log('ERROR: ', e);
+				         returnErrorMessage(e);
 					}
 				});
 		    	}   
