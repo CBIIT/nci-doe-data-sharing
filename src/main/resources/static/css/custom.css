@@ -560,7 +560,7 @@ margin-bottom: 110px;
     margin-top: 179px;
     margin-bottom: 50px;
     background-color: #E87B05;
-        height: 65px;
+       /* height: 65px;*/
         max-width: 86%;
 }
 div.container.main {
