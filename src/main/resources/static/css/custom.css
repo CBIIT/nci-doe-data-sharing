@@ -539,6 +539,11 @@ ul#subTab li {
 	padding-left: 20px;
 }
 
+ul#subTab {
+	font-size:18px;
+	margin-top:-3px;
+	flex-wrap: nowrap;
+}
 #subNav a.dropdown-item {
     padding-bottom: 10px;
     font-family: Nunito Sans;
