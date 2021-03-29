@@ -49,6 +49,7 @@ function validateUserLogin() {
 }
 
 function postLoginFunction(data,status) {
+	$(".successBlockLogin").hide();
 	if("loginFailure" == data) {
 		
 		$(".errorBlockLogin").show();
@@ -80,6 +81,7 @@ function postLoginFunction(data,status) {
 }
 
 function loginFailureFunction(data,status) {
+	$(".successBlockLogin").hide();
 	$(".errorBlockLogin").show();
 	$(".errorMsgLogin").html(data);
 }

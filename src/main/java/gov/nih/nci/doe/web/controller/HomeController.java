@@ -42,21 +42,9 @@ public class HomeController extends AbstractDoeController {
 	private String serviceURL;
 
 	@GetMapping
-	public String index(@RequestParam(value = "token", required = false) String token,
-			@RequestParam(value = "email", required = false) String email) throws DoeWebException {
+	public String index(HttpSession session, HttpServletRequest request)  {
 
 		log.info("home page");
-
-		try {
-			if (StringUtils.isNotEmpty(token) && StringUtils.isNotEmpty(email)) {
-				String status = authenticateService.confirmRegistration(token, email);
-				if ("SUCCESS".equalsIgnoreCase(status)) {
-					mailService.sendRegistrationEmail(email);
-				}
-			}
-		} catch (Exception e) {
-			throw new DoeWebException("Failed to send registration email" + e.getMessage());
-		}
 		return "home";
 
 	}
@@ -123,7 +111,20 @@ public class HomeController extends AbstractDoeController {
 	}
 
 	@GetMapping(value = "/loginTab")
-	public String getLoginTab(HttpSession session, HttpServletRequest request) {
+	public String getLoginTab(Model model, @RequestParam(value = "token", required = false) String token,
+			@RequestParam(value = "email", required = false) String email) throws DoeWebException {
+		
+		try {
+			if (StringUtils.isNotEmpty(token) && StringUtils.isNotEmpty(email)) {
+				String status = authenticateService.confirmRegistration(token, email);
+				if ("SUCCESS".equalsIgnoreCase(status)) {
+					model.addAttribute("successMsg", "Thank you for registering. You may now login.");
+				}
+			}
+		} catch (Exception e) {
+			throw new DoeWebException("Failed to send registration email" + e.getMessage());
+		}
+		
 		return "loginTab";
 	}
 

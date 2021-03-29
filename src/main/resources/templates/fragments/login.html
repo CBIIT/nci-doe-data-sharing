@@ -11,7 +11,15 @@
         <div class="form-row jumbotron pt-2 pb-2 mb-2" id="loginSubTab">
                  <form role="form" id="userlogin" style="width:100%;">
                         <p style="text-align: center;font-family: latoregular;font-size: 26px;color: #FFFFFF;padding-top: 18px;
-    padding-bottom: 14px;">LOGIN</p>
+                         padding-bottom: 14px;">LOGIN</p>
+                         
+                         <div class="clearfix successBlockLogin" th:if= "${successMsg!= null}">
+                         <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
+                        <div class="alert alert-success">
+                            <h6 class="updateAccessMsg" th:text="${successMsg}"></h6>
+                        </div>
+                    </div>
+                         </div>
                         <div class="clearfix errorBlockLogin" style="display: none;">
                     <div class="col-md-12" style="padding-left: 0px; Padding-right: 0px; border-radius: 0px;">
                         <div class="alert alert-danger" style="background-color: #E87B05;">
