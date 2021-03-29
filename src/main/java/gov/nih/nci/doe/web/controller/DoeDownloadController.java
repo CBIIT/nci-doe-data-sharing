@@ -182,7 +182,7 @@ public class DoeDownloadController extends AbstractDoeController {
 			// store the task ID in DB if logged on user exists
 			if (loggedOnUser != null) {
 
-				if (taskId != null && taskId.indexOf("Download request is not successful:") != -1) {
+				if (taskId != null && taskId.indexOf("Download request is not successful") != -1) {
 					result.setMessage(taskId);
 				} else {
 					taskManagerService.saveTransfer(taskId, "Download", downloadFile.getDownloadType(), name,
