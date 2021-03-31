@@ -9,60 +9,59 @@
      
      <div class="col-lg-12 col-md-12 col-sm-12 float-right">
        <div class="controls controls-row mt-4">
-         <button type="button" style="background-color: #E87B05!important;" class="btn btn-primary float-left mb-2 mr-2 backToSearch">Back to Search Results</button>
+         <a class="float-left mb-2 mr-2"><img src="images/BackSearch-icon.png" data-toggle="tooltip" title="Back to Search Results"
+         th:src="@{/images/BackSearch-icon.png}" style="width:50px;" alt="back to search">
+         &nbsp;&nbsp;<span class="backToSearch">Back to Search Results</span></a>
+         
        </div>
      </div>
      
      <div class="col-lg-12 col-md-12 col-sm-12" style="margin-top: 20px;border-bottom: 4px solid #194F85;">
-    <h4 class="datasetDetailsheader">Asset Details</h4>
+        <h4 class="datasetDetailsheader">Asset Details</h4>
      </div>
      
     <br/>
     <br/>
     
-    <div class="form-row col-lg-12 col-md-12 col-sm-12" style="padding:2rem 2rem;margin-top:20px;border-bottom: 2px solid #194F85;">
-    <div class="col-md-12 col-sm-12" style="color: #000000;font-family: 'latoregular';font-size: 13px;">
-                        <div class="form-group">
-                                <div class="form-group col-lg-6 col-md-12">
-                                    <label aria-label="program name" style="font-weight:100;">Program Name: <span style="font-weight:bold;" id="selectedProgramName"></span></label>
-                            </div>
-                            <div class="form-group col-lg-6 col-md-12">
-                                           <label aria-label="study name" style="font-weight:100;">Study Name: <span style="font-weight:bold;" id="selectedStudyName"></span></label>
-                            </div>
-                            <div class="form-group col-lg-6 col-md-12">
-                                           <label aria-label="dataset name" style="font-weight:100;">Asset Name: <span  style="font-weight:bold;" id="selectedDataSetName"></span></label>
-                            </div>
-                            
-                            <div class="form-group col-lg-12 col-md-12">
-                                           <label aria-label="dataset name">Asset Path: <span id="selectedAssetPath"></span></label>
-                            </div>
-        </div>
+    <div class="form-row col-lg-12 col-md-12 col-sm-12" style="padding:2rem 2rem;border-bottom: 2px solid #194F85;">
+      <div class="col-md-12 col-sm-12" style="color: #000000;font-family: 'latoregular';font-size: 13px;margin-left: -19px;">
+         <div class="form-group">
+              <div class="form-group col-lg-6 col-md-12">
+                   <label aria-label="program name" style="font-weight:100;">Program Name: <span style="font-weight:bold;" id="selectedProgramName"></span></label>
+              </div>
+              <div class="form-group col-lg-6 col-md-12">
+                    <label aria-label="study name" style="font-weight:100;">Study Name: <span style="font-weight:bold;" id="selectedStudyName"></span></label>
+              </div>
+              <div class="form-group col-lg-6 col-md-12">
+                    <label aria-label="dataset name" style="font-weight:100;">Asset Name: <span  style="font-weight:bold;" id="selectedDataSetName"></span></label>
+             </div>                           
+             <div class="form-group col-lg-12 col-md-12">
+                    <label aria-label="dataset name">Asset Path: <span id="selectedAssetPath"></span></label>
+             </div>
+         </div>
+      </div>
     </div>
-</div>
     
-   <div class="col-lg-2 col-md-2 col-sm-12" style="z-index:1010;">
-                        <button id="advancedSearch" type="button" class="float-left btn btn-link" data-toggle="collapse"
-                                data-target="#dataSetMetaData">
-                            <i class="fa fa-minus-circle" style="color: #5099AB"></i><strong>Asset Attributes</strong>
-                        </button>
-           </div>
-               
-     
-         <table id="dataSetMetaData" class="table display dt-responsive wrap">
-                      <thead>
-							<tr>
-                                <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col">ATTRIBUTE</th>
-                                 <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col">VALUE</th>
-                            </tr>
-                        </thead>
-                        <tbody>                      
-                        </tbody>
-         </table> 
+   <button type="button" class="float-left btn asset-attributes" data-toggle="collapse" 
+       data-target="#dataSetMetaData">
+       <i class="fa fa-minus-circle" style="color: #194F85"></i><strong>&nbsp;&nbsp;Asset Attributes</strong>
+   </button>
+              
+    <table id="dataSetMetaData" class="table display dt-responsive wrap">
+        <thead>
+			<tr>
+               <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col">ATTRIBUTE</th>
+               <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col">VALUE</th>
+            </tr>
+        </thead>
+        <tbody>                      
+        </tbody>
+     </table> 
 
                     
-        <div class="col-lg-12 col-md-12 col-sm-12 float-right" style="border-top: 2px solid #194F85;">
+    <div class="col-lg-12 col-md-12 col-sm-12 float-right" style="border-top: 2px solid #194F85;">
        <div class="controls controls-row mt-4">
-       <p class="datasetDetailsheader" style="font-size: 20px;font-weight: 500;">Asset Files</p>
+       <p class="assetFilesheader">Asset Files</p>
        
        <p th:if= "${loggedOnUser == null}" class="infoDownload">
        <i class="fas fa-info-circle"></i> To download files, <a th:href="@{/loginTab}">log in.</a></p>
@@ -70,22 +69,23 @@
        <button id="downloadSelectedMetadata" type="button" class="btn btn-primary float-right mb-2 mr-2" disabled>Download Selected Metadata</button>
        <button id="downloadSelectedDataSet" type="button" class="btn btn-primary float-right mb-2 mr-2" disabled>Download Selected Files</button>
        </div>
-     </div>
-      <table id="dataSetTable" class="table display dt-responsive wrap"  role="grid" style="width:100%;margin-left: 45px" aria-label="data set table">
-                      <thead>
-							<tr>
-							 <th aria-sort="none" class="sortable" aria-label="select all checkbox" role="columnheader" scope="colgroup">
-							 <label style="color: rgba(255,255,255,0.66) !important;" class="select-checkbox-label">
-							 Batch Select<br><input type="checkbox" class="selectAll"></label></th>
-                                <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="colgroup">File Name</th>
-                                <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="colgroup">File Size</th>
-                                 <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="colgroup">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                    </tbody>
-                </table>                
-     </div>
-     </body>
-     </html>
+    </div>
+    
+     <table id="dataSetTable" class="col-lg-12 col-md-12 col-sm-12 table display dt-responsive wrap"  role="grid" style="width:100%;" aria-label="data set table">
+         <thead>
+		   <tr>
+			 <th aria-sort="none" class="sortable" aria-label="select all checkbox" role="columnheader" scope="colgroup">
+			 <label style="color: rgba(255,255,255,0.66) !important;" class="select-checkbox-label">
+			 <input type="checkbox" class="selectAll">&nbsp;&nbsp;Batch Select</label></th>
+             <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="colgroup">File Name</th>
+             <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="colgroup">File Size</th>
+             <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="colgroup">Actions</th>
+           </tr>
+         </thead>
+         <tbody>
+         </tbody>
+      </table>                
+   </div>
+   </body>
+   </html>
     

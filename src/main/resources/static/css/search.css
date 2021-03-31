@@ -26,13 +26,14 @@
 
 #dataSetMetaData {
 	    width: 100%;
-    margin-left: 48px;
     font-size: 14px;
     font-family: 'latoregular';
     border-color: transparent;
     margin-top: 13px;
 }
-
+#dataSetTable_wrapper {
+	width:100%;
+}
 #advancedSearch {
 	background-color:transparent; 
     border:0px;color: #5099AB !important;font-family: 'latoregular';font-size: 20px;margin-left: 37px;
@@ -41,13 +42,15 @@
 }
 
 #dataSetTable_length {
-	margin-left: 45px;
     margin-top: -25px;
     font-family: 'latoregular';
+    margin-left: 13px;
 }
 #dataSetTable_info {
-	margin-left: 50px;
+	margin-left: 20px;
     font-family: 'latoregular';
+    float: right;
+    margin-right: 21px;
 }
 #dataSetTable{
 	border-color: transparent;

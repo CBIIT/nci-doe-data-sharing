@@ -171,11 +171,17 @@ table#userMetaData tr:nth-child(even) td{
 	background-color: #E0F0F4!important;
 }
 
+table#dataSetMetaData thead tr th {
+    padding-left: 25px;
+}
+
 table#dataSetMetaData tr:nth-child(odd) td{
 	background-color: #E0F0F4!important;
+	padding-left: 25px;
 }
 table#dataSetMetaData tr:nth-child(even) td{
 	background-color: #FBFBFB!important;
+	padding-left: 25px;
 }
 /*table#newMetaDataTable tr:nth-child(odd) td{
 	background-color: #E0F0F4!important;
@@ -224,10 +230,15 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 	background-color: #E87B05!important;
 }
 #updateMetaData,#addMetaData,#addBulkDataFiles,#addNewMetaDataForSingleDataFile,
-#registerBulkDataFileBtn,#registerCollectionBtn,#updatePermissions,.backToSearch,#backtoSearch {
+#registerBulkDataFileBtn,#registerCollectionBtn,#updatePermissions,#backtoSearch {
 	background-color: #E87B05!important;
 }
-
+.backToSearch {
+ color: #E87B05;
+ font-family: 'inter_regular';
+ font-size: 16px;
+ font-weight: 900;
+}
 #registerCollectionBtn {
 	width: 8%;
     border-radius: 10px;
@@ -239,11 +250,27 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
     width: 5%;
     border-radius: 10px;
 }
+.asset-attributes {
+	color: #5099AB!important;
+	font-family: 'latoregular';
+	font-size: 20px;
+   font-weight: 100;
+   border: 0px;
+   margin-top: 10px;
+}
 .datasetDetailsheader {
-	color: #5099AB;
+   color: #242525;
     font-family: 'latoregular';
-    font-size: 24px;
-    margin-left: 46px;
+    font-size: 28px;
+    line-height: 51px;
+}
+.assetFilesheader {
+	font-size: 20px;
+    font-weight: 500;
+    font-family: 'latoregular';
+    margin-left: 20px;
+    color: #5099AB;
+    line-height: 51px;
 }
 .divTableHeading {
     background-color: #EEE;
