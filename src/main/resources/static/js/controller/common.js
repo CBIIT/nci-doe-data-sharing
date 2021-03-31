@@ -342,7 +342,7 @@ $("#resetBtn").click(function(e){
 
 });
 	
-$(".backToSearch").click(function(e){
+$(".backToSearchBtn").click(function(e){
 	$("#searchFragmentDiv").show();
     $("#dataSetFragment").hide();
 	$("#editCollectionFragment").hide();
