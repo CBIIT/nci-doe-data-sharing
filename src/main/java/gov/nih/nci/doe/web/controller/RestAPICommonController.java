@@ -44,6 +44,7 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectDTO;
 import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
 
@@ -762,6 +763,59 @@ public class RestAPICommonController extends AbstractDoeController {
 		}
 
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
+	}
+
+	@PutMapping(value = "/v2/registration")
+	public ResponseEntity<?> registerDataObjects(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
+			HttpServletResponse response, HttpServletRequest request,
+			@Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO bulkDataObjectRegistrationRequest)
+			throws DoeWebException, JsonProcessingException {
+
+		log.info("register bulk data files: " + bulkDataObjectRegistrationRequest);
+		log.info("Headers: {}", headers);
+
+		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		log.info("authToken: " + authToken);
+
+		if (authToken == null) {
+			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
+		}
+
+		// verifying MoDaC authentication.
+		String doeLogin = (String) session.getAttribute("doeLogin");
+		log.info("doeLogin: " + doeLogin);
+		if (doeLogin == null) {
+			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
+		}
+
+		HpcBulkDataObjectRegistrationResponseDTO responseDTO = DoeClientUtil.registerBulkDatafiles(authToken,
+				bulkRegistrationURL, bulkDataObjectRegistrationRequest, sslCertPath, sslCertPassword);
+
+		if (responseDTO != null) {
+			try {
+				String taskId = responseDTO.getTaskId();
+				taskManagerService.saveTransfer(taskId, "Upload", null, null, doeLogin);
+
+				// store the auditing info
+				AuditingModel audit = new AuditingModel();
+				audit.setName(doeLogin);
+				audit.setOperation("Upload");
+				audit.setStartTime(new Date());
+				audit.setTransferType("Bulk Registration");
+				audit.setTaskId(taskId);
+				auditingService.saveAuditInfo(audit);
+			} catch (Exception e) {
+				log.error("error in save" + e.getMessage());
+			}
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+			mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+			return new ResponseEntity<>(mapper.writeValueAsString(responseDTO), HttpStatus.OK);
+
+		}
+
+		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
+
 	}
 
 	/**
