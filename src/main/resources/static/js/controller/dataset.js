@@ -404,8 +404,8 @@ function openPopOverDataSet($this) {
 
        ind += "<p><b>User Metadata </b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
               "<div class='divTableBody'><div class='divTableRow'>" +
-              "<div class='divTableHead rowAttribute'>Attribute</div>" + 
-              "<div class='divTableHead'>Value</div></div>";
+              "<div class='divTableHead rowAttribute'>ATTRIBUTE</div>" + 
+              "<div class='divTableHead'>VALUE</div></div>";
 
               $.each(userMetadataList, function( key, value ) {	
                 content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
@@ -418,8 +418,8 @@ function openPopOverDataSet($this) {
     if(sysMetadatalist) {
        content += "<p><b>Key System Metadata </b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
                   "<div class='divTableBody'><div class='divTableRow'>" +
-                  "<div class='divTableHead rowAttribute'>Attribute</div>" + 
-                  "<div class='divTableHead'>Value</div></div>";
+                  "<div class='divTableHead rowAttribute'>ATTRIBUTE</div>" + 
+                  "<div class='divTableHead'>VALUE</div></div>";
 
             $.each(sysMetadatalist, function( key, value ) {	
                 content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +

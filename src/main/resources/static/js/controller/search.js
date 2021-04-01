@@ -719,8 +719,8 @@ function openPopOver($this) {
                 "" + headerTest +" <a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a> </div>" +
                 "<div class='popover-body'> <div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
                 "<div class='divTableBody'><div class='divTableRow'>" +
-                "<div class='divTableHead'>Attribute</div>" + 
-                "<div class='divTableHead'>Value</div></div>";
+                "<div class='divTableHead'>ATTRIBUTE</div>" + 
+                "<div class='divTableHead'>VALUE</div></div>";
 
             var content = "";
 
