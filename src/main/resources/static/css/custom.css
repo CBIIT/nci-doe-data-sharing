@@ -305,8 +305,8 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 	    border: 0 solid #000000;
     box-sizing: border-box;
     opacity: 0.96;border-radius: 11px;
-    height: 676px;
-    width:590px;
+    height: 600px;
+    width:617px;
     margin-top:50px;
     border: 2.5px solid #214C75;
 }
@@ -337,8 +337,7 @@ background-color: rgb(100, 150, 198);
 	color:#03233C;
 }
 #btnRegister {
-	background-color: #C6FFF4 !important;
-    color: #1C5886;
+	background-color: #245D93 !important;
     font-size: 15px;
     border-radius: 12px;
     height: 38px;
@@ -347,8 +346,7 @@ background-color: rgb(100, 150, 198);
     margin-left: 83px;
 }
 #loginButton{
-	    background-color: #C6FFF4 !important;
-    color: #1C5886;
+	    background-color: #245D93 !important;
     font-size: 15px;
     border-radius: 12px;
     font-family: 'latoregular';
@@ -361,8 +359,7 @@ background-color: rgb(100, 150, 198);
       border-radius: 12px;
       margin-left: 45px;
         font-family: 'latoregular';
-        background-color: #C6FFF4 !important;
-        color: #1C5886;
+        background-color: #245D93 !important;
 }
 #cancelUpdate {
 	width: 154px;
@@ -370,7 +367,7 @@ background-color: rgb(100, 150, 198);
       border-radius: 12px;
       margin-left: -8px;
         font-family: 'latoregular';
-        background-color: #FFF6BB !important;
+        background-color: #C6E3FF !important;
       color: #1C5886;
 }
 
@@ -380,8 +377,7 @@ background-color: rgb(100, 150, 198);
       border-radius: 12px;
       font-family: 'latoregular';
       margin-left: 45px;
-      background-color: #C6FFF4 !important;
-      color: #1C5886;
+      background-color: #245D93 !important;
 }
 #cancelPassword{
 	width: 154px;
@@ -389,7 +385,7 @@ background-color: rgb(100, 150, 198);
       border-radius: 12px;
       font-family: 'latoregular';
        margin-left: -8px;
-       background-color: #FFF6BB !important;
+       background-color: #C6E3FF !important;
        color: #1C5886;
 }
 
