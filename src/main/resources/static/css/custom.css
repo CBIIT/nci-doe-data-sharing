@@ -1338,7 +1338,12 @@ th.active .arrow {
   border-right: 4px solid transparent;
   border-top: 4px solid #fff;
 }
-
+.loginHr{
+	border: 0 solid #000000;
+    background-color: #022749;
+    box-sizing: border-box;
+    height: 1px;
+}
 #spinner {
 text-align: center;
     z-index: 101010;
