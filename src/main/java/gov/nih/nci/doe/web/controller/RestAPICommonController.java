@@ -46,6 +46,8 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO;
 import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
 
 import java.io.IOException;
@@ -661,17 +663,15 @@ public class RestAPICommonController extends AbstractDoeController {
 			Integer responseStatus = DoeClientUtil.updateCollection(authToken, serviceURL, collectionRegistration, path,
 					sslCertPath, sslCertPassword);
 			if (responseStatus == 200 || responseStatus == 201) {
-				// after collection is created, store the permissions.
-				String progList = request.getParameter("metaDataPermissionsList");
-				log.info("selected permissions" + progList);
+
 				HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL, path, false,
 						sslCertPath, sslCertPassword);
 				if (collections != null && collections.getCollections() != null
 						&& !CollectionUtils.isEmpty(collections.getCollections())) {
 					HpcCollectionDTO collection = collections.getCollections().get(0);
 					try {
-						// save permissions
-						metaDataPermissionService.savePermissionsList(doeLogin, progList,
+						// save owner collection permissions in MoDaC DB
+						metaDataPermissionService.savePermissionsList(doeLogin, null,
 								collection.getCollection().getCollectionId(), path);
 
 						// store the access_group metadata in MoDaC DB
@@ -766,9 +766,9 @@ public class RestAPICommonController extends AbstractDoeController {
 	}
 
 	@PutMapping(value = "/v2/registration")
-	public ResponseEntity<?> registerDataObjects(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
+	public ResponseEntity<?> bulkRegistration(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
-			@Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO bulkDataObjectRegistrationRequest)
+			@RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO bulkDataObjectRegistrationRequest)
 			throws DoeWebException, JsonProcessingException {
 
 		log.info("register bulk data files: " + bulkDataObjectRegistrationRequest);
@@ -780,7 +780,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		if (authToken == null) {
 			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
 		}
-
+		Boolean isValidPermissions = false;
 		// verifying MoDaC authentication.
 		String doeLogin = (String) session.getAttribute("doeLogin");
 		log.info("doeLogin: " + doeLogin);
@@ -788,29 +788,122 @@ public class RestAPICommonController extends AbstractDoeController {
 			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
 		}
 
-		HpcBulkDataObjectRegistrationResponseDTO responseDTO = DoeClientUtil.registerBulkDatafiles(authToken,
-				bulkRegistrationURL, bulkDataObjectRegistrationRequest, sslCertPath, sslCertPassword);
+		if (StringUtils.isNotEmpty(doeLogin) && Boolean.TRUE.equals(isUploader(doeLogin))) {
 
-		if (responseDTO != null) {
-			try {
-				String taskId = responseDTO.getTaskId();
-				taskManagerService.saveTransfer(taskId, "Upload", null, null, doeLogin);
+			List<HpcDirectoryScanRegistrationItemDTO> directoryScanRegistrationItems = bulkDataObjectRegistrationRequest
+					.getDirectoryScanRegistrationItems();
+			String path = CollectionUtils.isNotEmpty(directoryScanRegistrationItems)
+					? directoryScanRegistrationItems.get(0).getBasePath()
+					: "";
 
-				// store the auditing info
-				AuditingModel audit = new AuditingModel();
-				audit.setName(doeLogin);
-				audit.setOperation("Upload");
-				audit.setStartTime(new Date());
-				audit.setTransferType("Bulk Registration");
-				audit.setTaskId(taskId);
-				auditingService.saveAuditInfo(audit);
-			} catch (Exception e) {
-				log.error("error in save" + e.getMessage());
+			if (StringUtils.isNotEmpty(path)) {
+				HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, serviceURL, path,
+						true, sslCertPath, sslCertPassword);
+				isValidPermissions = hasCollectionPermissions(doeLogin, path, parentCollectionDto);
+				if (Boolean.FALSE.equals(isValidPermissions)) {
+					throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
+				}
 			}
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-			mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-			return new ResponseEntity<>(mapper.writeValueAsString(responseDTO), HttpStatus.OK);
+
+			// loop through dataObjectRegistrationItems
+			List<HpcDataObjectRegistrationItemDTO> dataObjectRegistrationItems = bulkDataObjectRegistrationRequest
+					.getDataObjectRegistrationItems();
+			if (CollectionUtils.isNotEmpty(dataObjectRegistrationItems)) {
+				for (HpcDataObjectRegistrationItemDTO item : dataObjectRegistrationItems) {
+					String assetPath = item.getPath();
+					String parentpath = assetPath.substring(0, assetPath.lastIndexOf('/'));
+					if (Boolean.TRUE.equals(item.getCreateParentCollections())) {
+						// this is for new collection registration, check permissions for the parent
+						// path
+						String parentOfpath = parentpath.substring(0, parentpath.lastIndexOf('/'));
+						HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
+								parentOfpath, true, sslCertPath, sslCertPassword);
+						isValidPermissions = hasCollectionPermissions(doeLogin, parentOfpath, parentCollectionDto);
+					} else {
+						// this is for data objects upload, check permissions at asset level
+						HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
+								parentpath, true, sslCertPath, sslCertPassword);
+						isValidPermissions = hasCollectionPermissions(doeLogin, parentpath, parentCollectionDto);
+					}
+					if (Boolean.FALSE.equals(isValidPermissions)) {
+						throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
+					}
+				}
+			}
+
+			if (Boolean.TRUE.equals(isValidPermissions)) {
+				HpcBulkDataObjectRegistrationResponseDTO responseDTO = DoeClientUtil.registerBulkDatafiles(authToken,
+						bulkRegistrationURL, bulkDataObjectRegistrationRequest, sslCertPath, sslCertPassword);
+				if (responseDTO != null) {
+					try {
+
+						// get the paths for new collection registration and save in modac
+						List<String> pathsList = new ArrayList<String>();
+						if (CollectionUtils.isNotEmpty(directoryScanRegistrationItems)) {
+							for (HpcDirectoryScanRegistrationItemDTO item : directoryScanRegistrationItems) {
+								item.getBulkMetadataEntries().getPathsMetadataEntries().stream()
+										.forEach(e -> pathsList.add(e.getPath()));
+							}
+						}
+
+						if (CollectionUtils.isNotEmpty(dataObjectRegistrationItems)) {
+							for (HpcDataObjectRegistrationItemDTO item : dataObjectRegistrationItems) {
+								if (Boolean.TRUE.equals(item.getCreateParentCollections())) {
+									item.getParentCollectionsBulkMetadataEntries().getPathsMetadataEntries().stream()
+											.forEach(e -> pathsList.add(e.getPath()));
+								}
+							}
+						}
+
+						if (CollectionUtils.isNotEmpty(pathsList)) {
+							for (String collectionPath : pathsList) {
+								HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL,
+										collectionPath, false, sslCertPath, sslCertPassword);
+								if (collections != null && collections.getCollections() != null
+										&& !CollectionUtils.isEmpty(collections.getCollections())) {
+									HpcCollectionDTO collection = collections.getCollections().get(0);
+
+									// save owner collection permissions in MoDaC DB
+									metaDataPermissionService.savePermissionsList(doeLogin, null,
+											collection.getCollection().getCollectionId(), path);
+
+									// store the access_group metadata in MoDaC DB
+									HpcMetadataEntry selectedEntry = collection.getMetadataEntries()
+											.getSelfMetadataEntries().stream()
+											.filter(e -> e.getAttribute().equalsIgnoreCase("access_group")).findAny()
+											.orElse(null);
+									if (selectedEntry != null && !"public".equalsIgnoreCase(selectedEntry.getValue())) {
+										accessGroupsService.saveAccessGroups(
+												collection.getCollection().getCollectionId(), collectionPath,
+												selectedEntry.getValue(), doeLogin);
+									}
+								}
+							}
+						}
+						String taskId = responseDTO.getTaskId();
+						// save the task info
+						taskManagerService.saveTransfer(taskId, "Upload", null, null, doeLogin);
+
+						// store the auditing info
+						AuditingModel audit = new AuditingModel();
+						audit.setName(doeLogin);
+						audit.setOperation("Upload");
+						audit.setStartTime(new Date());
+						audit.setTransferType("Bulk Registration");
+						audit.setTaskId(taskId);
+						auditingService.saveAuditInfo(audit);
+					} catch (Exception e) {
+						log.error("error in save" + e.getMessage());
+					}
+
+					ObjectMapper mapper = new ObjectMapper();
+					mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+					mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+					return new ResponseEntity<>(mapper.writeValueAsString(responseDTO), HttpStatus.OK);
+
+				}
+
+			}
 
 		}
 
