@@ -836,15 +836,21 @@ public class RestAPICommonController extends AbstractDoeController {
 						bulkRegistrationURL, bulkDataObjectRegistrationRequest, sslCertPath, sslCertPassword);
 				if (responseDTO != null) {
 					try {
+						String taskId = responseDTO.getTaskId();
+						// save the task info
+						taskManagerService.saveTransfer(taskId, "Upload", null, null, doeLogin);
+
+						// store the auditing info
+						AuditingModel audit = new AuditingModel();
+						audit.setName(doeLogin);
+						audit.setOperation("Upload");
+						audit.setStartTime(new Date());
+						audit.setTransferType("Bulk Registration");
+						audit.setTaskId(taskId);
+						auditingService.saveAuditInfo(audit);
 
 						// get the paths for new collection registration and save in modac
 						List<String> pathsList = new ArrayList<String>();
-						if (CollectionUtils.isNotEmpty(directoryScanRegistrationItems)) {
-							for (HpcDirectoryScanRegistrationItemDTO item : directoryScanRegistrationItems) {
-								item.getBulkMetadataEntries().getPathsMetadataEntries().stream()
-										.forEach(e -> pathsList.add(e.getPath()));
-							}
-						}
 
 						if (CollectionUtils.isNotEmpty(dataObjectRegistrationItems)) {
 							for (HpcDataObjectRegistrationItemDTO item : dataObjectRegistrationItems) {
@@ -852,6 +858,13 @@ public class RestAPICommonController extends AbstractDoeController {
 									item.getParentCollectionsBulkMetadataEntries().getPathsMetadataEntries().stream()
 											.forEach(e -> pathsList.add(e.getPath()));
 								}
+							}
+						}
+
+						if (CollectionUtils.isNotEmpty(directoryScanRegistrationItems)) {
+							for (HpcDirectoryScanRegistrationItemDTO item : directoryScanRegistrationItems) {
+								item.getBulkMetadataEntries().getPathsMetadataEntries().stream()
+										.forEach(e -> pathsList.add(e.getPath()));
 							}
 						}
 
@@ -880,18 +893,6 @@ public class RestAPICommonController extends AbstractDoeController {
 								}
 							}
 						}
-						String taskId = responseDTO.getTaskId();
-						// save the task info
-						taskManagerService.saveTransfer(taskId, "Upload", null, null, doeLogin);
-
-						// store the auditing info
-						AuditingModel audit = new AuditingModel();
-						audit.setName(doeLogin);
-						audit.setOperation("Upload");
-						audit.setStartTime(new Date());
-						audit.setTransferType("Bulk Registration");
-						audit.setTaskId(taskId);
-						auditingService.saveAuditInfo(audit);
 					} catch (Exception e) {
 						log.error("error in save" + e.getMessage());
 					}
