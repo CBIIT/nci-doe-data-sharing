@@ -56,7 +56,8 @@ select coll_id, SUBSTR(coll_name, 19, LENGTH(coll_name)) from r_coll_main where 
 7330732
 );
 /* update COLLECTION_UPDATE_PERMISSIONS_T from the above table */
-
+update NCI_DOE_DB_T.COLLECTION_UPDATE_PERMISSIONS_T set COLLECTION_UPDATE_PERMISSIONS_T.COLLECTION_PATH='DOE_TEST_Archive/Program_JDACS4C_Pilot_2'
+where COLLECTION_ID=930851;
 
 
 

@@ -810,20 +810,20 @@ public class RestAPICommonController extends AbstractDoeController {
 					.getDataObjectRegistrationItems();
 			if (CollectionUtils.isNotEmpty(dataObjectRegistrationItems)) {
 				for (HpcDataObjectRegistrationItemDTO item : dataObjectRegistrationItems) {
-					String assetPath = item.getPath();
-					String parentpath = assetPath.substring(0, assetPath.lastIndexOf('/'));
+					String dataFilePath = item.getPath();
+					String assetPath = dataFilePath.substring(0, dataFilePath.lastIndexOf('/'));
 					if (Boolean.TRUE.equals(item.getCreateParentCollections())) {
 						// this is for new collection registration, check permissions for the parent
-						// path
-						String parentOfpath = parentpath.substring(0, parentpath.lastIndexOf('/'));
+						// path of the asset
+						String parentPath = assetPath.substring(0, assetPath.lastIndexOf('/'));
 						HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
-								parentOfpath, true, sslCertPath, sslCertPassword);
-						isValidPermissions = hasCollectionPermissions(doeLogin, parentOfpath, parentCollectionDto);
+								parentPath, true, sslCertPath, sslCertPassword);
+						isValidPermissions = hasCollectionPermissions(doeLogin, parentPath, parentCollectionDto);
 					} else {
 						// this is for data objects upload, check permissions at asset level
 						HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
-								parentpath, true, sslCertPath, sslCertPassword);
-						isValidPermissions = hasCollectionPermissions(doeLogin, parentpath, parentCollectionDto);
+								assetPath, true, sslCertPath, sslCertPassword);
+						isValidPermissions = hasCollectionPermissions(doeLogin, assetPath, parentCollectionDto);
 					}
 					if (Boolean.FALSE.equals(isValidPermissions)) {
 						throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
@@ -849,27 +849,32 @@ public class RestAPICommonController extends AbstractDoeController {
 						audit.setTaskId(taskId);
 						auditingService.saveAuditInfo(audit);
 
-						// get the paths for new collection registration and save in modac
-						List<String> pathsList = new ArrayList<String>();
+					} catch (Exception e) {
+						log.error("error in save" + e.getMessage());
+					}
 
-						if (CollectionUtils.isNotEmpty(dataObjectRegistrationItems)) {
-							for (HpcDataObjectRegistrationItemDTO item : dataObjectRegistrationItems) {
-								if (Boolean.TRUE.equals(item.getCreateParentCollections())) {
-									item.getParentCollectionsBulkMetadataEntries().getPathsMetadataEntries().stream()
-											.forEach(e -> pathsList.add(e.getPath()));
-								}
-							}
-						}
+					// get the paths for new collection registration and save in modac
+					List<String> pathsList = new ArrayList<String>();
 
-						if (CollectionUtils.isNotEmpty(directoryScanRegistrationItems)) {
-							for (HpcDirectoryScanRegistrationItemDTO item : directoryScanRegistrationItems) {
-								item.getBulkMetadataEntries().getPathsMetadataEntries().stream()
+					if (CollectionUtils.isNotEmpty(dataObjectRegistrationItems)) {
+						for (HpcDataObjectRegistrationItemDTO item : dataObjectRegistrationItems) {
+							if (Boolean.TRUE.equals(item.getCreateParentCollections())) {
+								item.getParentCollectionsBulkMetadataEntries().getPathsMetadataEntries().stream()
 										.forEach(e -> pathsList.add(e.getPath()));
 							}
 						}
+					}
 
-						if (CollectionUtils.isNotEmpty(pathsList)) {
-							for (String collectionPath : pathsList) {
+					if (CollectionUtils.isNotEmpty(directoryScanRegistrationItems)) {
+						for (HpcDirectoryScanRegistrationItemDTO item : directoryScanRegistrationItems) {
+							item.getBulkMetadataEntries().getPathsMetadataEntries().stream()
+									.forEach(e -> pathsList.add(e.getPath()));
+						}
+					}
+
+					if (CollectionUtils.isNotEmpty(pathsList)) {
+						for (String collectionPath : pathsList) {
+							try {
 								HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL,
 										collectionPath, false, sslCertPath, sslCertPassword);
 								if (collections != null && collections.getCollections() != null
@@ -878,7 +883,7 @@ public class RestAPICommonController extends AbstractDoeController {
 
 									// save owner collection permissions in MoDaC DB
 									metaDataPermissionService.savePermissionsList(doeLogin, null,
-											collection.getCollection().getCollectionId(), path);
+											collection.getCollection().getCollectionId(), collectionPath);
 
 									// store the access_group metadata in MoDaC DB
 									HpcMetadataEntry selectedEntry = collection.getMetadataEntries()
@@ -891,10 +896,10 @@ public class RestAPICommonController extends AbstractDoeController {
 												selectedEntry.getValue(), doeLogin);
 									}
 								}
+							} catch (Exception e) {
+								log.error("error in bulk registration" + e.getMessage());
 							}
 						}
-					} catch (Exception e) {
-						log.error("error in save" + e.getMessage());
 					}
 
 					ObjectMapper mapper = new ObjectMapper();
