@@ -64,6 +64,7 @@ function postSuccessDataSetInitialize(data,status) {
 function functionDelete($this,collectionType) {
 	var selectedValue = $( "#" +$this+ " option:selected" ).text();
 	var textvalue = $( "#" +$this+ " option:selected" ).val();
+	if(textvalue && textvalue != "ANY") {
 	   bootbox.confirm({
 		    message: "Are you sure you want to delete " + selectedValue + "?",
 		    buttons: {
@@ -106,6 +107,9 @@ function functionDelete($this,collectionType) {
 		    	}   
 		    }
 		});
+	} else {
+		bootbox.alert("Select a collection to delete.");
+	}
 }
 
 function postSuccessDeleteCollection(data,collectionType) {

@@ -37,7 +37,8 @@
                                 onchange="retrieveCollections('instituteList', this.options[this.selectedIndex],'onChange');">
                                 </select></label>
                                 
-                                <div class="form-group" style="margin-left: 116px;padding: 10px;"><a href="#" 
+                                <div class="col-md-2 col-lg-2 col-sm-2" style="margin-right:-34px;"></div>
+                                <div class="mx-auto" style="padding: 10px;"><a href="#" 
                                class="addDeleteUploadLabels" id="addNewInstitute" 
                                onclick="openUploadModal('basePath')" data-backdrop="static" data-keyboard="false" >
                                <img src="images/Uploads.add.png" th:src="@{/images/Uploads.add.png}" class="uploadslogo" alt="register"> Register New Program</a> &nbsp;&nbsp;
@@ -46,33 +47,33 @@
                                 
                             </div>
                             <div class="form-row col-lg-6 col-md-6" id="studyListDiv" style="display:none;">
-                                <label class="uploadLabels" for="attributeVal">Select Study: &nbsp;&nbsp;&nbsp;
+                                <label class="uploadLabels" for="attributeVal">Select Study: &nbsp;&nbsp;&nbsp;&nbsp;
                                 
                                 <select class="simple-select2"  id="studyList" name="studyList" style="width:70%"
                                 onchange="retrieveCollections('studyList', this.options[this.selectedIndex],'onChange');">
                                 </select></label>
                                 
-                                <div class="form-group" style="margin-left: 116px;padding: 10px;"><a href="#" class="addDeleteUploadLabels" 
-                                id="addNewStudy" 
+                                <div class="mx-auto" style="padding: 10px;"><a href="#" class="addDeleteUploadLabels" id="addNewStudy" 
                                 onclick="openUploadModal('instituteList')" data-backdrop="static" data-keyboard="false">
-                                <img src="images/Uploads.add.png" th:src="@{/images/Uploads.add.png}" class="uploadslogo" alt="register"> Register New Study</a>
+                                <img src="images/Uploads.add.png" th:src="@{/images/Uploads.add.png}" class="uploadslogo" alt="register"> Register New Study</a>&nbsp;&nbsp;
                                 <a href="#" style="display:none;" id="deleteStudy" class="addDeleteUploadLabels" onclick="functionDelete('studyList','Study')">
                                <img src="images/Uploads.delete.png" th:src="@{/images/Uploads.delete.png}" class="uploadslogo" alt="delete"> Delete Study</a></div>
                             </div>
                             
                              <div class="form-row col-lg-6 col-md-12" id="dataSetListDiv" style="display:none;">
-                          <label class="uploadLabels" for="attributeVal">Select Asset: &nbsp;&nbsp;&nbsp;&nbsp;
+                          <label class="uploadLabels" for="attributeVal">Select Asset: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         
-                                <select class="simple-select2"  id="dataList" name="dataList" style="width:70%"
-                                onchange="retrieveCollections('dataList', this.options[this.selectedIndex],'onChange');">
-                                </select>  </label>
-                                
-                               <div class="form-group" style="margin-left: 116px;padding: 10px;"><a href="#" class="addDeleteUploadLabels" 
+                           <select class="simple-select2"  id="dataList" name="dataList" style="width:70%"
+                             onchange="retrieveCollections('dataList', this.options[this.selectedIndex],'onChange');">
+                           </select></label>
+
+                          <div class="mx-auto" style="padding: 10px;"><a href="#" class="addDeleteUploadLabels" 
                           id="addNewDataSet" data-toggle="modal" data-target="#createAssetModal" data-backdrop="static" data-keyboard="false">
-                          <img src="images/Uploads.add.png" th:src="@{/images/Uploads.add.png}" class="uploadslogo" alt="register"> Register New Asset</a>
-                             <a href="#" style="display:none;" class="addDeleteUploadLabels" id="deleteDataSet" onclick="functionDelete('dataList','Asset')">
-                               <img src="images/Uploads.delete.png" th:src="@{/images/Uploads.delete.png}" class="uploadslogo" alt="delete"> Delete Asset</a></div>
-                            </div>
+                          
+                          <img src="images/Uploads.add.png" th:src="@{/images/Uploads.add.png}" class="uploadslogo" alt="register"> Register New Asset</a>&nbsp;&nbsp;
+                          <a href="#" style="display:none;" class="addDeleteUploadLabels" id="deleteDataSet" onclick="functionDelete('dataList','Asset')">
+                          <img src="images/Uploads.delete.png" th:src="@{/images/Uploads.delete.png}" class="uploadslogo" alt="delete"> Delete Asset</a></div>
+                         </div>
                             
                             <div class="col-md-12 col-sm-12" id="dataListDiv" style="display:none;margin-top:30px;">
                               <div class="form-row" style="height:190px;position:relative;">
