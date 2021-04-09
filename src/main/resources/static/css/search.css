@@ -25,11 +25,12 @@
 }
 
 #dataSetMetaData {
-	    width: 100%;
+	width: 100%;
     font-size: 14px;
     font-family: 'latoregular';
     border-color: transparent;
     margin-top: 13px;
+    margin-bottom: 30px;
 }
 #dataSetTable_wrapper {
 	width:100%;
