@@ -1,4 +1,4 @@
-function constructCollectionMetData(metadata,metaDataPath,isDataObject,permissionrole,collectionId,fileName) {
+function constructCollectionMetData(metadata,metaDataPath,isDataObject,fileName) {
 	 $("#userMetaData tbody").html("");
 	 $("#path").val(metaDataPath);
 	 $(".editCollectionSuccess").hide();
@@ -12,25 +12,14 @@ function constructCollectionMetData(metadata,metaDataPath,isDataObject,permissio
 	 $.each(data, function(key, value) {	
 		var attrVal= value.value;
 		var attrValModified = attrVal.replace(/"/g, "");
-		if(value.key.indexOf("_identifier") != -1 || value.key.indexOf("asset_type") != -1) {
-			$("#userMetaData tbody").append("<tr><td>" + value.displayName + "</td><td><input type='text'" +
-					                        "disabled='true' aria-label='value of meta data' name='zAttrStr_"+value.key+"' " +
-					                        "style='width:70%;' " +
-					                        "value=\"" + attrValModified + "\"></td></tr>");
-		} else {
-            $("#userMetaData tbody").append("<tr><td>" + value.displayName + "</td><td><input type='text' " +
-          		                            "aria-label='value of meta data' name='zAttrStr_"+value.key+"'" +
-          		                            " style='width:70%;' " +
-          		                            "value=\"" + attrValModified + "\"></td></tr>");
-		}
+        
+		$("#userMetaData tbody").append("<tr><td>" + value.displayName + "</td><td><input type='text' " +
+          		                        "aria-label='value of meta data' name='zAttrStr_"+value.key+"'" +
+          		                        " style='width:70%;' " +
+          		                        "value=\"" + attrValModified + "\"></td></tr>");
 		
-	});
-	if(permissionrole && permissionrole == 'Owner') {
-		$("#updatePermissions").show();
-	} else {
-		$("#updatePermissions").hide();
-	}
-	
+		
+	});	
 }
 
 function constructEditCollectionMetadata(data,status) {
@@ -50,6 +39,7 @@ function constructEditCollectionMetadata(data,status) {
 			                                "name='zAttrStr_"+value.attrName+"' style='width:70%;' value=\"" + attrValModified + "\"></td></tr>");
 			
 		} else if(value.validValues == null && value.attrName.indexOf("access_group") == -1) {
+			
 			 if(!attrValModified) {
 				 attrValModified = "";
 			 }
@@ -62,12 +52,23 @@ function constructEditCollectionMetadata(data,status) {
 		    	 isMandatory = value.mandatory;
 		     }
 		     
-			 $("#userMetaData tbody").append("<tr><td>" + value.displayName + "&nbsp;&nbsp;<i class='fas fa-question-circle'" +
-					                         " data-toggle='tooltip' " +
-					                         "data-placement='right' title=\"" + value.description + "\"></i></td><td><input type='text' " +
-					                         "placeholder='"+placeholderValue+"' is_mandatory='"+isMandatory+"' " +
-					                         "aria-label='value of meta data' name='zAttrStr_"+value.attrName+"' style='width:70%;'" +
-					                         " value=\"" + attrValModified + "\"></td></tr>");
+		     if(value.attrName.indexOf("description") != -1) {
+		    	 $("#userMetaData tbody").append("<tr><td>" + value.displayName + "&nbsp;&nbsp;<i class='fas fa-question-circle'" +
+                                                 " data-toggle='tooltip' " +
+                                                 "data-placement='right' title=\"" + value.description + "\">" +
+                                                 "</i></td><td><textarea rows='4'" +
+                                                 "placeholder='"+placeholderValue+"' is_mandatory='"+isMandatory+"' " +
+                                                 "aria-label='value of meta data' name='zAttrStr_"+value.attrName+"' " +
+                                                 "style='width:70%;'>" + attrValModified + "</textarea></td></tr>"); 
+		     } else {		    	 		     
+			     $("#userMetaData tbody").append("<tr><td>" + value.displayName + "&nbsp;&nbsp;<i class='fas fa-question-circle'" +
+					                             "data-toggle='tooltip' " +
+					                             "data-placement='right' title=\"" + value.description + "\">" +
+					                             "</i></td><td><input type='text' " +
+					                             "placeholder='"+placeholderValue+"' is_mandatory='"+isMandatory+"' " +
+					                             "aria-label='value of meta data' name='zAttrStr_"+value.attrName+"' style='width:70%;'" +
+					                             "value=\"" + attrValModified + "\"></td></tr>");
+		     }
 
 		} else if(value.validValues != null) {
 			 $("#userMetaData tbody").append("<tr><td>" + value.displayName+ "&nbsp;&nbsp;<i class='fas fa-question-circle'" +
@@ -252,6 +253,13 @@ function updateMetaDataCollection() {
 	var validate = true;
 		var data = $('#collectionForm').serialize();
 		$('form#collectionForm input[type="text"]').each(function(){
+			var ismandatory = $(this).attr('is_mandatory');
+	        if(!$(this).val() && ismandatory && ismandatory != "false" ){
+	        		validate = false;
+	        }          
+	    });
+		
+		$("textarea").each(function(){
 			var ismandatory = $(this).attr('is_mandatory');
 	        if(!$(this).val() && ismandatory && ismandatory != "false" ){
 	        		validate = false;

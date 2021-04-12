@@ -147,7 +147,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,accessgroups,permissions,col
     				 success : function(msg) {
     					 $("#spinner").hide();
     			         $("#dimmer").hide();
-    			         constructCollectionMetData(msg,metaDataPath,true,null,null,fileName);
+    			         constructCollectionMetData(msg,metaDataPath,true,fileName);
     				 },
     				 error : function(e) {
     					 console.log('ERROR: ', e);

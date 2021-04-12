@@ -301,10 +301,18 @@ function constructNewCollectionMetaDataSet(data,status) {
 		     if(value.mandatory && value.mandatory == true) {
 		    	 placeholderValue = "Required";
 		     }
-			$("#newMetaDataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
-        	'data-placement="right" title="'+value.description+'"></i></td><td>'+
-        	'<input type="text" is_mandatory="'+value.mandatory+'" placeholder="'+placeholderValue+'" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
-        	'style="width:70%;"></td></tr>');
+		     if(value.attrName.indexOf("description") != -1) {
+		    	 $("#newMetaDataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+		    	        	'data-placement="right" title="'+value.description+'"></i></td><td>'+
+		    	        	'<textarea rows="4" is_mandatory="'+value.mandatory+'" placeholder="'+placeholderValue+'" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
+		    	        	'style="width:70%;"></textarea></td></tr>');
+		     } else {
+		    	 $("#newMetaDataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+		    	        	'data-placement="right" title="'+value.description+'"></i></td><td>'+
+		    	        	'<input type="text" is_mandatory="'+value.mandatory+'" placeholder="'+placeholderValue+'" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
+		    	        	'style="width:70%;"></td></tr>'); 
+		     }
+			
 		}      
 		
 	});	
@@ -415,13 +423,21 @@ function registerCollection() {
 	        	var modifiedName = name.replace(/ /g,"_");
 	        	collectionName = modifiedName;
 	        }
-		});
-			$(".simple-select2").each(function(){
-				var name = $(this).val();
-				if(name && name == 'Select') {
-	        	usermetaDataEntered = false;
-	           }
-			});
+	});
+	
+	$("textarea").each(function(){
+		var ismandatory = $(this).attr('is_mandatory');
+        if(!$(this).val() && ismandatory && ismandatory != "false" ){
+        	usermetaDataEntered = false;
+        }          
+    });
+	 
+	$(".simple-select2").each(function(){
+		var name = $(this).val();
+		if(name && name == 'Select') {
+	       usermetaDataEntered = false;
+	    }
+	});
 	
 	if(!usermetaDataEntered) {
 		validate = false;
