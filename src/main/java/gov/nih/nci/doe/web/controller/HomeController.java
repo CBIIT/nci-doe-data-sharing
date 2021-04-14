@@ -118,7 +118,7 @@ public class HomeController extends AbstractDoeController {
 			if (StringUtils.isNotEmpty(token) && StringUtils.isNotEmpty(email)) {
 				String status = authenticateService.confirmRegistration(token, email);
 				if ("SUCCESS".equalsIgnoreCase(status)) {
-					model.addAttribute("successMsg", "Thank you for registering. You may now login.");
+					model.addAttribute("successMsg", "Thank you for registering. You may now log in.");
 				}
 			}
 		} catch (Exception e) {
