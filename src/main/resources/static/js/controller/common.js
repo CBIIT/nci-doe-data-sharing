@@ -466,6 +466,14 @@ $("#btnUpdateAccessGroup").click(function(e){
 	updateAccessGroupsFunction();
 });
 
+$('.asset-attributes').click(function(){
+	  if($(this).hasClass('collapsed')){
+	      $(this).find('img').attr('src','/images/arrow.collapse-open.svg')
+	  } else {
+		  $(this).find('img').attr('src','/images/arrow.collapse.svg')
+	  }
+	});
+
 $(".select2-selection").removeAttr("role");
 $(".select2-search__field").removeAttr("role");
 $(".select2-search__field").attr("aria-label", "textbox");
@@ -480,6 +488,8 @@ $(document).ajaxStop(function () {
 });
 
 });
+
+
 
 $(document).on('change', '#publicAccess', function() {
 	if($(this).is(":checked")) {
