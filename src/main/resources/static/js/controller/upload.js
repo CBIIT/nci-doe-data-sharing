@@ -304,7 +304,7 @@ function constructNewCollectionMetaDataSet(data,status) {
 		     if(value.attrName.indexOf("description") != -1) {
 		    	 $("#newMetaDataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
 		    	        	'data-placement="right" title="'+value.description+'"></i></td><td>'+
-		    	        	'<textarea rows="4" is_mandatory="'+value.mandatory+'" placeholder="'+placeholderValue+'" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
+		    	        	'<textarea rows="5" is_mandatory="'+value.mandatory+'" placeholder="'+placeholderValue+'" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
 		    	        	'style="width:70%;"></textarea></td></tr>');
 		     } else {
 		    	 $("#newMetaDataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+

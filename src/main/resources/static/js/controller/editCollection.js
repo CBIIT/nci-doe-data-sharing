@@ -56,7 +56,7 @@ function constructEditCollectionMetadata(data,status) {
 		    	 $("#userMetaData tbody").append("<tr><td>" + value.displayName + "&nbsp;&nbsp;<i class='fas fa-question-circle'" +
                                                  " data-toggle='tooltip' " +
                                                  "data-placement='right' title=\"" + value.description + "\">" +
-                                                 "</i></td><td><textarea rows='4'" +
+                                                 "</i></td><td><textarea rows='5'" +
                                                  "placeholder='"+placeholderValue+"' is_mandatory='"+isMandatory+"' " +
                                                  "aria-label='value of meta data' name='zAttrStr_"+value.attrName+"' " +
                                                  "style='width:70%;'>" + attrValModified + "</textarea></td></tr>"); 
