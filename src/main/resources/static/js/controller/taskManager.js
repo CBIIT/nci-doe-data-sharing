@@ -179,10 +179,12 @@ function renderTaskName(data, type, row) {
     
 	var html = "";
 	
-	html += row.taskName + "&nbsp;&nbsp;<span prog_name='" + row.progName + "' study_name = '"+row.studyName + "' " +
+	if(row.taskName) {
+	  html += row.taskName + "&nbsp;&nbsp;<span prog_name='" + row.progName + "' study_name = '"+row.studyName + "' " +
 			"datasetname='" + row.dataSetName + "' class='button3a' data-container='body' data-toggle='popover'" +
 			"data-placement='right' data-trigger='click' data-popover-content='#a02'>" +
 			"<img src='images/Status.info-tooltip.png' th:src='@{/images/Status.info-tooltip.png}' style='width:12px;' alt='Status info'></a></span>";
+	}
 	
 	return html;
 }

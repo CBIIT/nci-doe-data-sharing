@@ -835,69 +835,73 @@ public class RestAPICommonController extends AbstractDoeController {
 				HpcBulkDataObjectRegistrationResponseDTO responseDTO = DoeClientUtil.registerBulkDatafiles(authToken,
 						bulkRegistrationURL, bulkDataObjectRegistrationRequest, sslCertPath, sslCertPassword);
 				if (responseDTO != null) {
-					try {
-						String taskId = responseDTO.getTaskId();
-						// save the task info
-						taskManagerService.saveTransfer(taskId, "Upload", null, null, doeLogin);
+					String taskId = responseDTO.getTaskId();
+					if (StringUtils.isNotEmpty(taskId)) {
+						try {
 
-						// store the auditing info
-						AuditingModel audit = new AuditingModel();
-						audit.setName(doeLogin);
-						audit.setOperation("Upload");
-						audit.setStartTime(new Date());
-						audit.setTransferType("Bulk Registration");
-						audit.setTaskId(taskId);
-						auditingService.saveAuditInfo(audit);
+							// save the task info
+							taskManagerService.saveTransfer(taskId, "Upload", null, null, doeLogin);
 
-					} catch (Exception e) {
-						log.error("error in save" + e.getMessage());
-					}
+							// store the auditing info
+							AuditingModel audit = new AuditingModel();
+							audit.setName(doeLogin);
+							audit.setOperation("Upload");
+							audit.setStartTime(new Date());
+							audit.setTransferType("Bulk Registration");
+							audit.setTaskId(taskId);
+							auditingService.saveAuditInfo(audit);
 
-					// get the paths for new collection registration and save in modac
-					List<String> pathsList = new ArrayList<String>();
+						} catch (Exception e) {
+							log.error("error in save" + e.getMessage());
+						}
 
-					if (CollectionUtils.isNotEmpty(dataObjectRegistrationItems)) {
-						for (HpcDataObjectRegistrationItemDTO item : dataObjectRegistrationItems) {
-							if (Boolean.TRUE.equals(item.getCreateParentCollections())) {
-								item.getParentCollectionsBulkMetadataEntries().getPathsMetadataEntries().stream()
+						// get the paths for new collection registration and save in modac
+						List<String> pathsList = new ArrayList<String>();
+
+						if (CollectionUtils.isNotEmpty(dataObjectRegistrationItems)) {
+							for (HpcDataObjectRegistrationItemDTO item : dataObjectRegistrationItems) {
+								if (Boolean.TRUE.equals(item.getCreateParentCollections())) {
+									item.getParentCollectionsBulkMetadataEntries().getPathsMetadataEntries().stream()
+											.forEach(e -> pathsList.add(e.getPath()));
+								}
+							}
+						}
+
+						if (CollectionUtils.isNotEmpty(directoryScanRegistrationItems)) {
+							for (HpcDirectoryScanRegistrationItemDTO item : directoryScanRegistrationItems) {
+								item.getBulkMetadataEntries().getPathsMetadataEntries().stream()
 										.forEach(e -> pathsList.add(e.getPath()));
 							}
 						}
-					}
 
-					if (CollectionUtils.isNotEmpty(directoryScanRegistrationItems)) {
-						for (HpcDirectoryScanRegistrationItemDTO item : directoryScanRegistrationItems) {
-							item.getBulkMetadataEntries().getPathsMetadataEntries().stream()
-									.forEach(e -> pathsList.add(e.getPath()));
-						}
-					}
+						if (CollectionUtils.isNotEmpty(pathsList)) {
+							for (String collectionPath : pathsList) {
+								try {
+									HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken,
+											serviceURL, collectionPath, false, sslCertPath, sslCertPassword);
+									if (collections != null && collections.getCollections() != null
+											&& !CollectionUtils.isEmpty(collections.getCollections())) {
+										HpcCollectionDTO collection = collections.getCollections().get(0);
 
-					if (CollectionUtils.isNotEmpty(pathsList)) {
-						for (String collectionPath : pathsList) {
-							try {
-								HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL,
-										collectionPath, false, sslCertPath, sslCertPassword);
-								if (collections != null && collections.getCollections() != null
-										&& !CollectionUtils.isEmpty(collections.getCollections())) {
-									HpcCollectionDTO collection = collections.getCollections().get(0);
+										// save owner collection permissions in MoDaC DB
+										metaDataPermissionService.savePermissionsList(doeLogin, null,
+												collection.getCollection().getCollectionId(), collectionPath);
 
-									// save owner collection permissions in MoDaC DB
-									metaDataPermissionService.savePermissionsList(doeLogin, null,
-											collection.getCollection().getCollectionId(), collectionPath);
-
-									// store the access_group metadata in MoDaC DB
-									HpcMetadataEntry selectedEntry = collection.getMetadataEntries()
-											.getSelfMetadataEntries().stream()
-											.filter(e -> e.getAttribute().equalsIgnoreCase("access_group")).findAny()
-											.orElse(null);
-									if (selectedEntry != null && !"public".equalsIgnoreCase(selectedEntry.getValue())) {
-										accessGroupsService.saveAccessGroups(
-												collection.getCollection().getCollectionId(), collectionPath,
-												selectedEntry.getValue(), doeLogin);
+										// store the access_group metadata in MoDaC DB
+										HpcMetadataEntry selectedEntry = collection.getMetadataEntries()
+												.getSelfMetadataEntries().stream()
+												.filter(e -> e.getAttribute().equalsIgnoreCase("access_group"))
+												.findAny().orElse(null);
+										if (selectedEntry != null
+												&& !"public".equalsIgnoreCase(selectedEntry.getValue())) {
+											accessGroupsService.saveAccessGroups(
+													collection.getCollection().getCollectionId(), collectionPath,
+													selectedEntry.getValue(), doeLogin);
+										}
 									}
+								} catch (Exception e) {
+									log.error("error in bulk registration" + e.getMessage());
 								}
-							} catch (Exception e) {
-								log.error("error in bulk registration" + e.getMessage());
 							}
 						}
 					}
