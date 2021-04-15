@@ -66,11 +66,11 @@ public class ForgotPasswordController extends AbstractDoeController {
 				log.info("failed to reset applicant's password...");
 				// failed to reset the password. set the error message
 				if (PasswordStatusCode.INVALID_FORMAT == status || PasswordStatusCode.INVALID_LENGTH == status) {
-					return new ResponseEntity<>("Password is in invalid length or format", HttpStatus.OK);
+					return new ResponseEntity<>("Enter a password with valid length and format. Refer to Password Constraints.", HttpStatus.OK);
 				}
 				if (PasswordStatusCode.NEW_PASSWD_SAME_AS_PREV_PASSWD == status) {
 					return new ResponseEntity<>(
-							"Enter a password with valid length and format. Refer to Password Constraints.",
+							"Your new password is the same as your current one. Enter a new password.",
 							HttpStatus.OK);
 				} else {
 					return new ResponseEntity<>(status, HttpStatus.OK);

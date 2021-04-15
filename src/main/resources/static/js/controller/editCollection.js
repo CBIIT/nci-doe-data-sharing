@@ -270,7 +270,7 @@ function updateMetaDataCollection() {
 			$(".editCollectionSuccess").hide();
 			 $(".editCollectionMsg").html("");
 			$(".editCollectionError").show();
-			$(".editCollectionErrorMsg").html("Enter all the required metadata.");
+			$(".editCollectionErrorMsg").html("Enter the values for all collection metadata.");
 		} else {
 		$.ajax({
 			type : "POST",

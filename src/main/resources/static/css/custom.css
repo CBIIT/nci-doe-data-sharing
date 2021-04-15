@@ -305,7 +305,7 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 	    border: 0 solid #000000;
     box-sizing: border-box;
     opacity: 0.96;border-radius: 11px;
-    height: 600px;
+    height: 635px;
     width:617px;
     margin-top:50px;
     border: 2.5px solid #214C75;
@@ -852,13 +852,16 @@ ul.myErrorClass input {
     color: #666 !important;
 }
 .ui-button{background:#fff!important;}
+
 label{font-weight:bold;}
+
 form#register-form label {
     color: #fff;
 }
 form#update-profile-form label {
     color: #fff;
 }
+
 form#userlogin label {
     color: #fff;
 }
@@ -876,9 +879,6 @@ form#register-form .error {
 form#userlogin .error {
     color: rgb(251, 6, 10);
     padding-top: 0px;
-}
-label.error {
-    margin-left: 17px;
 }
 
 label.myErrorClass {
@@ -1433,5 +1433,6 @@ text-align: center;
 }
 
 label.error {
-   color: rgb(251, 6, 10);
+   color: rgb(251, 6, 10) !important;
+   margin-left: 17px;
 }

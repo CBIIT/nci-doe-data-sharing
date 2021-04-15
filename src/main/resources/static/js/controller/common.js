@@ -170,7 +170,8 @@ var asyncSearchType = $("#asyncSearchType").val();
 $("#download-btn").click(function(e){
 	e.preventDefault();
 	var selectedFiles = $("#selectedFilesList").val();
-	var searchType = $('input[name=searchType]:checked').val();
+	//var searchType = $('input[name=searchType]:checked').val();
+	var searchType =$('input[name=searchType]:checked:visible').val();
 	var d = {};
 	d.searchType = searchType;
 	d.destinationPath = $("#destinationPathId").val();
@@ -180,8 +181,8 @@ $("#download-btn").click(function(e){
 	var validate = true;
 	
 	if(!searchType) {
-		 $("#download-modal").find('.downloadErrorMsg').html("Enter the download type.");
-		 $("#download-modal").find("#message").show();
+		 $('.downloadErrorMsg').html("Select download destination.");
+		 $("#message").show();
 	}
 	
 	else if(searchType == 's3' || searchType == 'async' || searchType == 'drive'  || selectedFiles) {
@@ -224,7 +225,7 @@ $("#download-btn").click(function(e){
 		}
 	
 		if(!validate) {
-			 $('.downloadErrorMsg').html("Enter all the criteria.");
+			 $('.downloadErrorMsg').html("Enter the destination information.");
 			 $("#message").show();
 		} else {
 					   								
@@ -272,7 +273,7 @@ $("#download-btn").click(function(e){
 	        }          
 	    });
 		if(!validate) {
-			 $('.downloadErrorMsg').html("Enter all the criteria.");
+			 $('.downloadErrorMsg').html("Enter the destination information.");
 			 $("#message").show();
 		} else {
 		  $('#downloadSyncForm').attr('action', '/downloadsync');

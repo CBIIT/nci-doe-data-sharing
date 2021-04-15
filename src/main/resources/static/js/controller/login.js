@@ -68,7 +68,9 @@ function postLoginFunction(data,status) {
 	} else if("loginlocked" == data) {
 		
 		$(".errorBlockLogin").show();
-		$(".errorMsgLogin").html("Maximum login attempts exceeded. Request a password via forgot password.");
+		$(".errorMsgLogin").html("Maximum login attempts exceeded. Request a password via " +
+				"<a style='text-decoration: underline;color: #fff;'href='javascript:void(0);' " +
+				"data-toggle='modal' data-target='#forgotPasswordLightbox'>forgot password</a>.");
 		
 	} else if("loginInactivated" == data) {
 		$(".errorBlockLogin").show();
