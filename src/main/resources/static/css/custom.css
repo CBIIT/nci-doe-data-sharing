@@ -228,11 +228,16 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 
 .btn-primary, bg-primary{background-color: #00579e!important;}
 
-#downloadSelectedMetadata,#downloadSelected {
+#downloadSelected {
 	background-color: #E87B05!important;
 }
-#downloadSelectedDataSet{
+#downloadSelectedDataSet,#downloadSelectedMetadata{
 	background-color: #E87B05!important;
+	margin-top: -40px;
+    border-radius: 13px;
+    height: 47px;
+    width: 191px;
+    font-size: 13px;
 }
 #updateMetaData,#addMetaData,#addBulkDataFiles,#addNewMetaDataForSingleDataFile,
 #registerBulkDataFileBtn,#registerCollectionBtn,#updatePermissions,#backtoSearch {
