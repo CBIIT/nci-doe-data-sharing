@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+
 <body>
      <div class="form-row pt-2 pb-2 mb-2" id="dataSetFragment" th:fragment="dataSetFragment" style="display:none;font-size:13px;">
      
@@ -49,7 +50,7 @@
     <table id="dataSetMetaData" class="table display dt-responsive wrap">
         <thead>
 			<tr>
-               <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col" style="width:25%;">ATTRIBUTE</th>
+               <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col" style="width:26%;">ATTRIBUTE</th>
                <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col">VALUE</th>
             </tr>
         </thead>
@@ -65,8 +66,8 @@
        <p th:if= "${loggedOnUser == null}" class="infoDownload">
        <i class="fas fa-info-circle"></i> To download files, <a th:href="@{/loginTab}">log in.</a></p>
        
-       <button id="downloadSelectedMetadata" type="button" class="btn btn-primary float-right mb-2 mr-2" disabled>Download Selected Metadata</button>
-       <button id="downloadSelectedDataSet" type="button" class="btn btn-primary float-right mb-2 mr-2" disabled>Download Selected Files</button>
+       <button id="downloadSelectedMetadata" type="button" class="btn btn-primary float-right mb-2 mr-2" style="margin-top:-40px;" disabled>Download Selected Metadata</button>
+       <button id="downloadSelectedDataSet" type="button" class="btn btn-primary float-right mb-2 mr-2" style="margin-top:-40px;" disabled>Download Selected Files</button>
        </div>
     </div>
     

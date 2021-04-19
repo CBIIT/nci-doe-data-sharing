@@ -45,13 +45,14 @@
 #dataSetTable_length {
     margin-top: -25px;
     font-family: 'latoregular';
-    margin-left: 13px;
+    margin-left: 20px;
 }
-#dataSetTable_info {
+.dataTables_info {
 	margin-left: 20px;
     font-family: 'latoregular';
-    float: right;
+    float: right !important;
     margin-right: 21px;
+    margin-bottom: 20px;
 }
 #dataSetTable{
 	border-color: transparent;

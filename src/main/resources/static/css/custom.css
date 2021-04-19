@@ -150,6 +150,7 @@
 table#assetDetailsDiv td {
 	border:none;
 	background-color: transparent;
+	padding-top: 2px;
 }
 
 table.dataTable thead th, table.dataTable tfoot th {

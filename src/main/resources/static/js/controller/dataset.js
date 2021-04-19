@@ -300,7 +300,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,accessgroups,permissions,col
             {"targets": -1, "orderable": false},
             {"targets":2,"type":"file-size"},
             { "visible": isVisible, "targets": 3}],
-        "dom": '<"top"lip>rt<"bottom"p>',
+        "dom": '<"top"lip>rt<"bottom"ip>',
 
         "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
 
@@ -361,7 +361,7 @@ function renderDataSetPath(data, type, row) {
 		userMetadata = JSON.stringify(row.selfMetadata);
 	}
 	
-	html+= row.name + "&nbsp;&nbsp;<a class='cil_12_no_color button2a' " +
+	html+= "&nbsp;&nbsp" + row.name + "&nbsp;&nbsp;<a class='cil_12_no_color button2a' " +
 		   "userMetadata = '" + userMetadata  + "' sys_metadata = '" + systemMetadata  + "' tabindex='0'" +
 	       " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
 	       "data-popover-content='#a01'><i class='fas fa-info-circle' data-toggle='tooltip' title='Metadata'></i></a>";	
