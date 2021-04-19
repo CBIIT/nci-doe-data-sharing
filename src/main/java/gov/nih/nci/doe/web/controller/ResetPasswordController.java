@@ -44,6 +44,11 @@ public class ResetPasswordController extends AbstractDoeController {
 			return new ResponseEntity<>("Enter an email address.", HttpStatus.OK);
 
 		}
+		String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+		if (!emailAddr.matches(regex)) {
+			log.error("Email address format is incorrect.");
+			return new ResponseEntity<>("Enter a valid email address.", HttpStatus.OK);
+		}
 
 		try {
 			if (!authService.doesUsernameExist(emailAddr.trim().toLowerCase())) {
