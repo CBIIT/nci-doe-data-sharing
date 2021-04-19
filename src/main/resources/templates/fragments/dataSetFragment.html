@@ -25,20 +25,18 @@
     
     <div class="form-row col-lg-12 col-md-12 col-sm-12" style="padding:2rem 2rem;border-bottom: 2px solid #194F85;">
       <div class="col-md-12 col-sm-12" style="color: #000000;font-family: 'latoregular';font-size: 13px;margin-left: -19px;">
-         <div class="form-group">
-              <div class="form-group col-lg-6 col-md-12">
-                   <label aria-label="program name" style="font-weight:100;">Program Name: <span style="font-weight:bold;" id="selectedProgramName"></span></label>
-              </div>
-              <div class="form-group col-lg-6 col-md-12">
-                    <label aria-label="study name" style="font-weight:100;">Study Name: <span style="font-weight:bold;" id="selectedStudyName"></span></label>
-              </div>
-              <div class="form-group col-lg-6 col-md-12">
-                    <label aria-label="dataset name" style="font-weight:100;">Asset Name: <span  style="font-weight:bold;" id="selectedDataSetName"></span></label>
-             </div>                           
-             <div class="form-group col-lg-12 col-md-12">
-                    <label aria-label="dataset name" style="font-weight:100;">Asset Path: <span style="font-weight:bold;" id="selectedAssetPath"></span></label>
-             </div>
-         </div>
+      <table id="assetDetailsDiv" class="table display dt-responsive wrap" style="border: none;background-color: transparent;">
+        <tbody style="background-color: transparent;">
+            <tr><td style="font-weight: lighter;width: 15%;">PROGRAM NAME: </td>
+                <td style="font-weight:bold;" id="selectedProgramName"></td></tr>
+             <tr><td style="font-weight: lighter;width: 15%;">STUDY NAME:</td>
+             <td style="font-weight:bold;" id="selectedStudyName"></td></tr>
+             <tr><td style="font-weight: lighter;width: 15%;">ASSET NAME:</td>
+             <td style="font-weight:bold;" id="selectedDataSetName"></td></tr>
+             <tr><td style="font-weight: lighter;width: 15%;">ASSET PATH:</td>
+             <td style="font-weight:bold;" id="selectedAssetPath"></td></tr>
+        </tbody>
+     </table>
       </div>
     </div>
     
@@ -51,7 +49,7 @@
     <table id="dataSetMetaData" class="table display dt-responsive wrap">
         <thead>
 			<tr>
-               <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col">ATTRIBUTE</th>
+               <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col" style="width:25%;">ATTRIBUTE</th>
                <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col">VALUE</th>
             </tr>
         </thead>

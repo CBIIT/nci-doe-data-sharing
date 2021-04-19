@@ -147,6 +147,10 @@
     font-family: Lato;
     font-size: 16px;
 }
+table#assetDetailsDiv td {
+	border:none;
+	background-color: transparent;
+}
 
 table.dataTable thead th, table.dataTable tfoot th {
     background-color: #194F85;
@@ -499,6 +503,10 @@ table.dataTable thead .sorting_asc {
 table#manageTasksTable thead .sorting,table#dataSetTable thead .sorting {
    	background-image: url(/images/Sort-up.icon.svg) !important;
    	background-size: 16px 19px;
+   	
+}
+table#dataSetTable thead .sorting,table#dataSetTable thead .sorting_asc,table#dataSetTable thead .sorting_desc {
+	background-position: center center;
 }
 
 table#manageTasksTable thead .sorting_asc,table#dataSetTable thead .sorting_asc {
