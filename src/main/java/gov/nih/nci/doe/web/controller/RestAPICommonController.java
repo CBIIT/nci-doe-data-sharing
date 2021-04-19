@@ -901,6 +901,9 @@ public class RestAPICommonController extends AbstractDoeController {
 									}
 								} catch (Exception e) {
 									log.error("error in bulk registration" + e.getMessage());
+									// send email to admin list if there is a failure in saving the collection to
+									// modac database
+									mailService.sendCollectionRegistationFailure(doeLogin, collectionPath);
 								}
 							}
 						}

@@ -46,6 +46,8 @@ public class MailServiceImpl implements MailService {
 	private boolean override;
 	@Value("${mail.override.addresses}")
 	private String overrideAddresses;
+	@Value("${mail.admin.address}")
+	private String adminAddress;
 
 	/**
 	 * Very simple mail sender method using Velocity templates pulled from a
@@ -191,5 +193,16 @@ public class MailServiceImpl implements MailService {
 		send("RESET_PASSWORD_EMAIL", params);
 
 	}
-
+	
+	@Override
+	public void sendCollectionRegistationFailure(String email, String collectionPath) {
+		log.info("Sending collection registration failure for: " + email);
+		final Map<String, Object> params = new HashMap<String, Object>();
+		final List<String> to = new ArrayList<String>();
+		to.add(adminAddress);
+		params.put(TO, to.toArray(new String[0]));
+		params.put("COLLECTION_PATH", collectionPath);
+		params.put("EMAIL", email);
+		send("COLLECTION_FAILURE_EMAIL", params);
+	}
 }

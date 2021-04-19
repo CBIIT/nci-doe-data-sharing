@@ -10,5 +10,7 @@ public interface MailService {
 	public void sendActivationEmail(String webServerName, String email, String uuid);
 
 	public void sendResetPasswordEmail(String password, String email);
+	
+	public void sendCollectionRegistationFailure(String email, String collectionPath);
 
 }
