@@ -74,7 +74,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,accessgroups,permissions,col
         	var selfMetadata = JSON.parse(assetMetadata);
         	
         	$.each(selfMetadata, function(key, value) {	
-                $("#dataSetMetaData tbody").append("<tr><td>" + value.displayName + "</td>" +
+                $("#dataSetMetaData tbody").append("<tr><td>&nbsp;&nbsp;" + value.displayName + "</td>" +
                  "<td>" + value.value + "</td></tr>");
         	});
         	
@@ -361,7 +361,7 @@ function renderDataSetPath(data, type, row) {
 		userMetadata = JSON.stringify(row.selfMetadata);
 	}
 	
-	html+= "&nbsp;&nbsp" + row.name + "&nbsp;&nbsp;<a class='cil_12_no_color button2a' " +
+	html+= "&nbsp;&nbsp;&nbsp;" + row.name + "&nbsp;&nbsp;<a class='cil_12_no_color button2a' " +
 		   "userMetadata = '" + userMetadata  + "' sys_metadata = '" + systemMetadata  + "' tabindex='0'" +
 	       " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
 	       "data-popover-content='#a01'><i class='fas fa-info-circle' data-toggle='tooltip' title='Metadata'></i></a>";	
@@ -439,7 +439,7 @@ function openPopOverDataSet($this) {
 }
 
 function renderFileSize(data, type, row) {
-	return row.fileSize;
+	return "&nbsp;&nbsp;&nbsp;" + row.fileSize;
 	
 }
 function exportDataObjectMetadata() {
