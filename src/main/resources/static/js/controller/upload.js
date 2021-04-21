@@ -276,9 +276,9 @@ function constructNewCollectionMetaDataSet(data,status) {
 		   
 	    	$("#newMetaDataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
         	'data-placement="right" title="'+value.description+'"></i></td><td>'+
-        	'<select class="simple-select2" style="width:70%;" id="frameworkList" name="zAttrStr_'+value.attrName+'" value="'+value.attrValue+'"></select></td></tr>');
+        	'<select class="simple-select2" style="width:70%;" id="'+value.attrName+'" name="zAttrStr_'+value.attrName+'" value="'+value.attrValue+'"></select></td></tr>');
 	    	
-	    	  var $select = $("#registerCollectionModal").find("#frameworkList");
+	    	  var $select = $("#registerCollectionModal").find("#"+value.attrName);
 	    	  if(value.attrValue){
 	    	 	$select.append($('<option></option>').attr('value', value.attrValue).text(value.attrValue));
 	    	  } else {

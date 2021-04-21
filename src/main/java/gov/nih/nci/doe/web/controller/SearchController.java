@@ -403,7 +403,7 @@ public class SearchController extends AbstractDoeController {
 				}
 			}
 
-			// remove duplicate emails from collectionOwnersList
+			// remove duplicates
 			List<String> newCollectionLevels = collectionLevels.stream().distinct().collect(Collectors.toList());
 
 			if (CollectionUtils.isNotEmpty(newCollectionLevels)) {
