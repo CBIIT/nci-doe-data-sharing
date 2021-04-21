@@ -73,11 +73,11 @@ function constructEditCollectionMetadata(data,status) {
 			 $("#userMetaData tbody").append("<tr><td>" + value.displayName+ "&nbsp;&nbsp;<i class='fas fa-question-circle'" +
 			                                 " data-toggle='tooltip' " +
 			                                 "data-placement='right' title=\"" +value.description + "\"></i></td><td>" +
-			                                 "<select id='validvalueList' " +
+			                                 "<select id='"+value.attrName+"' " +
 			                                 "class='simple-select2' style='width:70%;' name='zAttrStr_"+value.attrName+"' " +
 			                                 "value=\"" + attrVal+ "\"></select></td></tr>");
 
-			 var $select = $("#validvalueList");	    	  
+			 var $select = $("#"+value.attrName);	    	  
 	    	 for (var i = 0; i < value.validValues.length; i++) {
 	    		   $select.append($('<option></option>').attr('value', value.validValues[i]).text(value.validValues[i]));
              }            
