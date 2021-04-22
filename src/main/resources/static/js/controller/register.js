@@ -178,10 +178,13 @@ function postForgotPassword(data,status) {
 
 
 function postResetLinkFunction(data,status) {
-	$("#forgotPasswordLightbox").modal('hide');	
+		
 	if(data == 'SUCCESS') {		
-	bootbox.alert("Check your email inbox for a new password.");
+	   $("#forgotPasswordLightbox").modal('hide');
+	   bootbox.alert("Check your email inbox for a new password.");
 	} else {
-		bootbox.alert(data);
+	   $("#forgotPasswordLightbox").find(".forgotPswdErrorMsg").html(data);
+	   $("#forgotPasswordLightbox").find(".forgorPswdErrorBlock").show();
+		 
 	}
 }

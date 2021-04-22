@@ -298,9 +298,17 @@ $("#btnforgotPassword").click(function(e){
 	validateForgotPassword();
 });
 
-$("#btnSubmitPswdLink").click(function(e){
-	var params= {emailAddr:$('#forgotPasswordLightbox').find("#txtResetPswdLink").val()};
+$("#forgotPswdLink").click(function(e){
+	$("#forgotPasswordLightbox").find(".forgotPswdErrorMsg").html("");
+	$("#forgotPasswordLightbox").find(".forgorPswdErrorBlock").hide();
+	$("#forgotPasswordLightbox").find("#txtResetPswdLink").val("");
+	$("#forgotPasswordLightbox").modal('show');
 	
+});
+
+$("#btnSubmitPswdLink").click(function(e){
+	
+	var params= {emailAddr:$('#forgotPasswordLightbox').find("#txtResetPswdLink").val()};	
 	invokeAjax('/resetPasswordLink','GET',params,postResetLinkFunction,null,null,'text');
 });
 
