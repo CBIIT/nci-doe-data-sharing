@@ -181,7 +181,7 @@ $("#download-btn").click(function(e){
 	var validate = true;
 	
 	if(!searchType) {
-		 $('.downloadErrorMsg').html("Select download destination.");
+		 $('.downloadErrorMsg').html("Select a download destination.");
 		 $("#message").show();
 	}
 	
