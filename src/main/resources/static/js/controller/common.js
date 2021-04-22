@@ -301,6 +301,8 @@ $("#btnforgotPassword").click(function(e){
 $("#forgotPswdLink").click(function(e){
 	$("#forgotPasswordLightbox").find(".forgotPswdErrorMsg").html("");
 	$("#forgotPasswordLightbox").find(".forgorPswdErrorBlock").hide();
+	$("#forgotPasswordLightbox").find(".forgotPswdSuccessMsg").html("");
+	$("#forgotPasswordLightbox").find(".forgorPswdSuccessBlock").hide();
 	$("#forgotPasswordLightbox").find("#txtResetPswdLink").val("");
 	$("#forgotPasswordLightbox").modal('show');
 	
