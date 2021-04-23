@@ -1133,16 +1133,16 @@ h3.table-title{font-size:1rem;}
 
 /* placeholder input */
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: #e7e7e7;
+    color: #A8A8A8;
     opacity: 1; /* Firefox */
 }
 
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
-    color: #e7e7e7;
+    color: #A8A8A8;
 }
 
 ::-ms-input-placeholder { /* Microsoft Edge */
-    color: #e7e7e7;
+    color: #A8A8A8;
 }
 .b-4{border-top: 8px solid #7f8990!important;}
 .card-heading{width:100%;background: #00467f;}
