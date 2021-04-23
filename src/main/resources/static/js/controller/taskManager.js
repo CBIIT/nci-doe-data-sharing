@@ -66,6 +66,7 @@ function retryDownload(taskId,taskName,taskType) {
 function dataTableInitTaskManager() {
     $('#manageTasksTable').DataTable({
         "paging": true,
+        "order": [[2, 'desc']],
         "ordering": true,
         "info": true,
         "pageLength": 25,
