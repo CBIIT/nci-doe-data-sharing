@@ -1,9 +1,13 @@
-function refreshDataSetDataTable(dataSetPath,accessgroups,permissions,collections,assetMetadata) {
+$(document).ready(function () {
+	
+	refreshDataSetDataTable();
+});
+
+function refreshDataSetDataTable() {
 	var isVisible = (loggedOnUserInfo ? true:false);
     console.log("refresh datatable");
-    $("#dataSetTable").dataTable().fnDestroy();
     if (!$.fn.DataTable.isDataTable('#dataSetTable')) {
-    	dataTableInitDataSet(isVisible,dataSetPath,accessgroups,permissions,collections,assetMetadata);
+    	dataTableInitDataSet(isVisible);
     } else {
         var t = $('#dataSetTable').DataTable();
         console.log(t);
@@ -11,7 +15,7 @@ function refreshDataSetDataTable(dataSetPath,accessgroups,permissions,collection
     }
 }
 
-function dataTableInitDataSet(isVisible,dataSetPath,accessgroups,permissions,collections,assetMetadata) {
+function dataTableInitDataSet(isVisible) {
     $('#dataSetTable').DataTable({
     	 "paging": true,
     	 "ordering": true,
@@ -23,7 +27,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,accessgroups,permissions,col
          "ajax": {
             "url": "/getDataObjects",
             "type": "GET",
-            "data": {path:dataSetPath},
+            "data": {path:$("#assetPath").val()},
             "dataSrc": function (data) {
                 return data;
             },
@@ -64,19 +68,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,accessgroups,permissions,col
         		$("#downloadSelectedMetadata").hide();
         	}
         	
-        	$("#dataSetMetaData tbody").html("");
-        	var collectionSet= JSON.parse(collections);
-        	$("#selectedProgramName").text(collectionSet.programName);
-        	$("#selectedStudyName").text(collectionSet.studyName);
-        	$("#selectedDataSetName").text(collectionSet.datasetName);
-        	$("#selectedAssetPath").text(dataSetPath);
         	
-        	var selfMetadata = JSON.parse(assetMetadata);
-        	
-        	$.each(selfMetadata, function(key, value) {	
-                $("#dataSetMetaData tbody").append("<tr><td>&nbsp;&nbsp;" + value.displayName + "</td>" +
-                 "<td>" + value.value + "</td></tr>");
-        	});
         	
         	 $(".selectAll").change(function (e) {
                  var table = $(e.target).closest('table');
@@ -240,8 +232,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,accessgroups,permissions,col
         							 if(msg != "SUCCESS") {
         									return bootbox.alert(msg);
         								} else {
-        									refreshDataSetDataTable(dataSetPath,accessgroups,
-        											permissions,collections,assetMetadata);
+        									refreshDataSetDataTable();
         								}
         							 
         						 },
@@ -281,7 +272,7 @@ function dataTableInitDataSet(isVisible,dataSetPath,accessgroups,permissions,col
             },
         
             {"data": "download", "render": function (data, type, row) {
-                return renderDownload(data, type, row,accessgroups,permissions);
+                return renderDownload(data, type, row);
             },
             responsivePriority: 3
         },
@@ -474,12 +465,14 @@ function exportDataObjectMetadata() {
 	
 }
 
-function renderDownload(data, type, row,accessgroups,permissions) {
+function renderDownload(data, type, row) {
 	
 	var downdloadFileName = null;
 	var path = row.path;
 	var html = "";
 	var n = path.lastIndexOf("/");
+	var accessgroups = $("#assetAccessGrp").val();
+	var permissions = $("#assetPermission").val();
 	downdloadFileName = path.substring(n+1);	
 	
 	html += "<button type='button' style='border: transparent;' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' " +

@@ -1,9 +1,12 @@
 package gov.nih.nci.doe.web.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -23,8 +26,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
-
+import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.model.PermissionsModel;
+import gov.nih.nci.doe.web.util.DoeClientUtil;
+import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
+import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 
 /**
  *
@@ -42,7 +49,7 @@ public class HomeController extends AbstractDoeController {
 	private String serviceURL;
 
 	@GetMapping
-	public String index(HttpSession session, HttpServletRequest request)  {
+	public String index(HttpSession session, HttpServletRequest request) {
 
 		log.info("home page");
 		return "home";
@@ -113,7 +120,7 @@ public class HomeController extends AbstractDoeController {
 	@GetMapping(value = "/loginTab")
 	public String getLoginTab(Model model, @RequestParam(value = "token", required = false) String token,
 			@RequestParam(value = "email", required = false) String email) throws DoeWebException {
-		
+
 		try {
 			if (StringUtils.isNotEmpty(token) && StringUtils.isNotEmpty(email)) {
 				String status = authenticateService.confirmRegistration(token, email);
@@ -124,7 +131,7 @@ public class HomeController extends AbstractDoeController {
 		} catch (Exception e) {
 			throw new DoeWebException("Failed to send registration email" + e.getMessage());
 		}
-		
+
 		return "loginTab";
 	}
 
@@ -143,6 +150,58 @@ public class HomeController extends AbstractDoeController {
 		return "aboutTab";
 	}
 
+	@SuppressWarnings("unchecked")
+	@GetMapping(value = "/assetDetails")
+	public String getAssetDetailsTab(Model model, HttpSession session, HttpServletRequest request,
+			@RequestParam(value = "path") String path) throws DoeWebException {
+
+		log.info("get asset details for path:" + path);
+		String authToken = (String) session.getAttribute("hpcUserToken");
+		log.info("authToken: " + authToken);
+
+		String user = getLoggedOnUserInfo();
+		log.info("asset details for user: " + user);
+		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList().getBody();
+
+		HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL, path, false, sslCertPath,
+				sslCertPassword);
+		if (collections != null && collections.getCollections() != null
+				&& !CollectionUtils.isEmpty(collections.getCollections())) {
+			HpcCollectionDTO collection = collections.getCollections().get(0);
+
+			HpcMetadataEntry selectedEntry = collection.getMetadataEntries().getSelfMetadataEntries().stream()
+					.filter(e -> e.getAttribute().equalsIgnoreCase("access_group")).findAny().orElse(null);
+			if (selectedEntry != null) {
+				model.addAttribute("accessGrp", selectedEntry.getValue());
+			}
+
+			HpcMetadataEntry assetName = collection.getMetadataEntries().getSelfMetadataEntries().stream()
+					.filter(e -> e.getAttribute().equalsIgnoreCase("asset_name")).findAny().orElse(null);
+			if (assetName != null) {
+				model.addAttribute("assetName", assetName.getValue());
+			}
+			List<KeyValueBean> selfMetadata = getUserMetaDataAttributesByPath(path, "Asset", "false", session);
+
+			String studyName = getAttributeValue("study_name",
+					collection.getMetadataEntries().getParentMetadataEntries(), "Study");
+
+			String progName = getAttributeValue("program_name",
+					collection.getMetadataEntries().getParentMetadataEntries(), "Program");
+
+			String assetPermission = getPermissionRole(user, collection.getCollection().getCollectionId(),
+					loggedOnUserPermissions);
+
+			model.addAttribute("assetMetadata", selfMetadata);
+			model.addAttribute("studyName", studyName);
+			model.addAttribute("progName", progName);
+			model.addAttribute("assetPath", path);
+			model.addAttribute("assetPermission", assetPermission);
+
+		}
+
+		return "assetDetails";
+	}
+
 	@GetMapping(value = "/downloadTab")
 	public String getDownload(Model model, HttpSession session, HttpServletRequest request,
 			@RequestParam(value = "selectedPaths", required = false) String selectedPaths,
@@ -151,6 +210,7 @@ public class HomeController extends AbstractDoeController {
 			@RequestParam(value = "downloadAsyncType", required = false) String downloadAsyncType,
 			@RequestParam(value = "fileName", required = false) String fileName) throws DoeWebException {
 
+		log.info("get download tab details");
 		model.addAttribute("selectedPathsString", selectedPaths);
 		model.addAttribute("downloadAsyncType", downloadAsyncType);
 		model.addAttribute("fileName", fileName);
@@ -191,8 +251,8 @@ public class HomeController extends AbstractDoeController {
 				model.addAttribute("downloadAsyncType", downloadAsyncType);
 				model.addAttribute("fileName", fileName);
 			}
-		} else if(endPointName != null) {
-			//This is return from Globus site
+		} else if (endPointName != null) {
+			// This is return from Globus site
 			selectedPaths = (String) session.getAttribute("selectedPathsString");
 			downloadAsyncType = (String) session.getAttribute("downloadAsyncType");
 			fileName = (String) session.getAttribute("fileName");

@@ -78,16 +78,12 @@ public class SearchController extends AbstractDoeController {
 	private String compoundCollectionSearchServiceURL;
 	@Value("${gov.nih.nci.hpc.server.search.dataobject.compound}")
 	private String compoundDataObjectSearchServiceURL;
-	@Value("${gov.nih.nci.hpc.server.model}")
-	private String modelServiceURL;
 	@Value("${gov.nih.nci.hpc.server.metadataattributes}")
 	private String hpcMetadataAttrsURL;
 
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	private String serviceURL;
 
-	@Value("${gov.nih.nci.hpc.server.model}")
-	private String hpcModelURL;
 
 	@Value("${gov.nih.nci.hpc.web.server}")
 	private String webUrl;

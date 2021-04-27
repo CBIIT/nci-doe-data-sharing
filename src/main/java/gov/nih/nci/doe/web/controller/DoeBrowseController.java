@@ -42,8 +42,6 @@ public class DoeBrowseController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	private String collectionURL;
 
-	@Value("${gov.nih.nci.hpc.server.model}")
-	private String hpcModelURL;
 
 	// The logger instance.
 	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());

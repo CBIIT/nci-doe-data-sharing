@@ -59,7 +59,7 @@ public abstract class AbstractDoeController {
 	protected String sslCertPassword;
 
 	@Value("${gov.nih.nci.hpc.server.model}")
-	private String hpcModelURL;
+	public String hpcModelURL;
 
 	@Value("${gov.nih.nci.hpc.server.v2.dataObject}")
 	public String dataObjectAsyncServiceURL;

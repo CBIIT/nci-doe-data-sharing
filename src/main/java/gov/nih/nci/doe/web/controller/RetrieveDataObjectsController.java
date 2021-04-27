@@ -56,8 +56,6 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.search.dataobject.compound}")
 	private String compoundDataObjectSearchServiceURL;
 
-	@Value("${gov.nih.nci.hpc.server.model}")
-	private String hpcModelURL;
 
 	/**
 	 * The number of bytes in a kilobyte.

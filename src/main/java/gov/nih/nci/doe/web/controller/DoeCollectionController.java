@@ -38,8 +38,6 @@ public class DoeCollectionController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	private String serviceURL;
 
-	@Value("${gov.nih.nci.hpc.server.model}")
-	private String hpcModelURL;
 
 	/**
 	 * Update collection

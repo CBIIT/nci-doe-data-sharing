@@ -50,10 +50,9 @@ import gov.nih.nci.hpc.domain.datatransfer.HpcGoogleDriveScanDirectory;
 
 @EnableAutoConfiguration
 public abstract class DoeCreateCollectionDataFileController extends AbstractDoeController {
+	
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	private String serviceURL;
-	@Value("${gov.nih.nci.hpc.server.model}")
-	private String hpcModelURL;
 	@Value("${gov.nih.nci.hpc.server.collection.acl.user}")
 	private String collectionAclURL;
 

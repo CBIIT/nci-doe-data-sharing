@@ -49,10 +49,9 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementRulesDTO;
 @EnableAutoConfiguration
 @RequestMapping("/addCollection")
 public class DoeCreateCollectionController extends DoeCreateCollectionDataFileController {
+	
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	private String serviceURL;
-	@Value("${gov.nih.nci.hpc.server.model}")
-	private String hpcModelURL;
 	@Value("${dme.archive.naming.forbidden.chararacters}")
 	private String forbiddenCharacters;
 

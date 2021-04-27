@@ -220,15 +220,8 @@ function dataTableInit(isVisible) {
         	}
 
            $(".dataSetFragment").click(function(e) {
-        	   $("#searchFragmentDiv").hide();
-        	   $("#dataSetFragment").show();
-        	   $("#editCollectionFragment").hide();
         	   var datsetPath = $(this).attr('data_set_path');
-        	   var acessGrps = $(this).attr('access_grp');
-        	   var permissions = $(this).attr('permissions_role');
-        	   var collections = $(this).attr('collections');
-        	   var assetMetadata =$(this).attr('asset_metadata');
-        		refreshDataSetDataTable(datsetPath,acessGrps,permissions,collections,assetMetadata);
+        	   location.replace('/assetDetails?path='+datsetPath);
            });
            
            $(".editCollectionMetadata").click(function(e){
@@ -378,16 +371,7 @@ function renderDataSetName(data, type, row){
 	
 	var html = "";
 	var isLoggedOnuserExists = (loggedOnUserInfo ? true:false);
-	var search_results_json = {};
-	
-	search_results_json.dataLevelAccessGroups = row.dataLevelAccessGroups;
-	search_results_json.dataCollectionId = row.dataSetCollectionId;
-	search_results_json.studyCollectionId = row.studyCollectionId;
-	search_results_json.progCollectionId = row.programCollectionId;
-	search_results_json.datasetName = row.dataSetName;
-	search_results_json.studyName = row.studyName;
-	search_results_json.programName = row.programName;
-	search_results_json.dataSetPermissionRole = row.dataSetPermissionRole;
+
 
 	if(isLoggedOnuserExists) {
 		var editDataSetHtml = "";
@@ -422,16 +406,15 @@ function renderDataSetName(data, type, row){
 		html += "<div class='col-md-12' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'>" +
 				""+checkboxHtml+"&nbsp;&nbsp;&nbsp;" +
 				"<a href='#' class='dataSetFragment' " +
-			    "permissions_role = '" + row.dataSetPermissionRole + "' asset_metadata= '" + JSON.stringify(row.selfMetadata) + "' collections = '" + JSON.stringify(search_results_json)+ "' " +
-				"access_grp ='"+row.dataLevelAccessGroups +"'" +
+			    "permissions_role = '" + row.dataSetPermissionRole + "' " +
 				"data_set_path = " + row.dataSetPath + ">" +
 				"<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span></a>" +
 			    "&nbsp&nbsp;" + editDataSetHtml + "</div></div></div>";
 
 	} else {
 		html += "<div class='col-md-12' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'>"+
-		        "&nbsp;&nbsp;&nbsp;<a href='#' class='dataSetFragment' asset_metadata= '" + JSON.stringify(row.selfMetadata) + "' collections = '" + JSON.stringify(search_results_json)+ "' " +
-				"permissions_role = '" + row.dataSetPermissionRole + "' access_grp ='"+row.dataLevelAccessGroups +"' " +
+		        "&nbsp;&nbsp;&nbsp;<a href='#' class='dataSetFragment' " +
+				"permissions_role = '" + row.dataSetPermissionRole + "'" +
 				"data_set_path = " + row.dataSetPath + ">" +
 				"<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span></a>" +
 		        "&nbsp&nbsp;</div></div></div>";
@@ -451,16 +434,6 @@ function renderPath(data, type, row) {
 	
 	var html = "";
 	var isLoggedOnuserExists = (loggedOnUserInfo ? true:false);
-    var search_results_json = {};
-	
-	search_results_json.dataLevelAccessGroups = row.dataLevelAccessGroups;
-	search_results_json.dataCollectionId = row.dataSetCollectionId;
-	search_results_json.studyCollectionId = row.studyCollectionId;
-	search_results_json.progCollectionId = row.programCollectionId;
-	search_results_json.datasetName = row.dataSetName;
-	search_results_json.studyName = row.studyName;
-	search_results_json.programName = row.programName;
-	search_results_json.dataSetPermissionRole = row.dataSetPermissionRole;
 	
 	if(isLoggedOnuserExists) {
 		var editStudySetHtml = "";
