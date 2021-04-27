@@ -120,9 +120,10 @@ function dataTableInitDataSet(isVisible) {
            
 
                $(".editDataFileCollectionMetadata").click(function(e){
-        	        $("#searchFragmentDiv").hide();
-        	        $("#dataSetFragment").hide();
+        	        $("#assetDetailsFragment").hide();
         	        $("#editCollectionFragment").show();
+        	        $(".backToAssetDetailsBtn").show();
+        	        $(".backToSearchBtn").hide();
         	        var metaDataPath = $(this).attr('metadata_path');
         	        var fileName = $(this).attr('data-fileName');
         	        var params= {selectedPath:metaDataPath,levelName:'DataObject',isDataObject:true};
@@ -478,7 +479,7 @@ function renderDownload(data, type, row) {
 	html += "<button type='button' style='border: transparent;' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' " +
 	        "title='Copy File Path' data-clipboard-text='"+ row.path + "'>" +
 	        "<img src='images/Copy-FilePath.png' th:src='@{/images/Copy-FilePath.png}' " +
-			"style='width:17px;' alt='edit collection'></button>";
+			"style='width:17px;' alt='copy file path'></button>";
 	
 	if(permissions && permissions != 'No Permissions') {
 	  html += "<span style='border: transparent;' class='btn btn-link btn-sm editDataFileCollectionMetadata'  metadata_path  = '" + path + "'" +

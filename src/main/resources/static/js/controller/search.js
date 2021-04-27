@@ -228,6 +228,8 @@ function dataTableInit(isVisible) {
         	   $("#searchFragmentDiv").hide();
         	   $("#dataSetFragment").hide();
         	   $("#editCollectionFragment").show();
+        	   $(".backToAssetDetailsBtn").hide();
+   	           $(".backToSearchBtn").show();
         	   var metaDataPath = $(this).attr('metadata_path');
         	   var permissionsRole = $(this).attr('permissions_role');
         	   var collectionId = $(this).attr('collectionId');

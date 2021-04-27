@@ -359,6 +359,11 @@ $(".backToSearchBtn").click(function(e){
 	$("#editCollectionFragment").hide();
 });
 
+$(".backToAssetDetailsBtn").click(function(e){
+	 $("#assetDetailsFragment").show();
+     $("#editCollectionFragment").hide();
+});
+
 $("#backtoSearch").click(function(e){
 	location.replace("/searchTab?returnToSearch=true");
 });

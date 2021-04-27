@@ -5,7 +5,6 @@ function constructCollectionMetData(metadata,metaDataPath,isDataObject,fileName)
 	 $(".editCollectionMsg").html("");
 	 $(".editCollectionError").hide();
 	 $(".editCollectionErrorMsg").html("");
-	 $("#collectionId").val(collectionId);
 	 $("#isDataObject").val(isDataObject);
 	 $("#editUserMetadataFileName").html(fileName);
 	 var data = metadata;
