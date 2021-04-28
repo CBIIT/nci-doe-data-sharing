@@ -4,11 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -17,7 +14,6 @@ import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -45,15 +41,8 @@ import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.doe.web.util.HibernateProxyTypeAdapter;
 import gov.nih.nci.doe.web.util.LambdaUtils;
-import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
-import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQueryOperator;
-import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQueryType;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataLevelAttributes;
-import gov.nih.nci.hpc.domain.metadata.HpcMetadataQuery;
-import gov.nih.nci.hpc.domain.metadata.HpcMetadataQueryAttributeMatch;
-import gov.nih.nci.hpc.domain.metadata.HpcMetadataQueryLevelFilter;
-import gov.nih.nci.hpc.domain.metadata.HpcMetadataQueryOperator;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
@@ -76,18 +65,14 @@ public class SearchController extends AbstractDoeController {
 	private String collectionServiceURL;
 	@Value("${gov.nih.nci.hpc.server.search.collection.compound}")
 	private String compoundCollectionSearchServiceURL;
-	@Value("${gov.nih.nci.hpc.server.search.dataobject.compound}")
-	private String compoundDataObjectSearchServiceURL;
 	@Value("${gov.nih.nci.hpc.server.metadataattributes}")
 	private String hpcMetadataAttrsURL;
 
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	private String serviceURL;
 
-
 	@Value("${gov.nih.nci.hpc.web.server}")
 	private String webUrl;
-
 
 	@GetMapping
 	public ResponseEntity<?> search(HttpSession session, @RequestHeader HttpHeaders headers, HttpServletRequest request,
@@ -214,7 +199,10 @@ public class SearchController extends AbstractDoeController {
 					+ getAttributeValue("dme_data_id", result.getMetadataEntries().getSelfMetadataEntries(), "Asset"));
 			returnResult.setAssetType(
 					getAttributeValue("asset_type", result.getMetadataEntries().getSelfMetadataEntries(), "Asset"));
+			returnResult.setDmeDataId(
+					getAttributeValue("dme_data_id", result.getMetadataEntries().getSelfMetadataEntries(), "Asset"));
 			returnResults.add(returnResult);
+
 		}
 
 		return returnResults;
@@ -230,140 +218,6 @@ public class SearchController extends AbstractDoeController {
 			return entry.getCollectionId();
 		}
 		return null;
-	}
-
-	private HpcCompoundMetadataQueryDTO constructCriteria(DoeSearch search) {
-		HpcCompoundMetadataQueryDTO dto = new HpcCompoundMetadataQueryDTO();
-		dto.setTotalCount(true);
-		HpcCompoundMetadataQuery query = buildSimpleSearch(search);
-		dto.setCompoundQuery(query);
-		dto.setDetailedResponse(search.isDetailed());
-		dto.setCompoundQueryType(HpcCompoundMetadataQueryType.COLLECTION);
-		dto.setPage(search.getPageNumber());
-		dto.setPageSize(search.getPageSize());
-		return dto;
-	}
-
-	@SuppressWarnings("unchecked")
-	private HpcCompoundMetadataQuery buildSimpleSearch(DoeSearch search) {
-
-		HpcCompoundMetadataQuery query = new HpcCompoundMetadataQuery();
-		query.setOperator(HpcCompoundMetadataQueryOperator.AND);
-		Map<String, HpcMetadataQuery> queriesMap = getQueries(search);
-		List<HpcMetadataQuery> queries = new ArrayList<HpcMetadataQuery>();
-		Iterator<String> iter = queriesMap.keySet().iterator();
-		while (iter.hasNext())
-			queries.add(queriesMap.get(iter.next()));
-
-		query.getQueries().addAll(queries);
-
-		// add criteria for access group public and other prog names for logged on user.
-		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList().getBody();
-
-		HpcCompoundMetadataQuery query1 = new HpcCompoundMetadataQuery();
-		query1.setOperator(HpcCompoundMetadataQueryOperator.OR);
-		List<HpcMetadataQuery> queries1 = new ArrayList<HpcMetadataQuery>();
-
-		// perform OR operation of public access and logged on users access groups
-		HpcMetadataQuery q = new HpcMetadataQuery();
-		HpcMetadataQueryLevelFilter levelFilter = new HpcMetadataQueryLevelFilter();
-		levelFilter.setLabel("Asset");
-		levelFilter.setOperator(HpcMetadataQueryOperator.EQUAL);
-		q.setLevelFilter(levelFilter);
-		q.setAttribute("access_group");
-		q.setValue("public");
-		q.setOperator(HpcMetadataQueryOperator.EQUAL);
-		queries1.add(q);
-
-		for (KeyValueBean x : loggedOnUserPermissions) {
-			HpcMetadataQuery q1 = new HpcMetadataQuery();
-			HpcMetadataQueryLevelFilter levelFilter1 = new HpcMetadataQueryLevelFilter();
-			levelFilter1.setLabel("Asset");
-			levelFilter1.setOperator(HpcMetadataQueryOperator.EQUAL);
-			q1.setAttribute("access_group");
-			q1.setValue("%" + x.getValue() + "%");
-			q1.setLevelFilter(levelFilter1);
-			q1.setOperator(HpcMetadataQueryOperator.LIKE);
-			queries1.add(q1);
-		}
-
-		query1.getQueries().addAll(queries1);
-
-		// perform and operation of query and query1
-		HpcCompoundMetadataQuery query2 = new HpcCompoundMetadataQuery();
-		query2.setOperator(HpcCompoundMetadataQueryOperator.AND);
-		query2.getCompoundQueries().add(query1);
-		query2.getCompoundQueries().add(query);
-
-		return query2;
-
-	}
-
-	private Map<String, HpcMetadataQuery> getQueries(DoeSearch search) {
-		Map<String, HpcMetadataQuery> queries = new HashMap<String, HpcMetadataQuery>();
-
-		for (int i = 0; i < search.getAttrName().length; i++) {
-			String rowId = search.getRowId()[i];
-			String attrName = search.getAttrName()[i];
-			String attrValue = search.getAttrValue()[i];
-			String operator = search.getOperator()[i];
-			String level = null;
-			boolean selfMetadata = search.getIsExcludeParentMetadata()[i];
-
-			LookUp val = lookUpService.getLookUpByDisplayName(attrName);
-
-			if (val != null) {
-				level = val.getLevelName();
-			} else {
-				level = search.getLevel()[i];
-			}
-
-			if (!attrValue.isEmpty()) {
-				HpcMetadataQuery criteria = new HpcMetadataQuery();
-				if (StringUtils.isEmpty(attrName) || StringUtils.isBlank(attrName)
-						|| "ANY".equalsIgnoreCase(attrName)) {
-					criteria.setAttributeMatch(HpcMetadataQueryAttributeMatch.ANY);
-				} else {
-					if (val != null) {
-						criteria.setAttribute(val.getAttrName());
-					} else {
-						criteria.setAttribute(attrName);
-					}
-
-				}
-				criteria.setValue(attrValue);
-				criteria.setOperator(HpcMetadataQueryOperator.fromValue(operator));
-				// If its a timestamp operator, specify the format
-				if (operator.startsWith("TIMESTAMP_GREATER")) {
-					criteria.setValue(attrValue.concat(" 00:00:00").replace("/", "-"));
-					criteria.setFormat("MM-DD-YYYY HH24:MI:SS");
-				}
-				if (operator.startsWith("TIMESTAMP_LESS")) {
-					criteria.setValue(attrValue.concat(" 23:59:59").replace("/", "-"));
-					criteria.setFormat("MM-DD-YYYY HH24:MI:SS");
-				}
-				if (level != null) {
-					HpcMetadataQueryLevelFilter levelFilter = new HpcMetadataQueryLevelFilter();
-					if (selfMetadata) {
-						levelFilter.setLevel(1);
-						levelFilter.setOperator(HpcMetadataQueryOperator.EQUAL);
-					} else if (level.equals("ANY")) {
-						levelFilter.setLevel(1);
-						levelFilter.setOperator(HpcMetadataQueryOperator.NUM_GREATER_OR_EQUAL);
-					} else {
-						if (level.equals("Data file") || level.equals("DataObject"))
-							levelFilter.setLevel(1);
-						else
-							levelFilter.setLabel(level);
-						levelFilter.setOperator(HpcMetadataQueryOperator.EQUAL);
-					}
-
-					criteria.setLevelFilter(levelFilter);
-				}
-				queries.put(rowId, criteria);
-			}
-		}
-		return queries;
 	}
 
 	@GetMapping(value = "/search-list")

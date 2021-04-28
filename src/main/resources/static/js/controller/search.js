@@ -220,8 +220,8 @@ function dataTableInit(isVisible) {
         	}
 
            $(".dataSetFragment").click(function(e) {
-        	   var datsetPath = $(this).attr('data_set_path');
-        	   location.replace('/assetDetails?path='+datsetPath);
+        	   var dmeDataId = $(this).attr('dme_data_id');
+        	   location.replace('/assetDetails?returnToSearch=true&&dme_data_id='+dmeDataId);
            });
            
            $(".editCollectionMetadata").click(function(e){
@@ -408,7 +408,7 @@ function renderDataSetName(data, type, row){
 		html += "<div class='col-md-12' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'>" +
 				""+checkboxHtml+"&nbsp;&nbsp;&nbsp;" +
 				"<a href='#' class='dataSetFragment' " +
-			    "permissions_role = '" + row.dataSetPermissionRole + "' " +
+			    "dme_data_id  = '" + row.dmeDataId + "' permissions_role = '" + row.dataSetPermissionRole + "' " +
 				"data_set_path = " + row.dataSetPath + ">" +
 				"<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span></a>" +
 			    "&nbsp&nbsp;" + editDataSetHtml + "</div></div></div>";
@@ -416,7 +416,7 @@ function renderDataSetName(data, type, row){
 	} else {
 		html += "<div class='col-md-12' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'>"+
 		        "&nbsp;&nbsp;&nbsp;<a href='#' class='dataSetFragment' " +
-				"permissions_role = '" + row.dataSetPermissionRole + "'" +
+				"dme_data_id  = '" + row.dmeDataId + "' permissions_role = '" + row.dataSetPermissionRole + "'" +
 				"data_set_path = " + row.dataSetPath + ">" +
 				"<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span></a>" +
 		        "&nbsp&nbsp;</div></div></div>";

@@ -1,13 +1,16 @@
 package gov.nih.nci.doe.web.controller;
 
+import java.io.InputStream;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpHeaders;
@@ -23,15 +26,20 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.MappingJsonFactory;
 import gov.nih.nci.doe.web.DoeWebException;
+import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.model.PermissionsModel;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
-import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
+import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
 
 /**
  *
@@ -153,50 +161,105 @@ public class HomeController extends AbstractDoeController {
 	@SuppressWarnings("unchecked")
 	@GetMapping(value = "/assetDetails")
 	public String getAssetDetailsTab(Model model, HttpSession session, HttpServletRequest request,
-			@RequestParam(value = "path") String path) throws DoeWebException {
+			@RequestParam(value = "dme_data_id") String dmeDataId,
+			@RequestParam(value = "returnToSearch", required = false) String returnToSearch) throws DoeWebException {
 
-		log.info("get asset details for path:" + path);
+		log.info("get asset details for dme_data_id: " + dmeDataId);
 		String authToken = (String) session.getAttribute("hpcUserToken");
 		log.info("authToken: " + authToken);
 
 		String user = getLoggedOnUserInfo();
 		log.info("asset details for user: " + user);
+
 		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList().getBody();
+		DoeSearch search = new DoeSearch();
 
-		HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL, path, false, sslCertPath,
-				sslCertPassword);
-		if (collections != null && collections.getCollections() != null
-				&& !CollectionUtils.isEmpty(collections.getCollections())) {
-			HpcCollectionDTO collection = collections.getCollections().get(0);
+		String[] attrNames = { "collection_type", "dme_data_id" };
+		String[] attrValues = { "Asset", dmeDataId };
+		String[] levelValues = { "ANY", "Asset" };
+		boolean[] isExcludeParentMetadata = { false, false };
+		String[] rowIds = { "1", "2" };
+		String[] operators = { "LIKE", "LIKE" };
+		boolean[] iskeyWordSearch = { true, false };
+		boolean[] isAdvancedSearch = { false, false };
 
-			HpcMetadataEntry selectedEntry = collection.getMetadataEntries().getSelfMetadataEntries().stream()
-					.filter(e -> e.getAttribute().equalsIgnoreCase("access_group")).findAny().orElse(null);
-			if (selectedEntry != null) {
-				model.addAttribute("accessGrp", selectedEntry.getValue());
+		search.setAttrName(attrNames);
+		search.setAttrValue(attrValues);
+		search.setLevel(levelValues);
+		search.setIsExcludeParentMetadata(isExcludeParentMetadata);
+		search.setRowId(rowIds);
+		search.setOperator(operators);
+		search.setIskeyWordSearch(iskeyWordSearch);
+		search.setIsAdvancedSearch(isAdvancedSearch);
+
+		List<String> systemAttrs = (List<String>) session.getAttribute("systemAttrs");
+		if (CollectionUtils.isEmpty(systemAttrs)) {
+			HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
+			if (modelDTO == null) {
+				modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL, sslCertPath, sslCertPassword);
+				session.setAttribute("userDOCModel", modelDTO);
 			}
 
-			HpcMetadataEntry assetName = collection.getMetadataEntries().getSelfMetadataEntries().stream()
-					.filter(e -> e.getAttribute().equalsIgnoreCase("asset_name")).findAny().orElse(null);
-			if (assetName != null) {
-				model.addAttribute("assetName", assetName.getValue());
+			systemAttrs = modelDTO.getCollectionSystemGeneratedMetadataAttributeNames();
+			List<String> dataObjectsystemAttrs = modelDTO.getDataObjectSystemGeneratedMetadataAttributeNames();
+			systemAttrs.addAll(dataObjectsystemAttrs);
+			systemAttrs.add("collection_type");
+			systemAttrs.add("access_group");
+			session.setAttribute("systemAttrs", systemAttrs);
+		}
+
+		try {
+			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search);
+			compoundQuery.setDetailedResponse(true);
+			log.info("search compund query" + compoundQuery);
+			serviceURL = compoundDataObjectSearchServiceURL;
+
+			UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(compoundDataObjectSearchServiceURL);
+
+			ucBuilder.queryParam("returnParent", Boolean.TRUE);
+			final String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
+
+			WebClient client = DoeClientUtil.getWebClient(requestURL, sslCertPath, sslCertPassword);
+			client.header("Authorization", "Bearer " + authToken);
+			Response restResponse = client.invoke("POST", compoundQuery);
+			if (restResponse.getStatus() == 200) {
+				MappingJsonFactory factory = new MappingJsonFactory();
+				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+				HpcCollectionListDTO collections = parser.readValueAs(HpcCollectionListDTO.class);
+				HpcCollectionDTO collection = collections.getCollections().get(0);
+
+				String studyName = getAttributeValue("study_name",
+						collection.getMetadataEntries().getParentMetadataEntries(), "Study");
+
+				String progName = getAttributeValue("program_name",
+						collection.getMetadataEntries().getParentMetadataEntries(), "Program");
+
+				String assetPermission = getPermissionRole(user, collection.getCollection().getCollectionId(),
+						loggedOnUserPermissions);
+
+				String accessGrp = getAttributeValue("access_group",
+						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
+
+				String assetName = getAttributeValue("asset_name",
+						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
+
+				List<KeyValueBean> selfMetadata = getUserMetadata(
+						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset", systemAttrs);
+
+				if (StringUtils.isNotEmpty(returnToSearch)) {
+					model.addAttribute("returnToSearch", true);
+				}
+
+				model.addAttribute("accessGrp", accessGrp);
+				model.addAttribute("assetName", assetName);
+				model.addAttribute("assetMetadata", selfMetadata);
+				model.addAttribute("studyName", studyName);
+				model.addAttribute("progName", progName);
+				model.addAttribute("assetPath", collection.getCollection().getCollectionName());
+				model.addAttribute("assetPermission", assetPermission);
 			}
-			List<KeyValueBean> selfMetadata = getUserMetaDataAttributesByPath(path, "Asset", "false", session);
-
-			String studyName = getAttributeValue("study_name",
-					collection.getMetadataEntries().getParentMetadataEntries(), "Study");
-
-			String progName = getAttributeValue("program_name",
-					collection.getMetadataEntries().getParentMetadataEntries(), "Program");
-
-			String assetPermission = getPermissionRole(user, collection.getCollection().getCollectionId(),
-					loggedOnUserPermissions);
-
-			model.addAttribute("assetMetadata", selfMetadata);
-			model.addAttribute("studyName", studyName);
-			model.addAttribute("progName", progName);
-			model.addAttribute("assetPath", path);
-			model.addAttribute("assetPermission", assetPermission);
-
+		} catch (Exception e) {
+			throw new DoeWebException(e.getMessage());
 		}
 
 		return "assetDetails";
