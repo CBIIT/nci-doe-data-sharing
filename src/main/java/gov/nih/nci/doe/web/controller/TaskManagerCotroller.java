@@ -136,11 +136,18 @@ public class TaskManagerCotroller extends AbstractDoeController {
 					task.setDataSetName(collectionNames[4]);
 				}
 
+				if (StringUtils.isNotEmpty(task.getDataSetName()) && StringUtils.isNotEmpty(t.getTaskName())) {
+					task.setTaskName("<a href=" + webUrl + "/assetDetails?assetIdentifier=" + task.getDataSetName()
+							+ ">" + t.getTaskName() + "</a>");
+				} else {
+					task.setTaskName(t.getTaskName());
+				}
+
 				task.setTaskCreatedDate(t.getTaskDate());
 				task.setTaskId(download.getTaskId());
 				task.setTaskCompletedDate(
 						download.getCompleted() != null ? format.format(download.getCompleted().getTime()) : "");
-				task.setTaskName(t.getTaskName());
+
 				task.setUserId(t.getUserId());
 				task.setTaskType(t.getTaskType());
 				if (download.getResult() == null) {
@@ -173,7 +180,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
 				task.setTaskCreatedDate(t != null ? t.getTaskDate() : null);
 				task.setTaskCompletedDate(
 						upload.getCompleted() != null ? format.format(upload.getCompleted().getTime()) : "");
-				task.setTaskName(t != null ? t.getTaskName() : "");
+
 				task.setUserId(t != null ? t.getUserId() : "");
 				task.setTaskType(t != null ? t.getTaskType() : "");
 				if (upload.getResult() == null) {
@@ -194,6 +201,15 @@ public class TaskManagerCotroller extends AbstractDoeController {
 					task.setStudyName(collectionNames[3]);
 					task.setDataSetName(collectionNames[4]);
 				}
+
+				if (StringUtils.isNotEmpty(task.getDataSetName()) && t != null
+						&& StringUtils.isNotEmpty(t.getTaskName())) {
+					task.setTaskName("<a href=" + webUrl + "/assetDetails?assetIdentifier=" + task.getDataSetName()
+							+ ">" + t.getTaskName() + "</a>");
+				} else {
+					task.setTaskName(t != null ? t.getTaskName() : "");
+				}
+
 				uploadTaskResults.add(task);
 			}
 

@@ -79,6 +79,9 @@ public abstract class AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.search.dataobject.compound}")
 	public String compoundDataObjectSearchServiceURL;
+	
+	@Value("${gov.nih.nci.hpc.web.server}")
+	public String webUrl;
 
 	@Autowired
 	public AuthenticateService authenticateService;

@@ -71,8 +71,7 @@ public class SearchController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	private String serviceURL;
 
-	@Value("${gov.nih.nci.hpc.web.server}")
-	private String webUrl;
+	
 
 	@GetMapping
 	public ResponseEntity<?> search(HttpSession session, @RequestHeader HttpHeaders headers, HttpServletRequest request,

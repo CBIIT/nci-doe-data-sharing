@@ -161,8 +161,9 @@ public class HomeController extends AbstractDoeController {
 	@SuppressWarnings("unchecked")
 	@GetMapping(value = "/assetDetails")
 	public String getAssetDetailsTab(Model model, HttpSession session, HttpServletRequest request,
-			@RequestParam(value = "dme_data_id") String dmeDataId,
-			@RequestParam(value = "returnToSearch", required = false) String returnToSearch) throws DoeWebException {
+			@RequestParam(value = "dme_data_id", required = false) String dmeDataId,
+			@RequestParam(value = "returnToSearch", required = false) String returnToSearch,
+			@RequestParam(value = "assetIdentifier", required = false) String assetIdentifier) throws DoeWebException {
 
 		log.info("get asset details for dme_data_id: " + dmeDataId);
 		String authToken = (String) session.getAttribute("hpcUserToken");
@@ -174,8 +175,18 @@ public class HomeController extends AbstractDoeController {
 		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList().getBody();
 		DoeSearch search = new DoeSearch();
 
-		String[] attrNames = { "collection_type", "dme_data_id" };
-		String[] attrValues = { "Asset", dmeDataId };
+		if (StringUtils.isNotEmpty(dmeDataId)) {
+			String[] attrNames = { "collection_type", "dme_data_id" };
+			String[] attrValues = { "Asset", dmeDataId };
+			search.setAttrName(attrNames);
+			search.setAttrValue(attrValues);
+		} else if (StringUtils.isNotEmpty(assetIdentifier)) {
+
+			String[] attrNames = { "collection_type", "asset_identifier" };
+			String[] attrValues = { "Asset", assetIdentifier };
+			search.setAttrName(attrNames);
+			search.setAttrValue(attrValues);
+		}
 		String[] levelValues = { "ANY", "Asset" };
 		boolean[] isExcludeParentMetadata = { false, false };
 		String[] rowIds = { "1", "2" };
@@ -183,8 +194,6 @@ public class HomeController extends AbstractDoeController {
 		boolean[] iskeyWordSearch = { true, false };
 		boolean[] isAdvancedSearch = { false, false };
 
-		search.setAttrName(attrNames);
-		search.setAttrValue(attrValues);
 		search.setLevel(levelValues);
 		search.setIsExcludeParentMetadata(isExcludeParentMetadata);
 		search.setRowId(rowIds);
@@ -223,6 +232,13 @@ public class HomeController extends AbstractDoeController {
 			client.header("Authorization", "Bearer " + authToken);
 			Response restResponse = client.invoke("POST", compoundQuery);
 			if (restResponse.getStatus() == 200) {
+				HpcCompoundMetadataQueryDTO compoundQuerySession = (HpcCompoundMetadataQueryDTO) session
+						.getAttribute("compoundQuery");
+
+				if (compoundQuerySession == null) {
+					session.setAttribute("compoundQuery", compoundQuery);
+				}
+
 				MappingJsonFactory factory = new MappingJsonFactory();
 				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 				HpcCollectionListDTO collections = parser.readValueAs(HpcCollectionListDTO.class);
@@ -257,6 +273,8 @@ public class HomeController extends AbstractDoeController {
 				model.addAttribute("progName", progName);
 				model.addAttribute("assetPath", collection.getCollection().getCollectionName());
 				model.addAttribute("assetPermission", assetPermission);
+			} else {
+				throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
 			}
 		} catch (Exception e) {
 			throw new DoeWebException(e.getMessage());
