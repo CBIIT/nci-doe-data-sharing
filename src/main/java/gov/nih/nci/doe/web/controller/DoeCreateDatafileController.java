@@ -53,6 +53,7 @@ public class DoeCreateDatafileController extends DoeCreateCollectionDataFileCont
 			@RequestParam("doeDataFile") MultipartFile doeDataFile, @RequestParam("dataFilePath") String dataFilePath,
 			HttpSession session, HttpServletRequest request, HttpServletResponse response) {
 
+		log.info("Upload Single file from file system");
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		String user = getLoggedOnUserInfo();
 		String checksum = request.getParameter("checksum");

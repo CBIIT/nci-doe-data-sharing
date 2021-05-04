@@ -507,7 +507,7 @@ public class DoeClientUtil {
 			gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationRequestDTO datafileDTO, String path,
 			String hpcCertPath, String hpcCertPassword) throws DoeWebException {
 
-		log.debug("Register data file for path: " + path);
+		log.info("Register data file for path: " + path);
 		try {
 			try {
 				HpcDataObjectDTO datafile = getDatafiles(token, hpcDatafileURL, path, false, hpcCertPath,
