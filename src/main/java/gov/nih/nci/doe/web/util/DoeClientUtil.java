@@ -309,7 +309,7 @@ public class DoeClientUtil {
 			}
 
 		} catch (Exception e) {
-			throw new DoeWebException(path + ": " + e.getMessage());
+			throw new DoeWebException(e.getMessage());
 		}
 	}
 
