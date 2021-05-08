@@ -11,6 +11,6 @@ public interface MailService {
 
 	public void sendResetPasswordEmail(String password, String email);
 	
-	public void sendCollectionRegistationFailure(String email, String collectionPath);
+	public void sendCollectionRegistationFailure(String email, String collectionPath,Exception e);
 
 }
