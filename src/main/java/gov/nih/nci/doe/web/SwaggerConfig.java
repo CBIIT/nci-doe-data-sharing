@@ -11,6 +11,7 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDownloadResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectDTO;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.service.ApiInfo;
@@ -42,6 +43,7 @@ public class SwaggerConfig {
                 .additionalModels(typeResolver.resolve(HpcCollectionDTO.class))
                 .additionalModels(typeResolver.resolve(HpcDataObjectListDTO.class))
                 .additionalModels(typeResolver.resolve(HpcCollectionListDTO.class))
+                .additionalModels(typeResolver.resolve(HpcBulkDataObjectRegistrationResponseDTO.class))
                 .additionalModels(typeResolver.resolve(HpcDataObjectDTO.class));
     }
  

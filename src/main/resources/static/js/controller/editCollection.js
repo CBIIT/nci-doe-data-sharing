@@ -30,7 +30,7 @@ function constructEditCollectionMetadata(data,status) {
 		if(attrVal) {
 		   attrValModified = attrVal.replace(/"/g, "");
 		}
-		if(value.isEditable == false) {
+		if(value.isEditable == false &&  && value.attrName.indexOf("access_group") == -1) {
 			$("#userMetaData tbody").append("<tr><td>" + value.displayName + "&nbsp;&nbsp;<i class='fas fa-question-circle'" +
 			                                "data-toggle='tooltip' " +
 			                                "data-placement='right' title=\"" + value.description + "\"></i></td><td><input " +
