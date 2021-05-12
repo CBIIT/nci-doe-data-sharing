@@ -5,7 +5,7 @@
     "description": "This user guide describes how to use the MoDaC REST Application Programming Interface.\n\nThe MoDaC REST API provides the ability to upload and download assets,  manage associated metadata, and search for assets against these metadata. Assets include datasets and machine learning models.\n\nA *collection* is a logical directory on MoDaC. A data object represents an individual file. Data objects reside in collections. Collections can also contain other collections. Collections and data objects can be logically structured in a hierarchal manner, depicted with a tree structure with parents and children.\n\nA *metadata attribute* consists of the attribute name and the attribute value. Each object or collection is associated with its required and user defined metadata. The required metadata needs to be provided when the collection or object is first created.\n\nA *collection* is associated with a type, defined by the collection_type attribute.  MoDaC presently supports three collection types – Program, Study and Asset, organized hierarchically.  Program is the top level collection. A Program can contain one or more collections of type Study, and a Study can contain one of more collections of type Asset. The asset_type attribute denotes the type of an Asset. It can take on the value model or dataset.\n\nA *child* entity (collection or data object) always inherits the metadata of its parent and other ancestors in that hierarchy. Child entities can however override the parent metadata. This facilitates advanced searches where the data objects or collections can be searched based on their own metadata or their parent metadata. Searches can also be limited to a specific level in the hierarchy.",
     "title": "MoDaC API"
   },
-  "host": "fsdmel-modac01t.ncifcrf.gov",
+  "host": "modac.cancer.gov",
   "basePath": "/",
   "paths": {
     "/api/authenticate": {
@@ -471,6 +471,46 @@
           },
           "401": {
             "description": "Authentication Failure: \n\nHTTP/1.1 401 Unauthorized Content-Type: application/json\n\n\nJSON:\n\n{ \"errorType\": \"REQUEST_AUTHENTICATION_FAILED\",\n\n\"message\": \"Access Denied: LDAP authentication failed\",\n\n\"stackTrace\": \"…\" } "
+          }
+        }
+      }
+    },
+    "/api/v2/registration": {
+      "put": {
+        "description": "\nThis service allows users to bulk register several files or collections in a single request from the following locations: \n\n• Globus endpoint \n\n• AWS S3 bucket\n\nThere are multiple ways to bulk register data on MoDaC:\n\n1. To register a collection which consists of one or more files, use the directory scan registration example from below to prepare the attributesFile.json. \n\n2. To register one or more files to an existing collection, use the bulk data objects registeration example from below to prepare the attributesFile.json.\n\nNote: The two methods shared above can also be combined in a single request. \n\n\nThe user can provide a *dryRun* indicator.  If the *dryRun* is set to 'true', the API doesn’t perform the file registrations, but instead returns a list of registration requests.\n\nThe *directoryScanRegistrationItems* holds the Globus endpoint or AWS S3 bucket information of the directory to be registered. \n\nThe *globusScanDirectory* specifies the Globus endpoint to upload from. \n\nThe *s3ScanDirectory* specifies the AWS S3 endpoint to upload from.\n\n\n  1. **CURL COMMAND**\n  ```\n  curl -k -H \"Content-Type: application/json\" -d @<attributesFile.json> -X PUT https://modac.cancer.gov/api/v2/registration -H \"Accept: application/json\" -D  <response-header> -o <response-message.json> -u <Your Email Id>\n  \n  ```\n  2.  **Globus - attributesFile.json Examples**\n  \n    (a) Globus directory scan registration example:\n    \n      {\n          \"dryRun\":false,\n          \"directoryScanRegistrationItems\":[\n              {\n                  \"basePath\":\"/NCI_DOE_Archive/ATOM/Study_Neurocrine_H1_Demonstration\",\n                  \"globusScanDirectory\":{\n                      \"directoryLocation\":{\n                          \"fileContainerId\":\"13789bd2-88af-11ea-bf84-0e6cccbb0103\",\n                          \"fileId\":\"Asset_H1_M1_update_MnM\"\n                      }\n                  },\n                  \"bulkMetadataEntries\":{\n                      \"pathsMetadataEntries\":[\n                          {\n                              \"path\":\"/NCI_DOE_Archive/ATOM/Study_Neurocrine_H1_Demo/Asset_H1_M1_update_MnM\",\n                              \"pathMetadataEntries\":[\n                                 {\n                                      \"attribute\":\"collection_type\",\n                                      \"value\":\"Asset\"\n                                  },\n                                  {\n                                      \"attribute\":\"asset_identifier\",\n                                      \"value\":\"H1_M1_update_MnM\"\n                                  },\n                                  {\n                                      \"attribute\":\"asset_name\",\n                                      \"value\":\"H1_M2\"\n                                  },\n                                  {\n                                      \"attribute\":\"description\",\n                                      \"value\":\" Demo data of Accelerating Therapeutics for Opportunities in Medicine (ATOM)\"\n                                  },\n                                  {\n                                      \"attribute\":\"asset_type\",\n                                      \"value\":\"Dataset\"\n                                  }\n                      ]\n                    }\n                  ]\n                }\n              }\n            ]\n        }\n    \n    (b) Globus bulk data objects registration example \n    {\n        \"dryRun\": false,\n        \"dataObjectRegistrationItems\": [{\n            \"path\": \"/NCI_DOE_Archive/ATOM/Study_Neurocrine_H1_Demo/Asset_H1_M1_update_MnM/DNA_12918_results.xlsx\",\n            \"globusUploadSource\": {\n              \"sourceLocation\": {\n                \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n                \"fileId\": \"DNA_12918_results.xlsx\"\n              }\n            },\n            \"dataObjectMetadataEntries\": [{\n              \"attribute\": \"file_description\",\n              \"value\": \"DNA Results from 12-9-2018\"\n            }]\n          },\n          {\n                \"path\": \"/NCI_DOE_Archive/ATOM/Study_Neurocrine_H1_Demo/Asset_H1_M1_update_MnM/DNA_5_9_21_results.xlsx\",\n            \"globusUploadSource\": {\n              \"sourceLocation\": {\n                \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n                \"fileId\": \"DNA_5_9_21_results.xlsx\"\n              }\n            },\n            \"dataObjectMetadataEntries\": [{\n              \"attribute\": \"file_description\",\n              \"value\": \"DNA results from 5-9-2021\"\n            }]\n          }\n        ]\n      }\n      \n    (c) Globus directory scan and bulk data objects registration example\n    \n        {\n          \"dryRun\": false,\n          \"directoryScanRegistrationItems\": [{\n            \"basePath\": \"/NCI_DOE_Archive/ATOM/Study_Neurocrine_H1_Demonstration\",\n            \"globusScanDirectory\": {\n              \"directoryLocation\": {\n                \"fileContainerId\": \"13789bd2-88af-11ea-bf84-0e6cccbb0103\",\n                \"fileId\": \"Asset_H1_M1_update_MnM\"\n              }\n            },\n            \"bulkMetadataEntries\": {\n              \"pathsMetadataEntries\": [{\n                \"path\": \"/NCI_DOE_Archive/ATOM/Study_Neurocrine_H1_Demo/Asset_H1_M1_update_MnM\",\n                \"pathMetadataEntries\": [{\n                    \"attribute\": \"collection_type\",\n                    \"value\": \"Asset\"\n                  },\n                  {\n                    \"attribute\": \"asset_identifier\",\n                    \"value\": \"H1_M1_update_MnM\"\n                  },\n                  {\n                    \"attribute\": \"asset_name\",\n                    \"value\": \"H1_M2\"\n                  },\n                  {\n                    \"attribute\": \"description\",\n                    \"value\": \" Demo data of Accelerating Therapeutics for Opportunities in Medicine (ATOM)\"\n                  },\n                  {\n                    \"attribute\": \"asset_type\",\n                    \"value\": \"Dataset\"\n                  }\n                ]\n              }]\n            }\n          }],\n          \"dataObjectRegistrationItems\": [{\n              \"path\": \"/NCI_DOE_Archive/ATOM/Study_Neurocrine_H1_Demo/Asset_H1_M7/combined_data_combat_5_8_21.csv\",\n              \"globusUploadSource\": {\n                \"sourceLocation\": {\n                  \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n                  \"fileId\": \"combined_data_combat_5_8_21.csv\"\n                }\n              },\n              \"dataObjectMetadataEntries\": [{\n                \"attribute\": \"file_description\",\n                \"value\": \"Combined results from 5-8-2021\"\n              }]\n            },\n            {\n              \"path\": \"/NCI_DOE_Archive/ATOM/Study_Neurocrine_H1_Demo/Asset_H1_M7/combined_data_combat_5_9_21.csv\",\n              \"globusUploadSource\": {\n                \"sourceLocation\": {\n                  \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n                  \"fileId\": \"combined_data_combat_5_9_21.csv\"\n                }\n              },\n              \"dataObjectMetadataEntries\": [{\n                \"attribute\": \"file_description\",\n                \"value\": \"Combined results from 5-9-2021\"\n              }]\n            }\n          ]\n        }\n    \n\n  \n  3. **AWS S3 - attributesFile.json Examples**\n  \n  \n     (a) AWS S3 directory scan registration example:\n    \n      {\n          \"dryRun\":false,\n          \"directoryScanRegistrationItems\":[\n              {\n                  \"basePath\":\"/NCI_DOE_Archive/ATOM/Study_Neurocrine_H1_Demonstration\",\n                  \"s3ScanDirectory\":{\n                      \"directoryLocation\":{\n                          \"fileContainerId\":\"13789bd2-88af-11ea-bf84-0e6cccbb0103\",\n                          \"fileId\":\"Asset_H1_M1_update_MnM\"\n               },\n                \"account\": {\n                  \"accessKey\": \"*******\",\n                  \"secretKey\": \"*******\",\n                  \"region\": \"us-east-1\"\n                }\n              },\n\n                  \"bulkMetadataEntries\":{\n                      \"pathsMetadataEntries\":[\n                          {\n                              \"path\":\"/NCI_DOE_Archive/ATOM/Study_Neurocrine_H1_Demo/Asset_H1_M1_update_MnM\",\n                              \"pathMetadataEntries\":[\n                                 {\n                                      \"attribute\":\"collection_type\",\n                                      \"value\":\"Asset\"\n                                  },\n                                  {\n                                      \"attribute\":\"asset_identifier\",\n                                      \"value\":\"H1_M1_update_MnM\"\n                                  },\n                                  {\n                                      \"attribute\":\"asset_name\",\n                                      \"value\":\"H1_M2\"\n                                  },\n                                  {\n                                      \"attribute\":\"description\",\n                                      \"value\":\" Demo data of Accelerating Therapeutics for Opportunities in Medicine (ATOM)\"\n                                  },\n                                  {\n                                      \"attribute\":\"asset_type\",\n                                      \"value\":\"Dataset\"\n                                  }\n                      ]\n                    }\n                  ]\n                }\n              }\n            ]\n        }\n    \n    (b) AWS S3 bulk data objects registration example \n    {\n        \"dryRun\": false,\n        \"dataObjectRegistrationItems\": [{\n            \"path\": \"/NCI_DOE_Archive/ATOM/Study_Neurocrine_H1_Demo/Asset_H1_M1_update_MnM/DNA_12918_results.xlsx\",\n            \"s3UploadSource\": {\n              \"sourceLocation\": {\n                \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n                \"fileId\": \"DNA_12918_results.xlsx\"\n            },\n                \"account\": {\n                  \"accessKey\": \"*******\",\n                  \"secretKey\": \"*******\",\n                  \"region\": \"us-east-1\"\n                }\n              },\n            \"dataObjectMetadataEntries\": [{\n              \"attribute\": \"file_description\",\n              \"value\": \"DNA Results from 12-9-2018\"\n            }]\n          },\n          {\n                \"path\": \"/NCI_DOE_Archive/ATOM/Study_Neurocrine_H1_Demo/Asset_H1_M1_update_MnM/DNA_5_9_21_results.xlsx\",\n            \"s3UploadSource\": {\n              \"sourceLocation\": {\n                \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n                \"fileId\": \"DNA_5_9_21_results.xlsx\"\n              },\n                \"account\": {\n                  \"accessKey\": \"*******\",\n                  \"secretKey\": \"*******\",\n                  \"region\": \"us-east-1\"\n                }\n              },\n            \"dataObjectMetadataEntries\": [{\n              \"attribute\": \"file_description\",\n              \"value\": \"DNA results from 5-9-2021\"\n            }]\n          }\n        ]\n      }\n      \n    (c) AWS S3 directory scan and bulk data objects registration example\n    \n        {\n          \"dryRun\": false,\n          \"directoryScanRegistrationItems\": [{\n            \"basePath\": \"/NCI_DOE_Archive/ATOM/Study_Neurocrine_H1_Demonstration\",\n            \"s3ScanDirectory\": {\n              \"directoryLocation\": {\n                \"fileContainerId\": \"13789bd2-88af-11ea-bf84-0e6cccbb0103\",\n                \"fileId\": \"Asset_H1_M1_update_MnM\"\n              },\n                \"account\": {\n                  \"accessKey\": \"*******\",\n                  \"secretKey\": \"*******\",\n                  \"region\": \"us-east-1\"\n                }\n              },\n            \"bulkMetadataEntries\": {\n              \"pathsMetadataEntries\": [{\n                \"path\": \"/NCI_DOE_Archive/ATOM/Study_Neurocrine_H1_Demo/Asset_H1_M1_update_MnM\",\n                \"pathMetadataEntries\": [{\n                    \"attribute\": \"collection_type\",\n                    \"value\": \"Asset\"\n                  },\n                  {\n                    \"attribute\": \"asset_identifier\",\n                    \"value\": \"H1_M1_update_MnM\"\n                  },\n                  {\n                    \"attribute\": \"asset_name\",\n                    \"value\": \"H1_M2\"\n                  },\n                  {\n                    \"attribute\": \"description\",\n                    \"value\": \" Demo data of Accelerating Therapeutics for Opportunities in Medicine (ATOM)\"\n                  },\n                  {\n                    \"attribute\": \"asset_type\",\n                    \"value\": \"Dataset\"\n                  }\n                ]\n              }]\n            }\n          }],\n          \"dataObjectRegistrationItems\": [{\n              \"path\": \"/NCI_DOE_Archive/ATOM/Study_Neurocrine_H1_Demo/Asset_H1_M7/combined_data_combat_5_8_21.csv\",\n              \"s3UploadSource\": {\n                \"sourceLocation\": {\n                  \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n                  \"fileId\": \"combined_data_combat_5_8_21.csv\"\n                },\n                \"account\": {\n                  \"accessKey\": \"*******\",\n                  \"secretKey\": \"*******\",\n                  \"region\": \"us-east-1\"\n                }\n              },\n              \"dataObjectMetadataEntries\": [{\n                \"attribute\": \"file_description\",\n                \"value\": \"Combined results from 5-8-2021\"\n              }]\n            },\n            {\n              \"path\": \"/NCI_DOE_Archive/ATOM/Study_Neurocrine_H1_Demo/Asset_H1_M7/combined_data_combat_5_9_21.csv\",\n              \"s3UploadSource\": {\n                \"sourceLocation\": {\n                  \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n                  \"fileId\": \"combined_data_combat_5_9_21.csv\"\n                },\n                \"account\": {\n                  \"accessKey\": \"*******\",\n                  \"secretKey\": \"*******\",\n                  \"region\": \"us-east-1\"\n                }\n              },\n              \"dataObjectMetadataEntries\": [{\n                \"attribute\": \"file_description\",\n                \"value\": \"Combined results from 5-9-2021\"\n              }]\n            }\n          ]\n        }\n    \n    \n  4. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -H \"Content-Type: application/json\" -d @attributesFile.json -X PUT https://modac.cancer.gov/api/v2/registration -H \"Accept: application/json\" -D header.txt -o output.json -u us39@nih.gov\n  ```\n",
+        "summary": "Bulk Registration.",
+        "tags": [
+          "Upload Data"
+        ],
+        "operationId": "BulkRegistration",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Bulk Registration",
+            "description": "Bulk Registration",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/HpcBulkDataObjectRegistrationRequestDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/HpcBulkDataObjectRegistrationResponseDTORes"
+            },
+            "description": "HTTP/1.1 200 OK\n**Output**:\n\n    ",
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Authentication Failure: \n\nHTTP/1.1 401 Unauthorized Content-Type: application/json\n\n\nJSON:\n\n{ \"errorType\": \"REQUEST_AUTHENTICATION_FAILED\",\n\n\"message\": \"Access Denied: LDAP authentication failed\",\n\n\"stackTrace\": \"…\" }"
           }
         }
       }
@@ -2202,6 +2242,500 @@
     "Locale": {
       "type": "object",
       "title": "Locale"
+    },
+    "HpcBulkDataObjectRegistrationRequestDTO": {
+      "type": "object",
+      "properties": {
+        "dataObjectRegistrationItems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HpcDataObjectRegistrationItemDTO"
+          }
+        },
+        "directoryScanRegistrationItems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HpcDirectoryScanRegistrationItemDTO"
+          }
+        },
+        "dryRun": {
+          "type": "boolean"
+        },
+        "uiURL": {
+          "type": "string",
+          "xml": {
+            "name": "uiURL",
+            "attribute": false,
+            "wrapped": false
+          }
+        }
+      },
+      "title": "HpcBulkDataObjectRegistrationRequestDTO",
+      "xml": {
+        "name": "HpcBulkDataObjectRegistrationRequestDTO",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcDataObjectRegistrationItemDTO": {
+      "type": "object",
+      "properties": {
+        "callerObjectId": {
+          "type": "string",
+          "xml": {
+            "name": "callerObjectId",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "createParentCollections": {
+          "type": "boolean"
+        },
+        "dataObjectMetadataEntries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HpcMetadataEntry"
+          }
+        },
+        "fileSystemUploadSource": {
+          "xml": {
+            "name": "fileSystemUploadSource",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcUploadSource"
+        },
+        "globusUploadSource": {
+          "xml": {
+            "name": "globusUploadSource",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcUploadSource"
+        },
+        "googleDriveUploadSource": {
+          "xml": {
+            "name": "googleDriveUploadSource",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcStreamingUploadSource"
+        },
+        "linkSourcePath": {
+          "type": "string",
+          "xml": {
+            "name": "linkSourcePath",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "parentCollectionsBulkMetadataEntries": {
+          "xml": {
+            "name": "parentCollectionsBulkMetadataEntries",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcBulkMetadataEntries"
+        },
+        "path": {
+          "type": "string",
+          "xml": {
+            "name": "path",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "s3UploadSource": {
+          "xml": {
+            "name": "s3UploadSource",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcStreamingUploadSource"
+        }
+      },
+      "title": "HpcDataObjectRegistrationItemDTO",
+      "xml": {
+        "name": "HpcDataObjectRegistrationItemDTO",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcDirectoryScanRegistrationItemDTO": {
+      "type": "object",
+      "properties": {
+        "basePath": {
+          "type": "string",
+          "xml": {
+            "name": "basePath",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "bulkMetadataEntries": {
+          "xml": {
+            "name": "bulkMetadataEntries",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcBulkMetadataEntries"
+        },
+        "callerObjectId": {
+          "type": "string",
+          "xml": {
+            "name": "callerObjectId",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "excludePatterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fileSystemScanDirectory": {
+          "xml": {
+            "name": "fileSystemScanDirectory",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcScanDirectory"
+        },
+        "globusScanDirectory": {
+          "xml": {
+            "name": "globusScanDirectory",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcScanDirectory"
+        },
+        "googleDriveScanDirectory": {
+          "xml": {
+            "name": "googleDriveScanDirectory",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcGoogleDriveScanDirectory"
+        },
+        "includePatterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "pathMap": {
+          "xml": {
+            "name": "pathMap",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcDirectoryScanPathMap"
+        },
+        "patternType": {
+          "type": "string",
+          "xml": {
+            "name": "patternType",
+            "attribute": false,
+            "wrapped": false
+          },
+          "enum": [
+            "REGEX",
+            "SIMPLE"
+          ]
+        },
+        "s3ScanDirectory": {
+          "xml": {
+            "name": "s3ScanDirectory",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcS3ScanDirectory"
+        }
+      },
+      "title": "HpcDirectoryScanRegistrationItemDTO",
+      "xml": {
+        "name": "HpcDirectoryScanRegistrationItemDTO",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcScanDirectory": {
+      "type": "object",
+      "properties": {
+        "directoryLocation": {
+          "xml": {
+            "name": "directoryLocation",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcFileLocation"
+        }
+      },
+      "title": "HpcScanDirectory",
+      "xml": {
+        "name": "HpcScanDirectory",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcGoogleDriveScanDirectory": {
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "type": "string",
+          "xml": {
+            "name": "accessToken",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "directoryLocation": {
+          "xml": {
+            "name": "directoryLocation",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcFileLocation"
+        }
+      },
+      "title": "HpcGoogleDriveScanDirectory",
+      "xml": {
+        "name": "HpcGoogleDriveScanDirectory",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcDirectoryScanPathMap": {
+      "type": "object",
+      "properties": {
+        "fromPath": {
+          "type": "string",
+          "xml": {
+            "name": "fromPath",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "toPath": {
+          "type": "string",
+          "xml": {
+            "name": "toPath",
+            "attribute": false,
+            "wrapped": false
+          }
+        }
+      },
+      "title": "HpcDirectoryScanPathMap",
+      "xml": {
+        "name": "HpcDirectoryScanPathMap",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcS3ScanDirectory": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "xml": {
+            "name": "account",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcS3Account"
+        },
+        "directoryLocation": {
+          "xml": {
+            "name": "directoryLocation",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcFileLocation"
+        }
+      },
+      "title": "HpcS3ScanDirectory",
+      "xml": {
+        "name": "HpcS3ScanDirectory",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcBulkDataObjectRegistrationResponseDTORes": {
+      "type": "object",
+      "properties": {
+        "dataObjectRegistrationItems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HpcDataObjectRegistrationItemDTORes"
+          }
+        },
+        "taskId": {
+          "type": "string",
+          "xml": {
+            "name": "taskId",
+            "attribute": false,
+            "wrapped": false
+          }
+        }
+      },
+      "title": "HpcBulkDataObjectRegistrationResponseDTORes",
+      "xml": {
+        "name": "HpcBulkDataObjectRegistrationResponseDTO",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcDataObjectRegistrationItemDTORes": {
+      "type": "object",
+      "properties": {
+        "callerObjectId": {
+          "type": "string",
+          "xml": {
+            "name": "callerObjectId",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "createParentCollections": {
+          "type": "boolean"
+        },
+        "dataObjectMetadataEntries": {
+          "type": "array",
+          "xml": {
+            "name": "dataObjectMetadataEntries",
+            "attribute": false,
+            "wrapped": false
+          },
+          "items": {
+            "$ref": "#/definitions/HpcMetadataEntry"
+          }
+        },
+        "fileSystemUploadSource": {
+          "xml": {
+            "name": "fileSystemUploadSource",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcUploadSource"
+        },
+        "globusUploadSource": {
+          "xml": {
+            "name": "globusUploadSource",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcUploadSource"
+        },
+        "googleDriveUploadSource": {
+          "xml": {
+            "name": "googleDriveUploadSource",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcStreamingUploadSource"
+        },
+        "linkSourcePath": {
+          "type": "string",
+          "xml": {
+            "name": "linkSourcePath",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "parentCollectionsBulkMetadataEntries": {
+          "xml": {
+            "name": "parentCollectionsBulkMetadataEntries",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcBulkMetadataEntriesRes"
+        },
+        "path": {
+          "type": "string",
+          "xml": {
+            "name": "path",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "s3UploadSource": {
+          "xml": {
+            "name": "s3UploadSource",
+            "attribute": false,
+            "wrapped": false
+          },
+          "$ref": "#/definitions/HpcStreamingUploadSource"
+        }
+      },
+      "title": "HpcDataObjectRegistrationItemDTORes",
+      "xml": {
+        "name": "HpcDataObjectRegistrationItemDTO",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcBulkMetadataEntriesRes": {
+      "type": "object",
+      "properties": {
+        "defaultCollectionMetadataEntries": {
+          "type": "array",
+          "xml": {
+            "name": "defaultCollectionMetadataEntries",
+            "attribute": false,
+            "wrapped": false
+          },
+          "items": {
+            "$ref": "#/definitions/HpcMetadataEntry"
+          }
+        },
+        "pathsMetadataEntries": {
+          "type": "array",
+          "xml": {
+            "name": "pathsMetadataEntries",
+            "attribute": false,
+            "wrapped": false
+          },
+          "items": {
+            "$ref": "#/definitions/HpcBulkMetadataEntryRes"
+          }
+        }
+      },
+      "title": "HpcBulkMetadataEntriesRes",
+      "xml": {
+        "name": "HpcBulkMetadataEntries",
+        "attribute": false,
+        "wrapped": false
+      }
+    },
+    "HpcBulkMetadataEntryRes": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "xml": {
+            "name": "path",
+            "attribute": false,
+            "wrapped": false
+          }
+        },
+        "pathMetadataEntries": {
+          "type": "array",
+          "xml": {
+            "name": "pathMetadataEntries",
+            "attribute": false,
+            "wrapped": false
+          },
+          "items": {
+            "$ref": "#/definitions/HpcMetadataEntry"
+          }
+        }
+      },
+      "title": "HpcBulkMetadataEntryRes",
+      "xml": {
+        "name": "HpcBulkMetadataEntry",
+        "attribute": false,
+        "wrapped": false
+      }
     }
   }
 }
