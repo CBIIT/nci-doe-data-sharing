@@ -10,7 +10,7 @@ public class DoeSearch {
 	private boolean detailed;
 	private String searchType;
 	private int pageNumber=1;
-	private int pageSize=100;
+	private int pageSize=5000;
 	private boolean[] isExcludeParentMetadata;
 	private boolean[] iskeyWordSearch;
 	private boolean[] isAdvancedSearch;
