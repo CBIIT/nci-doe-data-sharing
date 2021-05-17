@@ -60,7 +60,10 @@
         <tbody>     
          <tr th:each="metadata : ${assetMetadata}">
             <td th:text="${metadata.displayName}"></td>
-            <td th:text="${metadata.value}"></td>
+            <td th:if="${#strings.startsWith(metadata.value, 'https') OR #strings.startsWith(metadata.value, 'http')}">
+            <a target="_blank" th:href="${metadata.value}"><span th:text="${metadata.value}"></span></a></td>
+            <td th:unless="${#strings.startsWith(metadata.value, 'https') OR #strings.startsWith(metadata.value, 'http')}" 
+            th:text="${metadata.value}"></td>
         </tr>                
         </tbody>
      </table> 

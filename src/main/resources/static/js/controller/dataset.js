@@ -400,8 +400,14 @@ function openPopOverDataSet($this) {
               "<div class='divTableHead'>VALUE</div></div>";
 
               $.each(userMetadataList, function( key, value ) {	
-                content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
-                        "<div class='divTableCell'>" + value.value + "</div></div>";
+            	  if(value.value.startsWith('https') || value.value.startsWith('http')) {
+            		  content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
+                      "<div class='divTableCell'><a target='_blank' href=" + value.value + ">" + value.value + "</a></div></div>";
+            	  } else {
+            		  content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
+                      "<div class='divTableCell'>" + value.value + "</div></div>";
+            	  }
+               
                });
             content += "</div> </div><br/>";
            

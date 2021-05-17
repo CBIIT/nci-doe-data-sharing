@@ -700,8 +700,15 @@ function openPopOver($this) {
             var content = "";
 
             $.each(list, function( key, value ) {	
-                content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
-                        "<div class='divTableCell'>" + value.value + "</div></div>";
+            	var attrVal = value.value;
+            	if(attrVal.startsWith('https') || attrVal.startsWith('http')) {
+            		content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
+                    "<div class='divTableCell'><a target='_blank' href=" + attrVal + ">" + attrVal + "</a></div></div>";
+            	} else {
+            		content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
+                    "<div class='divTableCell'>" + attrVal + "</div></div>";
+            	}
+                
                 });
             
             var table = ind + content + "</div> </div></div> </div>";
