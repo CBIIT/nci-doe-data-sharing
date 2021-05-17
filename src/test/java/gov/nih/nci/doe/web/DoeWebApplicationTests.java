@@ -1,4 +1,4 @@
-package gov.nih.nci.hpc.web;
+package gov.nih.nci.doe.web;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
