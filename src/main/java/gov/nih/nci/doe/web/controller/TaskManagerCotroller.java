@@ -253,13 +253,15 @@ public class TaskManagerCotroller extends AbstractDoeController {
 
 		if (Boolean.TRUE.equals(retry)) {
 
-			t.setTransferStatus("Failed &nbsp;&nbsp; <i class='fas fa-info-circle failureMsg' data-toggle='tooltip' title='"
+			t.setTransferStatus("Failed &nbsp;&nbsp; <img style='width:12px;' data-toggle='tooltip'"
+					+ "src='images/Status.info-tooltip.png' alt='failed message' title='"
 					+ String.join(",", message) + "'></i>"
 					+ "<strong><a style='border: none;background-color: #F39530;height: 23px;width: 37px;border-radius: 11px;float: right;' class='btn btn-link btn-sm' aria-label='Retry Upload' href='#'"
 					+ "onclick='retryUpload(\"" + upload.getTaskId() + "\" ,\"" + task.getTaskName() + "\")'>"
 					+ "<img style='height: 13px;width: 13px;margin-top: -14px;' data-toggle='tooltip' title='Retry Upload' src='images/Status.refresh_icon-01.png' th:src='@{/images/Status.refresh_icon-01.png}' alt='Status refresh'></a></strong>");
 		} else {
-			t.setTransferStatus("Failed &nbsp;&nbsp; <i class='fas fa-info-circle failureMsg' data-toggle='tooltip' title='"
+			t.setTransferStatus("Failed &nbsp;&nbsp; <img style='width:12px;' data-toggle='tooltip'"
+					+ " src='images/Status.info-tooltip.png' alt='failed message' title='"
 					+ String.join(",", message) + "'></i>");
 		}
 	}
@@ -318,7 +320,9 @@ public class TaskManagerCotroller extends AbstractDoeController {
 
 		if (Boolean.TRUE.equals(retry)) {
 
-			dto.setTransferStatus("Failed &nbsp;&nbsp; <i class='fas fa-info-circle failureMsg' data-toggle='tooltip' title='"
+		
+			dto.setTransferStatus("Failed &nbsp;&nbsp; <img style='width:12px;' data-toggle='tooltip'"
+					+ "src='images/Status.info-tooltip.png' alt='failed message' title='"
 					+ String.join(",", message) + "'></i>"
 					+ "<strong><a style='border: none;background-color: #F39530; height: 23px;width: 37px;border-radius: 11px;float: right;' class='btn btn-link btn-sm' aria-label='Retry download' href='#' "
 					+ "onclick='retryDownload(\"" + download.getTaskId() + "\" ,\"" + task.getTaskName() + "\", \""
@@ -326,7 +330,8 @@ public class TaskManagerCotroller extends AbstractDoeController {
 					+ "<img style='height: 13px;width: 13px;margin-top: -14px;' data-toggle='tooltip' title='Retry Download' src='images/Status.refresh_icon-01.png' th:src='@{/images/Status.refresh_icon-01.png}' alt='Status refresh'></a></strong>");
 
 		} else {
-			dto.setTransferStatus("Failed &nbsp;&nbsp; <i class='fas fa-info-circle failureMsg' data-toggle='tooltip' title='"
+			dto.setTransferStatus("Failed &nbsp;&nbsp; <img style='width:12px;' data-toggle='tooltip'"
+					+ "src='images/Status.info-tooltip.png' alt='failed message' title='"
 					+ String.join(",", message) + "'></i>");
 		}
 
