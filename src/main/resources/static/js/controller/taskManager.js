@@ -148,7 +148,7 @@ function dataTableInitTaskManager() {
             {className: "td_class_2", "targets": [-1]}
         ],
         
-        "dom": '<"top"lip>rt<"bottom"p>',
+        "dom": '<"top"lip>rt<"bottom"ip>',
 
         "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
 

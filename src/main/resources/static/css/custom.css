@@ -127,26 +127,24 @@
     color: #fff;
 }
 
-/*#manageTasksTable_paginate {
-	margin-right: 50px;
-	color: #000000;
-    font-family: Lato;
-    font-size: 16px;
-}*/
-
-#manageTasksTable_info{
-	float: right;
-	color: #000000;
-    font-family: Lato;
-    font-size: 16px;
-}
 
 #manageTasksTable_length {
    float: right;
    color: #000000;
-    font-family: Lato;
+    font-family: 'latoregular';
     font-size: 16px;
+    margin-right: 17px;
 }
+
+.dataTables_info {
+	margin-left: 20px;
+    font-family: 'latoregular';
+    float: right !important;
+    margin-right: 21px;
+    margin-bottom: 20px;
+    font-size: 13px;
+}
+
 table#assetDetailsDiv td {
 	border:none;
 	background-color: transparent;
@@ -529,6 +527,13 @@ table#manageTasksTable thead .sorting_desc,table#dataSetTable thead .sorting_des
 
 }
 
+table#manageTasksTable th {
+	color: #FFFFFF;
+    font-family: 'inter_regular';
+    font-size: 13px;
+    line-height: 17px;
+
+	}
 table#dataSetTable thead tr th.select-checkbox {
     background-image: none!important;
 }
