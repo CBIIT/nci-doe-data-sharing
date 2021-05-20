@@ -129,6 +129,9 @@ public abstract class AbstractDoeController {
 	String clientId;
 	@Value("${gov.nih.nci.hpc.drive.clientsecret}")
 	String clientSecret;
+	
+	@Value("${gov.nih.nci.hpc.server.search.collection.compound}")
+	String compoundCollectionSearchServiceURL;
 
 	protected Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -594,7 +597,7 @@ public abstract class AbstractDoeController {
 
 	}
 
-	private Map<String, HpcMetadataQuery> getQueries(DoeSearch search) {
+	public Map<String, HpcMetadataQuery> getQueries(DoeSearch search) {
 		Map<String, HpcMetadataQuery> queries = new HashMap<String, HpcMetadataQuery>();
 
 		for (int i = 0; i < search.getAttrName().length; i++) {
