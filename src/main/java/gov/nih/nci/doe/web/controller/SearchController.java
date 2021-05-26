@@ -69,8 +69,6 @@ public class SearchController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	private String serviceURL;
 
-	
-
 	@GetMapping
 	public ResponseEntity<?> search(HttpSession session, @RequestHeader HttpHeaders headers, HttpServletRequest request,
 			DoeSearch search) throws DoeWebException {
@@ -290,21 +288,6 @@ public class SearchController extends AbstractDoeController {
 
 			}
 			return new ResponseEntity<>(keyValueBeanResults, headers, HttpStatus.OK);
-
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-
-			return new ResponseEntity<>(null, headers, HttpStatus.SERVICE_UNAVAILABLE);
-		}
-	}
-
-	@GetMapping(value = "/adv-search-list")
-	public ResponseEntity<?> getAdvancedSearchList(HttpSession session, @RequestHeader HttpHeaders headers) {
-		log.info("getting search list");
-		try {
-			List<LookUp> results = new ArrayList<LookUp>();
-			results = lookUpService.getAllDisplayNames();
-			return new ResponseEntity<>(results, headers, HttpStatus.OK);
 
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
