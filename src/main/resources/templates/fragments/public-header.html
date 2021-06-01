@@ -22,7 +22,7 @@
 
 	<!--logo image-->
     <div class="col order-first" style="margin-left:-30px;">
-        <a href="#" aria-label="image link">
+        <a th:href="@{/}" aria-label="image link">
         <img src="images/nci_logo.png" th:src="@{/images/nci_logo_2.svg}" class="logoImg" alt="National Cancer Institute"></a>
     </div>
     
@@ -43,7 +43,7 @@
             <div id="subNav" class="card-header" style="height:50px;margin-left: 45px;">
         <ul class="nav nav-tabs card-header-tabs" id="subTab" role="tablist">
             <li class="nav-item" role="tab">
-                <a class="nav-link active" id="landing-tab" th:href="@{/}"role="tab"><u>Home</u></a>
+                <a class="nav-link active" id="landing-tab" th:href="@{/}" role="tab"><u>Home</u></a>
             </li>
              
             <li class="nav-item" role="tab">
