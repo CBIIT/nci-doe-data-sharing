@@ -127,22 +127,30 @@
     color: #fff;
 }
 
-
+#manageTasksTable_paginate {
+margin-bottom: -17px;
+}
 #manageTasksTable_length {
    float: right;
    color: #000000;
     font-family: 'latoregular';
     font-size: 16px;
-    margin-right: 17px;
+    margin-right: 24px;
+    padding-top: 24px;
+    margin-bottom: -7px;
 }
 
 .dataTables_info {
-	margin-left: 20px;
+	margin-left: 30px;
     font-family: 'latoregular';
     float: right !important;
-    margin-right: 21px;
+    margin-right: 29px;
     margin-bottom: 20px;
     font-size: 13px;
+}
+
+#manageTasksTable_info{
+    margin-bottom: 8px;
 }
 
 table#assetDetailsDiv td {
@@ -513,6 +521,10 @@ table#dataSetTable thead .sorting,table#dataSetTable thead .sorting_asc,table#da
 	background-position: center center;
 }
 
+table#manageTasksTable thead .sorting,table#manageTasksTable thead .sorting_asc,table#manageTasksTable thead .sorting_desc {
+	background-position: 90% 50%;
+}
+
 table#manageTasksTable thead .sorting_asc,table#dataSetTable thead .sorting_asc {
 	background-image: url(/images/Sort-up.icon.svg) !important;
 	background-image: url(/images/Sort-up.icon.svg) !important;
@@ -647,6 +659,17 @@ height: 50px;
 }
 .td_class_3 {
 	width:30%;
+}
+.td_class_4 {
+	width:25% !important;
+}
+
+.td_class_2 {
+	width:13.75%!important;
+}
+
+.td_class_5 {
+	width:20%!important;
 }
 
 #subNav.card-header {

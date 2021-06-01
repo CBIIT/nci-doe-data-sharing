@@ -149,14 +149,14 @@ public class TaskManagerCotroller extends AbstractDoeController {
 						download.getCompleted() != null ? format.format(download.getCompleted().getTime()) : "");
 
 				task.setUserId(t.getUserId());
-				task.setTaskType(t.getTaskType());
+				task.setTaskType("&nbsp;&nbsp;"+t.getTaskType());
 				if (download.getResult() == null) {
-					task.setTransferStatus("In Progress");
+					task.setTransferStatus("&nbsp&nbsp;In Progress");
 				} else if (download.getResult() != null && download.getResult().value().equals("CANCELLED")) {
-					task.setTransferStatus("Cancelled");
+					task.setTransferStatus("&nbsp&nbsp;Cancelled");
 
 				} else if (download.getResult() != null && download.getResult().value().equals("COMPLETED")) {
-					task.setTransferStatus("Completed");
+					task.setTransferStatus("&nbsp&nbsp;Completed");
 				} else {
 					retryDownLoadFunc(session, download, task, t);
 				}
@@ -182,13 +182,13 @@ public class TaskManagerCotroller extends AbstractDoeController {
 						upload.getCompleted() != null ? format.format(upload.getCompleted().getTime()) : "");
 
 				task.setUserId(t != null ? t.getUserId() : "");
-				task.setTaskType(t != null ? t.getTaskType() : "");
+				task.setTaskType(t != null ? "&nbsp;&nbsp;"+t.getTaskType() : "");
 				if (upload.getResult() == null) {
-					task.setTransferStatus("In Progress");
+					task.setTransferStatus("&nbsp&nbsp;In Progress");
 					path = upload.getInProgressItems().get(0).getPath();
 
 				} else if (Boolean.TRUE.equals(upload.getResult())) {
-					task.setTransferStatus("Completed");
+					task.setTransferStatus("&nbsp&nbsp;Completed");
 					path = upload.getCompletedItems().get(0).getPath();
 				} else if (Boolean.FALSE.equals(upload.getResult())) {
 					retryUploadFunc(session, upload, task, t);
@@ -253,14 +253,14 @@ public class TaskManagerCotroller extends AbstractDoeController {
 
 		if (Boolean.TRUE.equals(retry)) {
 
-			t.setTransferStatus("Failed &nbsp;&nbsp; <img style='width:12px;' data-toggle='tooltip'"
+			t.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<img style='width:12px;' data-toggle='tooltip'"
 					+ "src='images/Status.info-tooltip.png' alt='failed message' title='"
 					+ String.join(",", message) + "'></i>"
 					+ "<strong><a style='border: none;background-color: #F39530;height: 23px;width: 37px;border-radius: 11px;float: right;' class='btn btn-link btn-sm' aria-label='Retry Upload' href='#'"
 					+ "onclick='retryUpload(\"" + upload.getTaskId() + "\" ,\"" + task.getTaskName() + "\")'>"
 					+ "<img style='height: 13px;width: 13px;margin-top: -14px;' data-toggle='tooltip' title='Retry Upload' src='images/Status.refresh_icon-01.png' th:src='@{/images/Status.refresh_icon-01.png}' alt='Status refresh'></a></strong>");
 		} else {
-			t.setTransferStatus("Failed &nbsp;&nbsp; <img style='width:12px;' data-toggle='tooltip'"
+			t.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<img style='width:12px;' data-toggle='tooltip'"
 					+ " src='images/Status.info-tooltip.png' alt='failed message' title='"
 					+ String.join(",", message) + "'></i>");
 		}
@@ -321,7 +321,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
 		if (Boolean.TRUE.equals(retry)) {
 
 		
-			dto.setTransferStatus("Failed &nbsp;&nbsp; <img style='width:12px;' data-toggle='tooltip'"
+			dto.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<img style='width:12px;' data-toggle='tooltip'"
 					+ "src='images/Status.info-tooltip.png' alt='failed message' title='"
 					+ String.join(",", message) + "'></i>"
 					+ "<strong><a style='border: none;background-color: #F39530; height: 23px;width: 37px;border-radius: 11px;float: right;' class='btn btn-link btn-sm' aria-label='Retry download' href='#' "
@@ -330,7 +330,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
 					+ "<img style='height: 13px;width: 13px;margin-top: -14px;' data-toggle='tooltip' title='Retry Download' src='images/Status.refresh_icon-01.png' th:src='@{/images/Status.refresh_icon-01.png}' alt='Status refresh'></a></strong>");
 
 		} else {
-			dto.setTransferStatus("Failed &nbsp;&nbsp; <img style='width:12px;' data-toggle='tooltip'"
+			dto.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<img style='width:12px;' data-toggle='tooltip'"
 					+ "src='images/Status.info-tooltip.png' alt='failed message' title='"
 					+ String.join(",", message) + "'></i>");
 		}
