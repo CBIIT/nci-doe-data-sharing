@@ -159,13 +159,29 @@ public class HomeController extends AbstractDoeController {
 			@RequestParam(value = "code", required = false) String code,
 			@RequestParam(value = "endpoint_id", required = false) String endPointName,
 			@RequestParam(value = "downloadAsyncType", required = false) String downloadAsyncType,
-			@RequestParam(value = "fileName", required = false) String fileName) throws DoeWebException {
+			@RequestParam(value = "fileName", required = false) String fileName,
+			@RequestParam(value = "returnToSearch", required = false) String returnToSearch,
+			@RequestParam(value = "assetIdentifier", required = false) String assetIdentifier) throws DoeWebException {
 
 		log.info("get download tab details");
 		model.addAttribute("selectedPathsString", selectedPaths);
 		model.addAttribute("downloadAsyncType", downloadAsyncType);
 		model.addAttribute("fileName", fileName);
 		model.addAttribute("clientId", clientId);
+		String identifier = (String) session.getAttribute("assetIdentifier");
+		String returnSearch = (String) session.getAttribute("returnToSearch");
+
+		if (StringUtils.isNotEmpty(assetIdentifier)) {
+			model.addAttribute("assetIdentifier", assetIdentifier);
+		} else if (StringUtils.isNotEmpty(identifier)) {
+			model.addAttribute("assetIdentifier", identifier);
+		}
+
+		if (StringUtils.isNotEmpty(returnToSearch)) {
+			model.addAttribute("returnToSearch", returnToSearch);
+		} else if (StringUtils.isNotEmpty(returnSearch)) {
+			model.addAttribute("returnToSearch", returnSearch);
+		}
 		if (StringUtils.isNotEmpty(selectedPaths)) {
 			session.setAttribute("selectedPathsString", selectedPaths);
 		}

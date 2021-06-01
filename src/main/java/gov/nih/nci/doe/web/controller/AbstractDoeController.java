@@ -758,6 +758,9 @@ public abstract class AbstractDoeController {
 
 				String assetName = getAttributeValue("asset_name",
 						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
+				
+				String asset_Identifier = getAttributeValue("asset_identifier",
+						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
 
 				List<KeyValueBean> selfMetadata = getUserMetadata(
 						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset", systemAttrs);
@@ -766,6 +769,7 @@ public abstract class AbstractDoeController {
 					model.addAttribute("returnToSearch", true);
 				}
 
+				model.addAttribute("asset_Identifier",asset_Identifier);
 				model.addAttribute("accessGrp", accessGrp);
 				model.addAttribute("assetName", assetName);
 				model.addAttribute("assetMetadata", selfMetadata);

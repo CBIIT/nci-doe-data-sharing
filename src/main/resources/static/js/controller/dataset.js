@@ -517,19 +517,21 @@ function renderDownload(data, type, row) {
 
 
 function downloadFunction(path,fileName) {
-	location.replace('/downloadTab?selectedPaths='+path+'&&fileName='+fileName+'&&downloadAsyncType=data_object');
+	var assetIdentifier = $("#assetIdentifier").val();
+	location.replace('/downloadTab?selectedPaths='+path+'&&fileName='+fileName+'&&assetIdentifier='+assetIdentifier+'&&downloadAsyncType=data_object&&returnToSearch=false');
 }
 
 function onClickOfBulkDownloadBtn() {
 	var selectedPaths = [];
+	var assetIdentifier = $("#assetIdentifier").val();
     $("#dataSetTable tbody input[type=checkbox]:checked").each(function () {
     	selectedPaths.push($(this).attr('id'));
     });
 
     if(selectedPaths.length == 1) {
-  	   location.replace('/downloadTab?selectedPaths='+selectedPaths+'&&downloadAsyncType=data_object');
+  	   location.replace('/downloadTab?selectedPaths='+selectedPaths+'&&assetIdentifier='+assetIdentifier+'&&downloadAsyncType=data_object&&returnToSearch=false');
     } else {
-  	   location.replace('/downloadTab?selectedPaths='+selectedPaths+'&&downloadAsyncType=datafiles');
+  	   location.replace('/downloadTab?selectedPaths='+selectedPaths+'&&assetIdentifier='+assetIdentifier+'&&downloadAsyncType=datafiles&&returnToSearch=false');
     }	    
 }
 
