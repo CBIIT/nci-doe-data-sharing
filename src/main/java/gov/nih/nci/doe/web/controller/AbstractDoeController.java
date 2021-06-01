@@ -27,10 +27,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
+
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.MappingJsonFactory;
 
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.domain.LookUp;
@@ -79,7 +83,7 @@ public abstract class AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.search.dataobject.compound}")
 	public String compoundDataObjectSearchServiceURL;
-	
+
 	@Value("${gov.nih.nci.hpc.web.server}")
 	public String webUrl;
 
@@ -129,7 +133,7 @@ public abstract class AbstractDoeController {
 	String clientId;
 	@Value("${gov.nih.nci.hpc.drive.clientsecret}")
 	String clientSecret;
-	
+
 	@Value("${gov.nih.nci.hpc.server.search.collection.compound}")
 	String compoundCollectionSearchServiceURL;
 
@@ -662,5 +666,119 @@ public abstract class AbstractDoeController {
 			}
 		}
 		return queries;
+	}
+
+	@SuppressWarnings("unchecked")
+	public void getAssetDetails(HttpSession session, String dmeDataId, String returnToSearch, String assetIdentifier,
+			Model model) throws DoeWebException {
+
+		log.info("get Asset detials for dmeDataId: " + dmeDataId + " is returnToSearch: " + returnToSearch
+				+ " and assetIdentifier is : " + assetIdentifier);
+		String authToken = (String) session.getAttribute("hpcUserToken");
+		log.info("authToken: " + authToken);
+		String user = getLoggedOnUserInfo();
+		log.info("asset details for user: " + user);
+		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList().getBody();
+		DoeSearch search = new DoeSearch();
+
+		if (StringUtils.isNotEmpty(dmeDataId)) {
+			String[] attrNames = { "collection_type", "dme_data_id" };
+			String[] attrValues = { "Asset", dmeDataId };
+			search.setAttrName(attrNames);
+			search.setAttrValue(attrValues);
+		} else if (StringUtils.isNotEmpty(assetIdentifier)) {
+
+			String[] attrNames = { "collection_type", "asset_identifier" };
+			String[] attrValues = { "Asset", assetIdentifier };
+			search.setAttrName(attrNames);
+			search.setAttrValue(attrValues);
+		}
+		String[] levelValues = { "ANY", "Asset" };
+		boolean[] isExcludeParentMetadata = { false, false };
+		String[] rowIds = { "1", "2" };
+		String[] operators = { "LIKE", "LIKE" };
+		boolean[] iskeyWordSearch = { true, false };
+		boolean[] isAdvancedSearch = { false, false };
+
+		search.setLevel(levelValues);
+		search.setIsExcludeParentMetadata(isExcludeParentMetadata);
+		search.setRowId(rowIds);
+		search.setOperator(operators);
+		search.setIskeyWordSearch(iskeyWordSearch);
+		search.setIsAdvancedSearch(isAdvancedSearch);
+
+		List<String> systemAttrs = (List<String>) session.getAttribute("systemAttrs");
+		if (CollectionUtils.isEmpty(systemAttrs)) {
+			HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
+			if (modelDTO == null) {
+				modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL, sslCertPath, sslCertPassword);
+				session.setAttribute("userDOCModel", modelDTO);
+			}
+
+			systemAttrs = modelDTO.getCollectionSystemGeneratedMetadataAttributeNames();
+			List<String> dataObjectsystemAttrs = modelDTO.getDataObjectSystemGeneratedMetadataAttributeNames();
+			systemAttrs.addAll(dataObjectsystemAttrs);
+			systemAttrs.add("collection_type");
+			systemAttrs.add("access_group");
+			session.setAttribute("systemAttrs", systemAttrs);
+		}
+
+		try {
+			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search);
+			compoundQuery.setDetailedResponse(true);
+			log.info("search compund query" + compoundQuery);
+
+			Response restResponse = DoeClientUtil.getDataObjectQuery(authToken, compoundDataObjectSearchServiceURL,
+					true, sslCertPath, sslCertPassword, compoundQuery);
+
+			if (restResponse.getStatus() == 200) {
+				HpcCompoundMetadataQueryDTO compoundQuerySession = (HpcCompoundMetadataQueryDTO) session
+						.getAttribute("compoundQuery");
+
+				if (compoundQuerySession == null) {
+					session.setAttribute("compoundQuery", compoundQuery);
+				}
+
+				MappingJsonFactory factory = new MappingJsonFactory();
+				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+				HpcCollectionListDTO collections = parser.readValueAs(HpcCollectionListDTO.class);
+				HpcCollectionDTO collection = collections.getCollections().get(0);
+
+				String studyName = getAttributeValue("study_name",
+						collection.getMetadataEntries().getParentMetadataEntries(), "Study");
+
+				String progName = getAttributeValue("program_name",
+						collection.getMetadataEntries().getParentMetadataEntries(), "Program");
+
+				String assetPermission = getPermissionRole(user, collection.getCollection().getCollectionId(),
+						loggedOnUserPermissions);
+
+				String accessGrp = getAttributeValue("access_group",
+						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
+
+				String assetName = getAttributeValue("asset_name",
+						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
+
+				List<KeyValueBean> selfMetadata = getUserMetadata(
+						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset", systemAttrs);
+
+				if (StringUtils.isNotEmpty(returnToSearch)) {
+					model.addAttribute("returnToSearch", true);
+				}
+
+				model.addAttribute("accessGrp", accessGrp);
+				model.addAttribute("assetName", assetName);
+				model.addAttribute("assetMetadata", selfMetadata);
+				model.addAttribute("studyName", studyName);
+				model.addAttribute("progName", progName);
+				model.addAttribute("assetPath", collection.getCollection().getCollectionName());
+				model.addAttribute("assetPermission", assetPermission);
+			} else {
+				throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
+			}
+		} catch (Exception e) {
+			throw new DoeWebException(e.getMessage());
+		}
+
 	}
 }
