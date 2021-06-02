@@ -166,9 +166,6 @@ function dataTableInit(isVisible) {
         "ordering": false,
         "info": true,
         "pageLength": 25,
-        oLanguage: {
-            "sSearch": "Filter:"
-        },
         "ajax": {
             "url": "/search",
             "type": "GET",
@@ -361,9 +358,10 @@ function dataTableInit(isVisible) {
 
         "language": {
             "zeroRecords": "Nothing found to display",
-            "info": "&nbsp; (Displaying _START_ to _END_ of _TOTAL_ )",
-            sLengthMenu: "_MENU_",
-            "infoEmpty": " No records to display"
+            "paginate": {
+                next: '&#10095;',
+                previous: '&#10094;'
+              }
         }
     });
 }

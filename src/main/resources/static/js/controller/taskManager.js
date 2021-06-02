@@ -70,9 +70,6 @@ function dataTableInitTaskManager() {
         "ordering": true,
         "info": true,
         "pageLength": 25,
-        oLanguage: {
-            "sSearch": "Filter:"
-        },
         "ajax": {
             "url": "/tasks",
             "type": "GET",
@@ -153,10 +150,13 @@ function dataTableInitTaskManager() {
         "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
 
         "language": {
+        	"lengthMenu": "ROWS PER PAGE &nbsp;&nbsp; _MENU_",
+        	"sLoadingRecords": "Loading...",
             "zeroRecords": "Nothing found to display",
-            "info": "&nbsp; (Displaying _START_ to _END_ of _TOTAL_ )",
-            sLengthMenu: "_MENU_",
-            "infoEmpty": " No records to display"
+            "paginate": {
+                next: '&#10095;',
+                previous: '&#10094;'
+              }
         }
     });
 }

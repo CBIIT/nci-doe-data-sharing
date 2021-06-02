@@ -148,7 +148,10 @@ margin-bottom: -17px;
     margin-bottom: 20px;
     font-size: 13px;
 }
-
+#manageTasksTable_length label {
+    font-size: 12px;
+    font-family: 'latoregular';
+}
 #manageTasksTable_info{
     margin-bottom: 8px;
 }
