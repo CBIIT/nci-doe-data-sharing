@@ -21,9 +21,6 @@ function dataTableInitDataSet(isVisible) {
     	 "ordering": true,
          "info": true,
          "pageLength": 25,
-         oLanguage: {
-            "sSearch": "Filter:"
-         },
          "ajax": {
             "url": "/getDataObjects",
             "type": "GET",
@@ -292,15 +289,20 @@ function dataTableInitDataSet(isVisible) {
             {"targets": -1, "orderable": false},
             {"targets":2,"type":"file-size"},
             { "visible": isVisible, "targets": 3}],
+            
         "dom": '<"top"lip>rt<"bottom"ip>',
+        "pagingType": "simple",
 
         "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
 
         "language": {
+        	"lengthMenu": "ROWS PER PAGE &nbsp;&nbsp; _MENU_",
+        	"sLoadingRecords": "Loading...",
             "zeroRecords": "Nothing found to display",
-            "info": "&nbsp; (Displaying _START_ to _END_ of _TOTAL_ )",
-            sLengthMenu: "_MENU_",
-            "infoEmpty": " No records to display"
+            "paginate": {
+            	 next: '<i style="color:#000;font-size:17px;" class="fas fa-caret-right"></i>',
+                 previous: '<i style="color:#000;font-size:17px;" class="fas fa-caret-left"></i>'
+              }
         }
     });
 }
@@ -517,19 +519,21 @@ function renderDownload(data, type, row) {
 
 
 function downloadFunction(path,fileName) {
-	location.replace('/downloadTab?selectedPaths='+path+'&&fileName='+fileName+'&&downloadAsyncType=data_object');
+	var assetIdentifier = $("#assetIdentifier").val();
+	location.replace('/downloadTab?selectedPaths='+path+'&&fileName='+fileName+'&&assetIdentifier='+assetIdentifier+'&&downloadAsyncType=data_object&&returnToSearch=false');
 }
 
 function onClickOfBulkDownloadBtn() {
 	var selectedPaths = [];
+	var assetIdentifier = $("#assetIdentifier").val();
     $("#dataSetTable tbody input[type=checkbox]:checked").each(function () {
     	selectedPaths.push($(this).attr('id'));
     });
 
     if(selectedPaths.length == 1) {
-  	   location.replace('/downloadTab?selectedPaths='+selectedPaths+'&&downloadAsyncType=data_object');
+  	   location.replace('/downloadTab?selectedPaths='+selectedPaths+'&&assetIdentifier='+assetIdentifier+'&&downloadAsyncType=data_object&&returnToSearch=false');
     } else {
-  	   location.replace('/downloadTab?selectedPaths='+selectedPaths+'&&downloadAsyncType=datafiles');
+  	   location.replace('/downloadTab?selectedPaths='+selectedPaths+'&&assetIdentifier='+assetIdentifier+'&&downloadAsyncType=datafiles&&returnToSearch=false');
     }	    
 }
 

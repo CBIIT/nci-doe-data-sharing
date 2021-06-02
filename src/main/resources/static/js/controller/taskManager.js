@@ -70,9 +70,6 @@ function dataTableInitTaskManager() {
         "ordering": true,
         "info": true,
         "pageLength": 25,
-        oLanguage: {
-            "sSearch": "Filter:"
-        },
         "ajax": {
             "url": "/tasks",
             "type": "GET",
@@ -139,24 +136,29 @@ function dataTableInitTaskManager() {
         ],
        
         "columnDefs": [
-            {className: "td_class_2", "targets": [0]},
+            {className: "td_class_4", "targets": [0]},
             {className: "td_class_2", "targets": [1]},
             {className: "td_class_2", "targets": [2]},
             {className: "td_class_2", "targets": [3]},
             {className: "td_class_2", "targets": [4]},
             {className: "td_class_2", "targets": [5]},
-            {className: "td_class_2", "targets": [-1]}
+            {className: "td_class_5", "targets": [-1]}
         ],
         
         "dom": '<"top"lip>rt<"bottom"ip>',
+        
+        "pagingType": "simple",
 
         "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
 
         "language": {
-            "zeroRecords": "Nothing found to display",
-            "info": "&nbsp; (Displaying _START_ to _END_ of _TOTAL_ )",
-            sLengthMenu: "_MENU_",
-            "infoEmpty": " No records to display"
+        	"lengthMenu": "ROWS PER PAGE &nbsp;&nbsp; _MENU_",
+        	"sLoadingRecords": "Loading...",
+            "zeroRecords": "Nothing found to display",            
+            "paginate": {
+            	 next: '<i style="color:#000;font-size:17px;" class="fas fa-caret-right"></i>',
+                 previous: '<i style="color:#000;font-size:17px;" class="fas fa-caret-left"></i>'
+              },             
         }
     });
 }
@@ -164,14 +166,14 @@ function dataTableInitTaskManager() {
 
 function renderTaskDate(data, type, row) {
 	if(data) {
-		return moment(data).format("MM/DD/YYYY HH:mm:ss") ;
+		return "&nbsp&nbsp;"+ moment(data).format("MM/DD/YYYY HH:mm:ss") ;
 	}
 	return "";
 }
 
 function renderTaskCompletedDate(data, type, row) {
 	if(data) {
-		return moment(data).format("MM/DD/YYYY HH:mm:ss");
+		return "&nbsp&nbsp;"+ moment(data).format("MM/DD/YYYY HH:mm:ss");
 	}
 	return "";
 	
@@ -181,7 +183,7 @@ function renderTaskName(data, type, row) {
 	var html = "";
 	
 	if(row.taskName) {
-	  html += row.taskName + "&nbsp;&nbsp;<span prog_name='" + row.progName + "' study_name = '"+row.studyName + "' " +
+	  html += "&nbsp&nbsp;"+ row.taskName + "&nbsp;&nbsp;<span prog_name='" + row.progName + "' study_name = '"+row.studyName + "' " +
 			"datasetname='" + row.dataSetName + "' class='button3a' data-container='body' data-toggle='popover'" +
 			"data-placement='right' data-trigger='click' data-popover-content='#a02'>" +
 			"<img src='images/Status.info-tooltip.png' th:src='@{/images/Status.info-tooltip.png}' style='width:12px;' alt='Status info'></a></span>";
@@ -192,7 +194,7 @@ function renderTaskName(data, type, row) {
 
 function rendertaskId(data, type, row) {
 		
-	return row.taskId ;
+	return "&nbsp&nbsp;"+ row.taskId ;
 }
 
 function displayPopoverTask() {
