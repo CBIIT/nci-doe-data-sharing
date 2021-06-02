@@ -504,38 +504,7 @@ $(document).ajaxStop(function () {
 
 });
 
-$(document).on('change', '.filteritem', function() {
-	var attrName = $(this).parents().prev('label.attrName').text();
-    var attrVal = $(this).val();
-    $(".filterGroupDiv").each(function(e){
-    	var attributeName = $(this).attr('id');
-    	if(attrName != attributeName) {
-    		var d = {};
-    		var attrNames = [] ;
-    		var attrValues = [];
-    		var levelValues= [];
-    		var isExcludeParentMetadata = [];
-    		var rowIds = [];
-    		var operators = [];
 
-    		attrNames.push("collection_type");
-    		attrValues.push(attrVal);
-    		levelValues.push(attrVal);
-    		isExcludeParentMetadata.push(true);
-    		rowIds.push(1);
-    		operators.push("EQUAL");
-    		
-    		attrNames.push("collection_type");
-    		attrValues.push(attrVal);
-    		levelValues.push(attrVal);
-    		isExcludeParentMetadata.push(true);
-    		rowIds.push(1);
-    		operators.push("EQUAL");
-    		
-    		invokeAjax('/searchList','GET',params,postSuccessSearchList,null,null,'text');
-    	}
-    });
-});
 
 $(document).on('change', '#publicAccess', function() {
 	if($(this).is(":checked")) {

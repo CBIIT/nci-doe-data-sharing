@@ -3,12 +3,17 @@ package gov.nih.nci.doe.web.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -29,16 +34,19 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import gov.nih.nci.doe.web.DoeWebException;
+import gov.nih.nci.doe.web.domain.LookUp;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.DoeSearchResult;
 import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.doe.web.util.HibernateProxyTypeAdapter;
-
+import gov.nih.nci.doe.web.util.LambdaUtils;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
+import gov.nih.nci.hpc.domain.metadata.HpcMetadataLevelAttributes;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcMetadataAttributesListDTO;
 import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
 
 /**
@@ -207,81 +215,85 @@ public class SearchController extends AbstractDoeController {
 		return null;
 	}
 
-	/*
-	 * @GetMapping(value = "/search-list") public ResponseEntity<?>
-	 * getLevelList(HttpSession session, @RequestHeader HttpHeaders headers) {
-	 * log.info("getting search list"); try {
-	 * 
-	 * List<KeyValueBean> keyValueBeanResults = new ArrayList<>(); List<String>
-	 * collectionLevels = new ArrayList<String>(); List<String> attrNamesList = new
-	 * ArrayList<String>(); String authToken = (String)
-	 * session.getAttribute("hpcUserToken");
-	 * 
-	 * HpcMetadataAttributesListDTO dto =
-	 * DoeClientUtil.getMetadataAttrNames(authToken, hpcMetadataAttrsURL,
-	 * sslCertPath, sslCertPassword);
-	 * 
-	 * if (dto != null && dto.getCollectionMetadataAttributes() != null) { for
-	 * (HpcMetadataLevelAttributes levelAttrs :
-	 * dto.getCollectionMetadataAttributes()) { String label =
-	 * levelAttrs.getLevelLabel(); if (label == null) continue;
-	 * collectionLevels.addAll(levelAttrs.getMetadataAttributes());
-	 * 
-	 * } }
-	 * 
-	 * if (dto != null && dto.getDataObjectMetadataAttributes() != null) { for
-	 * (HpcMetadataLevelAttributes levelAttrs :
-	 * dto.getDataObjectMetadataAttributes()) { String label =
-	 * levelAttrs.getLevelLabel(); if (label == null) continue;
-	 * collectionLevels.addAll(levelAttrs.getMetadataAttributes());
-	 * 
-	 * } }
-	 * 
-	 * // remove duplicates List<String> newCollectionLevels =
-	 * collectionLevels.stream().distinct().collect(Collectors.toList());
-	 * 
-	 * if (CollectionUtils.isNotEmpty(newCollectionLevels)) {
-	 * 
-	 * HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO)
-	 * session.getAttribute("userDOCModel"); if (modelDTO == null) { modelDTO =
-	 * DoeClientUtil.getDOCModel(authToken, hpcModelURL, sslCertPath,
-	 * sslCertPassword); session.setAttribute("userDOCModel", modelDTO); }
-	 * 
-	 * List<String> systemAttrs =
-	 * modelDTO.getCollectionSystemGeneratedMetadataAttributeNames(); List<String>
-	 * dataObjectsystemAttrs =
-	 * modelDTO.getDataObjectSystemGeneratedMetadataAttributeNames();
-	 * systemAttrs.addAll(dataObjectsystemAttrs);
-	 * systemAttrs.add("collection_type"); systemAttrs.add("access_group");
-	 * session.setAttribute("systemAttrs", systemAttrs);
-	 * 
-	 * List<String> userList = LambdaUtils.filter(newCollectionLevels, (String n) ->
-	 * !systemAttrs.contains(n));
-	 * 
-	 * List<LookUp> results = lookUpService.getAllDisplayNames(); List<String>
-	 * lookUpList = LambdaUtils.map(results, LookUp::getDisplayName); List<String>
-	 * lookUpAttrnamesList = LambdaUtils.map(results, LookUp::getAttrName);
-	 * attrNamesList.addAll(lookUpList);
-	 * 
-	 * List<String> userDefinedMetadaList = LambdaUtils.filter(userList, (String n)
-	 * -> !lookUpAttrnamesList.contains(n));
-	 * 
-	 * attrNamesList.addAll(userDefinedMetadaList);
-	 * 
-	 * Set<String> duplicates = new HashSet<>(); duplicates.addAll(attrNamesList);
-	 * attrNamesList.clear(); attrNamesList.addAll(duplicates);
-	 * 
-	 * attrNamesList.stream().forEach(e -> keyValueBeanResults.add(new
-	 * KeyValueBean(e, e)));
-	 * keyValueBeanResults.sort(Comparator.comparing(KeyValueBean::getKey,
-	 * String.CASE_INSENSITIVE_ORDER));
-	 * 
-	 * } return new ResponseEntity<>(keyValueBeanResults, headers, HttpStatus.OK);
-	 * 
-	 * } catch (Exception e) { log.error(e.getMessage(), e);
-	 * 
-	 * return new ResponseEntity<>(null, headers, HttpStatus.SERVICE_UNAVAILABLE); }
-	 * }
-	 */
+	@GetMapping(value = "/search-list")
+	public ResponseEntity<?> getLevelList(HttpSession session, @RequestHeader HttpHeaders headers) {
+		log.info("getting search list");
+		try {
+
+			List<KeyValueBean> keyValueBeanResults = new ArrayList<>();
+			List<String> collectionLevels = new ArrayList<String>();
+			List<String> attrNamesList = new ArrayList<String>();
+			String authToken = (String) session.getAttribute("hpcUserToken");
+
+			HpcMetadataAttributesListDTO dto = DoeClientUtil.getMetadataAttrNames(authToken, hpcMetadataAttrsURL,
+					sslCertPath, sslCertPassword);
+
+			if (dto != null && dto.getCollectionMetadataAttributes() != null) {
+				for (HpcMetadataLevelAttributes levelAttrs : dto.getCollectionMetadataAttributes()) {
+					String label = levelAttrs.getLevelLabel();
+					if (label == null)
+						continue;
+					collectionLevels.addAll(levelAttrs.getMetadataAttributes());
+
+				}
+			}
+
+			if (dto != null && dto.getDataObjectMetadataAttributes() != null) {
+				for (HpcMetadataLevelAttributes levelAttrs : dto.getDataObjectMetadataAttributes()) {
+					String label = levelAttrs.getLevelLabel();
+					if (label == null)
+						continue;
+					collectionLevels.addAll(levelAttrs.getMetadataAttributes());
+
+				}
+			}
+
+			// remove duplicates
+			List<String> newCollectionLevels = collectionLevels.stream().distinct().collect(Collectors.toList());
+
+			if (CollectionUtils.isNotEmpty(newCollectionLevels)) {
+
+				HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
+				if (modelDTO == null) {
+					modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL, sslCertPath, sslCertPassword);
+					session.setAttribute("userDOCModel", modelDTO);
+				}
+
+				List<String> systemAttrs = modelDTO.getCollectionSystemGeneratedMetadataAttributeNames();
+				List<String> dataObjectsystemAttrs = modelDTO.getDataObjectSystemGeneratedMetadataAttributeNames();
+				systemAttrs.addAll(dataObjectsystemAttrs);
+				systemAttrs.add("collection_type");
+				systemAttrs.add("access_group");
+				session.setAttribute("systemAttrs", systemAttrs);
+
+				List<String> userList = LambdaUtils.filter(newCollectionLevels, (String n) -> !systemAttrs.contains(n));
+
+				List<LookUp> results = lookUpService.getAllDisplayNames();
+				List<String> lookUpList = LambdaUtils.map(results, LookUp::getDisplayName);
+				List<String> lookUpAttrnamesList = LambdaUtils.map(results, LookUp::getAttrName);
+				attrNamesList.addAll(lookUpList);
+
+				List<String> userDefinedMetadaList = LambdaUtils.filter(userList,
+						(String n) -> !lookUpAttrnamesList.contains(n));
+
+				attrNamesList.addAll(userDefinedMetadaList);
+
+				Set<String> duplicates = new HashSet<>();
+				duplicates.addAll(attrNamesList);
+				attrNamesList.clear();
+				attrNamesList.addAll(duplicates);
+
+				attrNamesList.stream().forEach(e -> keyValueBeanResults.add(new KeyValueBean(e, e)));
+				keyValueBeanResults.sort(Comparator.comparing(KeyValueBean::getKey, String.CASE_INSENSITIVE_ORDER));
+
+			}
+			return new ResponseEntity<>(keyValueBeanResults, headers, HttpStatus.OK);
+
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+
+			return new ResponseEntity<>(null, headers, HttpStatus.SERVICE_UNAVAILABLE);
+		}
+	}
 
 }

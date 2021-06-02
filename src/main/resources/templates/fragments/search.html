@@ -6,57 +6,72 @@
 </head>
 <body>
     <div class="M-4 p-4" id="searchTab" role="tabpanel" th:fragment="search">
-      <div id="searchFragmentDiv">
+    <div id="searchFragmentDiv">
         <form id="referral-search-params">
             <div class="form-row  pt-2 pb-2 mb-2">
                 <div id="searchCollapse" class="col-md-12 col-sm-12 collapse show">
                     <div class="col-md-12 col-sm-12">
                         <div class="form-row">
-                            <div class="form-group col-lg-6 col-md-8 mx-auto" style="float: right;margin-top: 33px;">
+                            <div class="form-group col-lg-8 col-md-8 mx-auto" style="float: right;margin-top: 33px;">
                                 <input type="hidden" th:value="${dmeDataId}" id="dmeDataId"/>
                                 <input type="hidden" th:value="${doi}" id="doi"/>
                                  <input type="hidden" th:value="${searchQuery}" id="searchQuery"/>
-                                 <input type="hidden" th:value="${returnToSearch}" id="returnToSearch"/>
-                                 <input type="text" placeholder="Search MoDaC" style="height: 112%;
-                                  margin-top:10px;border: 2px solid #E87B05;border-radius: 
-                                  26px;float: right;" id="attributeVal" class="form-control">
+                                  <input type="hidden" th:value="${returnToSearch}" id="returnToSearch"/>
+                                <input type="text" placeholder="Search MoDaC" style="height: 112%;
+                                margin-top:10px;border: 2px solid #E87B05;border-radius: 
+                                26px;float: right;" id="attributeVal" class="form-control">
                                 
-                                 <span id="resetBtn" data-toggle="tooltip" title="Reset" 
-                                  style="position: absolute;top: 25px;
-                                  right: 90px;height: 16px;"><img src="/images/cancel-X-grey.svg" style="width:20px;"/></span>
+                                <span id="resetBtn" data-toggle="tooltip" title="Reset" 
+                                style="position: absolute;top: 25px;
+                                right: 90px;height: 16px;"><img src="/images/cancel-X-grey.svg" style="width:20px;"/></span>
                             
-                                 <span data-toggle="tooltip" title="Search" style="position: absolute;top: 20px;
-                                  right: 25px;height: 29px;width: 57px;font-size: 18px;background-color: #E87B05;border-radius: 13px;
-                                  text-align: center;" id="searchBtn">
-                                 <img src="/images/arrow-white-large.svg" style="width: 29px;"></span>
+                                <span data-toggle="tooltip" title="Search" style="position: absolute;top: 20px;
+                                right: 25px;height: 29px;width: 57px;font-size: 18px;background-color: #E87B05;border-radius: 13px;
+                                text-align: center;" id="searchBtn">
+                                <img src="/images/arrow-white-large.svg" style="width: 29px;"></span>
                                  <br>
+                              </div>
+                            <div class="form-row col-lg-12 col-md-12" style="margin-top: 50px;">
+                            <div class="form-group col-md-4 col-sm-12"></div>
+                       <div id="advancedsearchCollapse" class="form-group col-md-6 col-sm-12" style="margin-top: -15px;">
+                    <div class="col-md-12 col-sm-12">
+                        <div class="form-row">
+                             <div class="form-group col-lg-8 col-md-12">
+                                <label for="metadatalist" style="color: #C06400;font-family: 'inter_regular';font-size: 14px;font-weight: 500;height: 14px;">Filter Results By: 
+                                 <select class="simple-select2"  id="metadatalist" name="metadatalist" style="width:70%" onchange="addValueToSelected(this.options[this.selectedIndex],null,null);">
+                                </select></label>
                             </div>
-                           </div> 
-                       <div class="form-row">   
-                       <div class="form-group col-lg-2 col-md-8" style="margin-left:-35px;margin-right:35px;">   
-                       <h5>Filter Results By:</h5>                   
-                                  <div class="col-lg-12 col-md-12" th:each="list : ${browseList}" 
-                                   style="height: 120px;overflow: auto;margin-bottom:10px;">
-                                     <label th:text="${list.key}" class="attrName" style="margin-bottom:10px;"></label>
-                                  
-                                     <div class="form-group col-lg-12 col-md-12 filterGroupDiv" th:id="${list.key}" th:each="attr : ${list.value}">
-                                     <input type="checkbox" class="filteritem" th:value="${attr}"/>&nbsp;
-                                     <span th:text="${attr}"></span>
-                                     </div>
-                                </div>                           
-                            </div>  
-                          
-                         <div class="form-group col-md-10 col-sm-12 mb-4" id="searchResultsDiv" 
+                        </div>
+                    </div>
+                    
+                </div>
+                            </div>
+                            <div class="form-row col-lg-12 col-md-12" id="advSearchDiv">
+                            <div class="form-group col-lg-8 col-md-12 mx-auto" id="metadatalisting" 
+                             style="margin-bottom:15px;background-color: #DDE9F7;padding-bottom:15px;">
+                            </div>
+                            <div class="col-md-8 col-sm-8 mx-auto" id="advBtnRow">
+                            <span data-toggle="tooltip" id="advSearchBtn" title="Search" style="
+                             position: absolute;right: -53px;height: 33px;
+                             width: 48px;font-size: 18px;background-color: #7C7C7C;
+                             border-radius: 13px;text-align: center;float: left;"
+                             class="float-right"> <img src="/images/arrow-white-large.svg" style="width: 29px;"></span>
+                            <a class="btn btn-default float-right" href="#" id="resetAdvSearchBtn" 
+                            style="border-radius: 13px;background-color: #7C7C7C;color: #fff;">Clear All</a>
+                            </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+           
+            <div class="container main col-md-12 col-sm-12 mb-4" id="searchResultsDiv" 
             style="display:none;margin-top:40px;background-color: #ecf4fb;">                          
                 <!-- search results -->
                 <div th:replace="fragments/search_results :: search_results"></div>
-            </div>
-                   </div>
-                </div>                   
-              </div>
-            
-                       
-           
             </div>
         </form>
         </div>
