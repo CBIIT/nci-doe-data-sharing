@@ -95,11 +95,9 @@
 #searchResultTable_info {
 	font-family: 'latoregular';
     font-size: 12px;
-    margin-left: 5px;
 }
 #searchResultTable_paginate,.dataTables_paginate.paging_simple_numbers {
 	    font-family: 'latoregular';
-    font-size: 13px;
 }
 .paginate_button.current {
 	width: 30px;
@@ -127,9 +125,7 @@
     color: #fff;
 }
 
-#manageTasksTable_paginate {
-margin-bottom: -17px;
-}
+
 #manageTasksTable_length {
    float: right;
    color: #000000;
@@ -145,15 +141,16 @@ margin-bottom: -17px;
     font-family: 'latoregular';
     float: right !important;
     margin-right: 29px;
-    margin-bottom: 20px;
+    margin-top: -6px;
     font-size: 13px;
 }
-#manageTasksTable_length label {
+.dataTables_length label {
     font-size: 12px;
     font-family: 'latoregular';
 }
 #manageTasksTable_info{
-    margin-bottom: 8px;
+    margin-bottom: 15px;
+    margin-top: -6px;
 }
 
 table#assetDetailsDiv td {
@@ -1116,10 +1113,9 @@ table{text-align: left; font-size:14px;}
 .dataTables_wrapper .dataTables_paginate .paginate_button.current{color:#000!important; background:#f8f9fa;}
 
 .dataTables_paginate{
- margin-right: 50px;
 	color: #000000;
-    font-family: Lato;
-    font-size: 16px;
+    font-family: 'latoregular';
+    font-size: 7px;
 }
 table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after,  
 table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:after,

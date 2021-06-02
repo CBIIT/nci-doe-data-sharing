@@ -21,9 +21,6 @@ function dataTableInitDataSet(isVisible) {
     	 "ordering": true,
          "info": true,
          "pageLength": 25,
-         oLanguage: {
-            "sSearch": "Filter:"
-         },
          "ajax": {
             "url": "/getDataObjects",
             "type": "GET",
@@ -292,15 +289,20 @@ function dataTableInitDataSet(isVisible) {
             {"targets": -1, "orderable": false},
             {"targets":2,"type":"file-size"},
             { "visible": isVisible, "targets": 3}],
+            
         "dom": '<"top"lip>rt<"bottom"ip>',
+        "pagingType": "simple",
 
         "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
 
         "language": {
+        	"lengthMenu": "ROWS PER PAGE &nbsp;&nbsp; _MENU_",
+        	"sLoadingRecords": "Loading...",
             "zeroRecords": "Nothing found to display",
-            "info": "&nbsp; (Displaying _START_ to _END_ of _TOTAL_ )",
-            sLengthMenu: "_MENU_",
-            "infoEmpty": " No records to display"
+            "paginate": {
+            	 next: '<i style="color:#000;font-size:17px;" class="fas fa-caret-right"></i>',
+                 previous: '<i style="color:#000;font-size:17px;" class="fas fa-caret-left"></i>'
+              }
         }
     });
 }

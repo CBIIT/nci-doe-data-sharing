@@ -352,15 +352,18 @@ function dataTableInit(isVisible) {
             {className: "td_class_3", "targets": [0]},
         ],
         
-        "dom": '<"top"lip>rt<"bottom"p>',
+        "dom": '<"top"lip>rt<"bottom"ip>',
+        
+        "pagingType": "simple",
 
         "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
 
         "language": {
+        	"lengthMenu": "ROWS PER PAGE &nbsp;&nbsp; _MENU_",
             "zeroRecords": "Nothing found to display",
             "paginate": {
-                next: '&#10095;',
-                previous: '&#10094;'
+            	 next: '<i style="color:#000;font-size:17px;" class="fas fa-caret-right"></i>',
+                 previous: '<i style="color:#000;font-size:17px;" class="fas fa-caret-left"></i>'
               }
         }
     });
