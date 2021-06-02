@@ -137,7 +137,7 @@
 }
 
 .dataTables_info {
-	margin-left: 30px;
+	margin-left: 15px;
     font-family: 'latoregular';
     float: right !important;
     margin-right: 29px;
@@ -149,7 +149,7 @@
     font-family: 'latoregular';
 }
 #manageTasksTable_info{
-    margin-bottom: 15px;
+    margin-bottom: 13px;
     margin-top: -6px;
 }
 
