@@ -485,7 +485,7 @@ function renderPath(data, type, row) {
 		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;margin-bottom: 20px;'><div class='row'>" +
 				"<div class='col-md-12'></div>" +
 			    "<div class='col-md-12 cil_12_bold_no_color_dataset'>" +
-				"<span>" + row.dataSetDescription + "</span>" +
+				"<span style='word-break: break-all;'>" + row.dataSetDescription + "</span>" +
 			    "<br></div><div class='col-md-12' style='margin-left:22px;margin-top: 10px;'>" +
 			    "<span class='cil_12_bold_no_color'>STUDY: </span><a class='cil_12_no_color button2a' " +
 			    "metadata_type = '" + JSON.stringify(row.studyUserMetadata)  + "' tabindex='0'" +
@@ -504,7 +504,7 @@ function renderPath(data, type, row) {
 		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;margin-bottom: 20px;'><div class='row'>" +
 				"<div class='col-md-12'></div>" +
 		        "<div class='col-md-12 cil_12_bold_no_color_dataset' >" +
-				"<span>" + row.dataSetDescription + "</span>" +
+				"<span style='word-break: break-all;'>" + row.dataSetDescription + "</span>" +
 		        "</a><br></div><div class='col-md-12' style='margin-left:22px;margin-top: 10px;'>" +
 		        "<span class='cil_12_bold_no_color'>STUDY: </span><a class='cil_12_no_color button2a'" +
 		        " metadata_type = '" + JSON.stringify(row.studyUserMetadata)  + "' tabindex='0'" +
