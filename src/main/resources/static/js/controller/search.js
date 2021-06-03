@@ -360,6 +360,7 @@ function dataTableInit(isVisible) {
 
         "language": {
         	"lengthMenu": "ROWS PER PAGE &nbsp;&nbsp; _MENU_",
+        	"sLoadingRecords": "Loading...",
             "zeroRecords": "Nothing found to display",
             "paginate": {
             	 next: '<i style="color:#000;font-size:17px;" class="fas fa-caret-right"></i>',

@@ -86,6 +86,9 @@ public abstract class AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.web.server}")
 	public String webUrl;
+	
+	@Value("${doe.search.results.pageSize}")
+	private int pageSize;
 
 	@Autowired
 	public AuthenticateService authenticateService;
@@ -542,7 +545,7 @@ public abstract class AbstractDoeController {
 		dto.setDetailedResponse(search.isDetailed());
 		dto.setCompoundQueryType(HpcCompoundMetadataQueryType.COLLECTION);
 		dto.setPage(search.getPageNumber());
-		dto.setPageSize(search.getPageSize());
+		dto.setPageSize(pageSize);
 		return dto;
 	}
 
