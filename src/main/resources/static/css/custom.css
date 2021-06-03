@@ -469,12 +469,12 @@ ol#dataListing > li:before {
     font-weight: lighter;
 }
 
-button.share-link-copy-button {
+button.share-link-copy-button,button.share-assetLink-copy-button {
 	border: none;
     background-color: #fff;
 }
 
-button.share-link-copy-button > img {
+button.share-link-copy-button > img,button.share-assetLink-copy-button > img {
 	filter: invert(40%) sepia(97%) saturate(5634%) hue-rotate(202deg) brightness(109%) contrast(104%);
 }
 

@@ -764,6 +764,9 @@ public abstract class AbstractDoeController {
 				
 				String asset_Identifier = getAttributeValue("asset_identifier",
 						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
+				
+				String dme_Data_Id = getAttributeValue("dme_data_id",
+						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
 
 				List<KeyValueBean> selfMetadata = getUserMetadata(
 						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset", systemAttrs);
@@ -772,6 +775,7 @@ public abstract class AbstractDoeController {
 					model.addAttribute("returnToSearch", true);
 				}
 
+				model.addAttribute("dme_Data_Id", dme_Data_Id);
 				model.addAttribute("asset_Identifier",asset_Identifier);
 				model.addAttribute("accessGrp", accessGrp);
 				model.addAttribute("assetName", assetName);
@@ -780,6 +784,7 @@ public abstract class AbstractDoeController {
 				model.addAttribute("progName", progName);
 				model.addAttribute("assetPath", collection.getCollection().getCollectionName());
 				model.addAttribute("assetPermission", assetPermission);
+				model.addAttribute("assetLink", webUrl + "/assetDetails?dme_data_id="+dme_Data_Id);
 			} else {
 				throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
 			}
