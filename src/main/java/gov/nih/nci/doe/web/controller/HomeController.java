@@ -84,7 +84,7 @@ public class HomeController extends AbstractDoeController {
 	public String getSearchTab(Model model, HttpSession session, HttpServletRequest request,
 			@RequestParam(value = "dme_data_id", required = false) String dmeDataId,
 			@RequestParam(value = "doi", required = false) String doi,
-			@RequestParam(value = "returnToSearch", required = false) String returnToSearch) {
+			@RequestParam(value = "returnToSearch", required = false) String returnToSearch) throws DoeWebException {
 
 		if (StringUtils.isNotEmpty(dmeDataId)) {
 			model.addAttribute("dmeDataId", dmeDataId);
@@ -100,6 +100,8 @@ public class HomeController extends AbstractDoeController {
 			model.addAttribute("searchQuery", query);
 			model.addAttribute("returnToSearch", "true");
 		}
+		
+		constructSearchCriteriaList(session, model);
 
 		return "searchTab";
 	}
@@ -267,6 +269,14 @@ public class HomeController extends AbstractDoeController {
 
 	@GetMapping(value = "/getAccessgroups", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getAccessgroups(@RequestParam(value = "selectedPath") String selectedPath,
+			@RequestParam(value = "levelName") String levelName, HttpSession session, HttpServletRequest request,
+			HttpServletResponse response) throws DoeWebException {
+		log.info("get collection access groups");
+		return getCollectionAccessGroups(selectedPath, levelName);
+	}
+	
+	@GetMapping(value = "/getFilterList", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getFilterList(@RequestParam(value = "selectedPath") String selectedPath,
 			@RequestParam(value = "levelName") String levelName, HttpSession session, HttpServletRequest request,
 			HttpServletResponse response) throws DoeWebException {
 		log.info("get collection access groups");

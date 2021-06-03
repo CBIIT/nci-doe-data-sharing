@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
@@ -86,6 +88,9 @@ public abstract class AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.web.server}")
 	public String webUrl;
+
+	@Value("${doe.search.results.pageSize}")
+	private int pageSize;
 
 	@Autowired
 	public AuthenticateService authenticateService;
@@ -542,7 +547,7 @@ public abstract class AbstractDoeController {
 		dto.setDetailedResponse(search.isDetailed());
 		dto.setCompoundQueryType(HpcCompoundMetadataQueryType.COLLECTION);
 		dto.setPage(search.getPageNumber());
-		dto.setPageSize(search.getPageSize());
+		dto.setPageSize(pageSize);
 		return dto;
 	}
 
@@ -758,8 +763,11 @@ public abstract class AbstractDoeController {
 
 				String assetName = getAttributeValue("asset_name",
 						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
-				
+
 				String asset_Identifier = getAttributeValue("asset_identifier",
+						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
+
+				String dme_Data_Id = getAttributeValue("dme_data_id",
 						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
 
 				List<KeyValueBean> selfMetadata = getUserMetadata(
@@ -769,7 +777,8 @@ public abstract class AbstractDoeController {
 					model.addAttribute("returnToSearch", true);
 				}
 
-				model.addAttribute("asset_Identifier",asset_Identifier);
+				model.addAttribute("dme_Data_Id", dme_Data_Id);
+				model.addAttribute("asset_Identifier", asset_Identifier);
 				model.addAttribute("accessGrp", accessGrp);
 				model.addAttribute("assetName", assetName);
 				model.addAttribute("assetMetadata", selfMetadata);
@@ -777,6 +786,7 @@ public abstract class AbstractDoeController {
 				model.addAttribute("progName", progName);
 				model.addAttribute("assetPath", collection.getCollection().getCollectionName());
 				model.addAttribute("assetPermission", assetPermission);
+				model.addAttribute("assetLink", webUrl + "/assetDetails?dme_data_id=" + dme_Data_Id);
 			} else {
 				throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
 			}
@@ -784,5 +794,87 @@ public abstract class AbstractDoeController {
 			throw new DoeWebException(e.getMessage());
 		}
 
+	}
+
+	public void constructSearchCriteriaList(HttpSession session, Model model) throws DoeWebException {
+		Map<String, Set<String>> browseList = new HashMap<String, Set<String>>();
+		List<LookUp> results = lookUpService.getAllDisplayNames();
+
+		for (LookUp val : results) {
+			DoeSearch search = new DoeSearch();
+
+			String[] attrNames = { "collection_type" };
+			String[] attrValues = new String[3];
+			attrValues[0] = val.getLevelName();
+			String[] levelValues = new String[3];
+			levelValues[0] = val.getLevelName();
+
+			String[] rowIds = { "1" };
+			String[] operators = { "EQUAL" };
+			boolean[] isExcludeParentMetadata = { true };
+			search.setLevel(levelValues);
+			search.setAttrName(attrNames);
+			search.setAttrValue(attrValues);
+
+			search.setRowId(rowIds);
+			search.setOperator(operators);
+			search.setIsExcludeParentMetadata(isExcludeParentMetadata);
+
+			Set<String> list = retrieveSearchList(session, search, val.getAttrName());
+			browseList.put(val.getDisplayName(), list);
+
+		}
+		model.addAttribute("browseList", browseList);
+	}
+
+	public Set<String> retrieveSearchList(HttpSession session, DoeSearch search, String attributeName)
+			throws DoeWebException {
+
+		Set<String> list = new HashSet<>();
+		String authToken = (String) session.getAttribute("hpcUserToken");
+		log.info("authToken: " + authToken);
+
+		try {
+			Map<String, HpcMetadataQuery> queriesMap = getQueries(search);
+			HpcCompoundMetadataQuery query = new HpcCompoundMetadataQuery();
+			query.setOperator(HpcCompoundMetadataQueryOperator.AND);
+			List<HpcMetadataQuery> queries = new ArrayList<HpcMetadataQuery>();
+			Iterator<String> iter = queriesMap.keySet().iterator();
+			while (iter.hasNext())
+				queries.add(queriesMap.get(iter.next()));
+
+			query.getQueries().addAll(queries);
+
+			HpcCompoundMetadataQueryDTO compoundQuery = new HpcCompoundMetadataQueryDTO();
+			compoundQuery.setTotalCount(true);
+			compoundQuery.setCompoundQuery(query);
+			compoundQuery.setDetailedResponse(search.isDetailed());
+			compoundQuery.setCompoundQueryType(HpcCompoundMetadataQueryType.COLLECTION);
+			compoundQuery.setPage(search.getPageNumber());
+			compoundQuery.setPageSize(pageSize);
+			compoundQuery.setDetailedResponse(true);
+			log.info("search compund query" + compoundQuery);
+
+			Response restResponse = DoeClientUtil.getCollectionSearchQuery(authToken,
+					compoundCollectionSearchServiceURL, sslCertPath, sslCertPassword, compoundQuery);
+
+			if (restResponse.getStatus() == 200) {
+				MappingJsonFactory factory = new MappingJsonFactory();
+				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+				HpcCollectionListDTO collections = parser.readValueAs(HpcCollectionListDTO.class);
+				List<HpcCollectionDTO> results = collections.getCollections();
+
+				results.stream().flatMap(g -> g.getMetadataEntries().getSelfMetadataEntries().stream()).forEach(f -> {
+					if (f.getAttribute().equalsIgnoreCase(attributeName)) {
+						list.add(f.getValue());
+					}
+				});
+
+			}
+		} catch (Exception e) {
+			log.error("Failed to get search list");
+			throw new DoeWebException(e);
+		}
+		return list;
 	}
 }

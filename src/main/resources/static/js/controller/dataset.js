@@ -165,6 +165,22 @@ function dataTableInitDataSet(isVisible) {
     	     console.log(e);
     	   });
     	   
+    	   var clipboard1 = new ClipboardJS('.share-assetLink-copy-button');
+
+    	   clipboard1.on('success', function(e) {
+      	     console.log(e);
+      	     $(e.trigger).tooltip('hide').attr('data-original-title', 'Copied').tooltip('show');
+      	     setTimeout(function() {
+                   $(e.trigger).tooltip('hide');
+                   $(e.trigger).attr('data-original-title', 'Copy to Clipboard');
+                     }, 2000);
+      	  
+      	   });
+
+    	   clipboard1.on('error', function(e) {
+    	     console.log(e);
+    	   });
+    	   
            $('#downloadSelectedMetadata').unbind('click').bind('click', function() {
         	   exportDataObjectMetadata();        	  
            });

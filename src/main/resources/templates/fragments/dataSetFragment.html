@@ -40,6 +40,14 @@
              <td style="font-weight:bold;" id="selectedDataSetName" th:text="${assetName}"></td></tr>
              <tr><td style="font-weight: lighter;width: 15%;">ASSET PATH:</td>
              <td style="font-weight:bold;" id="selectedAssetPath" th:text="${assetPath}"></td></tr>
+             <tr><td style="font-weight: lighter;width: 15%;">SHARABLE LINK:</td>
+             <td style="font-weight:bold;">
+             <span th:text="${assetLink}" id="assetUrlLink"></span>
+             <button type="button" class="share-assetLink-copy-button" data-toggle="tooltip"
+             data-placement="bottom" title="" data-clipboard-target="#assetUrlLink" 
+             data-original-title="Copy to clipboard">
+             <img src="images/clippy.svg" width="13" alt="Copy to clipboard"></button>
+             </td></tr>
         </tbody>
      </table>
       </div>
