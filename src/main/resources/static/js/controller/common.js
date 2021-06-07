@@ -548,11 +548,11 @@ $(document).on('click', '.dataTargetCollapse', function() {
 	  	
 		  $(this).parent().parent().find('div.dataDivCollapse').css('display','none');
 		  $(this).parent().parent().find('.filterSearchBox').css('display','none');
-		  $(this).attr('src','/images/arrow.collapse-open.svg')
+		  $(this).attr('src','/images/AccordionUp.svg')
 	  } else {
 	  	$(this).parent().parent().find('div.dataDivCollapse').css('display','block');
 	  	$(this).parent().parent().find('.filterSearchBox').css('display','none');
-		  $(this).attr('src','/images/arrow.collapse.svg');
+		  $(this).attr('src','/images/AccordionDown.svg');
 	  }
 });
 
@@ -611,10 +611,17 @@ $(document).on('change', '.filteritem', function() {
     		attrValues.push(attrVal);
     		levelValues.push(attrVal);
     		isExcludeParentMetadata.push(true);
-    		rowIds.push(1);
+    		rowIds.push(2);
     		operators.push("EQUAL");
     		
-    		invokeAjax('/searchList','GET',d,postSuccessSearchList,null,null,'text');
+    		d.attrName = attrNames;
+    		d.attrValue = attrValues;
+    		d.level = levelValues;
+    		d.isExcludeParentMetadata = isExcludeParentMetadata;
+    		d.rowId = rowIds;
+    		d.operator = operators;
+    		
+    		invokeAjax('/getFilterList?attrName='+attributeName,'GET',d,postSuccessSearchList,null,null,'text');
     	}
     });
 });

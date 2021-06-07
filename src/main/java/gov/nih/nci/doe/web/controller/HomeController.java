@@ -1,5 +1,7 @@
 package gov.nih.nci.doe.web.controller;
 
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import gov.nih.nci.doe.web.DoeWebException;
+import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.model.PermissionsModel;
 
@@ -100,7 +103,7 @@ public class HomeController extends AbstractDoeController {
 			model.addAttribute("searchQuery", query);
 			model.addAttribute("returnToSearch", "true");
 		}
-		
+
 		constructSearchCriteriaList(session, model);
 
 		return "searchTab";
@@ -274,12 +277,14 @@ public class HomeController extends AbstractDoeController {
 		log.info("get collection access groups");
 		return getCollectionAccessGroups(selectedPath, levelName);
 	}
-	
+
 	@GetMapping(value = "/getFilterList", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getFilterList(@RequestParam(value = "selectedPath") String selectedPath,
-			@RequestParam(value = "levelName") String levelName, HttpSession session, HttpServletRequest request,
-			HttpServletResponse response) throws DoeWebException {
-		log.info("get collection access groups");
-		return getCollectionAccessGroups(selectedPath, levelName);
+	public ResponseEntity<?> getFilterList(@RequestParam(value = "attrName") String attrName, DoeSearch search,
+			HttpSession session, HttpServletRequest request, HttpServletResponse response) throws DoeWebException {
+		log.info("get filtered list for attribute name: " + attrName);
+
+		Set<String> list = retrieveSearchList(session, search, attrName);
+		return new ResponseEntity<>(list, HttpStatus.OK);
+
 	}
 }
