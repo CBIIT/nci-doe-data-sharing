@@ -143,7 +143,7 @@ function dataTableInitTaskManager() {
             {className: "td_class_2", "targets": [4]},
             {className: "td_class_2", "targets": [5]},
             {className: "td_class_5", "targets": [-1]},
-            {type: "date", "targets": [2]}
+            {type: "date", "targets": [2,3]}
         ],
         
         "dom": '<"top"lip>rt<"bottom"ip>',
