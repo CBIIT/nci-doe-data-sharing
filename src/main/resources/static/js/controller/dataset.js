@@ -372,7 +372,8 @@ function renderDataSetPath(data, type, row) {
 	}
 	
 	html+= "&nbsp;&nbsp;&nbsp;" + row.name + "&nbsp;&nbsp;<a class='cil_12_no_color button2a' " +
-		   "userMetadata = '" + userMetadata  + "' sys_metadata = '" + systemMetadata  + "' tabindex='0'" +
+		   "userMetadata = '" + userMetadata  + "' file_name = '" + row.name + "' sys_metadata = '" + systemMetadata  + "' " +
+		   "tabindex='0'" +
 	       " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
 	       "data-popover-content='#a01'><i class='fas fa-info-circle' data-toggle='tooltip' title='Metadata'></i></a>";	
 			
@@ -397,6 +398,7 @@ function openPopOverDataSet($this) {
     var userMetadata = $this.attr('userMetadata');
     var sysMetadata = $this.attr('sys_metadata');
     var userMetadataList = "";
+    var fileName = $this.attr('file_name');
     
     if(userMetadata) {
        userMetadataList = JSON.parse(userMetadata);
@@ -405,7 +407,7 @@ function openPopOverDataSet($this) {
     var sysMetadatalist = JSON.parse(sysMetadata);
     
     var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"><div class=\"popover-heading\">" +
-              "Metadata <a class=\"button closeBtn float-right\" href=\"javascript:void(0);\">" +
+              "Metadata for " + fileName + "<a class=\"button closeBtn float-right\" href=\"javascript:void(0);\">" +
               "<i class=\"fa fa-times\"></i></a> </div><div class='popover-body'>";
     var table = "";
     var content = "";
