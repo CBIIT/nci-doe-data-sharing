@@ -22,6 +22,19 @@ $(document).ready(function () {
 				 var attrval = list.attrValue[i];
 				 var newAttrVal = attrval.replaceAll('%', '');
 				 $("#attributeVal").val(newAttrVal);
+			 } else {
+				 var attrName = list.attrName[i];
+				 var attrVal = list.attrValue[i];
+				 $(".attrName").each(function(e){
+					 if($(this).text() == attrName) {
+						 $(this).parent().parent().find(".filteritem").each(function(e){
+							 if($(this).val() == attrVal) {
+								 $(this).prop("checked",true);
+								 $(this).trigger('change');
+							 }
+						 })
+					 }
+				 })
 			 }
 		 }
 		 populateSearchCriteria(null);
@@ -86,15 +99,14 @@ function populateSearchCriteria(searchType) {
 
 		var rowId = 3;
 		$(".filteritem:checked").each(function () {
-			var attrName = $(this).parents().prev('label.attrName').text();
-	        var attrVal = $(this).val();
-					
+			var attrName = $(this).parent().attr('id');
+	        var attrVal = $(this).val();					
 	        attrNames.push(attrName);
 			levelValues.push("ANY");
-			attrValues.push('%' + attrVal + '%' );
+			attrValues.push(attrVal);
 			rowIds.push(rowId);
 			isExcludeParentMetadata.push(false);
-			operators.push("LIKE");
+			operators.push("EQUAL");
 			iskeyWordSearch.push(false);
 			rowId =  rowId + 1 ;
 			

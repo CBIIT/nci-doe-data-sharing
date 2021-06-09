@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -795,7 +796,7 @@ public abstract class AbstractDoeController {
 	}
 
 	public void constructSearchCriteriaList(HttpSession session, Model model) throws DoeWebException {
-		Map<String, Set<String>> browseList = new HashMap<String, Set<String>>();
+		Map<String, Set<String>> browseList = new LinkedHashMap<String, Set<String>>();
 		List<LookUp> results = lookUpService.getAllDisplayNames();
 
 		for (LookUp val : results) {
@@ -846,6 +847,12 @@ public abstract class AbstractDoeController {
 				List<HpcCollectionDTO> results = collections.getCollections();
 
 				results.stream().flatMap(g -> g.getMetadataEntries().getSelfMetadataEntries().stream()).forEach(f -> {
+					if (f.getAttribute().equalsIgnoreCase(attributeName)) {
+						list.add(f.getValue());
+					}
+				});
+				
+				results.stream().flatMap(g -> g.getMetadataEntries().getParentMetadataEntries().stream()).forEach(f -> {
 					if (f.getAttribute().equalsIgnoreCase(attributeName)) {
 						list.add(f.getValue());
 					}

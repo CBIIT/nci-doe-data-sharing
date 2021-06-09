@@ -605,7 +605,6 @@ $(document).on('change', '.filteritem', function() {
     		       beforeSend: function () {
     		    	   $("#spinner").show();
     		           $("#dimmer").show();
-    		           logAjaxCall('invokeAjax', url, params);
     		       },
     		       success: function (data, status) {
     		    	   $("#spinner").hide();
