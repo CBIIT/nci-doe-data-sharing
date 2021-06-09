@@ -538,13 +538,14 @@ $(document).on('click', '#pickerLink', function(){
 
 $(document).on('click', '.dataTargetCollapse', function() {
 	   if($(this).parent().parent().find('div.dataDivCollapse').is(":visible")){
-	  	
+	  	  $(this).parent().css('margin-bottom','-1px');
 		  $(this).parent().parent().find('div.dataDivCollapse').css('display','none');
 		  $(this).parent().parent().find('.filterSearchBox').css('display','none');
 		  $(this).attr('src','/images/AccordionUp.svg')
 	  } else {
-	  	$(this).parent().parent().find('div.dataDivCollapse').css('display','block');
-	  	$(this).parent().parent().find('.filterSearchBox').css('display','none');
+		  $(this).parent().css('margin-bottom','15px');
+	  	  $(this).parent().parent().find('div.dataDivCollapse').css('display','block');
+	  	  $(this).parent().parent().find('.filterSearchBox').css('display','none');
 		  $(this).attr('src','/images/AccordionDown.svg');
 	  }
 });
