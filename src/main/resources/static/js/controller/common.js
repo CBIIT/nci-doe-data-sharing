@@ -52,17 +52,11 @@ $(document).ready(function () {
 	    
 	    $('[data-toggle="tooltip"]').tooltip();
 	    
-	    loadJsonData('/search/search-list', $("#metadatalist"), true, null, null, null, "key", "value");
-	   
-
-
 	    
 $("#searchBtn").click(function(e){
 	e.preventDefault();	
 	populateSearchCriteria('simpleSearch');
 });
-
-
 
 
 $("#downloadSelected").click(function(e){
@@ -159,7 +153,6 @@ var asyncSearchType = $("#asyncSearchType").val();
 $("#download-btn").click(function(e){
 	e.preventDefault();
 	var selectedFiles = $("#selectedFilesList").val();
-	//var searchType = $('input[name=searchType]:checked').val();
 	var searchType =$('input[name=searchType]:checked:visible').val();
 	var d = {};
 	d.searchType = searchType;
@@ -183,7 +176,6 @@ $("#download-btn").click(function(e){
 	    d.endPointName = $("#endPointName").val();
 		d.endPointLocation = $("#endPointLocation").val();
 		d.drivePath = $("#drivePath").val();
-		//d.accessToken = $("#accessToken").val();
 		
 		var url;
 		if(selectedFiles) {
@@ -326,20 +318,9 @@ $("#btnUpdateProfile").click(function(e){
 });
 
 
-$("#resetAdvSearchBtn").click(function(e){
-	 $('#metadatalisting').empty();
-	 $("#searchResultsDiv").hide();
-	 $("#advSearchDiv").hide();
-	  loadJsonData('/search/search-list', $("#metadatalist"), true, null, null, null, "key", "value");
-	 
-});
-
 $("#resetBtn").click(function(e){
 	$("#attributeVal").val("");
 	 $("#searchResultsDiv").hide();
-	 $("#advSearchDiv").hide();
-	$('#metadatalisting').empty();
-
 });
 	
 $(".backToSearchBtn").click(function(e){
@@ -355,7 +336,7 @@ $(".backToAssetDetailsBtn").click(function(e){
 
 $(".backtoAssetFromDwnldBtn").click(function(e){
 	var assetIdentifier= $("#assetIdentifier").val();
-	 location.replace('/assetDetails?assetIdentifier='+assetIdentifier+'&&returnToSearch=true');
+	location.replace('/assetDetails?assetIdentifier='+assetIdentifier+'&&returnToSearch=true');
 });
 
 $("#backtoSearch").click(function(e){
@@ -576,46 +557,74 @@ $(document).on('click', '#clearFilters', function() {
 		$(this).show();
 	    $(this).find('.filteritem').prop('checked',false);
 	});
-	
+	$("#searchResultsDiv").hide();
 });
 
 $(document).on('change', '.filteritem', function() {
 	populateSearchCriteria('simpleSearch');
-	var attrName = $(this).parents().prev('label.attrName').text();
-    var attrVal = $(this).val();
+	
+	var attrName = $(this).parent().attr('id');
+	var rowId = 1;
+	var d = {};
+	var attrNames = [] ;
+	var attrValues = [];
+	var isExcludeParentMetadata = [];
+	var rowIds = [];
+	var operators = [];
+	
+	$(".filteritem:checked").each(function () {
+		var attrName = $(this).parent().attr('id');
+        var attrVal = $(this).val();
+				
+        attrNames.push(attrName);
+		attrValues.push(attrVal);
+		rowIds.push(rowId);
+		isExcludeParentMetadata.push(false);
+		operators.push("EQUAL");
+		rowId =  rowId + 1 ;
+		
+	});	
+		    		
+	d.attrName = attrNames.join();
+	d.attrValue = attrValues.join();
+	d.isExcludeParentMetadata = isExcludeParentMetadata.join();
+	d.rowId = rowIds.join();	
+	d.operator = operators.join();
+	
     $(".attributeLabel").each(function(e){
+    	var $this = $(this);
     	var attributeName = $(this).find('label').text();
-    	if(attrName != attributeName) {
-    		var d = {};
-    		var attrNames = [] ;
-    		var attrValues = [];
-    		var levelValues= [];
-    		var isExcludeParentMetadata = [];
-    		var rowIds = [];
-    		var operators = [];
-
-    		attrNames.push("collection_type");
-    		attrValues.push(attrVal);
-    		levelValues.push(attrVal);
-    		isExcludeParentMetadata.push(true);
-    		rowIds.push(1);
-    		operators.push("EQUAL");
-    		
-    		attrNames.push("collection_type");
-    		attrValues.push(attrVal);
-    		levelValues.push(attrVal);
-    		isExcludeParentMetadata.push(true);
-    		rowIds.push(2);
-    		operators.push("EQUAL");
-    		
-    		d.attrName = attrNames;
-    		d.attrValue = attrValues;
-    		d.level = levelValues;
-    		d.isExcludeParentMetadata = isExcludeParentMetadata;
-    		d.rowId = rowIds;
-    		d.operator = operators;
-    		
-    		invokeAjax('/getFilterList?attrName='+attributeName,'GET',d,postSuccessSearchList,null,null,'text');
+    	if(attrName != attributeName) {    	
+    		d.searchName = attributeName;   		
+    		$.ajax({
+    		       url: '/getFilterList',
+    		       type: 'GET',
+    		       contentType: 'application/json',
+    		       dataType: 'text',
+    		       data: d,
+    		       beforeSend: function () {
+    		    	   $("#spinner").show();
+    		           $("#dimmer").show();
+    		           logAjaxCall('invokeAjax', url, params);
+    		       },
+    		       success: function (data, status) {
+    		    	   $("#spinner").hide();
+    		           $("#dimmer").hide();
+    		           $this.parent().find('.filterGroupDiv').each(function(e){
+    		       		var val = $(this).find('.filteritem').val();
+    		       		if(data.indexOf(val) != -1) {
+    		       			$(this).show();
+    		       		} else {
+    		       			$(this).hide();
+    		       		}
+    		       	});    		           
+    		       },
+    		       error: function (data, status, error) {
+    		    	   $("#spinner").hide();
+    			         $("#dimmer").hide();
+    		           handleAjaxError(url, params, status, error, data);   		          
+    		       }
+    		   });
     	}
     });
 });

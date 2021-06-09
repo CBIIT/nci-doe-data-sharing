@@ -1408,31 +1408,16 @@ position: absolute;
 	}
 	
 	.bigbutton div {
-    /*border: 2px solid #0A3F7F;*/
     border-radius: 10px;
     text-align: center;
     width: 100%;
     max-width: 300px;
     margin: 10px auto 10px auto;
     padding: 5px;
-    /*-webkit-box-shadow: 7px 6px 20px 0px rgba(0,0,0,0.75);
-    -moz-box-shadow: 7px 6px 20px 0px rgba(0,0,0,0.75);
-    box-shadow: 7px 6px 20px 0px rgba(0,0,0,0.75);*/
 }
 
 .searchbutton {
-   /* background-image: url(/static/img/dcc/buttons/visualizescreenshot.png);*/
     background-size: 100% 100%;
-}
-
-#advSearchDiv {
-	margin-top: 32px;
-    padding: 10px;
-    max-width: 67%;
-    margin-left: 247px;
-    display:none;
-    background-color: #DDE9F7;
-    border-radius: 16px;
 }
 
 

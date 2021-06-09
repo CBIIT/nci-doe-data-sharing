@@ -18,18 +18,11 @@ $(document).ready(function () {
 		 var list= JSON.parse(search);
 		 for (var i = 1; i < list.attrName.length; i++) {
 			 var iskeyWordSearch = list.iskeyWordSearch[i];
-			 var isAdvancedSearch = list.isAdvancedSearch[i];
 			 if(iskeyWordSearch == true) {
 				 var attrval = list.attrValue[i];
 				 var newAttrVal = attrval.replaceAll('%', '');
 				 $("#attributeVal").val(newAttrVal);
 			 }
-			 if(isAdvancedSearch == true) {
-				 	var attrval = list.attrValue[i];
-				 	var newAttrVal = attrval.replaceAll('%', '');
-				 	var attrName = list.attrName[i];
-				 	addValueToSelected(null,attrName,newAttrVal);
-				 }
 		 }
 		 populateSearchCriteria(null);
 	 }
@@ -45,16 +38,14 @@ $(document).ready(function () {
 });
 
 function postSuccessSearchList(data,status) {
-	   //var query = $(this).val();
-	    $(this).parent().find('.filteritem').each(function(i,elem){
-	    	var x = $(this).val();
-		  if (x.indexOf(data) != -1) {
-	         $(this).parent().show();
-
-	      } else{
-	         $(this).parent().hide();
-	     }
-	}); 
+	$(".filterGroupDiv").each(function(e){
+		var val = $(this).find('.filteritem').val();
+		if(data.indexOf(val) != -1) {
+			$(this).show();
+		} else {
+			$(this).hide();
+		}
+	});
 }
 
 function populateSearchCriteria(searchType) {
@@ -70,8 +61,7 @@ function populateSearchCriteria(searchType) {
 	var rowIds = [];
 	var operators = [];
 	var iskeyWordSearch = [];
-	var isAdvancedSearch= []
-
+	
 	attrNames.push("collection_type");
 	attrValues.push("Asset");
 	levelValues.push("ANY");
@@ -79,7 +69,7 @@ function populateSearchCriteria(searchType) {
 	rowIds.push(1);
 	operators.push("EQUAL");
 	iskeyWordSearch.push(false);
-	isAdvancedSearch.push(false);
+
 	
 		
 	 if($("#attributeVal").val()) {
@@ -90,7 +80,7 @@ function populateSearchCriteria(searchType) {
 			rowIds.push(2);
 			operators.push("LIKE");
 			iskeyWordSearch.push(true);
-			isAdvancedSearch.push(false);
+			
 
 	} 
 
@@ -106,7 +96,6 @@ function populateSearchCriteria(searchType) {
 			isExcludeParentMetadata.push(false);
 			operators.push("LIKE");
 			iskeyWordSearch.push(false);
-			isAdvancedSearch.push(true);
 			rowId =  rowId + 1 ;
 			
 		});	
@@ -123,7 +112,6 @@ function populateSearchCriteria(searchType) {
 			 attrValues.push('%' + attrVal1 + '%' );
 		 }
 		    iskeyWordSearch.push(false);
-			isAdvancedSearch.push(false);
 			levelValues.push("Asset");
 			rowIds.push(rowId);
 			isExcludeParentMetadata.push(false);
@@ -138,7 +126,6 @@ function populateSearchCriteria(searchType) {
 		search_criteria_json.level = levelValues.join();
 		search_criteria_json.isExcludeParentMetadata = isExcludeParentMetadata.join();
 		search_criteria_json.iskeyWordSearch = iskeyWordSearch.join();
-		search_criteria_json.isAdvancedSearch = isAdvancedSearch.join();
 		search_criteria_json.operator = operators.join();
 		refreshDataTable();
 }
@@ -173,7 +160,6 @@ function dataTableInit(isVisible) {
                d.rowId = search_criteria_json.rowId;
                d.isExcludeParentMetadata = search_criteria_json.isExcludeParentMetadata;
                d.iskeyWordSearch = search_criteria_json.iskeyWordSearch;
-               d.isAdvancedSearch = search_criteria_json.isAdvancedSearch;
                d.operator = search_criteria_json.operator;
             },
             "dataSrc": function (data) {
@@ -542,103 +528,6 @@ function display(value) {
 		$("#s3Div").show();
 		$("#driveDiv").hide();
 	}
-}
-
-
-
-
-function addValueToSelected(optionVal,selectedValueText,attrval) {
-	
-	var fieldPath;
-	
-	if(selectedValueText) {		
-		fieldPath = selectedValueText;
-	} else {
-	   fieldPath = optionVal.value;
-	}
-	if(!attrval){
-		attrval = "";
-	}
-	
-	
-    if (fieldPath === '' || fieldPath === 'ANY')
-        return;
-    var $metadatalist = $('#metadatalisting');
-   
-    var mdIdentifier = fieldPath.replace(new RegExp('\\.|/|\\s|\\[|\\]', 'g'), '_');
-    var rowId = 'filterItemList_' + mdIdentifier;
-    var $rowdiv = $('<div class="row filteritem" style="margin-top: 9px;margin-bottom: 10px;" id="' + rowId + '"/>');
-    $metadatalist.append($rowdiv);
-    var $coldiv = $('<div class="col-sm-5" />');
-    $rowdiv.append($coldiv);
-    var $selectdiv = $('<div class="filtertext">' + fieldPath + '</div>');
-    $coldiv.append($selectdiv);
-
-    var $inputColumn = $('<div class="col-sm-7">');
-    var $inputGroup = $('<div class="input-group" />');
-    $inputColumn.append($inputGroup);
-    $rowdiv.append($inputColumn);
-    
-    if (/.*Date.*/.test(fieldPath)) {
-    	var $dateColumn = $('<div class="form-row><div class="form-group" style="padding-right: 50px;">'
-    			          +'<label>From: <input type="date" class="fromDate" id="from_' + fieldPath + '" > </label></div> <div class="form-group" '
-    			          +'style=" padding-left: 50px;"> <label>To: <input type="date" class="toDate" id="To_' + fieldPath + '"> </label></div></div>');
-    	$inputGroup.append($dateColumn);
-    } else {
-    	var advancedSearchInput = $('<input type="text" style="border-right: transparent;" value="'+ attrval +'" data-value="' + fieldPath + '" data-type="'
-    	                         + $(optionVal).attr('data-type') + '" id="metadatasearch_' + mdIdentifier
-    	                         + '" class="form-control" placeholder="Enter a keyword..."'
-    	                         + ' title="Enter a Search Keyword or Phrase" aria-label="Enter a Search Keyword or Phrase"'
-    	                         + ' inputtype="textval"/>');
-    	$inputGroup.append(advancedSearchInput);
-    }
-     var $inputGroupButton = $('<div class="input-group-btn" style="border-radius: 0px !important;border-left: transparent;margin-left: -3px;"/>');
-    	          
-          $inputGroup.append($inputGroupButton);
-    	  $inputGroupButton.append('<input class="btn pull-right" style="background-color: #fff!important;color: #7C7C7C" type="button" ' +
-    	  'value="X" onclick="removeRowAddOption(\'' + rowId + '\')"/>');
-    	    
-    $("#advSearchDiv").show();
-
-    removeOptionFromAdvancedSearchSelector(rowId, fieldPath);
-}
-
-
-
-function removeOptionFromAdvancedSearchSelector(rowId, optionVal) {
-    var optionToHide = $("#metadatalist option[value=\"" + optionVal + "\"]");
-    advancedSearchHiddenOptions[rowId] = optionToHide;
-    optionToHide.remove();
-}
-
-function removeRowAddOption(rowVal) {
-    var $metadatalist = $('#metadatalist');
-    $metadatalist.append(advancedSearchHiddenOptions[rowVal]);
-    sortOption();
-    removeRow(rowVal);
-}
-
-$.fn.sortOptions = function () {
-    $(this).each(function () {
-        var op = $(this).children('option');
-        op.sort(function (a, b) {
-            if (a.value === '')
-                return -1;
-            if (b.value === '')
-                return 1;
-            return a.value > b.value ? 1 : -1;
-        })
-        return $(this).empty().append(op);
-    });
-}
-
-function sortOption() {
-    $('#metadatalist').sortOptions();
-    $("#metadatalist").val($("#metadatalist option:first").val());
-}
-
-function removeRow(rowId) {
-    $('#' + rowId).remove();
 }
 
 function initializeToolTips() {

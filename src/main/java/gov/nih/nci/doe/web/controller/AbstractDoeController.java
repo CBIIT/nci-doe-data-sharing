@@ -539,10 +539,10 @@ public abstract class AbstractDoeController {
 		return new ResponseEntity<>(entryList, HttpStatus.OK);
 	}
 
-	public HpcCompoundMetadataQueryDTO constructCriteria(DoeSearch search) {
+	public HpcCompoundMetadataQueryDTO constructCriteria(DoeSearch search, String levelName) {
 		HpcCompoundMetadataQueryDTO dto = new HpcCompoundMetadataQueryDTO();
 		dto.setTotalCount(true);
-		HpcCompoundMetadataQuery query = buildSimpleSearch(search);
+		HpcCompoundMetadataQuery query = buildSimpleSearch(search, levelName);
 		dto.setCompoundQuery(query);
 		dto.setDetailedResponse(search.isDetailed());
 		dto.setCompoundQueryType(HpcCompoundMetadataQueryType.COLLECTION);
@@ -552,7 +552,7 @@ public abstract class AbstractDoeController {
 	}
 
 	@SuppressWarnings("unchecked")
-	private HpcCompoundMetadataQuery buildSimpleSearch(DoeSearch search) {
+	private HpcCompoundMetadataQuery buildSimpleSearch(DoeSearch search, String levelName) {
 
 		HpcCompoundMetadataQuery query = new HpcCompoundMetadataQuery();
 		query.setOperator(HpcCompoundMetadataQueryOperator.AND);
@@ -574,7 +574,7 @@ public abstract class AbstractDoeController {
 		// perform OR operation of public access and logged on users access groups
 		HpcMetadataQuery q = new HpcMetadataQuery();
 		HpcMetadataQueryLevelFilter levelFilter = new HpcMetadataQueryLevelFilter();
-		levelFilter.setLabel("Asset");
+		levelFilter.setLabel(levelName);
 		levelFilter.setOperator(HpcMetadataQueryOperator.EQUAL);
 		q.setLevelFilter(levelFilter);
 		q.setAttribute("access_group");
@@ -585,7 +585,7 @@ public abstract class AbstractDoeController {
 		for (KeyValueBean x : loggedOnUserPermissions) {
 			HpcMetadataQuery q1 = new HpcMetadataQuery();
 			HpcMetadataQueryLevelFilter levelFilter1 = new HpcMetadataQueryLevelFilter();
-			levelFilter1.setLabel("Asset");
+			levelFilter1.setLabel(levelName);
 			levelFilter1.setOperator(HpcMetadataQueryOperator.EQUAL);
 			q1.setAttribute("access_group");
 			q1.setValue("%" + x.getValue() + "%");
@@ -703,14 +703,12 @@ public abstract class AbstractDoeController {
 		String[] rowIds = { "1", "2" };
 		String[] operators = { "LIKE", "LIKE" };
 		boolean[] iskeyWordSearch = { true, false };
-		boolean[] isAdvancedSearch = { false, false };
 
 		search.setLevel(levelValues);
 		search.setIsExcludeParentMetadata(isExcludeParentMetadata);
 		search.setRowId(rowIds);
 		search.setOperator(operators);
 		search.setIskeyWordSearch(iskeyWordSearch);
-		search.setIsAdvancedSearch(isAdvancedSearch);
 
 		List<String> systemAttrs = (List<String>) session.getAttribute("systemAttrs");
 		if (CollectionUtils.isEmpty(systemAttrs)) {
@@ -729,7 +727,7 @@ public abstract class AbstractDoeController {
 		}
 
 		try {
-			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search);
+			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search, "Asset");
 			compoundQuery.setDetailedResponse(true);
 			log.info("search compund query" + compoundQuery);
 
@@ -819,15 +817,16 @@ public abstract class AbstractDoeController {
 			search.setRowId(rowIds);
 			search.setOperator(operators);
 			search.setIsExcludeParentMetadata(isExcludeParentMetadata);
+			search.setDetailed(true);
 
-			Set<String> list = retrieveSearchList(session, search, val.getAttrName());
+			Set<String> list = retrieveSearchList(session, search, val.getAttrName(), levelValues[0]);
 			browseList.put(val.getDisplayName(), list);
 
 		}
 		model.addAttribute("browseList", browseList);
 	}
 
-	public Set<String> retrieveSearchList(HttpSession session, DoeSearch search, String attributeName)
+	public Set<String> retrieveSearchList(HttpSession session, DoeSearch search, String attributeName, String levelName)
 			throws DoeWebException {
 
 		Set<String> list = new HashSet<>();
@@ -835,25 +834,7 @@ public abstract class AbstractDoeController {
 		log.info("authToken: " + authToken);
 
 		try {
-			Map<String, HpcMetadataQuery> queriesMap = getQueries(search);
-			HpcCompoundMetadataQuery query = new HpcCompoundMetadataQuery();
-			query.setOperator(HpcCompoundMetadataQueryOperator.AND);
-			List<HpcMetadataQuery> queries = new ArrayList<HpcMetadataQuery>();
-			Iterator<String> iter = queriesMap.keySet().iterator();
-			while (iter.hasNext())
-				queries.add(queriesMap.get(iter.next()));
-
-			query.getQueries().addAll(queries);
-
-			HpcCompoundMetadataQueryDTO compoundQuery = new HpcCompoundMetadataQueryDTO();
-			compoundQuery.setTotalCount(true);
-			compoundQuery.setCompoundQuery(query);
-			compoundQuery.setDetailedResponse(search.isDetailed());
-			compoundQuery.setCompoundQueryType(HpcCompoundMetadataQueryType.COLLECTION);
-			compoundQuery.setPage(search.getPageNumber());
-			compoundQuery.setPageSize(pageSize);
-			compoundQuery.setDetailedResponse(true);
-			log.info("search compund query" + compoundQuery);
+			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search, levelName);
 
 			Response restResponse = DoeClientUtil.getCollectionSearchQuery(authToken,
 					compoundCollectionSearchServiceURL, sslCertPath, sslCertPassword, compoundQuery);

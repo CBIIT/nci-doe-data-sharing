@@ -81,7 +81,7 @@ public class SearchController extends AbstractDoeController {
 		List<DoeSearchResult> results = new ArrayList<>();
 
 		try {
-			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search);
+			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search,"Asset");
 			compoundQuery.setDetailedResponse(true);
 			log.info("search compund query" + compoundQuery);
 			serviceURL = compoundDataObjectSearchServiceURL;
