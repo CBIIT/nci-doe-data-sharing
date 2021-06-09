@@ -33,10 +33,28 @@ $(document).ready(function () {
 		 }
 		 populateSearchCriteria(null);
 	 }
+	 
+	 $(document).keypress(function(event){	
+			var keycode = (event.keyCode ? event.keyCode : event.which);
+			if(keycode == '13'){
+				 event.preventDefault();
+				 populateSearchCriteria('displayAllResults');
+			}
+
+		});
 });
 
 function postSuccessSearchList(data,status) {
-	
+	   //var query = $(this).val();
+	    $(this).parent().find('.filteritem').each(function(i,elem){
+	    	var x = $(this).val();
+		  if (x.indexOf(data) != -1) {
+	         $(this).parent().show();
+
+	      } else{
+	         $(this).parent().hide();
+	     }
+	}); 
 }
 
 function populateSearchCriteria(searchType) {

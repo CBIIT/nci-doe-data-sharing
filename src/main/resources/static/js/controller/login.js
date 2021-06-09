@@ -1,4 +1,17 @@
- $('#loginTab').on('hide.bs.tab hidden.bs.tab', function(e) {
+
+$(document).ready(function () {
+	
+  $(document).keypress(function(event){	
+	var keycode = (event.keyCode ? event.keyCode : event.which);
+	  if(keycode == '13'){
+		 event.preventDefault();
+		 $("#loginButton").trigger("click");
+	  }
+
+	});
+});
+
+$('#loginTab').on('hide.bs.tab hidden.bs.tab', function(e) {
         clearMessages();
     });
 
