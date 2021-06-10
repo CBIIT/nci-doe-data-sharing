@@ -1,6 +1,5 @@
 package gov.nih.nci.doe.web.controller;
 
-import java.util.Arrays;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import gov.nih.nci.doe.web.DoeWebException;
-import gov.nih.nci.doe.web.domain.LookUp;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.model.PermissionsModel;
@@ -285,40 +283,8 @@ public class HomeController extends AbstractDoeController {
 			throws DoeWebException {
 
 		log.info("get filtered list" + search);
-		String level = null;
-		String attrName = null;
-		LookUp value = lookUpService.getLookUpByDisplayName(search.getSearchName());
-		if (value != null) {
-			level = value.getLevelName();
-			attrName = value.getAttrName();
-		}
+		Set<String> list = constructFilterCriteria(session, search);
 
-		int len = search.getRowId().length;
-
-		String[] newRowId = Arrays.copyOf(search.getRowId(), len + 1);
-		String[] newAttrNames = Arrays.copyOf(search.getAttrName(), len + 1);
-		String[] newAttrValues = Arrays.copyOf(search.getAttrValue(), len + 1);
-		String[] newLevelValues = new String[len+1];
-		boolean[] newIsExcludeParentMetadata = Arrays.copyOf(search.getIsExcludeParentMetadata(), len + 1);
-		String[] newOperators = Arrays.copyOf(search.getOperator(), len + 1);
-
-		newRowId[len] = String.valueOf(len + 1);
-		newAttrNames[len] = "collection_type";
-		newAttrValues[len] = level;
-		newLevelValues[len] = level;
-		newOperators[len] = "EQUAL";
-		newIsExcludeParentMetadata[len] = false;
-
-		search.setRowId(newRowId);
-		search.setAttrName(newAttrNames);
-		search.setAttrValue(newAttrValues);
-		search.setLevel(newLevelValues);
-		search.setIsExcludeParentMetadata(newIsExcludeParentMetadata);
-		search.setOperator(newOperators);
-		
-		search.setDetailed(true);
-
-		Set<String> list = retrieveSearchList(session, search, attrName, level);
 		return new ResponseEntity<>(list, HttpStatus.OK);
 
 	}

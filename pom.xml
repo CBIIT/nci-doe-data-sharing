@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
 <project
     xmlns="http://maven.apache.org/POM/4.0.0"
@@ -17,7 +18,7 @@
         <!-- lookup parent from repository -->
     </parent>
 	<properties>
-		<api.version>2.7.0</api.version>
+		<api.version>2.9.0</api.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <start-class>gov.nih.nci.doe.web.DoeWebApplication</start-class>
         <java.version>1.8</java.version>

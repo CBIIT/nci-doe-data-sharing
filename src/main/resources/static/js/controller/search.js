@@ -83,8 +83,7 @@ function populateSearchCriteria(searchType) {
 	operators.push("EQUAL");
 	iskeyWordSearch.push(false);
 
-	
-		
+			
 	 if($("#attributeVal").val()) {
 		    attrNames.push("ANY");
 			attrValues.push('%' + $("#attributeVal").val() + '%');
@@ -93,8 +92,6 @@ function populateSearchCriteria(searchType) {
 			rowIds.push(2);
 			operators.push("LIKE");
 			iskeyWordSearch.push(true);
-			
-
 	} 
 
 		var rowId = 3;

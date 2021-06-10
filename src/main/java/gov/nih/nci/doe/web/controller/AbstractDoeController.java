@@ -558,12 +558,38 @@ public abstract class AbstractDoeController {
 		HpcCompoundMetadataQuery query = new HpcCompoundMetadataQuery();
 		query.setOperator(HpcCompoundMetadataQueryOperator.AND);
 		Map<String, HpcMetadataQuery> queriesMap = getQueries(search);
-		List<HpcMetadataQuery> queries = new ArrayList<HpcMetadataQuery>();
-		Iterator<String> iter = queriesMap.keySet().iterator();
-		while (iter.hasNext())
-			queries.add(queriesMap.get(iter.next()));
 
-		query.getQueries().addAll(queries);
+		Map<String, List<HpcMetadataQuery>> attrNamesMap = new HashMap<String, List<HpcMetadataQuery>>();
+
+		//List<HpcMetadataQuery> queries = new ArrayList<HpcMetadataQuery>();
+		Iterator<String> iter = queriesMap.keySet().iterator();
+		
+
+		while (iter.hasNext()) {
+			String iterVal = iter.next();
+			String attrName = queriesMap.get(iterVal).getAttribute();
+			if (!attrNamesMap.containsKey(attrName)) {
+				List<HpcMetadataQuery> attrNamesList = new ArrayList<HpcMetadataQuery>();
+				attrNamesList.add(queriesMap.get(iterVal));
+				attrNamesMap.put(attrName, attrNamesList);
+			} else {
+				List<HpcMetadataQuery> list = attrNamesMap.get(attrName);
+				list.add(queriesMap.get(iterVal));
+				attrNamesMap.put(attrName, list);
+			}
+			//queries.add(queriesMap.get(iterVal));
+		}
+		Iterator<String> iter1 = attrNamesMap.keySet().iterator();
+		while (iter1.hasNext()) {
+			String iterVal = iter1.next();
+			List<HpcMetadataQuery> attrNameslist = attrNamesMap.get(iterVal);
+			HpcCompoundMetadataQuery q = new HpcCompoundMetadataQuery();
+			q.setOperator(HpcCompoundMetadataQueryOperator.OR);
+			q.getQueries().addAll(attrNameslist);
+			query.getCompoundQueries().add(q);
+		}
+
+		//query.getQueries().addAll(queries);
 
 		// add criteria for access group public and other prog names for logged on user.
 		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList().getBody();
@@ -851,7 +877,7 @@ public abstract class AbstractDoeController {
 						list.add(f.getValue());
 					}
 				});
-				
+
 				results.stream().flatMap(g -> g.getMetadataEntries().getParentMetadataEntries().stream()).forEach(f -> {
 					if (f.getAttribute().equalsIgnoreCase(attributeName)) {
 						list.add(f.getValue());
@@ -863,6 +889,45 @@ public abstract class AbstractDoeController {
 			log.error("Failed to get search list");
 			throw new DoeWebException(e);
 		}
+		return list;
+	}
+
+	public Set<String> constructFilterCriteria(HttpSession session, DoeSearch search) throws DoeWebException {
+		String level = null;
+		String attrName = null;
+		LookUp value = lookUpService.getLookUpByDisplayName(search.getSearchName());
+		if (value != null) {
+			level = value.getLevelName();
+			attrName = value.getAttrName();
+		}
+
+		int len = search.getRowId().length;
+
+		String[] newRowId = Arrays.copyOf(search.getRowId(), len + 1);
+		String[] newAttrNames = Arrays.copyOf(search.getAttrName(), len + 1);
+		String[] newAttrValues = Arrays.copyOf(search.getAttrValue(), len + 1);
+		String[] newLevelValues = new String[len + 1];
+		boolean[] newIsExcludeParentMetadata = Arrays.copyOf(search.getIsExcludeParentMetadata(), len + 1);
+		String[] newOperators = Arrays.copyOf(search.getOperator(), len + 1);
+
+		newRowId[len] = String.valueOf(len + 1);
+		newAttrNames[len] = "collection_type";
+		newAttrValues[len] = level;
+		newLevelValues[len] = level;
+		newOperators[len] = "EQUAL";
+		newIsExcludeParentMetadata[len] = false;
+
+		search.setRowId(newRowId);
+		search.setAttrName(newAttrNames);
+		search.setAttrValue(newAttrValues);
+		search.setLevel(newLevelValues);
+		search.setIsExcludeParentMetadata(newIsExcludeParentMetadata);
+		search.setOperator(newOperators);
+
+		search.setDetailed(true);
+
+		Set<String> list = retrieveSearchList(session, search, attrName, level);
+
 		return list;
 	}
 }
