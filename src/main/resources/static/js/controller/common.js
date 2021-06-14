@@ -564,38 +564,40 @@ $(document).on('change', '.filteritem', function() {
 	populateSearchCriteria('simpleSearch');
 	
 	var attrName = $(this).parent().attr('id');
-	var rowId = 1;
-	var d = {};
-	var attrNames = [] ;
-	var attrValues = [];
-	var isExcludeParentMetadata = [];
-	var rowIds = [];
-	var operators = [];
-	
-	$(".filteritem:checked").each(function () {
-		var attrName = $(this).parent().attr('id');
-        var attrVal = $(this).val();
-				
-        attrNames.push(attrName);
-		attrValues.push(attrVal);
-		rowIds.push(rowId);
-		isExcludeParentMetadata.push(false);
-		operators.push("EQUAL");
-		rowId =  rowId + 1 ;
 		
-	});	
-		    		
-	d.attrName = attrNames.join();
-	d.attrValue = attrValues.join();
-	d.isExcludeParentMetadata = isExcludeParentMetadata.join();
-	d.rowId = rowIds.join();	
-	d.operator = operators.join();
-	
 	$(this).closest('.filterComponentDiv').nextAll().find('.attributeLabel').each(function(e){
     	var $this = $(this);
     	var attributeName = $(this).find('label').text();
-    	if(attrName != attributeName) {    	
-    		d.searchName = attributeName;   		
+    	
+    	var rowId = 1;
+    	var d = {};
+    	var attrNames = [] ;
+    	var attrValues = [];
+    	var isExcludeParentMetadata = [];
+    	var rowIds = [];
+    	var operators = [];
+    	
+    	$(".filteritem:checked").each(function () {
+    		var attrName = $(this).parent().attr('id');
+            var attrVal = $(this).val();
+             if(attrName != attributeName) {        		       			
+               attrNames.push(attrName);
+               attrValues.push(attrVal);
+               rowIds.push(rowId);
+               isExcludeParentMetadata.push(false);
+               operators.push("EQUAL");
+               rowId =  rowId + 1 ;
+             }
+    	});
+    	
+    	
+    	d.attrName = attrNames.join();
+    	d.attrValue = attrValues.join();
+    	d.isExcludeParentMetadata = isExcludeParentMetadata.join();
+    	d.rowId = rowIds.join();	
+    	d.operator = operators.join();   	
+    	d.searchName = attributeName; 
+    	
     		$.ajax({
     		       url: '/getFilterList',
     		       type: 'GET',
@@ -627,6 +629,6 @@ $(document).on('change', '.filteritem', function() {
     			         console.log("===> data: ", data); 		          
     		       }
     		   });
-    	}
     });
+	
 });
