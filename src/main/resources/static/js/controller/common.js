@@ -88,10 +88,10 @@ $("#downloadSelected").click(function(e){
     }
     
     if(selectedPaths.length == 1) {
-  	location.replace('/downloadTab?selectedPaths='+selectedPaths+'&&downloadAsyncType=collection');
+  	location.replace('/downloadTab?selectedPaths='+selectedPaths+'&&downloadAsyncType=collection&&returnToSearch=true');
   } else  {
   	$("#downloadType").val("collectionfiles");
-  	location.replace('/downloadTab?selectedPaths='+selectedPaths+'&&downloadAsyncType=collectionfiles');
+  	location.replace('/downloadTab?selectedPaths='+selectedPaths+'&&downloadAsyncType=collectionfiles&&returnToSearch=true');
   }
     
     
@@ -364,6 +364,11 @@ $(".backToAssetDetailsBtn").click(function(e){
      $("#editCollectionFragment").hide();
 });
 
+$(".backtoAssetFromDwnldBtn").click(function(e){
+	var assetIdentifier= $("#assetIdentifier").val();
+	 location.replace('/assetDetails?assetIdentifier='+assetIdentifier+'&&returnToSearch=true');
+});
+
 $("#backtoSearch").click(function(e){
 	location.replace("/searchTab?returnToSearch=true");
 });
@@ -432,13 +437,18 @@ $("#btnSelectAssetType").click(function(e){
 });
 
 $("#driveAuthlink").click(function(e){
-	var params= {type:$("#downloadType").val(),downloadFilePath:$("#selectedFilesList").val(),action:"Drive"}
+	var params= {type:$("#downloadType").val(),
+			downloadFilePath:$("#selectedFilesList").val(),
+			action:"Drive",assetIdentifier:$("#assetIdentifier").val(),
+			returnToSearch:$("#returnToSearch").val()}
 
 	 invokeAjax('/download','GET',params,postGoogleDriveFunction,postFailureFunction,null,'text');
 });
 
 $("#downloadGlobuslink").click(function(e){
-	var params= {type:$("#downloadType").val(),downloadFilePath:$("#selectedFilesList").val(),action:"Globus"}
+	var params= {type:$("#downloadType").val(),downloadFilePath:$("#selectedFilesList").val(),action:"Globus",
+			assetIdentifier:$("#assetIdentifier").val(),
+			returnToSearch:$("#returnToSearch").val()}
 
 	 invokeAjax('/download','GET',params,postGoogleDriveFunction,postFailureFunction,null,'text');
 });

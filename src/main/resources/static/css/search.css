@@ -47,13 +47,7 @@
     font-family: 'latoregular';
     margin-left: 26px;
 }
-.dataTables_info {
-	margin-left: 20px;
-    font-family: 'latoregular';
-    float: right !important;
-    margin-right: 21px;
-    margin-bottom: 20px;
-}
+
 #dataSetTable{
 	border-color: transparent;
 	font-family: 'latoregular';

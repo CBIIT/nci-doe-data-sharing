@@ -9,15 +9,11 @@ public class DoeSearch {
 	private String[] attrValue;
 	private boolean detailed;
 	private String searchType;
-	private int pageNumber=1;
-	private int pageSize=5000;
+	private int pageNumber = 1;
+	// private int pageSize;
 	private boolean[] isExcludeParentMetadata;
 	private boolean[] iskeyWordSearch;
 	private boolean[] isAdvancedSearch;
-	
-	
-	
-	
 
 	public boolean[] getIskeyWordSearch() {
 		return iskeyWordSearch;
@@ -67,8 +63,6 @@ public class DoeSearch {
 		this.searchType = searchType;
 	}
 
-
-
 	public void setLevel(String[] level) {
 		this.level = level;
 	}
@@ -85,7 +79,6 @@ public class DoeSearch {
 		this.detailed = detailed;
 	}
 
-
 	public int getPageNumber() {
 		return pageNumber;
 	}
@@ -93,14 +86,6 @@ public class DoeSearch {
 	public void setPageNumber(int pageNumber) {
 		this.pageNumber = pageNumber;
 	}
-
-    public int getPageSize() {
-      return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-      this.pageSize = pageSize;
-    }
 
 	public boolean[] getIsExcludeParentMetadata() {
 		return isExcludeParentMetadata;
@@ -117,6 +102,5 @@ public class DoeSearch {
 	public void setOperator(String[] operator) {
 		this.operator = operator;
 	}
-    
-    
+
 }

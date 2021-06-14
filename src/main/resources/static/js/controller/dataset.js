@@ -21,9 +21,6 @@ function dataTableInitDataSet(isVisible) {
     	 "ordering": true,
          "info": true,
          "pageLength": 25,
-         oLanguage: {
-            "sSearch": "Filter:"
-         },
          "ajax": {
             "url": "/getDataObjects",
             "type": "GET",
@@ -168,6 +165,22 @@ function dataTableInitDataSet(isVisible) {
     	     console.log(e);
     	   });
     	   
+    	   var clipboard1 = new ClipboardJS('.share-assetLink-copy-button');
+
+    	   clipboard1.on('success', function(e) {
+      	     console.log(e);
+      	     $(e.trigger).tooltip('hide').attr('data-original-title', 'Copied').tooltip('show');
+      	     setTimeout(function() {
+                   $(e.trigger).tooltip('hide');
+                   $(e.trigger).attr('data-original-title', 'Copy to Clipboard');
+                     }, 2000);
+      	  
+      	   });
+
+    	   clipboard1.on('error', function(e) {
+    	     console.log(e);
+    	   });
+    	   
            $('#downloadSelectedMetadata').unbind('click').bind('click', function() {
         	   exportDataObjectMetadata();        	  
            });
@@ -292,15 +305,20 @@ function dataTableInitDataSet(isVisible) {
             {"targets": -1, "orderable": false},
             {"targets":2,"type":"file-size"},
             { "visible": isVisible, "targets": 3}],
+            
         "dom": '<"top"lip>rt<"bottom"ip>',
+        "pagingType": "simple",
 
         "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
 
         "language": {
+        	"lengthMenu": "ROWS PER PAGE &nbsp;&nbsp; _MENU_",
+        	"sLoadingRecords": "Loading...",
             "zeroRecords": "Nothing found to display",
-            "info": "&nbsp; (Displaying _START_ to _END_ of _TOTAL_ )",
-            sLengthMenu: "_MENU_",
-            "infoEmpty": " No records to display"
+            "paginate": {
+            	 next: '<i style="color:#000;font-size:17px;" class="fas fa-caret-right"></i>',
+                 previous: '<i style="color:#000;font-size:17px;" class="fas fa-caret-left"></i>'
+              }
         }
     });
 }
@@ -400,8 +418,14 @@ function openPopOverDataSet($this) {
               "<div class='divTableHead'>VALUE</div></div>";
 
               $.each(userMetadataList, function( key, value ) {	
-                content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
-                        "<div class='divTableCell'>" + value.value + "</div></div>";
+            	  if(value.value.startsWith('https') || value.value.startsWith('http')) {
+            		  content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
+                      "<div class='divTableCell'><a target='_blank' href=" + value.value + ">" + value.value + "</a></div></div>";
+            	  } else {
+            		  content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
+                      "<div class='divTableCell'>" + value.value + "</div></div>";
+            	  }
+               
                });
             content += "</div> </div><br/>";
            
@@ -511,19 +535,21 @@ function renderDownload(data, type, row) {
 
 
 function downloadFunction(path,fileName) {
-	location.replace('/downloadTab?selectedPaths='+path+'&&fileName='+fileName+'&&downloadAsyncType=data_object');
+	var assetIdentifier = $("#assetIdentifier").val();
+	location.replace('/downloadTab?selectedPaths='+path+'&&fileName='+fileName+'&&assetIdentifier='+assetIdentifier+'&&downloadAsyncType=data_object&&returnToSearch=false');
 }
 
 function onClickOfBulkDownloadBtn() {
 	var selectedPaths = [];
+	var assetIdentifier = $("#assetIdentifier").val();
     $("#dataSetTable tbody input[type=checkbox]:checked").each(function () {
     	selectedPaths.push($(this).attr('id'));
     });
 
     if(selectedPaths.length == 1) {
-  	   location.replace('/downloadTab?selectedPaths='+selectedPaths+'&&downloadAsyncType=data_object');
+  	   location.replace('/downloadTab?selectedPaths='+selectedPaths+'&&assetIdentifier='+assetIdentifier+'&&downloadAsyncType=data_object&&returnToSearch=false');
     } else {
-  	   location.replace('/downloadTab?selectedPaths='+selectedPaths+'&&downloadAsyncType=datafiles');
+  	   location.replace('/downloadTab?selectedPaths='+selectedPaths+'&&assetIdentifier='+assetIdentifier+'&&downloadAsyncType=datafiles&&returnToSearch=false');
     }	    
 }
 

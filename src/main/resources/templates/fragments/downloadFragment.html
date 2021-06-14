@@ -9,12 +9,23 @@
 <div class="form-row jumbotron pt-2 pb-2 mb-2" id="downloadFragment" th:fragment="downloadFragment" 
 style="font-size:13px;">
 
+    <input type="hidden" th:value="${assetIdentifier}" id="assetIdentifier"/>
+    <input type="hidden" th:value="${returnToSearch}" id="returnToSearch"/>
+ 
       <div class="col-lg-12 col-md-12 col-sm-12 float-right">
-       <div class="controls controls-row mt-4">
+       <div class="controls controls-row mt-4" th:if="${returnToSearch eq 'true'}">
            <a class="float-left mb-2 mr-2" id="backtoSearch"><img src="images/BackSearch-icon.png" data-toggle="tooltip" title="Back to Search Results"
          th:src="@{/images/BackSearch-icon.png}" style="width:50px;" alt="back to search">
          &nbsp;&nbsp;<span class="backToSearch">Back to Search Results</span></a>
        </div>
+       
+       <div class="controls controls-row mt-4" th:if="${returnToSearch eq 'false'}">
+           <a class="float-left mb-2 mr-2 backtoAssetFromDwnldBtn">
+         <img src="images/BackSearch-icon.png" data-toggle="tooltip" title="Back to Asset Details"
+         th:src="@{/images/BackSearch-icon.png}" style="width:50px;" alt="back to asset details">
+         &nbsp;&nbsp;<span class="backToSearch">Back to Asset Details</span></a>
+       </div>
+       
      </div>
      
      

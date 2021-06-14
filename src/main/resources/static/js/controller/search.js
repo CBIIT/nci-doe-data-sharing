@@ -166,9 +166,6 @@ function dataTableInit(isVisible) {
         "ordering": false,
         "info": true,
         "pageLength": 25,
-        oLanguage: {
-            "sSearch": "Filter:"
-        },
         "ajax": {
             "url": "/search",
             "type": "GET",
@@ -355,15 +352,20 @@ function dataTableInit(isVisible) {
             {className: "td_class_3", "targets": [0]},
         ],
         
-        "dom": '<"top"lip>rt<"bottom"p>',
+        "dom": '<"top"lip>rt<"bottom"ip>',
+        
+        "pagingType": "simple",
 
         "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
 
         "language": {
+        	"lengthMenu": "ROWS PER PAGE &nbsp;&nbsp; _MENU_",
+        	"sLoadingRecords": "Loading...",
             "zeroRecords": "Nothing found to display",
-            "info": "&nbsp; (Displaying _START_ to _END_ of _TOTAL_ )",
-            sLengthMenu: "_MENU_",
-            "infoEmpty": " No records to display"
+            "paginate": {
+            	 next: '<i style="color:#000;font-size:17px;" class="fas fa-caret-right"></i>',
+                 previous: '<i style="color:#000;font-size:17px;" class="fas fa-caret-left"></i>'
+              }
         }
     });
 }
@@ -484,7 +486,7 @@ function renderPath(data, type, row) {
 		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;margin-bottom: 20px;'><div class='row'>" +
 				"<div class='col-md-12'></div>" +
 			    "<div class='col-md-12 cil_12_bold_no_color_dataset'>" +
-				"<span>" + row.dataSetDescription + "</span>" +
+				"<span style='word-break: break-all;'>" + row.dataSetDescription + "</span>" +
 			    "<br></div><div class='col-md-12' style='margin-left:22px;margin-top: 10px;'>" +
 			    "<span class='cil_12_bold_no_color'>STUDY: </span><a class='cil_12_no_color button2a' " +
 			    "metadata_type = '" + JSON.stringify(row.studyUserMetadata)  + "' tabindex='0'" +
@@ -503,7 +505,7 @@ function renderPath(data, type, row) {
 		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;margin-bottom: 20px;'><div class='row'>" +
 				"<div class='col-md-12'></div>" +
 		        "<div class='col-md-12 cil_12_bold_no_color_dataset' >" +
-				"<span>" + row.dataSetDescription + "</span>" +
+				"<span style='word-break: break-all;'>" + row.dataSetDescription + "</span>" +
 		        "</a><br></div><div class='col-md-12' style='margin-left:22px;margin-top: 10px;'>" +
 		        "<span class='cil_12_bold_no_color'>STUDY: </span><a class='cil_12_no_color button2a'" +
 		        " metadata_type = '" + JSON.stringify(row.studyUserMetadata)  + "' tabindex='0'" +
@@ -700,8 +702,15 @@ function openPopOver($this) {
             var content = "";
 
             $.each(list, function( key, value ) {	
-                content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
-                        "<div class='divTableCell'>" + value.value + "</div></div>";
+            	var attrVal = value.value;
+            	if(attrVal.startsWith('https') || attrVal.startsWith('http')) {
+            		content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
+                    "<div class='divTableCell'><a target='_blank' href=" + attrVal + ">" + attrVal + "</a></div></div>";
+            	} else {
+            		content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
+                    "<div class='divTableCell'>" + attrVal + "</div></div>";
+            	}
+                
                 });
             
             var table = ind + content + "</div> </div></div> </div>";

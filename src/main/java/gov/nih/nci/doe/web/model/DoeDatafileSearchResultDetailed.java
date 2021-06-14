@@ -1,17 +1,31 @@
 package gov.nih.nci.doe.web.model;
 
+import java.util.List;
+
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntries;
 
-public class HpcCollectionSearchResultDetailed {
-
+public class DoeDatafileSearchResultDetailed {
 	private String path;
 	private String uuid;
 	private String registeredBy;
 	private String collectionType;
 	private String createdOn;
-	private String permission;
+	private String checksum;
 	private String download;
+	private String permission;
+	private String name;
+	private String fileSize;
+	private List<KeyValueBean> selfMetadata;
+	private List<KeyValueBean> systemMetadata;
 	HpcMetadataEntries metadataEntries;
+	
+	public String getFileSize() {
+		return fileSize;
+	}
+
+	public void setFileSize(String fileSize) {
+		this.fileSize = fileSize;
+	}
 
 	public String getPermission() {
 		return permission;
@@ -19,6 +33,22 @@ public class HpcCollectionSearchResultDetailed {
 
 	public void setPermission(String permission) {
 		this.permission = permission;
+	}
+
+	public String getDownload() {
+		return download;
+	}
+
+	public void setDownload(String download) {
+		this.download = download;
+	}
+
+	public String getChecksum() {
+		return checksum;
+	}
+
+	public void setChecksum(String checksum) {
+		this.checksum = checksum;
 	}
 
 	public String getPath() {
@@ -61,14 +91,6 @@ public class HpcCollectionSearchResultDetailed {
 		this.createdOn = createdOn;
 	}
 
-	public String getDownload() {
-		return download;
-	}
-
-	public void setDownload(String download) {
-		this.download = download;
-	}
-
 	public HpcMetadataEntries getMetadataEntries() {
 		return metadataEntries;
 	}
@@ -76,4 +98,31 @@ public class HpcCollectionSearchResultDetailed {
 	public void setMetadataEntries(HpcMetadataEntries metadataEntries) {
 		this.metadataEntries = metadataEntries;
 	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public List<KeyValueBean> getSelfMetadata() {
+		return selfMetadata;
+	}
+
+	public void setSelfMetadata(List<KeyValueBean> selfMetadata) {
+		this.selfMetadata = selfMetadata;
+	}
+
+	public List<KeyValueBean> getSystemMetadata() {
+		return systemMetadata;
+	}
+
+	public void setSystemMetadata(List<KeyValueBean> systemMetadata) {
+		this.systemMetadata = systemMetadata;
+	}
+	
+
 }
+

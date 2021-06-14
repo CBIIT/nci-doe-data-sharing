@@ -31,7 +31,7 @@ import org.springframework.http.HttpStatus;
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.constants.SystemAttributesList;
 import gov.nih.nci.doe.web.model.DoeSearch;
-import gov.nih.nci.doe.web.model.HpcDatafileSearchResultDetailed;
+import gov.nih.nci.doe.web.model.DoeDatafileSearchResultDetailed;
 import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
@@ -101,7 +101,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 			systemAttrs = modelDTO.getDataObjectSystemGeneratedMetadataAttributeNames();
 		}
 
-		List<HpcDatafileSearchResultDetailed> dataResults = new ArrayList<HpcDatafileSearchResultDetailed>();
+		List<DoeDatafileSearchResultDetailed> dataResults = new ArrayList<DoeDatafileSearchResultDetailed>();
 
 		try {
 			UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(compoundDataObjectSearchServiceURL);
@@ -132,10 +132,10 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 
 	}
 
-	private List<HpcDatafileSearchResultDetailed> processDataObjectResponseResults(Response restResponse,
+	private List<DoeDatafileSearchResultDetailed> processDataObjectResponseResults(Response restResponse,
 			List<String> systemAttrs) throws IOException {
 
-		List<HpcDatafileSearchResultDetailed> returnResults = new ArrayList<HpcDatafileSearchResultDetailed>();
+		List<DoeDatafileSearchResultDetailed> returnResults = new ArrayList<DoeDatafileSearchResultDetailed>();
 
 		returnResults = processDataObjectResults(restResponse, systemAttrs);
 
@@ -143,16 +143,16 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 
 	}
 
-	private List<HpcDatafileSearchResultDetailed> processDataObjectResults(Response restResponse,
+	private List<DoeDatafileSearchResultDetailed> processDataObjectResults(Response restResponse,
 			List<String> systemAttrs) throws IOException {
 		MappingJsonFactory factory = new MappingJsonFactory();
 		JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 		HpcDataObjectListDTO dataObjects = parser.readValueAs(HpcDataObjectListDTO.class);
 		SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy hh:mm");
 		List<HpcDataObjectDTO> searchResults = dataObjects.getDataObjects();
-		List<HpcDatafileSearchResultDetailed> returnResults = new ArrayList<HpcDatafileSearchResultDetailed>();
+		List<DoeDatafileSearchResultDetailed> returnResults = new ArrayList<DoeDatafileSearchResultDetailed>();
 		for (HpcDataObjectDTO result : searchResults) {
-			HpcDatafileSearchResultDetailed returnResult = new HpcDatafileSearchResultDetailed();
+			DoeDatafileSearchResultDetailed returnResult = new DoeDatafileSearchResultDetailed();
 			String name = result.getDataObject().getAbsolutePath()
 					.substring(result.getDataObject().getAbsolutePath().lastIndexOf('/') + 1);
 			returnResult.setName(name);
