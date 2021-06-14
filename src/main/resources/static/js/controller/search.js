@@ -50,16 +50,6 @@ $(document).ready(function () {
 		});
 });
 
-function postSuccessSearchList(data,status) {
-	$(".filterGroupDiv").each(function(e){
-		var val = $(this).find('.filteritem').val();
-		if(data.indexOf(val) != -1) {
-			$(this).show();
-		} else {
-			$(this).hide();
-		}
-	});
-}
 
 function populateSearchCriteria(searchType) {
 	

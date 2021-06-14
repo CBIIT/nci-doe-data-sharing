@@ -591,7 +591,7 @@ $(document).on('change', '.filteritem', function() {
 	d.rowId = rowIds.join();	
 	d.operator = operators.join();
 	
-    $(".attributeLabel").each(function(e){
+	$(this).closest('.filterComponentDiv').nextAll().find('.attributeLabel').each(function(e){
     	var $this = $(this);
     	var attributeName = $(this).find('label').text();
     	if(attrName != attributeName) {    	
@@ -609,9 +609,10 @@ $(document).on('change', '.filteritem', function() {
     		       success: function (data, status) {
     		    	   $("#spinner").hide();
     		           $("#dimmer").hide();
+    		           var list = JSON.parse(data);
     		           $this.parent().find('.filterGroupDiv').each(function(e){
     		       		var val = $(this).find('.filteritem').val();
-    		       		if(data.indexOf(val) != -1) {
+    		       		if(list.indexOf(val) != -1) {
     		       			$(this).show();
     		       		} else {
     		       			$(this).hide();
@@ -621,7 +622,9 @@ $(document).on('change', '.filteritem', function() {
     		       error: function (data, status, error) {
     		    	   $("#spinner").hide();
     			         $("#dimmer").hide();
-    		           handleAjaxError(url, params, status, error, data);   		          
+    			         console.log("===> status: ", status);
+    			         console.log("===> error: ", error);
+    			         console.log("===> data: ", data); 		          
     		       }
     		   });
     	}

@@ -878,11 +878,11 @@ public abstract class AbstractDoeController {
 					}
 				});
 
-				results.stream().flatMap(g -> g.getMetadataEntries().getParentMetadataEntries().stream()).forEach(f -> {
+				/*results.stream().flatMap(g -> g.getMetadataEntries().getParentMetadataEntries().stream()).forEach(f -> {
 					if (f.getAttribute().equalsIgnoreCase(attributeName)) {
 						list.add(f.getValue());
 					}
-				});
+				});*/
 
 			}
 		} catch (Exception e) {
