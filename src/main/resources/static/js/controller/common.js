@@ -564,7 +564,9 @@ $(document).on('change', '.filteritem', function() {
 	populateSearchCriteria('simpleSearch');
 	
 	var attrName = $(this).parent().attr('id');
-		
+	
+	//always filter the metadata on the children level
+	//do not filter parent based on child selection
 	$(this).closest('.filterComponentDiv').nextAll().find('.attributeLabel').each(function(e){
     	var $this = $(this);
     	var attributeName = $(this).find('label').text();
@@ -577,7 +579,8 @@ $(document).on('change', '.filteritem', function() {
     	var rowIds = [];
     	var operators = [];
     	
-    	$(".filteritem:checked").each(function () {
+    	//filter a list based on the parent level selection
+    	$this.closest('.filterComponentDiv').prevAll().find(".filteritem:checked").each(function () {
     		var attrName = $(this).parent().attr('id');
             var attrVal = $(this).val();
              if(attrName != attributeName) {        		       			
