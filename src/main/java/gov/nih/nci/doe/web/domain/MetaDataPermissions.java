@@ -45,10 +45,10 @@ public class MetaDataPermissions {
 
 	}
 
+
 	@Id
-	@Column(name = "ID", nullable = false, precision = 0)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "METADATA_PERMISSIONS_SEQ")
-	@SequenceGenerator(name = "METADATA_PERMISSIONS_SEQ", sequenceName = "METADATA_PERMISSIONS_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID", updatable = false, nullable = false)
 	public Integer getId() {
 		return id;
 	}
