@@ -561,8 +561,9 @@ $(document).on('click', '#clearFilters', function() {
 });
 
 $(document).on('change', '.filteritem', function() {
-	populateSearchCriteria('simpleSearch');
 	
+	$("#spinner").show();
+    $("#dimmer").show();
 	var attrName = $(this).parent().attr('id');
 	
 	//always filter the metadata on the children level
@@ -604,16 +605,11 @@ $(document).on('change', '.filteritem', function() {
     		$.ajax({
     		       url: '/getFilterList',
     		       type: 'GET',
+    		       async: false,
     		       contentType: 'application/json',
     		       dataType: 'text',
     		       data: d,
-    		       beforeSend: function () {
-    		    	   $("#spinner").show();
-    		           $("#dimmer").show();
-    		       },
     		       success: function (data, status) {
-    		    	   $("#spinner").hide();
-    		           $("#dimmer").hide();
     		           var list = JSON.parse(data);
     		           $this.parent().find('.filterGroupDiv').each(function(e){
     		       		var val = $(this).find('.filteritem').val();
@@ -621,17 +617,16 @@ $(document).on('change', '.filteritem', function() {
     		       			$(this).show();
     		       		} else {
     		       			$(this).hide();
+    		       			$(this).find('.filteritem').prop("checked",false);
     		       		}
     		       	});    		           
     		       },
     		       error: function (data, status, error) {
-    		    	   $("#spinner").hide();
-    			         $("#dimmer").hide();
     			         console.log("===> status: ", status);
     			         console.log("===> error: ", error);
     			         console.log("===> data: ", data); 		          
     		       }
     		   });
     });
-	
+	populateSearchCriteria('simpleSearch');
 });
