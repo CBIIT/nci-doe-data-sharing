@@ -961,7 +961,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		Response restResponse = DoeClientUtil.getCollectionSearchQuery(authToken, compoundCollectionSearchServiceURL,
 				sslCertPath, sslCertPassword, compoundMetadataQuery);
 
-		if (restResponse.getStatus() == 200) {
+		if (restResponse.getStatus() == 200 || restResponse.getStatus() == 201) {
 			MappingJsonFactory factory = new MappingJsonFactory();
 			JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 			ObjectMapper mapper = new ObjectMapper();

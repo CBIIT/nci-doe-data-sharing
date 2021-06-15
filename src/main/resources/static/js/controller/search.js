@@ -405,7 +405,7 @@ function renderDataSetName(data, type, row){
 		        "&nbsp&nbsp;</div></div></div>";
 	}
 	
-	html+= "<div class='col-md-12' style='margin-left: 21px;'><span class='sharableLink'>Sharable Link: " +
+	html+= "<div class='col-md-12' style='margin-left: 25px;'><span class='sharableLink'>Sharable Link: " +
 			"<i class='fas fa-share'></i></span><p style='display: none;' class ='sharableLinkDiv'><input type='text' " +
 			"id= 'colId"+row.dataSetCollectionId+"' value='"+ row.dataSetdmeDataId + "' readonly='true'/> &nbsp; " +
 			"<button type='button' class='share-link-copy-button' data-toggle='tooltip' data-placement='bottom' " +

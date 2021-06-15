@@ -884,6 +884,8 @@ public abstract class AbstractDoeController {
 					}
 				});*/
 
+			} else if(restResponse.getStatus() == 204) {
+				//no content, return empty list
 			}
 		} catch (Exception e) {
 			log.error("Failed to get search list");

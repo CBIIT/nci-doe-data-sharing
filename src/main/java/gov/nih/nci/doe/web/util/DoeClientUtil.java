@@ -414,7 +414,7 @@ public class DoeClientUtil {
 			WebClient client = DoeClientUtil.getWebClient(requestURL, sslCertPath, sslCertPassword);
 			client.header("Authorization", "Bearer " + authToken);
 			Response restResponse = client.invoke("POST", compoundMetadataQuery);
-			if (restResponse.getStatus() == 201 || restResponse.getStatus() == 200) {
+			if (restResponse.getStatus() == 201 || restResponse.getStatus() == 200 || restResponse.getStatus() == 204) {
 				return restResponse;
 			} else {
 				log.error("Failed to query collection");
