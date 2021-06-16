@@ -279,11 +279,12 @@ public class HomeController extends AbstractDoeController {
 	}
 
 	@GetMapping(value = "/getFilterList")
-	public ResponseEntity<?> getFilterList(HttpSession session, @RequestHeader HttpHeaders headers, DoeSearch search)
-			throws DoeWebException {
+	public ResponseEntity<?> getFilterList(
+			@RequestParam(value = "retrieveParent", required = false) String retrieveParent, HttpSession session,
+			@RequestHeader HttpHeaders headers, DoeSearch search) throws DoeWebException {
 
 		log.info("get filtered list" + search);
-		Set<String> list = constructFilterCriteria(session, search);
+		Set<String> list = constructFilterCriteria(session, search, retrieveParent);
 
 		return new ResponseEntity<>(list, HttpStatus.OK);
 

@@ -561,9 +561,8 @@ public abstract class AbstractDoeController {
 
 		Map<String, List<HpcMetadataQuery>> attrNamesMap = new HashMap<String, List<HpcMetadataQuery>>();
 
-		//List<HpcMetadataQuery> queries = new ArrayList<HpcMetadataQuery>();
+		// List<HpcMetadataQuery> queries = new ArrayList<HpcMetadataQuery>();
 		Iterator<String> iter = queriesMap.keySet().iterator();
-		
 
 		while (iter.hasNext()) {
 			String iterVal = iter.next();
@@ -577,7 +576,7 @@ public abstract class AbstractDoeController {
 				list.add(queriesMap.get(iterVal));
 				attrNamesMap.put(attrName, list);
 			}
-			//queries.add(queriesMap.get(iterVal));
+			// queries.add(queriesMap.get(iterVal));
 		}
 		Iterator<String> iter1 = attrNamesMap.keySet().iterator();
 		while (iter1.hasNext()) {
@@ -589,7 +588,7 @@ public abstract class AbstractDoeController {
 			query.getCompoundQueries().add(q);
 		}
 
-		//query.getQueries().addAll(queries);
+		// query.getQueries().addAll(queries);
 
 		// add criteria for access group public and other prog names for logged on user.
 		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList().getBody();
@@ -846,15 +845,15 @@ public abstract class AbstractDoeController {
 			search.setIsExcludeParentMetadata(isExcludeParentMetadata);
 			search.setDetailed(true);
 
-			Set<String> list = retrieveSearchList(session, search, val.getAttrName(), levelValues[0]);
+			Set<String> list = retrieveSearchList(session, search, val.getAttrName(), levelValues[0], null);
 			browseList.put(val.getDisplayName(), list);
 
 		}
 		model.addAttribute("browseList", browseList);
 	}
 
-	public Set<String> retrieveSearchList(HttpSession session, DoeSearch search, String attributeName, String levelName)
-			throws DoeWebException {
+	public Set<String> retrieveSearchList(HttpSession session, DoeSearch search, String attributeName, String levelName,
+			String retrieveParent) throws DoeWebException {
 
 		Set<String> list = new HashSet<>();
 		String authToken = (String) session.getAttribute("hpcUserToken");
@@ -872,20 +871,25 @@ public abstract class AbstractDoeController {
 				HpcCollectionListDTO collections = parser.readValueAs(HpcCollectionListDTO.class);
 				List<HpcCollectionDTO> results = collections.getCollections();
 
-				results.stream().flatMap(g -> g.getMetadataEntries().getSelfMetadataEntries().stream()).forEach(f -> {
-					if (f.getAttribute().equalsIgnoreCase(attributeName)) {
-						list.add(f.getValue());
+				if (StringUtils.isNotEmpty(retrieveParent)) {
+					HpcMetadataEntry entry = collections.getCollections().get(0).getMetadataEntries()
+							.getParentMetadataEntries().stream()
+							.filter(f -> f.getAttribute().equalsIgnoreCase(attributeName)).findAny().orElse(null);
+					if (entry != null) {
+						list.add(entry.getValue());
 					}
-				});
 
-				/*results.stream().flatMap(g -> g.getMetadataEntries().getParentMetadataEntries().stream()).forEach(f -> {
-					if (f.getAttribute().equalsIgnoreCase(attributeName)) {
-						list.add(f.getValue());
-					}
-				});*/
+				} else {
+					results.stream().flatMap(g -> g.getMetadataEntries().getSelfMetadataEntries().stream())
+							.forEach(f -> {
+								if (f.getAttribute().equalsIgnoreCase(attributeName)) {
+									list.add(f.getValue());
+								}
+							});
+				}
 
-			} else if(restResponse.getStatus() == 204) {
-				//no content, return empty list
+			} else if (restResponse.getStatus() == 204) {
+				// no content, return empty list
 			}
 		} catch (Exception e) {
 			log.error("Failed to get search list");
@@ -894,7 +898,8 @@ public abstract class AbstractDoeController {
 		return list;
 	}
 
-	public Set<String> constructFilterCriteria(HttpSession session, DoeSearch search) throws DoeWebException {
+	public Set<String> constructFilterCriteria(HttpSession session, DoeSearch search, String retrieveParent)
+			throws DoeWebException {
 		String level = null;
 		String attrName = null;
 		LookUp value = lookUpService.getLookUpByDisplayName(search.getSearchName());
@@ -928,7 +933,7 @@ public abstract class AbstractDoeController {
 
 		search.setDetailed(true);
 
-		Set<String> list = retrieveSearchList(session, search, attrName, level);
+		Set<String> list = retrieveSearchList(session, search, attrName, level, retrieveParent);
 
 		return list;
 	}

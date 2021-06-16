@@ -562,71 +562,146 @@ $(document).on('click', '#clearFilters', function() {
 
 $(document).on('change', '.filteritem', function() {
 	
-	$("#spinner").show();
-    $("#dimmer").show();
 	var attrName = $(this).parent().attr('id');
 	
 	//always filter the metadata on the children level
-	//do not filter parent based on child selection
+	//do not remove parent based on child selection
 	$(this).closest('.filterComponentDiv').nextAll().find('.attributeLabel').each(function(e){
-    	var $this = $(this);
-    	var attributeName = $(this).find('label').text();
-    	
-    	var rowId = 1;
-    	var d = {};
-    	var attrNames = [] ;
-    	var attrValues = [];
-    	var isExcludeParentMetadata = [];
-    	var rowIds = [];
-    	var operators = [];
-    	
-    	//filter a list based on the parent level selection
-    	$this.closest('.filterComponentDiv').prevAll().find(".filteritem:checked").each(function () {
-    		var attrName = $(this).parent().attr('id');
-            var attrVal = $(this).val();
-             if(attrName != attributeName) {        		       			
-               attrNames.push(attrName);
-               attrValues.push(attrVal);
-               rowIds.push(rowId);
-               isExcludeParentMetadata.push(false);
-               operators.push("EQUAL");
-               rowId =  rowId + 1 ;
-             }
-    	});
-    	
-    	
-    	d.attrName = attrNames.join();
-    	d.attrValue = attrValues.join();
-    	d.isExcludeParentMetadata = isExcludeParentMetadata.join();
-    	d.rowId = rowIds.join();	
-    	d.operator = operators.join();   	
-    	d.searchName = attributeName; 
-    	
-    		$.ajax({
-    		       url: '/getFilterList',
-    		       type: 'GET',
-    		       async: false,
-    		       contentType: 'application/json',
-    		       dataType: 'text',
-    		       data: d,
-    		       success: function (data, status) {
-    		           var list = JSON.parse(data);
-    		           $this.parent().find('.filterGroupDiv').each(function(e){
-    		       		var val = $(this).find('.filteritem').val();
-    		       		if(list.indexOf(val) != -1) {
-    		       			$(this).show();
-    		       		} else {
-    		       			$(this).hide();
-    		       			$(this).find('.filteritem').prop("checked",false);
-    		       		}
-    		       	});    		           
-    		       },
-    		       error: function (data, status, error) {
-    			         console.log("===> status: ", status);
-    			         console.log("===> error: ", error);
-    			         console.log("===> data: ", data); 		          
-    		       }
-    		   });
+		filterNext($(this));
+    });
+	
+	//based on child selection, search at parent level and check the parent checkbox
+	$(this).closest('.filterComponentDiv').prev().find('.attributeLabel').each(function(e){
+		filterPrev($(this));
     });
 	populateSearchCriteria('simpleSearch');
 });
+
+function filterNext($this) {
+
+	var attributeName = $this.find('label').text();
+
+	var rowId = 1;
+	var d = {};
+	var attrNames = [];
+	var attrValues = [];
+	var isExcludeParentMetadata = [];
+	var rowIds = [];
+	var operators = [];
+
+	// filter a list based on the parent level selection
+	$this.closest('.filterComponentDiv').prevAll().find(".filteritem:checked")
+			.each(function() {
+				var attrName = $(this).parent().attr('id');
+				var attrVal = $(this).val();
+				if (attrName != attributeName) {
+					attrNames.push(attrName);
+					attrValues.push(attrVal);
+					rowIds.push(rowId);
+					isExcludeParentMetadata.push(false);
+					operators.push("EQUAL");
+					rowId = rowId + 1;
+				}
+			});
+
+	d.attrName = attrNames.join();
+	d.attrValue = attrValues.join();
+	d.isExcludeParentMetadata = isExcludeParentMetadata.join();
+	d.rowId = rowIds.join();
+	d.operator = operators.join();
+	d.searchName = attributeName;
+
+	$.ajax({
+		url : '/getFilterList',
+		type : 'GET',
+		async : false,
+		contentType : 'application/json',
+		dataType : 'text',
+		data : d,
+		success : function(data, status) {
+			var list = JSON.parse(data);
+			$this.parent().find('.filterGroupDiv').each(function(e) {
+				var val = $(this).find('.filteritem').val();
+				if (list.indexOf(val) != -1) {
+					$(this).show();
+				} else {
+					$(this).hide();
+					$(this).find('.filteritem').prop("checked", false);
+				}
+			});
+		},
+		error : function(data, status, error) {
+			console.log("===> status: ", status);
+			console.log("===> error: ", error);
+			console.log("===> data: ", data);
+		}
+	});
+}
+
+function filterPrev($this) {
+	var attributeName = $this.find('label').text();
+
+	var rowId = 1;
+	var d = {};
+	var attrNames = [];
+	var attrValues = [];
+	var isExcludeParentMetadata = [];
+	var rowIds = [];
+	var operators = [];
+
+	// filter a list based on the parent level selection
+	$this.closest('.filterComponentDiv').nextAll().find(".filteritem:checked")
+			.each(function() {
+				var attrName = $(this).parent().attr('id');
+				var attrVal = $(this).val();
+				if (attrName != attributeName) {
+					attrNames.push(attrName);
+					attrValues.push(attrVal);
+					rowIds.push(rowId);
+					isExcludeParentMetadata.push(false);
+					operators.push("EQUAL");
+					rowId = rowId + 1;
+				}
+			});
+
+	d.attrName = attrNames.join();
+	d.attrValue = attrValues.join();
+	d.isExcludeParentMetadata = isExcludeParentMetadata.join();
+	d.rowId = rowIds.join();
+	d.operator = operators.join();
+	d.searchName = attributeName;
+
+	$.ajax({
+		url : '/getFilterList?retrieveParent=true',
+		type : 'GET',
+		async : false,
+		contentType : 'application/json',
+		dataType : 'text',
+		data : d,
+		beforeSend: function () {
+	    	$("#spinner").show();
+	        $("#dimmer").show();
+	    },
+		success : function(data, status) {
+			var list = JSON.parse(data);
+			$this.parent().find('.filterGroupDiv').each(function(e) {
+				var val = $(this).find('.filteritem').val();
+				if (list.indexOf(val) != -1) {
+					$(this).find('.filteritem').prop("checked", true);
+					$(this).show();
+				}
+			});
+		},
+		error : function(data, status, error) {
+			console.log("===> status: ", status);
+			console.log("===> error: ", error);
+			console.log("===> data: ", data);
+		}
+	}).done(
+			function(e) {
+				$this.closest('.filterComponentDiv').prev().find(
+						'.attributeLabel').each(function(e) {
+							filterPrev($(this));
+				});
+			});
+}
