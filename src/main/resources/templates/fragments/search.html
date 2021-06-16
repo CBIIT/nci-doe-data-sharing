@@ -12,45 +12,46 @@
                 <div id="searchCollapse" class="col-md-12 col-sm-12 collapse show">
                     <div class="col-md-12 col-sm-12">
                         <div class="form-row">
-                            <div class="form-group col-lg-8 col-md-8" style="float: right;margin-top: -8px;margin-left: 150px;">
+                            <div class="form-group col-lg-12 col-md-12" style="float: right;margin-top: -8px;
+                            margin-left: 245px;">
                                 <input type="hidden" th:value="${dmeDataId}" id="dmeDataId"/>
                                 <input type="hidden" th:value="${doi}" id="doi"/>
                                  <input type="hidden" th:value="${searchQuery}" id="searchQuery"/>
                                  <input type="hidden" th:value="${returnToSearch}" id="returnToSearch"/>
-                                 <input type="text" placeholder="Search MoDaC" style="height: 120%;
+                                 <input type="text" placeholder="Search MoDaC" style="
                                   margin-top:10px;border: 2px solid #E87B05;border-radius: 
-                                  26px;float: right;" id="attributeVal" class="form-control">
+                                  26px;height: 61px;width: 886px;" id="attributeVal" class="form-control">
                                 
                                  <span id="resetBtn" data-toggle="tooltip" title="Reset" 
-                                  style="position: absolute;top: 25px;
-                                  right: 98px;height: 16px;"><img src="/images/cancel-X-grey.svg" style="width:20px;"/></span>
+                                  style="position: absolute;top: 28px;
+                                  left: 56%;height: 16px;"><img src="/images/cancel-X-grey.svg" style="width:14px;"/></span>
                             
-                                 <span data-toggle="tooltip" title="Search" style="position: absolute;top: 20px;
-                                  right: 24px;height: 33px;width: 58px;font-size: 18px;background-color: #E87B05;border-radius: 16px;
+                                 <span data-toggle="tooltip" title="Search" style="position: absolute;top: 23px;
+                                  right: 38%;height: 33px;width: 58px;font-size: 18px;background-color: #E87B05;
+                                  border-radius: 16px;
                                   text-align: center;" id="searchBtn">
                                  <img src="/images/arrow-white-large.svg" style="width: 29px;"></span>
                                  <br>
                             </div>
                            </div> 
                        <div class="form-row">   
-                       <div class="form-group col-lg-3 col-md-8" style="margin-left:-35px;margin-right:35px;margin-top:41px;
+                       <div class="form-group col-lg-3 col-md-8" style="margin-left:-35px;margin-right:18px;margin-top:6px;
                        overflow: auto;height: 515px;background-color: #C6D9EC;overflow-x: hidden;">    
-                       <div style="background-color: #3a73b9;margin-bottom: 10px;margin-left: -10px;height: 42px;width: 105%;">
+                       <div style="background-color: #3a73b9;margin-bottom: 14px;margin-left: -10px;height: 42px;width: 105%;">
                          <p style="color: #fff;
-                              font-weight: bolder;
                               font-family: 'latoregular';
                               font-size: 18px;
                               margin-left: 15px;
-                              padding-top: 5px;float:left;">Filters: </p>
+                              padding-top: 6px;float:left;">Filters: </p>
                               
                               <input type="button" value="CLEAR ALL" id="clearFilters" class="btn btn-sm" style="float: right;margin-right: 16px;
                                  background-color: #FFFFFF;margin-top: 8px;
                                   border-radius: 15px;font-family: 'inter_regular';width:70px;font-size: 9px;font-weight: bold;color: #000;">
                        </div>                    
                            <div th:each="list : ${browseList}" class="filterComponentDiv"
-                                   style="border-radius: 12px;border: 1px solid #fff;margin-bottom: 13px;background-color: #fff;margin-left: 10px;margin-right: 3px;">
-                              <p style="background-color: #E87B05;border-radius: 5px;color: #fff;
-                                 margin-bottom: 6px;width: 101%;margin-left: -1px;margin-top: -1px;border-radius: 3px;
+                                   style="border-radius: 12px;border: 1px solid #fff;margin-bottom: 13px;background-color: #fff;margin-left: 10px;margin-right: 8px;">
+                              <p style="background-color: #E87B05;border-radius: 6px 6px 0px 0px;color: #fff;
+                                 margin-bottom: 6px;width: 101%;margin-left: -1px;margin-top: -1px;
                                  font-size: 19px;" class="attributeLabel">
                               <label class="attrName" th:text="${list.key}" style="color: #fff;margin-bottom: 5px;
                               margin-top: -8px;margin-left: 10px;
@@ -78,7 +79,7 @@
                             </div>  
                           
                          <div class="form-group col-md-9 col-sm-12 mb-4" id="searchResultsDiv" 
-            style="display:none;margin-top:40px;background-color: #C6D9EC;">                          
+            style="display:none;margin-top:6px;background-color: #C6D9EC;">                          
                 <!-- search results -->
                 <div th:replace="fragments/search_results :: search_results"></div>
             </div>
