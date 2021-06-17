@@ -674,6 +674,7 @@ height: 50px;
 
 .td_class_2 {
 	width:13.75%!important;
+	word-break: break-word;
 }
 
 .td_class_5 {
@@ -681,6 +682,7 @@ height: 50px;
 }
 .td_class_7 {
 	width:40%!important;
+	word-break: break-word;
 }
 
 .td_class_9 {
