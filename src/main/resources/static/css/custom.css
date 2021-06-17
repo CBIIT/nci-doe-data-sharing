@@ -245,8 +245,13 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 }
 
 #downloadSelected{
-	margin-top: -22px;
+	margin-top: -29px;
 	font-family: 'inter_regular';
+	border-radius: 36px;
+	height:50px;
+	width:213px;
+	font-size:15px;
+	line-height: 17px;
 }
 #updateMetaData,#addMetaData,#addBulkDataFiles,#addNewMetaDataForSingleDataFile,
 #registerBulkDataFileBtn,#registerCollectionBtn,#updatePermissions {
@@ -722,7 +727,8 @@ height: 50px;
     
    .cil_12_bold_no_color {
    font-family: 'latoregular';
-   font-size:13px
+   font-size:13px;
+   font-weight: bold;
    }
    .cil_12_bold_no_color_dataset {
    margin-left: 22px;
@@ -1016,11 +1022,12 @@ padding-right: 10px;
 .cil_12_no_color {
 	cursor: pointer;
     font-family: 'latoregular';
-    font-size: 13px;
-    font-weight: 900;
+    font-size: 15px;
+    font-weight: 500;
     line-height: 27px;
     height: 42px;
     width: 175px;
+    color: #397ded;
 }
 
 .btn-danger {
