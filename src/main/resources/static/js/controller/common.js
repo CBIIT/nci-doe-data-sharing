@@ -556,12 +556,18 @@ $(document).on('click', '#clearFilters', function() {
 	$(".filterGroupDiv").each(function(e){
 		$(this).show();
 	    $(this).find('.filteritem').prop('checked',false);
+	    $(this).find('span').css('color','#212529');
 	});
 	$("#searchResultsDiv").hide();
 });
 
 $(document).on('change', '.filteritem', function() {
 	
+	if($(this).is(':checked')) {
+		$(this).parent().find('span').css('color','#2E76ED');
+	} else {
+		$(this).parent().find('span').css('color','#212529');
+	}
 	var attrName = $(this).parent().attr('id');
 	
 	//always filter the metadata on the children level
@@ -627,6 +633,7 @@ function filterNext($this) {
 				} else {
 					$(this).hide();
 					$(this).find('.filteritem').prop("checked", false);
+					$(this).find('span').css('color','#212529');
 				}
 			});
 		},
@@ -689,6 +696,7 @@ function filterPrev($this) {
 				if (list.indexOf(val) != -1) {
 					$(this).find('.filteritem').prop("checked", true);
 					$(this).show();
+					$(this).find('span').css('color','#2E76ED');
 				}
 			});
 		},
