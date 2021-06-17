@@ -469,13 +469,13 @@ function renderPath(data, type, row) {
 			    "<div class='col-md-12 cil_12_bold_no_color_dataset'>" +
 				"<span style='word-break: break-all;'>" + row.dataSetDescription + "</span>" +
 			    "<br></div><div class='col-md-12' style='margin-left:22px;margin-top: 10px;'>" +
-			    "<span class='cil_12_bold_no_color'>STUDY: </span><a class='cil_12_no_color button2a' " +
+			    "<span style='color: #747474;' class='cil_12_bold_no_color'>STUDY: </span><a class='cil_12_no_color button2a' " +
 			    "metadata_type = '" + JSON.stringify(row.studyUserMetadata)  + "' tabindex='0'" +
 			    " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
 			    "data-popover-content='#a01'>" + row.studyName + "</a>" +
 				"&nbsp&nbsp;"+editStudySetHtml+"</div>" +
 			    "<div class='col-md-12 top-buffer' style='margin-left:22px;'>" +
-			    "<span class='cil_12_bold_no_color'>PROGRAM: </span><a class='cil_12_no_color button2a' " +
+			    "<span style='color: #747474;' class='cil_12_bold_no_color'>PROGRAM: </span><a class='cil_12_no_color button2a' " +
 			    "metadata_type = '" + JSON.stringify(row.instituteUserMetadata)  + "'" +
 				" tabindex='0'" +
 			    " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
@@ -488,13 +488,13 @@ function renderPath(data, type, row) {
 		        "<div class='col-md-12 cil_12_bold_no_color_dataset' >" +
 				"<span style='word-break: break-all;'>" + row.dataSetDescription + "</span>" +
 		        "</a><br></div><div class='col-md-12' style='margin-left:22px;margin-top: 10px;'>" +
-		        "<span class='cil_12_bold_no_color'>STUDY: </span><a class='cil_12_no_color button2a'" +
+		        "<span style='color: #747474;' class='cil_12_bold_no_color'>STUDY: </span><a class='cil_12_no_color button2a'" +
 		        " metadata_type = '" + JSON.stringify(row.studyUserMetadata)  + "' tabindex='0'" +
 		        " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
 		        "data-popover-content='#a01'>" + row.studyName + "</a>" +
 				"&nbsp&nbsp;</div>" +
 		        "<div class='col-md-12 top-buffer' style='margin-left:22px;'>" +
-		        "<span class='cil_12_bold_no_color'>PROGRAM: </span><a class='cil_12_no_color button2a' " +
+		        "<span style='color: #747474;' class='cil_12_bold_no_color'>PROGRAM: </span><a class='cil_12_no_color button2a' " +
 		        "metadata_type = '" + JSON.stringify(row.instituteUserMetadata)  + "' " +
 				"tabindex='0'" +
 		        " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
