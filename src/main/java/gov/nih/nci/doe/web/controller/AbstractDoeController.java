@@ -872,12 +872,14 @@ public abstract class AbstractDoeController {
 				List<HpcCollectionDTO> results = collections.getCollections();
 
 				if (StringUtils.isNotEmpty(retrieveParent)) {
-					HpcMetadataEntry entry = collections.getCollections().get(0).getMetadataEntries()
-							.getParentMetadataEntries().stream()
-							.filter(f -> f.getAttribute().equalsIgnoreCase(attributeName)).findAny().orElse(null);
-					if (entry != null) {
-						list.add(entry.getValue());
-					}
+	
+					results.stream().flatMap(g -> g.getMetadataEntries().getParentMetadataEntries().stream())
+					.forEach(f -> {
+						if (f.getAttribute().equalsIgnoreCase(attributeName)) {
+							list.add(f.getValue());
+						}
+					});
+					
 
 				} else {
 					results.stream().flatMap(g -> g.getMetadataEntries().getSelfMetadataEntries().stream())

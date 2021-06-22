@@ -570,20 +570,22 @@ $(document).on('change', '.filteritem', function() {
 	}
 	var attrName = $(this).parent().attr('id');
 	
+	//based on child selection, search at parent level and check the parent checkbox
+	$(this).closest('.filterComponentDiv').prev().find('.attributeLabel').each(function(e){
+		filterPrev($(this),attrName);
+    });
+	
 	//always filter the metadata on the children level
 	//do not remove parent based on child selection
 	$(this).closest('.filterComponentDiv').nextAll().find('.attributeLabel').each(function(e){
-		filterNext($(this));
+		filterNext($(this),attrName);
     });
 	
-	//based on child selection, search at parent level and check the parent checkbox
-	$(this).closest('.filterComponentDiv').prev().find('.attributeLabel').each(function(e){
-		filterPrev($(this));
-    });
+	
 	populateSearchCriteria('simpleSearch');
 });
 
-function filterNext($this) {
+function filterNext($this,attributeTypeName) {
 
 	var attributeName = $this.find('label').text();
 
@@ -645,7 +647,7 @@ function filterNext($this) {
 	});
 }
 
-function filterPrev($this) {
+function filterPrev($this,attributeTypeName) {
 	var attributeName = $this.find('label').text();
 
 	var rowId = 1;
@@ -655,6 +657,7 @@ function filterPrev($this) {
 	var isExcludeParentMetadata = [];
 	var rowIds = [];
 	var operators = [];
+	var url;
 
 	// filter a list based on the parent level selection
 	$this.closest('.filterComponentDiv').nextAll().find(".filteritem:checked")
@@ -677,9 +680,14 @@ function filterPrev($this) {
 	d.rowId = rowIds.join();
 	d.operator = operators.join();
 	d.searchName = attributeName;
-
+     if(attributeTypeName  == 'Asset Type') {
+	    url = '/getFilterList';
+     } else {
+	    url  = '/getFilterList?retrieveParent=true';
+     }
+     
 	$.ajax({
-		url : '/getFilterList?retrieveParent=true',
+		url : url,
 		type : 'GET',
 		async : false,
 		contentType : 'application/json',
