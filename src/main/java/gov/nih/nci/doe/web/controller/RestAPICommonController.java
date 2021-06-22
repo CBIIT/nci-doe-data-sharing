@@ -98,8 +98,6 @@ public class RestAPICommonController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.v2.collection}")
 	private String collectionUrl;
 
-	
-
 	@Value("${gov.nih.nci.hpc.server.search.dataobject.compound}")
 	private String compoundDataObjectSearchServiceURL;
 
@@ -902,7 +900,7 @@ public class RestAPICommonController extends AbstractDoeController {
 									log.error("error in bulk registration" + e.getMessage());
 									// send email to admin list if there is a failure in saving the collection to
 									// modac database
-									mailService.sendCollectionRegistationFailure(doeLogin, collectionPath,e);
+									mailService.sendCollectionRegistationFailure(doeLogin, collectionPath, e);
 								}
 							}
 						}
