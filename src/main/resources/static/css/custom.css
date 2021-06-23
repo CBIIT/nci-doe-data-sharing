@@ -863,8 +863,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 	color: #E87B05;
   font-family: latoregular;
   font-size: 26px;
-  padding-left:35px;
-  transform: translateY(3px);
+  transform: translateY(4px);
 }
 
 .filtertext {
