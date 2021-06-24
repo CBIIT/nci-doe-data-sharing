@@ -1,13 +1,17 @@
 package gov.nih.nci.doe.web.controller;
 
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
@@ -15,10 +19,17 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.MappingJsonFactory;
+
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.doe.web.util.ExcelExportProc;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
-import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
+import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
 
 @CrossOrigin
 @Controller
@@ -31,56 +42,91 @@ public class ExportController extends AbstractDoeController {
 
 	@GetMapping
 	public String exportMetadata(HttpSession session, HttpServletResponse response, HttpServletRequest request,
+			@RequestParam(value = "assetIdentifier") String assetIdentifier,
 			@RequestParam(value = "selectedPaths") String selectedPaths,
 			@RequestParam(value = "isParent") String isParent) throws Exception {
+
+		log.info("export file metadata for " + selectedPaths + " and is parent metadata: " + isParent);
 
 		String authToken = (String) session.getAttribute("hpcUserToken");
 		List<String> headers = new ArrayList<String>();
 
+		HpcCompoundMetadataQueryDTO compoundQuery = (HpcCompoundMetadataQueryDTO) session.getAttribute("compoundQuery");
+
+		UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(compoundDataObjectSearchServiceURL);
+
+		if (ucBuilder == null) {
+			return null;
+		}
+		ucBuilder.pathSegment(assetIdentifier.substring(1, assetIdentifier.length()));
+		final String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
+
+		WebClient client = DoeClientUtil.getWebClient(requestURL, sslCertPath, sslCertPassword);
+		client.header("Authorization", "Bearer " + authToken);
+		Response restResponse = client.invoke("POST", compoundQuery);
+
 		if (StringUtils.isNotEmpty(selectedPaths)) {
+
 			String[] paths = selectedPaths.split(",");
-			if (paths != null && paths.length >= 1) {
-				List<List<String>> rows = new ArrayList<>();
+			List<String> pathsList = new ArrayList<>(Arrays.asList(paths));
+			List<List<String>> rows = new ArrayList<>();
 
-				for (String path : paths) {
-					List<String> result = new ArrayList<String>();
-					HpcDataObjectDTO datafiles = DoeClientUtil.getDatafiles(authToken, dataObjectAsyncServiceURL, path,
-							true, true, sslCertPath, sslCertPassword);
+			if (restResponse.getStatus() == 200) {
 
-					if (datafiles != null && datafiles.getMetadataEntries() != null) {
-						for (HpcMetadataEntry entry : datafiles.getMetadataEntries().getSelfMetadataEntries()
-								.getUserMetadataEntries()) {
-							if (headers.contains("Dataobject" + "_" + entry.getAttribute())) {
-								result.add(entry.getValue());
-							} else {
-								headers.add("Dataobject" + "_" + entry.getAttribute());
-								result.add(entry.getValue());
-							}
+				MappingJsonFactory factory = new MappingJsonFactory();
+				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+				HpcDataObjectListDTO dataObjects = parser.readValueAs(HpcDataObjectListDTO.class);
+				List<HpcDataObjectDTO> searchResults = dataObjects.getDataObjects();
 
-						}
-						for (HpcMetadataEntry entry : datafiles.getMetadataEntries().getSelfMetadataEntries()
-								.getSystemMetadataEntries()) {
-							if (headers.contains("Dataobject" + "_" + entry.getAttribute())) {
-								result.add(entry.getValue());
-							} else {
-								headers.add("Dataobject" + "_" + entry.getAttribute());
-								result.add(entry.getValue());
-							}
+				for (HpcDataObjectDTO result : searchResults) {
+					if (pathsList.contains(result.getDataObject().getAbsolutePath())) {
 
-						}
-						if (!StringUtils.isEmpty(isParent) && isParent.equalsIgnoreCase("true")) {
-							for (HpcMetadataEntry entry : datafiles.getMetadataEntries().getParentMetadataEntries()) {
-								if (headers.contains(entry.getLevelLabel() + "_" + entry.getAttribute())) {
-									result.add(entry.getValue());
-								} else {
-									headers.add(entry.getLevelLabel() + "_" + entry.getAttribute());
-									result.add(entry.getValue());
+						List<String> r = new ArrayList<String>();
+						for (String header : headers) {
+							boolean found = false;
+							for (HpcMetadataEntry entry : result.getMetadataEntries().getSelfMetadataEntries()) {
+								if (header.equals("Dataobject" + "_" + entry.getAttribute())) {
+									r.add(entry.getValue());
+									found = true;
 								}
 							}
+
+							if (!StringUtils.isEmpty(isParent) && isParent.equalsIgnoreCase("true")) {
+								for (HpcMetadataEntry entry : result.getMetadataEntries().getParentMetadataEntries()) {
+									if (header.equals(entry.getLevelLabel() + "_" + entry.getAttribute())) {
+										r.add(entry.getValue());
+										found = true;
+									}
+								}
+							}
+							if (!found)
+								r.add("");
 						}
 
+						for (HpcMetadataEntry entry : result.getMetadataEntries().getSelfMetadataEntries()) {
+
+							if (!headers.contains("Dataobject" + "_" + entry.getAttribute())) {
+								headers.add("Dataobject" + "_" + entry.getAttribute());
+								r.add(entry.getValue());
+							}
+
+						}
+
+						if (!StringUtils.isEmpty(isParent) && isParent.equalsIgnoreCase("true")) {
+
+							for (HpcMetadataEntry entry : result.getMetadataEntries().getParentMetadataEntries()) {
+
+								if (!headers.contains(entry.getLevelLabel() + "_" + entry.getAttribute())) {
+									headers.add(entry.getLevelLabel() + "_" + entry.getAttribute());
+									r.add(entry.getValue());
+								}
+
+							}
+
+						}
+
+						rows.add(r);
 					}
-					rows.add(result);
 
 				}
 

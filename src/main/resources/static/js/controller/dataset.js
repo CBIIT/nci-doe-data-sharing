@@ -20,7 +20,7 @@ function dataTableInitDataSet(isVisible) {
     	 "paging": true,
     	 "ordering": true,
          "info": true,
-         "pageLength": 25,
+         "pageLength": 25,         
          "ajax": {
             "url": "/getDataObjects",
             "type": "GET",
@@ -186,7 +186,8 @@ function dataTableInitDataSet(isVisible) {
            });
            
            $(".downloadMetadata").click(function(e){
-        	   var selectedPath = $(this).attr('data_path');       	   
+        	   var selectedPath = $(this).attr('data_path'); 
+        	   var assetIdentifier =$("#assetPath").val();
         	   var selectedPaths = [];
         	   selectedPaths.push(selectedPath);
         	   bootbox.confirm({
@@ -203,9 +204,9 @@ function dataTableInitDataSet(isVisible) {
        		    },
        		    callback: function (result) {
        		    	if(result == true) {
-       		    		window.open('/export?isParent=true&&selectedPaths='+selectedPaths, '_self');
+       		    		window.open('/export?assetIdentifier='+assetIdentifier+'&&isParent=true&&selectedPaths='+selectedPaths, '_self');
        		    	} else if(result == false) {
-       		    		window.open('/export?isParent=false&&selectedPaths='+selectedPaths, '_self');
+       		    		window.open('/export?assetIdentifier='+assetIdentifier+'&&isParent=false&&selectedPaths='+selectedPaths, '_self');
        		    	}   
        		    }
        		});
@@ -306,20 +307,20 @@ function dataTableInitDataSet(isVisible) {
             {"targets":2,"type":"file-size"},
             { "visible": isVisible, "targets": 3}],
             
-        "dom": '<"top"lip>rt<"bottom"ip>',
-        "pagingType": "simple",
+            "dom": '<"top"lip>rt<"bottom"ip>',
+            "pagingType": "simple",
 
-        "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
+            "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
 
-        "language": {
-        	"lengthMenu": "ROWS PER PAGE &nbsp;&nbsp; _MENU_",
-        	"sLoadingRecords": "Loading...",
-            "zeroRecords": "Nothing found to display",
-            "paginate": {
-            	 next: '<i style="color:#000;font-size:17px;" class="fas fa-caret-right"></i>',
-                 previous: '<i style="color:#000;font-size:17px;" class="fas fa-caret-left"></i>'
-              }
-        }
+            "language": {
+            	"lengthMenu": "ROWS PER PAGE &nbsp;&nbsp; _MENU_",
+            	"sLoadingRecords": "Loading...",
+                "zeroRecords": "Nothing found to display",
+                "paginate": {
+                	 next: '<i style="color:#000;font-size:17px;" class="fas fa-caret-right"></i>',
+                     previous: '<i style="color:#000;font-size:17px;" class="fas fa-caret-left"></i>'
+                  }
+            }
     });
 }
 
@@ -461,6 +462,7 @@ function renderFileSize(data, type, row) {
 	
 }
 function exportDataObjectMetadata() {
+	var assetIdentifier =$("#assetPath").val();
 	   bootbox.confirm({
  		    message: "Do you wish to include parent metadata also?",
  		    buttons: {
@@ -479,13 +481,13 @@ function exportDataObjectMetadata() {
  		    	    $("#dataSetTable tbody input[type=checkbox]:checked").each(function () {
  		    	    	selectedPaths.push($(this).attr('id'));
  		    	    });
- 		    		window.open('/export?isParent=true&&selectedPaths='+selectedPaths, '_self');
+ 		    		window.open('/export?assetIdentifier='+assetIdentifier+'&&isParent=true&&selectedPaths='+selectedPaths, '_self');
  		    	} else if(result == false) {
  		    		var selectedPaths = [];
  		    	    $("#dataSetTable tbody input[type=checkbox]:checked").each(function () {
  		    	    	selectedPaths.push($(this).attr('id'));
  		    	    });
- 		    		window.open('/export?isParent=false&&selectedPaths='+selectedPaths, '_self');
+ 		    		window.open('/export?assetIdentifier='+assetIdentifier+'&&isParent=false&&selectedPaths='+selectedPaths, '_self');
  		    	}   
  		    }
  		});
