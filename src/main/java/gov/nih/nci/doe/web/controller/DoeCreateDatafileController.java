@@ -34,7 +34,6 @@ import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationRequestDTO
 @RequestMapping("/addDatafile")
 public class DoeCreateDatafileController extends DoeCreateCollectionDataFileController {
 
-;
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	private String collectionServiceURL;
 
@@ -84,8 +83,8 @@ public class DoeCreateDatafileController extends DoeCreateCollectionDataFileCont
 			HpcDataObjectRegistrationRequestDTO registrationDTO = constructSyncRequest(request, session, path);
 
 			registrationDTO.setChecksum(checksum);
-			Integer restResponse = DoeClientUtil.registerDatafile(authToken, doeDataFile, dataObjectAsyncServiceURL, registrationDTO, path,
-					sslCertPath, sslCertPassword);
+			Integer restResponse = DoeClientUtil.registerDatafile(authToken, doeDataFile, dataObjectAsyncServiceURL,
+					registrationDTO, path, sslCertPath, sslCertPassword);
 			if (restResponse == 200 || restResponse == 201) {
 
 				// store the auditing info
