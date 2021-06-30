@@ -101,7 +101,7 @@
                                </button>
                             
                             </div>
-                            
+                                                        
                             <div class="form-group col-lg-12 col-md-12" id="globusEndPointInformation" th:if="${endpoint_id != null}">
 									
 									
@@ -128,7 +128,7 @@
 								Authorize MoDaC to Access Your Google Drive</button>
 								</div>
 								
-                            <div class="col-sm-12 column" id="driveDiv">
+                            <div th:if="${authorized != null}" class="col-sm-12 column" id="driveDiv">
 							  <a href="javascript:void();" id="pickerUploadLink">
 							  Select Files from Google Drive</a>
 							</div>

@@ -170,7 +170,7 @@ style="font-size:13px;">
 									<br>
 									<div class="col-sm-12 column">
 										<label for="drivePath">Google Drive (Destination) Path:</label>
-										<a id="pickerLink" style="cursor:pointer;color: #007aff;">                                  
+										<a th:if="${authorized != null}" id="pickerLink" style="cursor:pointer;color: #007aff;">                                  
                                             Select from Google Drive</a>
 										<input type="text" class="form-control" name="drivePath" 
 										id="drivePath" placeholder="Enter Google Drive (Destination) Path" size="40" value="">
