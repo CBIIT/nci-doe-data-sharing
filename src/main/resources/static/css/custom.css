@@ -866,6 +866,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
     font-family:inter_medium;
     font-size:14px;
     padding-left:20px;
+    transform: translateY(-3px);
 }
 
 #attributeVal::placeholder {
