@@ -317,7 +317,7 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
   font-size: 14px;
 }
 
-#primaryGlobusButton{
+#primaryGlobusButton,#assetSelectionGlobusButton{
 	background-color: #E87B05;
     color: #fff !important;
     border-radius: 15px;
@@ -556,6 +556,10 @@ table#manageTasksTable thead .sorting_desc,table#dataSetTable thead .sorting_des
 
 }
 
+.clearMetadata {
+	border: transparent;
+    margin-left: -27px;
+}
 table#manageTasksTable th {
 	color: #FFFFFF;
     font-family: 'inter_regular';

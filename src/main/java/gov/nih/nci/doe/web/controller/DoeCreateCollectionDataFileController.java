@@ -41,13 +41,6 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementRulesDTO;
 import gov.nih.nci.hpc.domain.datatransfer.HpcGoogleDriveScanDirectory;
 
-/**
- * <p>
- * 
- * 
- * </p>
- */
-
 @EnableAutoConfiguration
 public abstract class DoeCreateCollectionDataFileController extends AbstractDoeController {
 	
@@ -570,7 +563,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				if ("zAttrStr_access_group".equalsIgnoreCase(paramName)) {
 					entry.setValue(String.join(",", attrValue));
 				} else {
-					entry.setValue(attrValue[0]);
+					entry.setValue(attrValue[0].trim());
 				}
 				if (StringUtils.isNotEmpty(entry.getValue())) {
 					metadataEntries.add(entry);
@@ -580,7 +573,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				if ("zAttrStr_access_group".equalsIgnoreCase(paramName)) {
 					attrEntry.setAttrValue(String.join(",", attrValue));
 				} else {
-					attrEntry.setAttrValue(attrValue[0]);
+					attrEntry.setAttrValue(attrValue[0].trim());
 				}
 				attrEntry.setSystemAttr(false);
 				if (StringUtils.isNotEmpty(entry.getValue())) {
@@ -596,13 +589,13 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				else
 					throw new DoeWebException("Invalid metadata attribute name. Empty value is not valid!");
 				if (attrValue.length > 0 && !attrValue[0].isEmpty())
-					entry.setValue(attrValue[0]);
+					entry.setValue(attrValue[0].trim());
 				else
 					throw new DoeWebException("Invalid metadata attribute value. Empty value is not valid!");
 				metadataEntries.add(entry);
 				DoeMetadataAttrEntry attrEntry = new DoeMetadataAttrEntry();
 				attrEntry.setAttrName(attrName[0]);
-				attrEntry.setAttrValue(attrValue[0]);
+				attrEntry.setAttrValue(attrValue[0].trim());
 				attrEntry.setSystemAttr(false);
 				selfMetadataEntries.add(attrEntry);
 			} else if (paramName.startsWith("path")) {

@@ -111,7 +111,7 @@ public class DoeCollectionController extends AbstractDoeController {
 				String attrName = paramName.substring("zAttrStr_".length());
 				String[] attrValue = request.getParameterValues(paramName);
 				entry.setAttribute(attrName);
-				entry.setValue(attrValue[0]);
+				entry.setValue(attrValue[0].trim());
 
 				metadataEntries.add(entry);
 			} else if (paramName.startsWith("_addAttrName")) {
@@ -124,7 +124,7 @@ public class DoeCollectionController extends AbstractDoeController {
 				else
 					throw new DoeWebException("Invalid metadata attribute name. Empty value is not valid!");
 				if (attrValue.length > 0 && !attrValue[0].isEmpty())
-					entry.setValue(attrValue[0]);
+					entry.setValue(attrValue[0].trim());
 				else
 					throw new DoeWebException("Invalid metadata attribute value. Empty value is not valid!");
 				metadataEntries.add(entry);
