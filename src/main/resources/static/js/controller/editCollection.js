@@ -59,14 +59,26 @@ function constructEditCollectionMetadata(data,status) {
                                                  "placeholder='"+placeholderValue+"' is_mandatory='"+isMandatory+"' " +
                                                  "aria-label='value of meta data' name='zAttrStr_"+value.attrName+"' " +
                                                  "style='width:70%;'>" + attrValModified + "</textarea></td></tr>"); 
-		     } else {		    	 		     
-			     $("#userMetaData tbody").append("<tr><td>" + value.displayName + "&nbsp;&nbsp;<i class='fas fa-question-circle'" +
-					                             "data-toggle='tooltip' " +
-					                             "data-placement='right' title=\"" + value.description + "\">" +
-					                             "</i></td><td><input type='text' " +
-					                             "placeholder='"+placeholderValue+"' is_mandatory='"+isMandatory+"' " +
-					                             "aria-label='value of meta data' name='zAttrStr_"+value.attrName+"' style='width:70%;'" +
-					                             "value=\"" + attrValModified + "\"></td></tr>");
+		     } else {	
+		    	 if(!isMandatory) {
+		    		 $("#userMetaData tbody").append("<tr id='"+value.attrName+"'><td>" + value.displayName + "&nbsp;&nbsp;<i class='fas fa-question-circle'" +
+                             "data-toggle='tooltip' " +
+                             "data-placement='right' title=\"" + value.description + "\">" +
+                             "</i></td><td><input type='text' " +
+                             "placeholder='"+placeholderValue+"' is_mandatory='"+isMandatory+"' " +
+                             "aria-label='value of meta data' name='zAttrStr_"+value.attrName+"' style='width:70%;'" +
+                             "value=\"" + attrValModified + "\">&nbsp;&nbsp;<input class='pull-right clearMetadata'" +
+                             "type='button' value='X'></td></tr>"); 
+		    		
+		    	 } else {
+			           $("#userMetaData tbody").append("<tr><td>" + value.displayName + "&nbsp;&nbsp;<i class='fas fa-question-circle'" +
+					   "data-toggle='tooltip' " +
+					   "data-placement='right' title=\"" + value.description + "\">" +
+					   "</i></td><td><input type='text' " +
+					   "placeholder='"+placeholderValue+"' is_mandatory='"+isMandatory+"' " +
+					   "aria-label='value of meta data' name='zAttrStr_"+value.attrName+"' style='width:70%;'" +
+					   "value=\"" + attrValModified + "\"></td></tr>");
+		    	 }
 		     }
 
 		} else if(value.validValues != null) {

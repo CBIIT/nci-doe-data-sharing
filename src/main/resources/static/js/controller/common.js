@@ -561,6 +561,10 @@ $(document).on('click', '#clearFilters', function() {
 	$("#searchResultsDiv").hide();
 });
 
+$(document).on('click','.clearMetadata',function(){
+	$(this).parent().find("input[type='text']").val("");
+});
+
 $(document).on('change', '.filteritem', function() {
 	
 	if($(this).is(':checked')) {
