@@ -168,6 +168,12 @@ table#assetDetailsDiv td {
 	padding-top: 2px;
 }
 
+
+table#globusDetailsDiv td {
+	border:none;
+	padding-top: 2px;
+}
+
 table.dataTable thead th, table.dataTable tfoot th {
     background-color: #194F85;
 }
@@ -1055,6 +1061,15 @@ padding-right: 10px;
     background-color: #fff;
     color:#00467f;
     }
+    
+#registerBulkAssets {
+    margin-top: 34px;
+    background-color: #E87B05;
+    color: #fff;
+    border-radius: 25px;
+    width: 100px;
+}
+
 .help-inline{font-size:12px;}
 .form-control{font-size: 14px;}  
 .form-control::-webkit-input-placeholder { color: #afafaf; }  /* WebKit, Blink, Edge */

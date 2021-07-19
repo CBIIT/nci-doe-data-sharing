@@ -7,13 +7,21 @@ public class DoeSearch {
 	private String[] operator;
 	private String[] attrName;
 	private String[] attrValue;
+	private String attrValuesString;
 	private boolean detailed;
 	private String searchType;
 	private int pageNumber = 1;
-	// private int pageSize;
 	private boolean[] isExcludeParentMetadata;
 	private boolean[] iskeyWordSearch;
 	private String searchName;
+
+	public String getAttrValuesString() {
+		return attrValuesString;
+	}
+
+	public void setAttrValuesString(String attrValuesString) {
+		this.attrValuesString = attrValuesString;
+	}
 
 	public String getSearchName() {
 		return searchName;
@@ -48,7 +56,15 @@ public class DoeSearch {
 	}
 
 	public String[] getAttrValue() {
-		return attrValue;
+		if (attrValue != null) {
+			return attrValue;
+		}
+
+		// Spring boot split by comma is causing an issue when the attribute value
+		// contains commas, so using a different escape pattern to split the string
+		// array of attribute values.
+		return attrValuesString.split("@@");
+
 	}
 
 	public void setAttrValue(String[] attrValue) {

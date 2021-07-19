@@ -374,6 +374,9 @@ $("#registerDataFileBtn").click(function(e){
 	registerDataFile();
 });
 
+$("#registerBulkAssets").click(function(e){
+	registerBulkAssets();
+});
 
 $("#doeDataFile").change(function (e) {	
 	appendFileName($(this));
@@ -429,6 +432,14 @@ $("#primaryGlobusButton").click(function(e){
 	d.institutionPath =$("#instituteList").val();
 	d.studyPath = $("#studyList").val();
 	d.dataSetPath = $("#dataList").val();
+
+	 invokeAjax('/upload','GET',d,postUploadGlobusFunction,postFailureFunction,null,'text');
+});
+
+$("#assetSelectionGlobusButton").click(function(e){
+	var d = {};
+	d.institutionPath =$("#instituteList").val();
+	d.studyPath = $("#studyList").val();
 
 	 invokeAjax('/upload','GET',d,postUploadGlobusFunction,postFailureFunction,null,'text');
 });
@@ -617,7 +628,7 @@ function filterNext($this,attributeTypeName) {
 			});
 
 	d.attrName = attrNames.join();
-	d.attrValue = attrValues.join();
+	d.attrValuesString = attrValues.join('@@');
 	d.isExcludeParentMetadata = isExcludeParentMetadata.join();
 	d.rowId = rowIds.join();
 	d.operator = operators.join();
@@ -679,7 +690,7 @@ function filterPrev($this,attributeTypeName) {
 			});
 
 	d.attrName = attrNames.join();
-	d.attrValue = attrValues.join();
+	d.attrValuesString = attrValues.join('@@');
 	d.isExcludeParentMetadata = isExcludeParentMetadata.join();
 	d.rowId = rowIds.join();
 	d.operator = operators.join();

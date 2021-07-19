@@ -120,7 +120,7 @@ function populateSearchCriteria(searchType) {
 		 
 	 
 		search_criteria_json.attrName = attrNames.join();
-		search_criteria_json.attrValue = attrValues.join();
+		search_criteria_json.attrValuesString = attrValues.join("@@");
 		search_criteria_json.rowId = rowIds.join();	
 		search_criteria_json.level = levelValues.join();
 		search_criteria_json.isExcludeParentMetadata = isExcludeParentMetadata.join();
@@ -155,7 +155,7 @@ function dataTableInit(isVisible) {
                 d.detailed = search_criteria_json.detailed;
                 d.level = search_criteria_json.level;
                d.attrName =search_criteria_json.attrName;
-               d.attrValue =search_criteria_json.attrValue;
+               d.attrValuesString =search_criteria_json.attrValuesString;
                d.rowId = search_criteria_json.rowId;
                d.isExcludeParentMetadata = search_criteria_json.isExcludeParentMetadata;
                d.iskeyWordSearch = search_criteria_json.iskeyWordSearch;
