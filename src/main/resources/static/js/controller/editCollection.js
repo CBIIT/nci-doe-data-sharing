@@ -15,7 +15,9 @@ function constructCollectionMetData(metadata,metaDataPath,isDataObject,fileName)
 		$("#userMetaData tbody").append("<tr><td>" + value.displayName + "</td><td><input type='text' " +
           		                        "aria-label='value of meta data' name='zAttrStr_"+value.key+"'" +
           		                        " style='width:70%;' " +
-          		                        "value=\"" + attrValModified + "\"></td></tr>");
+          		                        "value=\"" + attrValModified + "\">" +
+          		                        "&nbsp;&nbsp;<input class='pull-right clearMetadata'" +
+                                        "type='button' value='X'></td></tr>");
 		
 		
 	});	
