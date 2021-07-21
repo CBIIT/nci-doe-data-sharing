@@ -134,10 +134,10 @@ function refreshDataTable() {
     console.log("refresh datatable");
     if (!$.fn.DataTable.isDataTable('#searchResultTable')) {
         dataTableInit(isVisible);
-    } else {
+    } else {    	
         var t = $('#searchResultTable').DataTable();
         console.log(t);
-        t.ajax.reload(null, false);
+        t.ajax.reload(null, true);
     }
 }
 
