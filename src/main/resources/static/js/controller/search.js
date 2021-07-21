@@ -17,14 +17,15 @@ $(document).ready(function () {
 		 var search = $("#searchQuery").val();
 		 var list= JSON.parse(search);
 		 for (var i = 1; i < list.attrName.length; i++) {
+			 var attrVal = list.attrValuesString.split('@@');
 			 var iskeyWordSearch = list.iskeyWordSearch[i];
 			 if(iskeyWordSearch == true) {
-				 var attrval = list.attrValue[i];
+				 var attrval = attrVal[i];
 				 var newAttrVal = attrval.replaceAll('%', '');
 				 $("#attributeVal").val(newAttrVal);
 			 } else {
 				 var attrName = list.attrName[i];
-				 var attrVal = list.attrValue[i];
+				 var attrVal = attrVal[i];
 				 $(".attrName").each(function(e){
 					 if($(this).text() == attrName) {
 						 $(this).parent().parent().find(".filteritem").each(function(e){
@@ -37,6 +38,8 @@ $(document).ready(function () {
 				 })
 			 }
 		 }
+		 populateSearchCriteria(null);
+	 } else {
 		 populateSearchCriteria(null);
 	 }
 	 
