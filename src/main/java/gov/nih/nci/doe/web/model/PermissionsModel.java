@@ -2,9 +2,6 @@ package gov.nih.nci.doe.web.model;
 
 public class PermissionsModel {
 
-	private String dataLevelAccessGroups;
-	private String studyLevelAccessGroups;
-	private String programLevelAccessGroups;
 	private String dataCollectionId;
 	private String studyCollectionId;
 	private String progCollectionId;
@@ -45,30 +42,6 @@ public class PermissionsModel {
 
 	public void setSelectedCollection(String selectedCollection) {
 		this.selectedCollection = selectedCollection;
-	}
-
-	public String getDataLevelAccessGroups() {
-		return dataLevelAccessGroups;
-	}
-
-	public void setDataLevelAccessGroups(String dataLevelAccessGroups) {
-		this.dataLevelAccessGroups = dataLevelAccessGroups;
-	}
-
-	public String getStudyLevelAccessGroups() {
-		return studyLevelAccessGroups;
-	}
-
-	public void setStudyLevelAccessGroups(String studyLevelAccessGroups) {
-		this.studyLevelAccessGroups = studyLevelAccessGroups;
-	}
-
-	public String getProgramLevelAccessGroups() {
-		return programLevelAccessGroups;
-	}
-
-	public void setProgramLevelAccessGroups(String programLevelAccessGroups) {
-		this.programLevelAccessGroups = programLevelAccessGroups;
 	}
 
 	public String getDataCollectionId() {

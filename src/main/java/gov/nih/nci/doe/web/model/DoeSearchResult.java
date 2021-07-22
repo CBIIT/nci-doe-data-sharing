@@ -12,16 +12,12 @@ public class DoeSearchResult {
 	private String programName;
 	private String studyPath;
 	private String institutePath;
-	private List<KeyValueBean> selfMetadata;
-	private List<KeyValueBean> studyUserMetadata;
-	private List<KeyValueBean> instituteUserMetadata;
 	private String dataSetPermissionRole;
 	private String studyPermissionRole;
 	private String programPermissionRole;
 	private Integer dataSetCollectionId;
 	private Integer studyCollectionId;
 	private Integer programCollectionId;
-	private String dataLevelAccessGroups;
 	private String dataSetdmeDataId;
 	private String assetType;
 	private String dmeDataId;
@@ -88,30 +84,6 @@ public class DoeSearchResult {
 
 	public void setProgramName(String programName) {
 		this.programName = programName;
-	}
-
-	public List<KeyValueBean> getSelfMetadata() {
-		return selfMetadata;
-	}
-
-	public void setSelfMetadata(List<KeyValueBean> selfMetadata) {
-		this.selfMetadata = selfMetadata;
-	}
-
-	public List<KeyValueBean> getStudyUserMetadata() {
-		return studyUserMetadata;
-	}
-
-	public void setStudyUserMetadata(List<KeyValueBean> studyUserMetadata) {
-		this.studyUserMetadata = studyUserMetadata;
-	}
-
-	public List<KeyValueBean> getInstituteUserMetadata() {
-		return instituteUserMetadata;
-	}
-
-	public void setInstituteUserMetadata(List<KeyValueBean> instituteUserMetadata) {
-		this.instituteUserMetadata = instituteUserMetadata;
 	}
 
 	public String getDataSetPath() {
@@ -186,12 +158,5 @@ public class DoeSearchResult {
 		this.programCollectionId = programCollectionId;
 	}
 
-	public String getDataLevelAccessGroups() {
-		return dataLevelAccessGroups;
-	}
-
-	public void setDataLevelAccessGroups(String dataLevelAccessGroups) {
-		this.dataLevelAccessGroups = dataLevelAccessGroups;
-	}
 
 }

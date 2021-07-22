@@ -592,7 +592,7 @@ $(document).on('change', '.filteritem', function() {
 	
 	//always filter the metadata on the children level
 	//do not remove parent based on child selection
-	$(this).closest('.filterComponentDiv').nextAll().find('.attributeLabel').each(function(e){
+	$(this).closest('.filterComponentDiv').next().find('.attributeLabel').each(function(e){
 		filterNext($(this),attrName);
     });
 	
@@ -659,7 +659,12 @@ function filterNext($this,attributeTypeName) {
 			console.log("===> error: ", error);
 			console.log("===> data: ", data);
 		}
-	});
+	}).done(
+			function(e) {
+				$this.closest('.filterComponentDiv').next().find('.attributeLabel').each(function(e){
+					filterNext($(this));
+				});
+			});
 }
 
 function filterPrev($this,attributeTypeName) {

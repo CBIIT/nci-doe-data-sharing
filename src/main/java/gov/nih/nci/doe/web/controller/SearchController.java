@@ -81,7 +81,7 @@ public class SearchController extends AbstractDoeController {
 		List<DoeSearchResult> results = new ArrayList<>();
 
 		try {
-			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search,"Asset");
+			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search, "Asset");
 			compoundQuery.setDetailedResponse(true);
 			log.info("search compund query" + compoundQuery);
 			serviceURL = compoundDataObjectSearchServiceURL;
@@ -154,11 +154,14 @@ public class SearchController extends AbstractDoeController {
 					"Study");
 			Integer programCollectionId = getCollectionId(result.getMetadataEntries().getParentMetadataEntries(),
 					"Program");
+
 			returnResult.setDataSetCollectionId(result.getCollection().getCollectionId());
-			returnResult.setDataSetPermissionRole(
-					getPermissionRole(user, result.getCollection().getCollectionId(), loggedOnUserPermissions));
 			returnResult.setStudyCollectionId(studyCollectionId);
 			returnResult.setProgramCollectionId(programCollectionId);
+
+			returnResult.setDataSetPermissionRole(
+					getPermissionRole(user, result.getCollection().getCollectionId(), loggedOnUserPermissions));
+
 			returnResult.setStudyPermissionRole(getPermissionRole(user, studyCollectionId, loggedOnUserPermissions));
 			returnResult
 					.setProgramPermissionRole(getPermissionRole(user, programCollectionId, loggedOnUserPermissions));
@@ -169,18 +172,10 @@ public class SearchController extends AbstractDoeController {
 					getAttributeValue("description", result.getMetadataEntries().getSelfMetadataEntries(), "Asset"));
 			returnResult.setStudyPath(studyPath);
 			returnResult.setInstitutePath(programPath);
-			returnResult.setSelfMetadata(
-					getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(), "Asset", systemAttrs));
-			returnResult.setStudyUserMetadata(
-					getUserMetadata(result.getMetadataEntries().getParentMetadataEntries(), "Study", systemAttrs));
-			returnResult.setInstituteUserMetadata(
-					getUserMetadata(result.getMetadataEntries().getParentMetadataEntries(), "Program", systemAttrs));
 			returnResult.setProgramName(getAttributeValue("program_name",
 					result.getMetadataEntries().getParentMetadataEntries(), "Program"));
 			returnResult.setStudyName(
 					getAttributeValue("study_name", result.getMetadataEntries().getParentMetadataEntries(), "Study"));
-			returnResult.setDataLevelAccessGroups(
-					getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries(), "Asset"));
 			returnResult.setDataSetdmeDataId(webUrl + "/searchTab?dme_data_id="
 					+ getAttributeValue("dme_data_id", result.getMetadataEntries().getSelfMetadataEntries(), "Asset"));
 			returnResult.setAssetType(

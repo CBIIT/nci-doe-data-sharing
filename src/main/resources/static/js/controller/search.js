@@ -472,15 +472,15 @@ function renderPath(data, type, row) {
 			    "<div class='col-md-12 cil_12_bold_no_color_dataset'>" +
 				"<span style='word-break: break-all;'>" + row.dataSetDescription + "</span>" +
 			    "<br></div><div class='col-md-12' style='margin-left:22px;margin-top: 10px;'>" +
-			    "<span style='color: #747474;' class='cil_12_bold_no_color'>STUDY: </span><a class='cil_12_no_color button2a' " +
-			    "metadata_type = '" + JSON.stringify(row.studyUserMetadata)  + "' tabindex='0'" +
+			    "<span style='color: #747474;' class='cil_12_bold_no_color'>STUDY: </span>" +
+			    "<a class='cil_12_no_color button2a' " +
+			    "selected_path='"+row.studyPath+"' collection_type='Study' tabindex='0'" +
 			    " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
 			    "data-popover-content='#a01'>" + row.studyName + "</a>" +
 				"&nbsp&nbsp;"+editStudySetHtml+"</div>" +
 			    "<div class='col-md-12 top-buffer' style='margin-left:22px;'>" +
 			    "<span style='color: #747474;' class='cil_12_bold_no_color'>PROGRAM: </span><a class='cil_12_no_color button2a' " +
-			    "metadata_type = '" + JSON.stringify(row.instituteUserMetadata)  + "'" +
-				" tabindex='0'" +
+				" selected_path='"+row.institutePath+"' collection_type='Program' tabindex='0'" +
 			    " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
 			    "data-popover-content='#a01'>" + row.programName + "</a>" +
 				"&nbsp&nbsp;"+editProgramSetHtml+"</div></div></div>";
@@ -492,14 +492,13 @@ function renderPath(data, type, row) {
 				"<span style='word-break: break-all;'>" + row.dataSetDescription + "</span>" +
 		        "</a><br></div><div class='col-md-12' style='margin-left:22px;margin-top: 10px;'>" +
 		        "<span style='color: #747474;' class='cil_12_bold_no_color'>STUDY: </span><a class='cil_12_no_color button2a'" +
-		        " metadata_type = '" + JSON.stringify(row.studyUserMetadata)  + "' tabindex='0'" +
+		        "selected_path='"+row.studyPath+"' collection_type='Study' tabindex='0'" +
 		        " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
 		        "data-popover-content='#a01'>" + row.studyName + "</a>" +
 				"&nbsp&nbsp;</div>" +
 		        "<div class='col-md-12 top-buffer' style='margin-left:22px;'>" +
 		        "<span style='color: #747474;' class='cil_12_bold_no_color'>PROGRAM: </span><a class='cil_12_no_color button2a' " +
-		        "metadata_type = '" + JSON.stringify(row.instituteUserMetadata)  + "' " +
-				"tabindex='0'" +
+				"selected_path='"+row.institutePath+"' collection_type='Program' tabindex='0'" +
 		        " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
 		        "data-popover-content='#a01'>" + row.programName + "</a>" +
 				"&nbsp&nbsp;</div></div></div>";
@@ -559,6 +558,7 @@ function initializePopover() {
 function displayPopover() {
     $('.button2a').on('click', function (e) {
         openPopOver($(this));
+        
     });
     $('.button2a').on('keypress', function (e) {
         if (e.which == 13 || e.keyCode == 13) {
@@ -569,42 +569,60 @@ function displayPopover() {
 
 function openPopOver($this) {
     var pop = $this;
-    $('.button2a').not($this).popover('hide'); 
-    var metadata = $this.attr('metadata_type');
-    var headerTest = $this.attr('metadata_context');
-    if(!headerTest) {
-    	headerTest = 'User Metadata';
-    } else {
-    	headerTest = 'System Metadata';
-    }
-    var list = JSON.parse(metadata);
+    $('.button2a').not($this).popover('hide');
+    var headerTest = 'User Metadata';   
+    var metadata;
+    var selectedPath = $this.attr('selected_path');
+    var collection_type = $this.attr('collection_type');
     
-      var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\">" +
-                "" + headerTest +" <a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a> </div>" +
-                "<div class='popover-body'> <div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
-                "<div class='divTableBody'><div class='divTableRow'>" +
-                "<div class='divTableHead'>ATTRIBUTE</div>" + 
-                "<div class='divTableHead'>VALUE</div></div>";
+    var params= {selectedPath:selectedPath,collectionType:collection_type,refresh:false};	
+		$.ajax({
+		       url: '/addCollection',
+		       type: 'GET',
+		       contentType: 'application/json',
+		       dataType: 'json',
+		       data: params,
+		       beforeSend: function () {
+		    	   $("#spinner").show();
+		           $("#dimmer").show();
+		       },
+		       success: function (data, status) {
+		    	   $("#spinner").hide();
+		           $("#dimmer").hide();
+		    	   metadata= data;
+		    	      var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\">" +
+		                "" + headerTest +" <a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a> </div>" +
+		                "<div class='popover-body'> <div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
+		                "<div class='divTableBody'><div class='divTableRow'>" +
+		                "<div class='divTableHead'>ATTRIBUTE</div>" + 
+		                "<div class='divTableHead'>VALUE</div></div>";
 
-            var content = "";
+		            var content = "";
 
-            $.each(list, function( key, value ) {	
-            	var attrVal = value.value;
-            	if(attrVal.startsWith('https') || attrVal.startsWith('http')) {
-            		content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
-                    "<div class='divTableCell'><a target='_blank' href=" + attrVal + ">" + attrVal + "</a></div></div>";
-            	} else {
-            		content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
-                    "<div class='divTableCell'>" + attrVal + "</div></div>";
-            	}
-                
-                });
-            
-            var table = ind + content + "</div> </div></div> </div>";
-            $("#a01").remove();
-            pop.after(table);
-            pop.data('bs.popover').setContent();
-            pop.popover('show');
-        
-   
+		            $.each(metadata, function( key, value ) {	
+		            	var attrVal = value.attrValue;
+		            	if(attrVal.startsWith('https') || attrVal.startsWith('http')) {
+		            		content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
+		                    "<div class='divTableCell'><a target='_blank' href=" + attrVal + ">" + attrVal + "</a></div></div>";
+		            	} else if(value.attrName.indexOf("access_group") == -1){
+		            		content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
+		                    "<div class='divTableCell'>" + attrVal + "</div></div>";
+		            	}
+		                
+		                });
+		            
+		            var table = ind + content + "</div> </div></div> </div>";
+		            $("#a01").remove();
+		            pop.after(table);
+		            pop.data('bs.popover').setContent();
+		            pop.popover('show');
+		       },
+		       error: function (data, status, error) {
+		    	   $("#spinner").hide();
+		           $("#dimmer").hide();
+		    	   console.log("===> status: ", status);
+		    	   console.log("===> error: ", error);
+		       }
+
+		   });  
 }
