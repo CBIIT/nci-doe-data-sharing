@@ -206,4 +206,16 @@ public class MailServiceImpl implements MailService {
 		params.put("EXCEPTION", e);
 		send("COLLECTION_FAILURE_EMAIL", params);
 	}
+
+	@Override
+	public void sendErrorEmail(Exception e, String user) {
+		log.info("Sending exception email");
+		final Map<String, Object> params = new HashMap<String, Object>();
+		final List<String> to = new ArrayList<String>();
+		to.add(adminAddress);
+		params.put("EXCEPTION", e);
+		params.put("user_Id", user);
+		send("EXCEPTION_EMAIL", params);
+		
+	}
 }
