@@ -213,6 +213,7 @@ public class MailServiceImpl implements MailService {
 		final Map<String, Object> params = new HashMap<String, Object>();
 		final List<String> to = new ArrayList<String>();
 		to.add(adminAddress);
+		params.put(TO, to.toArray(new String[0]));
 		params.put("EXCEPTION", e);
 		params.put("user_Id", user);
 		send("EXCEPTION_EMAIL", params);
