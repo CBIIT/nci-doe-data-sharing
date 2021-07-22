@@ -1,6 +1,5 @@
 package gov.nih.nci.doe.web.model;
 
-import java.util.List;
 
 public class DoeSearchResult {
 

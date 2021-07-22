@@ -89,6 +89,7 @@ public class HomeController extends AbstractDoeController {
 			@RequestParam(value = "doi", required = false) String doi,
 			@RequestParam(value = "returnToSearch", required = false) String returnToSearch) throws DoeWebException {
 
+		log.info("Search tab");
 		if (StringUtils.isNotEmpty(dmeDataId)) {
 			model.addAttribute("dmeDataId", dmeDataId);
 		}

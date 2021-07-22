@@ -64,6 +64,7 @@ public class SearchController extends AbstractDoeController {
 	public ResponseEntity<?> search(HttpSession session, @RequestHeader HttpHeaders headers, HttpServletRequest request,
 			DoeSearch search) throws DoeWebException {
 
+		log.info("Search controller");
 		String authToken = (String) session.getAttribute("hpcUserToken");
 		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
 		if (modelDTO == null) {
