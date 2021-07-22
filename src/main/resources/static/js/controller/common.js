@@ -722,9 +722,11 @@ function filterPrev($this,attributeTypeName) {
 			$this.parent().find('.filterGroupDiv').each(function(e) {
 				var val = $(this).find('.filteritem').val();
 				if (list.indexOf(val) != -1) {
-					$(this).find('.filteritem').prop("checked", true);
 					$(this).show();
-					$(this).find('span').css('color','#2E76ED');
+				}  else {
+					$(this).hide();
+					$(this).find('.filteritem').prop("checked", false);
+					$(this).find('span').css('color','#212529');
 				}
 			});
 		},
