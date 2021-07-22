@@ -596,8 +596,8 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before
 
 .wrapper {
     position: absolute;
-    left: 60px;
-    right: 60px;
+    left: 50px;
+    right:50px;
     overflow:hidden;
 }
 .buttoncontainer {
