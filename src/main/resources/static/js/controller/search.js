@@ -79,7 +79,7 @@ function populateSearchCriteria(searchType) {
 			
 	 if($("#attributeVal").val()) {
 		    attrNames.push("ANY");
-			attrValues.push('%' + $("#attributeVal").val() + '%');
+			attrValues.push('%' + $("#attributeVal").val().trim() + '%');
 			levelValues.push("ANY");
 			isExcludeParentMetadata.push(false);
 			rowIds.push(2);

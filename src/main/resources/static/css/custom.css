@@ -162,6 +162,12 @@
     margin-top: -6px;
 }
 
+.bulkAssetTextbox {
+	    width: 90%;
+    border-radius: 9px;
+    border-color: transparent;
+    height: 29px;
+}
 table#assetDetailsDiv td {
 	border:none;
 	background-color: transparent;
@@ -189,6 +195,16 @@ table#dataSetMetaData thead th, table.dataTable tfoot th {
 
 table.dataTable tr.odd td{background-color: #E0F0F4!important;}
 table.dataTable tr.even td{background-color: #FBFBFB!important;}
+
+table#assetBulkMetadataTable tbody tr td {
+	background-color: #E0F0F4!important;
+}
+table#assetBulkMetadataTable thead tr th {
+	background-color: #00579e!important;
+    color: #fff;
+    font-weight: 400;
+}
+
 
 table#userMetaData tr:nth-child(odd) td{
 	    background-color: #E0F0F4!important;
@@ -516,7 +532,7 @@ li.nav-item > a:hover {
 }
 .uploadLabels {
 	color: #C06400;
-    font-family: Inter;
+    font-family: 'inter_regular';
     font-weight: 200;
     font-size: 15px;
 }
@@ -610,6 +626,25 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before
     height:486px;
 }
 
+.assetGlobusSelectionFields {
+	color: #fff;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    margin-left: 10px;
+}
+.assetBulkGlobusLabels{
+	background-color: #00579e;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border: 1px solid lightgrey;
+    height: 47px;
+    padding-left: 10px;
+}
+.assetBulkGlobusValues {
+	border: 1px solid lightgrey;
+	padding: 10px;
+	color: #424242;
+}
 .uploadslogo {
 	width:15px;
 }
@@ -880,10 +915,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 }
 
 #attributeVal::placeholder {
-	color: #E87B05;
+  color: #000000ad;
   font-family: latoregular;
-  font-size: 26px;
-  transform: translateY(4px);
+  font-size: 14px;
+  transform: translateY(0px);
 }
 
 .filtertext {
@@ -1062,12 +1097,13 @@ padding-right: 10px;
     color:#00467f;
     }
     
-#registerBulkAssets {
+#registerBulkAssets,#registerBulkDataFileBtn {
     margin-top: 34px;
     background-color: #E87B05;
     color: #fff;
-    border-radius: 25px;
+    border-radius: 14px;
     width: 100px;
+    margin-left: 82px;
 }
 
 .help-inline{font-size:12px;}
@@ -1313,6 +1349,10 @@ return to the top
 }
 .btn-success {
     background-color: #218739 !important;
+}
+
+.btn-close {
+	background-color: #E87B05 !important;
 }
 
 /*--===============================================================================

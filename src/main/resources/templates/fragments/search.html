@@ -8,25 +8,26 @@
     <div id="searchTab" role="tabpanel" th:fragment="search">
       <div id="searchFragmentDiv" class="col-md-12 col-sm-12">
                         <div class="form-row">
-                            <div class="form-group col-lg-8 col-md-8 mx-auto" style="float: right;margin-top: 4px;">
+                            <div class="form-group col-lg-3 col-md-3" style="float: left;margin-top: 10px;margin-bottom: -10px;margin-left: -18px;">
                                 <input type="hidden" th:value="${dmeDataId}" id="dmeDataId"/>
                                 <input type="hidden" th:value="${doi}" id="doi"/>
                                  <input type="hidden" th:value="${searchQuery}" id="searchQuery"/>
                                  <input type="hidden" th:value="${returnToSearch}" id="returnToSearch"/>
                                  <input type="text" placeholder="Search MoDaC" style="
-                                  margin-top:10px;border: 2px solid #E87B05;border-radius: 
-                                  33px;height: 61px;font-size: 17px;
-                                  font-weight: 550;padding-left: 40px;" id="attributeVal" class="form-control">
+                                   margin-top:10px;border: 2px solid #E87B05;
+                                  border-radius: 15px;height: 42px;font-size: 13px;
+                                  font-weight: 550;padding-left: 20px;" id="attributeVal" class="form-control">
                                 
                                  <span id="resetBtn" data-toggle="tooltip" title="Reset" 
-                                  style="position: absolute;top: 30px;
-                                  right: 100px;height: 16px;"><img src="/images/cancel-X-grey.svg" style="width:14px;"/></span>
+                                  style="position: absolute;
+                                  top: 17px;right: 66px;
+                                  height: -7px;"><img src="/images/cancel-X-grey.svg" style="width:11px;"/></span>
                             
-                                 <span data-toggle="tooltip" title="Search" style="position: absolute;top: 24px;
-                                  right: 25px;height: 33px;width: 58px;font-size: 18px;background-color: #E87B05;
-                                  border-radius: 16px;
+                                 <span data-toggle="tooltip" title="Search" style="position: absolute;top: 18px;
+                                  right: 16px;height: 25px;width: 41px;font-size: 14px;background-color: #E87B05;
+                                  border-radius: 11px;
                                   text-align: center;" id="searchBtn">
-                                 <img src="/images/arrow-white-large.svg" style="width: 29px;"></span>
+                                 <img src="/images/arrow-white-large.svg" style="width: 18px;"></span>
                                  <br>
                             </div>
                            </div> 
@@ -83,7 +84,7 @@
                             </div>  
                           
                          <div class="form-group col-md-9 col-sm-12 mb-4" id="searchResultsDiv" 
-            style="display:none;margin-top:6px;background-color: #C6D9EC;">                          
+            style="display:none;margin-top:-55px;background-color: #C6D9EC;">                          
                 <!-- search results -->
                 <div th:replace="fragments/search_results :: search_results"></div>
             </div>
