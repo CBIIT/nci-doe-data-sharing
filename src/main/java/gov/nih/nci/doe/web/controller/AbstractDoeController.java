@@ -166,6 +166,7 @@ public abstract class AbstractDoeController {
 		} else {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
+		mailService.sendErrorEmail(ex,getLoggedOnUserInfo());
 		response.setHeader("Content-Type", "application/json");
 		return new DoeResponse("Error occurred", ex.getMessage());
 

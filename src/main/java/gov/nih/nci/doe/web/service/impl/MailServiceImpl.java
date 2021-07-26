@@ -193,7 +193,7 @@ public class MailServiceImpl implements MailService {
 		send("RESET_PASSWORD_EMAIL", params);
 
 	}
-	
+
 	@Override
 	public void sendCollectionRegistationFailure(String email, String collectionPath, Exception e) {
 		log.info("Sending collection registration failure for: " + email);
@@ -203,7 +203,7 @@ public class MailServiceImpl implements MailService {
 		params.put(TO, to.toArray(new String[0]));
 		params.put("COLLECTION_PATH", collectionPath);
 		params.put("EMAIL", email);
-		params.put("EXCEPTION", e);
+		params.put("EXCEPTION", e != null ? e : "");
 		send("COLLECTION_FAILURE_EMAIL", params);
 	}
 
@@ -217,6 +217,6 @@ public class MailServiceImpl implements MailService {
 		params.put("EXCEPTION", e);
 		params.put("user_Id", user);
 		send("EXCEPTION_EMAIL", params);
-		
+
 	}
 }
