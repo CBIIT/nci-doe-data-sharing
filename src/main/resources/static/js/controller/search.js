@@ -391,7 +391,7 @@ function renderDataSetName(data, type, row){
 			}
 		}
 			
-		html += "<div class='col-md-12' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'>" +
+		html += "<div class='col-md-12' style='font-size:16px;margin-top:10px;'><div class='row'><div class='col-md-12'>" +
 				""+checkboxHtml+"&nbsp;&nbsp;&nbsp;" +
 				"<a href='#' class='dataSetFragment' " +
 			    "dme_data_id  = '" + row.dmeDataId + "' permissions_role = '" + row.dataSetPermissionRole + "' " +
@@ -400,7 +400,7 @@ function renderDataSetName(data, type, row){
 			    "&nbsp&nbsp;" + editDataSetHtml + "</div></div></div>";
 
 	} else {
-		html += "<div class='col-md-12' style='font-size:16px;margin-top:20px;'><div class='row'><div class='col-md-12'>"+
+		html += "<div class='col-md-12' style='font-size:16px;margin-top:10px;'><div class='row'><div class='col-md-12'>"+
 		        "&nbsp;&nbsp;&nbsp;<a href='#' class='dataSetFragment' " +
 				"dme_data_id  = '" + row.dmeDataId + "' permissions_role = '" + row.dataSetPermissionRole + "'" +
 				"data_set_path = " + row.dataSetPath + ">" +
@@ -467,7 +467,7 @@ function renderPath(data, type, row) {
 			}
 		}
 	
-		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;margin-bottom: 20px;'><div class='row'>" +
+		html += "<div class='col-md-10' style='font-size:16px;margin-top:10px;margin-bottom: 10px;'><div class='row'>" +
 				"<div class='col-md-12'></div>" +
 			    "<div class='col-md-12 cil_12_bold_no_color_dataset'>" +
 				"<span style='word-break: break-all;'>" + row.dataSetDescription + "</span>" +
@@ -486,7 +486,7 @@ function renderPath(data, type, row) {
 				"&nbsp&nbsp;"+editProgramSetHtml+"</div></div></div>";
 
 	} else {
-		html += "<div class='col-md-10' style='font-size:16px;margin-top:20px;margin-bottom: 20px;'><div class='row'>" +
+		html += "<div class='col-md-10' style='font-size:16px;margin-top:10px;margin-bottom: 10px;'><div class='row'>" +
 				"<div class='col-md-12'></div>" +
 		        "<div class='col-md-12 cil_12_bold_no_color_dataset' >" +
 				"<span style='word-break: break-all;'>" + row.dataSetDescription + "</span>" +

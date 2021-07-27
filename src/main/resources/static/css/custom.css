@@ -200,7 +200,7 @@ table#assetBulkMetadataTable tbody tr td {
 	background-color: #E0F0F4!important;
 }
 table#assetBulkMetadataTable thead tr th {
-	background-color: #00579e!important;
+	background-color: #194F85!important;
     color: #fff;
     font-weight: 400;
 }
@@ -633,17 +633,19 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before
     margin-left: 10px;
 }
 .assetBulkGlobusLabels{
-	background-color: #00579e;
+	background-color: #194F85;
     padding-top: 10px;
     padding-bottom: 10px;
-    border: 1px solid lightgrey;
+    border: 0.95px solid #898989;
     height: 47px;
     padding-left: 10px;
+    font-family:'inter_regular';
 }
 .assetBulkGlobusValues {
-	border: 1px solid lightgrey;
+	border: 0.95px solid #898989;
 	padding: 10px;
-	color: #424242;
+	color: #000000;
+	font-family:'inter_regular';
 }
 .uploadslogo {
 	width:15px;
@@ -915,9 +917,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 }
 
 #attributeVal::placeholder {
-  color: #000000ad;
+  color: #010101;
   font-family: latoregular;
-  font-size: 14px;
+  font-size: 16px;
   transform: translateY(0px);
 }
 
@@ -1098,7 +1100,7 @@ padding-right: 10px;
     }
     
 #registerBulkAssets,#registerBulkDataFileBtn {
-    margin-top: 34px;
+    margin-top:5px;
     background-color: #E87B05;
     color: #fff;
     border-radius: 14px;
