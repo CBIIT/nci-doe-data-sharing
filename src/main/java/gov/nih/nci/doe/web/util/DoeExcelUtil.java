@@ -18,6 +18,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.parboiled.common.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import gov.nih.nci.doe.web.DoeWebException;
@@ -29,25 +30,23 @@ public class DoeExcelUtil {
 	public static final String METADATA_SHEET = "Metadata";
 	public static final String TOKENS_SHEET = "Tokens";
 
-	public static HpcBulkMetadataEntries parseBulkMatadataEntries(MultipartFile metadataFile, String collectionPath) 
-			throws IOException,DoeWebException {
+	public static HpcBulkMetadataEntries parseBulkMatadataEntries(MultipartFile metadataFile, String accessGrps,
+			String collectionPath) throws IOException, DoeWebException {
 		HpcBulkMetadataEntries entries = null;
-		if(metadataFile == null || metadataFile.getName().isEmpty() || metadataFile.getOriginalFilename().isEmpty())
+		if (metadataFile == null || metadataFile.getName().isEmpty() || metadataFile.getOriginalFilename().isEmpty())
 			return null;
-		
-		
+
 		Sheet tokenSheet = getWorkbookSheet(metadataFile, TOKENS_SHEET);
 		Map<String, String> tokens = getTokensMap(tokenSheet);
 		Sheet metadataSheet = getWorkbookSheet(metadataFile, METADATA_SHEET);
 		Map<String, Map<String, String>> metadataMap = getMetadataMap(metadataSheet);
-		entries = buildHpcBulkMetadataEntries(metadataMap, tokens, collectionPath);
-		
+		entries = buildHpcBulkMetadataEntries(metadataMap, tokens, accessGrps, collectionPath);
 
 		return entries;
 	}
 
 	private static HpcBulkMetadataEntries buildHpcBulkMetadataEntries(Map<String, Map<String, String>> metadataMap,
-			Map<String, String> tokens, String collectionPath) {
+			Map<String, String> tokens, String accessGrps, String collectionPath) {
 		HpcBulkMetadataEntries entries = new HpcBulkMetadataEntries();
 		List<HpcBulkMetadataEntry> pathMetadataEntries = new ArrayList<HpcBulkMetadataEntry>();
 		if (metadataMap == null || metadataMap.isEmpty())
@@ -58,6 +57,10 @@ public class DoeExcelUtil {
 			HpcBulkMetadataEntry metadataEntry = new HpcBulkMetadataEntry();
 			String path = iterator.next();
 			Map<String, String> metadata = metadataMap.get(path);
+			if (metadata.containsKey("collection_type") && metadata.get("collection_type").equalsIgnoreCase("Asset")
+					&& StringUtils.isNotEmpty(accessGrps)) {
+				metadata.put("access_group", accessGrps);
+			}
 			path = replaceTokens(path, tokens);
 			metadataEntry.setPath(collectionPath + "/" + path);
 			if (metadata != null && !metadata.isEmpty())
@@ -92,7 +95,7 @@ public class DoeExcelUtil {
 	private static List<String> getHeader(Sheet metadataSheet) throws DoeWebException {
 		List<String> header = new ArrayList<String>();
 		Row firstRow = metadataSheet.getRow(metadataSheet.getFirstRowNum());
-		//List<String> attrNames = new ArrayList<String>();
+		// List<String> attrNames = new ArrayList<String>();
 		Iterator<Cell> cellIterator = firstRow.iterator();
 		while (cellIterator.hasNext()) {
 			Cell currentCell = cellIterator.next();
@@ -106,8 +109,7 @@ public class DoeExcelUtil {
 		return header;
 	}
 
-	@SuppressWarnings("deprecation")
-	private static Map<String, Map<String, String>> getMetadataMap(Sheet metadataSheet) throws DoeWebException{
+	private static Map<String, Map<String, String>> getMetadataMap(Sheet metadataSheet) throws DoeWebException {
 		Map<String, Map<String, String>> metdataSheetMap = new HashMap<String, Map<String, String>>();
 		Iterator<Row> iterator = metadataSheet.iterator();
 
@@ -123,39 +125,34 @@ public class DoeExcelUtil {
 			// Skip header row
 			int counter = 0;
 			Map<String, String> rowMetadata = new HashMap<String, String>();
-			
-			for(String attrName : attrNames)
-			{
+
+			for (String attrName : attrNames) {
 				Cell currentCell = currentRow.getCell(counter);
 				counter++;
-				if(currentCell == null)
+				if (currentCell == null)
 					continue;
-				if (attrName.equalsIgnoreCase("path"))
-				{
+				if (attrName.equalsIgnoreCase("path")) {
 					path = currentCell.getStringCellValue();
 					continue;
 				}
-				if(currentCell.getCellType().equals(CellType.NUMERIC))
-				{
+				if (currentCell.getCellType().equals(CellType.NUMERIC)) {
 					double dv = currentCell.getNumericCellValue();
 					if (HSSFDateUtil.isCellDateFormatted(currentCell)) {
-					    Date date = HSSFDateUtil.getJavaDate(dv);
-					    String df = currentCell.getCellStyle().getDataFormatString();
-					    String strValue = new CellDateFormatter(df).format(date);
-					    rowMetadata.put(attrName, strValue);
-					}else {
-						rowMetadata.put(attrName, (new Double(dv).toString()));	
+						Date date = HSSFDateUtil.getJavaDate(dv);
+						String df = currentCell.getCellStyle().getDataFormatString();
+						String strValue = new CellDateFormatter(df).format(date);
+						rowMetadata.put(attrName, strValue);
+					} else {
+						rowMetadata.put(attrName, (new Double(dv).toString()));
 					}
-					
-				}
-				else
-				{
-					if(currentCell.getStringCellValue() != null && !currentCell.getStringCellValue().isEmpty())
+
+				} else {
+					if (currentCell.getStringCellValue() != null && !currentCell.getStringCellValue().isEmpty())
 						rowMetadata.put(attrName, currentCell.getStringCellValue());
 				}
-				
+
 			}
-			
+
 			metdataSheetMap.put(path, rowMetadata);
 		}
 
@@ -170,9 +167,9 @@ public class DoeExcelUtil {
 	 */
 	private static Map<String, String> getTokensMap(Sheet tokenSheet) {
 		Map<String, String> tokens = new HashMap<String, String>();
-		if(tokenSheet == null)
+		if (tokenSheet == null)
 			return tokens;
-		
+
 		Iterator<Row> iterator = tokenSheet.iterator();
 
 		while (iterator.hasNext()) {

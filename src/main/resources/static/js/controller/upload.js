@@ -2,6 +2,7 @@ $(document).ready(function () {
 	$("#landing-tab").removeClass('active');
 	$("#upload-tab").addClass('active');
 	loadUploadTab();
+	$('body').tooltip({selector: '[data-toggle="tooltip"]'});
 });
 
 function loadUploadTab() {	 
@@ -9,16 +10,26 @@ function loadUploadTab() {
 	var ins = $("#institutePath").val();
 	var stu= $("#studyPath").val();
 	var data = $("#datafilePath").val();
+	var bulkUploadCollection = $("#bulkUploadCollection").val();
 	
 	if(ins){
-		loadJsonData('/browse', $("#instituteList"), true, null, postSuccessInsInitialize, null, "key", "value"); 
-		loadJsonData('/browse/collection', $("#studyList"), true, {selectedPath:ins}, postSuccessStudyInitialize, null, "key", "value");
+		loadJsonData('/browse', $("#instituteList"), true, null, null, null, "key", "value"); 
+		loadJsonData('/browse/collection', $("#studyList"), true, {selectedPath:ins}, null, null, "key", "value");
+		$("#studyListDiv").show();
+		$("#deleteProgram").show();
+		//$("#assetUploadDiv").hide();
 		if(stu) {
+			$("#dataSetListDiv").show();
+			$("#deleteStudy").show();
+			$("#addAsets").show();
+			if(bulkUploadCollection) {
+			   $("#addAsets").click();
+			}
+			
 			loadJsonData('/browse/collection', $("#dataList"), true, {selectedPath:stu}, postSuccessDataSetInitialize, null, "key", "value");
 			if(data) {
-				invokeAjax('/browse/collection','GET',{selectedPath:data},contructDataListDiv,null,null,null);		
-				$("#studyListDiv").show();
-				$("#dataSetListDiv").show();
+				invokeAjax('/browse/collection','GET',{selectedPath:data},contructDataListDiv,null,null,null);	
+				$("#deleteDataSet").show();
 			    $("#dataListDiv").hide();
 				$("#addBulkDataFiles").show();
 				$("#uploadDataFilesTab").show();
@@ -46,14 +57,6 @@ function loadUploadTab() {
 		 loadJsonData('/browse', $("#instituteList"), true, null, null, null, "key", "value"); 
 	}
   
-}
-
-function postSuccessInsInitialize(data,status) {
-	//$('#instituteList').select2("val", $("#institutePath").val());
-}
-
-function postSuccessStudyInitialize(data,status) {
-	//$('#studyList').select2("val", $("#studyPath").val());
 }
 
 function postSuccessDataSetInitialize(data,status) {
@@ -150,8 +153,10 @@ function retrieveCollections($this, selectedIndex,action) {
 	
 	
 	if(selectTarget == 'instituteList') {
+		$("#assetUploadDiv").removeClass('show');
 		$("#uploadDataFilesTab").hide();
 		$("#addBulkDataFiles").hide();
+		$("#addAsets").hide();
 		if(selectedValue && selectedValue != 'ANY') {
 			loadJsonData('/browse/collection', $("#studyList"), true, params, null, null, "key", "value");
 			$("#studyListDiv").show();
@@ -176,15 +181,18 @@ function retrieveCollections($this, selectedIndex,action) {
 		    $("#studyListDiv").show();
 		    $("#dataSetListDiv").show();
 		    $("#deleteStudy").show();
+		    $("#addAsets").show();
 		 } else {
 			$("#studyListDiv").show();
 			$("#dataSetListDiv").hide();
 			$("#deleteStudy").hide();
+			$("#addAsets").hide();
 		}
 		
 	} else if(selectTarget == 'dataList') {	
 		$("#studyListDiv").show();
 		$("#uploadDataFilesTab").hide();
+		$("#assetUploadDiv").removeClass('show');
 		if(selectedValue && selectedValue != 'ANY') {
 			var params1= {selectedPath:selectedValue,refreshNode:'true'};	
 			invokeAjax('/browse/collection','GET',params1,contructDataListDiv,null,null,null);	
@@ -432,7 +440,7 @@ function registerCollection() {
         }          
     });
 	 
-	$(".simple-select2").each(function(){
+	$("#registerCollectionModal").find(".simple-select2").each(function(){
 		var name = $(this).val();
 		if(name && name == 'Select') {
 	       usermetaDataEntered = false;
@@ -514,12 +522,188 @@ function openBulkDataRegistration() {
 	$(".registerBulkDataFile").html("");
 	$(".uploadBulkDataError").hide();
 	$(".uploadBulkDataErrorMsg").html("");
+	//$("#assetUploadDiv").removeClass('show');
 	clearRegisterDataDiv();
 }
 
 function cancelAndReturnToUploadTab() {
 	var params= {selectedPath:$("#dataList").val(),refreshNode:'true'};
 	 invokeAjax('/browse/collection','GET',params,contructDataListDiv,null,null,null);
+}
+
+function retrieveAssetTypeDiv(data) {
+	 if(data.value != 'Select') {
+		    var params1= {collectionType:'Asset',assetType:data.value,refresh:false};
+			invokeAjax('/addCollection','GET',params1,constructAssetTypeBulkDiv,null,null,null);
+	  } else {
+		  $("#addMetadataDiv").hide();
+		  $("#assetBulkMetadataTable tbody").html("");
+	  }
+}
+
+function constructAssetTypeBulkDiv(data,status) {
+	$("#addMetadataDiv").show();
+	$("#assetBulkMetadataTable tbody").html("");
+	
+	$.each(data, function(key, value) {	
+		
+		var placeholderValue = "";
+	     if(value.mandatory && value.mandatory == true) {
+	    	 placeholderValue = "Required";
+	     }
+
+	    if(value.validValues != null && value.attrName !='asset_type'){
+		   
+	    	$("#assetBulkMetadataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+        	'data-placement="right" title="'+value.description+'"></i></td><td>'+
+        	'<select class="simple-select2" style="width:90%;" id="'+value.attrName+'" name="zAttrStr_'+value.attrName+'" value="'+value.attrValue+'"></select></td></tr>');
+	    	
+	    	  var $select = $("#"+value.attrName);
+	    	  if(value.attrValue){
+	    	 	$select.append($('<option></option>').attr('value', value.attrValue).text(value.attrValue));
+	    	  } else {
+	    	    $select.append($('<option></option>').attr('value', 'Select').text('Select'));
+	    	  }
+	    	  	    	  
+	    	  for (var i = 0; i < value.validValues.length; i++) {
+	    		   $select.append($('<option></option>').attr('value', value.validValues[i]).text(value.validValues[i]));
+              }
+               
+	    	  $select.select2().trigger('change');
+	    	
+	   } else if(value.attrName && value.attrName != 'asset_name' && value.attrName !='asset_type' &&
+			   value.attrName !='asset_identifier' && value.attrName !='access_group'){	
+		   if(value.attrName == 'description') {
+			   $("#assetBulkMetadataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+			        	'data-placement="right" title="'+value.description+'"></i>&nbsp;&nbsp;<i class="fas fa-info-circle" data-toggle="tooltip"'+
+			        	'data-placement="right" title="Please note that this description will be applied to all Assets. You may edit the description of each Asset separately after it is uploaded."></i></td><td>'+
+			        	'<textarea rows="4" placeholder ="Required" is_mandatory="'+value.mandatory+'" aria-label="value of meta data"  name="zAttrStr_'+value.attrName+'"' +
+			        	'style="width:90%;"></textarea></td></tr>'); 
+		   } else {
+		 	$("#assetBulkMetadataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+        	'data-placement="right" title="'+value.description+'"></i></td><td>'+
+        	'<input type="text" placeholder="'+placeholderValue+'" class="bulkAssetTextbox" is_mandatory="'+value.mandatory+'" aria-label="value of meta data"  name="zAttrStr_'+value.attrName+'"' +
+        	'></td></tr>');
+		   }
+	   }      
+		
+	});
+	
+	
+}
+function registerBulkAssets() {
+    var studyPath = $("#studyPath").val();
+	$("#registerBulkAssetForm").attr('bulkDatafilePath', studyPath);	
+	$("#registerBulkAssetForm").attr('uploadType', 'globus');
+	var form = $('#registerBulkAssetForm')[0];		 
+    var data = new FormData(form);
+    data.append('bulkDatafilePath', studyPath);
+    data.append('uploadType','globus');
+    data.append('assetType',$("#assetTypeSelect").val())
+    var isValidated  = true;
+    var usermetaDataEntered = true;
+    var isFormBulkUpload;
+    if(!$("#assetGlobusEndpointId").length || !$("#assetGlobusEndpointPath").length) {
+    	isValidated =false;
+    	bootbox.dialog({ 
+    	    message: 'Select Assets from Globus.'
+    	});
+    } else if(!$("#assetSelectedFolders").length) {
+    	isValidated =false;
+    	bootbox.dialog({ 
+    	    message: 'Select Folders from Globus.'
+    	});
+    }
+    else if($('input[name="assetUploadType"]:checked').length == 0) {
+    	isValidated = false;
+    	bootbox.dialog({ 
+    	    message: 'Select your choice of upload.'
+    	});
+    } else if($("input[name='assetUploadType']:checked").val() == 'No' && $("#assetTypeSelect").val() == 'Select') {
+    	isValidated = false;
+    	bootbox.dialog({ 
+    	    message: 'Select Asset Type.'
+    	});
+    } else if($("input[name='assetUploadType']:checked").val() == 'Yes' && !$("#doeMetadataFile").val()) {
+    	isValidated = false;
+    	bootbox.dialog({ 
+    	    message: 'Upload CSV Metadata file.'
+    	});
+    }
+    
+    if($("#assetSelectedFiles").length) {
+    	isValidated = false;
+    	bootbox.dialog({ 
+    	    message: 'Select folders only.'
+    	});
+    }
+    
+    
+	$('table#assetBulkMetadataTable input[type="text"]').each(function(){
+		var name = $(this).val();
+		var ismandatory = $(this).attr('is_mandatory');
+	    if(!name && ismandatory && ismandatory != "false" ){
+	    	isValidated = false;
+	    	usermetaDataEntered = false;
+         }
+	});
+	
+	$("table#assetBulkMetadataTable").find("textarea").each(function(){
+		var ismandatory = $(this).attr('is_mandatory');
+        if(!$(this).val() && ismandatory && ismandatory != "false" ){
+        	isValidated = false;
+	    	usermetaDataEntered = false;
+        }          
+    });
+	 
+	$("table#assetBulkMetadataTable").find(".simple-select2").each(function(){
+		var name = $(this).val();
+		if(name && name == 'Select') {
+			isValidated = false;
+	    	usermetaDataEntered = false;
+	    }
+	});
+  
+	if(!usermetaDataEntered) {
+		bootbox.dialog({ 
+    	    message: 'Enter values for all required metadata.'
+    	});
+	}
+   if(isValidated)  {
+	   if($("input[name='assetUploadType']:checked").val() == 'No') {
+		   isFormBulkUpload = true;
+	   } else if($("input[name='assetUploadType']:checked").val() == 'Yes') {
+		   isFormBulkUpload = false;
+	   }
+	$.ajax({
+		type : "POST",
+		enctype: "multipart/form-data",
+	     url : "/addbulk?isFormBulkUpload="+isFormBulkUpload,
+		 data : data,
+		 processData: false, 
+         contentType: false,
+		 beforeSend: function () {
+	    	   $("#spinner").show();
+	           $("#dimmer").show();
+	       },
+		 success : function(msg) {
+			 $("#spinner").hide();
+	         $("#dimmer").hide();
+	    	 console.log('SUCCESS: ', msg);	
+	    	 bootbox.dialog({ 
+	     	    message: msg
+	     	});
+		 },
+		error : function(e) {
+			 $("#spinner").hide();
+	         $("#dimmer").hide();
+			 console.log('ERROR: ', e);
+			 bootbox.dialog({ 
+		     	    message: e
+		     	});
+		}
+	 });
+   }
 }
 
 function registerBulkDataFile() {
@@ -610,14 +794,15 @@ function registerBulkDataFile() {
 		} else if(bulkUploadType == 'drive' && (!$("#fileNamesDiv").length || !$("#folderNamesDiv").length )) {
 			$(".uploadBulkDataError").show();
 			$(".uploadBulkDataErrorMsg").html("Select google drive information.")
-		} else if((bulkUploadType == 'drive' && $("input[name=folderIds]").length) || 
+		} 
+		else if((bulkUploadType == 'drive' && $("input[name=folderIds]").length) || 
 				(bulkUploadType == 'globus' && $("#folderNamesDiv ul li").length)) {
 			$(".uploadBulkDataError").show();
 			$(".uploadBulkDataErrorMsg").html("Select files only.")
 		}
 		else if(dataFilePath) {	
 			$("#uploadType").val(bulkUploadType);
-			$("#bulkDatafilePath").val(dataFilePath);
+			$("#bulkDatafilePath").val(dataFilePath);		    
 	        var data = $('#registerBulkDataForm').serialize();
 			$.ajax({
 				type : "POST",
@@ -712,4 +897,17 @@ function displayDataFileSection(value) {
 
 function postUploadGlobusFunction(data,status) {
 	location.replace(data);
+}
+
+function displayAssetTpeSelection(data) {
+	if(data == 'Yes') {
+		$("#uploadCsvFile").show();
+		$("#formAssetSelection").hide();
+		$("#assetTypeSelect").val("Select").trigger('change');
+		$("#addMetadataDiv").hide();
+	} else if(data =='No') {
+		$("#doeMetadataFile").val("");
+		$("#uploadCsvFile").hide();
+		$("#formAssetSelection").show();
+	}
 }

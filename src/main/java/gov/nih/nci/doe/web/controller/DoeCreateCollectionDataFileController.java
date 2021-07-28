@@ -43,7 +43,7 @@ import gov.nih.nci.hpc.domain.datatransfer.HpcGoogleDriveScanDirectory;
 
 @EnableAutoConfiguration
 public abstract class DoeCreateCollectionDataFileController extends AbstractDoeController {
-	
+
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	private String serviceURL;
 	@Value("${gov.nih.nci.hpc.server.collection.acl.user}")
@@ -178,6 +178,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		model.addAttribute("datafilePath", session.getAttribute("datafilePath"));
 		model.addAttribute("institutePath", session.getAttribute("institutePath"));
 		model.addAttribute("studyPath", session.getAttribute("studyPath"));
+		model.addAttribute("bulkUploadCollection", session.getAttribute("bulkUploadCollection"));
 
 	}
 
@@ -187,6 +188,15 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO dto = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO();
 
 		String datafilePath = (String) session.getAttribute("datafilePath");
+
+		if (datafilePath == null) {
+			datafilePath = (String) session.getAttribute("studyPath");
+		}
+
+		if (datafilePath == null) {
+			datafilePath = path;
+		}
+
 		String globusEndpoint = (String) session.getAttribute("GlobusEndpoint");
 		String globusEndpointPath = (String) session.getAttribute("GlobusEndpointPath");
 		List<String> globusEndpointFiles = (List<String>) session.getAttribute("GlobusEndpointFiles");

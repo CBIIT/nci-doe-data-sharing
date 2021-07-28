@@ -153,7 +153,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 
 	@GetMapping
 	public ResponseEntity<List<DoeMetadataAttrEntry>> getCollectionAttributes(
-			@RequestParam(value = "selectedPath") String selectedPath,
+			@RequestParam(value = "selectedPath",required=false) String selectedPath,
 			@RequestParam(value = "collectionType") String collectionType,
 			@RequestParam(required = false) String assetType, @RequestParam(required = false) Boolean refresh,
 			HttpSession session, HttpServletRequest request, HttpServletResponse response) {
@@ -182,11 +182,12 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 					}
 				}
 				log.info("cached list: " + cachedEntries);
+			}
 				metadataEntries = populateFormAttributes(request, session, basePath, collectionType, assetType, refresh,
 						cachedEntries);
 
 				return new ResponseEntity<>(metadataEntries, HttpStatus.OK);
-			}
+			
 
 		} catch (Exception e) {
 			log.debug(e.getMessage());
