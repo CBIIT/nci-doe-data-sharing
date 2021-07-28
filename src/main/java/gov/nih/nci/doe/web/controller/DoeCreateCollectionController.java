@@ -59,6 +59,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 	public ResponseEntity<List<KeyValueBean>> populateCollectionTypes(HttpSession session,
 			@RequestParam(value = "parent") String parent, Model model) throws DoeWebException {
 
+		log.info("collection types for: " + parent);
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 
 		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
@@ -214,6 +215,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 	public String createCollection(@Valid DoeCollectionModel doeCollection, HttpSession session,
 			HttpServletRequest request, HttpServletResponse response) throws DoeWebException {
 
+		log.info("create collection");
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		String[] path = request.getParameterValues("path");
 		if (path[0] != null) {

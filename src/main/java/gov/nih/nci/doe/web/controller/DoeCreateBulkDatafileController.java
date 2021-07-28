@@ -130,7 +130,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			@RequestParam(value = "isFormBulkUpload", required = false) Boolean isFormBulkUpload, HttpSession session,
 			HttpServletRequest request, HttpServletResponse response) {
 
-		log.info("bulk upload");
+		log.info("bulk upload and isFormBulkUpload : " + isFormBulkUpload);
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		String user = getLoggedOnUserInfo();
 
@@ -294,6 +294,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	private HpcBulkMetadataEntries constructRequest(HttpServletRequest request, HttpSession session, String accessGrp,
 			String collectionPath) throws DoeWebException {
 
+		log.info("construct request for bulk asset upload through form: " + collectionPath);
 		HpcBulkMetadataEntries entryList = new HpcBulkMetadataEntries();
 		List<HpcBulkMetadataEntry> pathMetadataEntries = new ArrayList<HpcBulkMetadataEntry>();
 		List<String> globusEndpointFolders = (List<String>) session.getAttribute("GlobusEndpointFolders");
