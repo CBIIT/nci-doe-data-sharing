@@ -613,8 +613,12 @@ function registerBulkAssets() {
     	bootbox.dialog({ 
     	    message: 'Select Folders from Globus.'
     	});
-    }
-    else if($('input[name="assetUploadType"]:checked').length == 0) {
+    } else if($("#assetSelectedFiles").length) {
+    	isValidated = false;
+    	bootbox.dialog({ 
+    	    message: 'Select folders only.'
+    	});
+    } else if($('input[name="assetUploadType"]:checked').length == 0) {
     	isValidated = false;
     	bootbox.dialog({ 
     	    message: 'Select your choice of upload.'
@@ -631,12 +635,7 @@ function registerBulkAssets() {
     	});
     }
     
-    if($("#assetSelectedFiles").length) {
-    	isValidated = false;
-    	bootbox.dialog({ 
-    	    message: 'Select folders only.'
-    	});
-    }
+    
     
     
 	$('table#assetBulkMetadataTable input[type="text"]').each(function(){

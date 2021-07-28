@@ -240,14 +240,14 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 
 				// get the paths for new collection registration and save in modac
 
-				if (CollectionUtils.isNotEmpty(registrationDTO.getDataObjectRegistrationItems())) {
+				/*if (CollectionUtils.isNotEmpty(registrationDTO.getDataObjectRegistrationItems())) {
 					for (HpcDataObjectRegistrationItemDTO item : registrationDTO.getDataObjectRegistrationItems()) {
 						if (Boolean.TRUE.equals(item.getCreateParentCollections())) {
 							item.getParentCollectionsBulkMetadataEntries().getPathsMetadataEntries().stream()
 									.forEach(e -> pathsList.add(e.getPath()));
 						}
 					}
-				}
+				}*/
 
 				if (CollectionUtils.isNotEmpty(registrationDTO.getDirectoryScanRegistrationItems())) {
 					for (HpcDirectoryScanRegistrationItemDTO item : registrationDTO
