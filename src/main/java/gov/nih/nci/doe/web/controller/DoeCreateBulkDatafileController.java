@@ -240,14 +240,15 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 
 				// get the paths for new collection registration and save in modac
 
-				/*if (CollectionUtils.isNotEmpty(registrationDTO.getDataObjectRegistrationItems())) {
-					for (HpcDataObjectRegistrationItemDTO item : registrationDTO.getDataObjectRegistrationItems()) {
-						if (Boolean.TRUE.equals(item.getCreateParentCollections())) {
-							item.getParentCollectionsBulkMetadataEntries().getPathsMetadataEntries().stream()
-									.forEach(e -> pathsList.add(e.getPath()));
-						}
-					}
-				}*/
+				/*
+				 * if
+				 * (CollectionUtils.isNotEmpty(registrationDTO.getDataObjectRegistrationItems())
+				 * ) { for (HpcDataObjectRegistrationItemDTO item :
+				 * registrationDTO.getDataObjectRegistrationItems()) { if
+				 * (Boolean.TRUE.equals(item.getCreateParentCollections())) {
+				 * item.getParentCollectionsBulkMetadataEntries().getPathsMetadataEntries().
+				 * stream() .forEach(e -> pathsList.add(e.getPath())); } } }
+				 */
 
 				if (CollectionUtils.isNotEmpty(registrationDTO.getDirectoryScanRegistrationItems())) {
 					for (HpcDirectoryScanRegistrationItemDTO item : registrationDTO
@@ -259,7 +260,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 
 				if (CollectionUtils.isNotEmpty(pathsList)) {
 					pathsList.stream().forEach(f -> {
-						mailService.sendCollectionRegistationFailure(user, f, null,taskId);
+						mailService.sendCollectionRegistationFailure(user, f, null, taskId);
 					});
 
 				}
@@ -295,13 +296,14 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 
 		HpcBulkMetadataEntries entryList = new HpcBulkMetadataEntries();
 		List<HpcBulkMetadataEntry> pathMetadataEntries = new ArrayList<HpcBulkMetadataEntry>();
-		Enumeration<String> params = request.getParameterNames();
-
 		List<String> globusEndpointFolders = (List<String>) session.getAttribute("GlobusEndpointFolders");
 		String assetType = request.getParameter("assetType");
 		String collectionType = request.getParameter("collection_type");
+
 		if (CollectionUtils.isNotEmpty(globusEndpointFolders)) {
 			for (String folderName : globusEndpointFolders) {
+
+				Enumeration<String> params = request.getParameterNames();
 				HpcBulkMetadataEntry metadataEntry = new HpcBulkMetadataEntry();
 				metadataEntry.setPath(collectionPath + "/" + folderName);
 				List<HpcMetadataEntry> entries = new ArrayList<HpcMetadataEntry>();
@@ -333,7 +335,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 
 					HpcMetadataEntry entryAccessGrp = new HpcMetadataEntry();
 					entryAccessGrp.setAttribute("access_group");
-					entryAccessGrp.setValue(folderName);
+					entryAccessGrp.setValue(accessGrp);
 					entries.add(entryAccessGrp);
 				}
 
@@ -346,7 +348,9 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 						String[] attrValue = request.getParameterValues(paramName);
 						entry1.setAttribute(attrName);
 						entry1.setValue(attrValue[0].trim());
-						entries.add(entry1);
+						if (StringUtils.isNotEmpty(entry1.getValue())) {
+							entries.add(entry1);
+						}
 
 					}
 				}
