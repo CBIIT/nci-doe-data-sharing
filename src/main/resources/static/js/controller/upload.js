@@ -139,6 +139,7 @@ function postSuccessDeleteCollection(data,collectionType) {
 
 function retrieveCollections($this, selectedIndex,action) {
 	
+	$("#assetUploadDiv").removeClass('show');
 	var selectTarget = $this;
 	var params;
 	var selectedValue;
@@ -153,7 +154,7 @@ function retrieveCollections($this, selectedIndex,action) {
 	
 	
 	if(selectTarget == 'instituteList') {
-		$("#assetUploadDiv").removeClass('show');
+		
 		$("#uploadDataFilesTab").hide();
 		$("#addBulkDataFiles").hide();
 		$("#addAsets").hide();
@@ -192,7 +193,6 @@ function retrieveCollections($this, selectedIndex,action) {
 	} else if(selectTarget == 'dataList') {	
 		$("#studyListDiv").show();
 		$("#uploadDataFilesTab").hide();
-		$("#assetUploadDiv").removeClass('show');
 		if(selectedValue && selectedValue != 'ANY') {
 			var params1= {selectedPath:selectedValue,refreshNode:'true'};	
 			invokeAjax('/browse/collection','GET',params1,contructDataListDiv,null,null,null);	
@@ -522,7 +522,6 @@ function openBulkDataRegistration() {
 	$(".registerBulkDataFile").html("");
 	$(".uploadBulkDataError").hide();
 	$(".uploadBulkDataErrorMsg").html("");
-	//$("#assetUploadDiv").removeClass('show');
 	clearRegisterDataDiv();
 }
 
