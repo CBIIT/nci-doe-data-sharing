@@ -491,7 +491,10 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 							entry.setValidValues(validValues);
 						}
 						entry.setDescription(rule.getDescription());
-						if (Boolean.TRUE.equals(isConditonalMetaData)) {
+
+						if (StringUtils.isNotEmpty(rule.getDefaultValue())) {
+							entry.setMandatory(Boolean.FALSE);
+						} else if (Boolean.TRUE.equals(isConditonalMetaData)) {
 							entry.setMandatory(Boolean.TRUE);
 						} else {
 							entry.setMandatory(rule.getMandatory());
@@ -509,7 +512,6 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				}
 			}
 		}
-
 		// Handle custom attributes. If refresh, ignore them
 		if (!refresh) {
 			// add cached entries which are not included in rules
