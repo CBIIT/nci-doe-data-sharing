@@ -28,6 +28,7 @@ public class UploadController extends AbstractDoeController {
 
 		session.setAttribute("basePathSelected", basePath);
 		session.removeAttribute("GlobusEndpoint");
+		session.removeAttribute("includeCriteria");
 		session.removeAttribute("GlobusEndpointPath");
 		session.removeAttribute("GlobusEndpointFiles");
 		session.removeAttribute("GlobusEndpointFolders");

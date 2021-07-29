@@ -284,7 +284,7 @@ function constructNewCollectionMetaDataSet(data,status) {
 		   
 	    	$("#newMetaDataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
         	'data-placement="right" title="'+value.description+'"></i></td><td>'+
-        	'<select class="simple-select2" style="width:70%;" id="'+value.attrName+'" name="zAttrStr_'+value.attrName+'" value="'+value.attrValue+'"></select></td></tr>');
+        	'<select class="simple-select2" is_mandatory="'+value.mandatory+'" style="width:70%;" id="'+value.attrName+'" name="zAttrStr_'+value.attrName+'" value="'+value.attrValue+'"></select></td></tr>');
 	    	
 	    	  var $select = $("#registerCollectionModal").find("#"+value.attrName);
 	    	  if(value.attrValue){
@@ -375,7 +375,7 @@ function retrieveCollectionList(data,status) {
 	 var collectionPath = $("#registerCollectionModal").find("#collectionPath").val();
 		
 	 if(collectionType && collectionPath) {
-		var params1= {selectedPath:collectionPath,collectionType:collectionType,assetType:assetType};
+		var params1= {selectedPath:collectionPath,collectionType:collectionType,controllerValue:assetType,controllerAttribute:'asset_type'};
 		invokeAjax('/addCollection','GET',params1,constructNewCollectionMetaDataSet,null,null,null);		
 	} 	
 } 
@@ -441,8 +441,9 @@ function registerCollection() {
     });
 	 
 	$("#registerCollectionModal").find(".simple-select2").each(function(){
+		var ismandatory = $(this).attr('is_mandatory');
 		var name = $(this).val();
-		if(name && name == 'Select') {
+		if(ismandatory && ismandatory != "false" && name && name == 'Select') {
 	       usermetaDataEntered = false;
 	    }
 	});
@@ -532,7 +533,7 @@ function cancelAndReturnToUploadTab() {
 
 function retrieveAssetTypeDiv(data) {
 	 if(data.value != 'Select') {
-		    var params1= {collectionType:'Asset',assetType:data.value,refresh:false};
+		    var params1= {collectionType:'Asset',controllerValue:data.value,refresh:false,controllerAttribute:'asset_type'};
 			invokeAjax('/addCollection','GET',params1,constructAssetTypeBulkDiv,null,null,null);
 	  } else {
 		  $("#addMetadataDiv").hide();
@@ -555,7 +556,7 @@ function constructAssetTypeBulkDiv(data,status) {
 		   
 	    	$("#assetBulkMetadataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
         	'data-placement="right" title="'+value.description+'"></i></td><td>'+
-        	'<select class="simple-select2" style="width:90%;" id="'+value.attrName+'" name="zAttrStr_'+value.attrName+'" value="'+value.attrValue+'"></select></td></tr>');
+        	'<select class="simple-select2" is_mandatory="'+value.mandatory+'" style="width:90%;" id="'+value.attrName+'" name="zAttrStr_'+value.attrName+'" value="'+value.attrValue+'"></select></td></tr>');
 	    	
 	    	  var $select = $("#"+value.attrName);
 	    	  if(value.attrValue){
@@ -655,8 +656,9 @@ function registerBulkAssets() {
     });
 	 
 	$("table#assetBulkMetadataTable").find(".simple-select2").each(function(){
+		var ismandatory = $(this).attr('is_mandatory');
 		var name = $(this).val();
-		if(name && name == 'Select') {
+		if(ismandatory && ismandatory != "false" && name && name == 'Select') {
 			isValidated = false;
 	    	usermetaDataEntered = false;
 	    }

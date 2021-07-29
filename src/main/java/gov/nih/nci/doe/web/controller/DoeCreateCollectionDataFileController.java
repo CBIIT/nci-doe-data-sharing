@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -53,6 +54,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		session.removeAttribute("datafilePath");
 		session.removeAttribute("collection_type");
 		session.removeAttribute("basePathSelected");
+		session.removeAttribute("includeCriteria");
 		session.removeAttribute("GlobusEndpoint");
 		session.removeAttribute("GlobusEndpointPath");
 		session.removeAttribute("GlobusEndpointFiles");
@@ -71,6 +73,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 	@SuppressWarnings("unchecked")
 	protected void populateBasePaths(HttpServletRequest request, HttpSession session, String path)
 			throws DoeWebException {
+		log.info("populate base paths for " + path);
 		String authToken = (String) session.getAttribute("hpcUserToken");
 		Set<String> basePaths = (Set<String>) session.getAttribute("basePaths");
 		String userId = (String) session.getAttribute("hpcUserId");
@@ -197,6 +200,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			datafilePath = path;
 		}
 
+		String includeCriteria = request.getParameter("includeCriteria");
 		String globusEndpoint = (String) session.getAttribute("GlobusEndpoint");
 		String globusEndpointPath = (String) session.getAttribute("GlobusEndpointPath");
 		List<String> globusEndpointFiles = (List<String>) session.getAttribute("GlobusEndpointFiles");
@@ -250,6 +254,12 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			}
 			dto.getDataObjectRegistrationItems().addAll(files);
 		}
+		List<String> include = new ArrayList<String>();
+		if (includeCriteria != null && !includeCriteria.isEmpty()) {
+			StringTokenizer tokens = new StringTokenizer(includeCriteria, "\r\n");
+			while (tokens.hasMoreTokens())
+				include.add(tokens.nextToken());
+		}
 
 		if (StringUtils.equals(bulkType, "globus") && globusEndpointFolders != null) {
 			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO> folders = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO>();
@@ -271,6 +281,9 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 					pathDTO.setFromPath(fromPath);
 					pathDTO.setToPath(toPath);
 					folder.setPathMap(pathDTO);
+				}
+				if (include.size() > 0) {
+					folder.getIncludePatterns().addAll(include);
 				}
 			}
 			dto.getDirectoryScanRegistrationItems().addAll(folders);
@@ -380,6 +393,8 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 	}
 
 	protected List<String> getCollectionTypes(List<HpcMetadataValidationRule> rules) {
+
+		log.info("get collection Types: " + rules);
 		List<String> collectionTypesSet = new ArrayList<String>();
 		for (HpcMetadataValidationRule rule : rules) {
 			if (rule.getMandatory() && rule.getAttribute().equals("collection_type"))
@@ -389,6 +404,8 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 	}
 
 	protected List<String> getSubCollectionTypes(String collectionType, HpcDataHierarchy dataHierarchy) {
+
+		log.info("get sub collection types" + collectionType + " dataHierarchy : " + dataHierarchy);
 		List<String> types = new ArrayList<String>();
 		if (dataHierarchy == null || dataHierarchy.getSubCollectionsHierarchies() == null)
 			return types;
@@ -406,7 +423,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 	}
 
 	protected List<DoeMetadataAttrEntry> populateFormAttributes(HttpServletRequest request, HttpSession session,
-			String basePath, String collectionType, String assetType, boolean refresh,
+			String basePath, String collectionType, String controllerAttribute, String controllerValue, boolean refresh,
 			List<DoeMetadataAttrEntry> cachedEntries) throws DoeWebException {
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 
@@ -437,15 +454,23 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 					log.info("get HpcMetadataValidationRule:" + rule);
 					Boolean isValid = true;
 					Boolean isConditonalMetaData = false;
-					if (StringUtils.isNotEmpty(rule.getControllerValue())
-							&& StringUtils.isNotEmpty(rule.getControllerAttribute())
-							&& rule.getControllerValue().equalsIgnoreCase(assetType)) {
-						isValid = true;
-						isConditonalMetaData = true;
-					} else if (StringUtils.isNotEmpty(rule.getControllerValue())
-							&& StringUtils.isNotEmpty(rule.getControllerAttribute())
-							&& !rule.getControllerValue().equalsIgnoreCase(assetType)) {
-						isValid = false;
+
+					/*
+					 * If the rule has controller value/attribute exists, filter the metadata by
+					 * controllerAttribute/controllerAttribute
+					 * 
+					 */
+					if (StringUtils.isNotEmpty(rule.getControllerAttribute())
+							&& StringUtils.isNotEmpty(controllerAttribute) && StringUtils.isNotEmpty(controllerValue)) {
+
+						if (rule.getControllerAttribute().equalsIgnoreCase(controllerAttribute)
+								&& rule.getControllerValue().equalsIgnoreCase(controllerValue)) {
+
+							isConditonalMetaData = true;
+						} else {
+							isValid = false;
+						}
+
 					}
 					if (Boolean.TRUE.equals(isValid)) {
 						DoeMetadataAttrEntry entry = new DoeMetadataAttrEntry();
@@ -513,6 +538,8 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 	}
 
 	private String getCollectionAttrValue(HpcCollectionDTO collectionDTO, String attrName) {
+
+		log.info("get collection attribute value for: " + attrName);
 		if (collectionDTO == null || collectionDTO.getMetadataEntries() == null
 				|| collectionDTO.getMetadataEntries().getSelfMetadataEntries() == null)
 			return null;
@@ -621,6 +648,8 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 
 	@SuppressWarnings("unchecked")
 	public Boolean verifyCollectionPermissions(String parentPath, HpcCollectionListDTO parentCollectionDto) {
+
+		log.info("verify collection permissions for : " + parentPath);
 		if (!parentPath.equalsIgnoreCase(basePath) && parentCollectionDto != null
 				&& parentCollectionDto.getCollections() != null
 				&& !CollectionUtils.isEmpty(parentCollectionDto.getCollections())) {

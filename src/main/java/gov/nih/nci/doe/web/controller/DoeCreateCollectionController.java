@@ -49,7 +49,7 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementRulesDTO;
 @EnableAutoConfiguration
 @RequestMapping("/addCollection")
 public class DoeCreateCollectionController extends DoeCreateCollectionDataFileController {
-	
+
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	private String serviceURL;
 	@Value("${dme.archive.naming.forbidden.chararacters}")
@@ -154,13 +154,14 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 
 	@GetMapping
 	public ResponseEntity<List<DoeMetadataAttrEntry>> getCollectionAttributes(
-			@RequestParam(value = "selectedPath",required=false) String selectedPath,
+			@RequestParam(value = "selectedPath", required = false) String selectedPath,
 			@RequestParam(value = "collectionType") String collectionType,
-			@RequestParam(required = false) String assetType, @RequestParam(required = false) Boolean refresh,
-			HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+			@RequestParam(required = false) String controllerValue, @RequestParam(required = false) Boolean refresh,
+			@RequestParam(required = false) String controllerAttribute, HttpSession session, HttpServletRequest request,
+			HttpServletResponse response) {
 
-		log.info("get collection attributes" + selectedPath + " ,collectionType:  " + collectionType + ", assetType:"
-				+ assetType + ", refresh:" + refresh);
+		log.info("get collection attributes" + selectedPath + " ,collectionType:  " + collectionType
+				+ ", controllerValue:" + controllerValue + ", refresh:" + refresh);
 		List<DoeMetadataAttrEntry> metadataEntries = new ArrayList<DoeMetadataAttrEntry>();
 		List<DoeMetadataAttrEntry> cachedEntries = new ArrayList<DoeMetadataAttrEntry>();
 		try {
@@ -184,11 +185,10 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 				}
 				log.info("cached list: " + cachedEntries);
 			}
-				metadataEntries = populateFormAttributes(request, session, basePath, collectionType, assetType, refresh,
-						cachedEntries);
+			metadataEntries = populateFormAttributes(request, session, basePath, collectionType, controllerAttribute,
+					controllerValue, refresh, cachedEntries);
 
-				return new ResponseEntity<>(metadataEntries, HttpStatus.OK);
-			
+			return new ResponseEntity<>(metadataEntries, HttpStatus.OK);
 
 		} catch (Exception e) {
 			log.debug(e.getMessage());
