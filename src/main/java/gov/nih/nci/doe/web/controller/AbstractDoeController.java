@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -830,7 +831,7 @@ public abstract class AbstractDoeController {
 	}
 
 	public void constructSearchCriteriaList(HttpSession session, Model model) throws DoeWebException {
-		Map<String, Set<String>> browseList = new LinkedHashMap<String, Set<String>>();
+		Map<String, List<String>> browseList = new LinkedHashMap<String, List<String>>();
 		List<LookUp> results = lookUpService.getAllDisplayNames();
 
 		for (LookUp val : results) {
@@ -855,7 +856,10 @@ public abstract class AbstractDoeController {
 			search.setDetailed(true);
 
 			Set<String> list = retrieveSearchList(session, search, val.getAttrName(), levelValues[0], null);
-			browseList.put(val.getDisplayName(), list);
+			List<String> sortedList = new ArrayList<String>(list);
+			Collections.sort(sortedList, String.CASE_INSENSITIVE_ORDER);
+
+			browseList.put(val.getDisplayName(), sortedList);
 
 		}
 		model.addAttribute("browseList", browseList);
@@ -910,7 +914,7 @@ public abstract class AbstractDoeController {
 		return list;
 	}
 
-	public Set<String> constructFilterCriteria(HttpSession session, DoeSearch search, String retrieveParent)
+	public List<String> constructFilterCriteria(HttpSession session, DoeSearch search, String retrieveParent)
 			throws DoeWebException {
 
 		log.info("construct filter crietria for : " + search + " and isRetrieveParent: " + retrieveParent);
@@ -949,6 +953,9 @@ public abstract class AbstractDoeController {
 
 		Set<String> list = retrieveSearchList(session, search, attrName, level, retrieveParent);
 
-		return list;
+		List<String> sortedList = new ArrayList<String>(list);
+		Collections.sort(sortedList, String.CASE_INSENSITIVE_ORDER);
+
+		return sortedList;
 	}
 }

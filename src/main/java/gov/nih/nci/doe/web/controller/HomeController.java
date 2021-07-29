@@ -1,7 +1,6 @@
 package gov.nih.nci.doe.web.controller;
 
-import java.util.Set;
-
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -285,7 +284,7 @@ public class HomeController extends AbstractDoeController {
 			@RequestHeader HttpHeaders headers, DoeSearch search) throws DoeWebException {
 
 		log.info("get filtered list" + search);
-		Set<String> list = constructFilterCriteria(session, search, retrieveParent);
+		List<String> list = constructFilterCriteria(session, search, retrieveParent);
 
 		return new ResponseEntity<>(list, HttpStatus.OK);
 
