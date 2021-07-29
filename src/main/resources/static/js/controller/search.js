@@ -289,16 +289,7 @@ function dataTableInit(isVisible) {
         	   }
         	   
            });
-           
-           $(".sharableLink").click(function(){
-   	    	if($(this).parent().find('.sharableLinkDiv:visible').length == 0) {
-   	    		$(this).parent().find('.sharableLinkDiv').show();
-   	    	} else {
-   	    		$(this).parent().find('.sharableLinkDiv').hide();
-   	    	}
-   	    	
-   	    });
-                 
+ 
         	   var clipboard = new ClipboardJS('.share-link-copy-button');
 
         	   clipboard.on('success', function(e) {
