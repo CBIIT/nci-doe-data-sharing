@@ -474,6 +474,7 @@ function registerCollection() {
 		         $("#dimmer").hide();
 				 console.log('SUCCESS: ', msg);
 				 postSuccessRegisterCollection(msg,collectionType);
+				 $('#registerCollectionModal').animate({ scrollTop: 0 }, 'slow');
 				 
 			 },
 			error : function(e) {
@@ -481,7 +482,8 @@ function registerCollection() {
 		         $("#dimmer").hide();
 				 console.log('ERROR: ', e);	
 				 $("#registerCollectionModal").find(".registerErrorMsg").html(e.responseText);
-				 $("#registerCollectionModal").find(".registerMsgErrorBlock").show();
+				 $("#registerCollectionModal").find(".registerMsgErrorBlock").show();				 
+				 $('#registerCollectionModal').animate({ scrollTop: 0 }, 'slow');
 			}
 		});
 	}
