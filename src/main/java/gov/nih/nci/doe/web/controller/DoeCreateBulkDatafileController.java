@@ -353,6 +353,20 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 							entries.add(entry1);
 						}
 
+					} else if (paramName.startsWith("_addAttrName")) {
+						HpcMetadataEntry userEntry = new HpcMetadataEntry();
+						String attrId = paramName.substring("_addAttrName".length());
+						String[] attrName = request.getParameterValues(paramName);
+						String[] attrValue = request.getParameterValues("_addAttrValue" + attrId);
+						if (attrName.length > 0 && !attrName[0].isEmpty())
+							userEntry.setAttribute(attrName[0]);
+						else
+							throw new DoeWebException("Invalid metadata attribute name. Empty value is not valid!");
+						if (attrValue.length > 0 && !attrValue[0].isEmpty())
+							userEntry.setValue(attrValue[0].trim());
+						else
+							throw new DoeWebException("Invalid metadata attribute value. Empty value is not valid!");
+						entries.add(userEntry);
 					}
 				}
 				metadataEntry.getPathMetadataEntries().addAll(entries);

@@ -41,6 +41,7 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementRulesDTO;
 import gov.nih.nci.hpc.domain.datatransfer.HpcGoogleDriveScanDirectory;
+import gov.nih.nci.hpc.domain.datatransfer.HpcPatternType;
 
 @EnableAutoConfiguration
 public abstract class DoeCreateCollectionDataFileController extends AbstractDoeController {
@@ -284,6 +285,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				}
 				if (include.size() > 0) {
 					folder.getIncludePatterns().addAll(include);
+					folder.setPatternType(HpcPatternType.SIMPLE);
 				}
 			}
 			dto.getDirectoryScanRegistrationItems().addAll(folders);

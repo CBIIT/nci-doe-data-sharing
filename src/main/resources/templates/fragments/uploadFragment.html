@@ -129,7 +129,9 @@
 							
                  <div class="form-row" th:if="${bulkUploadCollection !=null and endpoint_id != null}">
 				    <div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
-				    <span class="assetGlobusSelectionFields">INCLUDE CRITERIA</span></div>
+				    <span class="assetGlobusSelectionFields">INCLUDE CRITERIA &nbsp;
+				    <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="right" title="Add list of include patterns to match source files in the selected folders. "></i>
+				    </span></div>
 					&nbsp;&nbsp;&nbsp;&nbsp;
 					<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues" style="background-color: #fff;">
     				<input type="text" name="includeCriteria" placeholder="Enter Include criteria" id="includeCriteria" style="width: 100%;border: none;background-color: transparent;">
@@ -172,6 +174,11 @@
                       </div>
                       <div class="form-group col-md-12 col-sm-12" id="addMetadataDiv" style="display:none;">
                       <input type="hidden" name="collection_type" value="Asset"/>
+                      <div class="form-group col-md-11 col-sm-11">
+                       <button id="addUserMetadataForBulkAssets" type="button" class="btn btn-primary mb-2 mr-2" 
+                       style="float: right;margin-right: 66px !important;"onclick="addNewMetaDataCollection('assetBulkMetadataTable')"
+                       >Add Metadata</button></div>
+                       
                         <table id="assetBulkMetadataTable" class="table display dt-responsive wrap" 
                         style="width:85%;border:none;border-collapse: separate;border-spacing: 0 1px;">
                       <thead>
