@@ -28,6 +28,7 @@ public class UploadController extends AbstractDoeController {
 
 		session.setAttribute("basePathSelected", basePath);
 		session.removeAttribute("GlobusEndpoint");
+		session.removeAttribute("includeCriteria");
 		session.removeAttribute("GlobusEndpointPath");
 		session.removeAttribute("GlobusEndpointFiles");
 		session.removeAttribute("GlobusEndpointFolders");
@@ -38,6 +39,13 @@ public class UploadController extends AbstractDoeController {
 		session.removeAttribute("folderIds");
 		session.removeAttribute("accessToken");
 		session.removeAttribute("authorized");
+		
+		if (uploadCollectionModel.getUploadType() != null
+				&& uploadCollectionModel.getUploadType().equalsIgnoreCase("assetBulkUpload")) {
+             session.setAttribute("bulkUploadCollection", "Asset");
+		} else {
+			session.removeAttribute("bulkUploadCollection");
+		}
 
 		if (uploadCollectionModel.getAction() != null && uploadCollectionModel.getAction().equalsIgnoreCase("Drive")) {
 

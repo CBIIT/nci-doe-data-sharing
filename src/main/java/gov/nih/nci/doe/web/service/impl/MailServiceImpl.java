@@ -195,7 +195,7 @@ public class MailServiceImpl implements MailService {
 	}
 
 	@Override
-	public void sendCollectionRegistationFailure(String email, String collectionPath, Exception e) {
+	public void sendCollectionRegistationFailure(String email, String collectionPath, Exception e, String taskId) {
 		log.info("Sending collection registration failure for: " + email);
 		final Map<String, Object> params = new HashMap<String, Object>();
 		final List<String> to = new ArrayList<String>();
@@ -204,6 +204,7 @@ public class MailServiceImpl implements MailService {
 		params.put("COLLECTION_PATH", collectionPath);
 		params.put("EMAIL", email);
 		params.put("EXCEPTION", e != null ? e : "");
+		params.put("TASK_ID", taskId != null ? taskId : "");
 		send("COLLECTION_FAILURE_EMAIL", params);
 	}
 

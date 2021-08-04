@@ -11,7 +11,7 @@ public interface MailService {
 
 	public void sendResetPasswordEmail(String password, String email);
 	
-	public void sendCollectionRegistationFailure(String email, String collectionPath,Exception e);
+	public void sendCollectionRegistationFailure(String email, String collectionPath,Exception e, String taskId);
 	
 	public void sendErrorEmail(Exception e, String user);
 

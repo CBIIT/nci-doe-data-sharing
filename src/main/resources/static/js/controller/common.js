@@ -440,6 +440,7 @@ $("#assetSelectionGlobusButton").click(function(e){
 	var d = {};
 	d.institutionPath =$("#instituteList").val();
 	d.studyPath = $("#studyList").val();
+	d.uploadType = "assetBulkUpload";
 
 	 invokeAjax('/upload','GET',d,postUploadGlobusFunction,postFailureFunction,null,'text');
 });

@@ -198,11 +198,18 @@ table.dataTable tr.even td{background-color: #FBFBFB!important;}
 
 table#assetBulkMetadataTable tbody tr td {
 	background-color: #E0F0F4!important;
+	padding: 5px;
+    padding-left: 14px;
+    font-family: 'latoregular';
 }
 table#assetBulkMetadataTable thead tr th {
 	background-color: #194F85!important;
     color: #fff;
     font-weight: 400;
+    padding: 7px;
+    font-size: 13px;
+    font-family: 'inter_regular';
+    padding-left: 14px;
 }
 
 
@@ -285,7 +292,7 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 	line-height: 17px;
 }
 #updateMetaData,#addMetaData,#addBulkDataFiles,#addNewMetaDataForSingleDataFile,
-#registerBulkDataFileBtn,#registerCollectionBtn,#updatePermissions {
+#registerBulkDataFileBtn,#registerCollectionBtn,#updatePermissions,#addUserMetadataForBulkAssets {
 	background-color: #E87B05!important;
 }
 .backToSearch {
@@ -536,6 +543,19 @@ li.nav-item > a:hover {
     font-weight: 200;
     font-size: 15px;
 }
+
+
+.uploadAssetLabels {
+	color: #000000;
+    font-family: 'inter_regular';
+    font-size: 14px;
+    font-weight: 500;
+}
+.assetBulkRadioButtons{
+	height: 19px;
+    width: 22px;
+        transform: translateY(5px);
+}
 .divTableFoot {
     background-color: #EEE;
     display: table-footer-group;
@@ -610,6 +630,25 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before
     position: fixed;
 }
 
+#doeMetadataFile {
+	color: #000000;
+  font-family: 'inter_regular';
+  font-size: 15px;
+}
+
+#doeMetadataFile::file-selector-button {
+	box-sizing: border-box;
+  height: 36px;
+  width: 146px;
+  border: 2px solid #E87B05;
+  background-color: #FFFFFF;
+  border-radius:10px;
+  color: #000000;
+  font-family: 'inter_regular';
+  font-size: 15px;
+  font-weight: 500;
+}
+
 .wrapper {
     position: absolute;
     left: 50px;
@@ -640,6 +679,7 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before
     height: 47px;
     padding-left: 10px;
     font-family:'inter_regular';
+    margin-right:10px;
 }
 .assetBulkGlobusValues {
 	border: 0.95px solid #898989;
@@ -923,6 +963,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
   transform: translateY(0px);
 }
 
+input#includeCriteria:focus {
+	 outline:none;
+}
+
 .filtertext {
 	height: 36px;
     border: 1.75px solid #E2750B;
@@ -1105,7 +1149,7 @@ padding-right: 10px;
     color: #fff;
     border-radius: 14px;
     width: 100px;
-    margin-left: 82px;
+    /*margin-left: 82px;*/
 }
 
 .help-inline{font-size:12px;}

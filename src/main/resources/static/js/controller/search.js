@@ -233,7 +233,7 @@ function dataTableInit(isVisible) {
    					$("#updatePermissions").hide();
    				}
      			 
-   				var params1= {selectedPath:metaDataPath,collectionType:selectedCollection,assetType:assetType,refresh:false};
+   				var params1= {selectedPath:metaDataPath,collectionType:selectedCollection,controllerValue:assetType,refresh:false,controllerAttribute:'asset_type'};
    				invokeAjax('/addCollection','GET',params1,constructEditCollectionMetadata,null,null,null);
         	   
            });
