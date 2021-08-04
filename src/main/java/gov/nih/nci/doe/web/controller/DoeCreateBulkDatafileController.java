@@ -236,19 +236,8 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			if (responseDTO != null) {
 
 				String taskId = responseDTO.getTaskId();
-				String name = doeDataFileModel.getPath().substring(doeDataFileModel.getPath().lastIndexOf('/') + 1);
-
+				
 				// get the paths for new collection registration and save in modac
-
-				/*
-				 * if
-				 * (CollectionUtils.isNotEmpty(registrationDTO.getDataObjectRegistrationItems())
-				 * ) { for (HpcDataObjectRegistrationItemDTO item :
-				 * registrationDTO.getDataObjectRegistrationItems()) { if
-				 * (Boolean.TRUE.equals(item.getCreateParentCollections())) {
-				 * item.getParentCollectionsBulkMetadataEntries().getPathsMetadataEntries().
-				 * stream() .forEach(e -> pathsList.add(e.getPath())); } } }
-				 */
 
 				if (CollectionUtils.isNotEmpty(registrationDTO.getDirectoryScanRegistrationItems())) {
 					for (HpcDirectoryScanRegistrationItemDTO item : registrationDTO
@@ -267,7 +256,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 
 				clearSessionAttrs(session);
 
-				taskManagerService.saveTransfer(taskId, "Upload", null, name, user);
+				taskManagerService.saveTransfer(taskId, "Upload", null, null, user);
 
 				// store the auditing info
 				AuditingModel audit = new AuditingModel();
