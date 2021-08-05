@@ -696,11 +696,14 @@ function registerBulkAssets() {
 			 $("#spinner").hide();
 	         $("#dimmer").hide();
 	    	 console.log('SUCCESS: ', msg);	
-	    	 
+
 	    	 bootbox.dialog({ 
-	     	    message: msg
+	     	    message: msg,
+	     	    onEscape: function() {
+	     		  location.replace("/addbulk");
+	     	    }
 	     	});
-	    	 location.replace("/addbulk");
+	    	 
 	    	 
 		 },
 		error : function(e) {
@@ -708,9 +711,12 @@ function registerBulkAssets() {
 	         $("#dimmer").hide();
 			 console.log('ERROR: ', e);
 			 bootbox.dialog({ 
-		     	    message: e
-		     	});
-			 location.replace("/addbulk");
+		     	   message: msg,
+		     	   onEscape: function() {
+		     		  location.replace("/addbulk");
+		     	    }
+		    });
+			 
 		}
 	 });
    }
