@@ -148,6 +148,8 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 		String accessGroups = null;
 		Set<String> pathsList = new HashSet<String>();
 		HpcBulkMetadataEntries formBulkMetadataEntries = null;
+		HpcBulkDataObjectRegistrationRequestDTO registrationDTO = null;
+		HpcBulkMetadataEntries entries = null;
 
 		// Validate parent path
 		try {
@@ -164,7 +166,6 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 				setInputParameters(request, session, model);
 			}
 
-			HpcBulkDataObjectRegistrationRequestDTO registrationDTO = null;
 			List<String> existingGroups = accessGroupsService.getGroupsByCollectionPath(dataFilePath);
 
 			if (CollectionUtils.isNotEmpty(existingGroups)) {
@@ -176,7 +177,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 					.parseBulkMatadataEntries(doeMetadataFile, accessGroups, doeDataFileModel.getPath().trim());
 
 			if (doeBulkMetadataEntries != null) {
-				HpcBulkMetadataEntries entries = doeBulkMetadataEntries.keySet().stream().findFirst().get();
+				entries = doeBulkMetadataEntries.keySet().stream().findFirst().get();
 				Map<String, String> assetIdentifierMapping = doeBulkMetadataEntries.get(entries);
 				registrationDTO = constructV2BulkRequest(request, session, doeDataFileModel.getPath().trim(),
 						assetIdentifierMapping);
@@ -204,7 +205,6 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			if (registrationDTO.getDataObjectRegistrationItems() != null
 					&& !registrationDTO.getDataObjectRegistrationItems().isEmpty()) {
 				for (HpcDataObjectRegistrationItemDTO dto : registrationDTO.getDataObjectRegistrationItems()) {
-					HpcBulkMetadataEntries entries = doeBulkMetadataEntries.keySet().stream().findFirst().get();
 					if (entries != null && !entries.getPathsMetadataEntries().isEmpty()) {
 						for (HpcBulkMetadataEntry bulkMeta : entries.getPathsMetadataEntries()) {
 							if (dto.getPath().equals(bulkMeta.getPath()))
