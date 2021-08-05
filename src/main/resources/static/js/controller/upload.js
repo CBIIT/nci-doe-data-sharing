@@ -700,6 +700,7 @@ function registerBulkAssets() {
 	    	 bootbox.dialog({ 
 	     	    message: msg
 	     	});
+	    	 location.replace("/addbulk");
 	    	 
 		 },
 		error : function(e) {
