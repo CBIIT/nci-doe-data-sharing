@@ -30,9 +30,9 @@ public class DoeExcelUtil {
 	public static final String METADATA_SHEET = "Metadata";
 	public static final String TOKENS_SHEET = "Tokens";
 
-	public static HpcBulkMetadataEntries parseBulkMatadataEntries(MultipartFile metadataFile, String accessGrps,
+	public static HashMap<HpcBulkMetadataEntries, Map<String, String>> parseBulkMatadataEntries(MultipartFile metadataFile, String accessGrps,
 			String collectionPath) throws IOException, DoeWebException {
-		HpcBulkMetadataEntries entries = null;
+		HashMap<HpcBulkMetadataEntries, Map<String, String>> entries = null;
 		if (metadataFile == null || metadataFile.getName().isEmpty() || metadataFile.getOriginalFilename().isEmpty())
 			return null;
 
@@ -45,9 +45,12 @@ public class DoeExcelUtil {
 		return entries;
 	}
 
-	private static HpcBulkMetadataEntries buildHpcBulkMetadataEntries(Map<String, Map<String, String>> metadataMap,
+	private static HashMap<HpcBulkMetadataEntries, Map<String, String>> buildHpcBulkMetadataEntries(Map<String, Map<String, String>> metadataMap,
 			Map<String, String> tokens, String accessGrps, String collectionPath) {
+		
+		HashMap<HpcBulkMetadataEntries, Map<String, String>> list = new HashMap<HpcBulkMetadataEntries, Map<String, String>>();
 		HpcBulkMetadataEntries entries = new HpcBulkMetadataEntries();
+		Map<String, String> assetIdentiferMapping = new HashMap<String, String>();
 		List<HpcBulkMetadataEntry> pathMetadataEntries = new ArrayList<HpcBulkMetadataEntry>();
 		if (metadataMap == null || metadataMap.isEmpty())
 			return null;
@@ -57,18 +60,39 @@ public class DoeExcelUtil {
 			HpcBulkMetadataEntry metadataEntry = new HpcBulkMetadataEntry();
 			String path = iterator.next();
 			Map<String, String> metadata = metadataMap.get(path);
-			if (metadata.containsKey("collection_type") && metadata.get("collection_type").equalsIgnoreCase("Asset")
-					&& StringUtils.isNotEmpty(accessGrps)) {
-				metadata.put("access_group", accessGrps);
-			}
 			path = replaceTokens(path, tokens);
-			metadataEntry.setPath(collectionPath + "/" + path);
-			if (metadata != null && !metadata.isEmpty())
+			if (metadata.containsKey("collection_type") && metadata.get("collection_type").equalsIgnoreCase("Asset")) {
+
+				if (StringUtils.isNotEmpty(accessGrps)) {
+					metadata.put("access_group", accessGrps);
+				}
+
+				if (metadata.containsKey("asset_identifier")
+						&& StringUtils.isNotEmpty(metadata.get("asset_identifier"))) {
+					String assetIdentifier = metadata.get("asset_identifier");
+					
+					// set path from asset_identifier metadata
+					metadataEntry.setPath(collectionPath + "/" + assetIdentifier);
+					assetIdentiferMapping.put(path,assetIdentifier);
+				}
+
+			} else {
+				// set file level path from asset_identifier metadata + fileName
+				String parentPath = path.substring(0, path.lastIndexOf('/'));
+				Map<String, String> parentMetadata = metadataMap.get(parentPath);
+				String assetIdentifier = parentMetadata.get("asset_identifier");
+				String fileName = path.substring(path.lastIndexOf("/"), path.length());
+				metadataEntry.setPath(collectionPath + "/" + assetIdentifier + fileName);
+			}
+
+			if (metadata != null && !metadata.isEmpty()) {
 				metadataEntry.getPathMetadataEntries().addAll(buildMetadataEntries(metadata));
+			}
 			pathMetadataEntries.add(metadataEntry);
 		}
 		entries.getPathsMetadataEntries().addAll(pathMetadataEntries);
-		return entries;
+		list.put(entries, assetIdentiferMapping);
+		return list;
 	}
 
 	private static List<HpcMetadataEntry> buildMetadataEntries(Map<String, String> metadata) {

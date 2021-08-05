@@ -3,8 +3,10 @@ package gov.nih.nci.doe.web.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -161,9 +163,8 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			if (request.getParameterNames().hasMoreElements()) {
 				setInputParameters(request, session, model);
 			}
-			HpcBulkDataObjectRegistrationRequestDTO registrationDTO = constructV2BulkRequest(request, session,
-					doeDataFileModel.getPath().trim());
 
+			HpcBulkDataObjectRegistrationRequestDTO registrationDTO = null;
 			List<String> existingGroups = accessGroupsService.getGroupsByCollectionPath(dataFilePath);
 
 			if (CollectionUtils.isNotEmpty(existingGroups)) {
@@ -171,12 +172,21 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			}
 
 			// when bulk metadata file is provided
-			HpcBulkMetadataEntries doeBulkMetadataEntries = DoeExcelUtil.parseBulkMatadataEntries(doeMetadataFile,
-					accessGroups, doeDataFileModel.getPath().trim());
+			HashMap<HpcBulkMetadataEntries, Map<String, String>> doeBulkMetadataEntries = DoeExcelUtil
+					.parseBulkMatadataEntries(doeMetadataFile, accessGroups, doeDataFileModel.getPath().trim());
 
 			if (doeBulkMetadataEntries != null) {
-				for (HpcDirectoryScanRegistrationItemDTO itemDTO : registrationDTO.getDirectoryScanRegistrationItems())
-					itemDTO.setBulkMetadataEntries(doeBulkMetadataEntries);
+				HpcBulkMetadataEntries entries = doeBulkMetadataEntries.keySet().stream().findFirst().get();
+				Map<String, String> assetIdentifierMapping = doeBulkMetadataEntries.get(entries);
+				registrationDTO = constructV2BulkRequest(request, session, doeDataFileModel.getPath().trim(),
+						assetIdentifierMapping);
+
+				for (HpcDirectoryScanRegistrationItemDTO itemDTO : registrationDTO
+						.getDirectoryScanRegistrationItems()) {
+					itemDTO.setBulkMetadataEntries(entries);
+				}
+			} else {
+				registrationDTO = constructV2BulkRequest(request, session, doeDataFileModel.getPath().trim(), null);
 			}
 
 			// when asset upload upload is done by form
@@ -194,8 +204,9 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			if (registrationDTO.getDataObjectRegistrationItems() != null
 					&& !registrationDTO.getDataObjectRegistrationItems().isEmpty()) {
 				for (HpcDataObjectRegistrationItemDTO dto : registrationDTO.getDataObjectRegistrationItems()) {
-					if (doeBulkMetadataEntries != null && !doeBulkMetadataEntries.getPathsMetadataEntries().isEmpty()) {
-						for (HpcBulkMetadataEntry bulkMeta : doeBulkMetadataEntries.getPathsMetadataEntries()) {
+					HpcBulkMetadataEntries entries = doeBulkMetadataEntries.keySet().stream().findFirst().get();
+					if (entries != null && !entries.getPathsMetadataEntries().isEmpty()) {
+						for (HpcBulkMetadataEntry bulkMeta : entries.getPathsMetadataEntries()) {
 							if (dto.getPath().equals(bulkMeta.getPath()))
 								dto.getDataObjectMetadataEntries().addAll(bulkMeta.getPathMetadataEntries());
 						}
@@ -236,7 +247,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			if (responseDTO != null) {
 
 				String taskId = responseDTO.getTaskId();
-				
+
 				// get the paths for new collection registration and save in modac
 
 				if (CollectionUtils.isNotEmpty(registrationDTO.getDirectoryScanRegistrationItems())) {
@@ -289,13 +300,15 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 		List<String> globusEndpointFolders = (List<String>) session.getAttribute("GlobusEndpointFolders");
 		String assetType = request.getParameter("assetType");
 		String collectionType = request.getParameter("collection_type");
-
+		String assetGroupIdentifier = request.getParameter("assetGroupIdentifier");
+		int index = 1;
 		if (CollectionUtils.isNotEmpty(globusEndpointFolders)) {
 			for (String folderName : globusEndpointFolders) {
 
+				String assetIdentifier = assetGroupIdentifier + "_" + index;
 				Enumeration<String> params = request.getParameterNames();
 				HpcBulkMetadataEntry metadataEntry = new HpcBulkMetadataEntry();
-				metadataEntry.setPath(collectionPath + "/" + folderName);
+				metadataEntry.setPath(collectionPath + "/" + assetIdentifier);
 				List<HpcMetadataEntry> entries = new ArrayList<HpcMetadataEntry>();
 
 				if (StringUtils.isNotEmpty(assetType)) {
@@ -313,7 +326,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 				}
 				HpcMetadataEntry entry = new HpcMetadataEntry();
 				entry.setAttribute("asset_identifier");
-				entry.setValue(folderName);
+				entry.setValue(assetIdentifier);
 				entries.add(entry);
 
 				HpcMetadataEntry entryName = new HpcMetadataEntry();
@@ -360,6 +373,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 				}
 				metadataEntry.getPathMetadataEntries().addAll(entries);
 				pathMetadataEntries.add(metadataEntry);
+				index++;
 			}
 		}
 

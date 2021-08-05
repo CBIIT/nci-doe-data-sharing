@@ -547,6 +547,10 @@ function constructAssetTypeBulkDiv(data,status) {
 	$("#addMetadataDiv").show();
 	$("#assetBulkMetadataTable tbody").html("");
 	
+	$("#assetBulkMetadataTable tbody").append('<tr><td>Asset Group Identifier</td><td>'+
+        	'<input type="text" placeholder="Required" class="bulkAssetTextbox" is_mandatory="true" aria-label="value of meta data"  name="assetGroupIdentifier"' +
+        	'></td></tr>');
+	
 	$.each(data, function(key, value) {	
 		
 		var placeholderValue = "";
@@ -692,9 +696,11 @@ function registerBulkAssets() {
 			 $("#spinner").hide();
 	         $("#dimmer").hide();
 	    	 console.log('SUCCESS: ', msg);	
+	    	 
 	    	 bootbox.dialog({ 
 	     	    message: msg
 	     	});
+	    	 
 		 },
 		error : function(e) {
 			 $("#spinner").hide();
@@ -703,6 +709,7 @@ function registerBulkAssets() {
 			 bootbox.dialog({ 
 		     	    message: e
 		     	});
+			 location.replace("/addbulk");
 		}
 	 });
    }
