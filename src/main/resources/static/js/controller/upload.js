@@ -547,7 +547,8 @@ function constructAssetTypeBulkDiv(data,status) {
 	$("#addMetadataDiv").show();
 	$("#assetBulkMetadataTable tbody").html("");
 	
-	$("#assetBulkMetadataTable tbody").append('<tr><td>Asset Group Identifier</td><td>'+
+	$("#assetBulkMetadataTable tbody").append('<tr><td>Asset Group Identifier&nbsp;&nbsp;<i class="fas fa-info-circle" data-toggle="tooltip"'+
+        	'data-placement="right" title="The system uses the Asset Group Identifier to create a unique Asset Identifier for each asset, in the format <group name>_<integer>"></i></td><td>'+
         	'<input type="text" placeholder="Required" class="bulkAssetTextbox" is_mandatory="true" aria-label="value of meta data"  name="assetGroupIdentifier"' +
         	'></td></tr>');
 	
