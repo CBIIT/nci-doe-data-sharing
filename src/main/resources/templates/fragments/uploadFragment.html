@@ -60,15 +60,31 @@
                                 <img src="images/Uploads.add.png" th:src="@{/images/Uploads.add.png}" class="uploadslogo" alt="register"> Register New Study</a>&nbsp;&nbsp;
                                 <a href="#" style="display:none;" id="deleteStudy" class="addDeleteUploadLabels" onclick="functionDelete('studyList','Study')">
                                <img src="images/Uploads.delete.png" th:src="@{/images/Uploads.delete.png}" class="uploadslogo" alt="delete"> Delete Study</a>&nbsp;&nbsp;
-                               
-                                <a href="#" style="display:none;" data-toggle="collapse" 
-                                data-target="#assetUploadDiv" id="addAsets" class="addDeleteUploadLabels">
-                               <i class="fas fa-upload"></i> Upload New Asset(s)</a>
+                                                              
                                </div>
                             </div>
-                            
-                            
-                       <div class="col-md-12 col-sm-12 collapse" id="assetUploadDiv">
+                           
+                       <div class="form-row col-lg-8 col-md-8" id="dataSetListDiv" style="display:none;">
+                          <label class="uploadLabels" style="width:75%;" for="attributeVal">Select Asset: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        
+                           <select class="simple-select2"  id="dataList" name="dataList" style="width:70%"
+                             onchange="retrieveCollections('dataList', this.options[this.selectedIndex],'onChange');">
+                           </select></label>
+
+                          <div style="padding: 10px;margin-left:118px;"><a href="#" class="addDeleteUploadLabels" 
+                          id="addNewDataSet" data-toggle="modal" data-target="#createAssetModal" data-backdrop="static" data-keyboard="false">
+                          
+                          <img src="images/Uploads.add.png" th:src="@{/images/Uploads.add.png}" class="uploadslogo" alt="register"> Register New Asset</a>&nbsp;&nbsp;
+                          <a href="#" style="display:none;" data-toggle="collapse" 
+                          data-target="#assetUploadDiv" id="addAsets" class="addDeleteUploadLabels">
+                          <i class="fas fa-upload"></i> Upload New Asset(s) from Globus</a>&nbsp;&nbsp;
+                          <a href="#" style="display:none;" class="addDeleteUploadLabels" id="deleteDataSet" onclick="functionDelete('dataList','Asset')">
+                          <img src="images/Uploads.delete.png" th:src="@{/images/Uploads.delete.png}" class="uploadslogo" alt="delete"> Delete Asset</a>
+                          
+                          </div>
+                         </div>
+                         
+                         <div class="col-md-12 col-sm-12 collapse" id="assetUploadDiv">
                        <form class="form-horizontal" id="registerBulkAssetForm" enctype="multipart/form-data"
                         method="POST"> 
                         <hr style="border: 0 solid #E87B05;background-color: #E87B05;box-sizing: border-box;height: 1px;width:85%;">
@@ -200,22 +216,6 @@
                    <hr style="border: 0 solid #E87B05;background-color: #E87B05;box-sizing: border-box;height: 1px;width:85%;">
                    </form>
                     </div> 
-                    
-                            
-                       <div class="form-row col-lg-8 col-md-8" id="dataSetListDiv" style="display:none;">
-                          <label class="uploadLabels" style="width:75%;" for="attributeVal">Select Asset: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        
-                           <select class="simple-select2"  id="dataList" name="dataList" style="width:70%"
-                             onchange="retrieveCollections('dataList', this.options[this.selectedIndex],'onChange');">
-                           </select></label>
-
-                          <div style="padding: 10px;margin-left:118px;"><a href="#" class="addDeleteUploadLabels" 
-                          id="addNewDataSet" data-toggle="modal" data-target="#createAssetModal" data-backdrop="static" data-keyboard="false">
-                          
-                          <img src="images/Uploads.add.png" th:src="@{/images/Uploads.add.png}" class="uploadslogo" alt="register"> Register New Asset</a>&nbsp;&nbsp;
-                          <a href="#" style="display:none;" class="addDeleteUploadLabels" id="deleteDataSet" onclick="functionDelete('dataList','Asset')">
-                          <img src="images/Uploads.delete.png" th:src="@{/images/Uploads.delete.png}" class="uploadslogo" alt="delete"> Delete Asset</a></div>
-                         </div>
                             
                             <div class="col-md-12 col-sm-12" id="dataListDiv" style="display:none;margin-top:30px;">
                               <div class="form-row" style="height:190px;position:relative;">

@@ -343,6 +343,10 @@ $("#backtoSearch").click(function(e){
 	location.replace("/searchTab?returnToSearch=true");
 });
 
+$("#addAsets").click(function(e){
+	resetAssetsSelection();	
+});
+
 $('body').on('click', 'a.button.closeBtn', function () {
     $(this).closest('div.popover').popover('hide');
 });
