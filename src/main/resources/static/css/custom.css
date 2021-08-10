@@ -1414,6 +1414,18 @@ max-width: 95%;
 }
 }
 
+@media (max-width: 990px){
+	
+.td_class_7 {width: 30%!important;word-break: break-word;}
+.td_class_9 {
+	width: 70%!important;
+	word-break: break-word;
+}
+#searchResultsDiv {
+	margin-top: 7px!important;
+	margin-left: -13px;
+}
+}
 
 @media (min-width: 992px) and (max-width:1082px){
 .td_class_7 {width: 10%!important;word-break: break-word;}
