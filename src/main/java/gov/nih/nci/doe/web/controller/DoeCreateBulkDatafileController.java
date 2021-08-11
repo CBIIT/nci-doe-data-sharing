@@ -70,6 +70,11 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	public String home(Model model, HttpSession session, HttpServletRequest request) throws Exception {
 
 		log.info("load upload page");
+
+		String user = getLoggedOnUserInfo();
+		if (StringUtils.isEmpty(user)) {
+			 return "loginTab";
+		}
 		String code = request.getParameter("code");
 		model.addAttribute("clientId", clientId);
 		if (code != null) {
@@ -103,6 +108,10 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			HttpServletRequest request, HttpServletResponse response) throws DoeWebException {
 
 		log.info("edit permissions for path: " + selectedPath);
+		String user = getLoggedOnUserInfo();
+		if (StringUtils.isEmpty(user)) {
+			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
+		}
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		if (StringUtils.isNotEmpty(selectedPath)) {
 			HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, collectionServiceURL,
@@ -123,6 +132,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	 * @param response
 	 * @param redirectAttributes
 	 * @return
+	 * @throws DoeWebException 
 	 */
 	@SuppressWarnings("unchecked")
 	@PostMapping
@@ -130,11 +140,14 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	public String createDatafile(@Valid DoeDatafileModel doeDataFileModel,
 			@RequestParam(value = "doeMetadataFile", required = false) MultipartFile doeMetadataFile, Model model,
 			@RequestParam(value = "isFormBulkUpload", required = false) Boolean isFormBulkUpload, HttpSession session,
-			HttpServletRequest request, HttpServletResponse response) {
+			HttpServletRequest request, HttpServletResponse response) throws DoeWebException {
 
 		log.info("bulk upload and isFormBulkUpload : " + isFormBulkUpload);
-		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		String user = getLoggedOnUserInfo();
+		if (StringUtils.isEmpty(user)) {
+			 return "loginTab";
+		}
+		String authToken = (String) session.getAttribute("writeAccessUserToken");
 
 		String dataFilePath = request.getParameter("bulkDatafilePath");
 

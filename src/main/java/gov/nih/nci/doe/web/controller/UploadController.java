@@ -1,7 +1,9 @@
 package gov.nih.nci.doe.web.controller;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,12 @@ public class UploadController extends AbstractDoeController {
 	public ResponseEntity<?> home(HttpSession session, @RequestHeader HttpHeaders headers,
 			UploadCollectionModel uploadCollectionModel) throws Exception {
 
+		log.info("upload controller");
+		String user = getLoggedOnUserInfo();
+		if (StringUtils.isEmpty(user)) {
+			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
+		}
+		
 		session.setAttribute("basePathSelected", basePath);
 		session.removeAttribute("GlobusEndpoint");
 		session.removeAttribute("includeCriteria");

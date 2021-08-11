@@ -388,13 +388,8 @@ public class DoeClientUtil {
 			WebClient client = DoeClientUtil.getWebClient(requestURL, sslCertPath, sslCertPassword);
 			client.header("Authorization", "Bearer " + token);
 			Response restResponse = client.invoke("POST", compoundMetadataQuery);
-			if (restResponse.getStatus() == 201 || restResponse.getStatus() == 200) {
-				return restResponse;
-			} else {
-				log.error("Failed to query data objects");
-				String errorMessage = getErrorMessage(restResponse);
-				throw new DoeWebException(errorMessage, restResponse.getStatus());
-			}
+			log.info("response status for data object query" + restResponse);
+			return restResponse;
 		} catch (Exception e) {
 			log.error("Failed to query data objects");
 			throw new DoeWebException(e);
@@ -772,10 +767,9 @@ public class DoeClientUtil {
 			throw new DoeWebException(e.getMessage());
 		}
 	}
-	
-	public static Response getPreSignedUrl(String authToken, String dataObjectServiceURL,String path,
-			String hpcCertPath, String hpcCertPassword)
-			throws DoeWebException {
+
+	public static Response getPreSignedUrl(String authToken, String dataObjectServiceURL, String path,
+			String hpcCertPath, String hpcCertPassword) throws DoeWebException {
 		try {
 			final String requestUrl = UriComponentsBuilder.fromHttpUrl(dataObjectServiceURL)
 					.path("/{dme-archive-path}/generateDownloadRequestURL").buildAndExpand(path).encode().toUri()
