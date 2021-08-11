@@ -110,7 +110,13 @@ public class HomeController extends AbstractDoeController {
 	}
 
 	@GetMapping(value = "/tasksTab")
-	public String getTasksTab(HttpSession session, HttpServletRequest request) {
+	public String getTasksTab(HttpSession session, HttpServletRequest request) throws DoeWebException {
+
+		log.info("tasks Tab");
+		String user = getLoggedOnUserInfo();
+		if (StringUtils.isEmpty(user)) {
+			 return "loginTab";
+		}
 		return "tasksTab";
 	}
 
