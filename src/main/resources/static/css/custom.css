@@ -1413,7 +1413,52 @@ footer{background:#fff; font-size:14px;}
 max-width: 95%;
 }
 }
-    
+
+@media (max-width: 990px){
+	
+.td_class_7 {width: 30%!important;word-break: break-word;}
+.td_class_9 {
+	width: 70%!important;
+	word-break: break-word;
+}
+#searchResultsDiv {
+	margin-top: 7px!important;
+	margin-left: -13px;
+}
+}
+
+@media (min-width: 992px) and (max-width:1082px){
+.td_class_7 {width: 10%!important;word-break: break-word;}
+.td_class_9 {
+	width: 40%!important;
+	word-break: break-word;
+}
+}
+
+@media (min-width: 1082px) and (max-width:1230px){
+.td_class_7 {width: 20%!important;word-break: break-word;}
+.td_class_9 {
+	width: 65%!important;
+	word-break: break-word;
+}
+}
+
+@media (min-width: 1230px) and (max-width:1371px){
+.td_class_7 {width: 20%!important;word-break: break-word;}
+.td_class_9 {
+	width: 80%!important;
+	word-break: break-word;
+}
+}
+
+@media (min-width: 1371px){
+.td_class_7 {width: 40%!important;word-break: break-word;}
+.td_class_9 {
+	width: 60%!important;
+	word-break: break-word;
+}
+}
+
 
 h4.media-heading{font-size:16px;font-weight: bold;}
 
@@ -1544,6 +1589,9 @@ position: absolute;
     background-size: 100% 100%;
 }
 
+table#searchResultTable tr {
+   display: inline-flex !important;
+}
 
 .multiDownloadIcon {
     background-image: url(/static/img/dcc/icon-multidownload.png);

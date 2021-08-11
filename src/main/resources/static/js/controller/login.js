@@ -5,7 +5,16 @@ $(document).ready(function () {
 	var keycode = (event.keyCode ? event.keyCode : event.which);
 	  if(keycode == '13'){
 		 event.preventDefault();
-		 $("#loginButton").trigger("click");
+		 if($("#btnforgotPassword").is(":visible")) {
+			 $("#btnforgotPassword").trigger("click");
+		 } else if($("#loginButton").is(":visible")) {
+			 $("#loginButton").trigger("click");
+		 } else if($("#btnUpdateProfile").is(":visible")) {
+			 $("#btnUpdateProfile").trigger("click"); 
+		 } else if($("#btnRegister").is(":visible")) {
+			 $("#btnRegister").trigger("click");
+		 }
+		 
 	  }
 
 	});

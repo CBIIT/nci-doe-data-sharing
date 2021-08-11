@@ -144,9 +144,11 @@ function retrieveCollections($this, selectedIndex,action) {
 	var params;
 	var selectedValue;
 	if(action  == 'onChange') {
-		$("#" +selectTarget+ " option[value='ANY']").remove();
-		 selectedValue = selectedIndex.value;
+	     selectedValue = selectedIndex.value;
 		 params = {selectedPath:selectedIndex.value};
+		 if(selectedIndex && selectedIndex.value != 'ANY') {
+			 $("#" +selectTarget+ " option[value='ANY']").remove(); 
+		 }
 	} else {
 		 selectedValue = selectedIndex;
 		 params= {selectedPath:selectedIndex};
@@ -501,7 +503,9 @@ function postSuccessRegisterCollection(data,collectionType) {
 			
 		} else if(collectionType == 'Asset') {
 			var params= {selectedPath:$("#studyList").val(),refreshNode:'true'};
-			 loadJsonData('/browse/collection', $("#dataList"), true, params, displaySuccessMsg, null, "key", "value");
+			loadJsonData('/browse/collection', $("#dataList"), true, params, displaySuccessMsg, null, "key", "value");
+			resetAssetsSelection();
+			$("#assetUploadDiv").removeClass('show');
 		}
 	} else {
 		$("#registerCollectionModal").find(".registerErrorMsg").html("Error in create collection:" + data);
@@ -511,6 +515,20 @@ function postSuccessRegisterCollection(data,collectionType) {
 	
 }
 
+function resetAssetsSelection() {
+	if($("#dataListDiv").is(":visible")) {
+		var data = {
+			    id: 'ANY',
+			    text: 'Select'
+			};
+		var newOption = new Option(data.text, data.id, true, true);
+		if ($('#dataList').find("option[value='" + data.id + "']").length) {
+		    $('#dataList').val(data.id).trigger('change');
+		} else {
+			$('#dataList').append(newOption).trigger('change');
+		}
+	}
+}
 
 function displaySuccessMsg(data,status) {
 	$("#registerCollectionModal").find(".registerMsg").html("Collection created successfully.");
@@ -546,6 +564,11 @@ function retrieveAssetTypeDiv(data) {
 function constructAssetTypeBulkDiv(data,status) {
 	$("#addMetadataDiv").show();
 	$("#assetBulkMetadataTable tbody").html("");
+	
+	$("#assetBulkMetadataTable tbody").append('<tr><td>Asset Group Identifier&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+        	'data-placement="right" title="The system uses the Asset Group Identifier to create a unique Asset Identifier for each asset, in the format <group name>_<integer>"></i></td><td>'+
+        	'<input type="text" placeholder="Required" class="bulkAssetTextbox" is_mandatory="true" aria-label="value of meta data"  name="assetGroupIdentifier"' +
+        	'></td></tr>');
 	
 	$.each(data, function(key, value) {	
 		
@@ -692,17 +715,27 @@ function registerBulkAssets() {
 			 $("#spinner").hide();
 	         $("#dimmer").hide();
 	    	 console.log('SUCCESS: ', msg);	
+
 	    	 bootbox.dialog({ 
-	     	    message: msg
+	     	    message: msg,
+	     	    onEscape: function() {
+	     		  location.replace("/addbulk");
+	     	    }
 	     	});
+	    	 
+	    	 
 		 },
 		error : function(e) {
 			 $("#spinner").hide();
 	         $("#dimmer").hide();
 			 console.log('ERROR: ', e);
 			 bootbox.dialog({ 
-		     	    message: e
-		     	});
+		     	   message: msg,
+		     	   onEscape: function() {
+		     		  location.replace("/addbulk");
+		     	    }
+		    });
+			 
 		}
 	 });
    }

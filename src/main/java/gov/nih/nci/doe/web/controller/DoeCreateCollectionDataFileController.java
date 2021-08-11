@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -188,7 +189,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 
 	@SuppressWarnings("unchecked")
 	protected gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO constructV2BulkRequest(
-			HttpServletRequest request, HttpSession session, String path) {
+			HttpServletRequest request, HttpSession session, String path, Map<String, String> assetIdentifierMapping) {
 		gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO dto = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO();
 
 		String datafilePath = (String) session.getAttribute("datafilePath");
@@ -263,14 +264,31 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		}
 
 		if (StringUtils.equals(bulkType, "globus") && globusEndpointFolders != null) {
+			String assetGroupIdentifier = request.getParameter("assetGroupIdentifier");
+			int index = 1;
 			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO> folders = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO>();
 			for (String folderName : globusEndpointFolders) {
 				gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO folder = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO();
 				HpcFileLocation source = new HpcFileLocation();
 				source.setFileContainerId(globusEndpoint);
+				// the to Path is the destination Path. If bulk asset upload, set the toPath
+				// from asset_identifer.
 				String fromPath = globusEndpointPath.endsWith("/") ? globusEndpointPath + folderName
 						: globusEndpointPath + "/" + folderName;
-				String toPath = "/" + folderName;
+				String toPath = "";
+				if (StringUtils.isNoneEmpty(assetGroupIdentifier)) {
+					toPath = "/" + assetGroupIdentifier + "_" + index;
+				} else if (assetIdentifierMapping != null) {
+					String assetIdentifier = assetIdentifierMapping.get(folderName);
+					if (assetIdentifier != null && !assetIdentifier.equals(folderName)) {
+						toPath = "/" + assetIdentifier;
+					} else {
+						toPath = "/" + folderName;
+					}
+				} else {
+					toPath = "/" + folderName;
+				}
+
 				source.setFileId(fromPath);
 				folder.setBasePath(datafilePath);
 				HpcScanDirectory globusDirectory = new HpcScanDirectory();
@@ -287,6 +305,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 					folder.getIncludePatterns().addAll(include);
 					folder.setPatternType(HpcPatternType.SIMPLE);
 				}
+				index++;
 			}
 			dto.getDirectoryScanRegistrationItems().addAll(folders);
 		}
