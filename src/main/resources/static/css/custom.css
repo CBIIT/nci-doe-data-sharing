@@ -637,7 +637,8 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before
 }
 
 #doeMetadataFile::file-selector-button {
-	box-sizing: border-box;
+  margin-right:15px;
+  box-sizing: border-box;
   height: 36px;
   width: 146px;
   border: 2px solid #E87B05;
