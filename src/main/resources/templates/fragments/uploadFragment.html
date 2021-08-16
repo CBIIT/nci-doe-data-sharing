@@ -88,11 +88,11 @@
                        <form class="form-horizontal" id="registerBulkAssetForm" enctype="multipart/form-data"
                         method="POST"> 
                         <hr style="border: 0 solid #E87B05;background-color: #E87B05;box-sizing: border-box;height: 1px;
-                        width:77%;margin-left: 120px;">
+                        width:61%;margin-left: 120px;">
                           <div class="form-row" style="margin-left:100px;">
                              <div class="form-group col-lg-12 col-md-12">
                              
-                               <div class="form-group col-lg-12 col-md-12" style="margin-top: 5px">
+                               <div class="form-group col-lg-12 col-md-12" style="margin-top: 12px">
                                
                                <button type="button" class="btn btn-md btn-link" id="assetSelectionGlobusButton">
                                Select Assets from <img src="images/Uploads-Globus.icon.png" th:src="@{/images/Uploads-Globus.icon.png}" style="width:20px;" alt="globus"> Globus Endpoint
@@ -101,28 +101,25 @@
                              </div>
                            
                             
-                <div class="col-md-12 col-sm-12" id="globusDetailsDiv"  style="margin-left: 3px;margin-top: 16px;">
+                <div class="col-md-12 col-sm-12" id="globusDetailsDiv"  style="margin-left: 3px;margin-top: 21px;">
                  <div class="form-row" th:if="${bulkUploadCollection !=null and endpoint_id != null}">
-				    <div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+				    <div class="form-group col-lg-2 col-md-2 assetBulkGlobusLabels">
 				     <span class="assetGlobusSelectionFields">GLOBUS ENDPOINT ID </span></div>
-					&nbsp;&nbsp;&nbsp;&nbsp;
 					<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues">
-    				<span id="assetGlobusEndpointId" th:text="${endpoint_id}" style="font-weight: normal;"></span></div>
+    				<span id="assetGlobusEndpointId" th:text="${endpoint_id}" style="font-weight: normal;padding-left: 10px;"></span></div>
 				 </div>
 							
-				<div class="form-row" th:if="${bulkUploadCollection !=null and endpoint_path != null}">
-				    <div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+				<div class="form-row" style="margin-top: -6px;" th:if="${bulkUploadCollection !=null and endpoint_path != null}">
+				    <div class="form-group col-lg-2 col-md-2 assetBulkGlobusLabels">
 				    <span class="assetGlobusSelectionFields">GLOBUS ENDPOINT PATH </span></div>
-					&nbsp;&nbsp;&nbsp;&nbsp;
 					<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues">
-    				<span id="assetGlobusEndpointPath" th:text="${endpoint_path}" style="font-weight: normal;"></span></div>
+    				<span id="assetGlobusEndpointPath" th:text="${endpoint_path}" style="font-weight: normal;padding-left: 10px;"></span></div>
 				 </div>		
 				 
 				 
-				 <div class="form-row" th:if="${bulkUploadCollection!=null and fileNames != null}">
-				    <div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+				 <div class="form-row" style="margin-top: -6px;" th:if="${bulkUploadCollection!=null and fileNames != null}">
+				    <div class="form-group col-lg-2 col-md-2 assetBulkGlobusLabels">
 				    <span class="assetGlobusSelectionFields">SELECTED FILES</span></div>
-					&nbsp;&nbsp;&nbsp;&nbsp;
 					<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues" id="assetSelectedFiles">
     				<ul> 
                          <li th:each="fileName:${fileNames}" th:text="${fileName}"></li>
@@ -132,10 +129,9 @@
 				 </div>	
 				 
 				 
-				  <div class="form-row" th:if="${bulkUploadCollection !=null and folderNames != null}">
-				    <div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+				  <div class="form-row" style="margin-top: -6px;" th:if="${bulkUploadCollection !=null and folderNames != null}">
+				    <div class="form-group col-lg-2 col-md-2 assetBulkGlobusLabels">
 				    <span class="assetGlobusSelectionFields">SELECTED FOLDERS</span></div>
-					&nbsp;&nbsp;&nbsp;&nbsp;
 					<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues" id="assetSelectedFolders">
     				  <ul> 
                          <li th:each="folderName:${folderNames}" th:text="${folderName}"></li>
@@ -144,18 +140,18 @@
 						th:each="folderId : ${folderIds}"/></div>
 				 </div>
 							
-                 <div class="form-row" th:if="${bulkUploadCollection !=null and endpoint_id != null}">
-				    <div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+                 <div class="form-row" style="margin-top: -6px;" th:if="${bulkUploadCollection !=null and endpoint_id != null}">
+				    <div class="form-group col-lg-2 col-md-2 assetBulkGlobusLabels">
 				    <span class="assetGlobusSelectionFields">INCLUDE CRITERIA &nbsp;
 				    <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="right" title="Add list of include patterns to match source files in the selected folders. "></i>
 				    </span></div>
-					&nbsp;&nbsp;&nbsp;&nbsp;
 					<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues" style="background-color: #fff;">
-    				<input type="text" name="includeCriteria" placeholder="Enter Include criteria" id="includeCriteria" style="width: 100%;border: none;background-color: transparent;">
+    				<input type="text" name="includeCriteria" placeholder="Enter criteria" id="includeCriteria" style="width: 100%;border: none;
+    				background-color: transparent;padding-left: 10px;">
     				</div>
 				 </div>
                 </div>
-                       <div class="form-row col-md-12 col-sm-12" th:if="${bulkUploadCollection != null and endpoint_id != null}" style="margin-left: 5px;">
+                       <div class="form-row col-md-12 col-sm-12" th:if="${bulkUploadCollection != null and endpoint_id != null}" style="margin-left: 5px;margin-top: 10px;">
                        <label style="color:#C06400;font-family: 'inter_regular';font-size: 15px;font-weight: 500;">
                        Do you want to upload bulk metadata file:</label>
                       <div class="form-group">
@@ -191,13 +187,13 @@
                       </div>
                       <div class="form-group col-md-12 col-sm-12" id="addMetadataDiv" style="display:none;">
                       <input type="hidden" name="collection_type" value="Asset"/>
-                      <div class="form-group col-md-11 col-sm-11">
+                      <div class="form-group col-md-8 col-sm-8">
                        <button id="addUserMetadataForBulkAssets" type="button" class="btn btn-primary mb-2 mr-2" 
-                       style="float: right;margin-right: 66px !important;"onclick="addNewMetaDataCollection('assetBulkMetadataTable')"
+                       onclick="addNewMetaDataCollection('assetBulkMetadataTable')"
                        >Add Metadata</button></div>
                        
                         <table id="assetBulkMetadataTable" class="table display dt-responsive wrap" 
-                        style="width:85%;border:none;border-collapse: separate;border-spacing: 0 1px;">
+                        style="width:68%;border:none;border-collapse: separate;border-spacing: 0 1px;">
                       <thead>
 							<tr>
                                 <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col">ATTRIBUTE</th>
@@ -209,13 +205,14 @@
                     </table> 
                       </div>
                       </div>   
-                 <div class="form-group col-lg-8 col-md-8" style="margin-top: 10px;margin-bottom: 0px;margin-left: 8px;">
+                 <div class="form-group col-lg-8 col-md-8" style="margin-top: 17px;margin-bottom: 0px;
+                 margin-left: 8px;">
 				 <input type="button"
 				 value="Upload" class="btn" id="registerBulkAssets"></div>					
                   </div>                            
                    </div>
                    <hr style="border: 0 solid #E87B05;background-color: #E87B05;box-sizing: border-box;height: 1px;
-                   width:77%;margin-left: 120px;">
+                   width:61%;margin-left: 120px;">
                    </form>
                     </div> 
                             

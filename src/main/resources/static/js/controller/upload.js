@@ -565,7 +565,7 @@ function constructAssetTypeBulkDiv(data,status) {
 	$("#addMetadataDiv").show();
 	$("#assetBulkMetadataTable tbody").html("");
 	
-	$("#assetBulkMetadataTable tbody").append('<tr><td>Asset Group Identifier&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+	$("#assetBulkMetadataTable tbody").append('<tr><td style="width: 24%;">Asset Group Identifier&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
         	'data-placement="right" title="The system uses the Asset Group Identifier to create a unique Asset Identifier for each asset, in the format <group name>_<integer>"></i></td><td>'+
         	'<input type="text" placeholder="Required" class="bulkAssetTextbox" is_mandatory="true" aria-label="value of meta data"  name="assetGroupIdentifier"' +
         	'></td></tr>');
@@ -603,7 +603,7 @@ function constructAssetTypeBulkDiv(data,status) {
 			        	'data-placement="right" title="'+value.description+'"></i>&nbsp;&nbsp;<i class="fas fa-info-circle" data-toggle="tooltip"'+
 			        	'data-placement="right" title="Please note that this description will be applied to all Assets. You may edit the description of each Asset separately after it is uploaded."></i></td><td>'+
 			        	'<textarea rows="4" placeholder ="Required" is_mandatory="'+value.mandatory+'" aria-label="value of meta data"  name="zAttrStr_'+value.attrName+'"' +
-			        	'style="width:90%;"></textarea></td></tr>'); 
+			        	'style="width:100%;padding-left: 10px;font-family:inter_regular;"></textarea></td></tr>'); 
 		   } else {
 		 	$("#assetBulkMetadataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
         	'data-placement="right" title="'+value.description+'"></i></td><td>'+

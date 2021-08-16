@@ -163,10 +163,12 @@
 }
 
 .bulkAssetTextbox {
-	    width: 90%;
+	width: 100%;
     border-radius: 9px;
     border-color: transparent;
     height: 29px;
+    padding-left: 10px;
+    font-family: 'inter_regular';
 }
 table#assetDetailsDiv td {
 	border:none;
@@ -273,7 +275,7 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 .btn-primary, bg-primary{background-color: #00579e!important;}
 
 
-#downloadSelectedDataSet,#downloadSelectedMetadata,#downloadSelected{
+#downloadSelectedDataSet,#downloadSelectedMetadata,#downloadSelected,#openInferModal{
 	background-color: #E87B05!important;
 	margin-top: -40px;
     border-radius: 13px;
@@ -643,11 +645,17 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before
   width: 146px;
   border: 2px solid #E87B05;
   background-color: #FFFFFF;
-  border-radius:10px;
+  border-radius:15px;
   color: #000000;
   font-family: 'inter_regular';
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 500; 
+}
+
+#addUserMetadataForBulkAssets {
+	margin-right: -30px!important;
+    margin-top: -42px;
+    float: right;
 }
 
 .wrapper {
@@ -1150,6 +1158,9 @@ padding-right: 10px;
     color: #fff;
     border-radius: 14px;
     width: 100px;
+    font-family: 'inter_regular';
+    font-size: 15px;
+    letter-spacing: 0.5px;
     /*margin-left: 82px;*/
 }
 
@@ -1186,11 +1197,14 @@ cursor: pointer;
 font-size: 14px;
 padding: 6px;
 }
+.select2-container span.select2-selection.select2-selection--single {
+    border: 2px solid #E87B05;
+}
 
 .select2-container .select2-selection--single #select2-instituteList-container,#select2-studyList-container,#select2-dataList-container {
     background-color: #fff !important;
     color: #000 !important;
-    border: 2px solid #E87B05;
+    /*border: 2px solid #E87B05;*/
 }
 
 .select2-results__option[aria-selected=true] {
