@@ -1654,6 +1654,12 @@ table#searchResultTable tr {
     margin-right: 11px;
 }
 
+#groupNames {
+	background-color: #A1C1DB;
+    color: #000000;
+    word-break: break-all;
+    height: 100%;
+}
 label.error {
    color: rgb(251, 6, 10) !important;
    margin-left: 17px;
