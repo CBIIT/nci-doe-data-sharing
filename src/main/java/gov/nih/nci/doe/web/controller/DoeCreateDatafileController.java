@@ -73,7 +73,7 @@ public class DoeCreateDatafileController extends DoeCreateCollectionDataFileCont
 			parentPath = doeDataFileModel.getPath().substring(0, doeDataFileModel.getPath().lastIndexOf('/'));
 			if (!parentPath.isEmpty()) {
 				HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, collectionServiceURL,
-						parentPath, true, sslCertPath, sslCertPassword);
+						parentPath, true);
 				Boolean isValidPermissions = verifyCollectionPermissions(parentPath, parentCollectionDto);
 				if (Boolean.FALSE.equals(isValidPermissions)) {
 					return "Insufficient privileges to add data files.";
@@ -84,7 +84,7 @@ public class DoeCreateDatafileController extends DoeCreateCollectionDataFileCont
 
 			registrationDTO.setChecksum(checksum);
 			Integer restResponse = DoeClientUtil.registerDatafile(authToken, doeDataFile, dataObjectAsyncServiceURL,
-					registrationDTO, path, sslCertPath, sslCertPassword);
+					registrationDTO, path);
 			if (restResponse == 200 || restResponse == 201) {
 
 				// store the auditing info

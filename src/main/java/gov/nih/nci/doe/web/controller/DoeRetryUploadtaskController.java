@@ -56,13 +56,13 @@ public class DoeRetryUploadtaskController extends AbstractDoeController {
 			String authToken = (String) session.getAttribute("writeAccessUserToken");
 
 			HpcBulkDataObjectRegistrationStatusDTO uploadTask = DoeClientUtil.getDataObjectRegistrationTask(authToken,
-					this.registrationServiceURL, taskId, this.sslCertPath, this.sslCertPassword);
+					this.registrationServiceURL, taskId);
 
 			HpcBulkDataObjectRegistrationRequestDTO registrationDTO = constructBulkRequest(request, session,
 					uploadTask);
 
 			HpcBulkDataObjectRegistrationResponseDTO responseDTO = DoeClientUtil.registerBulkDatafiles(authToken,
-					registrationServiceURL, registrationDTO, sslCertPath, sslCertPassword);
+					registrationServiceURL, registrationDTO);
 			if (responseDTO != null) {
 				StringBuffer info = new StringBuffer();
 				for (HpcDataObjectRegistrationItemDTO responseItem : responseDTO.getDataObjectRegistrationItems()) {

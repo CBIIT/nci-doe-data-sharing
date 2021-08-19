@@ -163,6 +163,10 @@ public class HomeController extends AbstractDoeController {
 		getAssetDetails(session, dmeDataId, returnToSearch, assetIdentifier, model);
 		return "assetDetails";
 	}
+	
+	
+	
+	
 
 	@GetMapping(value = "/downloadTab")
 	public String getDownload(Model model, HttpSession session, HttpServletRequest request,

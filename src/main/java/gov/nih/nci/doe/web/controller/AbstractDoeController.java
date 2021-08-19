@@ -74,11 +74,6 @@ import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
 
 public abstract class AbstractDoeController {
 
-	@Value("${gov.nih.nci.hpc.ssl.cert}")
-	protected String sslCertPath;
-	@Value("${gov.nih.nci.hpc.ssl.cert.password}")
-	protected String sslCertPassword;
-
 	@Value("${gov.nih.nci.hpc.server.model}")
 	public String hpcModelURL;
 
@@ -295,7 +290,7 @@ public abstract class AbstractDoeController {
 	public void downloadToUrl(String urlStr, String fileName, HttpServletResponse response) throws DoeWebException {
 		log.info("download to Url for urlStr: " + urlStr + " for fileName: " + fileName);
 		try {
-			WebClient client = DoeClientUtil.getWebClient(urlStr, null, null);
+			WebClient client = DoeClientUtil.getWebClient(urlStr);
 			Response restResponse = client.invoke("GET", null);
 			response.setContentType("application/octet-stream");
 			response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
@@ -315,7 +310,7 @@ public abstract class AbstractDoeController {
 
 		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
 		if (modelDTO == null) {
-			modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL, sslCertPath, sslCertPassword);
+			modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL);
 			session.setAttribute("userDOCModel", modelDTO);
 		}
 
@@ -331,7 +326,7 @@ public abstract class AbstractDoeController {
 				if (StringUtils.isNotEmpty(isDataObject) && isDataObject.equalsIgnoreCase("false")) {
 					// Get collection
 					HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL, selectedPath,
-							false, sslCertPath, sslCertPassword);
+							false);
 					if (collections != null && collections.getCollections() != null
 							&& !collections.getCollections().isEmpty()) {
 						HpcCollectionDTO collection = collections.getCollections().get(0);
@@ -353,7 +348,7 @@ public abstract class AbstractDoeController {
 
 				} else {
 					HpcDataObjectDTO datafiles = DoeClientUtil.getDatafiles(authToken, dataObjectAsyncServiceURL,
-							selectedPath, false, true, sslCertPath, sslCertPassword);
+							selectedPath, false, true);
 					if (datafiles != null && datafiles.getDataObject() != null) {
 						for (HpcMetadataEntry entry : datafiles.getMetadataEntries().getSelfMetadataEntries()
 								.getUserMetadataEntries()) {
@@ -462,8 +457,7 @@ public abstract class AbstractDoeController {
 		metadataEntries.add(entry);
 		dto.getMetadataEntries().addAll(metadataEntries);
 
-		Integer restResponse = DoeClientUtil.updateCollection(authToken, serviceURL, dto, permissionGroups.getPath(),
-				sslCertPath, sslCertPassword);
+		Integer restResponse = DoeClientUtil.updateCollection(authToken, serviceURL, dto, permissionGroups.getPath());
 		log.info("rest response for update collection:" + restResponse);
 
 		if (restResponse == 200 || restResponse == 201) {
@@ -750,7 +744,7 @@ public abstract class AbstractDoeController {
 		if (CollectionUtils.isEmpty(systemAttrs)) {
 			HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
 			if (modelDTO == null) {
-				modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL, sslCertPath, sslCertPassword);
+				modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL);
 				session.setAttribute("userDOCModel", modelDTO);
 			}
 
@@ -768,7 +762,7 @@ public abstract class AbstractDoeController {
 			log.info("search compund query" + compoundQuery);
 
 			Response restResponse = DoeClientUtil.getDataObjectQuery(authToken, compoundDataObjectSearchServiceURL,
-					true, sslCertPath, sslCertPassword, compoundQuery);
+					true,compoundQuery);
 
 			if (restResponse.getStatus() == 200) {
 				HpcCompoundMetadataQueryDTO compoundQuerySession = (HpcCompoundMetadataQueryDTO) session
@@ -804,6 +798,9 @@ public abstract class AbstractDoeController {
 				String dme_Data_Id = getAttributeValue("dme_data_id",
 						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
 
+				String assetType = getAttributeValue("asset_type",
+						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
+
 				List<KeyValueBean> selfMetadata = getUserMetadata(
 						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset", systemAttrs);
 
@@ -811,6 +808,7 @@ public abstract class AbstractDoeController {
 					model.addAttribute("returnToSearch", true);
 				}
 
+				model.addAttribute("assetType", assetType);
 				model.addAttribute("dme_Data_Id", dme_Data_Id);
 				model.addAttribute("asset_Identifier", asset_Identifier);
 				model.addAttribute("accessGrp", accessGrp);
@@ -878,7 +876,7 @@ public abstract class AbstractDoeController {
 			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search, levelName);
 
 			Response restResponse = DoeClientUtil.getCollectionSearchQuery(authToken,
-					compoundCollectionSearchServiceURL, sslCertPath, sslCertPassword, compoundQuery);
+					compoundCollectionSearchServiceURL, compoundQuery);
 
 			if (restResponse.getStatus() == 200) {
 				MappingJsonFactory factory = new MappingJsonFactory();

@@ -80,7 +80,7 @@ public class DoeRetryDownloadTaskController extends AbstractDoeController {
 					queryServiceURL = dataObjectsDownloadServiceURL + "/" + taskId;
 
 				HpcCollectionDownloadStatusDTO downloadTask = DoeClientUtil.getDataObjectsDownloadTask(authToken,
-						queryServiceURL, sslCertPath, sslCertPassword);
+						queryServiceURL);
 				if (downloadTask.getFailedItems() != null && !downloadTask.getFailedItems().isEmpty()) {
 					for (HpcCollectionDownloadTaskItem item : downloadTask.getFailedItems())
 						dto.getDataObjectPaths().add(item.getPath());
@@ -101,7 +101,7 @@ public class DoeRetryDownloadTaskController extends AbstractDoeController {
 				}
 				try {
 					HpcBulkDataObjectDownloadResponseDTO downloadDTO = DoeClientUtil.downloadFiles(authToken,
-							downloadServiceURL2, dto, sslCertPath, sslCertPassword);
+							downloadServiceURL2, dto);
 					if (downloadDTO != null) {
 						if (loggedOnUser != null) {
 							taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", taskType, taskName,
@@ -119,7 +119,7 @@ public class DoeRetryDownloadTaskController extends AbstractDoeController {
 			} else if (taskType.equalsIgnoreCase(HpcDownloadTaskType.DATA_OBJECT.name())) {
 				String queryServiceURL = dataObjectDownloadServiceURL + "/" + taskId;
 				HpcDataObjectDownloadStatusDTO downloadTask = DoeClientUtil.getDataObjectDownloadTask(authToken,
-						queryServiceURL, sslCertPath, sslCertPassword);
+						queryServiceURL);
 				String serviceURL = dataObjectServiceURL + downloadTask.getPath() + "/download";
 				if (downloadTask.getResult() != null && downloadTask.getResult().value().equals("COMPLETED")) {
 					HpcDownloadRequestDTO downloadDTO = new HpcDownloadRequestDTO();
@@ -128,7 +128,7 @@ public class DoeRetryDownloadTaskController extends AbstractDoeController {
 					destination.setDestinationLocation(location);
 					downloadDTO.setGlobusDownloadDestination(destination);
 					AjaxResponseBody responseBody = DoeClientUtil.downloadDataFile(authToken, serviceURL, downloadDTO,
-							HpcDownloadTaskType.DATA_OBJECT.name(), sslCertPath, sslCertPassword);
+							HpcDownloadTaskType.DATA_OBJECT.name());
 					if (loggedOnUser != null) {
 						taskManagerService.saveTransfer(responseBody.getMessage(), "Download", taskType, taskName,
 								getLoggedOnUserInfo());

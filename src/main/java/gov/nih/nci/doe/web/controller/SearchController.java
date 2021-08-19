@@ -68,7 +68,7 @@ public class SearchController extends AbstractDoeController {
 		String authToken = (String) session.getAttribute("hpcUserToken");
 		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
 		if (modelDTO == null) {
-			modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL, sslCertPath, sslCertPassword);
+			modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL);
 			session.setAttribute("userDOCModel", modelDTO);
 		}
 
@@ -96,7 +96,7 @@ public class SearchController extends AbstractDoeController {
 			ucBuilder.queryParam("returnParent", Boolean.TRUE);
 			final String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
 
-			WebClient client = DoeClientUtil.getWebClient(requestURL, sslCertPath, sslCertPassword);
+			WebClient client = DoeClientUtil.getWebClient(requestURL);
 			client.header("Authorization", "Bearer " + authToken);
 			Response restResponse = client.invoke("POST", compoundQuery);
 

@@ -71,7 +71,7 @@ public class DoeCollectionController extends AbstractDoeController {
 		if (isDataObject != null && isDataObject.equalsIgnoreCase("true")) {
 			HpcDataObjectRegistrationRequestDTO registrationDTO = constructDataRequest(request);
 			boolean updated = DoeClientUtil.updateDatafile(authToken, dataObjectAsyncServiceURL, registrationDTO,
-					doeCollection.getPath(), sslCertPath, sslCertPassword);
+					doeCollection.getPath());
 			if (updated) {
 				session.removeAttribute("selectedUsers");
 				return "The metadata was successfully updated.";
@@ -81,7 +81,7 @@ public class DoeCollectionController extends AbstractDoeController {
 		} else {
 			HpcCollectionRegistrationDTO registrationDTO = constructRequest(request);
 			Integer restResponse = DoeClientUtil.updateCollection(authToken, serviceURL, registrationDTO,
-					doeCollection.getPath(), sslCertPath, sslCertPassword);
+					doeCollection.getPath());
 			if (restResponse == 200 || restResponse == 201) {
 				session.removeAttribute("selectedUsers");
 				// store the auditing info

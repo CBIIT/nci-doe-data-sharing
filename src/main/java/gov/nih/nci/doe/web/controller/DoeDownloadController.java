@@ -177,8 +177,7 @@ public class DoeDownloadController extends AbstractDoeController {
 			final String downloadTaskType = "collection".equals(downloadFile.getDownloadType())
 					? HpcDownloadTaskType.COLLECTION.name()
 					: HpcDownloadTaskType.DATA_OBJECT.name();
-			result = DoeClientUtil.downloadDataFile(authToken, serviceURL, dto, downloadTaskType, sslCertPath,
-					sslCertPassword);
+			result = DoeClientUtil.downloadDataFile(authToken, serviceURL, dto, downloadTaskType);
 
 			String taskId = result.getMessage();
 			// store the task ID in DB if logged on user exists

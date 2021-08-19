@@ -157,8 +157,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		if (path.lastIndexOf('/') != -1) {
 			parentPath = path.substring(0, path.lastIndexOf('/'));
 		}
-		HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, parentPath, true,
-				sslCertPath, sslCertPassword);
+		HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, parentPath, true);
 
 		HpcCollectionDTO result = collectionDto.getCollections().get(0);
 		String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
@@ -170,8 +169,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		}
 
 		if (Boolean.TRUE.equals(isPermissions)) {
-			Response restResponse = DoeClientUtil.getPreSignedUrl(authToken, dataObjectServiceURL, path, sslCertPath,
-					sslCertPassword);
+			Response restResponse = DoeClientUtil.getPreSignedUrl(authToken, dataObjectServiceURL, path);
 			log.info("rest response:" + restResponse.getStatus());
 			if (restResponse.getStatus() == 200) {
 				MappingJsonFactory factory = new MappingJsonFactory();
@@ -223,8 +221,8 @@ public class RestAPICommonController extends AbstractDoeController {
 			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
 		}
 
-		Response restResponse = DoeClientUtil.downloadDataObjectsOrCollections(authToken, bulkDownloadUrl, sslCertPath,
-				sslCertPassword, downloadRequest);
+		Response restResponse = DoeClientUtil.downloadDataObjectsOrCollections(authToken, bulkDownloadUrl,
+				downloadRequest);
 
 		log.info("rest response:" + restResponse.getStatus());
 		if (restResponse.getStatus() == 200) {
@@ -284,8 +282,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		}
 		Boolean isPermissions = false;
 
-		HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, path, true, sslCertPath,
-				sslCertPassword);
+		HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, path, true);
 
 		HpcCollectionDTO result = collectionDto.getCollections().get(0);
 		String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
@@ -297,8 +294,7 @@ public class RestAPICommonController extends AbstractDoeController {
 
 		if (Boolean.TRUE.equals(isPermissions)) {
 
-			Response restResponse = DoeClientUtil.downloadCollection(authToken, collectionUrl, path, sslCertPath,
-					sslCertPassword, downloadRequest);
+			Response restResponse = DoeClientUtil.downloadCollection(authToken, collectionUrl, path, downloadRequest);
 			log.info("rest response:" + restResponse.getStatus());
 			if (restResponse.getStatus() == 200) {
 				HpcCollectionDownloadResponseDTO downloadDTO = (HpcCollectionDownloadResponseDTO) DoeClientUtil
@@ -363,8 +359,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		if (path.lastIndexOf('/') != -1) {
 			parentPath = path.substring(0, path.lastIndexOf('/'));
 		}
-		HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, parentPath, true,
-				sslCertPath, sslCertPassword);
+		HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, parentPath, true);
 
 		HpcCollectionDTO result = collectionDto.getCollections().get(0);
 		String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
@@ -377,8 +372,7 @@ public class RestAPICommonController extends AbstractDoeController {
 
 		if (Boolean.TRUE.equals(isPermissions)) {
 
-			Response restResponse = DoeClientUtil.getPreSignedUrl(authToken, dataObjectServiceURL, path, sslCertPath,
-					sslCertPassword);
+			Response restResponse = DoeClientUtil.getPreSignedUrl(authToken, dataObjectServiceURL, path);
 
 			log.info("rest response:" + restResponse.getStatus());
 			if (restResponse.getStatus() == 200) {
@@ -437,8 +431,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		}
 
 		Boolean isPermissions = false;
-		HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, parentPath, true,
-				sslCertPath, sslCertPassword);
+		HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, parentPath, true);
 
 		HpcCollectionDTO result = collectionDto.getCollections().get(0);
 		String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
@@ -451,7 +444,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		if (Boolean.TRUE.equals(isPermissions)) {
 
 			Response restResponse = DoeClientUtil.syncAndasynchronousDownload(authToken, dataObjectAsyncServiceURL,
-					path, sslCertPath, sslCertPassword, downloadRequest);
+					path, downloadRequest);
 			log.info("rest response:" + restResponse.getStatus());
 			if (restResponse.getStatus() == 200) {
 				// verify the content type from restReponse. If the content is of type
@@ -531,8 +524,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		parentPath = path.substring(0, path.lastIndexOf('/'));
 
 		if (!parentPath.isEmpty()) {
-			HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, parentPath, true,
-					sslCertPath, sslCertPassword);
+			HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, parentPath, true);
 
 			HpcCollectionDTO result = collectionDto.getCollections().get(0);
 			String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
@@ -545,7 +537,7 @@ public class RestAPICommonController extends AbstractDoeController {
 			if (Boolean.TRUE.equals(isPermissions)) {
 
 				HpcDataObjectDTO dataObjectList = DoeClientUtil.getDatafiles(authToken, dataObjectAsyncServiceURL, path,
-						true, includeAcl, sslCertPath, sslCertPassword);
+						true, includeAcl);
 				if (dataObjectList != null) {
 					ObjectMapper mapper = new ObjectMapper();
 					mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -587,7 +579,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		String doeLogin = (String) session.getAttribute("doeLogin");
 		log.info("doeLogin: " + doeLogin);
 		HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, path, false, list,
-				includeAcl, sslCertPath, sslCertPassword);
+				includeAcl);
 
 		HpcCollectionDTO result = collectionDto.getCollections().get(0);
 		String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
@@ -647,7 +639,7 @@ public class RestAPICommonController extends AbstractDoeController {
 			if (!parentPath.isEmpty()) {
 				if (!parentPath.equalsIgnoreCase(basePath)) {
 					HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
-							parentPath, true, sslCertPath, sslCertPassword);
+							parentPath, true);
 					Boolean isValidPermissions = hasCollectionPermissions(doeLogin, parentPath, parentCollectionDto);
 					if (Boolean.FALSE.equals(isValidPermissions)) {
 						throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
@@ -657,12 +649,11 @@ public class RestAPICommonController extends AbstractDoeController {
 				throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
 			}
 
-			Integer responseStatus = DoeClientUtil.updateCollection(authToken, serviceURL, collectionRegistration, path,
-					sslCertPath, sslCertPassword);
+			Integer responseStatus = DoeClientUtil.updateCollection(authToken, serviceURL, collectionRegistration,
+					path);
 			if (responseStatus == 200 || responseStatus == 201) {
 
-				HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL, path, false,
-						sslCertPath, sslCertPassword);
+				HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL, path, false);
 				if (collections != null && collections.getCollections() != null
 						&& !CollectionUtils.isEmpty(collections.getCollections())) {
 					HpcCollectionDTO collection = collections.getCollections().get(0);
@@ -737,7 +728,7 @@ public class RestAPICommonController extends AbstractDoeController {
 
 			if (!parentPath.isEmpty()) {
 				HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
-						parentPath, true, sslCertPath, sslCertPassword);
+						parentPath, true);
 				Boolean isValidPermissions = hasCollectionPermissions(doeLogin, parentPath, parentCollectionDto);
 				if (Boolean.FALSE.equals(isValidPermissions)) {
 					throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
@@ -745,7 +736,7 @@ public class RestAPICommonController extends AbstractDoeController {
 			}
 
 			Integer restResponse = DoeClientUtil.registerDatafile(authToken, dataObject, dataObjectAsyncServiceURL,
-					dataObjectRegistration, path, sslCertPath, sslCertPassword);
+					dataObjectRegistration, path);
 			if (restResponse == 200 || restResponse == 201) {
 				// store the auditing info
 				AuditingModel audit = new AuditingModel();
@@ -795,7 +786,7 @@ public class RestAPICommonController extends AbstractDoeController {
 
 			if (StringUtils.isNotEmpty(path)) {
 				HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, serviceURL, path,
-						true, sslCertPath, sslCertPassword);
+						true);
 				isValidPermissions = hasCollectionPermissions(doeLogin, path, parentCollectionDto);
 				if (Boolean.FALSE.equals(isValidPermissions)) {
 					throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
@@ -814,12 +805,12 @@ public class RestAPICommonController extends AbstractDoeController {
 						// path of the asset
 						String parentPath = assetPath.substring(0, assetPath.lastIndexOf('/'));
 						HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
-								parentPath, true, sslCertPath, sslCertPassword);
+								parentPath, true);
 						isValidPermissions = hasCollectionPermissions(doeLogin, parentPath, parentCollectionDto);
 					} else {
 						// this is for data objects upload, check permissions at asset level
 						HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
-								assetPath, true, sslCertPath, sslCertPassword);
+								assetPath, true);
 						isValidPermissions = hasCollectionPermissions(doeLogin, assetPath, parentCollectionDto);
 					}
 					if (Boolean.FALSE.equals(isValidPermissions)) {
@@ -830,7 +821,7 @@ public class RestAPICommonController extends AbstractDoeController {
 
 			if (Boolean.TRUE.equals(isValidPermissions)) {
 				HpcBulkDataObjectRegistrationResponseDTO responseDTO = DoeClientUtil.registerBulkDatafiles(authToken,
-						bulkRegistrationURL, bulkDataObjectRegistrationRequest, sslCertPath, sslCertPassword);
+						bulkRegistrationURL, bulkDataObjectRegistrationRequest);
 				if (responseDTO != null) {
 					String taskId = responseDTO.getTaskId();
 					if (StringUtils.isNotEmpty(taskId)) {
@@ -875,7 +866,7 @@ public class RestAPICommonController extends AbstractDoeController {
 							for (String collectionPath : pathsList) {
 								try {
 									HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken,
-											serviceURL, collectionPath, false, sslCertPath, sslCertPassword);
+											serviceURL, collectionPath, false);
 									if (collections != null && collections.getCollections() != null
 											&& !CollectionUtils.isEmpty(collections.getCollections())) {
 										HpcCollectionDTO collection = collections.getCollections().get(0);
@@ -957,7 +948,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		compoundMetadataQuery.setDetailedResponse(true);
 
 		Response restResponse = DoeClientUtil.getCollectionSearchQuery(authToken, compoundCollectionSearchServiceURL,
-				sslCertPath, sslCertPassword, compoundMetadataQuery);
+				compoundMetadataQuery);
 
 		if (restResponse.getStatus() == 200 || restResponse.getStatus() == 201) {
 			MappingJsonFactory factory = new MappingJsonFactory();
@@ -1012,7 +1003,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		compoundMetadataQuery.setDetailedResponse(true);
 
 		Response restResponse = DoeClientUtil.getDataObjectQuery(authToken, compoundDataObjectSearchServiceURL,
-				returnParent, sslCertPath, sslCertPassword, compoundMetadataQuery);
+				returnParent, compoundMetadataQuery);
 
 		if (restResponse.getStatus() == 200 || restResponse.getStatus() == 201) {
 			MappingJsonFactory factory = new MappingJsonFactory();

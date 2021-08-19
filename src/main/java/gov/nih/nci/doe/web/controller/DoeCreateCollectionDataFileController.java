@@ -82,11 +82,10 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		if (basePaths == null || basePaths.isEmpty()) {
 			HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
 			if (modelDTO == null) {
-				modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL, sslCertPath, sslCertPassword);
+				modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL);
 				session.setAttribute("userDOCModel", modelDTO);
 			}
-			DoeClientUtil.populateBasePaths(session, modelDTO, authToken, userId, collectionAclURL, sslCertPath,
-					sslCertPassword);
+			DoeClientUtil.populateBasePaths(session, modelDTO, authToken, userId, collectionAclURL);
 			basePaths = (Set<String>) session.getAttribute("basePaths");
 		}
 
@@ -450,7 +449,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 
 		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
 		if (modelDTO == null) {
-			modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL, sslCertPath, sslCertPassword);
+			modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL);
 			session.setAttribute("userDOCModel", modelDTO);
 		}
 		List<HpcMetadataValidationRule> rules = null;

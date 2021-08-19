@@ -64,7 +64,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 
 		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
 		if (modelDTO == null) {
-			modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL, sslCertPath, sslCertPassword);
+			modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL);
 			session.setAttribute("userDOCModel", modelDTO);
 		}
 
@@ -79,8 +79,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 			parent = basePath;
 		}
 		if (parent != null && !parent.isEmpty()) {
-			collections = DoeClientUtil.getCollection(authToken, serviceURL, parent, false, sslCertPath,
-					sslCertPassword);
+			collections = DoeClientUtil.getCollection(authToken, serviceURL, parent, false);
 			if (collections != null && collections.getCollections() != null
 					&& !CollectionUtils.isEmpty(collections.getCollections())) {
 				collection = collections.getCollections().get(0);
@@ -224,7 +223,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 
 		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
 		if (modelDTO == null) {
-			modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL, sslCertPath, sslCertPassword);
+			modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL);
 			session.setAttribute("userDOCModel", modelDTO);
 		}
 
@@ -238,7 +237,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 			if (!parentPath.isEmpty()) {
 				if (!parentPath.equalsIgnoreCase(basePath)) {
 					HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
-							parentPath, true, sslCertPath, sslCertPassword);
+							parentPath, true);
 					Boolean isValidPermissions = verifyCollectionPermissions(parentPath, parentCollectionDto);
 					if (Boolean.FALSE.equals(isValidPermissions)) {
 						return "Insufficient privileges to create collection";
@@ -260,7 +259,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 		// Validate Collection path
 		try {
 			HpcCollectionListDTO collection = DoeClientUtil.getCollection(authToken, serviceURL,
-					doeCollection.getPath(), false, true, sslCertPath, sslCertPassword);
+					doeCollection.getPath(), false, true);
 			if (collection != null && collection.getCollections() != null
 					&& CollectionUtils.isNotEmpty(collection.getCollections())) {
 				return "Collection already exists: " + doeCollection.getPath();
@@ -270,7 +269,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 		}
 		try {
 			Integer restResponse = DoeClientUtil.updateCollection(authToken, serviceURL, registrationDTO,
-					doeCollection.getPath(), sslCertPath, sslCertPassword);
+					doeCollection.getPath());
 
 			if (restResponse == 200 || restResponse == 201) {
 
@@ -278,7 +277,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 				String[] progList = request.getParameterValues("metaDataPermissionsList");
 				log.info("selected permissions" + progList);
 				HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL,
-						doeCollection.getPath(), false, sslCertPath, sslCertPassword);
+						doeCollection.getPath(), false);
 
 				if (collections != null && collections.getCollections() != null
 						&& !CollectionUtils.isEmpty(collections.getCollections())) {

@@ -61,7 +61,7 @@ public class ExportController extends AbstractDoeController {
 		ucBuilder.pathSegment(assetIdentifier.substring(1, assetIdentifier.length()));
 		final String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
 
-		WebClient client = DoeClientUtil.getWebClient(requestURL, sslCertPath, sslCertPassword);
+		WebClient client = DoeClientUtil.getWebClient(requestURL);
 		client.header("Authorization", "Bearer " + authToken);
 		Response restResponse = client.invoke("POST", compoundQuery);
 

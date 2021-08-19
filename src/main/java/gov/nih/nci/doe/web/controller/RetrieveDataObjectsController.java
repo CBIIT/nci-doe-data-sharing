@@ -95,7 +95,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 		if (modelDTO != null) {
 			systemAttrs = modelDTO.getDataObjectSystemGeneratedMetadataAttributeNames();
 		} else {
-			modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL, sslCertPath, sslCertPassword);
+			modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL);
 			session.setAttribute("userDOCModel", modelDTO);
 
 			systemAttrs = modelDTO.getDataObjectSystemGeneratedMetadataAttributeNames();
@@ -113,7 +113,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 			log.info("retrieve data objects compund query" + compoundQuery);
 			ucBuilder.pathSegment(path.substring(1, path.length()));
 			final String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
-			WebClient client = DoeClientUtil.getWebClient(requestURL, sslCertPath, sslCertPassword);
+			WebClient client = DoeClientUtil.getWebClient(requestURL);
 			client.header("Authorization", "Bearer " + authToken);
 			Response restResponse = client.invoke("POST", compoundQuery);
 

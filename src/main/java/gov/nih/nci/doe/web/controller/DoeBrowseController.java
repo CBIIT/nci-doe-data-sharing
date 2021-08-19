@@ -239,7 +239,7 @@ public class DoeBrowseController extends AbstractDoeController {
 		// Else, we only get the child list, since we already have the
 		// info about the selectedEntry.
 		HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, collectionURL, path,
-				partial || refresh ? false : true, partial || refresh, sslCertPath, sslCertPassword);
+				partial || refresh ? false : true, partial || refresh);
 
 		for (HpcCollectionDTO collectionDTO : collections.getCollections()) {
 			HpcCollection collection = collectionDTO.getCollection();

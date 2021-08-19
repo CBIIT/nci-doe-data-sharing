@@ -36,7 +36,7 @@ public class DeleteDataFileController extends AbstractDoeController {
 		if (deletepath == null) {
 			return "Invalid Data object path!";
 		}
-		String deleted = DoeClientUtil.deleteDatafile(authToken, serviceURL, deletepath, sslCertPath, sslCertPassword);
+		String deleted = DoeClientUtil.deleteDatafile(authToken, serviceURL, deletepath);
 		if (StringUtils.isNotEmpty(deleted) && deleted.equalsIgnoreCase("true")) {
 
 			// store the auditing info

@@ -64,7 +64,7 @@ public class DoeSyncDownloadController extends AbstractDoeController {
 
 			HpcDownloadRequestDTO downloadRequest = new HpcDownloadRequestDTO();
 			Response restResponse = DoeClientUtil.syncAndasynchronousDownload(authToken, dataObjectAsyncServiceURL,
-					downloadFile.getDestinationPath(), sslCertPath, sslCertPassword, downloadRequest);
+					downloadFile.getDestinationPath(), downloadRequest);
 			log.info("rest response:" + restResponse.getStatus());
 
 			if (restResponse.getStatus() == 200) {

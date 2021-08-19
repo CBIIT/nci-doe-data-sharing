@@ -84,16 +84,14 @@ public class TaskManagerCotroller extends AbstractDoeController {
 			List<String> taskIds = LambdaUtils.map(results, TaskManager::getTaskId);
 
 			String serviceURL = queryServiceURL + "?page=" + 1 + "&totalCount=true";
-			HpcDownloadSummaryDTO downloads = DoeClientUtil.getDownloadSummary(authToken, serviceURL, sslCertPath,
-					sslCertPassword);
+			HpcDownloadSummaryDTO downloads = DoeClientUtil.getDownloadSummary(authToken, serviceURL);
 
-			HpcDownloadSummaryDTO downloads1 = DoeClientUtil.getDownloadSummary(readToken, serviceURL, sslCertPath,
-					sslCertPassword);
+			HpcDownloadSummaryDTO downloads1 = DoeClientUtil.getDownloadSummary(readToken, serviceURL);
 
 			final MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>();
 			paramsMap.set("totalCount", Boolean.TRUE.toString());
 			HpcRegistrationSummaryDTO registrations = DoeClientUtil.getRegistrationSummary(authToken,
-					registrationServiceUrl, paramsMap, sslCertPath, sslCertPassword);
+					registrationServiceUrl, paramsMap);
 
 			// get the task end date
 
@@ -149,7 +147,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
 						download.getCompleted() != null ? format.format(download.getCompleted().getTime()) : "");
 
 				task.setUserId(t.getUserId());
-				task.setTaskType("&nbsp;&nbsp;"+t.getTaskType());
+				task.setTaskType("&nbsp;&nbsp;" + t.getTaskType());
 				if (download.getResult() == null) {
 					task.setTransferStatus("&nbsp&nbsp;In Progress");
 				} else if (download.getResult() != null && download.getResult().value().equals("CANCELLED")) {
@@ -182,7 +180,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
 						upload.getCompleted() != null ? format.format(upload.getCompleted().getTime()) : "");
 
 				task.setUserId(t != null ? t.getUserId() : "");
-				task.setTaskType(t != null ? "&nbsp;&nbsp;"+t.getTaskType() : "");
+				task.setTaskType(t != null ? "&nbsp;&nbsp;" + t.getTaskType() : "");
 				if (upload.getResult() == null) {
 					task.setTransferStatus("&nbsp&nbsp;In Progress");
 					path = upload.getInProgressItems().get(0).getPath();
@@ -231,7 +229,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
 		upload.getFailedItems().stream().forEach(x -> message.add(x.getMessage()));
 
 		HpcBulkDataObjectRegistrationStatusDTO uploadTask = DoeClientUtil.getDataObjectRegistrationTask(authToken,
-				registrationServiceUrl, upload.getTaskId(), sslCertPath, sslCertPassword);
+				registrationServiceUrl, upload.getTaskId());
 
 		Boolean retry = false;
 		if (uploadTask != null && uploadTask.getTask() != null) {
@@ -254,15 +252,15 @@ public class TaskManagerCotroller extends AbstractDoeController {
 		if (Boolean.TRUE.equals(retry)) {
 
 			t.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<img style='width:12px;' data-toggle='tooltip'"
-					+ "src='images/Status.info-tooltip.png' alt='failed message' title='"
-					+ String.join(",", message) + "'></i>"
+					+ "src='images/Status.info-tooltip.png' alt='failed message' title='" + String.join(",", message)
+					+ "'></i>"
 					+ "<strong><a style='border: none;background-color: #F39530;height: 23px;width: 37px;border-radius: 11px;float: right;margin-right: 10px;' class='btn btn-link btn-sm' aria-label='Retry Upload' href='#'"
 					+ "onclick='retryUpload(\"" + upload.getTaskId() + "\" ,\"" + task.getTaskName() + "\")'>"
 					+ "<img style='height: 13px;width: 13px;margin-top: -14px;' data-toggle='tooltip' title='Retry Upload' src='images/Status.refresh_icon-01.png' th:src='@{/images/Status.refresh_icon-01.png}' alt='Status refresh'></a></strong>");
 		} else {
 			t.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<img style='width:12px;' data-toggle='tooltip'"
-					+ " src='images/Status.info-tooltip.png' alt='failed message' title='"
-					+ String.join(",", message) + "'></i>");
+					+ " src='images/Status.info-tooltip.png' alt='failed message' title='" + String.join(",", message)
+					+ "'></i>");
 		}
 	}
 
@@ -284,8 +282,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
 				queryUrl = collectionDownloadServiceURL + "/" + task.getTaskId();
 			else
 				queryUrl = queryServiceURL + "/" + task.getTaskId();
-			HpcCollectionDownloadStatusDTO downloadTask = DoeClientUtil.getDataObjectsDownloadTask(authToken, queryUrl,
-					sslCertPath, sslCertPassword);
+			HpcCollectionDownloadStatusDTO downloadTask = DoeClientUtil.getDataObjectsDownloadTask(authToken, queryUrl);
 
 			if (CollectionUtils.isEmpty(message)) {
 				message.add(downloadTask.getMessage());
@@ -302,8 +299,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
 		} else if (taskType.equals(HpcDownloadTaskType.DATA_OBJECT.name())) {
 
 			queryUrl = dataObjectDownloadServiceURL + "/" + task.getTaskId();
-			HpcDataObjectDownloadStatusDTO downloadTask = DoeClientUtil.getDataObjectDownloadTask(authToken, queryUrl,
-					sslCertPath, sslCertPassword);
+			HpcDataObjectDownloadStatusDTO downloadTask = DoeClientUtil.getDataObjectDownloadTask(authToken, queryUrl);
 			if (CollectionUtils.isEmpty(message)) {
 				message.add(downloadTask.getMessage());
 			}
@@ -320,10 +316,9 @@ public class TaskManagerCotroller extends AbstractDoeController {
 
 		if (Boolean.TRUE.equals(retry)) {
 
-		
 			dto.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<img style='width:12px;' data-toggle='tooltip'"
-					+ "src='images/Status.info-tooltip.png' alt='failed message' title='"
-					+ String.join(",", message) + "'></i>"
+					+ "src='images/Status.info-tooltip.png' alt='failed message' title='" + String.join(",", message)
+					+ "'></i>"
 					+ "<strong><a style='border: none;background-color: #F39530; height: 23px;width: 37px;border-radius: 11px;float: right;margin-right: 10px;' class='btn btn-link btn-sm' aria-label='Retry download' href='#' "
 					+ "onclick='retryDownload(\"" + download.getTaskId() + "\" ,\"" + task.getTaskName() + "\", \""
 					+ download.getType().name() + "\")'>"
@@ -331,8 +326,8 @@ public class TaskManagerCotroller extends AbstractDoeController {
 
 		} else {
 			dto.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<img style='width:12px;' data-toggle='tooltip'"
-					+ "src='images/Status.info-tooltip.png' alt='failed message' title='"
-					+ String.join(",", message) + "'></i>");
+					+ "src='images/Status.info-tooltip.png' alt='failed message' title='" + String.join(",", message)
+					+ "'></i>");
 		}
 
 	}

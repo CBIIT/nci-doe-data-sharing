@@ -140,7 +140,7 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 			}
 
 			HpcBulkDataObjectDownloadResponseDTO downloadDTO = null;
-			downloadDTO = DoeClientUtil.downloadFiles(authToken, downloadServiceURL, dto, sslCertPath, sslCertPassword);
+			downloadDTO = DoeClientUtil.downloadFiles(authToken, downloadServiceURL, dto);
 			if (downloadDTO != null) {
 				String taskId = downloadDTO.getTaskId();
 				result.setMessage("Download request successful. Task ID: " + taskId);

@@ -115,7 +115,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		if (StringUtils.isNotEmpty(selectedPath)) {
 			HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, collectionServiceURL,
-					selectedPath, true, sslCertPath, sslCertPassword);
+					selectedPath, true);
 			return verifyCollectionPermissions(selectedPath, parentCollectionDto);
 		}
 		return false;
@@ -168,7 +168,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 		try {
 			if (StringUtils.isNotEmpty(dataFilePath)) {
 				HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, collectionServiceURL,
-						dataFilePath, true, sslCertPath, sslCertPassword);
+						dataFilePath, true);
 				Boolean isValidPermissions = verifyCollectionPermissions(dataFilePath, parentCollectionDto);
 				if (Boolean.FALSE.equals(isValidPermissions)) {
 					return "Insufficient privileges to create collection";
@@ -245,17 +245,16 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			if (basePaths == null || basePaths.isEmpty()) {
 				HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
 				if (modelDTO == null) {
-					modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL, sslCertPath, sslCertPassword);
+					modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL);
 					session.setAttribute("userDOCModel", modelDTO);
 				}
 				String userId = (String) session.getAttribute("hpcUserId");
-				DoeClientUtil.populateBasePaths(session, modelDTO, authToken, userId, serviceURL, sslCertPath,
-						sslCertPassword);
+				DoeClientUtil.populateBasePaths(session, modelDTO, authToken, userId, serviceURL);
 				basePaths = (Set<String>) session.getAttribute("basePaths");
 			}
 
 			HpcBulkDataObjectRegistrationResponseDTO responseDTO = DoeClientUtil.registerBulkDatafiles(authToken,
-					bulkRegistrationURL, registrationDTO, sslCertPath, sslCertPassword);
+					bulkRegistrationURL, registrationDTO);
 
 			if (responseDTO != null) {
 

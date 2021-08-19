@@ -48,8 +48,7 @@ public class DeleteCollectionController extends AbstractDoeController {
 			return "Invalid Data object path!";
 		}
 
-		HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL, collPath, false,
-				sslCertPath, sslCertPassword);
+		HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL, collPath, false);
 
 		if (collections != null && collections.getCollections() != null
 				&& !CollectionUtils.isEmpty(collections.getCollections())) {
@@ -60,8 +59,7 @@ public class DeleteCollectionController extends AbstractDoeController {
 
 			if (perm != null && perm.getUser().getEmailAddrr().equalsIgnoreCase(userInfo)) {
 
-				String deleted = DoeClientUtil.deleteCollection(authToken, serviceURL, collPath, sslCertPath,
-						sslCertPassword);
+				String deleted = DoeClientUtil.deleteCollection(authToken, serviceURL, collPath);
 				if (StringUtils.isNotEmpty(deleted) && deleted.equalsIgnoreCase("SUCCESS")) {
 
 					// delete from collection permission table
