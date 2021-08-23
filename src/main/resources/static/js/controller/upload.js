@@ -599,8 +599,7 @@ function constructAssetTypeBulkDiv(data,status) {
 	   } else if(value.attrName && value.attrName != 'asset_name' && value.attrName !='asset_type' &&
 			   value.attrName !='asset_identifier' && value.attrName !='access_group'){	
 		   if(value.attrName == 'description') {
-			   $("#assetBulkMetadataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
-			        	'data-placement="right" title="'+value.description+'"></i>&nbsp;&nbsp;<i class="fas fa-info-circle" data-toggle="tooltip"'+
+			   $("#assetBulkMetadataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-info-circle" data-toggle="tooltip"'+
 			        	'data-placement="right" title="Please note that this description will be applied to all Assets. You may edit the description of each Asset separately after it is uploaded."></i></td><td>'+
 			        	'<textarea rows="4" placeholder ="Required" is_mandatory="'+value.mandatory+'" aria-label="value of meta data"  name="zAttrStr_'+value.attrName+'"' +
 			        	'style="width:100%;padding-left: 10px;font-family:inter_regular;"></textarea></td></tr>'); 

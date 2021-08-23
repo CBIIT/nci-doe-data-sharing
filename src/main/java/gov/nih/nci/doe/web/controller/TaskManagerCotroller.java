@@ -135,7 +135,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
 				}
 
 				if (StringUtils.isNotEmpty(task.getDataSetName()) && StringUtils.isNotEmpty(t.getTaskName())) {
-					task.setTaskName("<a href=" + webUrl + "/assetDetails?assetIdentifier=" + task.getDataSetName()
+					task.setTaskName("<a href=" + webServerName + "/assetDetails?assetIdentifier=" + task.getDataSetName()
 							+ ">" + t.getTaskName() + "</a>");
 				} else {
 					task.setTaskName(t.getTaskName());
@@ -202,7 +202,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
 
 				if (StringUtils.isNotEmpty(task.getDataSetName()) && t != null
 						&& StringUtils.isNotEmpty(t.getTaskName())) {
-					task.setTaskName("<a href=" + webUrl + "/assetDetails?assetIdentifier=" + task.getDataSetName()
+					task.setTaskName("<a href=" + webServerName + "/assetDetails?assetIdentifier=" + task.getDataSetName()
 							+ ">" + t.getTaskName() + "</a>");
 				} else {
 					task.setTaskName(t != null ? t.getTaskName() : "");

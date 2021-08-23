@@ -484,7 +484,7 @@ public class DoeClientUtil {
 		}
 	}
 
-	public static Integer registerDatafile(String token, MultipartFile hpcDatafile, String hpcDatafileURL,
+	public static Response registerDatafile(String token, MultipartFile hpcDatafile, String hpcDatafileURL,
 			gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationRequestDTO datafileDTO, String path)
 			throws DoeWebException {
 
@@ -523,7 +523,7 @@ public class DoeClientUtil {
 			Response restResponse = client.put(new MultipartBody(atts));
 			if (restResponse.getStatus() == 201 || restResponse.getStatus() == 200) {
 				log.info("response status" + restResponse.getStatus());
-				return restResponse.getStatus();
+				return restResponse;
 			} else {
 				String errorMessage = getErrorMessage(restResponse);
 				throw new DoeWebException(errorMessage, restResponse.getStatus());

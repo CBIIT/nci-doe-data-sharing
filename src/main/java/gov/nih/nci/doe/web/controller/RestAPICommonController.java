@@ -735,9 +735,9 @@ public class RestAPICommonController extends AbstractDoeController {
 				}
 			}
 
-			Integer restResponse = DoeClientUtil.registerDatafile(authToken, dataObject, dataObjectAsyncServiceURL,
+			Response restResponse = DoeClientUtil.registerDatafile(authToken, dataObject, dataObjectAsyncServiceURL,
 					dataObjectRegistration, path);
-			if (restResponse == 200 || restResponse == 201) {
+			if (restResponse.getStatus() == 200 || restResponse.getStatus() == 201) {
 				// store the auditing info
 				AuditingModel audit = new AuditingModel();
 				audit.setName(doeLogin);
@@ -746,7 +746,7 @@ public class RestAPICommonController extends AbstractDoeController {
 				audit.setPath(path);
 				auditingService.saveAuditInfo(audit);
 
-				return restResponse;
+				return restResponse.getStatus();
 			}
 		}
 

@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -83,9 +84,9 @@ public class DoeCreateDatafileController extends DoeCreateCollectionDataFileCont
 			HpcDataObjectRegistrationRequestDTO registrationDTO = constructSyncRequest(request, session, path);
 
 			registrationDTO.setChecksum(checksum);
-			Integer restResponse = DoeClientUtil.registerDatafile(authToken, doeDataFile, dataObjectAsyncServiceURL,
+			Response restResponse = DoeClientUtil.registerDatafile(authToken, doeDataFile, dataObjectAsyncServiceURL,
 					registrationDTO, path);
-			if (restResponse == 200 || restResponse == 201) {
+			if (restResponse.getStatus() == 200 || restResponse.getStatus() == 201) {
 
 				// store the auditing info
 				AuditingModel audit = new AuditingModel();
