@@ -2,10 +2,10 @@
   "swagger": "2.0",
   "info": {
     "version": "1.11.0",
-    "description": "This user guide describes how to use the MoDaC REST Application Programming Interface.\n\nThe MoDaC REST API provides the ability to upload and download assets,  manage associated metadata, and search for assets against these metadata. Assets include datasets and machine learning models.\n\nA *collection* is a logical directory on MoDaC. A data object represents an individual file. Data objects reside in collections. Collections can also contain other collections. Collections and data objects can be logically structured in a hierarchal manner, depicted with a tree structure with parents and children.\n\nA *metadata attribute* consists of the attribute name and the attribute value. Each object or collection is associated with its required and user defined metadata. The required metadata needs to be provided when the collection or object is first created.\n\nA *collection* is associated with a type, defined by the collection_type attribute.  MoDaC presently supports three collection types – Program, Study and Asset, organized hierarchically.  Program is the top level collection. A Program can contain one or more collections of type Study, and a Study can contain one of more collections of type Asset. The asset_type attribute denotes the type of an Asset. It can take on the value model or dataset.\n\nA *child* entity (collection or data object) always inherits the metadata of its parent and other ancestors in that hierarchy. Child entities can however override the parent metadata. This facilitates advanced searches where the data objects or collections can be searched based on their own metadata or their parent metadata. Searches can also be limited to a specific level in the hierarchy.",
+    "description": "This user guide describes how to use the MoDaC REST Application Programming Interface.\n\nThe MoDaC REST API provides the ability to upload and download assets,  manage associated metadata, and search for assets against these metadata. Assets include datasets and machine learning models.\n\nA *collection* is a logical directory on MoDaC. A data object represents an individual file. Data objects reside in collections. Collections can also contain other collections. Collections and data objects can be logically structured in a hierarchal manner, depicted with a tree structure with parents and children.\n\nA *metadata attribute* consists of the attribute name and the attribute value. Each object or collection is associated with its required and user defined metadata. The required metadata needs to be provided when the collection or object is first created.\n\nA *collection* is associated with a type, defined by the collection_type attribute.  MoDaC presently supports three collection types – Program, Study and Asset, organized hierarchically.  Program is the top level collection. A Program can contain one or more collections of type Study, and a Study can contain one of more collections of type Asset. The asset_type attribute denotes the type of an Asset. It can take on the value model or dataset.\n\nA *child* entity (collection or data object) always inherits the metadata of its parent and other ancestors in that hierarchy. This facilitates advanced searches where the data objects or collections can be searched based on their own metadata or their parent metadata. Searches can also be limited to a specific level in the hierarchy.\n\nA *fileContainerId* is the Globus endpoint UUID or AWS S3 bucket name. \n\nA *fileId*, when registering data to DME, is the full path of the file or collection which exists at the Globus or AWS S3 location. When downloading data to a Globus endpoint or to an AWS S3 bucket, *fileId* will be the destination file name or collection name.  ",
     "title": "MoDaC API"
   },
-  "host": "fsdmel-modac01t.ncifcrf.gov",
+  "host": "modac.cancer.gov",
   "basePath": "/",
   "paths": {
     "/api/authenticate": {
@@ -2416,7 +2416,7 @@
             "attribute": false,
             "wrapped": false
           },
-          "$ref": "#/definitions/HpcGoogleDriveScanDirectory"
+          "$ref": "#/definitions/HpcGoogleScanDirectory"
         },
         "includePatterns": {
           "type": "array",
@@ -2479,7 +2479,7 @@
         "wrapped": false
       }
     },
-    "HpcGoogleDriveScanDirectory": {
+    "HpcGoogleScanDirectory": {
       "type": "object",
       "properties": {
         "accessToken": {
@@ -2499,9 +2499,9 @@
           "$ref": "#/definitions/HpcFileLocation"
         }
       },
-      "title": "HpcGoogleDriveScanDirectory",
+      "title": "HpcGoogleScanDirectory",
       "xml": {
-        "name": "HpcGoogleDriveScanDirectory",
+        "name": "HpcGoogleScanDirectory",
         "attribute": false,
         "wrapped": false
       }
