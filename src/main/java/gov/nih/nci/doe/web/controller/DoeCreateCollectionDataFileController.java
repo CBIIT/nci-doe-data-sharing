@@ -41,7 +41,7 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementRulesDTO;
-import gov.nih.nci.hpc.domain.datatransfer.HpcGoogleDriveScanDirectory;
+import gov.nih.nci.hpc.domain.datatransfer.HpcGoogleScanDirectory;
 import gov.nih.nci.hpc.domain.datatransfer.HpcPatternType;
 
 @EnableAutoConfiguration
@@ -321,7 +321,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				String toPath = "/" + folderName;
 				source.setFileId(folderId);
 				folder.setBasePath(datafilePath);
-				HpcGoogleDriveScanDirectory googleDriveDirectory = new HpcGoogleDriveScanDirectory();
+				HpcGoogleScanDirectory googleDriveDirectory = new HpcGoogleScanDirectory();
 				googleDriveDirectory.setDirectoryLocation(source);
 				googleDriveDirectory.setAccessToken(accessToken);
 				folder.setGoogleDriveScanDirectory(googleDriveDirectory);
