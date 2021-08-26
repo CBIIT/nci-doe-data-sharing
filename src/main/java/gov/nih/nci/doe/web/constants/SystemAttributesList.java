@@ -10,6 +10,6 @@ public class SystemAttributesList {
 	}
 
 	public static final List<String> dataSystemAttributes = Arrays.asList("data_transfer_completed",
-			"data_transfer_status", "metadata_updated");
+			"data_transfer_status", "metadata_updated","source_file_id");
 
 }
