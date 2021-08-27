@@ -255,7 +255,7 @@ function dataTableInitDataSet(isVisible) {
         							$("#spinner").hide();
         					         $("#dimmer").hide();
         							 console.log('ERROR: ', e);
-        							 bootbox.alert("Data file delete failed.");
+        							 returnErrorMessage(e);
         						}
         					});
         		    	}   
@@ -555,19 +555,4 @@ function onClickOfBulkDownloadBtn() {
     } else {
   	   location.replace('/downloadTab?selectedPaths='+selectedPaths+'&&assetIdentifier='+assetIdentifier+'&&downloadAsyncType=datafiles&&returnToSearch=false');
     }	    
-}
-
-
-function postSuccessDelete(data,status) {
-	if(data != "SUCCESS") {
-		return bootbox.alert(data);
-	} else {
-		 $("#dataSetTable").dataTable().fnDestroy();
-		 var t = $('#dataSetTable').DataTable();
-	        t.ajax.reload(null, false);
-	}
-}
-
-function postFailureDeleteFunction() {
-	return bootbox.alert("Data file delete failed.");
 }
