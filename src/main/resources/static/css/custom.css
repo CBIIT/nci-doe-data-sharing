@@ -623,6 +623,19 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before
       content: none !important;
 }
 
+.css-17rpx5x,.css-17rpx5xLess{
+	float:right;
+	cursor: pointer;
+	margin-top:-24px;
+	color: rgb(107, 98, 98);
+    font-size: 14px;
+}
+
+.css-17rpx5x a,.css-17rpx5xLess a {
+	color: rgb(107, 98, 98);
+    font-size: 14px;
+}
+
 .divTableBody {
     display: table-row-group;
 }

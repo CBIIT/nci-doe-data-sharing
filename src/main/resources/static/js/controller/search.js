@@ -43,6 +43,9 @@ $(document).ready(function () {
 		 populateSearchCriteria(null);
 	 }
 	 
+	 showFirstFewFields();
+
+	 
 	 $(document).keypress(function(event){	
 			var keycode = (event.keyCode ? event.keyCode : event.which);
 			if(keycode == '13'){
@@ -89,7 +92,7 @@ function populateSearchCriteria(searchType) {
 
 		var rowId = 3;
 		$(".filteritem:checked").each(function () {
-			var attrName = $(this).parent().attr('id');
+			var attrName = $(this).parent().parent().attr('id');
 	        var attrVal = $(this).val();					
 	        attrNames.push(attrName);
 			levelValues.push("ANY");
