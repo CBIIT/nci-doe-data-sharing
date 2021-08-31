@@ -634,6 +634,7 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before
 .css-17rpx5x a,.css-17rpx5xLess a {
 	color: rgb(107, 98, 98);
     font-size: 14px;
+    float: right;
 }
 
 .divTableBody {
