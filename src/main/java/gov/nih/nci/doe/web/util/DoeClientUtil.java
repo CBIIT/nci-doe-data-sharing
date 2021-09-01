@@ -585,8 +585,11 @@ public class DoeClientUtil {
 							hpcCertPath, hpcCertPassword);
 			client.type(MediaType.MULTIPART_FORM_DATA_VALUE).accept(MediaType.APPLICATION_JSON_VALUE);
 			List<Attachment> atts = new LinkedList<Attachment>();
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+			String json = mapper.writeValueAsString(datafileDTO);
 			atts.add(new org.apache.cxf.jaxrs.ext.multipart.Attachment("dataObjectRegistration", "application/json",
-					datafileDTO));
+					json));
 
 			client.header("Authorization", "Bearer " + token);
 
