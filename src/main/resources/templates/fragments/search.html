@@ -69,8 +69,10 @@
                                 <div th:if="${list.key == 'Asset Type'}" class="dataDivCollapse"
                                style="height: 68px;;margin-left: -5px;font-size: 14px;font-family: 'latoregular';">
                                      <div class="form-group col-lg-12 col-md-12 filterGroupDiv" th:id="${list.key}" th:each="attr : ${list.value}">
+                                     <span class="showMorefields">
                                      <input type="checkbox" class="filteritem" style="transform: translateY(2px);" th:value="${attr}"/>&nbsp;
                                      <span th:text="${attr}" style="margin-left: 3px;"></span>
+                                     </span>
                                      </div>
                                </div>          
                                <div th:if="${list.key != 'Asset Type'}" class="dataDivCollapse"

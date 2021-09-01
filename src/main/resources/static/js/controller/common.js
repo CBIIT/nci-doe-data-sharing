@@ -758,7 +758,9 @@ $(document).on(
 						'display', 'none');
 				$(this).parent().parent().find('.filterSearchBox').css(
 						'display', 'none');
-				$(this).attr('src', '/images/AccordionUp.svg')
+				$(this).attr('src', '/images/AccordionUp.svg');
+				$(this).parent().parent().find(".css-17rpx5x").hide();
+				$(this).parent().parent().find(".css-17rpx5xLess").hide();
 			} else {
 				$(this).parent().css('margin-bottom', '15px');
 				$(this).parent().parent().find('div.dataDivCollapse').css(
@@ -766,6 +768,9 @@ $(document).on(
 				$(this).parent().parent().find('.filterSearchBox').css(
 						'display', 'none');
 				$(this).attr('src', '/images/AccordionDown.svg');
+				$(this).parent().parent().find('.css-17rpx5x').show();
+				$(this).parent().parent().find('.showMore').show();
+				showFirstFewFields($(this).parent().parent(),'Less');
 			}
 		});
 
