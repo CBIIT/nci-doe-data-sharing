@@ -3,64 +3,147 @@ $(document).ready(function () {
 	$("#landing-tab").removeClass('active');
 	$("#search-tab").removeClass('active');
 	$("#manageTasks-tab").addClass('active');
-	refreshTaskManagerDataTable();
+	refreshTaskDatatable('manageTasksTable');
+	
+	$("#modelAnalysisStatus").click(function(e){
+		$(this).css('background-color', '#E87B05');
+		$("#transferTaskStatus").css('background-color','rgb(128 128 128 / 66%)');
+		$("#manageTasksTable").hide();
+		$("#inferencingTable").show();
+		refreshTaskDatatable('inferencingTable');
+	});
+	
+	$("#transferTaskStatus").click(function(e){
+		$(this).css('background-color', '#E87B05');
+		$("#modelAnalysisStatus").css('background-color','rgb(128 128 128 / 66%)');
+		$("#inferencingTable").hide();
+		$("#manageTasksTable").show();
+		refreshTaskDatatable('manageTasksTable');
+	});
+	
 });
 
-function refreshTaskManagerDataTable() {
+function refreshTaskDatatable(table) {
     console.log("refresh datatable");
-    if (!$.fn.DataTable.isDataTable('#manageTasksTable')) {
-    	dataTableInitTaskManager();
+    if (!$.fn.DataTable.isDataTable('#'+table)) {
+    	if(table == 'manageTasksTable') {
+    		$('#inferencingTable').dataTable().fnDestroy();
+    		dataTableInitTaskManager();
+    	} else {
+    		$('#manageTasksTable').dataTable().fnDestroy();
+    		dataTableInitInferenceTaskManager();
+    	}
+    	
     } else {
-        var t = $('#manageTasksTable').DataTable();
+        var t = $('#'+table).DataTable();
         console.log(t);
         t.ajax.reload(null, false);
     }
 }
 
-function retryUpload(taskId,taskName) {
-	var params= {taskId:taskId,taskName:taskName};
-	$.ajax({
-		type : "POST",
-	     url : "/uploadtask",
-		 data : params,
-		 beforeSend: function () {
-	    	   $("#spinner").show();
-	           $("#dimmer").show();
-	       },
-		 success : function(msg) {
-			 $("#spinner").hide();
-	         $("#dimmer").hide();
-	         refreshTaskManagerDataTable();		 
-		 },
-		error : function(e) {
-			$("#spinner").hide();
-	         $("#dimmer").hide();
-			 console.log('ERROR: ', e);				 
-		}
-	});
-}
 
-function retryDownload(taskId,taskName,taskType) {
-	var params= {taskId:taskId,taskName:taskName,taskType:taskType};
-	$.ajax({
-		type : "POST",
-	     url : "/downloadtask",
-		 data : params,
-		 beforeSend: function () {
-	    	   $("#spinner").show();
-	           $("#dimmer").show();
-	       },
-		 success : function(msg) {
-			 $("#spinner").hide();
-	         $("#dimmer").hide();
-	         refreshTaskManagerDataTable();		 
-		 },
-		error : function(e) {
-			$("#spinner").hide();
-	         $("#dimmer").hide();
-			 console.log('ERROR: ', e);				 
-		}
-	});
+function dataTableInitInferenceTaskManager() {
+    $('#inferencingTable').DataTable({
+        "paging": true,
+        "order": [[2, 'desc']],
+        "ordering": true,
+        "info": true,
+        "pageLength": 25,
+        "ajax": {
+            "url": "/performInferencing",
+            "type": "GET",
+            "data": {userId:loggedOnUserInfo},
+            "dataSrc": function (data) {
+                return data;
+            },
+            "error": function (xhr, error, thrown) {
+                console.log("Response status: " + xhr.status + " (" + xhr.statusText + ")");
+                console.log(error + ": " + thrown + " [" + xhr.status + " (" + xhr.statusText + ")]");
+                console.log(xhr.responseText);
+                console.log(xhr);
+                $("#spinner").hide();
+                $("#dimmer").hide();
+            },
+
+            "beforeSend": function () {
+                $("#spinner").show();
+                $("#dimmer").show();
+            },
+
+            "complete": function () {
+                $("#spinner").hide();
+                $("#dimmer").hide();
+            }
+        },
+
+        "initComplete": function (settings, json) {
+        	$('body').tooltip({selector: '[data-toggle="tooltip"]'});
+        },
+
+        "drawCallback": function (settings) {
+        	initializeToolTips();
+        	initializePopover();
+            displayPopoverTask();
+            
+            $(".downloadLink").click(function(e){
+       	     var dataPath = $(this).attr('data-path');  
+                downloadFunction(dataPath);
+             });
+        },
+
+        "columns": [
+        	{"data": "taskId", "render": function (data, type, row) {
+                return rendertaskId(data, type, row);
+            },
+            responsivePriority: 1
+        },
+        {"data": "modelIdentifier", "defaultContent": "",responsivePriority: 2},
+        {"data": "resultPath", "defaultContent": "",responsivePriority: 2},
+        {"data": "testDataSetPath", "defaultContent": "",responsivePriority: 2},
+        {"data": "startDate", "render": function (data, type, row) {
+            return renderTaskDate(data, type, row);
+        },
+        responsivePriority: 4
+        },
+        
+        {"data": "completedDate", "render": function (data, type, row) {
+            return renderTaskCompletedDate(data, type, row);
+        },
+        responsivePriority: 5
+        },
+
+        {"data": "status", "render": function (data, type, row) {
+            return renderInferStatus(data, type, row);
+        },
+        responsivePriority: 3
+        },
+        ],
+       
+        "columnDefs": [
+            {className: "td_class_4", "targets": [0]},
+            {className: "td_class_2", "targets": [1]},
+            {className: "td_class_2", "targets": [2]},
+            {className: "td_class_2", "targets": [3]},
+            {className: "td_class_5", "targets": [-1]},
+            {type: "date", "targets": [2,3]}
+        ],
+        
+        "dom": '<"top"lip>rt<"bottom"ip>',
+        
+        "pagingType": "simple",
+
+        "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
+
+        "language": {
+        	"lengthMenu": "ROWS PER PAGE &nbsp;&nbsp; _MENU_",
+        	"sLoadingRecords": "Loading...",
+            "zeroRecords": "Nothing found to display",            
+            "paginate": {
+            	 next: '<i style="color:#000;font-size:17px;" class="fas fa-caret-right"></i>',
+                 previous: '<i style="color:#000;font-size:17px;" class="fas fa-caret-left"></i>'
+              },             
+        }
+    });
 }
 
 function dataTableInitTaskManager() {
@@ -165,6 +248,26 @@ function dataTableInitTaskManager() {
 }
 
 
+function downloadFunction(path) {
+	var fileName = path.substring(path.lastIndexOf("/") + 1 ,path.length);
+	
+	location.replace('/downloadTab?selectedPaths='+path+'&&fileName='+fileName+'&&downloadAsyncType=data_object&&returnToStatus=true');
+}
+
+function renderInferStatus(data,type,row) {
+	var html = "";
+	if(data == 'COMPLETED') {
+		html += data + "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLink' href='javascript:void(0);' " +
+        "data-path=" + row.resultPath + " " +
+        "><img src='images/Download.png' data-toggle='tooltip' title='Download File' th:src='@{/images/Download.png}' " +
+		"style='width:17px;' alt='download file'></a>";
+	} else {
+		html += data;
+	}
+	
+	return html;
+}
+
 function renderTaskDate(data, type, row) {
 	if(data) {
 		return "&nbsp&nbsp;"+ moment(data).format("MM/DD/YYYY HH:mm:ss") ;
@@ -197,6 +300,54 @@ function rendertaskId(data, type, row) {
 		
 	return "&nbsp&nbsp;"+ row.taskId ;
 }
+
+
+function retryUpload(taskId,taskName) {
+	var params= {taskId:taskId,taskName:taskName};
+	$.ajax({
+		type : "POST",
+	     url : "/uploadtask",
+		 data : params,
+		 beforeSend: function () {
+	    	   $("#spinner").show();
+	           $("#dimmer").show();
+	       },
+		 success : function(msg) {
+			 $("#spinner").hide();
+	         $("#dimmer").hide();
+	         refreshTaskManagerDataTable();		 
+		 },
+		error : function(e) {
+			$("#spinner").hide();
+	         $("#dimmer").hide();
+			 console.log('ERROR: ', e);				 
+		}
+	});
+}
+
+function retryDownload(taskId,taskName,taskType) {
+	var params= {taskId:taskId,taskName:taskName,taskType:taskType};
+	$.ajax({
+		type : "POST",
+	     url : "/downloadtask",
+		 data : params,
+		 beforeSend: function () {
+	    	   $("#spinner").show();
+	           $("#dimmer").show();
+	       },
+		 success : function(msg) {
+			 $("#spinner").hide();
+	         $("#dimmer").hide();
+	         refreshTaskManagerDataTable();		 
+		 },
+		error : function(e) {
+			$("#spinner").hide();
+	         $("#dimmer").hide();
+			 console.log('ERROR: ', e);				 
+		}
+	});
+}
+
 
 function displayPopoverTask() {
     $('.button3a').on('click', function (e) {

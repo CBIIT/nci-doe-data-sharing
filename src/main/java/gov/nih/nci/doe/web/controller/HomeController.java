@@ -176,6 +176,7 @@ public class HomeController extends AbstractDoeController {
 			@RequestParam(value = "downloadAsyncType", required = false) String downloadAsyncType,
 			@RequestParam(value = "fileName", required = false) String fileName,
 			@RequestParam(value = "returnToSearch", required = false) String returnToSearch,
+			@RequestParam(value = "returnToStatus", required = false) String returnToStatus,
 			@RequestParam(value = "assetIdentifier", required = false) String assetIdentifier) throws DoeWebException {
 
 		log.info("get download tab details");
@@ -203,6 +204,12 @@ public class HomeController extends AbstractDoeController {
 
 		if (StringUtils.isNotEmpty(downloadAsyncType)) {
 			session.setAttribute("downloadAsyncType", downloadAsyncType);
+		}
+		
+		if (StringUtils.isNotEmpty(returnToStatus)) {
+			model.addAttribute("returnToStatus", returnToStatus);
+		} else if(session.getAttribute("returnToStatus") !=null) {
+			model.addAttribute("returnToStatus", session.getAttribute("returnToStatus"));
 		}
 
 		if (StringUtils.isNotEmpty(fileName)) {

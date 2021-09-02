@@ -144,9 +144,9 @@ aria-labelledby="forgotPasswordLabel">
             </div>
         </div>
     </div>
-    
-    
-    <div id="createAssetModal" class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog" aria-hidden="false">
+  
+  
+      <div id="createAssetModal" class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog" aria-hidden="false">
         <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -174,6 +174,41 @@ aria-labelledby="forgotPasswordLabel">
                       <div class="col-sm-12" style="margin-bottom: 10px;">
                         <button type="button" class="btn btn-default pull-right" data-dismiss="modal"> Close</button>
                           <button class="btn btn-primary pull-right"  data-dismiss="modal" id="btnSelectAssetType"> Select</button>
+                          </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>  
+    
+    <div id="registerFileModal" class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog" aria-hidden="false">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="modal-title">Perform Inferencing</p>
+                       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="clearfix performInferencingSuccess" style="display: none;margin-left:10px;width:90%;">
+                    <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
+                        <div class="alert alert-success">
+                            <h6 class="performInferMsg"></h6>
+                        </div>
+                    </div>
+                </div>
+         
+                <div class="modal-body drilldown-content">  
+                 <form class="form-horizontal" id="performInferForm"  method="POST">              
+                  <div class="row row-buffer">
+                  <input type="hidden" id="testModelPath" name="testModelPath"/>
+                  <input type="hidden" id="modelPath" name="modelPath"/>
+                      <label for="uploadTestInferFile">Upload File for Inferencing </label>
+                          <input type ="file" id="uploadTestInferFile" name="uploadTestInferFile"/>
+                  </div>
+                  </form>                    
+                  <div class="row row-buffer" style="text-align: end;">
+                      <div class="col-sm-12" style="margin-bottom: 10px;">
+                        <button type="button" class="btn btn-default pull-right" data-dismiss="modal"> Close</button>
+                          <button class="btn btn-primary pull-right" id="btnRegisterFile"> Infer</button>
                           </div>
                   </div>
                 </div>

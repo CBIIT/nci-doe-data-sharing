@@ -58,12 +58,15 @@ public class DoeDownloadController extends AbstractDoeController {
 			@RequestParam(value = "downloadFilePath", required = false) String downloadFilePath,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "assetIdentifier", required = false) String assetIdentifier,
-			@RequestParam(value = "returnToSearch", required = false) String returnToSearch, HttpSession session,
+			@RequestParam(value = "returnToSearch", required = false) String returnToSearch,
+			@RequestParam(value = "returnToStatus", required = false) String returnToStatus,
+			HttpSession session,
 			HttpServletRequest request) throws DoeWebException {
 
 		String downloadType = request.getParameter("type");
 		session.setAttribute("assetIdentifier", assetIdentifier);
 		session.setAttribute("returnToSearch", returnToSearch);
+		session.setAttribute("returnToStatus", returnToStatus);
 		String code = request.getParameter("code");
 		log.info("code from download" + code);
 		if (code != null) {

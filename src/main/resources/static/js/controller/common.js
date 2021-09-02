@@ -496,6 +496,11 @@ $(document)
 					$("#backtoSearch").click(function(e) {
 						location.replace("/searchTab?returnToSearch=true");
 					});
+					
+					$(".backToStatusTabLink").click(function(e) {
+						location.replace("/tasksTab");
+					});
+					
 
 					$("#addAsets").click(function(e) {
 						resetAssetsSelection();
@@ -596,6 +601,7 @@ $(document)
 									action : "Drive",
 									assetIdentifier : $("#assetIdentifier")
 											.val(),
+									returnToStatus : $("#returnToStatus").val(),
 									returnToSearch : $("#returnToSearch").val()
 								}
 
@@ -613,6 +619,7 @@ $(document)
 									action : "Globus",
 									assetIdentifier : $("#assetIdentifier")
 											.val(),
+									returnToStatus : $("#returnToStatus").val(),
 									returnToSearch : $("#returnToSearch").val()
 								}
 
@@ -882,6 +889,7 @@ $(document).on('click', '#btnRegisterFile', function() {
 		success : function(msg) {
 			$("#spinner").hide();
 			$("#dimmer").hide();
+			$("#registerFileModal").modal('hide');
 			bootbox.dialog({
 				message : msg
 			});

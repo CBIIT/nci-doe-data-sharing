@@ -11,6 +11,7 @@ style="font-size:13px;">
 
     <input type="hidden" th:value="${assetIdentifier}" id="assetIdentifier"/>
     <input type="hidden" th:value="${returnToSearch}" id="returnToSearch"/>
+      <input type="hidden" th:value="${returnToStatus}" id="returnToStatus"/>
  
       <div class="col-lg-12 col-md-12 col-sm-12 float-right">
        <div class="controls controls-row mt-4" th:if="${returnToSearch eq 'true'}">
@@ -24,6 +25,13 @@ style="font-size:13px;">
          <img src="images/BackSearch-icon.png" data-toggle="tooltip" title="Back to Asset Details"
          th:src="@{/images/BackSearch-icon.png}" style="width:50px;" alt="back to asset details">
          &nbsp;&nbsp;<span class="backToSearch">Back to Asset Details</span></a>
+       </div>
+       
+       <div class="controls controls-row mt-4" th:if="${returnToStatus eq 'true'}">
+         <a class="float-left mb-2 mr-2 backToStatusTabLink">
+         <img src="images/BackSearch-icon.png" data-toggle="tooltip" title="Back to Status Tab"
+         th:src="@{/images/BackSearch-icon.png}" style="width:50px;" alt="Back to Status Tab">
+         &nbsp;&nbsp;<span class="backToStatusTab">Back to Status Tab</span></a>
        </div>
        
      </div>

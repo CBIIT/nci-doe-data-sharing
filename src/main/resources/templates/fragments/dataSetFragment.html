@@ -85,6 +85,9 @@
        <p th:if= "${loggedOnUser == null}" class="infoDownload">
        <i class="fas fa-info-circle"></i> To download files, <a th:href="@{/loginTab}">log in.</a></p>
        
+       <button th:if= "${loggedOnUser != null and assetType == 'Model'}" id="openInferModal" type="button" 
+       class="btn btn-primary float-right mb-2 mr-2">Perform Inferencing</button>
+        
        <button id="downloadSelectedMetadata" type="button" class="btn btn-primary float-right mb-2 mr-2"
         disabled>Download Selected Metadata</button>
        <button id="downloadSelectedDataSet" type="button" class="btn btn-primary float-right mb-2 mr-2" 
