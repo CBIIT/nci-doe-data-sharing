@@ -135,13 +135,12 @@
 }
 
 
-#manageTasksTable_length {
+#manageTasksTable_length,#inferencingTable_length {
    float: right;
    color: #000000;
     font-family: 'latoregular';
     font-size: 16px;
     margin-right: 24px;
-    padding-top: 24px;
     margin-bottom: -7px;
 }
 
@@ -157,7 +156,7 @@
     font-size: 12px;
     font-family: 'latoregular';
 }
-#manageTasksTable_info{
+#manageTasksTable_info,#inferencingTable_info{
     margin-bottom: 13px;
     margin-top: -6px;
 }
@@ -297,7 +296,7 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 #registerBulkDataFileBtn,#registerCollectionBtn,#updatePermissions,#addUserMetadataForBulkAssets {
 	background-color: #E87B05!important;
 }
-.backToSearch {
+.backToSearch,.backToStatusTab {
  color: #E87B05;
  font-family: 'inter_regular';
  font-size: 16px;
@@ -573,7 +572,7 @@ table.dataTable thead .sorting_asc {
 
 }
 
-table#manageTasksTable thead .sorting,table#dataSetTable thead .sorting {
+table#manageTasksTable thead .sorting,table#dataSetTable thead .sorting,table#inferencingTable thead .sorting {
    	background-image: url(/images/Sort-up.icon.svg) !important;
    	background-size: 16px 19px;
    	
@@ -582,18 +581,21 @@ table#dataSetTable thead .sorting,table#dataSetTable thead .sorting_asc,table#da
 	background-position: center center;
 }
 
-table#manageTasksTable thead .sorting,table#manageTasksTable thead .sorting_asc,table#manageTasksTable thead .sorting_desc {
+table#manageTasksTable thead .sorting,table#manageTasksTable thead .sorting_asc,
+table#manageTasksTable thead .sorting_desc,table#inferencingTable thead .sorting,table#inferencingTable thead .sorting_asc
+ {
 	background-position: 90% 50%;
 }
 
-table#manageTasksTable thead .sorting_asc,table#dataSetTable thead .sorting_asc {
+table#manageTasksTable thead .sorting_asc,table#dataSetTable thead .sorting_asc,table#inferencingTable thead .sorting_asc {
 	background-image: url(/images/Sort-up.icon.svg) !important;
 	background-image: url(/images/Sort-up.icon.svg) !important;
    	background-size: 16px 19px;
 
 }
 
-table#manageTasksTable thead .sorting_desc,table#dataSetTable thead .sorting_desc {
+table#manageTasksTable thead .sorting_desc,table#dataSetTable thead .sorting_desc,table#inferencingTable thead .sorting_desc
+ {
 	background-image: url(/images/Sort-down.icon.svg) !important;
 	background-image: url(/images/Sort-down.icon.svg) !important;
    	background-size: 16px 19px;
@@ -604,7 +606,7 @@ table#manageTasksTable thead .sorting_desc,table#dataSetTable thead .sorting_des
 	border: transparent;
     margin-left: -27px;
 }
-table#manageTasksTable th {
+table#manageTasksTable th, table#inferencingTable th{
 	color: #FFFFFF;
     font-family: 'inter_regular';
     font-size: 13px;
@@ -1153,6 +1155,13 @@ padding-right: 10px;
     height: 42px;
     width: 175px;
     color: #397ded;
+}
+
+div.dataDivCollapse :not(:first-child) {
+    margin-top:-6px;
+}
+div.dataDivCollapse :first-child {
+    margin-top:5px;
 }
 
 .btn-danger {
