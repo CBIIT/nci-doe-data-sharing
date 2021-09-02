@@ -24,35 +24,32 @@ from sklearn.metrics import f1_score, confusion_matrix
 from keras.models import load_model
 
 import numpy as np
-import time
-
-import urllib.request
-import ftplib
 
 
-def main():
+def main(fname, model_name, testdataset):
     tasks = ['site', 'histology']
     test_x = np.load(r'test_X.npy')
-    test_y = np.load(r'test_Y.npy')
+    # test_y = np.load(r'test_Y.npy')
 
-    model_name = 'mt_cnn_model.h5'
+    # model_name = 'mt_cnn_model.h5'
     # Predict on Test data
     model = load_model(model_name)
     pred_probs = model.predict(np.array(test_x))
     print('Prediction on test set')
     for t in range(len(tasks)):
         preds = [np.argmax(x) for x in pred_probs[t]]
-        pred_max = [np.max(x) for x in pred_probs[t]]
+        # pred_max = [np.max(x) for x in pred_probs[t]]
         y_pred = preds
-        y_true = test_y[:, t]
-        y_prob = pred_max
-        micro = f1_score(y_true, y_pred, average='micro')
-        macro = f1_score(y_true, y_pred, average='macro')
+        # y_true = test_y[:, t]
+        # y_prob = pred_max
+        # micro = f1_score(y_true, y_pred, average='micro')
+        # macro = f1_score(y_true, y_pred, average='macro')
         print(y_pred)
-        print(type(y_pred))
-        print('task %s test f-score: %.4f,%.4f' % (tasks[t], micro, macro))
+        # print('task %s test f-score: %.4f,%.4f' % (tasks[t], micro, macro))
         y_predictions = y_pred
-        file = open('y_pred.txt', 'w')
+        file = open(fname, 'w')
         file.write(str(y_predictions))
         file.close()
-    return "OK"
+    if os.path.isfile(fname):
+        fname.save(os.path.join('/mnt/iRODsScratch/ModaC', fname))
+    return fname
