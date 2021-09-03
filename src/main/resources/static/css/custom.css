@@ -293,17 +293,16 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 	line-height: 17px;
 }
 #updateMetaData,#addMetaData,#addBulkDataFiles,#addNewMetaDataForSingleDataFile,
-#registerBulkDataFileBtn,#registerCollectionBtn,#updatePermissions,#addUserMetadataForBulkAssets {
+#registerBulkDataFileBtn,#registerCollectionBtn,#updatePermissions,#addUserMetadataForBulkAssets,#cancelRegisterBtn {
 	background-color: #E87B05!important;
 }
-.backToSearch,.backToStatusTab {
+.backToSearch,.backToStatusTab,.backToUpload {
  color: #E87B05;
  font-family: 'inter_regular';
  font-size: 16px;
  font-weight: 900;
 }
 #registerCollectionBtn {
-	width: 8%;
     border-radius: 10px;
 }
 .closeButtons {
