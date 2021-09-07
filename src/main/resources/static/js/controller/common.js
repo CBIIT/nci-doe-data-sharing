@@ -710,6 +710,7 @@ $(document)
 								$(".select2-search__field").attr("type",
 										"textbox");
 							});
+					
 
 				});
 

@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import gov.nih.nci.doe.web.DoeWebException;
+import gov.nih.nci.doe.web.domain.InferencingTask;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.model.PermissionsModel;
@@ -110,12 +112,17 @@ public class HomeController extends AbstractDoeController {
 	}
 
 	@GetMapping(value = "/tasksTab")
-	public String getTasksTab(HttpSession session, HttpServletRequest request) throws DoeWebException {
+	public String getTasksTab(Model model, HttpSession session, HttpServletRequest request) throws DoeWebException {
 
 		log.info("tasks Tab");
 		String user = getLoggedOnUserInfo();
 		if (StringUtils.isEmpty(user)) {
-			 return "loginTab";
+			return "loginTab";
+		}
+
+		List<InferencingTask> getAllInferencingTasks = inferencingTaskService.getAllTaskByUserId(user);
+		if (CollectionUtils.isNotEmpty(getAllInferencingTasks)) {
+			model.addAttribute("showModelAnalysisTab", true);
 		}
 		return "tasksTab";
 	}
@@ -163,10 +170,6 @@ public class HomeController extends AbstractDoeController {
 		getAssetDetails(session, dmeDataId, returnToSearch, assetIdentifier, model);
 		return "assetDetails";
 	}
-	
-	
-	
-	
 
 	@GetMapping(value = "/downloadTab")
 	public String getDownload(Model model, HttpSession session, HttpServletRequest request,
@@ -205,10 +208,10 @@ public class HomeController extends AbstractDoeController {
 		if (StringUtils.isNotEmpty(downloadAsyncType)) {
 			session.setAttribute("downloadAsyncType", downloadAsyncType);
 		}
-		
+
 		if (StringUtils.isNotEmpty(returnToStatus)) {
 			model.addAttribute("returnToStatus", returnToStatus);
-		} else if(session.getAttribute("returnToStatus") !=null) {
+		} else if (session.getAttribute("returnToStatus") != null) {
 			model.addAttribute("returnToStatus", session.getAttribute("returnToStatus"));
 		}
 

@@ -53,6 +53,7 @@ import gov.nih.nci.doe.web.service.AccessGroupsService;
 import gov.nih.nci.doe.web.service.AuditingService;
 import gov.nih.nci.doe.web.service.AuthenticateService;
 import gov.nih.nci.doe.web.service.DoeAuthorizationService;
+import gov.nih.nci.doe.web.service.InferencingTaskService;
 import gov.nih.nci.doe.web.service.LookUpService;
 import gov.nih.nci.doe.web.service.MailService;
 import gov.nih.nci.doe.web.service.MetaDataPermissionsService;
@@ -135,6 +136,9 @@ public abstract class AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.search.collection.compound}")
 	String compoundCollectionSearchServiceURL;
+	
+	@Autowired
+	InferencingTaskService inferencingTaskService;
 
 	protected Logger log = LoggerFactory.getLogger(this.getClass());
 

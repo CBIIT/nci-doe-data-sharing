@@ -11,7 +11,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpHeaders;
@@ -35,7 +34,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.ws.rs.core.Response;
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.domain.InferencingTask;
-import gov.nih.nci.doe.web.service.InferencingTaskService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationStatusDTO;
 
@@ -49,8 +47,7 @@ import java.nio.file.StandardCopyOption;
 @RequestMapping("/performInferencing")
 public class PerformInferencingController extends AbstractDoeController {
 
-	@Autowired
-	InferencingTaskService inferencingTaskService;
+	
 
 	@Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
 	private String bulkRegistrationURL;
