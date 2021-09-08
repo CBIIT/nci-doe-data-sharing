@@ -71,7 +71,7 @@
                                      <div class="form-group col-lg-12 col-md-12 filterGroupDiv" th:id="${list.key}" th:each="attr : ${list.value}">
                                      <span class="showMorefields">
                                      <input type="checkbox" class="filteritem" style="transform: translateY(2px);" th:value="${attr}"/>&nbsp;
-                                     <span th:text="${attr}" style="margin-left: 3px;"></span>
+                                     <div th:text="${attr}" style="margin-left: 20px;margin-top: -21px;"></div>
                                      </span>
                                      </div>
                                </div>          
@@ -83,7 +83,7 @@
                                     <input type="hidden" class="filterSize" th:value="${attrStat.size}"/>
                                     <span class="showMorefields">
                                      <input type="checkbox" class="filteritem" style="transform: translateY(2px);" th:value="${attr}"/>&nbsp;
-                                     <span th:text="${attr}" style="margin-left: 3px;"></span>
+                                     <div th:text="${attr}" style="margin-left: 20px;margin-top: -21px;"></div>
                                      </span>
                                    </div>
                                   
