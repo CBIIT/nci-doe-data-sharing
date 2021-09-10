@@ -3,6 +3,36 @@ $(document).ready(function () {
 	$("#upload-tab").addClass('active');
 	loadUploadTab();
 	$('body').tooltip({selector: '[data-toggle="tooltip"]'});
+	
+	$(".createCollectionFragment").click(function(e){
+		$("#createCollectionFragment").show();
+		$("#uploadSectionDiv").hide();
+		$("#uploadHeader").hide();
+	});
+	
+	$(".backToUploadTab").click(function(e){
+		$("#createCollectionFragment").hide();
+		$("#uploadSectionDiv").show();
+		$("#uploadHeader").show();
+	});
+	
+	$("#btnSelectAssetType").click(function(e) {
+		var assetType = $("#createAssetModal").find("#createAssetCollectionType option:selected").val();
+		$("#assetType").val(assetType);
+		$("#createCollectionFragment").show();
+		$("#uploadSectionDiv").hide();
+		$("#uploadHeader").hide();
+		createCollectionDiv('studyList');
+	});
+	
+	$(document).on('change','#publicAccess',function() {
+	    if ($(this).is(":checked")) {
+			$("#accessGroupSelect").next(".select2-container").hide();
+		} else {
+			$("#accessGroupSelect").next(".select2-container").show();
+		}
+
+	});
 });
 
 function loadUploadTab() {	 
@@ -256,8 +286,8 @@ function contructDataListDiv(data,status) {
 function constructNewCollectionMetaDataSet(data,status) {
 
 	$("#newMetaDataTable tbody").html("");
-	var parentAccessgrp = $("#registerCollectionModal").find("#parentAccessGroup").val();
-	var assetType = $("#registerCollectionModal").find("#assetType").val();
+	var parentAccessgrp = $("#parentAccessGroup").val();
+	var assetType = $("#assetType").val();
 	$.each(data, function(key, value) {	
 		if(value.attrName  =='access_group') {
 			
@@ -266,7 +296,7 @@ function constructNewCollectionMetaDataSet(data,status) {
         	   'data-placement="right" title="'+value.description+'"></i></td><td>'+
         	   '<select class="simple-select2" multiple="multiple" id="accessGroupSelect" name="zAttrStr_'+value.attrName+'"' +
         	   'style="width:70%;"></select> &nbsp;&nbsp;<input type="checkbox" id="publicAccess" checked="false" aria-label="public access" value="public access"/>&nbsp;&nbsp;Public</td></tr>');
-		 	   loadJsonData('/metaDataPermissionsList', $("#registerCollectionModal").find("#accessGroupSelect"), false, null, null, null, "key", "value"); 
+		 	   loadJsonData('/metaDataPermissionsList', $("#accessGroupSelect"), false, null, null, null, "key", "value"); 
 		
 			} else {
 				
@@ -288,7 +318,7 @@ function constructNewCollectionMetaDataSet(data,status) {
         	'data-placement="right" title="'+value.description+'"></i></td><td>'+
         	'<select class="simple-select2" is_mandatory="'+value.mandatory+'" style="width:70%;" id="'+value.attrName+'" name="zAttrStr_'+value.attrName+'" value="'+value.attrValue+'"></select></td></tr>');
 	    	
-	    	  var $select = $("#registerCollectionModal").find("#"+value.attrName);
+	    	  var $select = $("#"+value.attrName);
 	    	  if(value.attrValue){
 	    	 	$select.append($('<option></option>').attr('value', value.attrValue).text(value.attrValue));
 	    	  } else {
@@ -352,7 +382,7 @@ function addNewMetaDataRowsForDataFile($this) {
 
 
 function retrieveCollectionList(data,status) {	
-	var assetType = $("#registerCollectionModal").find("#assetType").val();
+	var assetType = $("#assetType").val();
 	var collectionType;
 	var parentAccessGrp;
 	$.each(data, function (key, val) {
@@ -365,16 +395,16 @@ function retrieveCollectionList(data,status) {
     }
 	
 	 var parent = data[0].value;
-	 $("#registerCollectionModal").find('#parentCollectionLabel').text(parent + " Collection Name");
-	 $("#registerCollectionModal").find("#parentCollectionType").val(parent);
-	 $("#registerCollectionModal").find("#parentAccessGroup").val(parentAccessGrp);
-	 $("#registerCollectionModal").find("#collectionType").val(collectionType);
-	 $("#registerCollectionModal").find("#registerCollectionBtn").val("Register " + collectionType);
-	 $("#registerCollectionModal").find("#collectionMetaDataLabel").text(collectionType + " Metadata");
-	 $("#registerCollectionModal").find("#registerModalTitle").html("Register " + collectionType + " Collection");
-	 $("#registerCollectionModal").find("#addNewMetaData").html("<img src='images/Uploads.add.png' th:src='@{/images/Uploads.add.png}' class='uploadslogo' alt='add metadata'>&nbsp;Add " + collectionType + " Metadata");
-	 $("#registerCollectionModal").modal('show');
-	 var collectionPath = $("#registerCollectionModal").find("#collectionPath").val();
+	 $('#parentCollectionLabel').text(parent + " Collection Name");
+	 $("#parentCollectionType").val(parent);
+	 $("#parentAccessGroup").val(parentAccessGrp);
+	 $("#collectionType").val(collectionType);
+	 $("#registerCollectionBtn").val("Register " + collectionType);
+	 $("#collectionMetaDataLabel").text(collectionType + " Metadata");
+	 $("#registerModalTitle").html("Register " + collectionType + " Collection");
+	 $("#addNewMetaData").html("<img src='images/Uploads.add.png' th:src='@{/images/Uploads.add.png}' class='uploadslogo' alt='add metadata'>&nbsp;Add " + collectionType + " Metadata");
+	// $("#registerCollectionModal").modal('show');
+	 var collectionPath = $("#collectionPath").val();
 		
 	 if(collectionType && collectionPath) {
 		var params1= {selectedPath:collectionPath,collectionType:collectionType,controllerValue:assetType,controllerAttribute:'asset_type'};
@@ -382,39 +412,35 @@ function retrieveCollectionList(data,status) {
 	} 	
 } 
 
-
-
-
-function openUploadModal(selectTarget) {
+function createCollectionDiv(selectTarget) {
 	
 	var selectedIndexPathVal = $("#" + selectTarget).val();
 	var parentName = $( "#" +selectTarget+ " option:selected" ).text();
 	if(selectTarget == 'basePath') {
-		$("#registerCollectionModal").find(".parentCollectionDiv").hide();
+		$(".parentCollectionDiv").hide();
 	} else {
-		$("#registerCollectionModal").find(".parentCollectionDiv").show();
-		$("#registerCollectionModal").find("#parentCollectionName").val(parentName);
+		$(".parentCollectionDiv").show();
+		$("#parentCollectionName").val(parentName);
 	}
-	$("#registerCollectionModal").find("#collectionPath").val(selectedIndexPathVal);
+	$("#collectionPath").val(selectedIndexPathVal);
 	$("#newMetaDataTable tbody").html("");
-	$("#registerCollectionModal").find(".registerMsg").html("");
-	$("#registerCollectionModal").find("#newMetaDataTable tbody").html("");
-	$("#registerCollectionModal").find(".registerMsgBlock").hide();
-	$("#registerCollectionModal").find(".registerMsgErrorBlock").hide();
-	$("#registerCollectionModal").find(".registerErrorMsg").html("");
+	$(".registerMsg").html("");
+	$("#newMetaDataTable tbody").html("");
+	$(".registerMsgBlock").hide();
+	$(".registerMsgErrorBlock").hide();
+	$(".registerErrorMsg").html("");
 	var params= {parent:selectedIndexPathVal};
 	invokeAjax('/addCollection/collectionTypes','GET',params,retrieveCollectionList,null,null,null);
 	//loadJson for permissions list
-	loadJsonData('/metaDataPermissionsList', $("#registerCollectionModal").find("#metaDataPermissionsList"), false, null, null, null, "key", "value"); 
+	loadJsonData('/metaDataPermissionsList', $("#metaDataPermissionsList"), false, null, null, null, "key", "value"); 
 }
-
 
 function registerCollection() {
 	
-	$("#registerCollectionModal").find(".registerErrorMsg").html("");
-	$("#registerCollectionModal").find(".registerMsgErrorBlock").hide();
-	var collectionPath = $("#registerCollectionModal").find("#collectionPath").val();
-	var collectionType = $("#registerCollectionModal").find("#collectionType").val();
+	$(".registerErrorMsg").html("");
+	$(".registerMsgErrorBlock").hide();
+	var collectionPath = $("#collectionPath").val();
+	var collectionType = $("#collectionType").val();
 	
 	var newCollectionPath;
 	var collectionName;
@@ -442,7 +468,7 @@ function registerCollection() {
         }          
     });
 	 
-	$("#registerCollectionModal").find(".simple-select2").each(function(){
+	$("table#newMetaDataTable .simple-select2").each(function(){
 		var ismandatory = $(this).attr('is_mandatory');
 		var name = $(this).val();
 		if(ismandatory && ismandatory != "false" && name && name == 'Select') {
@@ -452,13 +478,14 @@ function registerCollection() {
 	
 	if(!usermetaDataEntered) {
 		validate = false;
-		$("#registerCollectionModal").find(".registerErrorMsg").append("Enter values for all required metadata.");
-		$("#registerCollectionModal").find(".registerMsgErrorBlock").show();
+		$(".registerErrorMsg").append("Enter values for all required metadata.");
+		$(".registerMsgErrorBlock").show();
+		$('body,html').animate({scrollTop: 0 }, 500);
 	}
 	
 	if(collectionPath && collectionName) {
 		newCollectionPath = collectionPath + "/" + collectionName.trim();
-		$("#registerCollectionModal").find("#newCollectionPath").val(newCollectionPath);
+		$("#newCollectionPath").val(newCollectionPath);
 	}
 
 	if(validate && newCollectionPath) {
@@ -476,16 +503,18 @@ function registerCollection() {
 		         $("#dimmer").hide();
 				 console.log('SUCCESS: ', msg);
 				 postSuccessRegisterCollection(msg,collectionType);
-				 $('#registerCollectionModal').animate({ scrollTop: 0 }, 'slow');
+				 //$('#registerCollectionModal').animate({ scrollTop: 0 }, 'slow');
+				 $('body,html').animate({scrollTop: 0 }, 500);
 				 
 			 },
 			error : function(e) {
 				 $("#spinner").hide();
 		         $("#dimmer").hide();
 				 console.log('ERROR: ', e);	
-				 $("#registerCollectionModal").find(".registerErrorMsg").html(e.responseText);
-				 $("#registerCollectionModal").find(".registerMsgErrorBlock").show();				 
-				 $('#registerCollectionModal').animate({ scrollTop: 0 }, 'slow');
+				 $(".registerErrorMsg").html(e.responseText);
+				 $(".registerMsgErrorBlock").show();				 
+				 //$('#registerCollectionModal').animate({ scrollTop: 0 }, 'slow');
+				 $('body,html').animate({scrollTop: 0 }, 500);
 			}
 		});
 	}
@@ -508,8 +537,8 @@ function postSuccessRegisterCollection(data,collectionType) {
 			$("#assetUploadDiv").removeClass('show');
 		}
 	} else {
-		$("#registerCollectionModal").find(".registerErrorMsg").html("Error in create collection:" + data);
-		$("#registerCollectionModal").find(".registerMsgErrorBlock").show();
+		$(".registerErrorMsg").html("Error in create collection:" + data);
+		$(".registerMsgErrorBlock").show();
 	}
 
 	
@@ -531,8 +560,8 @@ function resetAssetsSelection() {
 }
 
 function displaySuccessMsg(data,status) {
-	$("#registerCollectionModal").find(".registerMsg").html("Collection created successfully.");
-	$("#registerCollectionModal").find(".registerMsgBlock").show();	
+	$(".registerMsg").html("Collection created successfully.");
+	$(".registerMsgBlock").show();	
 }
 
 function openBulkDataRegistration() {

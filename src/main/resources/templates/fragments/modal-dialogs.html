@@ -184,8 +184,8 @@ aria-labelledby="forgotPasswordLabel">
     <div id="registerFileModal" class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog" aria-hidden="false">
         <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <p class="modal-title">Perform Inferencing</p>
+                <div class="modal-header" style="border-bottom: none;margin-left: 32px;margin-top: 10px;">
+                    <p class="modal-title">Generate Predictions</p>
                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
                 <div class="clearfix performInferencingSuccess" style="display: none;margin-left:10px;width:90%;">
@@ -196,122 +196,25 @@ aria-labelledby="forgotPasswordLabel">
                     </div>
                 </div>
          
-                <div class="modal-body drilldown-content">  
+                <div class="modal-body drilldown-content" style="margin-top: -26px;margin-left: 36px;">  
                  <form class="form-horizontal" id="performInferForm"  method="POST">              
-                  <div class="row row-buffer">
+                  <div class="row row-buffer" style="margin-left: -3px;">
                   <input type="hidden" id="testModelPath" name="testModelPath"/>
                   <input type="hidden" id="modelPath" name="modelPath"/>
-                      <label for="uploadTestInferFile">Upload File for Inferencing </label>
-                          <input type ="file" id="uploadTestInferFile" name="uploadTestInferFile"/>
+                      <label for="uploadTestInferFile">Upload file to generate predictions </label>
+                          <input type ="file" style="margin-top: 14px;" id="uploadTestInferFile" name="uploadTestInferFile"/>
                   </div>
                   </form>                    
                   <div class="row row-buffer" style="text-align: end;">
                       <div class="col-sm-12" style="margin-bottom: 10px;">
                         <button type="button" class="btn btn-default pull-right" data-dismiss="modal"> Close</button>
-                          <button class="btn btn-primary pull-right" id="btnRegisterFile"> Infer</button>
+                          <button class="btn btn-primary pull-right" id="btnRegisterFile"> Generate</button>
                           </div>
                   </div>
                 </div>
             </div>
         </div>
     </div>
-    
-    
-    <div class="modal" id="registerCollectionModal" role="dialog" tabindex="-1" aria-hidden="false">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <p class="modal-title" id="registerModalTitle">Register Collection</p>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-
-            <!-- Modal body -->
-             <form class="form-horizontal" id="registerCollectionForm"  method="POST" style="border-top: 5px solid #194F85;"> 
-            <div class="modal-body">   
-            <div class="clearfix registerMsgBlock" style="display: none;margin-left:30px;width:90%;">
-                    <div class="col-md-12" style="padding-left: 0px; padding-bottom: 10px;padding-right: 0px;padding-top: 10px; border-radius: 0px;">
-                        <div class="alert alert-success">
-                            <h6 class="registerMsg"></h6>
-                        </div>
-                    </div>
-                </div>  
-                
-                 <div class="clearfix registerMsgErrorBlock" style="display: none;margin-left:10px;width:90%;">
-                    <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
-                        <div class="alert alert-danger">
-                            <h6 class="registerErrorMsg"></h6>
-                        </div>
-                    </div>
-                </div>  
-                 <input type="hidden" name="assetType" id="assetType"/> 
-                 <input type="hidden" name="path" id="newCollectionPath"/>   
-                  <input type="hidden" id="parentCollectionType"/>   
-                  <input type="hidden" id="parentAccessGroup"/>
-                <div class="col-md-12 col-sm-12">
-                    <div class="col-md-12 col-sm-12">
-                        <div class="form-row" style="margin-top: 80px;font-size: 65px;">
-                        <div class="form-group col-lg-12 col-md-12" style="margin-top: -37px;">
-                        <h4 style="color: #1C3D5D;font-family: latoregular;font-size:20px;">Permissions</h4></div>
-                        <div class="form-group col-lg-6 col-md-12" style="margin-top:-42px;">
-                            <label for="metaDataPermissionsList">Specify who can edit the collection &nbsp; <i class="fas fa-question-circle" data-toggle="tooltip" title="Permissions to Edit Metadata and Create Subcollections"></i> : &nbsp;&nbsp;
-                                <select class="simple-select2" multiple="multiple" id="metaDataPermissionsList" 
-                                name="metaDataPermissionsList" style="width:50% !important">
-                                </select>
-                                </label>
-                            </div>
-                             <div class="form-group col-lg-4 col-md-12" style="display:none;">
-                                <label for="collectionType">Collection Type</label>
-                                <input type="text" id="collectionType" name="zAttrStr_collection_type">     
-                            </div>
-                            <div class="form-group col-lg-4 col-md-12 parentCollectionDiv" style="margin-top:-30px;">
-                            <label for="parentCollectionName"><span id="parentCollectionLabel">Parent Collection Name:</span>
-                               <input type="text" disabled id="parentCollectionName" style="width:90%;"/></label>
-                            </div>
-                             <div class="form-group col-lg-4 col-md-12" style="display:none;">
-                            <label for="collectionPath">Parent Collection Path
-                               <input type="text" disabled id="collectionPath" style="width:90%;font-size: 16px;"/></label>
-                            </div>
-                            
-                            
-                        </div>
-                    </div> 
-                    
-                     <div class="col-md-12 col-sm-12">
-                      <div class="col-lg-12 col-md-12 col-sm-12 float-left" style="margin-top:55px;">
-                      <p style="font-size:20px;" id="collectionMetaDataLabel">Collection Metadata</p>
-                      </div>
-                      
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                        <a href="#" id="addNewMetaData"
-                        class="float-right mb-2 mr-2"  style="color: #E87B05!important;margin-top: -41px;"
-                        onclick="addNewMetaDataCollection('newMetaDataTable')">Add Metadata</a>
-                               <table id="newMetaDataTable" class="table display dt-responsive wrap" style="width:100%;border:none;">
-                      <thead>
-							<tr>
-                                <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col">Attribute Name</th>
-                                 <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col">Value</th>
-                            </tr>
-                        </thead>
-                        <tbody>                      
-                        </tbody>
-                    </table> 
-                        </div>
-               
-                    </div>
-                </div>
-          
-            </div>
-            <div class="form-group" style="margin-top:35px;margin-bottom:15px;padding: 5px;text-align:center">
-            
-           <input type="button" value="Register" class="btn btn-primary mr-4 mb-4" id="registerCollectionBtn">
-           <input type="button" value="Close" style="margin-left: -12px;" class="btn btn-default mr-4 mb-4 closeButtons" data-dismiss="modal">
-           </div> 
-             </form>
-        </div>
-    </div>
-</div>
     </div>
 </body>
 </html>

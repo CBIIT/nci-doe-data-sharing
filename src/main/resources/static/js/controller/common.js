@@ -580,18 +580,6 @@ $(document)
 
 					});
 
-					$("#btnSelectAssetType")
-							.click(
-									function(e) {
-										var assetType = $("#createAssetModal")
-												.find(
-														"#createAssetCollectionType option:selected")
-												.val();
-										$("#registerCollectionModal").find(
-												"#assetType").val(assetType);
-										openUploadModal('studyList');
-									});
-
 					$("#driveAuthlink").click(
 							function(e) {
 								var params = {
@@ -714,20 +702,7 @@ $(document)
 
 				});
 
-$(document).on(
-		'change',
-		'#publicAccess',
-		function() {
-			if ($(this).is(":checked")) {
-				$("#registerCollectionModal").find("#accessGroupSelect").next(
-						".select2-container").hide();
 
-			} else {
-				$("#registerCollectionModal").find("#accessGroupSelect").next(
-						".select2-container").show();
-			}
-
-		});
 
 $(document).on(
 		'change',
