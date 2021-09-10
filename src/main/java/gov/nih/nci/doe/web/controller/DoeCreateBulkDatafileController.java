@@ -73,7 +73,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 
 		String user = getLoggedOnUserInfo();
 		if (StringUtils.isEmpty(user)) {
-			 return "loginTab";
+			return "loginTab";
 		}
 		String code = request.getParameter("code");
 		model.addAttribute("clientId", clientId);
@@ -132,7 +132,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	 * @param response
 	 * @param redirectAttributes
 	 * @return
-	 * @throws DoeWebException 
+	 * @throws DoeWebException
 	 */
 	@SuppressWarnings("unchecked")
 	@PostMapping
@@ -145,7 +145,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 		log.info("bulk upload and isFormBulkUpload : " + isFormBulkUpload);
 		String user = getLoggedOnUserInfo();
 		if (StringUtils.isEmpty(user)) {
-			 return "loginTab";
+			return "loginTab";
 		}
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 
@@ -260,6 +260,11 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			if (responseDTO != null) {
 
 				String taskId = responseDTO.getTaskId();
+				String name = null;
+				if (isFormBulkUpload == null) {
+					// if isFormBulkUpload is null, the upload is for data files.
+					name = doeDataFileModel.getPath().substring(doeDataFileModel.getPath().lastIndexOf('/') + 1);
+				}
 
 				// get the paths for new collection registration and save in modac
 
@@ -280,7 +285,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 
 				clearSessionAttrs(session);
 
-				taskManagerService.saveTransfer(taskId, "Upload", null, null, user);
+				taskManagerService.saveTransfer(taskId, "Upload", null, name, user);
 
 				// store the auditing info
 				AuditingModel audit = new AuditingModel();
