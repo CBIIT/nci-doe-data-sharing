@@ -656,8 +656,7 @@ $('#dataSetTable tbody')
 													userMetadata = JSON.stringify(value.selfMetadata);
 												}
 
-												html += "&nbsp;&nbsp;&nbsp;"
-														+ value.name
+												html += value.name
 														+ "&nbsp;&nbsp;<a class='cil_12_no_color button2a' "
 														+ "userMetadata = '"
 														+ userMetadata
@@ -850,8 +849,7 @@ function renderDataSetPath(data, type, row) {
 		title = "Copy File Path";
 	}
 
-	html += "&nbsp;&nbsp;&nbsp;"
-			+ row.name
+	html += row.name
 			+ "&nbsp;&nbsp;<a class='cil_12_no_color button2a' "
 			+ "userMetadata = '"
 			+ userMetadata
@@ -953,7 +951,7 @@ function openPopOverDataSet($this) {
 
 function renderFileSize(data, type, row) {
 	if (row.fileSize) {
-		return "&nbsp;&nbsp;&nbsp;" + row.fileSize;
+		return row.fileSize;
 	}
 	return "";
 
