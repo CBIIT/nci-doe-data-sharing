@@ -126,10 +126,11 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 					returnResult1.setPath(result.getDataObject().getAbsolutePath());
 					folderFiles.add(returnResult1);
 					foldersList.put(folderName, folderFiles);
+					returnResult.setIsFolder(true);
+					returnResult.setFilesList(folderFiles);
+					returnResults.add(returnResult);
 				}
-				returnResult.setIsFolder(true);
-				returnResult.setFilesList(folderFiles);
-				returnResults.add(returnResult);
+				
 			} else {
 
 				String attr = getAttributeValue("generate_pred_username",

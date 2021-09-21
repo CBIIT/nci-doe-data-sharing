@@ -623,22 +623,24 @@ $('#dataSetTable tbody').on('click', '.editDataFileCollectionMetadata', function
 
 });
 
-// Add event listener for opening and closing row details
+// expand and close folder row
 $('#dataSetTable tbody')
 		.on(
 				'click',
 				'a.detail-control',
 				function() {
-					$("#subAssetsDataSetTable tbody").html("");
 					var tr = $(this).closest('tr');
 					var row = dataSetTable.row(tr);
 					if (row.child.isShown()) {
 						row.child.hide();
 						tr.removeClass('shown');
 						$(this).find("i.expand.far").toggleClass('fa-plus-circle fa-minus-circle');
-					} else {
+					} else {						
 						var x = row.data().filesList;
-
+						var tableId = 'table'+row.data().name;
+						var tableHtml= "<table class='table display" +
+								" dt-responsive wrap subAssetsDataSetTable' id='" + tableId + "'role='grid'>" +
+								"<tbody>";
 						if (x && x.length > 0) {
 							$.each(x,function(key, value) {
 
@@ -719,18 +721,18 @@ $('#dataSetTable tbody')
 															+ "style='width:15px;' alt='Delete File'></span>";
 
 												}
-
-												$("#subAssetsDataSetTable tbody").append(
-														"<tr><td style='width: 25%;'><input type='checkbox' style='margin-left:6px;' id='"
+												
+												tableHtml+=
+														"<tr><td style='background-color: #d3d3d347 !important;width: 25%;'><input type='checkbox' style='margin-left:6px;' id='"
 																+ value.path + "' "
 																+ "class='dt-checkboxes selectIndividualCheckbox'"
 																+ " aria-label='select'/></td>"
-																+ "<td style='width:28%'>" + html
-																+ "</td><td style='width:24%;'>" + value.fileSize
-																+ "</td><td>" + html1 + "</td><tr>")
+																+ "<td style='background-color: #d3d3d347 !important;width:28%'>" + html
+																+ "</td><td style='background-color: #d3d3d347 !important;width:24%;'>" + value.fileSize
+																+ "</td><td style='background-color: #d3d3d347 !important;'>" + html1 + "</td><tr>";
 											});
-							var table = $("#subAssetsDataSetDiv").html();
-							row.child(table, row.node().className + " subrow").show();
+							var table = tableHtml + "</tbody></table>";
+							row.child(table, row.node().className + " folder_subrow").show();
 						}
 						$(this).find("i.expand.far").toggleClass('fa-plus-circle fa-minus-circle');
 						tr.addClass('shown');
