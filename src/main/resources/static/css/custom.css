@@ -199,8 +199,22 @@ table#dataSetMetaData thead th, table.dataTable tfoot th {
     background-color: #194F85;
 }
 
+table.dataTable tbody tr.shown + tr > td {
+    padding: 0;
+}
+
+
+
 table.dataTable tr.odd td{background-color: #E0F0F4!important;}
 table.dataTable tr.even td{background-color: #FBFBFB!important;}
+
+/*table#subAssetsDataSetTable tbody tr:nth-child(even) td {
+	background-color: #FBFBFB!important;
+}
+
+table#subAssetsDataSetTable tbody tr:nth-child(odd) td {
+	background-color: #E0F0F4!important
+}*/
 
 table#assetBulkMetadataTable tbody tr td {
 	background-color: #E0F0F4!important;
@@ -344,6 +358,7 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 table#subAssetsDataSetTable{
 	border: transparent;
     background-color: rgb(251 251 251);
+    margin-bottom:0px;
 }
 .divTableHeading {
     background-color: #EEE;

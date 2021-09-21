@@ -468,7 +468,8 @@ $('#dataSetTable tbody').on('keypress', '.button2a', function(e) {
 $('#dataSetTable tbody').on('click', '.downloadLink', function(e) {
 	var path = $(this).attr('data-path');
 	var fileName = $(this).attr('data-fileName');
-	downloadFunction(path, fileName);
+	var isFolder =$(this).attr('is_folder');
+	downloadFunction(path, fileName,isFolder);
 });
 
 $('#dataSetTable tbody').on('click', '.deleteDataFileBtn', function(e) {
@@ -639,10 +640,7 @@ $('#dataSetTable tbody')
 						var x = row.data().filesList;
 
 						if (x && x.length > 0) {
-							$
-									.each(
-											x,
-											function(key, value) {
+							$.each(x,function(key, value) {
 
 												var html = "";
 												var userMetadata = "";
@@ -723,16 +721,19 @@ $('#dataSetTable tbody')
 												}
 
 												$("#subAssetsDataSetTable tbody").append(
-														"<tr><td style='width: 25%;'><input type='checkbox' style='margin-left:-2px;' id='" + value.path + "' "
+														"<tr><td style='width: 25%;'><input type='checkbox' style='margin-left:6px;' id='"
+																+ value.path + "' "
 																+ "class='dt-checkboxes selectIndividualCheckbox'"
-																+ " aria-label='select'/></td>" + "<td style='width:28%'>" + html
-																+ "</td><td style='width:24.5%;'>" + value.fileSize + "</td><td>" + html1
-																+ "</td><tr>")
+																+ " aria-label='select'/></td>"
+																+ "<td style='width:28%'>" + html
+																+ "</td><td style='width:24%;'>" + value.fileSize
+																+ "</td><td>" + html1 + "</td><tr>")
 											});
 							var table = $("#subAssetsDataSetDiv").html();
 							row.child(table, row.node().className + " subrow").show();
 						}
 						$(this).find("i.expand.far").toggleClass('fa-plus-circle fa-minus-circle');
+						tr.addClass('shown');
 					}
 				});
 
@@ -1046,7 +1047,7 @@ function renderDownload(data, type, row) {
 	}
 
 	html += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLink' href='javascript:void(0);' "
-			+ "data-fileName = "
+			+ "is_folder = '"+row.isFolder + "' data-fileName = "
 			+ downdloadFileName
 			+ " data-path="
 			+ row.path
@@ -1085,10 +1086,16 @@ function renderGeneratePredDownload(data, type, row) {
 	return html;
 }
 
-function downloadFunction(path, fileName) {
+function downloadFunction(path, fileName, isFolder) {
 	var assetIdentifier = $("#assetIdentifier").val();
+	
+	if(isFolder && isFolder == "true") {
+		location.replace('/downloadTab?selectedPaths=' + path
+				+ '&&downloadAsyncType=collection&&assetIdentifier='+assetIdentifier+'&&returnToSearch=false');
+	} else {
 	location.replace('/downloadTab?selectedPaths=' + path + '&&fileName=' + fileName + '&&assetIdentifier='
 			+ assetIdentifier + '&&downloadAsyncType=data_object&&returnToSearch=false');
+	}
 }
 
 function onClickOfModelAnlysisBulkDownloadBtn($this) {
