@@ -723,10 +723,10 @@ $('#dataSetTable tbody')
 												}
 
 												$("#subAssetsDataSetTable tbody").append(
-														"<tr><td><input type='checkbox' id='" + value.path + "' "
+														"<tr><td style='width: 25%;'><input type='checkbox' style='margin-left:-2px;' id='" + value.path + "' "
 																+ "class='dt-checkboxes selectIndividualCheckbox'"
-																+ " aria-label='select'/></td>" + "<td>" + html
-																+ "</td><td>" + value.fileSize + "</td><td>" + html1
+																+ " aria-label='select'/></td>" + "<td style='width:28%'>" + html
+																+ "</td><td style='width:24.5%;'>" + value.fileSize + "</td><td>" + html1
 																+ "</td><tr>")
 											});
 							var table = $("#subAssetsDataSetDiv").html();
@@ -1035,7 +1035,7 @@ function renderDownload(data, type, row) {
 		downloadMetadataTitle = "Download File Metadata";
 	}
 
-	if (row.isFolder && row.isFolder == false) {
+	if (row.isFolder == false) {
 		html += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadMetadata'  data_path  = '"
 				+ path
 				+ "' href='javascript:void(0);' "
@@ -1055,7 +1055,7 @@ function renderDownload(data, type, row) {
 			+ downloadFileTitle
 			+ "' th:src='@{/images/Download.png}' " + "style='width:17px;' alt='download file'></a>";
 
-	if (accessgroups && accessgroups.indexOf("public") == -1 && permissions && permissions == 'Owner' && row.isFolder
+	if (accessgroups && accessgroups.indexOf("public") == -1 && permissions && permissions == 'Owner'
 			&& row.isFolder == false) {
 
 		html += "<span style='border: transparent;' data-filePath = '"

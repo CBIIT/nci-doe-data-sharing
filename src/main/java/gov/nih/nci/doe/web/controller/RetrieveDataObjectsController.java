@@ -114,6 +114,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 				if (foldersList.containsKey(folderName)) {
 					folderFiles = foldersList.get(folderName);
 					DoeDatafileSearchResultDetailed returnResult1 = getAssetFile(result, false, systemAttrs);
+					returnResult1.setIsFolder(false);
 					returnResult1.setName(name);
 					returnResult1.setPath(result.getDataObject().getAbsolutePath());
 					folderFiles.add(returnResult1);
@@ -121,6 +122,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 					folderFiles = new ArrayList<DoeDatafileSearchResultDetailed>();
 					DoeDatafileSearchResultDetailed returnResult1 = getAssetFile(result, false, systemAttrs);
 					returnResult1.setName(name);
+					returnResult1.setIsFolder(false);
 					returnResult1.setPath(result.getDataObject().getAbsolutePath());
 					folderFiles.add(returnResult1);
 					foldersList.put(folderName, folderFiles);

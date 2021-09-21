@@ -342,10 +342,8 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
     color: #5099AB;
 }
 table#subAssetsDataSetTable{
-	border: 2px solid darkgray;
+	border: transparent;
     background-color: rgb(251 251 251);
-    align-content: center;
-    border-spacing: 1px 0px;
 }
 .divTableHeading {
     background-color: #EEE;
