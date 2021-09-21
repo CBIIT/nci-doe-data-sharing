@@ -136,7 +136,7 @@ public abstract class AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.search.collection.compound}")
 	String compoundCollectionSearchServiceURL;
-	
+
 	@Autowired
 	InferencingTaskService inferencingTaskService;
 
@@ -306,7 +306,7 @@ public abstract class AbstractDoeController {
 
 		log.info("getUserMetaDataAttributesByPath for path : " + selectedPath + " levelName : " + levelName
 				+ "isDataObject: " + isDataObject);
-		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		String authToken = (String) session.getAttribute("hpcUserToken");
 		List<KeyValueBean> entryList = new ArrayList<KeyValueBean>();
 
 		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
@@ -686,8 +686,8 @@ public abstract class AbstractDoeController {
 						levelFilter.setLevel(1);
 						levelFilter.setOperator(HpcMetadataQueryOperator.EQUAL);
 					} else if (level.equals("ANY")) {
-						levelFilter.setLevel(1);
-						levelFilter.setOperator(HpcMetadataQueryOperator.NUM_GREATER_OR_EQUAL);
+						levelFilter.setLevel(2);
+						levelFilter.setOperator(HpcMetadataQueryOperator.EQUAL);
 					} else {
 						if (level.equals("Data file") || level.equals("DataObject"))
 							levelFilter.setLevel(1);
@@ -820,6 +820,9 @@ public abstract class AbstractDoeController {
 				model.addAttribute("assetPath", collection.getCollection().getCollectionName());
 				model.addAttribute("assetPermission", assetPermission);
 				model.addAttribute("assetLink", webServerName + "/assetDetails?dme_data_id=" + dme_Data_Id);
+				
+
+				
 			} else {
 				throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
 			}
