@@ -125,7 +125,7 @@ public class PerformInferencingController extends AbstractDoeController {
 
 		// copy the test dataset file to iRODSScratch
 		// String path = "/mnt/IRODsTest";
-		Path root = Paths.get("/Users/gantam2");
+		Path root = Paths.get(uploadPath);
 		InputStream is = uploadTestInferFile.getInputStream();
 
 		Files.copy(is, root.resolve(uploadTestInferFile.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
