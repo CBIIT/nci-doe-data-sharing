@@ -18,18 +18,13 @@ $(document)
 						$(this).val($(this).val().trim().toLowerCase());
 					});
 
-					$(".loginFieldsTextBox").keyup(
-							function() {
-								if ($(this).val()) {
-									$(this).parent().find(
-											'.TextField-floatingLabel-qefpP')
-											.show();
-								} else {
-									$(this).parent().find(
-											'.TextField-floatingLabel-qefpP')
-											.hide();
-								}
-							});
+					$(".loginFieldsTextBox").keyup(function() {
+						if ($(this).val()) {
+							$(this).parent().find('.TextField-floatingLabel-qefpP').show();
+						} else {
+							$(this).parent().find('.TextField-floatingLabel-qefpP').hide();
+						}
+					});
 
 					$(window).scroll(function() {
 						if ($(this).scrollTop() >= 50) { // If page is
@@ -69,71 +64,47 @@ $(document)
 						populateSearchCriteria('simpleSearch');
 					});
 
-					$("#downloadSelected")
-							.click(
-									function(e) {
-										var selectedPaths = [];
-										$(
-												"#searchResultTable tbody input[type=checkbox]:checked")
-												.each(
-														function() {
-															selectedPaths
-																	.push($(
-																			this)
-																			.attr(
-																					'id'));
-														});
-										if (selectedPaths.length == 0) {
-											$(
-													"#searchResultTable tbody input[type=radio]:checked")
-													.each(
-															function() {
-																selectedPaths
-																		.push($(
-																				this)
-																				.attr(
-																						'id'));
-															});
-										}
-
-										if (selectedPaths.length == 1) {
-											location
-													.replace('/downloadTab?selectedPaths='
-															+ selectedPaths
-															+ '&&downloadAsyncType=collection&&returnToSearch=true');
-										} else {
-											$("#downloadType").val(
-													"collectionfiles");
-											location
-													.replace('/downloadTab?selectedPaths='
-															+ selectedPaths
-															+ '&&downloadAsyncType=collectionfiles&&returnToSearch=true');
-										}
-
+					$("#downloadSelected").click(
+							function(e) {
+								var selectedPaths = [];
+								$("#searchResultTable tbody input[type=checkbox]:checked").each(function() {
+									selectedPaths.push($(this).attr('id'));
+								});
+								if (selectedPaths.length == 0) {
+									$("#searchResultTable tbody input[type=radio]:checked").each(function() {
+										selectedPaths.push($(this).attr('id'));
 									});
+								}
+
+								if (selectedPaths.length == 1) {
+									location.replace('/downloadTab?selectedPaths=' + selectedPaths
+											+ '&&downloadAsyncType=collection&&returnToSearch=true');
+								} else {
+									$("#downloadType").val("collectionfiles");
+									location.replace('/downloadTab?selectedPaths=' + selectedPaths
+											+ '&&downloadAsyncType=collectionfiles&&returnToSearch=true');
+								}
+
+							});
 
 					var selectedPathsString = $("#selectedPathsString").val();
 					var downloadType = $("#downloadType").val();
 					var downloadFileName = $("#downloadFileName").val();
 					var asyncSearchType = $("#asyncSearchType").val();
 
-					if (selectedPathsString
-							&& downloadType
+					if (selectedPathsString && downloadType
 							&& (downloadType == 'collection' || downloadType == 'collectionfiles')) {
 						$("#syncRadioSet").hide();
 						$("#SyncDiv").hide();
 						if (asyncSearchType) {
-							$(
-									"input[name=searchType][value="
-											+ asyncSearchType + "]").click();
+							$("input[name=searchType][value=" + asyncSearchType + "]").click();
 						}
 
 						var selectedPaths = selectedPathsString.split(',');
 						$("#selectedFilesList").val(selectedPaths);
 
 						$.each(selectedPaths, function(index, value) {
-							$(".selectedFilesListDisplay").append(
-									"<p>" + value + "</p>");
+							$(".selectedFilesListDisplay").append("<p>" + value + "</p>");
 						});
 						$(".selectedFilesDiv").show();
 
@@ -146,15 +117,12 @@ $(document)
 										"This page allows you to download the "
 												+ "selected data files "
 												+ "asynchronously to a Globus endpoint location, an S3 bucket, or Google Drive.");
-					} else if (selectedPathsString
-							&& downloadType
+					} else if (selectedPathsString && downloadType
 							&& (downloadType == 'data_object' || downloadType == 'datafiles')) {
 
-						if (downloadFileName && downloadFileName != "null"
-								&& downloadType == 'data_object') {
+						if (downloadFileName && downloadFileName != "null" && downloadType == 'data_object') {
 							$("#syncRadioSet").show();
-							$(".selectedFilesListDisplay").append(
-									"<p>" + selectedPathsString + "</p>");
+							$(".selectedFilesListDisplay").append("<p>" + selectedPathsString + "</p>");
 							$(".selectedFilesDiv").show();
 							$("#destinationPathId").val(selectedPathsString);
 							$("#drivePath").val(downloadFileName);
@@ -164,10 +132,7 @@ $(document)
 													+ "selected data file either synchronously to your computer or asynchronously "
 													+ "to Globus endpoint location, an S3 bucket, or Google Drive.");
 							if (asyncSearchType) {
-								$(
-										"input[name=searchType][value="
-												+ asyncSearchType + "]")
-										.click();
+								$("input[name=searchType][value=" + asyncSearchType + "]").click();
 							} else {
 								$("#searchTypeSync").click();
 							}
@@ -176,10 +141,7 @@ $(document)
 							$("#syncRadioSet").hide();
 							$("#SyncDiv").hide();
 							if (asyncSearchType) {
-								$(
-										"input[name=searchType][value="
-												+ asyncSearchType + "]")
-										.click();
+								$("input[name=searchType][value=" + asyncSearchType + "]").click();
 							}
 							$("#informationalText")
 									.html(
@@ -191,8 +153,7 @@ $(document)
 							$("#selectedFilesList").val(selectedPaths);
 
 							$.each(selectedPaths, function(index, value) {
-								$(".selectedFilesListDisplay").append(
-										"<p>" + value + "</p>");
+								$(".selectedFilesListDisplay").append("<p><input type='checkbox' class='checkboxMultipleDwnlodPaths' checked='true' value="+value+"> &nbsp;&nbsp;" + value + "</p>");
 							});
 							$(".selectedFilesDiv").show();
 
@@ -207,48 +168,27 @@ $(document)
 							.click(
 									function(e) {
 										e.preventDefault();
-										var selectedFiles = $(
-												"#selectedFilesList").val();
-										var searchType = $(
-												'input[name=searchType]:checked:visible')
-												.val();
+										var selectedFiles = $("#selectedFilesList").val();
+										var searchType = $('input[name=searchType]:checked:visible').val();
 										var d = {};
 										d.searchType = searchType;
-										d.destinationPath = $(
-												"#destinationPathId").val();
-										d.downloadType = $("#downloadType")
-												.val();
-										d.downloadFileName = $(
-												"#downloadFileNameVal").val();
+										d.destinationPath = $("#destinationPathId").val();
+										d.downloadType = $("#downloadType").val();
+										d.downloadFileName = $("#downloadFileNameVal").val();
 										$("#message").hide();
 										var validate = true;
-
 										if (!searchType) {
-											$('.downloadErrorMsg')
-													.html(
-															"Select a download destination.");
+											$('.downloadErrorMsg').html("Select a download destination.");
 											$("#message").show();
-										}
-
-										else if (searchType == 's3'
-												|| searchType == 'async'
-												|| searchType == 'drive'
+										} else if (searchType == 's3' || searchType == 'async' || searchType == 'drive'
 												|| selectedFiles) {
-											d.bucketName = $(
-													"#downloadBucketName")
-													.val();
-											d.s3Path = $("#downloadS3Path")
-													.val();
-											d.accessKey = $(
-													"#downloadAccessKey").val();
-											d.secretKey = $(
-													"#downloadSecretKey").val();
-											d.region = $("#downloadRegion")
-													.val();
-											d.endPointName = $("#endPointName")
-													.val();
-											d.endPointLocation = $(
-													"#endPointLocation").val();
+											d.bucketName = $("#downloadBucketName").val();
+											d.s3Path = $("#downloadS3Path").val();
+											d.accessKey = $("#downloadAccessKey").val();
+											d.secretKey = $("#downloadSecretKey").val();
+											d.region = $("#downloadRegion").val();
+											d.endPointName = $("#endPointName").val();
+											d.endPointLocation = $("#endPointLocation").val();
 											d.drivePath = $("#drivePath").val();
 
 											var url;
@@ -260,138 +200,80 @@ $(document)
 
 											}
 											if (searchType == 'async') {
-												$(
-														'div#AsyncDiv input[type="text"]')
-														.each(
-																function() {
-																	if (!$(this)
-																			.val()) {
-																		validate = false;
-																	}
-																});
+												$('div#AsyncDiv input[type="text"]').each(function() {
+													if (!$(this).val()) {
+														validate = false;
+													}
+												});
 											} else if (searchType == 's3') {
-												$(
-														'div#s3Div input[type="text"]')
-														.each(
-																function() {
-																	if (!$(this)
-																			.val()) {
-																		validate = false;
-																	}
-																});
+												$('div#s3Div input[type="text"]').each(function() {
+													if (!$(this).val()) {
+														validate = false;
+													}
+												});
 											} else if (searchType == 'drive') {
-												$(
-														'div#driveDiv input[type="text"]')
-														.each(
-																function() {
-																	if (!$(this)
-																			.val()) {
-																		validate = false;
-																	}
-																});
+												$('div#driveDiv input[type="text"]').each(function() {
+													if (!$(this).val()) {
+														validate = false;
+													}
+												});
 											}
 
 											if (!validate) {
-												$('.downloadErrorMsg')
-														.html(
-																"Enter the destination information.");
+												$('.downloadErrorMsg').html("Enter the destination information.");
 												$("#message").show();
 											} else {
-
 												$
 														.ajax({
 															type : "POST",
 															url : url,
 															contentType : 'application/json',
-															data : JSON
-																	.stringify(d),
+															data : JSON.stringify(d),
 															beforeSend : function() {
-																$("#spinner")
-																		.show();
-																$("#dimmer")
-																		.show();
+																$("#spinner").show();
+																$("#dimmer").show();
 															},
-															success : function(
-																	msg) {
-																$("#spinner")
-																		.hide();
-																$("#dimmer")
-																		.hide();
-																console
-																		.log(
-																				'SUCCESS: ',
-																				msg);
+															success : function(msg) {
+																$("#spinner").hide();
+																$("#dimmer").hide();
+																console.log('SUCCESS: ', msg);
 
 																if (msg
 																		&& msg.message
 																		&& msg.message
 																				.indexOf("Download request is not successful:") != -1) {
-																	$(
-																			'.downloadErrorMsg')
-																			.html(
-																					msg.message);
-																	$(
-																			"#message")
-																			.show();
-																	$(
-																			'.downloadSuccessMsg')
-																			.html(
-																					"");
-																	$(
-																			"#successBlockDownload")
-																			.hide();
+																	$('.downloadErrorMsg').html(msg.message);
+																	$("#message").show();
+																	$('.downloadSuccessMsg').html("");
+																	$("#successBlockDownload").hide();
 																} else {
-																	$(
-																			'.downloadSuccessMsg')
-																			.html(
-																					msg.message);
-																	$(
-																			"#successBlockDownload")
-																			.show();
-																	$(
-																			'.downloadErrorMsg')
-																			.html(
-																					"");
-																	$(
-																			"#message")
-																			.hide();
+																	$('.downloadSuccessMsg').html(msg.message);
+																	$("#successBlockDownload").show();
+																	$('.downloadErrorMsg').html("");
+																	$("#message").hide();
 																}
 
 															},
 															error : function(e) {
-																console
-																		.log(
-																				'ERROR: ',
-																				e);
-																$("#spinner")
-																		.hide();
-																$("#dimmer")
-																		.hide();
-																$(
-																		'#downloadErrorMsg')
-																		.html(
-																				e.message);
-																$("#message")
-																		.show();
+																console.log('ERROR: ', e);
+																$("#spinner").hide();
+																$("#dimmer").hide();
+																$('#downloadErrorMsg').html(e.message);
+																$("#message").show();
 															}
 														});
 											}
 										} else {
-											$('div#SyncDiv input[type="text"]')
-													.each(function() {
-														if (!$(this).val()) {
-															validate = false;
-														}
-													});
+											$('div#SyncDiv input[type="text"]').each(function() {
+												if (!$(this).val()) {
+													validate = false;
+												}
+											});
 											if (!validate) {
-												$('.downloadErrorMsg')
-														.html(
-																"Enter the destination information.");
+												$('.downloadErrorMsg').html("Enter the destination information.");
 												$("#message").show();
 											} else {
-												$('#downloadSyncForm').attr(
-														'action',
-														'/downloadsync');
+												$('#downloadSyncForm').attr('action', '/downloadsync');
 												$("#downloadSyncForm").submit();
 											}
 										}
@@ -412,41 +294,27 @@ $(document)
 						validateForgotPassword();
 					});
 
-					$("#forgotPswdLink").click(
-							function(e) {
-								$("#forgotPasswordLightbox").find(
-										".forgotPswdErrorMsg").html("");
-								$("#forgotPasswordLightbox").find(
-										".forgorPswdErrorBlock").hide();
-								$("#forgotPasswordLightbox").find(
-										".forgotPswdSuccessMsg").html("");
-								$("#forgotPasswordLightbox").find(
-										".forgorPswdSuccessBlock").hide();
-								$("#forgotPasswordLightbox").find(
-										"#txtResetPswdLink").val("");
-								$("#forgotPasswordLightbox").modal('show');
+					$("#forgotPswdLink").click(function(e) {
+						$("#forgotPasswordLightbox").find(".forgotPswdErrorMsg").html("");
+						$("#forgotPasswordLightbox").find(".forgorPswdErrorBlock").hide();
+						$("#forgotPasswordLightbox").find(".forgotPswdSuccessMsg").html("");
+						$("#forgotPasswordLightbox").find(".forgorPswdSuccessBlock").hide();
+						$("#forgotPasswordLightbox").find("#txtResetPswdLink").val("");
+						$("#forgotPasswordLightbox").modal('show');
 
-							});
+					});
 
-					$("#btnSubmitPswdLink").click(
-							function(e) {
+					$("#btnSubmitPswdLink").click(function(e) {
 
-								var params = {
-									emailAddr : $('#forgotPasswordLightbox')
-											.find("#txtResetPswdLink").val()
-								};
-								invokeAjax('/resetPasswordLink', 'GET', params,
-										postResetLinkFunction, null, null,
-										'text');
-							});
+						var params = {
+							emailAddr : $('#forgotPasswordLightbox').find("#txtResetPswdLink").val()
+						};
+						invokeAjax('/resetPasswordLink', 'GET', params, postResetLinkFunction, null, null, 'text');
+					});
 
-					$("#logout")
-							.click(
-									function(e) {
-										invokeAjax('/logOut', 'POST', null,
-												postLogOutFunction, null, null,
-												'text');
-									});
+					$("#logout").click(function(e) {
+						invokeAjax('/logOut', 'POST', null, postLogOutFunction, null, null, 'text');
+					});
 
 					$("#register-tab").click(function(e) {
 						$("#registrationTab").show();
@@ -482,25 +350,18 @@ $(document)
 						$("#editCollectionFragment").hide();
 					});
 
-					$(".backtoAssetFromDwnldBtn")
-							.click(
-									function(e) {
-										var assetIdentifier = $(
-												"#assetIdentifier").val();
-										location
-												.replace('/assetDetails?assetIdentifier='
-														+ assetIdentifier
-														+ '&&returnToSearch=true');
-									});
+					$(".backtoAssetFromDwnldBtn").click(function(e) {
+						var assetIdentifier = $("#assetIdentifier").val();
+						location.replace('/assetDetails?assetIdentifier=' + assetIdentifier + '&&returnToSearch=true');
+					});
 
 					$("#backtoSearch").click(function(e) {
 						location.replace("/searchTab?returnToSearch=true");
 					});
-					
+
 					$(".backToStatusTabLink").click(function(e) {
 						location.replace("/tasksTab");
 					});
-					
 
 					$("#addAsets").click(function(e) {
 						resetAssetsSelection();
@@ -517,20 +378,10 @@ $(document)
 										$('[data-toggle=popover]')
 												.each(
 														function() {
-															if (!$(this).is(
-																	e.target)
-																	&& $(this)
-																			.has(
-																					e.target).length === 0
-																	&& $(
-																			'.popover')
-																			.has(
-																					e.target).length === 0) {
-																(($(this)
-																		.popover(
-																				'hide')
-																		.data(
-																				'bs.popover') || {}).inState || {}).click = false;
+															if (!$(this).is(e.target)
+																	&& $(this).has(e.target).length === 0
+																	&& $('.popover').has(e.target).length === 0) {
+																(($(this).popover('hide').data('bs.popover') || {}).inState || {}).click = false;
 															}
 														});
 									});
@@ -584,74 +435,59 @@ $(document)
 							function(e) {
 								var params = {
 									type : $("#downloadType").val(),
-									downloadFilePath : $("#selectedFilesList")
-											.val(),
+									downloadFilePath : $("#selectedFilesList").val(),
 									action : "Drive",
-									assetIdentifier : $("#assetIdentifier")
-											.val(),
+									assetIdentifier : $("#assetIdentifier").val(),
 									returnToStatus : $("#returnToStatus").val(),
 									returnToSearch : $("#returnToSearch").val()
 								}
 
-								invokeAjax('/download', 'GET', params,
-										postGoogleDriveFunction,
-										postFailureFunction, null, 'text');
+								invokeAjax('/download', 'GET', params, postGoogleDriveFunction, postFailureFunction,
+										null, 'text');
 							});
 
 					$("#downloadGlobuslink").click(
 							function(e) {
 								var params = {
 									type : $("#downloadType").val(),
-									downloadFilePath : $("#selectedFilesList")
-											.val(),
+									downloadFilePath : $("#selectedFilesList").val(),
 									action : "Globus",
-									assetIdentifier : $("#assetIdentifier")
-											.val(),
+									assetIdentifier : $("#assetIdentifier").val(),
 									returnToStatus : $("#returnToStatus").val(),
 									returnToSearch : $("#returnToSearch").val()
 								}
 
-								invokeAjax('/download', 'GET', params,
-										postGoogleDriveFunction,
-										postFailureFunction, null, 'text');
+								invokeAjax('/download', 'GET', params, postGoogleDriveFunction, postFailureFunction,
+										null, 'text');
 							});
 
-					$("#primaryGlobusButton").click(
-							function(e) {
+					$("#primaryGlobusButton").click(function(e) {
 
-								var d = {};
-								d.institutionPath = $("#instituteList").val();
-								d.studyPath = $("#studyList").val();
-								d.dataSetPath = $("#dataList").val();
+						var d = {};
+						d.institutionPath = $("#instituteList").val();
+						d.studyPath = $("#studyList").val();
+						d.dataSetPath = $("#dataList").val();
 
-								invokeAjax('/upload', 'GET', d,
-										postUploadGlobusFunction,
-										postFailureFunction, null, 'text');
-							});
+						invokeAjax('/upload', 'GET', d, postUploadGlobusFunction, postFailureFunction, null, 'text');
+					});
 
-					$("#assetSelectionGlobusButton").click(
-							function(e) {
-								var d = {};
-								d.institutionPath = $("#instituteList").val();
-								d.studyPath = $("#studyList").val();
-								d.uploadType = "assetBulkUpload";
+					$("#assetSelectionGlobusButton").click(function(e) {
+						var d = {};
+						d.institutionPath = $("#instituteList").val();
+						d.studyPath = $("#studyList").val();
+						d.uploadType = "assetBulkUpload";
 
-								invokeAjax('/upload', 'GET', d,
-										postUploadGlobusFunction,
-										postFailureFunction, null, 'text');
-							});
+						invokeAjax('/upload', 'GET', d, postUploadGlobusFunction, postFailureFunction, null, 'text');
+					});
 
-					$("#driveUploadAuthlink").click(
-							function(e) {
-								var d = {};
-								d.institutionPath = $("#instituteList").val();
-								d.studyPath = $("#studyList").val();
-								d.dataSetPath = $("#dataList").val();
-								d.action = "Drive";
-								invokeAjax('/upload', 'GET', d,
-										postUploadGlobusFunction,
-										postFailureFunction, null, 'text');
-							});
+					$("#driveUploadAuthlink").click(function(e) {
+						var d = {};
+						d.institutionPath = $("#instituteList").val();
+						d.studyPath = $("#studyList").val();
+						d.dataSetPath = $("#dataList").val();
+						d.action = "Drive";
+						invokeAjax('/upload', 'GET', d, postUploadGlobusFunction, postFailureFunction, null, 'text');
+					});
 
 					function postGoogleDriveFunction(data, status) {
 						location.replace(data);
@@ -672,56 +508,49 @@ $(document)
 						updateAccessGroupsFunction();
 					});
 
-					$('.asset-attributes').click(
-							function() {
-								if ($(this).hasClass('collapsed')) {
-									$(this).find('img').attr('src',
-											'/images/arrow.collapse-open.svg')
-								} else {
-									$(this).find('img').attr('src',
-											'/images/arrow.collapse.svg')
-								}
-							});
+					$('.asset-attributes').click(function() {
+						if ($(this).hasClass('collapsed')) {
+							$(this).find('img').attr('src', '/images/arrow.collapse-open.svg')
+						} else {
+							$(this).find('img').attr('src', '/images/arrow.collapse.svg')
+						}
+					});
 
 					$(".select2-selection").removeAttr("role");
 					$(".select2-search__field").removeAttr("role");
 					$(".select2-search__field").attr("aria-label", "textbox");
 					$(".select2-search__field").attr("type", "textbox");
 
-					$(document).ajaxStop(
-							function() {
-								console.log("Last ajax call completed");
-								$(".select2-selection").removeAttr("role");
-								$(".select2-search__field").removeAttr("role");
-								$(".select2-search__field").attr("aria-label",
-										"textbox");
-								$(".select2-search__field").attr("type",
-										"textbox");
-							});
-					
+					$(document).ajaxStop(function() {
+						console.log("Last ajax call completed");
+						$(".select2-selection").removeAttr("role");
+						$(".select2-search__field").removeAttr("role");
+						$(".select2-search__field").attr("aria-label", "textbox");
+						$(".select2-search__field").attr("type", "textbox");
+					});
 
 				});
 
+$(document).on('change','.checkboxMultipleDwnlodPaths', function() {
+	var selectedPaths = [];
+	$(".checkboxMultipleDwnlodPaths").each(function(e){
+		if($(this).is(':checked')) {
+			selectedPaths.push($(this).val());
+		}
+	});
+	$("#selectedFilesList").val(selectedPaths.join(","));
+});
 
+$(document).on('change', '#editPublicAccess', function() {
+	if ($(this).is(":checked")) {
+		$("#updateAccessPermissionsModal").find("#updateAccessGroupsList").next(".select2-container").hide();
+		$("#updateAccessPermissionsModal").find("#updateAccessGroupsList").val("").trigger('change');
 
-$(document).on(
-		'change',
-		'#editPublicAccess',
-		function() {
-			if ($(this).is(":checked")) {
-				$("#updateAccessPermissionsModal").find(
-						"#updateAccessGroupsList").next(".select2-container")
-						.hide();
-				$("#updateAccessPermissionsModal").find(
-						"#updateAccessGroupsList").val("").trigger('change');
+	} else {
+		$("#updateAccessPermissionsModal").find("#updateAccessGroupsList").next(".select2-container").show();
+	}
 
-			} else {
-				$("#updateAccessPermissionsModal").find(
-						"#updateAccessGroupsList").next(".select2-container")
-						.show();
-			}
-
-		});
+});
 
 $(document).on('click', '#pickerUploadLink', function() {
 	loadUploadPicker();
@@ -730,46 +559,32 @@ $(document).on('click', '#pickerLink', function() {
 	loadDownloadPicker();
 });
 
-$(document).on(
-		'click',
-		'.dataTargetCollapse',
-		function() {
-			if ($(this).parent().parent().find('div.dataDivCollapse').is(
-					":visible")) {
-				$(this).parent().css('margin-bottom', '-1px');
-				$(this).parent().parent().find('div.dataDivCollapse').css(
-						'display', 'none');
-				$(this).parent().parent().find('.filterSearchBox').css(
-						'display', 'none');
-				$(this).attr('src', '/images/AccordionUp.svg');
-				$(this).parent().parent().find(".css-17rpx5x").hide();
-				$(this).parent().parent().find(".css-17rpx5xLess").hide();
-			} else {
-				$(this).parent().css('margin-bottom', '15px');
-				$(this).parent().parent().find('div.dataDivCollapse').css(
-						'display', 'block');
-				$(this).parent().parent().find('.filterSearchBox').css(
-						'display', 'none');
-				$(this).attr('src', '/images/AccordionDown.svg');
-				$(this).parent().parent().find('.css-17rpx5x').show();
-				$(this).parent().parent().find('.showMore').show();
-				showFirstFewFields($(this).parent().parent(),'Less');
-			}
-		});
+$(document).on('click', '.dataTargetCollapse', function() {
+	if ($(this).parent().parent().find('div.dataDivCollapse').is(":visible")) {
+		$(this).parent().css('margin-bottom', '-1px');
+		$(this).parent().parent().find('div.dataDivCollapse').css('display', 'none');
+		$(this).parent().parent().find('.filterSearchBox').css('display', 'none');
+		$(this).attr('src', '/images/AccordionUp.svg');
+		$(this).parent().parent().find(".css-17rpx5x").hide();
+		$(this).parent().parent().find(".css-17rpx5xLess").hide();
+	} else {
+		$(this).parent().css('margin-bottom', '15px');
+		$(this).parent().parent().find('div.dataDivCollapse').css('display', 'block');
+		$(this).parent().parent().find('.filterSearchBox').css('display', 'none');
+		$(this).attr('src', '/images/AccordionDown.svg');
+		$(this).parent().parent().find('.css-17rpx5x').show();
+		$(this).parent().parent().find('.showMore').show();
+		showFirstFewFields($(this).parent().parent(), 'Less');
+	}
+});
 
-$(document).on(
-		'click',
-		'.searchCheckBoxlist',
-		function() {
-			if ($(this).parent().parent().find('.filterSearchBox').is(
-					":visible")) {
-				$(this).parent().parent().find('.filterSearchBox').css(
-						'display', 'none');
-			} else {
-				$(this).parent().parent().find('.filterSearchBox').css(
-						'display', 'block');
-			}
-		});
+$(document).on('click', '.searchCheckBoxlist', function() {
+	if ($(this).parent().parent().find('.filterSearchBox').is(":visible")) {
+		$(this).parent().parent().find('.filterSearchBox').css('display', 'none');
+	} else {
+		$(this).parent().parent().find('.filterSearchBox').css('display', 'block');
+	}
+});
 
 $(document).on('keyup', '.filterSearchBox', function() {
 	var query = $(this).val().toLowerCase();
@@ -812,37 +627,21 @@ $(document).on('change', '#uploadTestInferFile', function() {
 	$("#registerFileModal").find("#testModelPath").val(value);
 });
 
-$(document)
-		.on(
-				'click',
-				'#openInferModal',
-				function() {
+$(document).on('click', '#openInferModal', function() {
+	$("#dataSetTable tr").each(function() {
+		var len = $(this).find('td:first input[type=checkbox]').length;
+		if (len > 0) {
+			var value = $(this).find('td:first input[type=checkbox]').attr('id');
+			if (value && value.indexOf('.h5') != -1) {
+				$("#registerFileModal").find("#modelPath").val(value);
+			}
+		}
+	});
 
-					$("#dataSetTable tr")
-							.each(
-									function() {
-										var len = $(this)
-												.find(
-														'td:first input[type=checkbox]').length;
-										if (len > 0) {
-											var value = $(this)
-													.find(
-															'td:first input[type=checkbox]')
-													.attr('id');
-											if (value
-													&& value.indexOf('.h5') != -1) {
-												$("#registerFileModal").find(
-														"#modelPath")
-														.val(value);
-											}
-										}
+	$("#registerFileModal").find("#testModelPath").val($("#selectedAssetPath").text());
+	$("#registerFileModal").modal('show');
 
-									});
-					$("#registerFileModal").find("#testModelPath").val(
-							$("#selectedAssetPath").text());
-					$("#registerFileModal").modal('show');
-
-				});
+});
 
 $(document).on('click', '#btnRegisterFile', function() {
 
@@ -886,48 +685,43 @@ $(document).on('click', '.clearMetadata', function() {
 	$(this).parent().find("input[type='text']").val("");
 });
 
-$(document).on(
-		'change',
-		'.filteritem',
-		function() {
+$(document).on('change', '.filteritem', function() {
 
-			if ($(this).is(':checked')) {
-				$(this).parent().find('span').css('color', '#2E76ED');
-			} else {
-				$(this).parent().find('span').css('color', '#212529');
-			}
-			var attrName = $(this).parent().parent().attr('id');
+	if ($(this).is(':checked')) {
+		$(this).parent().find('span').css('color', '#2E76ED');
+	} else {
+		$(this).parent().find('span').css('color', '#212529');
+	}
+	var attrName = $(this).parent().parent().attr('id');
 
-			// based on child selection, search at parent level and check the
-			// parent checkbox
-			$(this).closest('.filterComponentDiv').prev().find(
-					'.attributeLabel').each(function(e) {
-				filterPrev($(this), attrName);
-			});
+	// based on child selection, search at parent level and check the
+	// parent checkbox
+	$(this).closest('.filterComponentDiv').prev().find('.attributeLabel').each(function(e) {
+		filterPrev($(this), attrName);
+	});
 
-			// always filter the metadata on the children level
-			// do not remove parent based on child selection
-			$(this).closest('.filterComponentDiv').next().find(
-					'.attributeLabel').each(function(e) {
-				filterNext($(this), attrName);
-			});
+	// always filter the metadata on the children level
+	// do not remove parent based on child selection
+	$(this).closest('.filterComponentDiv').next().find('.attributeLabel').each(function(e) {
+		filterNext($(this), attrName);
+	});
 
-			populateSearchCriteria('simpleSearch');
-		});
+	populateSearchCriteria('simpleSearch');
+});
 
 $(document).on('click', '.showMore', function() {
 
 	$(this).parent().hide();
 	$(this).parent().parent().find(".css-17rpx5xLess").show();
-	showFirstFewFields($(this).parent().parent(),'More');
+	showFirstFewFields($(this).parent().parent(), 'More');
 });
 
 $(document).on('click', '.showLess', function() {
-	
-	$(this).parent().hide();	
+
+	$(this).parent().hide();
 	$(this).parent().parent().find(".css-17rpx5x").show();
 	$(this).parent().parent().find(".showMore").show();
-	showFirstFewFields($(this).parent().parent(),'Less');
+	showFirstFewFields($(this).parent().parent(), 'Less');
 });
 
 function filterNext($this, attributeTypeName) {
@@ -943,19 +737,18 @@ function filterNext($this, attributeTypeName) {
 	var operators = [];
 
 	// filter a list based on the parent level selection
-	$this.closest('.filterComponentDiv').prevAll().find(".filteritem:checked")
-			.each(function() {
-				var attrName = $(this).parent().parent().attr('id');
-				var attrVal = $(this).val();
-				if (attrName != attributeName) {
-					attrNames.push(attrName);
-					attrValues.push(attrVal);
-					rowIds.push(rowId);
-					isExcludeParentMetadata.push(false);
-					operators.push("EQUAL");
-					rowId = rowId + 1;
-				}
-			});
+	$this.closest('.filterComponentDiv').prevAll().find(".filteritem:checked").each(function() {
+		var attrName = $(this).parent().parent().attr('id');
+		var attrVal = $(this).val();
+		if (attrName != attributeName) {
+			attrNames.push(attrName);
+			attrValues.push(attrVal);
+			rowIds.push(rowId);
+			isExcludeParentMetadata.push(false);
+			operators.push("EQUAL");
+			rowId = rowId + 1;
+		}
+	});
 
 	d.attrName = attrNames.join();
 	d.attrValuesString = attrValues.join('@@');
@@ -974,7 +767,7 @@ function filterNext($this, attributeTypeName) {
 		success : function(data, status) {
 			var list = JSON.parse(data);
 			var len = list.length;
-			
+
 			$this.parent().find('.filterGroupDiv').each(function(e) {
 				var val = $(this).find('.filteritem').val();
 				if (list.indexOf(val) != -1) {
@@ -986,12 +779,12 @@ function filterNext($this, attributeTypeName) {
 					$(this).find('span').css('color', '#212529');
 				}
 			});
-			
-			if(len && len > 4) {
+
+			if (len && len > 4) {
 				$this.parent().find('.css-17rpx5x').show();
 				$this.parent().find('.showMore').show();
-				$this.parent().find('.css-17rpx5xLess').hide();	
-				showFirstFewFields($this.parent(),'Less');
+				$this.parent().find('.css-17rpx5xLess').hide();
+				showFirstFewFields($this.parent(), 'Less');
 			} else {
 				$this.parent().find('.css-17rpx5xLess').hide();
 				$this.parent().find('.css-17rpx5x').hide();
@@ -1003,13 +796,11 @@ function filterNext($this, attributeTypeName) {
 			console.log("===> error: ", error);
 			console.log("===> data: ", data);
 		}
-	}).done(
-			function(e) {
-				$this.closest('.filterComponentDiv').next().find(
-						'.attributeLabel').each(function(e) {
-					filterNext($(this));
-				});
-			});
+	}).done(function(e) {
+		$this.closest('.filterComponentDiv').next().find('.attributeLabel').each(function(e) {
+			filterNext($(this));
+		});
+	});
 }
 
 function filterPrev($this, attributeTypeName) {
@@ -1025,19 +816,18 @@ function filterPrev($this, attributeTypeName) {
 	var url;
 
 	// filter a list based on the parent level selection
-	$this.closest('.filterComponentDiv').nextAll().find(".filteritem:checked")
-			.each(function() {
-				var attrName = $(this).parent().parent().attr('id');
-				var attrVal = $(this).val();
-				if (attrName != attributeName) {
-					attrNames.push(attrName);
-					attrValues.push(attrVal);
-					rowIds.push(rowId);
-					isExcludeParentMetadata.push(false);
-					operators.push("EQUAL");
-					rowId = rowId + 1;
-				}
-			});
+	$this.closest('.filterComponentDiv').nextAll().find(".filteritem:checked").each(function() {
+		var attrName = $(this).parent().parent().attr('id');
+		var attrVal = $(this).val();
+		if (attrName != attributeName) {
+			attrNames.push(attrName);
+			attrValues.push(attrVal);
+			rowIds.push(rowId);
+			isExcludeParentMetadata.push(false);
+			operators.push("EQUAL");
+			rowId = rowId + 1;
+		}
+	});
 
 	d.attrName = attrNames.join();
 	d.attrValuesString = attrValues.join('@@');
@@ -1077,12 +867,12 @@ function filterPrev($this, attributeTypeName) {
 					$(this).find('span').css('color', '#212529');
 				}
 			});
-			
-			if(len && len > 4) {
+
+			if (len && len > 4) {
 				$this.parent().find('.css-17rpx5x').show();
 				$this.parent().find('.showMore').show();
-				$this.parent().find('.css-17rpx5xLess').hide();	
-				showFirstFewFields($this.parent(),'Less');
+				$this.parent().find('.css-17rpx5xLess').hide();
+				showFirstFewFields($this.parent(), 'Less');
 			} else {
 				$this.parent().find('.css-17rpx5xLess').hide();
 				$this.parent().find('.css-17rpx5x').hide();
@@ -1093,23 +883,21 @@ function filterPrev($this, attributeTypeName) {
 			console.log("===> error: ", error);
 			console.log("===> data: ", data);
 		}
-	}).done(
-			function(e) {
-				$this.closest('.filterComponentDiv').prev().find(
-						'.attributeLabel').each(function(e) {
-					filterPrev($(this));
-				});
-			});
+	}).done(function(e) {
+		$this.closest('.filterComponentDiv').prev().find('.attributeLabel').each(function(e) {
+			filterPrev($(this));
+		});
+	});
 }
 
-function showFirstFewFields($this,oper) {
+function showFirstFewFields($this, oper) {
 	if ($this) {
-		if(oper == 'More') {
+		if (oper == 'More') {
 			$this.find('.filterGroupDiv:visible').each(function(index) {
 				$(this).find('.showMorefields').show();
-				
+
 			});
-		} else if(oper =='Less') {
+		} else if (oper == 'Less') {
 			var len = $this.find('.filterGroupDiv:visible').length;
 			var modifiedSize = len - 4;
 			$this.find('.filterGroupDiv:visible').each(function(index) {
@@ -1121,32 +909,29 @@ function showFirstFewFields($this,oper) {
 			});
 			$this.find(".showMore").text(modifiedSize + " More ..");
 		}
-	
+
 	} else {
-		$(".dataDivCollapse").each(
-				function(e) {
-					var len = $(this).find('.filterGroupDiv:visible').length;
-					var modifiedSize = len - 4;
-					if (len > 4) {
-						$(this).parent().find('.showMore').text(
-								modifiedSize + " More..");
-						$(this).parent().find('.showMore').show();
-						$(this).parent().find('.css-17rpx5x').show();
-						$(this).parent().find('.css-17rpx5xLess').hide();
-						$(this).find('.filterGroupDiv:visible').each(
-								function(index) {
-                             if(index > 3) {
-                            	 $(this).find(".showMorefields").hide();
-                             } else {
-                            	 $(this).find(".showMorefields").show(); 
-                             }
-                             
-								});
+		$(".dataDivCollapse").each(function(e) {
+			var len = $(this).find('.filterGroupDiv:visible').length;
+			var modifiedSize = len - 4;
+			if (len > 4) {
+				$(this).parent().find('.showMore').text(modifiedSize + " More..");
+				$(this).parent().find('.showMore').show();
+				$(this).parent().find('.css-17rpx5x').show();
+				$(this).parent().find('.css-17rpx5xLess').hide();
+				$(this).find('.filterGroupDiv:visible').each(function(index) {
+					if (index > 3) {
+						$(this).find(".showMorefields").hide();
 					} else {
-						$(this).parent().find('.css-17rpx5x').hide();
-						$(this).parent().find('.css-17rpx5xLess').hide();
+						$(this).find(".showMorefields").show();
 					}
-					
+
 				});
+			} else {
+				$(this).parent().find('.css-17rpx5x').hide();
+				$(this).parent().find('.css-17rpx5xLess').hide();
+			}
+
+		});
 	}
 }
