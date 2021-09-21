@@ -26,6 +26,7 @@ import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.datatransfer.HpcFileLocation;
 import gov.nih.nci.hpc.domain.datatransfer.HpcUploadSource;
 import gov.nih.nci.hpc.domain.datatransfer.HpcUserDownloadRequest;
+import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDownloadSummaryDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationResponseDTO;
@@ -152,8 +153,8 @@ public class ManageTasksScheduler extends AbstractDoeController {
 						t.getTestDataSetPath().length());
 				// upload test dataset to cloudian
 				log.info("upload test dataset to cloudian: " + fileNameOriginal);
-				HpcBulkDataObjectRegistrationRequestDTO registrationDTO = constructV2BulkRequest(t.getTestDataSetPath(),
-						fileNameOriginal);
+				HpcBulkDataObjectRegistrationRequestDTO registrationDTO = constructV2BulkRequest(t.getUserId(),
+						t.getTestDataSetPath(), fileNameOriginal, "input_dataset_" + t.getTaskId(), t.getUserId());
 
 				// call the FileUpload API to upload the file to cloudian
 				HpcBulkDataObjectRegistrationResponseDTO responseDTO = DoeClientUtil.registerBulkDatafiles(authToken,
@@ -161,20 +162,6 @@ public class ManageTasksScheduler extends AbstractDoeController {
 				if (responseDTO != null) {
 					log.info("dme task id for uplaoding test data set" + responseDTO.getTaskId());
 				}
-
-				/*
-				 * UriComponentsBuilder ucBuilder1 =
-				 * UriComponentsBuilder.fromHttpUrl(registrationServiceV2URL)
-				 * .path("/{dme-archive-path}"); final String serviceURL =
-				 * ucBuilder1.buildAndExpand(dmeTaskId).encode().toUri().toURL()
-				 * .toExternalForm();
-				 * 
-				 * WebClient client = DoeClientUtil.getWebClient(serviceURL);
-				 * client.header("Authorization", "Bearer " + authToken); Response restResponse
-				 * = client.invoke("GET", null);
-				 */
-				// if the file is available, call the flask web service
-				// if (restResponse.getStatus() == 200) {
 
 				String dataFilePath = t.getTestDataSetPath();
 				String modelh5Path = t.getModelh5Path();
@@ -228,8 +215,8 @@ public class ManageTasksScheduler extends AbstractDoeController {
 
 				log.info("verify if inferencing file is available on mount " + fileNameOriginal);
 				if (file.length() != 0) {
-					HpcBulkDataObjectRegistrationRequestDTO registrationDTO = constructV2BulkRequest(resultPath,
-							fileNameOriginal);
+					HpcBulkDataObjectRegistrationRequestDTO registrationDTO = constructV2BulkRequest(t.getUserId(),
+							resultPath, fileNameOriginal, "y_pred_" + t.getTaskId(), t.getUserId());
 
 					// call the FileUpload API to upload the file to cloudian
 					HpcBulkDataObjectRegistrationResponseDTO responseDTO = DoeClientUtil
@@ -243,23 +230,12 @@ public class ManageTasksScheduler extends AbstractDoeController {
 			} catch (Exception e) {
 				log.error("Exception in verifying predictions file and uploading: " + e);
 			}
-			/*
-			 * HpcDataObjectDTO dataObjectList = DoeClientUtil.getDatafiles(authToken,
-			 * dataObjectAsyncServiceURL, resultPath, true, null); if (dataObjectList !=
-			 * null) {
-			 * 
-			 * HpcMetadataEntry entry =
-			 * dataObjectList.getMetadataEntries().getSelfMetadataEntries()
-			 * .getSystemMetadataEntries().stream() .filter(f ->
-			 * f.getAttribute().equalsIgnoreCase("data_transfer_status")).findAny().orElse(
-			 * null); if (entry != null && entry.getValue().equalsIgnoreCase("ARCHIVED")) {
-			 * t.setStatus("COMPLETED"); inferencingTaskRepository.saveAndFlush(t); } }
-			 */
+
 		}
 	}
 
 	private gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO constructV2BulkRequest(
-			String path, String fileName) {
+			String userId, String path, String fileName, String metadata, String user) {
 
 		log.info("construct dto for fileName : " + fileName + " and path: " + path);
 		gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO dto = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO();
@@ -271,6 +247,17 @@ public class ManageTasksScheduler extends AbstractDoeController {
 		fileSystemUploadSource.setSourceLocation(location);
 		file.setFileSystemUploadSource(fileSystemUploadSource);
 		file.setPath(path);
+		HpcMetadataEntry e = new HpcMetadataEntry();
+
+		e.setAttribute("Model_Analysis_type_name");
+		e.setValue(metadata);
+		HpcMetadataEntry e1 = new HpcMetadataEntry();
+
+		e1.setAttribute("generate_pred_username");
+		e1.setValue(user);
+
+		file.getDataObjectMetadataEntries().add(e);
+		file.getDataObjectMetadataEntries().add(e1);
 		dto.getDataObjectRegistrationItems().add(file);
 		return dto;
 	}

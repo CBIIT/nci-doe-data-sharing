@@ -49,7 +49,7 @@
                            <div th:each="list : ${browseList}" class="filterComponentDiv"
                                    style="border-radius: 12px 12px 0px 0px;border: 1px solid #fff;margin-bottom: 13px;background-color: #fff;margin-left: 10px;margin-right: 8px;">
                               <p style="background-color: #E87B05;border-radius: 6px 6px 0px 0px;color: #fff;
-                                 margin-bottom: 6px;width: 101%;margin-left: -1px;margin-top: -1px;
+                                 width: 101%;margin-left: -1px;margin-top: -1px;
                                  font-size: 19px;" class="attributeLabel">
                               <label class="attrName" th:text="${list.key}" style="color: #fff;margin-bottom: 5px;
                               margin-top: -8px;margin-left: 9px;font-weight:400;
@@ -67,7 +67,7 @@
                                 font-size: 14px;height: 2.1rem;padding: 6px 12px;margin-bottom: 15px;display:none;">
                                 
                                 <div th:if="${list.key == 'Asset Type'}" class="dataDivCollapse"
-                               style="height: 68px;;margin-left: -5px;font-size: 14px;font-family: 'latoregular';">
+                               style="margin-top:-10px;height: 68px;;margin-left: -5px;font-size: 14px;font-family: 'latoregular';">
                                      <div class="form-group col-lg-12 col-md-12 filterGroupDiv" th:id="${list.key}" th:each="attr : ${list.value}">
                                      <span class="showMorefields">
                                      <input type="checkbox" class="filteritem" style="transform: translateY(2px);" th:value="${attr}"/>&nbsp;
@@ -76,7 +76,7 @@
                                      </div>
                                </div>          
                                <div th:if="${list.key != 'Asset Type'}" class="dataDivCollapse"
-                               style="height: 136px;overflow: auto;font-size: 14px;margin-bottom: 10px;margin-left: -5px;font-family: 'latoregular';">
+                               style="margin-top:-10px;height: 136px;overflow: auto;font-size: 14px;margin-bottom: 10px;margin-left: -5px;font-family: 'latoregular';">
                                   <div class="form-group col-lg-12 col-md-12 filterGroupDiv" th:id="${list.key}" th:each="attr: ${list.value}">
                                     
                                     <input type="hidden" th:value="${attrStat.index}"/>

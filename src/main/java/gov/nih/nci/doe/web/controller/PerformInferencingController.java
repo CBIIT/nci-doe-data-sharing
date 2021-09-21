@@ -124,7 +124,7 @@ public class PerformInferencingController extends AbstractDoeController {
 				modelh5Path);
 
 		// copy the test dataset file to iRODSScratch
-		// String path = "/mnt/iRODsScratch/ModaC/";
+		// String path = "/mnt/IRODsTest";
 		Path root = Paths.get("/Users/gantam2");
 		InputStream is = uploadTestInferFile.getInputStream();
 

@@ -144,6 +144,10 @@
     margin-bottom: -7px;
     margin-top: -20px;
 }
+.dataTables_filter {
+	margin-top: -7px;
+    margin-right: 10px;
+}
 
 .dataTables_info {
 	margin-left: 15px;
@@ -273,11 +277,14 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 }
 
 .btn-primary, bg-primary{background-color: #00579e!important;}
-
+#dataSetTable_wrapper,#generatePredTable_wrapper{
+	border: 2px solid #194F85;
+    margin-top: -8px;
+}
 
 #downloadSelectedDataSet,#downloadSelectedMetadata,#downloadSelected,#openInferModal{
 	background-color: #E87B05!important;
-	margin-top: -40px;
+	margin-top: 0px;
     border-radius: 13px;
     height: 47px;
     width: 191px;
@@ -328,12 +335,17 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
     line-height: 51px;
 }
 .assetFilesheader {
-	font-size: 20px;
+	font-size: 19px;
     font-weight: 500;
     font-family: 'latoregular';
-    margin-left: 26px;
+    margin-left: 111px;
     color: #5099AB;
-    line-height: 51px;
+}
+table#subAssetsDataSetTable{
+	border: 2px solid darkgray;
+    background-color: rgb(251 251 251);
+    align-content: center;
+    border-spacing: 1px 0px;
 }
 .divTableHeading {
     background-color: #EEE;
@@ -1297,7 +1309,11 @@ i.fas.fa-file-plus{font-size: 16px!important;}
 }
 .my_class{background-color: rgba(222, 244, 255, 0.7);}
 
-
+i.expand {
+    font-size: 16px;
+    color: #194F85;
+    font-weight: bold;
+}
 /* background colors */
 .bg-dark{background-color:#616A70!important;}
 .bg-grant{background-color: #e1f1fd!important;}

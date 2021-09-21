@@ -32,7 +32,7 @@
     margin-top: 13px;
     margin-bottom: 30px;
 }
-#dataSetTable_wrapper {
+#dataSetTable_wrapper,#generatePredTable_wrapper {
 	width:100%;
 }
 #advancedSearch {
@@ -42,13 +42,21 @@
     font-weight: 100;
 }
 
-#dataSetTable_length {
-    margin-top: -25px;
+#dataSetTable_length,#generatePredTable_length {
+    margin-top: 6px;
     font-family: 'latoregular';
-    margin-left: 26px;
+    margin-right: 25px;
+    float: right;
 }
 
 #dataSetTable{
-	border-color: transparent;
 	font-family: 'latoregular';
+	width: 97% !important;
+    border: 2px solid lightgray;
+}
+
+#generatePredTable {
+	font-family: 'latoregular';
+	width: 97% !important;
+    border: 2px solid lightgray;
 }

@@ -147,7 +147,7 @@ public class SearchController extends AbstractDoeController {
 		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList().getBody();
 		String user = getLoggedOnUserInfo();
 		for (HpcCollectionDTO result : searchResults) {
-
+			List<HpcMetadataEntry> selfMetadatEntries = result.getMetadataEntries().getSelfMetadataEntries();
 			DoeSearchResult returnResult = new DoeSearchResult();
 			String studyPath = result.getCollection().getCollectionParentName();
 			String programPath = studyPath.substring(0, studyPath.lastIndexOf('/'));
@@ -167,10 +167,8 @@ public class SearchController extends AbstractDoeController {
 			returnResult
 					.setProgramPermissionRole(getPermissionRole(user, programCollectionId, loggedOnUserPermissions));
 			returnResult.setDataSetPath(result.getCollection().getCollectionName());
-			returnResult.setDataSetName(
-					getAttributeValue("asset_name", result.getMetadataEntries().getSelfMetadataEntries(), "Asset"));
-			returnResult.setDataSetDescription(
-					getAttributeValue("description", result.getMetadataEntries().getSelfMetadataEntries(), "Asset"));
+			returnResult.setDataSetName(getAttributeValue("asset_name", selfMetadatEntries, "Asset"));
+			returnResult.setDataSetDescription(getAttributeValue("description", selfMetadatEntries, "Asset"));
 			returnResult.setStudyPath(studyPath);
 			returnResult.setInstitutePath(programPath);
 			returnResult.setProgramName(getAttributeValue("program_name",
@@ -178,11 +176,9 @@ public class SearchController extends AbstractDoeController {
 			returnResult.setStudyName(
 					getAttributeValue("study_name", result.getMetadataEntries().getParentMetadataEntries(), "Study"));
 			returnResult.setDataSetdmeDataId(webServerName + "/searchTab?dme_data_id="
-					+ getAttributeValue("dme_data_id", result.getMetadataEntries().getSelfMetadataEntries(), "Asset"));
-			returnResult.setAssetType(
-					getAttributeValue("asset_type", result.getMetadataEntries().getSelfMetadataEntries(), "Asset"));
-			returnResult.setDmeDataId(
-					getAttributeValue("dme_data_id", result.getMetadataEntries().getSelfMetadataEntries(), "Asset"));
+					+ getAttributeValue("dme_data_id", selfMetadatEntries, "Asset"));
+			returnResult.setAssetType(getAttributeValue("asset_type", selfMetadatEntries, "Asset"));
+			returnResult.setDmeDataId(getAttributeValue("dme_data_id", selfMetadatEntries, "Asset"));
 			returnResults.add(returnResult);
 
 		}
