@@ -393,23 +393,31 @@ function dataTableInitDataSet(isVisible) {
 		],
 		columnDefs : [ {
 			orderable : false,
-			className : 'select-checkbox',
+			className : 'select-checkbox td_class_4',
 			headerHtml : 'batch select',
 			blurable : true,
 			targets : 0,
 			"visible" : isVisible,
 		}, {
 			"targets" : 0,
-			"orderable" : false
+			"orderable" : false,
+			className: "td_class_4"
 		}, {
 			"targets" : -1,
-			"orderable" : false
+			"orderable" : false,
+			className: "td_class_4"
 		}, {
 			"targets" : 2,
-			"type" : "file-size"
+			"type" : "file-size",
+			className: "td_class_4"
 		}, {
 			"visible" : isVisible,
-			"targets" : 3
+			"targets" : 3,
+			className: "td_class_4"
+		},
+		{
+			"targets" : 1,
+			className: "td_class_4"
 		} ],
 
 		"dom" : '<"top"lip>frt<"bottom"ip>',
@@ -508,7 +516,7 @@ $('#dataSetTable tbody').on('click', '.deleteDataFileBtn', function(e) {
 						if (msg != "SUCCESS") {
 							return bootbox.alert(msg);
 						} else {
-							refreshDataSetDataTable();
+							refreshTaskDatatable('dataSetTable');
 						}
 
 					},
@@ -726,9 +734,9 @@ $('#dataSetTable tbody')
 																+ value.path + "' "
 																+ "class='dt-checkboxes selectIndividualCheckbox'"
 																+ " aria-label='select'/></td>"
-																+ "<td style='background-color: #d3d3d347 !important;width:28%'>" + html
-																+ "</td><td style='background-color: #d3d3d347 !important;width:24%;'>" + value.fileSize
-																+ "</td><td style='background-color: #d3d3d347 !important;'>" + html1 + "</td><tr>";
+																+ "<td style='background-color: #d3d3d347 !important;width:25%'>" + html
+																+ "</td><td style='background-color: #d3d3d347 !important;width:25%;'>" + value.fileSize
+																+ "</td><td style='background-color: #d3d3d347 !important;width:25%;'>" + html1 + "</td><tr>";
 											});
 							var table = tableHtml + "</tbody></table>";
 							row.child(table, row.node().className + " folder_subrow").show();
