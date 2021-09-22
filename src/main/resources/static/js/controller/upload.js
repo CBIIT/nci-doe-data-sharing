@@ -399,7 +399,7 @@ function retrieveCollectionList(data,status) {
 	 $("#parentCollectionType").val(parent);
 	 $("#parentAccessGroup").val(parentAccessGrp);
 	 $("#collectionType").val(collectionType);
-	 $("#registerCollectionBtn").val("Register " + collectionType);
+	 $("#registerCollectionBtn").html("Register " + collectionType);
 	 $("#collectionMetaDataLabel").text(collectionType + " Metadata");
 	 $("#registerModalTitle").html("Register " + collectionType + " Collection");
 	 $("#addNewMetaData").html("<img src='images/Uploads.add.png' th:src='@{/images/Uploads.add.png}' class='uploadslogo' alt='add metadata'>&nbsp;Add " + collectionType + " Metadata");
