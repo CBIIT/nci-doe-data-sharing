@@ -371,20 +371,14 @@ $(document)
 						$(this).closest('div.popover').popover('hide');
 					});
 
-					$('body')
-							.on(
-									'click',
-									function(e) {
-										$('[data-toggle=popover]')
-												.each(
-														function() {
-															if (!$(this).is(e.target)
-																	&& $(this).has(e.target).length === 0
-																	&& $('.popover').has(e.target).length === 0) {
-																(($(this).popover('hide').data('bs.popover') || {}).inState || {}).click = false;
-															}
-														});
-									});
+					$('body').on('click',function(e) {
+						 $('[data-toggle=popover]').each(function() {
+							 if (!$(this).is(e.target) && $(this).has(e.target).length === 0
+								   && $('.popover').has(e.target).length === 0) {
+								 (($(this).popover('hide').data('bs.popover') || {}).inState || {}).click = false;
+							 }
+						 });
+					});
 
 					$("#addMetaData").click(function(e) {
 						addCollectionMetaDataRows();

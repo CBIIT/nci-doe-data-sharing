@@ -811,6 +811,10 @@ width: 100%;
 background-color: #DDDDDD;
 height: 50px;
 }
+
+.td_class_1 {
+	width:10% !important;
+}
 .td_class_3 {
 	width:30%;
 }
@@ -833,6 +837,12 @@ height: 50px;
 
 .td_class_9 {
 	width:60%!important;
+}
+.td_class_15 {
+	width:15%!important;
+}
+.td_class_35 {
+	width:35%!important;
 }
 #subNav.card-header {
 	background-color: #DDDDDD !important;
@@ -1706,6 +1716,9 @@ table#searchResultTable tr {
     margin-right: 11px;
 }
 
+.selectFolderCheckbox {
+    margin-left: 6px;
+}
 #groupNames {
 	background-color: #A1C1DB;
     color: #000000;

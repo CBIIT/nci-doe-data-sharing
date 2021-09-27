@@ -94,19 +94,15 @@ function generatePredTable(isVisible) {
 			$(".selectAll").change(function(e) {
 				var table = $(e.target).closest('table');
 				var tableId = table.attr('id');
-				var row_count = $('#' + tableId + "> tbody").children().length;
 				$(".downloadModelAnalysisLink").prop("disabled", false);
 				if ($(this).is(':checked')) {
 					$('td input:checkbox', table).prop('checked', true);
-					if (row_count >= 1) {
-						$("#downloadSelectedDataSet").prop("disabled", false);
-					}
+					$("#downloadSelectedDataSet").prop("disabled", false);					
 
 				} else {
 					$('td input:checkbox', table).prop('checked', false);
-					if (row_count > 1) {
-						$("#downloadSelectedDataSet").prop("disabled", true);
-					}
+					$("#downloadSelectedDataSet").prop("disabled", true);
+					
 				}
 			});
 
@@ -118,7 +114,7 @@ function generatePredTable(isVisible) {
 				}
 				var len = $('#' + table).find('.selectIndividualCheckbox:checked').length;
 				$(".downloadModelAnalysisLink").prop("disabled", false);
-				if (len >= 1) {
+				if (len > 1) {
 					$("#downloadSelectedDataSet").prop("disabled", false);
 				} else {
 					$("#downloadSelectedDataSet").prop("disabled", true);
@@ -277,46 +273,57 @@ function dataTableInitDataSet(isVisible) {
 				$("#downloadSelectedMetadata").hide();
 			}
 
-			$(".selectAll").change(function(e) {
+			$(".selectAll").click(function(e) {
 				var table = $(e.target).closest('table');
-				var tableId = table.attr('id');
-				var row_count = $('#' + tableId + "> tbody").children().length;
-				$(".downloadLink").prop("disabled", false);
 				if ($(this).is(':checked')) {
 					$('td input:checkbox', table).prop('checked', true);
-					if (row_count >= 1) {
-						$("#downloadSelectedDataSet").prop("disabled", false);
-						$("#downloadSelectedMetadata").prop("disabled", false);
-					}
+					$("#downloadSelectedDataSet").prop("disabled", false);
+					$("#downloadSelectedMetadata").prop("disabled", false);
+					$(".selectFolderCheckbox").prop('checked',true).trigger('change');
+					
 
 				} else {
 					$('td input:checkbox', table).prop('checked', false);
-					if (row_count > 1) {
-						$("#downloadSelectedDataSet").prop("disabled", true);
+					$("#downloadSelectedDataSet").prop("disabled", true);
+					$("#downloadSelectedMetadata").prop("disabled", true);
+					
+				}
+			});
+			$(".selectFolderCheckbox").change(function(e) {
+				var tr = $(this).closest('tr');
+				var row = dataSetTable.row(tr);
+				var tableId = 'table_' + row.data().name;
+				var table = document.getElementById(tableId);
+				if ($(this).is(':checked')) {
+					if (!row.child.isShown()) {
+						$(this).closest('tr').find('a.detail-control').click();
+						if(!table) {
+							table = document.getElementById(tableId);
+						}
+					} 
+					$('td input:checkbox.selectIndividualCheckbox', table).prop('checked', true);
+					$("#downloadSelectedDataSet").prop("disabled", false);
+					$("#downloadSelectedMetadata").prop("disabled", false);
+				} else {
+					$('td input:checkbox.selectIndividualCheckbox', table).prop('checked', false);
+					$(".selectAll").prop('checked',false);
+					var len = $('.selectIndividualCheckbox:checked').length;
+					if (len >= 1) {
+						$("#downloadSelectedMetadata").prop("disabled", false);
+						$("#downloadSelectedDataSet").prop("disabled", false);
+					} else {
 						$("#downloadSelectedMetadata").prop("disabled", true);
+						$("#downloadSelectedDataSet").prop("disabled", true);
 					}
 				}
 			});
-
-			$(".selectIndividualCheckbox").click(function(e) {
-				var table = $(e.target).closest('table').attr('id');
-				if (!$(this).is(':checked')) {
-					$("#" + table).find(".selectAll").prop('checked', false);
-					$(this).closest("tr").find('a.downloadLink').prop("disabled", false);
-				}
-				var len = $('#' + table).find('.selectIndividualCheckbox:checked').length;
-				$(".downloadLink").prop("disabled", false);
-				if (len >= 1) {
-					$("#downloadSelectedMetadata").prop("disabled", false);
-					$("#downloadSelectedDataSet").prop("disabled", false);
-				} else {
-					$("#downloadSelectedMetadata").prop("disabled", true);
-					$("#downloadSelectedDataSet").prop("disabled", true);
-				}
-			});
-
+			
 			$("#downloadSelectedDataSet").click(function(e) {
-				onClickOfBulkDownloadBtn();
+				onClickOfBulkDownloadBtn('dataSetTable');
+			});
+			
+			$('#downloadSelectedMetadata').unbind('click').bind('click', function() {
+				exportDataObjectMetadata();
 			});
 
 			var clipboard = new ClipboardJS('.share_path_copy');
@@ -351,9 +358,7 @@ function dataTableInitDataSet(isVisible) {
 				console.log(e);
 			});
 
-			$('#downloadSelectedMetadata').unbind('click').bind('click', function() {
-				exportDataObjectMetadata();
-			});
+			
 			initializeToolTips();
 			initializePopover();
 		},
@@ -393,7 +398,7 @@ function dataTableInitDataSet(isVisible) {
 		],
 		columnDefs : [ {
 			orderable : false,
-			className : 'select-checkbox td_class_4',
+			className : 'select-checkbox td_class_15',
 			headerHtml : 'batch select',
 			blurable : true,
 			targets : 0,
@@ -401,7 +406,7 @@ function dataTableInitDataSet(isVisible) {
 		}, {
 			"targets" : 0,
 			"orderable" : false,
-			className: "td_class_4"
+			className: "td_class_15"
 		}, {
 			"targets" : -1,
 			"orderable" : false,
@@ -409,7 +414,7 @@ function dataTableInitDataSet(isVisible) {
 		}, {
 			"targets" : 2,
 			"type" : "file-size",
-			className: "td_class_4"
+			className: "td_class_5"
 		}, {
 			"visible" : isVisible,
 			"targets" : 3,
@@ -417,7 +422,7 @@ function dataTableInitDataSet(isVisible) {
 		},
 		{
 			"targets" : 1,
-			className: "td_class_4"
+			className: "td_class_7"
 		} ],
 
 		"dom" : '<"top"lip>frt<"bottom"ip>',
@@ -438,30 +443,25 @@ function dataTableInitDataSet(isVisible) {
 	});
 }
 
-$.fn.dataTable.ext.type.order['file-size-pre'] = function(data) {
-	var matches = data.match(/^(\d+(?:\.\d+)?)\s*([a-z]+)/i);
-	var multipliers = {
-		b : 1,
-		bytes : 1,
-		kb : 1000,
-		kib : 1024,
-		mb : 1000000,
-		mib : 1048576,
-		gb : 1000000000,
-		gib : 1073741824,
-		tb : 1000000000000,
-		tib : 1099511627776,
-		pb : 1000000000000000,
-		pib : 1125899906842624
-	};
 
-	if (matches) {
-		var multiplier = multipliers[matches[2].toLowerCase()];
-		return parseFloat(matches[1]) * multiplier;
-	} else {
-		return -1;
+$('#dataSetTable tbody').on('click', '.selectIndividualCheckbox', function(e) {
+	var table = $(e.target).closest('table').attr('id');
+	
+	if (!$(this).is(':checked')) {
+		if(table.indexOf('table_') != -1) {
+			$(this).closest('tr .folder_subrow').parent().prev('tr').find('.selectFolderCheckbox').prop('checked',false);		
+		}
+		$("#dataSetTable").find(".selectAll").prop('checked', false);
 	}
-}
+	var len = $('.selectIndividualCheckbox:checked').length;
+	if (len >= 1) {
+		$("#downloadSelectedMetadata").prop("disabled", false);
+		$("#downloadSelectedDataSet").prop("disabled", false);
+	} else {
+		$("#downloadSelectedMetadata").prop("disabled", true);
+		$("#downloadSelectedDataSet").prop("disabled", true);
+	}
+});
 
 $('#dataSetTable tbody').on('click', '.button2a', function(e) {
 	openPopOverDataSet($(this));
@@ -476,94 +476,19 @@ $('#dataSetTable tbody').on('keypress', '.button2a', function(e) {
 $('#dataSetTable tbody').on('click', '.downloadLink', function(e) {
 	var path = $(this).attr('data-path');
 	var fileName = $(this).attr('data-fileName');
-	var isFolder =$(this).attr('is_folder');
-	downloadFunction(path, fileName,isFolder);
+	downloadFunction(path, fileName);
 });
 
-$('#dataSetTable tbody').on('click', '.deleteDataFileBtn', function(e) {
-	var path = $(this).attr('data-filePath');
-	bootbox.confirm({
-		message : "Are you sure you want to delete this?",
-		buttons : {
-			confirm : {
-				label : 'Yes',
-				className : 'btn-success'
-			},
-			cancel : {
-				label : 'No',
-				className : 'btn-danger'
-			}
-		},
-		callback : function(result) {
-			if (result == true) {
-				var params = {
-					deletepath : path
-				};
-				$.ajax({
-					type : "POST",
-					url : "/delete/datafile",
-					contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
-					dataType : 'text',
-					data : params,
-					beforeSend : function() {
-						$("#spinner").show();
-						$("#dimmer").show();
-					},
-					success : function(msg) {
-						$("#spinner").hide();
-						$("#dimmer").hide();
-						console.log('SUCCESS: ', msg);
-						if (msg != "SUCCESS") {
-							return bootbox.alert(msg);
-						} else {
-							refreshTaskDatatable('dataSetTable');
-						}
+$('#dataSetTable tbody').on('click', '.downloadLinkFolder', function(e) {
+	var tr = $(this).closest('tr');
+	var row = dataSetTable.row(tr);
+	if (!row.child.isShown()) {
+		$(this).closest('tr').find('a.detail-control').click();
+	} 
 
-					},
-					error : function(e) {
-						$("#spinner").hide();
-						$("#dimmer").hide();
-						console.log('ERROR: ', e);
-						returnErrorMessage(e);
-					}
-				});
-			}
-		}
-	});
+	onClickOfBulkDownloadBtn('table_'+row.data().name);
 });
 
-$('#dataSetTable tbody').on(
-		'click',
-		'.downloadMetadata',
-		function(e) {
-			var selectedPath = $(this).attr('data_path');
-			var assetIdentifier = $("#assetPath").val();
-			var selectedPaths = [];
-			selectedPaths.push(selectedPath);
-			bootbox.confirm({
-				message : "Do you wish to include parent metadata also?",
-				buttons : {
-					confirm : {
-						label : 'Yes',
-						className : 'btn-success'
-					},
-					cancel : {
-						label : 'No',
-						className : 'btn-danger'
-					}
-				},
-				callback : function(result) {
-					if (result == true) {
-						window.open('/export?assetIdentifier=' + assetIdentifier + '&&isParent=true&&selectedPaths='
-								+ selectedPaths, '_self');
-					} else if (result == false) {
-						window.open('/export?assetIdentifier=' + assetIdentifier + '&&isParent=false&&selectedPaths='
-								+ selectedPaths, '_self');
-					}
-				}
-			});
-
-		});
 
 $('#dataSetTable tbody').on('click', '.editCollectionMetadata', function(e) {
 	$("#assetDetailsFragment").hide();
@@ -632,20 +557,18 @@ $('#dataSetTable tbody').on('click', '.editDataFileCollectionMetadata', function
 });
 
 // expand and close folder row
-$('#dataSetTable tbody')
-		.on(
-				'click',
-				'a.detail-control',
-				function() {
+$('#dataSetTable tbody').on('click','a.detail-control',function() {
 					var tr = $(this).closest('tr');
 					var row = dataSetTable.row(tr);
 					if (row.child.isShown()) {
 						row.child.hide();
 						tr.removeClass('shown');
-						$(this).find("i.expand.far").toggleClass('fa-plus-circle fa-minus-circle');
+						//$(this).find("i.expand.far").toggleClass('fa-plus-circle fa-minus-circle');
 					} else {						
+						var tr = $(this).closest('tr');
+						var row = dataSetTable.row(tr);
 						var x = row.data().filesList;
-						var tableId = 'table'+row.data().name;
+						var tableId = 'table_'+row.data().name;
 						var tableHtml= "<table class='table display" +
 								" dt-responsive wrap subAssetsDataSetTable' id='" + tableId + "'role='grid'>" +
 								"<tbody>";
@@ -664,8 +587,7 @@ $('#dataSetTable tbody')
 													userMetadata = JSON.stringify(value.selfMetadata);
 												}
 
-												html += value.name
-														+ "&nbsp;&nbsp;<a class='cil_12_no_color button2a' "
+												html += "<img src='images/line.png' style='display:none;' th:src='@{/images/line.png}'>" +value.name + "&nbsp;&nbsp;<a class='cil_12_no_color button2a' "
 														+ "userMetadata = '"
 														+ userMetadata
 														+ "' file_name = '"
@@ -675,9 +597,9 @@ $('#dataSetTable tbody')
 														+ "' "
 														+ "tabindex='0'"
 														+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
-														+ "data-popover-content='#a01'><i class='fas fa-info-circle' data-toggle='tooltip' title='Metadata'></i></a>";
+														+ "data-popover-content='#a01' style='float:right'><i class='fas fa-info-circle' data-toggle='tooltip' title='Metadata'></i></a>";
 
-												html += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
+												html += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;float:right;' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
 														+ "title='Copy File Path' data-clipboard-text='"
 														+ value.path
 														+ "'>"
@@ -730,21 +652,21 @@ $('#dataSetTable tbody')
 												}
 												
 												tableHtml+=
-														"<tr><td style='background-color: #d3d3d347 !important;width: 25%;'><input type='checkbox' style='margin-left:6px;' id='"
+														"<tr><td style='background-color: #d3d3d347 !important;width: 15%;'><input type='checkbox' style='margin-left:6px;' id='"
 																+ value.path + "' "
 																+ "class='dt-checkboxes selectIndividualCheckbox'"
 																+ " aria-label='select'/></td>"
-																+ "<td style='background-color: #d3d3d347 !important;width:25%'>" + html
-																+ "</td><td style='background-color: #d3d3d347 !important;width:25%;'>" + value.fileSize
+																+ "<td style='background-color: #d3d3d347 !important;width:40%'>" + html
+																+ "</td><td style='background-color: #d3d3d347 !important;width:20%;'>" + value.fileSize
 																+ "</td><td style='background-color: #d3d3d347 !important;width:25%;'>" + html1 + "</td><tr>";
 											});
 							var table = tableHtml + "</tbody></table>";
 							row.child(table, row.node().className + " folder_subrow").show();
 						}
-						$(this).find("i.expand.far").toggleClass('fa-plus-circle fa-minus-circle');
+						//$(this).find("i.expand.far").toggleClass('fa-plus-circle fa-minus-circle');
 						tr.addClass('shown');
 					}
-				});
+});
 
 function renderBatchSelect(data, type, row) {
 	var selectHtml = "<input type='checkbox' id='" + row.inputDatasetPath + "' dataset_path = '" + row.inputDatasetPath
@@ -755,11 +677,15 @@ function renderBatchSelect(data, type, row) {
 }
 
 function renderBatchSelectForAssetFiles(data, type, row) {
-	var selectHtml = "<input type='checkbox' id='" + row.path + "' class='dt-checkboxes selectIndividualCheckbox'"
-			+ " aria-label='select'/>";
+	var selectHtml;
 
 	if (row.isFolder && row.isFolder == true) {
-		selectHtml += "&nbsp;&nbsp;<a class='detail-control'><i class='expand far fa-plus-circle'></i></a>";
+		selectHtml = "<input type='checkbox' id='" + row.path + "' class='dt-checkboxes selectFolderCheckbox'"
+		+ " aria-label='select'/>";
+	
+	} else {
+		var selectHtml = "<input type='checkbox' id='" + row.path + "' class='dt-checkboxes selectIndividualCheckbox'"
+		+ " aria-label='select'/>";
 	}
 
 	return selectHtml;
@@ -853,12 +779,13 @@ function renderDataSetPath(data, type, row) {
 
 	if (row.isFolder && row.isFolder == true) {
 		title = "Copy Folder Path";
+		html+= "<a class='detail-control' style='float:left;margin-left:-25px;'><i class='expand far fa-folder'></i></a>";
 	} else {
 		title = "Copy File Path";
 	}
 
-	html += row.name
-			+ "&nbsp;&nbsp;<a class='cil_12_no_color button2a' "
+	html += row.name+"&nbsp;&nbsp;" +
+			"<a class='cil_12_no_color button2a' "
 			+ "userMetadata = '"
 			+ userMetadata
 			+ "' file_name = '"
@@ -868,9 +795,9 @@ function renderDataSetPath(data, type, row) {
 			+ "' "
 			+ "tabindex='0'"
 			+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
-			+ "data-popover-content='#a01'><i class='fas fa-info-circle' data-toggle='tooltip' title='Metadata'></i></a>";
+			+ "data-popover-content='#a01' style='float:right'><i class='fas fa-info-circle' data-toggle='tooltip' title='Metadata'></i></a>";
 
-	html += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
+	html += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;float:right;' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
 			+ "title='"
 			+ title
 			+ "' data-clipboard-text='"
@@ -880,6 +807,277 @@ function renderDataSetPath(data, type, row) {
 			+ "style='width:17px;' alt='copy file path'></button>";
 	return html;
 }
+
+
+function renderFileSize(data, type, row) {
+	if (row.fileSize) {
+		return row.fileSize;
+	}
+	return "";
+
+}
+
+
+function renderDownload(data, type, row) {
+
+	var downdloadFileName = null;
+	var path = row.path;
+	var html = "";
+	var n = path.lastIndexOf("/");
+	var accessgroups = $("#assetAccessGrp").val();
+	var permissions = $("#assetPermission").val();
+	downdloadFileName = path.substring(n + 1);
+
+	var downloadFileTitle;
+	var downloadMetadataTitle;
+
+	if (permissions && permissions != 'No Permissions') {
+		if (row.isFolder && row.isFolder == true) {
+			html += "<span style='border: transparent;' class='btn btn-link btn-sm editCollectionMetadata'  metadata_path  = '"
+					+ path
+					+ "'"
+					+ "collectionId = '"
+					+ row.collectionId
+					+ "' data-fileName = '"
+					+ downdloadFileName
+					+ "' >"
+					+ "<img src='images/Edit-FileMetadata.png' data-toggle='tooltip' title='Edit Folder Metadata' th:src='@{/images/Edit-FileMetadata.png}' "
+					+ "style='width:17px;' alt='edit collection'></span>";
+		} else {
+			html += "<span style='border: transparent;' class='btn btn-link btn-sm editDataFileCollectionMetadata'  metadata_path  = '"
+					+ path
+					+ "'"
+					+ "data-fileName = '"
+					+ downdloadFileName
+					+ "' >"
+					+ "<img src='images/Edit-FileMetadata.png' data-toggle='tooltip' title='Edit File Metadata' th:src='@{/images/Edit-FileMetadata.png}' "
+					+ "style='width:17px;' alt='edit collection'></span>";
+		}
+
+	}
+
+	if (row.isFolder == false) {
+		downloadFileTitle = "Download File";
+		downloadMetadataTitle = "Download File Metadata";
+		html += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadMetadata'  data_path  = '"
+				+ path
+				+ "' href='javascript:void(0);' "
+				+ "><img src='images/Download-Metadata.png' data-toggle='tooltip' title= '"
+				+ downloadMetadataTitle
+				+ "' th:src='@{/images/Download-Metadata.png}' "
+				+ "style='width:17px;' alt='Download File Metadata'></a>";
+		
+		html += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLink' href='javascript:void(0);' "
+			+ "data-fileName = "
+			+ downdloadFileName
+			+ " data-path="
+			+ row.path
+			+ " "
+			+ "><img src='images/Download.png' data-toggle='tooltip' title='"
+			+ downloadFileTitle
+			+ "' th:src='@{/images/Download.png}' " + "style='width:17px;' alt='download file'></a>";
+	} else {
+		downloadFileTitle = "Download Folder";
+		html += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLinkFolder' href='javascript:void(0);' "
+			+ "data-fileName = "
+			+ downdloadFileName
+			+ " data-path="
+			+ row.path
+			+ " "
+			+ "><img src='images/Download.png' data-toggle='tooltip' title='"
+			+ downloadFileTitle
+			+ "' th:src='@{/images/Download.png}' " + "style='width:17px;' alt='download file'></a>";
+	}
+	
+
+	
+
+	if (accessgroups && accessgroups.indexOf("public") == -1 && permissions && permissions == 'Owner'
+			&& row.isFolder == false) {
+
+		html += "<span style='border: transparent;' data-filePath = '"
+				+ path
+				+ "' class='btn btn-link btn-sm deleteDataFileBtn'>"
+				+ "<img src='images/Delete.png' data-toggle='tooltip' title='Delete File' th:src='@{/images/Delete.png}' "
+				+ "style='width:15px;' alt='Delete File'></span>";
+
+	}
+
+	return html;
+
+}
+
+function renderGeneratePredDownload(data, type, row) {
+
+	var html = "";
+	html += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadModelAnalysisLink' href='javascript:void(0);' "
+			+ "dataset_path = '"
+			+ row.inputDatasetPath
+			+ "' pred_path ='"
+			+ row.predictionsPath
+			+ "'"
+			+ "><img src='images/Download.png' data-toggle='tooltip' title='Download Model Analysis Files' th:src='@{/images/Download.png}' "
+			+ "style='width:17px;' alt='download file'></a>";
+
+	return html;
+}
+
+$('#dataSetTable tbody').on('click', '.deleteDataFileBtn', function(e) {
+	var path = $(this).attr('data-filePath');
+	bootbox.confirm({
+		message : "Are you sure you want to delete this?",
+		buttons : {
+			confirm : {
+				label : 'Yes',
+				className : 'btn-success'
+			},
+			cancel : {
+				label : 'No',
+				className : 'btn-danger'
+			}
+		},
+		callback : function(result) {
+			if (result == true) {
+				var params = {
+					deletepath : path
+				};
+				$.ajax({
+					type : "POST",
+					url : "/delete/datafile",
+					contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
+					dataType : 'text',
+					data : params,
+					beforeSend : function() {
+						$("#spinner").show();
+						$("#dimmer").show();
+					},
+					success : function(msg) {
+						$("#spinner").hide();
+						$("#dimmer").hide();
+						console.log('SUCCESS: ', msg);
+						if (msg != "SUCCESS") {
+							return bootbox.alert(msg);
+						} else {
+							refreshTaskDatatable('dataSetTable');
+						}
+
+					},
+					error : function(e) {
+						$("#spinner").hide();
+						$("#dimmer").hide();
+						console.log('ERROR: ', e);
+						returnErrorMessage(e);
+					}
+				});
+			}
+		}
+	});
+});
+
+
+$('#dataSetTable tbody').on(
+		'click',
+		'.downloadMetadata',
+		function(e) {			
+			exportDataObjectMetadataResults($(this));
+
+});
+
+function exportDataObjectMetadata() {
+	exportDataObjectMetadataResults();
+}
+
+function exportDataObjectMetadataResults($this) {
+	var selectedPaths = [];
+	if ($this) {
+		var selectedPath = $this.attr('data_path');
+		selectedPaths.push(selectedPath);
+	} else {
+		$("#dataSetTable tbody input[type=checkbox].selectIndividualCheckbox:checked").each(function() {
+			selectedPaths.push($(this).attr('id'));
+		});
+	}
+	var assetIdentifier = $("#assetPath").val();
+	bootbox.confirm({
+		message : "Do you wish to include parent metadata also?",
+		buttons : {
+			confirm : {
+				label : 'Yes',
+				className : 'btn-success'
+			},
+			cancel : {
+				label : 'No',
+				className : 'btn-danger'
+			}
+		},
+		callback : function(result) {
+			if (result == true) {
+				window.open('/export?assetIdentifier=' + assetIdentifier + '&&isParent=true&&selectedPaths='
+						+ selectedPaths, '_self');
+			} else if (result == false) {
+
+				window.open('/export?assetIdentifier=' + assetIdentifier + '&&isParent=false&&selectedPaths='
+						+ selectedPaths, '_self');
+			}
+		}
+	});
+}
+
+
+
+
+function onClickOfModelAnlysisBulkDownloadBtn($this) {
+	var selectedPaths = [];
+	var assetIdentifier = $("#assetIdentifier").val();
+
+	if ($this) {
+		selectedPaths.push($this.attr('dataset_path'));
+		selectedPaths.push($this.attr('pred_path'));
+	} else {
+		$("#generatePredTable tbody input[type=checkbox]:checked").each(function() {
+			selectedPaths.push($(this).attr('dataset_path'));
+			selectedPaths.push($(this).attr('pred_path'));
+		});
+	}
+
+	location.replace('/downloadTab?selectedPaths=' + selectedPaths + '&&assetIdentifier=' + assetIdentifier
+			+ '&&downloadAsyncType=datafiles&&returnToSearch=false');
+
+}
+
+function downloadFunction(path, fileName) {
+	var assetIdentifier = $("#assetIdentifier").val();
+	
+
+	location.replace('/downloadTab?selectedPaths=' + path + '&&fileName=' + fileName + '&&assetIdentifier='
+			+ assetIdentifier + '&&downloadAsyncType=data_object&&returnToSearch=false');
+	
+}
+
+function onClickOfBulkDownloadBtn(tableName) {
+	var selectedPaths = [];
+	var assetIdentifier = $("#assetIdentifier").val();
+	var fileName;
+
+	var len = $("#" + tableName + " tbody input[type=checkbox].selectIndividualCheckbox:checked").length;
+	$("#" + tableName + " tbody input[type=checkbox].selectIndividualCheckbox:checked").each(function() {
+		if (len == 1) {
+			var tableId = $(this).closest('table').attr('id');
+			fileName = $("#"+tableId+" tr:nth-child(1) td").eq(1).text().trim();
+		}
+		selectedPaths.push($(this).attr('id'));
+	});
+
+	if (selectedPaths.length == 1) {
+
+		location.replace('/downloadTab?selectedPaths=' + selectedPaths + '&&fileName=' + fileName
+				+ '&&assetIdentifier=' + assetIdentifier + '&&downloadAsyncType=data_object&&returnToSearch=false');
+	} else {
+		location.replace('/downloadTab?selectedPaths=' + selectedPaths + '&&assetIdentifier=' + assetIdentifier
+				+ '&&downloadAsyncType=datafiles&&returnToSearch=false');
+	}
+}
+
 
 function displayPopoverDataSet() {
 	$('.button2a').on('click', function(e) {
@@ -952,191 +1150,33 @@ function openPopOverDataSet($this) {
 	table += ind + content + "</div> </div></div> </div>";
 	$("#a01").remove();
 	pop.after(table);
+	var x = pop.data('bs.popover');	
 	pop.data('bs.popover').setContent();
 	pop.popover('show');
 
 }
 
-function renderFileSize(data, type, row) {
-	if (row.fileSize) {
-		return row.fileSize;
-	}
-	return "";
+$.fn.dataTable.ext.type.order['file-size-pre'] = function(data) {
+	var matches = data.match(/^(\d+(?:\.\d+)?)\s*([a-z]+)/i);
+	var multipliers = {
+		b : 1,
+		bytes : 1,
+		kb : 1000,
+		kib : 1024,
+		mb : 1000000,
+		mib : 1048576,
+		gb : 1000000000,
+		gib : 1073741824,
+		tb : 1000000000000,
+		tib : 1099511627776,
+		pb : 1000000000000000,
+		pib : 1125899906842624
+	};
 
-}
-function exportDataObjectMetadata() {
-	var assetIdentifier = $("#assetPath").val();
-	bootbox.confirm({
-		message : "Do you wish to include parent metadata also?",
-		buttons : {
-			confirm : {
-				label : 'Yes',
-				className : 'btn-success'
-			},
-			cancel : {
-				label : 'No',
-				className : 'btn-danger'
-			}
-		},
-		callback : function(result) {
-			if (result == true) {
-				var selectedPaths = [];
-				$("#dataSetTable tbody input[type=checkbox]:checked").each(function() {
-					selectedPaths.push($(this).attr('id'));
-				});
-				window.open('/export?assetIdentifier=' + assetIdentifier + '&&isParent=true&&selectedPaths='
-						+ selectedPaths, '_self');
-			} else if (result == false) {
-				var selectedPaths = [];
-				$("#dataSetTable tbody input[type=checkbox]:checked").each(function() {
-					selectedPaths.push($(this).attr('id'));
-				});
-				window.open('/export?assetIdentifier=' + assetIdentifier + '&&isParent=false&&selectedPaths='
-						+ selectedPaths, '_self');
-			}
-		}
-	});
-
-}
-
-function renderDownload(data, type, row) {
-
-	var downdloadFileName = null;
-	var path = row.path;
-	var html = "";
-	var n = path.lastIndexOf("/");
-	var accessgroups = $("#assetAccessGrp").val();
-	var permissions = $("#assetPermission").val();
-	downdloadFileName = path.substring(n + 1);
-
-	var downloadFileTitle;
-	var downloadMetadataTitle;
-
-	if (permissions && permissions != 'No Permissions') {
-		if (row.isFolder && row.isFolder == true) {
-			html += "<span style='border: transparent;' class='btn btn-link btn-sm editCollectionMetadata'  metadata_path  = '"
-					+ path
-					+ "'"
-					+ "collectionId = '"
-					+ row.collectionId
-					+ "' data-fileName = '"
-					+ downdloadFileName
-					+ "' >"
-					+ "<img src='images/Edit-FileMetadata.png' data-toggle='tooltip' title='Edit Folder Metadata' th:src='@{/images/Edit-FileMetadata.png}' "
-					+ "style='width:17px;' alt='edit collection'></span>";
-		} else {
-			html += "<span style='border: transparent;' class='btn btn-link btn-sm editDataFileCollectionMetadata'  metadata_path  = '"
-					+ path
-					+ "'"
-					+ "data-fileName = '"
-					+ downdloadFileName
-					+ "' >"
-					+ "<img src='images/Edit-FileMetadata.png' data-toggle='tooltip' title='Edit File Metadata' th:src='@{/images/Edit-FileMetadata.png}' "
-					+ "style='width:17px;' alt='edit collection'></span>";
-		}
-
-	}
-
-	if (row.isFolder && row.isFolder == true) {
-		downloadFileTitle = "Download Folder";
+	if (matches) {
+		var multiplier = multipliers[matches[2].toLowerCase()];
+		return parseFloat(matches[1]) * multiplier;
 	} else {
-		downloadFileTitle = "Download File";
-		downloadMetadataTitle = "Download File Metadata";
-	}
-
-	if (row.isFolder == false) {
-		html += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadMetadata'  data_path  = '"
-				+ path
-				+ "' href='javascript:void(0);' "
-				+ "><img src='images/Download-Metadata.png' data-toggle='tooltip' title= '"
-				+ downloadMetadataTitle
-				+ "' th:src='@{/images/Download-Metadata.png}' "
-				+ "style='width:17px;' alt='Download File Metadata'></a>";
-	}
-
-	html += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLink' href='javascript:void(0);' "
-			+ "is_folder = '"+row.isFolder + "' data-fileName = "
-			+ downdloadFileName
-			+ " data-path="
-			+ row.path
-			+ " "
-			+ "><img src='images/Download.png' data-toggle='tooltip' title='"
-			+ downloadFileTitle
-			+ "' th:src='@{/images/Download.png}' " + "style='width:17px;' alt='download file'></a>";
-
-	if (accessgroups && accessgroups.indexOf("public") == -1 && permissions && permissions == 'Owner'
-			&& row.isFolder == false) {
-
-		html += "<span style='border: transparent;' data-filePath = '"
-				+ path
-				+ "' class='btn btn-link btn-sm deleteDataFileBtn'>"
-				+ "<img src='images/Delete.png' data-toggle='tooltip' title='Delete File' th:src='@{/images/Delete.png}' "
-				+ "style='width:15px;' alt='Delete File'></span>";
-
-	}
-
-	return html;
-
-}
-
-function renderGeneratePredDownload(data, type, row) {
-
-	var html = "";
-	html += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadModelAnalysisLink' href='javascript:void(0);' "
-			+ "dataset_path = '"
-			+ row.inputDatasetPath
-			+ "' pred_path ='"
-			+ row.predictionsPath
-			+ "'"
-			+ "><img src='images/Download.png' data-toggle='tooltip' title='Download Model Analysis Files' th:src='@{/images/Download.png}' "
-			+ "style='width:17px;' alt='download file'></a>";
-
-	return html;
-}
-
-function downloadFunction(path, fileName, isFolder) {
-	var assetIdentifier = $("#assetIdentifier").val();
-	
-	if(isFolder && isFolder == "true") {
-		location.replace('/downloadTab?selectedPaths=' + path
-				+ '&&downloadAsyncType=collection&&assetIdentifier='+assetIdentifier+'&&returnToSearch=false');
-	} else {
-	location.replace('/downloadTab?selectedPaths=' + path + '&&fileName=' + fileName + '&&assetIdentifier='
-			+ assetIdentifier + '&&downloadAsyncType=data_object&&returnToSearch=false');
-	}
-}
-
-function onClickOfModelAnlysisBulkDownloadBtn($this) {
-	var selectedPaths = [];
-	var assetIdentifier = $("#assetIdentifier").val();
-
-	if ($this) {
-		selectedPaths.push($this.attr('dataset_path'));
-		selectedPaths.push($this.attr('pred_path'));
-	} else {
-		$("#generatePredTable tbody input[type=checkbox]:checked").each(function() {
-			selectedPaths.push($(this).attr('dataset_path'));
-			selectedPaths.push($(this).attr('pred_path'));
-		});
-	}
-
-	location.replace('/downloadTab?selectedPaths=' + selectedPaths + '&&assetIdentifier=' + assetIdentifier
-			+ '&&downloadAsyncType=datafiles&&returnToSearch=false');
-
-}
-
-function onClickOfBulkDownloadBtn() {
-	var selectedPaths = [];
-	var assetIdentifier = $("#assetIdentifier").val();
-	$("#dataSetTable tbody input[type=checkbox]:checked").each(function() {
-		selectedPaths.push($(this).attr('id'));
-	});
-
-	if (selectedPaths.length == 1) {
-		location.replace('/downloadTab?selectedPaths=' + selectedPaths + '&&assetIdentifier=' + assetIdentifier
-				+ '&&downloadAsyncType=data_object&&returnToSearch=false');
-	} else {
-		location.replace('/downloadTab?selectedPaths=' + selectedPaths + '&&assetIdentifier=' + assetIdentifier
-				+ '&&downloadAsyncType=datafiles&&returnToSearch=false');
+		return -1;
 	}
 }
