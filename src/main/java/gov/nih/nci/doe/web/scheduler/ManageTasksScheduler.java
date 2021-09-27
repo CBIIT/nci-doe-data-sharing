@@ -27,6 +27,9 @@ import gov.nih.nci.hpc.domain.datatransfer.HpcFileLocation;
 import gov.nih.nci.hpc.domain.datatransfer.HpcUploadSource;
 import gov.nih.nci.hpc.domain.datatransfer.HpcUserDownloadRequest;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
+import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDownloadSummaryDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationResponseDTO;
@@ -137,11 +140,10 @@ public class ManageTasksScheduler extends AbstractDoeController {
 	// @Scheduled(cron = "${doe.scheduler.cron.infer}")
 	public void performInferencing() throws DoeWebException, MalformedURLException {
 
+		log.info("scheduler for inferencing");
+
 		// get all not Started tasks to call the flask web service to perform
 		// inferencing
-
-		// the test data set mnt to cloudian
-		log.info("scheduler for inferencing");
 		List<InferencingTask> getAllNotStartedTasks = inferencingTaskRepository.getAllNotStartedTasks("NOTSTARTED");
 
 		String authToken = DoeClientUtil.getAuthenticationToken(writeAccessUserName, writeAccessUserPassword,
@@ -149,20 +151,6 @@ public class ManageTasksScheduler extends AbstractDoeController {
 		for (InferencingTask t : getAllNotStartedTasks) {
 
 			try {
-				String fileNameOriginal = t.getTestDataSetPath().substring(t.getTestDataSetPath().lastIndexOf('/') + 1,
-						t.getTestDataSetPath().length());
-				// upload test dataset to cloudian
-				log.info("upload test dataset to cloudian: " + fileNameOriginal);
-				HpcBulkDataObjectRegistrationRequestDTO registrationDTO = constructV2BulkRequest(t.getUserId(),
-						t.getTestDataSetPath(), fileNameOriginal, "input_dataset_" + t.getTaskId(), t.getUserId());
-
-				// call the FileUpload API to upload the file to cloudian
-				HpcBulkDataObjectRegistrationResponseDTO responseDTO = DoeClientUtil.registerBulkDatafiles(authToken,
-						registrationServiceV2URL, registrationDTO);
-				if (responseDTO != null) {
-					log.info("dme task id for uplaoding test data set" + responseDTO.getTaskId());
-				}
-
 				String dataFilePath = t.getTestDataSetPath();
 				String modelh5Path = t.getModelh5Path();
 				String resultPath = t.getResultPath();
@@ -206,26 +194,77 @@ public class ManageTasksScheduler extends AbstractDoeController {
 		List<InferencingTask> getAllInProgressTasks = inferencingTaskRepository.getAllNotStartedTasks("INPROGRESS");
 
 		for (InferencingTask t : getAllInProgressTasks) {
+
 			// verify if the y_pred file is available in cloudian
 			String resultPath = t.getResultPath();
+			String fileNameOriginal = resultPath.substring(resultPath.lastIndexOf('/') + 1, resultPath.length());
+			String testDataSetFileName = t.getTestDataSetPath().substring(t.getTestDataSetPath().lastIndexOf('/') + 1,
+					t.getTestDataSetPath().length());
 
 			try {
-				String fileNameOriginal = resultPath.substring(resultPath.lastIndexOf('/') + 1, resultPath.length());
-				java.io.File file = new java.io.File("/mnt/iRODsScratch/ModaC/" + fileNameOriginal);
-
+				java.io.File file = new java.io.File("/mnt/IRODsTest/" + fileNameOriginal);
 				log.info("verify if inferencing file is available on mount " + fileNameOriginal);
 				if (file.length() != 0) {
-					HpcBulkDataObjectRegistrationRequestDTO registrationDTO = constructV2BulkRequest(t.getUserId(),
-							resultPath, fileNameOriginal, "y_pred_" + t.getTaskId(), t.getUserId());
 
-					// call the FileUpload API to upload the file to cloudian
-					HpcBulkDataObjectRegistrationResponseDTO responseDTO = DoeClientUtil
-							.registerBulkDatafiles(authToken, registrationServiceV2URL, registrationDTO);
-					if (responseDTO != null) {
-						String dmeTaskId = responseDTO.getTaskId();
-						t.setDmeTaskId(dmeTaskId);
-						inferencingTaskRepository.saveAndFlush(t);
+					// if predictions file is available, create a collection folder and upload
+					// prediction under this folder
+					String parentPath = t.getTestDataSetPath().substring(0, t.getTestDataSetPath().lastIndexOf('/'));
+					HpcCollectionRegistrationDTO dto = new HpcCollectionRegistrationDTO();
+					List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
+					HpcMetadataEntry entry = new HpcMetadataEntry();
+					entry.setValue("Folder");
+					entry.setAttribute("collection_type");
+					metadataEntries.add(entry);
+					dto.getMetadataEntries().addAll(metadataEntries);
+					Integer responseStatus = DoeClientUtil.updateCollection(authToken, serviceURL, dto,
+							parentPath + "/Predictions");
+					if (responseStatus == 200 || responseStatus == 201) {
+						// upload both test dataset and pred file to cloudian
+						String folderPath = parentPath + "/Predictions";
+
+						// save folder permissions to MoDaC
+						HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL,
+								folderPath, false);
+
+						if (collections != null && collections.getCollections() != null
+								&& !CollectionUtils.isEmpty(collections.getCollections())) {
+
+							HpcCollectionDTO collection = collections.getCollections().get(0);
+
+							// save collection permissions in MoDaC DB
+
+							metaDataPermissionService.savePermissionsList(getLoggedOnUserInfo(), null,
+									collection.getCollection().getCollectionId(), folderPath);
+						}
+
+						log.info("upload test dataset to cloudian: " + testDataSetFileName);
+						HpcBulkDataObjectRegistrationRequestDTO registrationDTO = constructV2BulkRequest(t.getUserId(),
+								folderPath + "/" + testDataSetFileName, testDataSetFileName,
+								"input_dataset_" + t.getTaskId());
+
+						// call the FileUpload API to upload the test dataset file to cloudian
+						HpcBulkDataObjectRegistrationResponseDTO responseDTO = DoeClientUtil
+								.registerBulkDatafiles(authToken, registrationServiceV2URL, registrationDTO);
+						if (responseDTO != null) {
+							log.info("dme task id for uplaoding test data set" + responseDTO.getTaskId());
+						}
+
+						HpcBulkDataObjectRegistrationRequestDTO registrationDTO1 = constructV2BulkRequest(t.getUserId(),
+								folderPath + "/" + fileNameOriginal, fileNameOriginal, "y_pred_" + t.getTaskId());
+
+						// call the FileUpload API to upload the pred file to cloudian
+						HpcBulkDataObjectRegistrationResponseDTO responseDTO1 = DoeClientUtil
+								.registerBulkDatafiles(authToken, registrationServiceV2URL, registrationDTO1);
+						if (responseDTO1 != null) {
+							String dmeTaskId = responseDTO1.getTaskId();
+							t.setTestDataSetPath(folderPath + "/" + testDataSetFileName);
+							t.setResultPath(folderPath + "/" + fileNameOriginal);
+							t.setDmeTaskId(dmeTaskId);
+							t.setStatus("COMPLETED");
+							inferencingTaskRepository.saveAndFlush(t);
+						}
 					}
+
 				}
 			} catch (Exception e) {
 				log.error("Exception in verifying predictions file and uploading: " + e);
@@ -235,15 +274,15 @@ public class ManageTasksScheduler extends AbstractDoeController {
 	}
 
 	private gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO constructV2BulkRequest(
-			String userId, String path, String fileName, String metadata, String user) {
+			String userId, String path, String fileName, String metadata) {
 
 		log.info("construct dto for fileName : " + fileName + " and path: " + path);
 		gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO dto = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO();
 		gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO file = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO();
 		HpcUploadSource fileSystemUploadSource = new HpcUploadSource();
 		HpcFileLocation location = new HpcFileLocation();
-		location.setFileContainerId("at-s-is2s:/ifs/projects/IRODsTest/scratch");
-		location.setFileId("/mnt/IRODsScratch/modac/" + fileName);
+		location.setFileContainerId("at-s-is2s:/ifs/projects/IRODsTest/archive");
+		location.setFileId("/mnt/IRODsTest/" + fileName);
 		fileSystemUploadSource.setSourceLocation(location);
 		file.setFileSystemUploadSource(fileSystemUploadSource);
 		file.setPath(path);
@@ -254,7 +293,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 		HpcMetadataEntry e1 = new HpcMetadataEntry();
 
 		e1.setAttribute("generate_pred_username");
-		e1.setValue(user);
+		e1.setValue(userId);
 
 		file.getDataObjectMetadataEntries().add(e);
 		file.getDataObjectMetadataEntries().add(e1);

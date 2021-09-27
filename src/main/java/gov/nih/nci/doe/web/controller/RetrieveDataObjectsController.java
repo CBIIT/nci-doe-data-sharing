@@ -103,34 +103,37 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 					.findAny().orElse(null);
 
 			if (folderType != null) {
-				DoeDatafileSearchResultDetailed returnResult = getAssetFile(result, true, systemAttrs);
 				String folderPath = result.getDataObject().getAbsolutePath().substring(0,
 						result.getDataObject().getAbsolutePath().lastIndexOf('/'));
 				String folderName = folderPath.substring(folderPath.lastIndexOf("/") + 1);
-				returnResult.setName(folderName);
-				returnResult.setPath(folderPath);
-				returnResult.setCollectionId(folderType.getCollectionId());
-				List<DoeDatafileSearchResultDetailed> folderFiles;
-				if (foldersList.containsKey(folderName)) {
-					folderFiles = foldersList.get(folderName);
-					DoeDatafileSearchResultDetailed returnResult1 = getAssetFile(result, false, systemAttrs);
-					returnResult1.setIsFolder(false);
-					returnResult1.setName(name);
-					returnResult1.setPath(result.getDataObject().getAbsolutePath());
-					folderFiles.add(returnResult1);
-				} else {
-					folderFiles = new ArrayList<DoeDatafileSearchResultDetailed>();
-					DoeDatafileSearchResultDetailed returnResult1 = getAssetFile(result, false, systemAttrs);
-					returnResult1.setName(name);
-					returnResult1.setIsFolder(false);
-					returnResult1.setPath(result.getDataObject().getAbsolutePath());
-					folderFiles.add(returnResult1);
-					foldersList.put(folderName, folderFiles);
-					returnResult.setIsFolder(true);
-					returnResult.setFilesList(folderFiles);
-					returnResults.add(returnResult);
+				if (!"Predictions".equalsIgnoreCase(folderName)) {
+					DoeDatafileSearchResultDetailed returnResult = getAssetFile(result, true, systemAttrs);
+
+					returnResult.setName(folderName);
+					returnResult.setPath(folderPath);
+					returnResult.setCollectionId(folderType.getCollectionId());
+					List<DoeDatafileSearchResultDetailed> folderFiles;
+					if (foldersList.containsKey(folderName)) {
+						folderFiles = foldersList.get(folderName);
+						DoeDatafileSearchResultDetailed returnResult1 = getAssetFile(result, false, systemAttrs);
+						returnResult1.setIsFolder(false);
+						returnResult1.setName(name);
+						returnResult1.setPath(result.getDataObject().getAbsolutePath());
+						folderFiles.add(returnResult1);
+					} else {
+						folderFiles = new ArrayList<DoeDatafileSearchResultDetailed>();
+						DoeDatafileSearchResultDetailed returnResult1 = getAssetFile(result, false, systemAttrs);
+						returnResult1.setName(name);
+						returnResult1.setIsFolder(false);
+						returnResult1.setPath(result.getDataObject().getAbsolutePath());
+						folderFiles.add(returnResult1);
+						foldersList.put(folderName, folderFiles);
+						returnResult.setIsFolder(true);
+						returnResult.setFilesList(folderFiles);
+						returnResults.add(returnResult);
+					}
 				}
-				
+
 			} else {
 
 				String attr = getAttributeValue("generate_pred_username",
@@ -175,6 +178,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private List<MoDaCPredictionsResults> processGeneratedPredDataObjects(Response restResponse,
 			List<String> systemAttrs) throws IOException {
 		MappingJsonFactory factory = new MappingJsonFactory();
@@ -185,73 +189,97 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 		for (HpcDataObjectDTO result : searchResults) {
 
 			String user = getLoggedOnUserInfo();
-			String attr = getAttributeValue("generate_pred_username",
-					result.getMetadataEntries().getSelfMetadataEntries(), "DataObject");
-			if (StringUtils.isNotEmpty(attr) && attr.equalsIgnoreCase(user)) {
+			List<HpcMetadataEntry> parentMetadaEntries = result.getMetadataEntries().getParentMetadataEntries();
+			HpcMetadataEntry folderType = parentMetadaEntries.stream()
+					.filter(e -> e.getAttribute().equals("collection_type") && e.getValue().equalsIgnoreCase("Folder"))
+					.findAny().orElse(null);
+			if (folderType != null) {
+				String folderPath = result.getDataObject().getAbsolutePath().substring(0,
+						result.getDataObject().getAbsolutePath().lastIndexOf('/'));
+				String folderName = folderPath.substring(folderPath.lastIndexOf("/") + 1);
+				if ("Predictions".equalsIgnoreCase(folderName)) {
+					List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList()
+							.getBody();
+					Integer folderCollectionId = folderType.getCollectionId();
+					String folderPermissions = getPermissionRole(user, folderCollectionId, loggedOnUserPermissions);
+					if ("Owner".equalsIgnoreCase(folderPermissions)) {
 
-				String modelAnanlysisTypeName = getAttributeValue("Model_Analysis_type_name",
-						result.getMetadataEntries().getSelfMetadataEntries(), "DataObject");
-				String name = result.getDataObject().getAbsolutePath()
-						.substring(result.getDataObject().getAbsolutePath().lastIndexOf('/') + 1);
+						String modelAnanlysisTypeName = getAttributeValue("Model_Analysis_type_name",
+								result.getMetadataEntries().getSelfMetadataEntries(), "DataObject");
+						String name = result.getDataObject().getAbsolutePath()
+								.substring(result.getDataObject().getAbsolutePath().lastIndexOf('/') + 1);
 
-				if (!StringUtils.isEmpty(modelAnanlysisTypeName)) {
+						if (!StringUtils.isEmpty(modelAnanlysisTypeName)) {
 
-					if (modelAnanlysisTypeName.startsWith("input_dataset_")) {
-						String taskId = modelAnanlysisTypeName.substring(
-								modelAnanlysisTypeName.lastIndexOf("input_dataset_") + 14, modelAnanlysisTypeName.length());
-						MoDaCPredictionsResults r = returnResults.stream()
-								.filter(e -> ("y_pred_" + taskId).equalsIgnoreCase(e.getModelAnalysisPredName()))
-								.findAny().orElse(null);
-						if (r != null) {
-							r.setInputDatasetName(name);
-							r.setInputDatasetPath(result.getDataObject().getAbsolutePath());
-							r.setModelAnalysisInputDatasetName(modelAnanlysisTypeName);
-							r.setInputDatasetSelfMetadata(getUserMetadata(
-									result.getMetadataEntries().getSelfMetadataEntries(), "DataObject", systemAttrs));
-							r.setInputDatasetSystemMetadata(getSystemMetaData(
-									result.getMetadataEntries().getSelfMetadataEntries(), "DataObject", systemAttrs));
-						} else {
-							MoDaCPredictionsResults returnResult = new MoDaCPredictionsResults();
-							returnResult.setInputDatasetName(name);
-							returnResult.setInputDatasetPath(result.getDataObject().getAbsolutePath());
-							returnResult.setModelAnalysisInputDatasetName(modelAnanlysisTypeName);
-							returnResult.setInputDatasetSelfMetadata(getUserMetadata(
-									result.getMetadataEntries().getSelfMetadataEntries(), "DataObject", systemAttrs));
-							returnResult.setInputDatasetSystemMetadata(getSystemMetaData(
-									result.getMetadataEntries().getSelfMetadataEntries(), "DataObject", systemAttrs));
-							returnResults.add(returnResult);
-						}
+							if (modelAnanlysisTypeName.startsWith("input_dataset_")) {
+								String taskId = modelAnanlysisTypeName.substring(
+										modelAnanlysisTypeName.lastIndexOf("input_dataset_") + 14,
+										modelAnanlysisTypeName.length());
+								MoDaCPredictionsResults r = returnResults.stream().filter(
+										e -> ("y_pred_" + taskId).equalsIgnoreCase(e.getModelAnalysisPredName()))
+										.findAny().orElse(null);
+								if (r != null) {
+									r.setInputDatasetName(name);
+									r.setInputDatasetPath(result.getDataObject().getAbsolutePath());
+									r.setModelAnalysisInputDatasetName(modelAnanlysisTypeName);
+									r.setInputDatasetSelfMetadata(
+											getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),
+													"DataObject", systemAttrs));
+									r.setInputDatasetSystemMetadata(
+											getSystemMetaData(result.getMetadataEntries().getSelfMetadataEntries(),
+													"DataObject", systemAttrs));
+								} else {
+									MoDaCPredictionsResults returnResult = new MoDaCPredictionsResults();
+									returnResult.setInputDatasetName(name);
+									returnResult.setInputDatasetPath(result.getDataObject().getAbsolutePath());
+									returnResult.setModelAnalysisInputDatasetName(modelAnanlysisTypeName);
+									returnResult.setInputDatasetSelfMetadata(
+											getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),
+													"DataObject", systemAttrs));
+									returnResult.setInputDatasetSystemMetadata(
+											getSystemMetaData(result.getMetadataEntries().getSelfMetadataEntries(),
+													"DataObject", systemAttrs));
+									returnResults.add(returnResult);
+								}
 
-					} else if (modelAnanlysisTypeName.startsWith("y_pred_")) {
-						String taskId = modelAnanlysisTypeName.substring(modelAnanlysisTypeName.lastIndexOf("y_pred_") + 7,
-								modelAnanlysisTypeName.length());
-						MoDaCPredictionsResults r = returnResults.stream()
-								.filter(e -> ("input_dataset_" + taskId).equalsIgnoreCase(e.getModelAnalysisInputDatasetName()))
-								.findAny().orElse(null);
-						if (r != null) {
-							r.setPredictionsName(name);
-							r.setPredictionsPath(result.getDataObject().getAbsolutePath());
-							r.setModelAnalysisPredName(modelAnanlysisTypeName);
-							r.setPredictionsSelfMetadata(getUserMetadata(
-									result.getMetadataEntries().getSelfMetadataEntries(), "DataObject", systemAttrs));
-							r.setPredictionsSystemMetadata(getSystemMetaData(
-									result.getMetadataEntries().getSelfMetadataEntries(), "DataObject", systemAttrs));
+							} else if (modelAnanlysisTypeName.startsWith("y_pred_")) {
+								String taskId = modelAnanlysisTypeName.substring(
+										modelAnanlysisTypeName.lastIndexOf("y_pred_") + 7,
+										modelAnanlysisTypeName.length());
+								MoDaCPredictionsResults r = returnResults.stream()
+										.filter(e -> ("input_dataset_" + taskId)
+												.equalsIgnoreCase(e.getModelAnalysisInputDatasetName()))
+										.findAny().orElse(null);
+								if (r != null) {
+									r.setPredictionsName(name);
+									r.setPredictionsPath(result.getDataObject().getAbsolutePath());
+									r.setModelAnalysisPredName(modelAnanlysisTypeName);
+									r.setPredictionsSelfMetadata(
+											getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),
+													"DataObject", systemAttrs));
+									r.setPredictionsSystemMetadata(
+											getSystemMetaData(result.getMetadataEntries().getSelfMetadataEntries(),
+													"DataObject", systemAttrs));
 
-						} else {
-							MoDaCPredictionsResults returnResult = new MoDaCPredictionsResults();
-							returnResult.setPredictionsName(name);
-							returnResult.setPredictionsPath(result.getDataObject().getAbsolutePath());
-							returnResult.setModelAnalysisPredName(modelAnanlysisTypeName);
-							returnResult.setPredictionsSelfMetadata(getUserMetadata(
-									result.getMetadataEntries().getSelfMetadataEntries(), "DataObject", systemAttrs));
-							returnResult.setPredictionsSystemMetadata(getSystemMetaData(
-									result.getMetadataEntries().getSelfMetadataEntries(), "DataObject", systemAttrs));
-							returnResults.add(returnResult);
+								} else {
+									MoDaCPredictionsResults returnResult = new MoDaCPredictionsResults();
+									returnResult.setPredictionsName(name);
+									returnResult.setPredictionsPath(result.getDataObject().getAbsolutePath());
+									returnResult.setModelAnalysisPredName(modelAnanlysisTypeName);
+									returnResult.setPredictionsSelfMetadata(
+											getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),
+													"DataObject", systemAttrs));
+									returnResult.setPredictionsSystemMetadata(
+											getSystemMetaData(result.getMetadataEntries().getSelfMetadataEntries(),
+													"DataObject", systemAttrs));
+									returnResults.add(returnResult);
+								}
+
+							}
 						}
 
 					}
 				}
-
 			}
 
 		}

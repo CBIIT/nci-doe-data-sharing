@@ -91,7 +91,7 @@ public abstract class AbstractDoeController {
 	public AuthenticateService authenticateService;
 
 	@Autowired
-	MetaDataPermissionsService metaDataPermissionService;
+	public MetaDataPermissionsService metaDataPermissionService;
 
 	@Autowired
 	AccessGroupsService accessGroupsService;
@@ -115,7 +115,7 @@ public abstract class AbstractDoeController {
 	String downtimeMessage;
 
 	@Value("${gov.nih.nci.hpc.server.collection}")
-	private String serviceURL;
+	public String serviceURL;
 
 	@Value("${doe.show.api-docs:false}")
 	boolean showApiDocs;
@@ -820,9 +820,22 @@ public abstract class AbstractDoeController {
 				model.addAttribute("assetPath", collection.getCollection().getCollectionName());
 				model.addAttribute("assetPermission", assetPermission);
 				model.addAttribute("assetLink", webServerName + "/assetDetails?dme_data_id=" + dme_Data_Id);
-				
 
-				
+				// verify if prediction folder exists, else hide the generate predictions sub
+				// tab
+				try {
+					HpcCollectionListDTO folderCollections = DoeClientUtil.getCollection(authToken, serviceURL,
+							collection.getCollection().getCollectionName() + "/Predictions", false);
+					if (folderCollections == null) {
+						model.addAttribute("showGeneratePredTab", false);
+					} else {
+						model.addAttribute("showGeneratePredTab", true);
+					}
+				} catch (Exception e) {
+					// collection does not exist
+					log.error("folder collection does not exist for Asset: " + asset_Identifier);
+				}
+
 			} else {
 				throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
 			}
