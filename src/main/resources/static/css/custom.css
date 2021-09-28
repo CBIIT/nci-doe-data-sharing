@@ -292,7 +292,6 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 
 .btn-primary, bg-primary{background-color: #00579e!important;}
 #dataSetTable_wrapper,#generatePredTable_wrapper{
-	border: 2px solid #194F85;
     margin-top: -8px;
 }
 
