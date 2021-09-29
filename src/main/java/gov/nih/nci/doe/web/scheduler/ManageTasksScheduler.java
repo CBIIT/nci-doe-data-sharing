@@ -2,6 +2,7 @@ package gov.nih.nci.doe.web.scheduler;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -15,6 +16,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.SftpException;
 
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.controller.AbstractDoeController;
@@ -137,7 +141,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 		}
 	}
 
-	// @Scheduled(cron = "${doe.scheduler.cron.infer}")
+	@Scheduled(cron = "${doe.scheduler.cron.infer}")
 	public void performInferencing() throws DoeWebException, MalformedURLException {
 
 		log.info("scheduler for inferencing");
@@ -155,9 +159,15 @@ public class ManageTasksScheduler extends AbstractDoeController {
 				String modelh5Path = t.getModelh5Path();
 				String resultPath = t.getResultPath();
 
-				String dataFileName = dataFilePath.substring(dataFilePath.lastIndexOf('/') + 1, dataFilePath.length());
-				String modelName = modelh5Path.substring(modelh5Path.lastIndexOf('/') + 1, modelh5Path.length());
-				String resultFileName = resultPath.substring(resultPath.lastIndexOf('/') + 1, resultPath.length());
+				String dataFileName = dataFilePath != null
+						? dataFilePath.substring(dataFilePath.lastIndexOf('/') + 1, dataFilePath.length())
+						: null;
+				String modelName = modelh5Path != null
+						? modelh5Path.substring(modelh5Path.lastIndexOf('/') + 1, modelh5Path.length())
+						: null;
+				String resultFileName = resultPath != null
+						? resultPath.substring(resultPath.lastIndexOf('/') + 1, resultPath.length())
+						: null;
 
 				// call flask API
 				log.info("call flask web service for " + dataFileName);
@@ -197,18 +207,22 @@ public class ManageTasksScheduler extends AbstractDoeController {
 
 			// verify if the y_pred file is available in cloudian
 			String resultPath = t.getResultPath();
-			String fileNameOriginal = resultPath.substring(resultPath.lastIndexOf('/') + 1, resultPath.length());
+			String fileNameOriginal = resultPath.substring(resultPath.lastIndexOf('/') + 1, resultPath.length())
+					+ ".csv";
 			String testDataSetFileName = t.getTestDataSetPath().substring(t.getTestDataSetPath().lastIndexOf('/') + 1,
 					t.getTestDataSetPath().length());
 
 			try {
-				java.io.File file = new java.io.File("/mnt/IRODsTest/" + fileNameOriginal);
 				log.info("verify if inferencing file is available on mount " + fileNameOriginal);
-				if (file.length() != 0) {
-
+				ChannelSftp channelSftp1 = setupJsch();
+				channelSftp1.connect();
+				String remoteDir = "/mnt/IRODsTest/" + fileNameOriginal;
+				try {
+					channelSftp1.lstat(remoteDir);
 					// if predictions file is available, create a collection folder and upload
 					// prediction under this folder
 					String parentPath = t.getTestDataSetPath().substring(0, t.getTestDataSetPath().lastIndexOf('/'));
+					String folderPath = parentPath + "/Predictions_" + t.getUserId();
 					HpcCollectionRegistrationDTO dto = new HpcCollectionRegistrationDTO();
 					List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
 					HpcMetadataEntry entry = new HpcMetadataEntry();
@@ -216,11 +230,8 @@ public class ManageTasksScheduler extends AbstractDoeController {
 					entry.setAttribute("collection_type");
 					metadataEntries.add(entry);
 					dto.getMetadataEntries().addAll(metadataEntries);
-					Integer responseStatus = DoeClientUtil.updateCollection(authToken, serviceURL, dto,
-							parentPath + "/Predictions");
+					Integer responseStatus = DoeClientUtil.updateCollection(authToken, serviceURL, dto, folderPath);
 					if (responseStatus == 200 || responseStatus == 201) {
-						// upload both test dataset and pred file to cloudian
-						String folderPath = parentPath + "/Predictions";
 
 						// save folder permissions to MoDaC
 						HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL,
@@ -233,9 +244,11 @@ public class ManageTasksScheduler extends AbstractDoeController {
 
 							// save collection permissions in MoDaC DB
 
-							metaDataPermissionService.savePermissionsList(getLoggedOnUserInfo(), null,
+							metaDataPermissionService.savePermissionsList(t.getUserId(), null,
 									collection.getCollection().getCollectionId(), folderPath);
 						}
+
+						// upload both test dataset and pred file to cloudian
 
 						log.info("upload test dataset to cloudian: " + testDataSetFileName);
 						HpcBulkDataObjectRegistrationRequestDTO registrationDTO = constructV2BulkRequest(t.getUserId(),
@@ -261,11 +274,19 @@ public class ManageTasksScheduler extends AbstractDoeController {
 							t.setResultPath(folderPath + "/" + fileNameOriginal);
 							t.setDmeTaskId(dmeTaskId);
 							t.setStatus("COMPLETED");
+							t.setCompletedDate(new Date());
 							inferencingTaskRepository.saveAndFlush(t);
 						}
 					}
-
+				} catch (SftpException e) {
+					if (e.id == ChannelSftp.SSH_FX_NO_SUCH_FILE) {
+						log.error("File does not exist" + fileNameOriginal);
+					} else {
+						log.error("Error in get file: " + e);
+					}
 				}
+				channelSftp1.exit();
+
 			} catch (Exception e) {
 				log.error("Exception in verifying predictions file and uploading: " + e);
 			}

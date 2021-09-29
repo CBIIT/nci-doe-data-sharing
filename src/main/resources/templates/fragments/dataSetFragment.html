@@ -83,11 +83,12 @@
      <p style="font-weight: 500;color: #5099AB;margin-left: 18px;font-family: 
      latoregular;font-size: 20px;line-height: 52px;">Asset Files</p></div>
     
-    <div class="form-group col-lg-3 col-md-3 col-sm-3" th:if="${showGeneratePredTab eq true}" id="generatePredictionsTab" style="float:right;
-    height: 55px;background-color: rgb(128 128 128 / 33%);color: #fff;margin-left: 4px;">
+    <div class="form-group col-lg-3 col-md-3 col-sm-3" th:if="${showGeneratePredTab eq true}" id="generatePredictionsTab"
+     style="float:right;height: 55px;background-color: rgb(128 128 128 / 33%);color: #fff;margin-left: 4px;">
      <p style="font-weight: 500;color: #5099AB;margin-left: 15px;font-family: 
      latoregular;font-size: 20px;line-height: 52px;">Generate Predictions</p></div>
      
+     <div class="form-group col-lg-3 col-md-3 col-sm-3" th:if="${showGeneratePredTab eq false || showGeneratePredTab == null}"></div>
      <div class="form-group col-lg-2 col-md-2 col-sm-2"></div>
      <div class="form-group col-lg-3 col-md-3 col-sm-3" style="float:right;margin-left: 97px;" th:if= "${loggedOnUser != null and assetType == 'Model'}">
      <button  id="openInferModal" type="button" class="btn btn-primary float-right mb-2 mr-2">Generate Predictions</button></div>

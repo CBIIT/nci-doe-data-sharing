@@ -106,7 +106,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 				String folderPath = result.getDataObject().getAbsolutePath().substring(0,
 						result.getDataObject().getAbsolutePath().lastIndexOf('/'));
 				String folderName = folderPath.substring(folderPath.lastIndexOf("/") + 1);
-				if (!"Predictions".equalsIgnoreCase(folderName)) {
+				if (StringUtils.isNotEmpty(folderName) && !folderName.startsWith("Predictions")) {
 					DoeDatafileSearchResultDetailed returnResult = getAssetFile(result, true, systemAttrs);
 
 					returnResult.setName(folderName);
@@ -178,7 +178,6 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	private List<MoDaCPredictionsResults> processGeneratedPredDataObjects(Response restResponse,
 			List<String> systemAttrs) throws IOException {
 		MappingJsonFactory factory = new MappingJsonFactory();
@@ -197,88 +196,81 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 				String folderPath = result.getDataObject().getAbsolutePath().substring(0,
 						result.getDataObject().getAbsolutePath().lastIndexOf('/'));
 				String folderName = folderPath.substring(folderPath.lastIndexOf("/") + 1);
-				if ("Predictions".equalsIgnoreCase(folderName)) {
-					List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList()
-							.getBody();
-					Integer folderCollectionId = folderType.getCollectionId();
-					String folderPermissions = getPermissionRole(user, folderCollectionId, loggedOnUserPermissions);
-					if ("Owner".equalsIgnoreCase(folderPermissions)) {
+				if (StringUtils.isNotEmpty(folderName) && folderName.equalsIgnoreCase("Predictions_" + user)) {
 
-						String modelAnanlysisTypeName = getAttributeValue("Model_Analysis_type_name",
-								result.getMetadataEntries().getSelfMetadataEntries(), "DataObject");
-						String name = result.getDataObject().getAbsolutePath()
-								.substring(result.getDataObject().getAbsolutePath().lastIndexOf('/') + 1);
+					String modelAnanlysisTypeName = getAttributeValue("Model_Analysis_type_name",
+							result.getMetadataEntries().getSelfMetadataEntries(), "DataObject");
+					String name = result.getDataObject().getAbsolutePath()
+							.substring(result.getDataObject().getAbsolutePath().lastIndexOf('/') + 1);
 
-						if (!StringUtils.isEmpty(modelAnanlysisTypeName)) {
+					if (!StringUtils.isEmpty(modelAnanlysisTypeName)) {
 
-							if (modelAnanlysisTypeName.startsWith("input_dataset_")) {
-								String taskId = modelAnanlysisTypeName.substring(
-										modelAnanlysisTypeName.lastIndexOf("input_dataset_") + 14,
-										modelAnanlysisTypeName.length());
-								MoDaCPredictionsResults r = returnResults.stream().filter(
-										e -> ("y_pred_" + taskId).equalsIgnoreCase(e.getModelAnalysisPredName()))
-										.findAny().orElse(null);
-								if (r != null) {
-									r.setInputDatasetName(name);
-									r.setInputDatasetPath(result.getDataObject().getAbsolutePath());
-									r.setModelAnalysisInputDatasetName(modelAnanlysisTypeName);
-									r.setInputDatasetSelfMetadata(
-											getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),
-													"DataObject", systemAttrs));
-									r.setInputDatasetSystemMetadata(
-											getSystemMetaData(result.getMetadataEntries().getSelfMetadataEntries(),
-													"DataObject", systemAttrs));
-								} else {
-									MoDaCPredictionsResults returnResult = new MoDaCPredictionsResults();
-									returnResult.setInputDatasetName(name);
-									returnResult.setInputDatasetPath(result.getDataObject().getAbsolutePath());
-									returnResult.setModelAnalysisInputDatasetName(modelAnanlysisTypeName);
-									returnResult.setInputDatasetSelfMetadata(
-											getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),
-													"DataObject", systemAttrs));
-									returnResult.setInputDatasetSystemMetadata(
-											getSystemMetaData(result.getMetadataEntries().getSelfMetadataEntries(),
-													"DataObject", systemAttrs));
-									returnResults.add(returnResult);
-								}
-
-							} else if (modelAnanlysisTypeName.startsWith("y_pred_")) {
-								String taskId = modelAnanlysisTypeName.substring(
-										modelAnanlysisTypeName.lastIndexOf("y_pred_") + 7,
-										modelAnanlysisTypeName.length());
-								MoDaCPredictionsResults r = returnResults.stream()
-										.filter(e -> ("input_dataset_" + taskId)
-												.equalsIgnoreCase(e.getModelAnalysisInputDatasetName()))
-										.findAny().orElse(null);
-								if (r != null) {
-									r.setPredictionsName(name);
-									r.setPredictionsPath(result.getDataObject().getAbsolutePath());
-									r.setModelAnalysisPredName(modelAnanlysisTypeName);
-									r.setPredictionsSelfMetadata(
-											getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),
-													"DataObject", systemAttrs));
-									r.setPredictionsSystemMetadata(
-											getSystemMetaData(result.getMetadataEntries().getSelfMetadataEntries(),
-													"DataObject", systemAttrs));
-
-								} else {
-									MoDaCPredictionsResults returnResult = new MoDaCPredictionsResults();
-									returnResult.setPredictionsName(name);
-									returnResult.setPredictionsPath(result.getDataObject().getAbsolutePath());
-									returnResult.setModelAnalysisPredName(modelAnanlysisTypeName);
-									returnResult.setPredictionsSelfMetadata(
-											getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),
-													"DataObject", systemAttrs));
-									returnResult.setPredictionsSystemMetadata(
-											getSystemMetaData(result.getMetadataEntries().getSelfMetadataEntries(),
-													"DataObject", systemAttrs));
-									returnResults.add(returnResult);
-								}
-
+						if (modelAnanlysisTypeName.startsWith("input_dataset_")) {
+							String taskId = modelAnanlysisTypeName.substring(
+									modelAnanlysisTypeName.lastIndexOf("input_dataset_") + 14,
+									modelAnanlysisTypeName.length());
+							MoDaCPredictionsResults r = returnResults.stream()
+									.filter(e -> ("y_pred_" + taskId).equalsIgnoreCase(e.getModelAnalysisPredName()))
+									.findAny().orElse(null);
+							if (r != null) {
+								r.setInputDatasetName(name);
+								r.setInputDatasetPath(result.getDataObject().getAbsolutePath());
+								r.setModelAnalysisInputDatasetName(modelAnanlysisTypeName);
+								r.setInputDatasetSelfMetadata(
+										getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),
+												"DataObject", systemAttrs));
+								r.setInputDatasetSystemMetadata(
+										getSystemMetaData(result.getMetadataEntries().getSelfMetadataEntries(),
+												"DataObject", systemAttrs));
+							} else {
+								MoDaCPredictionsResults returnResult = new MoDaCPredictionsResults();
+								returnResult.setInputDatasetName(name);
+								returnResult.setInputDatasetPath(result.getDataObject().getAbsolutePath());
+								returnResult.setModelAnalysisInputDatasetName(modelAnanlysisTypeName);
+								returnResult.setInputDatasetSelfMetadata(
+										getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),
+												"DataObject", systemAttrs));
+								returnResult.setInputDatasetSystemMetadata(
+										getSystemMetaData(result.getMetadataEntries().getSelfMetadataEntries(),
+												"DataObject", systemAttrs));
+								returnResults.add(returnResult);
 							}
-						}
 
+						} else if (modelAnanlysisTypeName.startsWith("y_pred_")) {
+							String taskId = modelAnanlysisTypeName.substring(
+									modelAnanlysisTypeName.lastIndexOf("y_pred_") + 7, modelAnanlysisTypeName.length());
+							MoDaCPredictionsResults r = returnResults.stream()
+									.filter(e -> ("input_dataset_" + taskId)
+											.equalsIgnoreCase(e.getModelAnalysisInputDatasetName()))
+									.findAny().orElse(null);
+							if (r != null) {
+								r.setPredictionsName(name);
+								r.setPredictionsPath(result.getDataObject().getAbsolutePath());
+								r.setModelAnalysisPredName(modelAnanlysisTypeName);
+								r.setPredictionsSelfMetadata(
+										getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),
+												"DataObject", systemAttrs));
+								r.setPredictionsSystemMetadata(
+										getSystemMetaData(result.getMetadataEntries().getSelfMetadataEntries(),
+												"DataObject", systemAttrs));
+
+							} else {
+								MoDaCPredictionsResults returnResult = new MoDaCPredictionsResults();
+								returnResult.setPredictionsName(name);
+								returnResult.setPredictionsPath(result.getDataObject().getAbsolutePath());
+								returnResult.setModelAnalysisPredName(modelAnanlysisTypeName);
+								returnResult.setPredictionsSelfMetadata(
+										getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),
+												"DataObject", systemAttrs));
+								returnResult.setPredictionsSystemMetadata(
+										getSystemMetaData(result.getMetadataEntries().getSelfMetadataEntries(),
+												"DataObject", systemAttrs));
+								returnResults.add(returnResult);
+							}
+
+						}
 					}
+
 				}
 			}
 

@@ -30,6 +30,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jcraft.jsch.ChannelSftp;
 
 import javax.ws.rs.core.Response;
 import gov.nih.nci.doe.web.DoeWebException;
@@ -37,17 +38,10 @@ import gov.nih.nci.doe.web.domain.InferencingTask;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationStatusDTO;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-
 @Controller
 @EnableAutoConfiguration
 @RequestMapping("/performInferencing")
 public class PerformInferencingController extends AbstractDoeController {
-
-	
 
 	@Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
 	private String bulkRegistrationURL;
@@ -113,38 +107,29 @@ public class PerformInferencingController extends AbstractDoeController {
 
 		parentPath = testModelPath.substring(0, testModelPath.lastIndexOf('/'));
 
-		String fileName = testModelPath.substring(testModelPath.lastIndexOf('/') + 1, testModelPath.length());
-
 		String taskId = UUID.randomUUID().toString();
 
-		String resultPath = parentPath + "/" + taskId + "_" + fileName;
+		String resultPath = parentPath + "/y_pred_" + taskId;
 
-		// save the inferencing task
-		inferencingTaskService.saveInferenceTask(getLoggedOnUserInfo(), taskId, parentPath, resultPath, testModelPath,
-				modelh5Path);
+		try {
+			// save the inferencing task
+			inferencingTaskService.saveInferenceTask(getLoggedOnUserInfo(), taskId, parentPath, resultPath,
+					testModelPath, modelh5Path);
 
-		// copy the test dataset file to iRODSScratch
-		// String path = "/mnt/IRODsTest";
-		Path root = Paths.get(uploadPath);
-		InputStream is = uploadTestInferFile.getInputStream();
+			// copy the test dataset file to IRODsTest
+			ChannelSftp channelSftp = setupJsch();
+			channelSftp.connect();
+			InputStream is = uploadTestInferFile.getInputStream();
+			String remoteDir = "/mnt/IRODsTest/" + uploadTestInferFile.getOriginalFilename();
 
-		Files.copy(is, root.resolve(uploadTestInferFile.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
+			channelSftp.put(is, remoteDir);
 
-		// construct the dto for the the FileUpload API
-		// HpcBulkDataObjectRegistrationRequestDTO registrationDTO =
-		// constructV2BulkRequest(parentPath, fileNameOriginal);
-
-		// call the FileUpload API to upload the file to cloudian
-		// HpcBulkDataObjectRegistrationResponseDTO responseDTO =
-		// DoeClientUtil.registerBulkDatafiles(authToken,
-		// bulkRegistrationURL, registrationDTO);
-
-		/*
-		 * if (responseDTO != null) { String dmeTaskId = responseDTO.getTaskId();
-		 * inferencingTaskService.updateInferenceTask(taskId, dmeTaskId); }
-		 */
-
-		return "Perform Inferencing task Submitted. Your task Id is " + taskId;
-
+			channelSftp.exit();
+			return "Perform Inferencing task Submitted. Your task Id is " + taskId;
+		} catch (Exception e) {
+			log.error("Exception in uploading inferencing file: " + e);
+		}
+		return "Error in submitting dataset for inferencing";
 	}
+
 }

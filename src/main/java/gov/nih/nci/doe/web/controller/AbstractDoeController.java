@@ -39,6 +39,10 @@ import org.springframework.web.context.request.WebRequest;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.domain.LookUp;
@@ -136,6 +140,12 @@ public abstract class AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.search.collection.compound}")
 	String compoundCollectionSearchServiceURL;
+
+	@Value("${doe.writeaccount.password}")
+	private String writeAccessUserPassword;
+
+	@Value("${doe.writeaccount.username}")
+	private String writeAccessUserName;
 
 	@Autowired
 	InferencingTaskService inferencingTaskService;
@@ -824,12 +834,18 @@ public abstract class AbstractDoeController {
 				// verify if prediction folder exists, else hide the generate predictions sub
 				// tab
 				try {
+					String folderPath = collection.getCollection().getCollectionName() + "/Predictions_" + user;
 					HpcCollectionListDTO folderCollections = DoeClientUtil.getCollection(authToken, serviceURL,
-							collection.getCollection().getCollectionName() + "/Predictions", false);
-					if (folderCollections == null) {
-						model.addAttribute("showGeneratePredTab", false);
-					} else {
-						model.addAttribute("showGeneratePredTab", true);
+							folderPath, false);
+
+					if (folderCollections != null) {
+						String folderPermissions = getPermissionRole(user,
+								folderCollections.getCollections().get(0).getCollection().getCollectionId(),
+								loggedOnUserPermissions);
+						if ("Owner".equalsIgnoreCase(folderPermissions)) {
+							model.addAttribute("showGeneratePredTab", true);
+						}
+
 					}
 				} catch (Exception e) {
 					// collection does not exist
@@ -972,5 +988,17 @@ public abstract class AbstractDoeController {
 		Collections.sort(sortedList, String.CASE_INSENSITIVE_ORDER);
 
 		return sortedList;
+	}
+
+	public ChannelSftp setupJsch() throws JSchException {
+		JSch jsch = new JSch();
+		Session jschSession = jsch.getSession(writeAccessUserName, "fsdmel-modac01d.ncifcrf.gov");
+		java.util.Properties config = new java.util.Properties();
+		config.put("StrictHostKeyChecking", "no");
+		jschSession.setConfig(config);
+		jschSession.setPassword(writeAccessUserPassword);
+		jschSession.connect();
+		return (ChannelSftp) jschSession.openChannel("sftp");
+
 	}
 }
