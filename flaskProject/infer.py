@@ -1,55 +1,46 @@
-"""
-DISCLAIMER
-UT-BATTELLE, LLC AND THE GOVERNMENT MAKE NO REPRESENTATIONS AND DISCLAIM ALL WARRANTIES,
-BOTH EXPRESSED AND IMPLIED.  THERE ARE NO EXPRESS OR IMPLIED WARRANTIES OF MERCHANTABILITY
-OR FITNESS FOR A PARTICULAR PURPOSE, OR THAT THE USE OF THE SOFTWARE WILL NOT INFRINGE ANY
-PATENT, COPYRIGHT, TRADEMARK, OR OTHER PROPRIETARY RIGHTS, OR THAT THE SOFTWARE WILL
-ACCOMPLISH THE INTENDED RESULTS OR THAT THE SOFTWARE OR ITS USE WILL NOT RESULT IN INJURY
-OR DAMAGE.  THE USER ASSUMES RESPONSIBILITY FOR ALL LIABILITIES, PENALTIES, FINES, CLAIMS,
-CAUSES OF ACTION, AND COSTS AND EXPENSES, CAUSED BY, RESULTING FROM OR ARISING OUT OF, IN
-WHOLE OR IN PART THE USE, STORAGE OR DISPOSAL OF THE SOFTWARE.
-"""
+import json
 import os
 
-"""
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
-PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
-FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-DEALINGS IN THE SOFTWARE.
-"""
-
-from sklearn.metrics import f1_score, confusion_matrix
+import paramiko
 from keras.models import load_model
-
 import numpy as np
+import pandas as pd
+import subprocess
 
 
 def main(fname, model_name, testdataset):
-    tasks = ['site', 'histology']
-    test_x = np.load(r'test_X.npy')
-    # test_y = np.load(r'test_Y.npy')
-
-    # model_name = 'mt_cnn_model.h5'
+    print('Perform Inferencing')
+    test_x = np.load(testdataset)
     # Predict on Test data
     model = load_model(model_name)
     pred_probs = model.predict(np.array(test_x))
-    print('Prediction on test set')
-    for t in range(len(tasks)):
-        preds = [np.argmax(x) for x in pred_probs[t]]
-        # pred_max = [np.max(x) for x in pred_probs[t]]
-        y_pred = preds
-        # y_true = test_y[:, t]
-        # y_prob = pred_max
-        # micro = f1_score(y_true, y_pred, average='micro')
-        # macro = f1_score(y_true, y_pred, average='macro')
-        print(y_pred)
-        # print('task %s test f-score: %.4f,%.4f' % (tasks[t], micro, macro))
-        y_predictions = y_pred
-        file = open(fname, 'w')
-        file.write(str(y_predictions))
-        file.close()
+    hist_site_pred = []
+
+    with open('histology_class_mapper.json') as json_file:
+        histologyLabel = json.load(json_file)
+        histologyIdtoLabel = {}
+        for k, v in histologyLabel.items():
+            histologyIdtoLabel[v] = k
+
+    with open('site_class_mapper.json') as json_file:
+        siteLabel = json.load(json_file)
+        siteIdtoLabel = {}
+        for k, v in siteLabel.items():
+            siteIdtoLabel[v] = k
+
+    for site, hist in zip(pred_probs[0], pred_probs[1]):
+        hist_site_pred.append([siteIdtoLabel[np.argmax(site)], histologyIdtoLabel[np.argmax(hist)]])
+
+    hist_site_dataframe = pd.DataFrame(hist_site_pred)
+    hist_site_dataframe.to_csv(fname);
+    # subprocess.run(["scp", fname, "ncidoesvct1@fsdmel-modac01d.ncifcrf.gov:/mnt/IRODsTest/"])
     if os.path.isfile(fname):
-        fname.save(os.path.join('/mnt/iRODsScratch/ModaC', fname))
+        host_name = 'fsdmel-modac01d.ncifcrf.gov'
+        user_name = 'ncidoesvct1'
+        password = ''
+        # Connect to remote server
+        t = paramiko.Transport(host_name)
+        t.connect(username=user_name, password=password)
+        sftp = paramiko.SFTPClient.from_transport(t)
+        sftp.put(fname, '/mnt/IRODsTest/'+fname)
     return fname

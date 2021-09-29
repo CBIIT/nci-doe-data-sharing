@@ -1,8 +1,6 @@
 from flask import Flask, request
-
-
-import wget
 from infer import *
+import paramiko
 
 app = Flask(__name__)
 
@@ -14,26 +12,53 @@ def hello():
 
 @app.route('/modac-routing', methods=['GET'])
 def modac_routing():
-    datafilepath = request.args.get("dataFileName", None)
-    modelfilepath = request.args.get("modelName", None)
+    datafilename = request.args.get("dataFileName", None)
+    modelfilename = request.args.get("modelName", None)
     predictions_filename = request.args.get("resultFileName", None)
-    if modelfilepath is None:
-        modelname = 'mt_cnn_model.h5'
-    testdataset = None
-
-    if datafilepath is not None:
-        wget.download('/mnt/iRODsScratch/ModaC' + datafilepath)
-    if modelfilepath is not None:
-        wget.download('/mnt/iRODsScratch/ModaC' + modelfilepath)
-    # if resultpath is not None:
-    # indexofpredictions = resultpath.rindex("/", 0, len(resultpath))
-    # predictions_filename = resultpath[indexofpredictions + 1:len(resultpath)]
-    # origin_1 = api_server + '/v2/dataObject' + resultpath
-
+    print("model file:" + modelfilename)
+    if datafilename is not None:
+        downloadFile(datafilename)
+    if modelfilename is not None and modelfilename:
+        print("model file here:" + modelfilename)
+        downloadFile(modelfilename)
+    if datafilename is None:
+        datafilename = 'test_X.npy'
+    if modelfilename is None or not modelfilename:
+        modelfilename = 'mt_cnn_model.h5'
     print(predictions_filename)
-    main(predictions_filename, modelname, datafilepath)
-    os.system("sbatch %s" % main)
+    print(modelfilename)
+    main(predictions_filename, modelfilename, datafilename)
+    # os.system("sbatch %s" % main)
+    # os.system('ssh ncidoesvct2@batch.ncifcrf.gov python < test.py >> mylog.txt 2>&1')
     return "OK"
+
+
+def downloadFile(fileName):
+    # Server connection information
+    host_name = 'fsdmel-modac01d.ncifcrf.gov'
+    user_name = 'ncidoesvct1'
+    password = ''
+
+    # Connect to remote server
+    t = paramiko.Transport(host_name)
+    t.connect(username=user_name, password=password)
+    sftp = paramiko.SFTPClient.from_transport(t)
+
+    # Remote file path (absolute path required)
+    remote_dir = '/mnt/IRODsTest/' + fileName
+    print(remote_dir)
+    # Local file storage path (either absolute or relative)
+    local_dir = fileName
+    # Files, downloading directly
+    print('Start downloading file: ' + remote_dir)
+    try:
+        sftp.get(remote_dir, local_dir)
+        # Close connection
+        t.close()
+
+    except Exception:
+        print(Exception)
+        pass
 
 
 if __name__ == '__main__':

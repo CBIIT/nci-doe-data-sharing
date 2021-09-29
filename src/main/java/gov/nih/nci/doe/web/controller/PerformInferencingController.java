@@ -109,7 +109,7 @@ public class PerformInferencingController extends AbstractDoeController {
 
 		String taskId = UUID.randomUUID().toString();
 
-		String resultPath = parentPath + "/y_pred_" + taskId;
+		String resultPath = parentPath + "/y_pred_" + taskId +".csv";
 
 		try {
 			// save the inferencing task

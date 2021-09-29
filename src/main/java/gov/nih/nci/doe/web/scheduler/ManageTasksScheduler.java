@@ -207,8 +207,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 
 			// verify if the y_pred file is available in cloudian
 			String resultPath = t.getResultPath();
-			String fileNameOriginal = resultPath.substring(resultPath.lastIndexOf('/') + 1, resultPath.length())
-					+ ".csv";
+			String fileNameOriginal = resultPath.substring(resultPath.lastIndexOf('/') + 1, resultPath.length());
 			String testDataSetFileName = t.getTestDataSetPath().substring(t.getTestDataSetPath().lastIndexOf('/') + 1,
 					t.getTestDataSetPath().length());
 
