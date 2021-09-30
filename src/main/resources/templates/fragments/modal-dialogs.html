@@ -183,10 +183,11 @@ aria-labelledby="forgotPasswordLabel">
     
     <div id="registerFileModal" class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog" aria-hidden="false">
         <div class="modal-dialog modal-md" role="document">
-            <div class="modal-content">
+            <div class="modal-content" style="width: 454px;border-radius: 14px;">
                 <div class="modal-header" style="border-bottom: none;margin-left: 32px;margin-top: 10px;">
                     <p class="modal-title">Generate Predictions</p>
-                       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                       <button type="button" class="close" data-dismiss="modal" 
+                       aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
                 <div class="clearfix performInferencingSuccess" style="display: none;margin-left:10px;width:90%;">
                     <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
@@ -201,13 +202,15 @@ aria-labelledby="forgotPasswordLabel">
                   <div class="row row-buffer" style="margin-left: -3px;">
                   <input type="hidden" id="testModelPath" name="testModelPath"/>
                   <input type="hidden" id="modelPath" name="modelPath"/>
-                      <label for="uploadTestInferFile">Upload file to generate predictions </label>
+                      <label for="uploadTestInferFile" style="color: #033D6F;
+                        font-family: 'inter_regular';font-size: 13px;
+                        font-weight: 500;">Upload file to generate predictions </label>
                           <input type ="file" style="margin-top: 14px;" id="uploadTestInferFile" name="uploadTestInferFile"/>
                   </div>
                   </form>                    
-                  <div class="row row-buffer" style="text-align: end;">
+                  <div class="row row-buffer" style="text-align: center;">
                       <div class="col-sm-12" style="margin-bottom: 10px;">
-                        <button type="button" class="btn btn-default pull-right" data-dismiss="modal"> Close</button>
+                        
                           <button class="btn btn-primary pull-right" id="btnRegisterFile"> Generate</button>
                           </div>
                   </div>

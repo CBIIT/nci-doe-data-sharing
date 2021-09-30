@@ -99,7 +99,8 @@
        style="border-bottom: 2px solid rgb(197, 197, 197) !important;padding-bottom:3px;margin-top: -10px;">
        <div class="controls controls-row mt-4">
        <p th:if= "${loggedOnUser == null}" class="infoDownload">
-       <i class="fas fa-info-circle"></i> To download files, <a th:href="@{/loginTab}">log in.</a></p>
+       <img src='images/Status.info-tooltip.png' th:src='@{/images/Status.info-tooltip.png}' 
+       style='width:12px;' alt='Status info'> To download files, <a th:href="@{/loginTab}">log in.</a></p>
        
        <button id="downloadSelectedMetadata" type="button" class="btn btn-primary float-right mb-2 mr-2"
         disabled>Download Selected Metadata</button>
@@ -114,7 +115,7 @@
 			 <th aria-sort="none" class="sortable" aria-label="select all checkbox" role="columnheader" scope="colgroup">
 			 <label style="color: rgba(255,255,255,0.66) !important;" class="select-checkbox-label">
 			 <input type="checkbox" class="selectAll">&nbsp;&nbsp;BATCH SELECT</label></th>
-             <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="colgroup" style="padding-left:0px;">FILE/FOLDER NAME</th>
+             <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="colgroup" style="padding-left:0px;">FILE/COLLECTION</th>
              <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="colgroup" style="padding-left:10px;">FILE SIZE</th>
              <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="colgroup">ACTIONS</th>
            </tr>
