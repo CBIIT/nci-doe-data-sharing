@@ -27,3 +27,7 @@ table#newMetaDataTable thead tr th {
 	color: #000;
 	background-color: transparent;
 }
+
+.select2-selection .select2-selection--multiple{
+	background-color: #F7F7F7;
+}
