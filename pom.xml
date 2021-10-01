@@ -78,7 +78,11 @@
 			<artifactId>jjwt</artifactId>
 			<version>0.2</version>
 		</dependency>
-		
+				<dependency>
+    <groupId>com.jcraft</groupId>
+    <artifactId>jsch</artifactId>
+    <version>0.1.55</version>
+</dependency>
 	     <dependency>	     
 		<groupId>com.oracle</groupId>
 		<artifactId>ojdbc6</artifactId>
