@@ -1163,6 +1163,7 @@ function openPopOverDataSet($this) {
 	table += ind + content + "</div> </div></div> </div>";
 	$("#a01").remove();
 	pop.after(table);
+	initializePopover();
 	var x = pop.data('bs.popover');	
 	pop.data('bs.popover').setContent();
 	pop.popover('show');
