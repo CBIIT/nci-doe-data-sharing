@@ -7,7 +7,7 @@ $(document).ready(function () {
 	
 	$("#modelAnalysisStatus").click(function(e){
 		$(this).css('background-color', '#E87B05');
-		$("#transferTaskStatus").css('background-color','rgb(128 128 128 / 66%)');
+		$("#transferTaskStatus").css('background-color','#B7B7B7');
 		$("#manageTasksTable").hide();
 		$("#inferencingTable").show();
 		refreshTaskDatatable('inferencingTable');
@@ -15,7 +15,7 @@ $(document).ready(function () {
 	
 	$("#transferTaskStatus").click(function(e){
 		$(this).css('background-color', '#E87B05');
-		$("#modelAnalysisStatus").css('background-color','rgb(128 128 128 / 66%)');
+		$("#modelAnalysisStatus").css('background-color','#B7B7B7');
 		$("#inferencingTable").hide();
 		$("#manageTasksTable").show();
 		refreshTaskDatatable('manageTasksTable');
