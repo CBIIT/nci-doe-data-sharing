@@ -55,6 +55,9 @@ public class ManageTasksScheduler extends AbstractDoeController {
 	@Value("${doe.writeaccount.username}")
 	private String writeAccessUserName;
 
+	@Value("${modac.flask.webservice}")
+	private String modacFlaskServer;
+
 	@Autowired
 	InferencingTaskRepository inferencingTaskRepository;
 
@@ -169,9 +172,9 @@ public class ManageTasksScheduler extends AbstractDoeController {
 						? resultPath.substring(resultPath.lastIndexOf('/') + 1, resultPath.length())
 						: null;
 
-				// call flask API
+				// call flask API for each not started task
 				log.info("call flask web service for " + dataFileName);
-				String url = "http://127.0.0.1:5000/modac-routing";
+				String url = modacFlaskServer + "modac-routing";
 				UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(url);
 
 				ucBuilder.queryParam("dataFileName", dataFileName);
@@ -205,7 +208,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 
 		for (InferencingTask t : getAllInProgressTasks) {
 
-			// verify if the y_pred file is available in cloudian
+			// get the result path and verify if the y_pred file is available in cloudian
 			String resultPath = t.getResultPath();
 			String fileNameOriginal = resultPath.substring(resultPath.lastIndexOf('/') + 1, resultPath.length());
 			String testDataSetFileName = t.getTestDataSetPath().substring(t.getTestDataSetPath().lastIndexOf('/') + 1,
@@ -218,7 +221,8 @@ public class ManageTasksScheduler extends AbstractDoeController {
 				String remoteDir = "/mnt/IRODsTest/" + fileNameOriginal;
 				try {
 					channelSftp1.lstat(remoteDir);
-					// if predictions file is available, create a collection folder and upload
+					// if predictions file is available, create a collection folder under Asset and
+					// upload
 					// prediction under this folder
 					String parentPath = t.getTestDataSetPath().substring(0, t.getTestDataSetPath().lastIndexOf('/'));
 					String folderPath = parentPath + "/Predictions_" + t.getUserId();

@@ -15,7 +15,6 @@ def modac_routing():
     datafilename = request.args.get("dataFileName", None)
     modelfilename = request.args.get("modelName", None)
     predictions_filename = request.args.get("resultFileName", None)
-    print("model file:" + modelfilename)
     if datafilename is not None:
         downloadFile(datafilename)
     if modelfilename is not None and modelfilename:
@@ -28,16 +27,18 @@ def modac_routing():
     print(predictions_filename)
     print(modelfilename)
     main(predictions_filename, modelfilename, datafilename)
+    # subprocess.call(['python', 'infer.py', predictions_filename, modelfilename, datafilename])
     # os.system("sbatch %s" % main)
-    # os.system('ssh ncidoesvct2@batch.ncifcrf.gov python < test.py >> mylog.txt 2>&1')
+    # os.system('ssh ncidoesvct2@batch.ncifcrf.gov python < infer.py >> mylog.txt 2>&1')
     return "OK"
 
 
 def downloadFile(fileName):
     # Server connection information
+    # this is used when running on local
     host_name = 'fsdmel-modac01d.ncifcrf.gov'
     user_name = 'ncidoesvct1'
-    password = ''
+    password = 'Cancer$0rSep30t'
 
     # Connect to remote server
     t = paramiko.Transport(host_name)

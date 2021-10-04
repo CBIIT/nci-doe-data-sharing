@@ -99,7 +99,7 @@ public class PerformInferencingController extends AbstractDoeController {
 			@RequestParam("testModelPath") String testModelPath, HttpSession session, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
-		log.info("perform inferencing");
+		log.info("perform inferencing for test dataset: " + uploadTestInferFile.getOriginalFilename());
 
 		String modelh5Path = request.getParameter("modelPath");
 
@@ -107,16 +107,18 @@ public class PerformInferencingController extends AbstractDoeController {
 
 		parentPath = testModelPath.substring(0, testModelPath.lastIndexOf('/'));
 
+		// create a modac task Id
 		String taskId = UUID.randomUUID().toString();
 
-		String resultPath = parentPath + "/y_pred_" + taskId +".csv";
+		// create a file name for y_pred file and append to the asset Path
+		String resultPath = parentPath + "/y_pred_" + taskId + ".csv";
 
 		try {
 			// save the inferencing task
 			inferencingTaskService.saveInferenceTask(getLoggedOnUserInfo(), taskId, parentPath, resultPath,
 					testModelPath, modelh5Path);
 
-			// copy the test dataset file to IRODsTest
+			// copy the test dataset file to IRODsTest mount through sftp transfer
 			ChannelSftp channelSftp = setupJsch();
 			channelSftp.connect();
 			InputStream is = uploadTestInferFile.getInputStream();
@@ -128,8 +130,8 @@ public class PerformInferencingController extends AbstractDoeController {
 			return "Perform Inferencing task Submitted. Your task Id is " + taskId;
 		} catch (Exception e) {
 			log.error("Exception in uploading inferencing file: " + e);
+			throw new DoeWebException("Exception in uploading inferencing file: " + e);
 		}
-		return "Error in submitting dataset for inferencing";
 	}
 
 }

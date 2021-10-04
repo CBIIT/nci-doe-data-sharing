@@ -991,6 +991,7 @@ public abstract class AbstractDoeController {
 	}
 
 	public ChannelSftp setupJsch() throws JSchException {
+		log.info("setting up secure transfer connection");
 		JSch jsch = new JSch();
 		Session jschSession = jsch.getSession(writeAccessUserName, "fsdmel-modac01d.ncifcrf.gov");
 		java.util.Properties config = new java.util.Properties();

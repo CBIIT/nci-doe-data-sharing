@@ -5,7 +5,6 @@ import paramiko
 from keras.models import load_model
 import numpy as np
 import pandas as pd
-import subprocess
 
 
 def main(fname, model_name, testdataset):
@@ -33,11 +32,10 @@ def main(fname, model_name, testdataset):
 
     hist_site_dataframe = pd.DataFrame(hist_site_pred)
     hist_site_dataframe.to_csv(fname);
-    # subprocess.run(["scp", fname, "ncidoesvct1@fsdmel-modac01d.ncifcrf.gov:/mnt/IRODsTest/"])
     if os.path.isfile(fname):
         host_name = 'fsdmel-modac01d.ncifcrf.gov'
         user_name = 'ncidoesvct1'
-        password = ''
+        password = 'Cancer$0rSep30t'
         # Connect to remote server
         t = paramiko.Transport(host_name)
         t.connect(username=user_name, password=password)
