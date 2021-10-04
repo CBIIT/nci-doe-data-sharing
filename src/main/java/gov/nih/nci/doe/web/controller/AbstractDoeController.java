@@ -146,6 +146,9 @@ public abstract class AbstractDoeController {
 
 	@Value("${doe.writeaccount.username}")
 	private String writeAccessUserName;
+	
+	@Value("${asset.bulk.collections}")
+	public String bulkAssetsPaths;
 
 	@Autowired
 	InferencingTaskService inferencingTaskService;

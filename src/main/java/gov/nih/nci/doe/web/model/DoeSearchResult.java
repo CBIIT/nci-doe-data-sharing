@@ -1,6 +1,5 @@
 package gov.nih.nci.doe.web.model;
 
-
 public class DoeSearchResult {
 
 	private String dataSetName;
@@ -20,6 +19,15 @@ public class DoeSearchResult {
 	private String dataSetdmeDataId;
 	private String assetType;
 	private String dmeDataId;
+	private Boolean isBulkAsset;
+
+	public Boolean getIsBulkAsset() {
+		return isBulkAsset;
+	}
+
+	public void setIsBulkAsset(Boolean isBulkAsset) {
+		this.isBulkAsset = isBulkAsset;
+	}
 
 	public String getDmeDataId() {
 		return dmeDataId;
@@ -156,6 +164,5 @@ public class DoeSearchResult {
 	public void setProgramCollectionId(Integer programCollectionId) {
 		this.programCollectionId = programCollectionId;
 	}
-
 
 }

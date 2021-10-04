@@ -366,12 +366,18 @@ function renderDataSetName(data, type, row){
 		var editDataSetHtml = "";
 		var checkboxHtml = "";
 		
-		if(isUploader && isUploader == true) {
+		if(row.isBulkAsset == false) {
+		   if(isUploader && isUploader == true) {
 			checkboxHtml += "<input aria-label='checkbox' type='checkbox' id=" + row.dataSetPath + " " +
 					        "class='selectCheckboxForIns'/>";
-		} else {
+		    } else {
 			checkboxHtml += "<input aria-label='radio' type='radio' id=" + row.dataSetPath + " class='selectRadioForDataSet'/>";
+		    }
+		} else  {
+			checkboxHtml += "<input aria-label='checkbox' style='display:none;' type='checkbox' id=" + row.dataSetPath + " " +
+	        "class='selectCheckboxForIns'/>";
 		}
+		
 		if(row.dataSetPermissionRole && row.dataSetPermissionRole != 'No Permissions') {
 			editDataSetHtml = "<span class='editCollectionMetadata' asset_type = "+ row.assetType+" selectedCollection = 'Asset' " +
 					          "data-fileName = '" + row.dataSetName + "' collectionId  = '" + row.dataSetCollectionId + "' " +

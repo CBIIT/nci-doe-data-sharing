@@ -3,6 +3,7 @@ package gov.nih.nci.doe.web.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -146,6 +147,7 @@ public class SearchController extends AbstractDoeController {
 		List<DoeSearchResult> returnResults = new ArrayList<DoeSearchResult>();
 		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList().getBody();
 		String user = getLoggedOnUserInfo();
+		List<String> bulkAssetsList = Arrays.asList(bulkAssetsPaths.split(","));
 		for (HpcCollectionDTO result : searchResults) {
 			List<HpcMetadataEntry> selfMetadatEntries = result.getMetadataEntries().getSelfMetadataEntries();
 			DoeSearchResult returnResult = new DoeSearchResult();
@@ -156,6 +158,10 @@ public class SearchController extends AbstractDoeController {
 			Integer programCollectionId = getCollectionId(result.getMetadataEntries().getParentMetadataEntries(),
 					"Program");
 
+			Boolean isBulkAsset = bulkAssetsList.stream()
+					.anyMatch(s -> result.getCollection().getCollectionName().equalsIgnoreCase(s));
+			returnResult.setIsBulkAsset(isBulkAsset);
+			returnResult.setDataSetPath(result.getCollection().getCollectionName());
 			returnResult.setDataSetCollectionId(result.getCollection().getCollectionId());
 			returnResult.setStudyCollectionId(studyCollectionId);
 			returnResult.setProgramCollectionId(programCollectionId);
@@ -166,7 +172,7 @@ public class SearchController extends AbstractDoeController {
 			returnResult.setStudyPermissionRole(getPermissionRole(user, studyCollectionId, loggedOnUserPermissions));
 			returnResult
 					.setProgramPermissionRole(getPermissionRole(user, programCollectionId, loggedOnUserPermissions));
-			returnResult.setDataSetPath(result.getCollection().getCollectionName());
+
 			returnResult.setDataSetName(getAttributeValue("asset_name", selfMetadatEntries, "Asset"));
 			returnResult.setDataSetDescription(getAttributeValue("description", selfMetadatEntries, "Asset"));
 			returnResult.setStudyPath(studyPath);
