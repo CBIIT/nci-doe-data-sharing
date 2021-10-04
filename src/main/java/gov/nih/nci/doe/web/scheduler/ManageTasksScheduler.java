@@ -276,8 +276,8 @@ public class ManageTasksScheduler extends AbstractDoeController {
 							t.setTestDataSetPath(folderPath + "/" + testDataSetFileName);
 							t.setResultPath(folderPath + "/" + fileNameOriginal);
 							t.setDmeTaskId(dmeTaskId);
-							t.setStatus("COMPLETED");
-							t.setCompletedDate(new Date());
+							//t.setStatus("COMPLETED");
+							//t.setCompletedDate(new Date());
 							inferencingTaskRepository.saveAndFlush(t);
 						}
 					}
