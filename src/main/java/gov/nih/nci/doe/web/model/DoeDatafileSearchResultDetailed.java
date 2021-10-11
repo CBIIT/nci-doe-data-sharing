@@ -11,6 +11,15 @@ public class DoeDatafileSearchResultDetailed {
 	private Boolean isFolder;
 	private List<DoeDatafileSearchResultDetailed> filesList;
 	private Integer collectionId;
+	private List<DoeDatafileSearchResultDetailed> nestedFolders;
+
+	public List<DoeDatafileSearchResultDetailed> getNestedFolders() {
+		return nestedFolders;
+	}
+
+	public void setNestedFolders(List<DoeDatafileSearchResultDetailed> nestedFolders) {
+		this.nestedFolders = nestedFolders;
+	}
 
 	public Integer getCollectionId() {
 		return collectionId;

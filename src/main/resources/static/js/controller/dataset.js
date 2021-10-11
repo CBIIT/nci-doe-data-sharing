@@ -45,6 +45,7 @@ function generatePredTable(isVisible) {
 		"ordering" : true,
 		"info" : true,
 		"pageLength" : 25,
+		"rowId": 'staffId',
 		"ajax" : {
 			"url" : "/getDataObjects/getPredictionFiles",
 			"type" : "GET",
@@ -531,6 +532,122 @@ $('#dataSetTable tbody').on('click', '.editDataFileCollectionMetadata', function
 
 });
 
+//expand sub folder row
+$('#dataSetTable tbody').on('click', 'a.detail-control-sub-folder', function() {
+	var thistr = $(this).closest('tr');
+	if (thistr.hasClass('shown')) {
+	    $(this).closest('tr').next('div.subFoldersDiv').hide();
+		thistr.removeClass('shown');
+		$(this).find("i.expand.far").toggleClass('fa-folder fa-folder-open');
+	} else {
+    var name = $(this).attr('data-name');
+    var subFoldersFiles = $(this).attr('data-row');
+	var x = JSON.parse(subFoldersFiles);
+	var table;
+	var accessgroups = $("#assetAccessGrp").val();
+	var permissions = $("#assetPermission").val();
+    var tableId = 'table_nested_folder'+name;
+	var tableHtml="<div class='subFoldersDiv' style='width:200px;'><table style='width:1369px;'class='table display" +
+				  " dt-responsive wrap subAssetsDataSetTable' id='" + tableId + "'role='grid'>" +
+				  "<tbody>";
+	if (x && x.length > 0) {
+		$.each(x, function(key, value) {
+			var html = "";
+			var userMetadata = "";
+			var systemMetadata = "";
+			var title = "";
+			var selectHtml;
+			var html1 = "";
+			var downdloadFileName = null;
+			var path = value.path;
+			var n = path.lastIndexOf("/");
+
+			downdloadFileName = path.substring(n + 1);
+
+			if (value.systemMetadata && value.systemMetadata.length > 0) {
+				systemMetadata = JSON.stringify(value.systemMetadata);
+			}
+
+			if (value.selfMetadata && value.selfMetadata.length > 0) {
+				userMetadata = JSON.stringify(value.selfMetadata);
+			}
+			selectHtml = "<input type='checkbox' style='margin-left:6px;' id='"
+				+ value.path + "' "
+				+ "class='dt-checkboxes selectIndividualCheckbox'"
+				+ " aria-label='select'/>";
+			html += "<img src='images/line.svg' class='line' th:src='@{/images/line.png}'>";
+			if (permissions && permissions != 'No Permissions') {
+				html1 += "<span style='border: transparent;' class='btn btn-link btn-sm editDataFileCollectionMetadata'  metadata_path  = '"
+					+ path
+					+ "'"
+					+ "data-fileName = '"
+					+ downdloadFileName
+					+ "' >"
+					+ "<img src='images/Edit-FileMetadata.png' data-toggle='tooltip' title='Edit File Metadata' th:src='@{/images/Edit-FileMetadata.png}' "
+					+ "style='width:17px;' alt='edit collection'></span>";
+			}
+			html1 += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadMetadata'  data_path  = '"
+				+ path
+				+ "' href='javascript:void(0);' "
+				+ "><img src='images/Download-Metadata.png' data-toggle='tooltip' title='Download File Metadata' th:src='@{/images/Download-Metadata.png}' "
+				+ "style='width:17px;' alt='Download File Metadata'></a>";
+			html1 += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLink' href='javascript:void(0);' "
+				+ "data-fileName = "
+				+ downdloadFileName
+				+ " data-path="
+				+ value.path
+				+ " "
+				+ "><img src='images/Download.png' data-toggle='tooltip' title='Download File' th:src='@{/images/Download.png}' "
+				+ "style='width:17px;' alt='download file'></a>";
+
+
+			html += value.name + "&nbsp;&nbsp;<a class='cil_12_no_color button2a' "
+				+ "userMetadata = '"
+				+ userMetadata
+				+ "' file_name = '"
+				+ value.name
+				+ "' sys_metadata = '"
+				+ systemMetadata
+				+ "' "
+				+ "tabindex='0'"
+				+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
+				+ "data-popover-content='#a01' style='float:right'><img src='images/Status.info-tooltip.png' th:src='@{/images/Status.info-tooltip.png}' class='infoMetadata' data-toggle='tooltip' title='File Metadata' alt='Status info'></a>";
+
+			html += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;float:right;' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
+				+ "title='Copy File Path' data-clipboard-text='"
+				+ value.path
+				+ "'>"
+				+ "<img src='images/Copy-FilePath.png' th:src='@{/images/Copy-FilePath.png}' "
+				+ "style='width:17px;' alt='copy file path'></button>";
+
+
+
+
+			if (accessgroups && accessgroups.indexOf("public") == -1 && permissions
+				&& permissions == 'Owner') {
+
+				html1 += "<span style='border: transparent;' data-filePath = '"
+					+ path
+					+ "' class='btn btn-link btn-sm deleteDataFileBtn'>"
+					+ "<img src='images/Delete.png' data-toggle='tooltip' title='Delete File' th:src='@{/images/Delete.png}' "
+					+ "style='width:15px;' alt='Delete File'></span>";
+
+			}
+			tableHtml +=
+				"<tr><td style='background-color: #d3d3d347 !important;width: 15%;'>" + selectHtml + "</td>"
+				+ "<td style='background-color: #d3d3d347 !important;width:40%'>" + html
+				+ "</td><td style='background-color: #d3d3d347 !important;width:20%;'>" + value.fileSize
+				+ "</td><td style='background-color: #d3d3d347 !important;width:25%;'>" + html1 + "</td><tr>";
+		});
+		 table = tableHtml + "</div></tbody></table>";
+
+	}
+	    thistr.after(table);
+		$(this).find("i.expand.far").toggleClass('fa-folder fa-folder-open');
+		thistr.addClass('shown');
+	}
+	});
+
 // expand and close folder row
 $('#dataSetTable tbody').on('click','a.detail-control',function() {
 					var tr = $(this).closest('tr');
@@ -539,30 +656,97 @@ $('#dataSetTable tbody').on('click','a.detail-control',function() {
 						row.child.hide();
 						tr.removeClass('shown');
 						$(this).find("i.expand.far").toggleClass('fa-folder fa-folder-open');
-					} else {						
-						var tr = $(this).closest('tr');
-						var row = dataSetTable.row(tr);
+					} else {												
+						var table;
 						var x = row.data().filesList;
-						var tableId = 'table_'+row.data().name;
+						var nestedFolder = row.data().nestedFolders;
+						var tableId = 'table_' + row.data().name;
+						var className = row.node().className;
+						var accessgroups = $("#assetAccessGrp").val();
+						var permissions = $("#assetPermission").val();
 						var tableHtml= "<table class='table display" +
 								" dt-responsive wrap subAssetsDataSetTable' id='" + tableId + "'role='grid'>" +
 								"<tbody>";
+                        
+						if (nestedFolder && nestedFolder.length > 0) {
+							$.each(nestedFolder, function(key, value) {
+								var downdloadFileName = null;
+								var path = value.path;												
+								var n = path.lastIndexOf("/");												
+								downdloadFileName = path.substring(n + 1);
+								var userMetadata = "";
+								var systemMetadata = "";
+								var nestedEditPermissionsHtml = "";
+								var iconHtml = "";
+								
+								if (value.systemMetadata && value.systemMetadata.length > 0) {
+									systemMetadata = JSON.stringify(value.systemMetadata);
+								}
+
+								if (value.selfMetadata && value.selfMetadata.length > 0) {
+									userMetadata = JSON.stringify(value.selfMetadata);
+								}
+
+								iconHtml += "<a class='detail-control-sub-folder' data-name ='" + value.name + "' data-row='" + JSON.stringify(value.filesList) + "' style='float:left;margin-left:-25px;'><i class='expand far fa-folder'></i></a>";
+
+								iconHtml += value.name + "&nbsp;&nbsp;<a class='cil_12_no_color button2a' "
+									+ "userMetadata = '"
+									+ userMetadata
+									+ "' file_name = '"
+									+ value.name
+									+ "' sys_metadata = '"
+									+ systemMetadata
+									+ "' "
+									+ "tabindex='0'"
+									+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
+									+ "data-popover-content='#a01' style='float:right'><img src='images/Status.info-tooltip.png' th:src='@{/images/Status.info-tooltip.png}' class='infoMetadata' data-toggle='tooltip' title='Folder Metadata' alt='Status info'></a>";
+
+								iconHtml += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;float:right;' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
+									+ "title='Copy Folder Path' data-clipboard-text='"
+									+ value.path
+									+ "'>"
+									+ "<img src='images/Copy-FilePath.png' th:src='@{/images/Copy-FilePath.png}' "
+									+ "style='width:17px;' alt='copy file path'></button>";
+								if (permissions && permissions != 'No Permissions') {
+									nestedEditPermissionsHtml += "<span style='border: transparent;' class='btn btn-link btn-sm editCollectionMetadata'  metadata_path  = '"
+										+ path
+										+ "'"
+										+ "collectionId = '"
+										+ value.collectionId
+										+ "' data-fileName = '"
+										+ downdloadFileName
+										+ "' >"
+										+ "<img src='images/Edit-FileMetadata.png' data-toggle='tooltip' title='Edit Folder Metadata' th:src='@{/images/Edit-FileMetadata.png}' "
+										+ "style='width:17px;' alt='edit collection'></span>";
+									nestedEditPermissionsHtml += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLinkFolder' href='javascript:void(0);' "
+										+ "data-fileName = "
+										+ downdloadFileName
+										+ " data-path="
+										+ value.path
+										+ " "
+										+ "><img src='images/Download.png' data-toggle='tooltip' title='Download Folder' th:src='@{/images/Download.png}' "
+										+ "style='width:17px;' alt='download file'></a>";
+								}
+								tableHtml +=
+									"<tr><td style='background-color: #d3d3d347 !important;width: 15%;'></td>"
+									+ "<td style='background-color: #d3d3d347 !important;width:40%'>" + iconHtml
+									+ "</td><td style='background-color: #d3d3d347 !important;width:20%;'></td>"
+									+ "<td style = 'background-color: #d3d3d347 !important;width:25%;' > " + nestedEditPermissionsHtml + "</td > <tr>";
+							
+							});
+						}
+						
 						if (x && x.length > 0) {
 							$.each(x,function(key, value) {
-
 												var html = "";
 												var userMetadata = "";
 												var systemMetadata = "";
-												var title= "";
 												var selectHtml;
 												var html1 = "";
 												var downdloadFileName = null;
 												var path = value.path;												
-												var n = path.lastIndexOf("/");
-												var accessgroups = $("#assetAccessGrp").val();
-												var permissions = $("#assetPermission").val();
+												var n = path.lastIndexOf("/");												
 												downdloadFileName = path.substring(n + 1);
-												var metadatatitle= "";
 												
 												if (value.systemMetadata && value.systemMetadata.length > 0) {
 													systemMetadata = JSON.stringify(value.systemMetadata);
@@ -571,37 +755,11 @@ $('#dataSetTable tbody').on('click','a.detail-control',function() {
 												if (value.selfMetadata && value.selfMetadata.length > 0) {
 													userMetadata = JSON.stringify(value.selfMetadata);
 												}
-												if (value.isFolder && value.isFolder == true) {
-													metadatatitle ='Folder Metadata';
-													title = "Copy Folder Path";
-													html+= "<a class='detail-control' style='float:left;margin-left:-25px;'><i class='expand far fa-folder'></i></a>";
-													if (permissions && permissions != 'No Permissions') {
-													html1 += "<span style='border: transparent;' class='btn btn-link btn-sm editCollectionMetadata'  metadata_path  = '"
-														+ path
-														+ "'"
-														+ "collectionId = '"
-														+ value.collectionId
-														+ "' data-fileName = '"
-														+ downdloadFileName
-														+ "' >"
-														+ "<img src='images/Edit-FileMetadata.png' data-toggle='tooltip' title='Edit Folder Metadata' th:src='@{/images/Edit-FileMetadata.png}' "
-														+ "style='width:17px;' alt='edit collection'></span>";
-													html1 += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLinkFolder' href='javascript:void(0);' "
-														+ "data-fileName = "
-														+ downdloadFileName
-														+ " data-path="
-														+ value.path
-														+ " "
-														+ "><img src='images/Download.png' data-toggle='tooltip' title='Download Folder' th:src='@{/images/Download.png}' "
-														+ "style='width:17px;' alt='download file'></a>";
-													}
-												} else {
-													metadatatitle = 'File Metadata';
+												
 													selectHtml ="<input type='checkbox' style='margin-left:6px;' id='"
 														+ value.path + "' "
 														+ "class='dt-checkboxes selectIndividualCheckbox'"
 														+ " aria-label='select'/>";
-													title = "Copy File Path";
 													html += "<img src='images/line.svg' class='line' th:src='@{/images/line.png}'>";
 													if (permissions && permissions != 'No Permissions') {
 														html1 += "<span style='border: transparent;' class='btn btn-link btn-sm editDataFileCollectionMetadata'  metadata_path  = '"
@@ -626,7 +784,7 @@ $('#dataSetTable tbody').on('click','a.detail-control',function() {
 														+ " "
 														+ "><img src='images/Download.png' data-toggle='tooltip' title='Download File' th:src='@{/images/Download.png}' "
 														+ "style='width:17px;' alt='download file'></a>";
-												}
+											
 
 												html += value.name + "&nbsp;&nbsp;<a class='cil_12_no_color button2a' "
 														+ "userMetadata = '"
@@ -638,39 +796,33 @@ $('#dataSetTable tbody').on('click','a.detail-control',function() {
 														+ "' "
 														+ "tabindex='0'"
 														+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
-														+ "data-popover-content='#a01' style='float:right'><img src='images/Status.info-tooltip.png' th:src='@{/images/Status.info-tooltip.png}' class='infoMetadata' data-toggle='tooltip' title='"+metadatatitle+"' alt='Status info'></a>";
+														+ "data-popover-content='#a01' style='float:right'><img src='images/Status.info-tooltip.png' th:src='@{/images/Status.info-tooltip.png}' class='infoMetadata' data-toggle='tooltip' title='File Metadata' alt='Status info'></a>";
 
 												html += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;float:right;' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
-														+ "title='"+title+"' data-clipboard-text='"
+														+ "title='Copy File Path' data-clipboard-text='"
 														+ value.path
 														+ "'>"
 														+ "<img src='images/Copy-FilePath.png' th:src='@{/images/Copy-FilePath.png}' "
 														+ "style='width:17px;' alt='copy file path'></button>";
-
-
 												
-
 												if (accessgroups && accessgroups.indexOf("public") == -1 && permissions
-														&& permissions == 'Owner' && value.isFolder == false) {
+														&& permissions == 'Owner') {
 
 													html1 += "<span style='border: transparent;' data-filePath = '"
 															+ path
 															+ "' class='btn btn-link btn-sm deleteDataFileBtn'>"
 															+ "<img src='images/Delete.png' data-toggle='tooltip' title='Delete File' th:src='@{/images/Delete.png}' "
 															+ "style='width:15px;' alt='Delete File'></span>";
-
-												}
-												
-						
+												}												
 												tableHtml+=
 														"<tr><td style='background-color: #d3d3d347 !important;width: 15%;'>" + selectHtml + "</td>"
 																+ "<td style='background-color: #d3d3d347 !important;width:40%'>" + html
 																+ "</td><td style='background-color: #d3d3d347 !important;width:20%;'>" + value.fileSize
 																+ "</td><td style='background-color: #d3d3d347 !important;width:25%;'>" + html1 + "</td><tr>";
 											});
-							var table = tableHtml + "</tbody></table>";
-							row.child(table, row.node().className + " folder_subrow").show();
+							 table = tableHtml + "</tbody></table>";							
 						}
+						row.child(table, className + " folder_subrow").show();						
 						$(this).find("i.expand.far").toggleClass('fa-folder fa-folder-open');
 						tr.addClass('shown');
 					}
@@ -688,8 +840,6 @@ function renderBatchSelectForAssetFiles(data, type, row) {
 	var selectHtml="";
 
 	if (row.isFolder == false) {
-		/*selectHtml = "<input type='checkbox' id='" + row.path + "' class='dt-checkboxes selectFolderCheckbox'"
-		+ " aria-label='select'/>";*/
 		var selectHtml = "<input type='checkbox' id='" + row.path + "' class='dt-checkboxes selectIndividualCheckbox'"
 		+ " aria-label='select'/>";
 	

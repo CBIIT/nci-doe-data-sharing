@@ -360,7 +360,7 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
     margin-left: 111px;
     color: #5099AB;
 }
-table.subAssetsDataSetTable{
+table.subAssetsDataSetTable,table.subFolderAssetsDataSetTable{
 	border: transparent;
     background-color: rgb(251 251 251);
     margin-bottom:0px;

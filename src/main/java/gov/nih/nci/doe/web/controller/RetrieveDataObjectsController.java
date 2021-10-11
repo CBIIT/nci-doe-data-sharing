@@ -34,8 +34,10 @@ import gov.nih.nci.doe.web.model.DoeDatafileSearchResultDetailed;
 import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.model.MoDaCPredictionsResults;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
+import gov.nih.nci.hpc.domain.datamanagement.HpcCollection;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
+import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
@@ -86,7 +88,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 	}
 
 	private List<DoeDatafileSearchResultDetailed> processDataObjectResponseResults(Response restResponse,
-			List<String> systemAttrs, String type) throws IOException {
+			List<String> systemAttrs, String path, HttpSession session) throws IOException, DoeWebException {
 		MappingJsonFactory factory = new MappingJsonFactory();
 		JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 		HpcDataObjectListDTO dataObjects = parser.readValueAs(HpcDataObjectListDTO.class);
@@ -106,36 +108,123 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 				String folderPath = result.getDataObject().getAbsolutePath().substring(0,
 						result.getDataObject().getAbsolutePath().lastIndexOf('/'));
 				String folderName = folderPath.substring(folderPath.lastIndexOf("/") + 1);
+
 				if (StringUtils.isNotEmpty(folderName) && !folderName.startsWith("Predictions")) {
 					DoeDatafileSearchResultDetailed returnResult = getAssetFile(result, true, systemAttrs);
 
-					returnResult.setName(folderName);
-					returnResult.setPath(folderPath);
-					returnResult.setCollectionId(folderType.getCollectionId());
+					String parentPath = folderPath.substring(0, folderPath.lastIndexOf('/'));
 					List<DoeDatafileSearchResultDetailed> folderFiles;
-					if (foldersList.containsKey(folderName)) {
-						folderFiles = foldersList.get(folderName);
-						DoeDatafileSearchResultDetailed returnResult1 = getAssetFile(result, false, systemAttrs);
-						returnResult1.setIsFolder(false);
-						returnResult1.setName(name);
-						returnResult1.setPath(result.getDataObject().getAbsolutePath());
-						folderFiles.add(returnResult1);
+
+					if (!parentPath.equalsIgnoreCase(path)) {
+						String authToken = (String) session.getAttribute("hpcUserToken");
+						// The parent is not Asset which means this is a sub-folder
+
+						DoeDatafileSearchResultDetailed returnResultFile = getAssetFile(result, false, systemAttrs);
+						returnResultFile.setName(name);
+						returnResultFile.setIsFolder(false);
+						returnResultFile.setPath(result.getDataObject().getAbsolutePath());
+
+						String parentName = parentPath.substring(parentPath.lastIndexOf("/") + 1);
+						HpcCollectionListDTO subFolderCollection = DoeClientUtil.getCollection(authToken, serviceURL,
+								folderPath, false);
+						DoeDatafileSearchResultDetailed returnResult1 = new DoeDatafileSearchResultDetailed();
+						returnResult1.setIsFolder(true);
+						if (subFolderCollection != null
+								&& subFolderCollection.getCollections().get(0).getCollection() != null) {
+							HpcCollection subFolder = subFolderCollection.getCollections().get(0).getCollection();
+							returnResult1.setCollectionId(subFolder.getCollectionId());
+
+							returnResult1.setSelfMetadata(getUserMetadata(subFolderCollection.getCollections().get(0)
+									.getMetadataEntries().getSelfMetadataEntries(), "Folder", systemAttrs));
+							returnResult1.setSystemMetadata(getSystemMetaData(subFolderCollection.getCollections()
+									.get(0).getMetadataEntries().getSelfMetadataEntries(), "Folder", systemAttrs));
+							returnResult1.setName(folderName);
+							returnResult1.setPath(folderPath);
+
+						}
+						DoeDatafileSearchResultDetailed parentResult = returnResults.stream()
+								.filter(e -> e.getPath().equalsIgnoreCase(parentPath)).findAny().orElse(null);
+
+						if (foldersList.containsKey(parentName)) {
+
+							if (CollectionUtils.isNotEmpty(parentResult.getNestedFolders())) {
+								DoeDatafileSearchResultDetailed subResult = parentResult.getNestedFolders().stream()
+										.filter(e -> e.getPath().equalsIgnoreCase(folderPath)).findAny().orElse(null);
+								if (subResult != null) {
+									List<DoeDatafileSearchResultDetailed> nestedFoldersFilesList = subResult
+											.getFilesList();
+									nestedFoldersFilesList.add(returnResultFile);
+									subResult.setFilesList(nestedFoldersFilesList);
+								} else {
+									List<DoeDatafileSearchResultDetailed> nestedFoldersFilesList = new ArrayList<DoeDatafileSearchResultDetailed>();
+									List<DoeDatafileSearchResultDetailed> nestedFoldersList = parentResult
+											.getNestedFolders();
+
+									nestedFoldersFilesList.add(returnResultFile);
+									returnResult1.setFilesList(nestedFoldersFilesList);
+									nestedFoldersList.add(returnResult1);
+									parentResult.setNestedFolders(nestedFoldersList);
+								}
+							} else {
+								List<DoeDatafileSearchResultDetailed> nestedFoldersFilesList = new ArrayList<DoeDatafileSearchResultDetailed>();
+								List<DoeDatafileSearchResultDetailed> nestedFoldersList = new ArrayList<DoeDatafileSearchResultDetailed>();
+
+								nestedFoldersFilesList.add(returnResultFile);
+								returnResult1.setFilesList(nestedFoldersFilesList);
+								nestedFoldersList.add(returnResult1);
+								parentResult.setNestedFolders(nestedFoldersList);
+
+							}
+
+						} else {
+							// if the parent folder does not exist,
+							HpcCollectionListDTO parentCollection = DoeClientUtil.getCollection(authToken, serviceURL,
+									parentPath, false);
+							if (parentCollection != null && parentCollection.getCollections().get(0) != null) {
+								returnResult.setName(parentName);
+								returnResult.setPath(parentPath);
+								returnResult.setIsFolder(true);
+								returnResult.setCollectionId(
+										parentCollection.getCollections().get(0).getCollection().getCollectionId());
+							}
+
+							folderFiles = new ArrayList<DoeDatafileSearchResultDetailed>();
+							folderFiles.add(returnResultFile);
+
+							folderFiles = new ArrayList<DoeDatafileSearchResultDetailed>();
+							foldersList.put(parentName, folderFiles);
+							returnResult1.setFilesList(folderFiles);
+
+							List<DoeDatafileSearchResultDetailed> nestedFoldersList = new ArrayList<DoeDatafileSearchResultDetailed>();
+							nestedFoldersList.add(returnResult1);
+							returnResult.setNestedFolders(nestedFoldersList);
+							returnResults.add(returnResult);
+						}
+
 					} else {
-						folderFiles = new ArrayList<DoeDatafileSearchResultDetailed>();
+						returnResult.setName(folderName);
+						returnResult.setPath(folderPath);
+						returnResult.setCollectionId(folderType.getCollectionId());
 						DoeDatafileSearchResultDetailed returnResult1 = getAssetFile(result, false, systemAttrs);
 						returnResult1.setName(name);
 						returnResult1.setIsFolder(false);
 						returnResult1.setPath(result.getDataObject().getAbsolutePath());
-						folderFiles.add(returnResult1);
-						foldersList.put(folderName, folderFiles);
-						returnResult.setIsFolder(true);
-						returnResult.setFilesList(folderFiles);
-						returnResults.add(returnResult);
+						if (foldersList.containsKey(folderName)) {
+							folderFiles = foldersList.get(folderName);
+							folderFiles.add(returnResult1);
+						} else {
+							folderFiles = new ArrayList<DoeDatafileSearchResultDetailed>();
+							folderFiles.add(returnResult1);
+							foldersList.put(folderName, folderFiles);
+							returnResult.setIsFolder(true);
+							returnResult.setFilesList(folderFiles);
+							returnResults.add(returnResult);
+						}
 					}
+
 				}
 
 			} else {
-
 				String attr = getAttributeValue("generate_pred_username",
 						result.getMetadataEntries().getSelfMetadataEntries(), "DataObject");
 				if (StringUtils.isEmpty(attr)) {
@@ -143,12 +232,12 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 					returnResult.setPath(result.getDataObject().getAbsolutePath());
 					returnResult.setName(name);
 					returnResult.setIsFolder(false);
+
 					returnResults.add(returnResult);
 
 				}
 			}
 		}
-
 		return returnResults;
 
 	}
@@ -361,7 +450,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 					modelAnalysisFiles = processGeneratedPredDataObjects(restResponse, systemAttrs);
 					return new ResponseEntity<>(modelAnalysisFiles, HttpStatus.OK);
 				} else {
-					dataResults = processDataObjectResponseResults(restResponse, systemAttrs, type);
+					dataResults = processDataObjectResponseResults(restResponse, systemAttrs, path, session);
 					return new ResponseEntity<>(dataResults, HttpStatus.OK);
 				}
 
