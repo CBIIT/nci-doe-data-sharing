@@ -146,7 +146,7 @@ public abstract class AbstractDoeController {
 
 	@Value("${doe.writeaccount.username}")
 	private String writeAccessUserName;
-	
+
 	@Value("${asset.bulk.collections}")
 	public String bulkAssetsPaths;
 
@@ -238,8 +238,8 @@ public abstract class AbstractDoeController {
 		List<KeyValueBean> entryList = new ArrayList<KeyValueBean>();
 
 		for (HpcMetadataEntry entry : list) {
-			if (systemAttrs != null && !systemAttrs.contains(entry.getAttribute())
-					&& levelName.equalsIgnoreCase(entry.getLevelLabel())) {
+			if (systemAttrs != null && !systemAttrs.contains(entry.getAttribute()) && (levelName == null
+					|| (levelName != null && levelName.equalsIgnoreCase(entry.getLevelLabel())))) {
 				String attrName = lookUpService.getDisplayName(levelName, entry.getAttribute());
 				KeyValueBean k = null;
 				// this is a temporary fix to escape json.stringify error with single and double

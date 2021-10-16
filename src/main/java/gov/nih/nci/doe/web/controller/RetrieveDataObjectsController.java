@@ -135,9 +135,9 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 							returnResult1.setCollectionId(subFolder.getCollectionId());
 
 							returnResult1.setSelfMetadata(getUserMetadata(subFolderCollection.getCollections().get(0)
-									.getMetadataEntries().getSelfMetadataEntries(), "Folder", systemAttrs));
+									.getMetadataEntries().getSelfMetadataEntries(), null, systemAttrs));
 							returnResult1.setSystemMetadata(getSystemMetaData(subFolderCollection.getCollections()
-									.get(0).getMetadataEntries().getSelfMetadataEntries(), "Folder", systemAttrs));
+									.get(0).getMetadataEntries().getSelfMetadataEntries(), null, systemAttrs));
 							returnResult1.setName(folderName);
 							returnResult1.setPath(folderPath);
 
@@ -383,8 +383,8 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 
 		for (HpcMetadataEntry entry : list) {
 			if (systemAttrs != null && systemAttrs.contains(entry.getAttribute())
-					&& SystemAttributesList.dataSystemAttributes.contains(entry.getAttribute())
-					&& levelName.equalsIgnoreCase(entry.getLevelLabel())) {
+					&& SystemAttributesList.dataSystemAttributes.contains(entry.getAttribute()) && (levelName == null
+							|| (levelName != null && levelName.equalsIgnoreCase(entry.getLevelLabel())))) {
 				KeyValueBean k = null;
 				k = new KeyValueBean(entry.getAttribute(), entry.getAttribute(), entry.getValue());
 				entryList.add(k);
