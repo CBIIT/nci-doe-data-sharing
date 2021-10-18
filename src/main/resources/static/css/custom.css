@@ -562,6 +562,14 @@ img.line {
     width: 15px;
 }
 
+img.sub-line{
+	float: left;
+    margin-left: -2px;
+    margin-top: 11px;
+    width: 15px;
+    margin-right: 10px;
+}
+
 img.infoMetadata{
 	width:12px;
 	margin-top:-5px;
@@ -776,6 +784,12 @@ ul#subTab {
     padding-top: 15px;
     letter-spacing: 1px;
     color: #fff;
+}
+
+a.detail-control-sub-folder{
+	float: left;
+    margin-left: -12px;
+    margin-right: 10px;
 }
 
 .Aboutbuttoncontainer {

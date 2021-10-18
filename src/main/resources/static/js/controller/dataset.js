@@ -575,7 +575,7 @@ $('#dataSetTable tbody').on('click', 'a.detail-control-sub-folder', function() {
 				+ value.path + "' "
 				+ "class='dt-checkboxes selectIndividualCheckbox'"
 				+ " aria-label='select'/>";
-			html += "<img src='images/line.svg' class='line' th:src='@{/images/line.png}'>";
+			html += "<img src='images/line.svg' class='sub-line' th:src='@{/images/line.png}'>";
 			if (permissions && permissions != 'No Permissions') {
 				html1 += "<span style='border: transparent;' class='btn btn-link btn-sm editDataFileCollectionMetadata'  metadata_path  = '"
 					+ path
@@ -687,7 +687,7 @@ $('#dataSetTable tbody').on('click','a.detail-control',function() {
 									userMetadata = JSON.stringify(value.selfMetadata);
 								}
 
-								iconHtml += "<a class='detail-control-sub-folder' data-name ='" + value.name + "' data-row='" + JSON.stringify(value.filesList) + "' style='float:left;margin-left:-25px;'><i class='expand far fa-folder'></i></a>";
+								iconHtml += "<a class='detail-control-sub-folder' data-name ='" + value.name + "' data-row='" + JSON.stringify(value.filesList) + "'><i class='expand far fa-folder'></i></a>";
 
 								iconHtml += value.name + "&nbsp;&nbsp;<a class='cil_12_no_color button2a' "
 									+ "userMetadata = '"
