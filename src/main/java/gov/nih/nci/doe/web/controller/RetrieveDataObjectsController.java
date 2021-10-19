@@ -190,10 +190,11 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 
 							folderFiles = new ArrayList<DoeDatafileSearchResultDetailed>();
 							folderFiles.add(returnResultFile);
-
+							returnResult1.setFilesList(folderFiles);
+							
 							folderFiles = new ArrayList<DoeDatafileSearchResultDetailed>();
 							foldersList.put(parentName, folderFiles);
-							returnResult1.setFilesList(folderFiles);
+							
 
 							List<DoeDatafileSearchResultDetailed> nestedFoldersList = new ArrayList<DoeDatafileSearchResultDetailed>();
 							nestedFoldersList.add(returnResult1);

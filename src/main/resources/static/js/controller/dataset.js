@@ -820,8 +820,9 @@ $('#dataSetTable tbody').on('click','a.detail-control',function() {
 																+ "</td><td style='background-color: #d3d3d347 !important;width:20%;'>" + value.fileSize
 																+ "</td><td style='background-color: #d3d3d347 !important;width:25%;'>" + html1 + "</td><tr>";
 											});
-							 table = tableHtml + "</tbody></table>";							
+							 							
 						}
+						table = tableHtml + "</tbody></table>";
 						row.child(table, className + " folder_subrow").show();						
 						$(this).find("i.expand.far").toggleClass('fa-folder fa-folder-open');
 						tr.addClass('shown');
