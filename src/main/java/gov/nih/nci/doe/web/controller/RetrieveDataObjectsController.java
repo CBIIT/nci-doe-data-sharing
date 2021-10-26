@@ -3,10 +3,10 @@ package gov.nih.nci.doe.web.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 
@@ -34,14 +34,16 @@ import gov.nih.nci.doe.web.model.DoeDatafileSearchResultDetailed;
 import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.model.MoDaCPredictionsResults;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
-import gov.nih.nci.hpc.domain.datamanagement.HpcCollection;
+import gov.nih.nci.hpc.domain.datamanagement.HpcCollectionListingEntry;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
+import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
 import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
+import io.jsonwebtoken.lang.Collections;
 
 /**
  *
@@ -87,182 +89,94 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 		return getDataObjectsLevelFiles(session, headers, path, "Prediction_Files");
 	}
 
-	private List<DoeDatafileSearchResultDetailed> processDataObjectResponseResults(Response restResponse,
-			List<String> systemAttrs, String path, HttpSession session) throws IOException, DoeWebException {
+	@GetMapping("/getMetadata")
+	public ResponseEntity<?> getUserMetaDataByPath(@RequestParam(value = "selectedPath") String selectedPath,
+			HttpSession session, HttpServletRequest request, HttpServletResponse response) throws DoeWebException {
+
+		log.info("get model analysis files under asset path: " + selectedPath);
+		DoeDatafileSearchResultDetailed dataResult = new DoeDatafileSearchResultDetailed();
+		String authToken = (String) session.getAttribute("hpcUserToken");
+		List<String> systemAttrs = new ArrayList<>();
+
+		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
+
+		if (modelDTO != null) {
+			systemAttrs = modelDTO.getDataObjectSystemGeneratedMetadataAttributeNames();
+		} else {
+			modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL);
+			session.setAttribute("userDOCModel", modelDTO);
+
+			systemAttrs = modelDTO.getDataObjectSystemGeneratedMetadataAttributeNames();
+		}
+
+		gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectDTO datafiles = DoeClientUtil.getDatafiles(authToken,
+				dataObjectAsyncServiceURL, selectedPath, false, false);
+		if (datafiles != null && datafiles.getDataObject() != null) {
+			dataResult = getAssetFile(datafiles, systemAttrs);
+		}
+
+		return new ResponseEntity<>(dataResult, HttpStatus.OK);
+
+	}
+
+	private List<DoeDatafileSearchResultDetailed> processDataObjectResponseResults(Response restResponse, String path,
+			HttpSession session) throws IOException, DoeWebException {
+
+		log.info("process asset files and folders");
+		List<DoeDatafileSearchResultDetailed> returnResults = new ArrayList<DoeDatafileSearchResultDetailed>();
 		MappingJsonFactory factory = new MappingJsonFactory();
 		JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-		HpcDataObjectListDTO dataObjects = parser.readValueAs(HpcDataObjectListDTO.class);
+		HpcCollectionListDTO dataObjects = parser.readValueAs(HpcCollectionListDTO.class);
 
-		List<HpcDataObjectDTO> searchResults = dataObjects.getDataObjects();
-		List<DoeDatafileSearchResultDetailed> returnResults = new ArrayList<DoeDatafileSearchResultDetailed>();
-		Map<String, List<DoeDatafileSearchResultDetailed>> foldersList = new HashMap<String, List<DoeDatafileSearchResultDetailed>>();
-		for (HpcDataObjectDTO result : searchResults) {
-			String name = result.getDataObject().getAbsolutePath()
-					.substring(result.getDataObject().getAbsolutePath().lastIndexOf('/') + 1);
-			List<HpcMetadataEntry> parentMetadaEntries = result.getMetadataEntries().getParentMetadataEntries();
-			HpcMetadataEntry folderType = parentMetadaEntries.stream()
-					.filter(e -> e.getAttribute().equals("collection_type") && e.getValue().equalsIgnoreCase("Folder"))
-					.findAny().orElse(null);
+		List<HpcCollectionDTO> searchResults = dataObjects.getCollections();
 
-			if (folderType != null) {
-				String folderPath = result.getDataObject().getAbsolutePath().substring(0,
-						result.getDataObject().getAbsolutePath().lastIndexOf('/'));
-				String folderName = folderPath.substring(folderPath.lastIndexOf("/") + 1);
+		List<HpcCollectionListingEntry> dataObjectsList = searchResults.get(0).getCollection().getDataObjects();
 
-				if (StringUtils.isNotEmpty(folderName) && !folderName.startsWith("Predictions")) {
-					DoeDatafileSearchResultDetailed returnResult = getAssetFile(result, true, systemAttrs);
+		List<HpcCollectionListingEntry> subCollections = searchResults.get(0).getCollection().getSubCollections();
 
-					String parentPath = folderPath.substring(0, folderPath.lastIndexOf('/'));
-					List<DoeDatafileSearchResultDetailed> folderFiles;
+		if (!Collections.isEmpty(dataObjectsList)) {
+			for (HpcCollectionListingEntry dataObject : dataObjectsList) {
+				String name = dataObject.getPath().substring(dataObject.getPath().lastIndexOf('/') + 1);
+				DoeDatafileSearchResultDetailed returnResult = new DoeDatafileSearchResultDetailed();
+				returnResult.setPath(dataObject.getPath());
+				returnResult.setName(name);
+				returnResult.setFileSize(addHumanReadableSize(dataObject.getDataSize()));
+				returnResult.setIsFolder(false);
+				returnResults.add(returnResult);
+			}
 
-					if (!parentPath.equalsIgnoreCase(path)) {
-						String authToken = (String) session.getAttribute("hpcUserToken");
-						// The parent is not Asset which means this is a sub-folder
+		}
 
-						DoeDatafileSearchResultDetailed returnResultFile = getAssetFile(result, false, systemAttrs);
-						returnResultFile.setName(name);
-						returnResultFile.setIsFolder(false);
-						returnResultFile.setPath(result.getDataObject().getAbsolutePath());
-
-						String parentName = parentPath.substring(parentPath.lastIndexOf("/") + 1);
-						HpcCollectionListDTO subFolderCollection = DoeClientUtil.getCollection(authToken, serviceURL,
-								folderPath, false);
-						DoeDatafileSearchResultDetailed returnResult1 = new DoeDatafileSearchResultDetailed();
-						returnResult1.setIsFolder(true);
-						if (subFolderCollection != null
-								&& subFolderCollection.getCollections().get(0).getCollection() != null) {
-							HpcCollection subFolder = subFolderCollection.getCollections().get(0).getCollection();
-							returnResult1.setCollectionId(subFolder.getCollectionId());
-
-							returnResult1.setSelfMetadata(getUserMetadata(subFolderCollection.getCollections().get(0)
-									.getMetadataEntries().getSelfMetadataEntries(), null, systemAttrs));
-							returnResult1.setSystemMetadata(getSystemMetaData(subFolderCollection.getCollections()
-									.get(0).getMetadataEntries().getSelfMetadataEntries(), null, systemAttrs));
-							returnResult1.setName(folderName);
-							returnResult1.setPath(folderPath);
-
-						}
-						DoeDatafileSearchResultDetailed parentResult = returnResults.stream()
-								.filter(e -> e.getPath().equalsIgnoreCase(parentPath)).findAny().orElse(null);
-
-						if (foldersList.containsKey(parentName)) {
-
-							if (CollectionUtils.isNotEmpty(parentResult.getNestedFolders())) {
-								DoeDatafileSearchResultDetailed subResult = parentResult.getNestedFolders().stream()
-										.filter(e -> e.getPath().equalsIgnoreCase(folderPath)).findAny().orElse(null);
-								if (subResult != null) {
-									List<DoeDatafileSearchResultDetailed> nestedFoldersFilesList = subResult
-											.getFilesList();
-									nestedFoldersFilesList.add(returnResultFile);
-									subResult.setFilesList(nestedFoldersFilesList);
-								} else {
-									List<DoeDatafileSearchResultDetailed> nestedFoldersFilesList = new ArrayList<DoeDatafileSearchResultDetailed>();
-									List<DoeDatafileSearchResultDetailed> nestedFoldersList = parentResult
-											.getNestedFolders();
-
-									nestedFoldersFilesList.add(returnResultFile);
-									returnResult1.setFilesList(nestedFoldersFilesList);
-									nestedFoldersList.add(returnResult1);
-									parentResult.setNestedFolders(nestedFoldersList);
-								}
-							} else {
-								List<DoeDatafileSearchResultDetailed> nestedFoldersFilesList = new ArrayList<DoeDatafileSearchResultDetailed>();
-								List<DoeDatafileSearchResultDetailed> nestedFoldersList = new ArrayList<DoeDatafileSearchResultDetailed>();
-
-								nestedFoldersFilesList.add(returnResultFile);
-								returnResult1.setFilesList(nestedFoldersFilesList);
-								nestedFoldersList.add(returnResult1);
-								parentResult.setNestedFolders(nestedFoldersList);
-
-							}
-
-						} else {
-							// if the parent folder does not exist,
-							HpcCollectionListDTO parentCollection = DoeClientUtil.getCollection(authToken, serviceURL,
-									parentPath, false);
-							if (parentCollection != null && parentCollection.getCollections().get(0) != null) {
-								returnResult.setName(parentName);
-								returnResult.setPath(parentPath);
-								returnResult.setIsFolder(true);
-								returnResult.setCollectionId(
-										parentCollection.getCollections().get(0).getCollection().getCollectionId());
-							}
-
-							folderFiles = new ArrayList<DoeDatafileSearchResultDetailed>();
-							folderFiles.add(returnResultFile);
-							returnResult1.setFilesList(folderFiles);
-							
-							folderFiles = new ArrayList<DoeDatafileSearchResultDetailed>();
-							foldersList.put(parentName, folderFiles);
-							
-
-							List<DoeDatafileSearchResultDetailed> nestedFoldersList = new ArrayList<DoeDatafileSearchResultDetailed>();
-							nestedFoldersList.add(returnResult1);
-							returnResult.setNestedFolders(nestedFoldersList);
-							returnResults.add(returnResult);
-						}
-
-					} else {
-						returnResult.setName(folderName);
-						returnResult.setPath(folderPath);
-						returnResult.setCollectionId(folderType.getCollectionId());
-						DoeDatafileSearchResultDetailed returnResult1 = getAssetFile(result, false, systemAttrs);
-						returnResult1.setName(name);
-						returnResult1.setIsFolder(false);
-						returnResult1.setPath(result.getDataObject().getAbsolutePath());
-						if (foldersList.containsKey(folderName)) {
-							folderFiles = foldersList.get(folderName);
-							folderFiles.add(returnResult1);
-						} else {
-							folderFiles = new ArrayList<DoeDatafileSearchResultDetailed>();
-							folderFiles.add(returnResult1);
-							foldersList.put(folderName, folderFiles);
-							returnResult.setIsFolder(true);
-							returnResult.setFilesList(folderFiles);
-							returnResults.add(returnResult);
-						}
-					}
-
-				}
-
-			} else {
-				String attr = getAttributeValue("generate_pred_username",
-						result.getMetadataEntries().getSelfMetadataEntries(), "DataObject");
-				if (StringUtils.isEmpty(attr)) {
-					DoeDatafileSearchResultDetailed returnResult = getAssetFile(result, false, systemAttrs);
-					returnResult.setPath(result.getDataObject().getAbsolutePath());
+		if (!Collections.isEmpty(subCollections)) {
+			String user = getLoggedOnUserInfo();
+			for (HpcCollectionListingEntry collection : subCollections) {
+				String name = collection.getPath().substring(collection.getPath().lastIndexOf('/') + 1);
+				if (!("Predictions_" + user).equalsIgnoreCase(name)) {
+					DoeDatafileSearchResultDetailed returnResult = new DoeDatafileSearchResultDetailed();
+					returnResult.setPath(collection.getPath());
 					returnResult.setName(name);
-					returnResult.setIsFolder(false);
-
+					returnResult.setCollectionId(collection.getId());
+					returnResult.setIsFolder(true);
 					returnResults.add(returnResult);
-
 				}
 			}
+
 		}
+
 		return returnResults;
 
 	}
 
-	private DoeDatafileSearchResultDetailed getAssetFile(HpcDataObjectDTO result, Boolean IsParentlevel,
+	private DoeDatafileSearchResultDetailed getAssetFile(gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectDTO result,
 			List<String> systemAttrs) {
 
 		DoeDatafileSearchResultDetailed returnResult = new DoeDatafileSearchResultDetailed();
 
-		if (Boolean.TRUE.equals(IsParentlevel)) {
-
-			returnResult.setSelfMetadata(
-					getUserMetadata(result.getMetadataEntries().getParentMetadataEntries(), "Folder", systemAttrs));
-			returnResult.setSystemMetadata(
-					getSystemMetaData(result.getMetadataEntries().getParentMetadataEntries(), "Folder", systemAttrs));
-
-		} else {
-			returnResult.setSelfMetadata(
-					getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(), "DataObject", systemAttrs));
-			returnResult.setSystemMetadata(
-					getSystemMetaData(result.getMetadataEntries().getSelfMetadataEntries(), "DataObject", systemAttrs));
-			returnResult.setFileSize(addHumanReadableSize(getAttributeValue("source_file_size",
-					result.getMetadataEntries().getSelfMetadataEntries(), "DataObject")));
-		}
+		returnResult.setSelfMetadata(getUserMetadata(
+				result.getMetadataEntries().getSelfMetadataEntries().getUserMetadataEntries(), null, systemAttrs));
+		returnResult.setSystemMetadata(
+				getSystemMetaData(result.getMetadataEntries().getSelfMetadataEntries().getSystemMetadataEntries(),
+						null, systemAttrs));
 
 		return returnResult;
 
@@ -369,9 +283,9 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 
 	}
 
-	private String addHumanReadableSize(String value) {
-		if (StringUtils.isNotEmpty(value)) {
-			return FileUtils.byteCountToDisplaySize(Long.parseLong(value));
+	private String addHumanReadableSize(Long value) {
+		if (value != null) {
+			return FileUtils.byteCountToDisplaySize(value);
 		}
 
 		return null;
@@ -412,56 +326,71 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 			}
 		}
 
-		List<String> systemAttrs = new ArrayList<>();
-
-		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
-
-		if (modelDTO != null) {
-			systemAttrs = modelDTO.getDataObjectSystemGeneratedMetadataAttributeNames();
-		} else {
-			modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL);
-			session.setAttribute("userDOCModel", modelDTO);
-
-			systemAttrs = modelDTO.getDataObjectSystemGeneratedMetadataAttributeNames();
-		}
-
-		systemAttrs.add("collection_type");
-		systemAttrs.add("dme_data_id");
-
 		List<DoeDatafileSearchResultDetailed> dataResults = new ArrayList<DoeDatafileSearchResultDetailed>();
 		List<MoDaCPredictionsResults> modelAnalysisFiles = new ArrayList<MoDaCPredictionsResults>();
 		try {
-			UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(compoundDataObjectSearchServiceURL);
+			if (type.equalsIgnoreCase("Prediction_Files")) {
 
-			if (ucBuilder == null) {
-				return null;
-			}
+				List<String> systemAttrs = new ArrayList<>();
 
-			log.info("retrieve data objects compund query" + compoundQuery);
-			ucBuilder.pathSegment(path.substring(1, path.length()));
-			final String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
-			WebClient client = DoeClientUtil.getWebClient(requestURL);
-			client.header("Authorization", "Bearer " + authToken);
-			Response restResponse = client.invoke("POST", compoundQuery);
+				HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
 
-			if (restResponse.getStatus() == 200) {
-				session.setAttribute("compoundQuery", compoundQuery);
-				if (type.equalsIgnoreCase("Prediction_Files")) {
+				if (modelDTO != null) {
+					systemAttrs = modelDTO.getDataObjectSystemGeneratedMetadataAttributeNames();
+				} else {
+					modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL);
+					session.setAttribute("userDOCModel", modelDTO);
+
+					systemAttrs = modelDTO.getDataObjectSystemGeneratedMetadataAttributeNames();
+				}
+
+				systemAttrs.add("collection_type");
+				systemAttrs.add("dme_data_id");
+
+				UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(compoundDataObjectSearchServiceURL);
+
+				if (ucBuilder == null) {
+					return null;
+				}
+
+				log.info("retrieve data objects compund query" + compoundQuery);
+				ucBuilder.pathSegment(path.substring(1, path.length()));
+				final String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
+				WebClient client = DoeClientUtil.getWebClient(requestURL);
+				client.header("Authorization", "Bearer " + authToken);
+				Response restResponse = client.invoke("POST", compoundQuery);
+				if (restResponse.getStatus() == 200) {
+					session.setAttribute("compoundQuery", compoundQuery);
 
 					modelAnalysisFiles = processGeneratedPredDataObjects(restResponse, systemAttrs);
 					return new ResponseEntity<>(modelAnalysisFiles, HttpStatus.OK);
-				} else {
-					dataResults = processDataObjectResponseResults(restResponse, systemAttrs, path, session);
-					return new ResponseEntity<>(dataResults, HttpStatus.OK);
+
+				} else if (restResponse.getStatus() == 204) {
+
+					return new ResponseEntity<>(modelAnalysisFiles, HttpStatus.OK);
+
 				}
 
-			} else if (restResponse.getStatus() == 204) {
-				if (type.equalsIgnoreCase("Prediction_Files")) {
-					return new ResponseEntity<>(modelAnalysisFiles, HttpStatus.OK);
-				} else {
+			} else {
+				final String requestUrl = UriComponentsBuilder.fromHttpUrl(serviceURL).path("{path}/children")
+						.buildAndExpand(path).encode().toUri().toURL().toExternalForm();
+
+				WebClient client = DoeClientUtil.getWebClient(requestUrl);
+				client.header("Authorization", "Bearer " + authToken);
+				Response restResponse = client.invoke("GET", null);
+				if (restResponse.getStatus() == 200) {
+					session.setAttribute("compoundQuery", compoundQuery);
+
+					dataResults = processDataObjectResponseResults(restResponse, path, session);
 					return new ResponseEntity<>(dataResults, HttpStatus.OK);
+
+				} else if (restResponse.getStatus() == 204) {
+
+					return new ResponseEntity<>(dataResults, HttpStatus.OK);
+
 				}
 			}
+
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 

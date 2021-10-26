@@ -788,8 +788,12 @@ ul#subTab {
 
 a.detail-control-sub-folder{
 	float: left;
-    margin-left: -12px;
+    margin-left:-12px;
     margin-right: 10px;
+}
+
+span.collectionName {
+    margin-left: 17px;
 }
 
 .Aboutbuttoncontainer {

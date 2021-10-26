@@ -10,7 +10,7 @@ $(document).ready(function () {
 		$("#manageTasks-tab").removeClass('active');
 	}
 	
-	 $('.dt-responsive tbody').on('click', 'td', function (e) {
+	 $('.dt-responsive tbody').on('click', 'td', function () {
 		 initializeToolTips();
 		
 	 });
@@ -33,9 +33,9 @@ $(document).ready(function () {
 			 } else {
 				 var attrName = list.attrName[i];
 				 var attrVal = attrVal[i];
-				 $(".attrName").each(function(e){
+				 $(".attrName").each(function(){
 					 if($(this).text() == attrName) {
-						 $(this).parent().parent().find(".filteritem").each(function(e){
+						 $(this).parent().parent().find(".filteritem").each(function(){
 							 if($(this).val() == attrVal) {
 								 $(this).prop("checked",true);
 								 $(this).trigger('change');
@@ -197,11 +197,11 @@ function dataTableInit(isVisible) {
             }
         },
 
-        "initComplete": function (settings, json) {
+        "initComplete": function () {
         	$('body').tooltip({selector: '[data-toggle="tooltip"]'});
         },
 
-        "drawCallback": function (settings) {
+        "drawCallback": function () {
         	$("#searchResultTable thead").remove();
         	if(isVisible) {
         		$("#downloadSelected").show();
@@ -209,12 +209,12 @@ function dataTableInit(isVisible) {
         		$("#downloadSelected").hide();
         	}
 
-           $(".dataSetFragment").click(function(e) {
+           $(".dataSetFragment").click(function() {
         	   var dmeDataId = $(this).attr('dme_data_id');
         	   location.replace('/assetDetails?returnToSearch=true&&dme_data_id='+dmeDataId);
            });
            
-           $(".editCollectionMetadata").click(function(e){
+           $(".editCollectionMetadata").click(function(){
         	   $("#searchFragmentDiv").hide();
         	   $("#dataSetFragment").hide();
         	   $("#editCollectionFragment").show();
@@ -248,7 +248,7 @@ function dataTableInit(isVisible) {
         	   
            });
            
-           $(".editAccessGroupPermissions").click(function(e){
+           $(".editAccessGroupPermissions").click(function(){
          	 var collectionId = $(this).attr('collectionId');
          	 var metaDataPath = $(this).attr('metadata_path');
          	 var selectedCollection = $(this).attr('selectedCollection');
@@ -563,7 +563,7 @@ function initializePopover() {
 
 
 function displayPopover() {
-    $('.button2a').on('click', function (e) {
+    $('.button2a').on('click', function () {
         openPopOver($(this));
         
     });
@@ -577,12 +577,12 @@ function displayPopover() {
 function openPopOver($this) {
     var pop = $this;
     $('.button2a').not($this).popover('hide');
-    var headerTest = 'User Metadata';   
-    var metadata;
+    var headerTest = 'User Metadata';
     var selectedPath = $this.attr('selected_path');
     var collection_type = $this.attr('collection_type');
     
-    var params= {selectedPath:selectedPath,collectionType:collection_type,refresh:false};	
+  if(collection_type != 'DataObject') {
+     var params= {selectedPath:selectedPath,collectionType:collection_type,refresh:false};	
 		$.ajax({
 		       url: '/addCollection',
 		       type: 'GET',
@@ -596,7 +596,10 @@ function openPopOver($this) {
 		       success: function (data, status) {
 		    	   $("#spinner").hide();
 		           $("#dimmer").hide();
-		    	   metadata= data;
+                   var table ="";
+                   
+				   if(data.length > 0) {
+		    	      
 		    	      var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\">" +
 		                "" + headerTest +" <a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a> </div>" +
 		                "<div class='popover-body'> <div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
@@ -604,9 +607,9 @@ function openPopOver($this) {
 		                "<div class='divTableHead'>ATTRIBUTE</div>" + 
 		                "<div class='divTableHead'>VALUE</div></div>";
 
-		            var content = "";
+		               var content = "";
 
-		            $.each(metadata, function( key, value ) {	
+		             $.each(data, function( key, value ) {	
 		            	var attrVal = value.attrValue;
 		            	if(attrVal.startsWith('https') || attrVal.startsWith('http')) {
 		            		content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
@@ -616,20 +619,119 @@ function openPopOver($this) {
 		                    "<div class='divTableCell'>" + attrVal + "</div></div>";
 		            	}
 		                
-		                });
+		              });
+					  table = ind + content + "</div> </div></div> </div>";
+					} else {
+						table = "<div id=\"a01\" class=\"col-md-12 hidden\">" 
+						+"<div class=\"popover-heading\"> No User Metadata &nbsp;&nbsp;" +
+		                "<a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a> </div>" +
+		                "<div class='popover-body'></div></div>";
+					}
 		            
-		            var table = ind + content + "</div> </div></div> </div>";
+		            
 		            $("#a01").remove();
 		            pop.after(table);
+					initializePopover();
 		            pop.data('bs.popover').setContent();
 		            pop.popover('show');
 		       },
 		       error: function (data, status, error) {
 		    	   $("#spinner").hide();
 		           $("#dimmer").hide();
+				   console.log("===> data: ", data);
 		    	   console.log("===> status: ", status);
 		    	   console.log("===> error: ", error);
 		       }
 
-		   });  
+		   }); 
+		} else {
+			openDataObjectPopOver($this);
+		}
+}
+
+
+function openDataObjectPopOver($this) {
+	var pop = $this;
+	$('.button2a').not($this).popover('hide');
+	var fileName = $this.attr('file_name');
+	var selectedPath = $this.attr('selected_path');
+
+	var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"><div class=\"popover-heading\">" + "Metadata for " + fileName
+		+ "<a class=\"button closeBtn float-right\" href=\"javascript:void(0);\">"
+		+ "<i class=\"fa fa-times\"></i></a> </div><div class='popover-body'>";
+	var table = "";
+	var content = "";
+
+	var params= {selectedPath:selectedPath};
+	
+	$.ajax({
+		url: '/getDataObjects/getMetadata',
+		type: 'GET',
+		contentType: 'application/json',
+		dataType: 'json',
+		data: params,
+		beforeSend: function() {
+			$("#spinner").show();
+			$("#dimmer").show();
+		},
+		success: function(data, status) {
+			$("#spinner").hide();
+			$("#dimmer").hide();
+			console.log("success status: ", status);
+			
+			if (data.selfMetadata.length > 0) {
+
+				ind += "<p><b>User Metadata </b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>"
+					+ "<div class='divTableBody'><div class='divTableRow'>"
+					+ "<div class='divTableHead rowAttribute'>ATTRIBUTE</div>"
+					+ "<div class='divTableHead'>VALUE</div></div>";
+
+				$.each(data.selfMetadata, function(key, value) {
+					if (value.value.startsWith('https') || value.value.startsWith('http')) {
+						content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>"
+							+ "<div class='divTableCell'><a target='_blank' href=" + value.value + ">" + value.value
+							+ "</a></div></div>";
+					} else {
+						content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>"
+							+ "<div class='divTableCell'>" + value.value + "</div></div>";
+					}
+
+				});
+				content += "</div> </div><br/>";
+
+			}
+
+			if (data.systemMetadata.length > 0) {
+				content += "<p><b>Key System Metadata </b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>"
+					+ "<div class='divTableBody'><div class='divTableRow'>"
+					+ "<div class='divTableHead rowAttribute'>ATTRIBUTE</div>"
+					+ "<div class='divTableHead'>VALUE</div></div>";
+
+				$.each(data.systemMetadata, function(key, value) {
+					content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>"
+						+ "<div class='divTableCell'>" + value.value + "</div></div>";
+				});
+
+				content += "</div> </div>";
+
+			}
+
+			table += ind + content + "</div> </div></div> </div>";
+			$("#a01").remove();
+			pop.after(table);
+			initializePopover();
+			pop.data('bs.popover').setContent();
+			pop.popover('show');
+
+		},
+		error: function(data, status, error) {
+			$("#spinner").hide();
+			$("#dimmer").hide();
+			console.log("===> data: ", data);
+			console.log("===> status: ", status);
+			console.log("===> error: ", error);
+		}
+
+	});
+
 }

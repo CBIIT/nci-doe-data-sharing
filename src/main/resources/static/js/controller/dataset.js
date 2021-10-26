@@ -1,8 +1,7 @@
 $(document).ready(function() {
-	var dataSetTable;
 	refreshTaskDatatable('dataSetTable');
 
-	$("#assetFilesTab").click(function(e) {
+	$("#assetFilesTab").click(function() {
 		$(this).css('background-color', '#194F85');
 		$("#generatePredictionsTab").css('background-color', 'rgb(128 128 128 / 33%)');
 		$("#generatePredTable").hide();
@@ -10,14 +9,14 @@ $(document).ready(function() {
 		refreshTaskDatatable('dataSetTable');
 	});
 
-	$("#generatePredictionsTab").click(function(e) {
+	$("#generatePredictionsTab").click(function() {
 		$(this).css('background-color', '#194F85');
 		$("#assetFilesTab").css('background-color', 'rgb(128 128 128 / 33%)');
 		$("#generatePredTable").show();
 		$("#dataSetTable").hide();
 		refreshTaskDatatable('generatePredTable');
 	});
-
+	
 });
 
 function refreshTaskDatatable(table) {
@@ -75,13 +74,13 @@ function generatePredTable(isVisible) {
 			}
 		},
 
-		"initComplete" : function(settings, json) {
+		"initComplete" : function() {
 			$('body').tooltip({
 				selector : '[data-toggle="tooltip"]'
 			});
 		},
 
-		"drawCallback" : function(settings) {
+		"drawCallback" : function() {
 
 			$("#downloadSelectedDataSet").prop("disabled", true);
 			$("#downloadSelectedMetadata").hide();
@@ -94,7 +93,6 @@ function generatePredTable(isVisible) {
 
 			$(".selectAll").change(function(e) {
 				var table = $(e.target).closest('table');
-				var tableId = table.attr('id');
 				$(".downloadModelAnalysisLink").prop("disabled", false);
 				if ($(this).is(':checked')) {
 					$('td input:checkbox', table).prop('checked', true);
@@ -122,11 +120,11 @@ function generatePredTable(isVisible) {
 				}
 			});
 
-			$(".downloadModelAnalysisLink").click(function(e) {
+			$(".downloadModelAnalysisLink").click(function() {
 				onClickOfModelAnlysisBulkDownloadBtn($(this));
 			});
 
-			$("#downloadSelectedDataSet").click(function(e) {
+			$("#downloadSelectedDataSet").click(function() {
 				onClickOfModelAnlysisBulkDownloadBtn();
 			});
 
@@ -228,7 +226,7 @@ function generatePredTable(isVisible) {
 }
 
 function dataTableInitDataSet(isVisible) {
-	dataSetTable = $('#dataSetTable').DataTable({
+	$('#dataSetTable').DataTable({
 		"paging" : true,
 		"ordering" : true,
 		"info" : true,
@@ -262,13 +260,13 @@ function dataTableInitDataSet(isVisible) {
 			}
 		},
 
-		"initComplete" : function(settings, json) {
+		"initComplete" : function() {
 			$('body').tooltip({
 				selector : '[data-toggle="tooltip"]'
 			});
 		},
 
-		"drawCallback" : function(settings) {
+		"drawCallback" : function() {
 
 			$("#downloadSelectedDataSet").prop("disabled", true);
 			$("#downloadSelectedMetadata").prop("disabled", true);
@@ -281,7 +279,7 @@ function dataTableInitDataSet(isVisible) {
 				$("#downloadSelectedMetadata").hide();
 			}
 			
-			$("#downloadSelectedDataSet").click(function(e) {
+			$("#downloadSelectedDataSet").click(function() {
 				onClickOfBulkDownloadBtn('dataSetTable');
 			});
 			
@@ -388,7 +386,7 @@ function dataTableInitDataSet(isVisible) {
 			className: "td_class_7"
 		} ],
 
-		"dom" : '<"top"lip>frt<"bottom"ip>',
+		"dom" : '<"top"lip>rt<"bottom"ip>',
 		"pagingType" : "simple",
 
 		"lengthMenu" : [ [ 10, 25, 50, 100 ], [ 10, 25, 50, 100 ] ],
@@ -427,9 +425,7 @@ $('#dataSetTable').on('click', '.selectAll', function(e) {
 });
 
 
-$('#dataSetTable tbody').on('click', '.selectIndividualCheckbox', function(e) {
-	var table = $(e.target).closest('table').attr('id');
-	
+$('#dataSetTable tbody').on('click', '.selectIndividualCheckbox', function() {
 	if (!$(this).is(':checked')) {
 		$("#dataSetTable").find(".selectAll").prop('checked', false);
 	}
@@ -443,34 +439,33 @@ $('#dataSetTable tbody').on('click', '.selectIndividualCheckbox', function(e) {
 	}
 });
 
-$('#dataSetTable tbody').on('click', '.button2a', function(e) {
-	openPopOverDataSet($(this));
+$('#dataSetTable tbody').on('click', '.button2a', function() {
+	openPopOver($(this));
 });
 
 $('#dataSetTable tbody').on('keypress', '.button2a', function(e) {
 	if (e.which == 13 || e.keyCode == 13) {
-		openPopOverDataSet($(this));
+		openPopOver($(this));
 	}
 });
 
-$('#dataSetTable tbody').on('click', '.downloadLink', function(e) {
+$('#dataSetTable tbody').on('click', '.downloadLink', function() {
 	var path = $(this).attr('data-path');
 	var fileName = $(this).attr('data-fileName');
 	downloadFunction(path, fileName);
 });
 
-$('#dataSetTable tbody').on('click', '.downloadLinkFolder', function(e) {
+$('#dataSetTable tbody').on('click', '.downloadLinkFolder', function() {
 	var path = $(this).attr('data-path');
 	downloadFunction(path, null);
 });
 
 
-$('#dataSetTable tbody').on('click', '.editCollectionMetadata', function(e) {
+$('#dataSetTable tbody').on('click', '.editCollectionMetadata', function() {
 	$("#assetDetailsFragment").hide();
 	$("#editCollectionFragment").show();
 	$(".backToAssetDetailsBtn").show();
 	$(".backToSearchBtn").hide();
-	;
 	var metaDataPath = $(this).attr('metadata_path');
 	var collectionId = $(this).attr('collectionId');
 	var fileName = $(this).attr('data-fileName');
@@ -495,7 +490,7 @@ $('#dataSetTable tbody').on('click', '.editCollectionMetadata', function(e) {
 });
 
 
-$('#dataSetTable tbody').on('click', '.editDataFileCollectionMetadata', function(e) {
+$('#dataSetTable tbody').on('click', '.editDataFileCollectionMetadata', function() {
 	$("#assetDetailsFragment").hide();
 	$("#editCollectionFragment").show();
 	$(".backToAssetDetailsBtn").show();
@@ -532,300 +527,164 @@ $('#dataSetTable tbody').on('click', '.editDataFileCollectionMetadata', function
 
 });
 
-//expand sub folder row
-$('#dataSetTable tbody').on('click', 'a.detail-control-sub-folder', function() {
-	var thistr = $(this).closest('tr');
-	if (thistr.hasClass('shown')) {
-	    $(this).closest('tr').next('div.subFoldersDiv').hide();
-		thistr.removeClass('shown');
-		$(this).find("i.expand.far").toggleClass('fa-folder fa-folder-open');
-	} else {
-    var name = $(this).attr('data-name');
-    var subFoldersFiles = $(this).attr('data-row');
-	var x = JSON.parse(subFoldersFiles);
-	var table;
-	var accessgroups = $("#assetAccessGrp").val();
-	var permissions = $("#assetPermission").val();
-    var tableId = 'table_nested_folder'+name;
-	var tableHtml="<div class='subFoldersDiv' style='width:200px;'><table style='width:1369px;'class='table display" +
-				  " dt-responsive wrap subAssetsDataSetTable' id='" + tableId + "'role='grid'>" +
-				  "<tbody>";
-	if (x && x.length > 0) {
-		$.each(x, function(key, value) {
-			var html = "";
-			var userMetadata = "";
-			var systemMetadata = "";
-			var title = "";
-			var selectHtml;
-			var html1 = "";
-			var downdloadFileName = null;
-			var path = value.path;
-			var n = path.lastIndexOf("/");
-
-			downdloadFileName = path.substring(n + 1);
-
-			if (value.systemMetadata && value.systemMetadata.length > 0) {
-				systemMetadata = JSON.stringify(value.systemMetadata);
-			}
-
-			if (value.selfMetadata && value.selfMetadata.length > 0) {
-				userMetadata = JSON.stringify(value.selfMetadata);
-			}
-			selectHtml = "<input type='checkbox' style='margin-left:6px;' id='"
-				+ value.path + "' "
-				+ "class='dt-checkboxes selectIndividualCheckbox'"
-				+ " aria-label='select'/>";
-			html += "<img src='images/line.svg' class='sub-line' th:src='@{/images/line.png}'>";
-			if (permissions && permissions != 'No Permissions') {
-				html1 += "<span style='border: transparent;' class='btn btn-link btn-sm editDataFileCollectionMetadata'  metadata_path  = '"
-					+ path
-					+ "'"
-					+ "data-fileName = '"
-					+ downdloadFileName
-					+ "' >"
-					+ "<img src='images/Edit-FileMetadata.png' data-toggle='tooltip' title='Edit File Metadata' th:src='@{/images/Edit-FileMetadata.png}' "
-					+ "style='width:17px;' alt='edit collection'></span>";
-			}
-			html1 += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadMetadata'  data_path  = '"
-				+ path
-				+ "' href='javascript:void(0);' "
-				+ "><img src='images/Download-Metadata.png' data-toggle='tooltip' title='Download File Metadata' th:src='@{/images/Download-Metadata.png}' "
-				+ "style='width:17px;' alt='Download File Metadata'></a>";
-			html1 += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLink' href='javascript:void(0);' "
-				+ "data-fileName = "
-				+ downdloadFileName
-				+ " data-path="
-				+ value.path
-				+ " "
-				+ "><img src='images/Download.png' data-toggle='tooltip' title='Download File' th:src='@{/images/Download.png}' "
-				+ "style='width:17px;' alt='download file'></a>";
-
-
-			html += value.name + "&nbsp;&nbsp;<a class='cil_12_no_color button2a' "
-				+ "userMetadata = '"
-				+ userMetadata
-				+ "' file_name = '"
-				+ value.name
-				+ "' sys_metadata = '"
-				+ systemMetadata
-				+ "' "
-				+ "tabindex='0'"
-				+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
-				+ "data-popover-content='#a01' style='float:right'><img src='images/Status.info-tooltip.png' th:src='@{/images/Status.info-tooltip.png}' class='infoMetadata' data-toggle='tooltip' title='File Metadata' alt='Status info'></a>";
-
-			html += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;float:right;' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
-				+ "title='Copy File Path' data-clipboard-text='"
-				+ value.path
-				+ "'>"
-				+ "<img src='images/Copy-FilePath.png' th:src='@{/images/Copy-FilePath.png}' "
-				+ "style='width:17px;' alt='copy file path'></button>";
-
-
-
-
-			if (accessgroups && accessgroups.indexOf("public") == -1 && permissions
-				&& permissions == 'Owner') {
-
-				html1 += "<span style='border: transparent;' data-filePath = '"
-					+ path
-					+ "' class='btn btn-link btn-sm deleteDataFileBtn'>"
-					+ "<img src='images/Delete.png' data-toggle='tooltip' title='Delete File' th:src='@{/images/Delete.png}' "
-					+ "style='width:15px;' alt='Delete File'></span>";
-
-			}
-			tableHtml +=
-				"<tr><td style='background-color: #d3d3d347 !important;width: 15%;'>" + selectHtml + "</td>"
-				+ "<td style='background-color: #d3d3d347 !important;width:40%'>" + html
-				+ "</td><td style='background-color: #d3d3d347 !important;width:20%;'>" + value.fileSize
-				+ "</td><td style='background-color: #d3d3d347 !important;width:25%;'>" + html1 + "</td><tr>";
-		});
-		 table = tableHtml + "</div></tbody></table>";
-
-	}
-	    thistr.after(table);
-		$(this).find("i.expand.far").toggleClass('fa-folder fa-folder-open');
-		thistr.addClass('shown');
-	}
-	});
 
 // expand and close folder row
 $('#dataSetTable tbody').on('click','a.detail-control',function() {
-					var tr = $(this).closest('tr');
-					var row = dataSetTable.row(tr);
-					if (row.child.isShown()) {
-						row.child.hide();
-						tr.removeClass('shown');
-						$(this).find("i.expand.far").toggleClass('fa-folder fa-folder-open');
-					} else {												
-						var table;
-						var x = row.data().filesList;
-						var nestedFolder = row.data().nestedFolders;
-						var tableId = 'table_' + row.data().name;
-						var className = row.node().className;
-						var accessgroups = $("#assetAccessGrp").val();
-						var permissions = $("#assetPermission").val();
-						var tableHtml= "<table class='table display" +
-								" dt-responsive wrap subAssetsDataSetTable' id='" + tableId + "'role='grid'>" +
-								"<tbody>";
-                        
-						if (nestedFolder && nestedFolder.length > 0) {
-							$.each(nestedFolder, function(key, value) {
+	    var thistr = $(this).closest('tr');
+	    var $this = $(this);
+
+	         if (thistr.hasClass('shown')) {
+					$this.closest('tr').next('div.subFoldersDiv').hide();
+					thistr.removeClass('shown');
+					$this.find("i.expand.far").toggleClass('fa-folder fa-folder-open');
+				} else {
+						var name = $this.attr('data-name');
+						var params ={path:$("#assetPath").val()+"/"+name};						
+						$.ajax({
+							"url": "/getDataObjects",
+							"type": "GET",
+							data: params,
+							beforeSend: function() {
+								$("#spinner").show();
+								$("#dimmer").show();
+							},
+							success: function(msg) {
+								$("#spinner").hide();
+								$("#dimmer").hide();
+								var table;
+								var tableId = 'table_' + name;
+								var accessgroups = $("#assetAccessGrp").val();
+								var permissions = $("#assetPermission").val();
+								var tableHtml = "<div class='subFoldersDiv' style='width:200px;'><table style='width:1369px;'class='table display" +
+									" dt-responsive wrap subAssetsDataSetTable' id='" + tableId + "'role='grid'>" +
+									"<tbody>";
+									
+							$.each(msg, function(key, value) {
 								var downdloadFileName = null;
 								var path = value.path;												
 								var n = path.lastIndexOf("/");												
 								downdloadFileName = path.substring(n + 1);
-								var userMetadata = "";
-								var systemMetadata = "";
 								var nestedEditPermissionsHtml = "";
 								var iconHtml = "";
-								
-								if (value.systemMetadata && value.systemMetadata.length > 0) {
-									systemMetadata = JSON.stringify(value.systemMetadata);
-								}
+								var selectHtml = "";
+								var metadataInfoTitle = "File Metadata";
+								var copyPathTitle = "Copy File Path";
+								var collection_type = "";
+								var fileSize = "";
 
-								if (value.selfMetadata && value.selfMetadata.length > 0) {
-									userMetadata = JSON.stringify(value.selfMetadata);
-								}
+								if (value.isFolder == false) {
+									 selectHtml = "<input type='checkbox' id='" + value.path + "' class='dt-checkboxes selectIndividualCheckbox'"
+										+ " aria-label='select'/>";
+									iconHtml += "<span class='collectionName'>" + value.name + "</span>";
+									collection_type = "DataObject";
+									fileSize = value.fileSize;
+								}	
+								if (value.isFolder == true) {
+								  iconHtml += "<a class='detail-control detail-control-sub-folder' data-name = '"+name+"/"+value.name+"'>"
+								           +"<i class='expand far fa-folder'></i></a>"+value.name+"";
+								  metadataInfoTitle = "Folder Metadata";
+								  copyPathTitle = "Copy Folder Path";
+								  collection_type = "Folder";
+								}					
 
-								iconHtml += "<a class='detail-control-sub-folder' data-name ='" + value.name + "' data-row='" + JSON.stringify(value.filesList) + "'><i class='expand far fa-folder'></i></a>";
-
-								iconHtml += value.name + "&nbsp;&nbsp;<a class='cil_12_no_color button2a' "
-									+ "userMetadata = '"
-									+ userMetadata
-									+ "' file_name = '"
-									+ value.name
-									+ "' sys_metadata = '"
-									+ systemMetadata
-									+ "' "
+								iconHtml += "<a class='cil_12_no_color button2a' selected_path='"+value.path+"' collection_type = " + collection_type + " file_name = '"+ value.name +"'"
 									+ "tabindex='0'"
 									+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
-									+ "data-popover-content='#a01' style='float:right'><img src='images/Status.info-tooltip.png' th:src='@{/images/Status.info-tooltip.png}' class='infoMetadata' data-toggle='tooltip' title='Folder Metadata' alt='Status info'></a>";
+									+ "data-popover-content='#a01' style='float:right'><img src='images/Status.info-tooltip.png'"
+									+ "th:src='@{/images/Status.info-tooltip.png}' class='infoMetadata' data-toggle='tooltip'" 
+									+ "title='"+metadataInfoTitle+"' alt='Status info'></a>";
 
-								iconHtml += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;float:right;' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
-									+ "title='Copy Folder Path' data-clipboard-text='"
-									+ value.path
-									+ "'>"
-									+ "<img src='images/Copy-FilePath.png' th:src='@{/images/Copy-FilePath.png}' "
-									+ "style='width:17px;' alt='copy file path'></button>";
+								iconHtml += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;"
+								         +"float:right;' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
+									     + "title='"+copyPathTitle+"' data-clipboard-text='"
+									     + value.path
+									     + "'>"
+									     + "<img src='images/Copy-FilePath.png' th:src='@{/images/Copy-FilePath.png}' "
+									     + "style='width:17px;' alt='copy file path'></button>";
+									
 								if (permissions && permissions != 'No Permissions') {
-									nestedEditPermissionsHtml += "<span style='border: transparent;' class='btn btn-link btn-sm editCollectionMetadata'  metadata_path  = '"
+									if (value.isFolder && value.isFolder == true) {
+										nestedEditPermissionsHtml += "<span style='border: transparent;' class='btn btn-link btn-sm editCollectionMetadata'  metadata_path  = '"
+											+ value.path
+											+ "'"
+											+ "collectionId = '"
+											+ value.collectionId
+											+ "' data-fileName = '"
+											+ downdloadFileName
+											+ "' >"
+											+ "<img src='images/Edit-FileMetadata.png' data-toggle='tooltip' title='Edit Folder Metadata' th:src='@{/images/Edit-FileMetadata.png}' "
+											+ "style='width:17px;' alt='edit collection'></span>";
+									} else {
+										nestedEditPermissionsHtml += "<span style='border: transparent;' class='btn btn-link btn-sm editDataFileCollectionMetadata'  metadata_path  = '"
+											+ value.path
+											+ "'"
+											+ "data-fileName = '"
+											+ downdloadFileName
+											+ "' >"
+											+ "<img src='images/Edit-FileMetadata.png' data-toggle='tooltip' title='Edit File Metadata' th:src='@{/images/Edit-FileMetadata.png}' "
+											+ "style='width:17px;' alt='edit collection'></span>";
+									}
+
+								}
+
+								if (value.isFolder == false) {
+									nestedEditPermissionsHtml += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadMetadata'  data_path  = '"
 										+ path
-										+ "'"
-										+ "collectionId = '"
-										+ value.collectionId
-										+ "' data-fileName = '"
+										+ "' href='javascript:void(0);' "
+										+ "><img src='images/Download-Metadata.png' data-toggle='tooltip' title= 'Download File Metadata' th:src='@{/images/Download-Metadata.png}' "
+										+ "style='width:17px;' alt='Download File Metadata'></a>";
+
+									nestedEditPermissionsHtml += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLink' href='javascript:void(0);' "
+										+ "data-fileName = "
 										+ downdloadFileName
-										+ "' >"
-										+ "<img src='images/Edit-FileMetadata.png' data-toggle='tooltip' title='Edit Folder Metadata' th:src='@{/images/Edit-FileMetadata.png}' "
-										+ "style='width:17px;' alt='edit collection'></span>";
+										+ " data-path="
+										+ value.path
+										+ " "
+										+ "><img src='images/Download.png' data-toggle='tooltip' title='Download File' th:src='@{/images/Download.png}' " + "style='width:17px;' alt='download file'></a>";
+								} else {
+									downloadFileTitle = "Download Folder";
 									nestedEditPermissionsHtml += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLinkFolder' href='javascript:void(0);' "
 										+ "data-fileName = "
 										+ downdloadFileName
 										+ " data-path="
 										+ value.path
 										+ " "
-										+ "><img src='images/Download.png' data-toggle='tooltip' title='Download Folder' th:src='@{/images/Download.png}' "
-										+ "style='width:17px;' alt='download file'></a>";
+										+ "><img src='images/Download.png' data-toggle='tooltip' title='"
+										+ downloadFileTitle
+										+ "' th:src='@{/images/Download.png}' " + "style='width:17px;' alt='download file'></a>";
+								}
+
+								if (accessgroups && accessgroups.indexOf("public") == -1 && permissions
+									&& permissions == 'Owner') {
+
+									nestedEditPermissionsHtml += "<span style='border: transparent;' data-filePath = '"
+										+ value.path
+										+ "' class='btn btn-link btn-sm deleteDataFileBtn'>"
+										+ "<img src='images/Delete.png' data-toggle='tooltip' title='Delete File' th:src='@{/images/Delete.png}' "
+										+ "style='width:15px;' alt='Delete File'></span>";
 								}
 								tableHtml +=
-									"<tr><td style='background-color: #d3d3d347 !important;width: 15%;'></td>"
+									"<tr><td style='background-color: #d3d3d347 !important;width: 15%;'>"+selectHtml+"</td>"
 									+ "<td style='background-color: #d3d3d347 !important;width:40%'>" + iconHtml
-									+ "</td><td style='background-color: #d3d3d347 !important;width:20%;'></td>"
+									+ "</td><td style='background-color: #d3d3d347 !important;width:20%;'>"+fileSize+"</td>"
 									+ "<td style = 'background-color: #d3d3d347 !important;width:25%;' > " + nestedEditPermissionsHtml + "</td > <tr>";
-							
+
 							});
-						}
-						
-						if (x && x.length > 0) {
-							$.each(x,function(key, value) {
-												var html = "";
-												var userMetadata = "";
-												var systemMetadata = "";
-												var selectHtml;
-												var html1 = "";
-												var downdloadFileName = null;
-												var path = value.path;												
-												var n = path.lastIndexOf("/");												
-												downdloadFileName = path.substring(n + 1);
-												
-												if (value.systemMetadata && value.systemMetadata.length > 0) {
-													systemMetadata = JSON.stringify(value.systemMetadata);
-												}
 
-												if (value.selfMetadata && value.selfMetadata.length > 0) {
-													userMetadata = JSON.stringify(value.selfMetadata);
-												}
-												
-													selectHtml ="<input type='checkbox' style='margin-left:6px;' id='"
-														+ value.path + "' "
-														+ "class='dt-checkboxes selectIndividualCheckbox'"
-														+ " aria-label='select'/>";
-													html += "<img src='images/line.svg' class='line' th:src='@{/images/line.png}'>";
-													if (permissions && permissions != 'No Permissions') {
-														html1 += "<span style='border: transparent;' class='btn btn-link btn-sm editDataFileCollectionMetadata'  metadata_path  = '"
-																+ path
-																+ "'"
-																+ "data-fileName = '"
-																+ downdloadFileName
-																+ "' >"
-																+ "<img src='images/Edit-FileMetadata.png' data-toggle='tooltip' title='Edit File Metadata' th:src='@{/images/Edit-FileMetadata.png}' "
-																+ "style='width:17px;' alt='edit collection'></span>";
-													}
-													html1 += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadMetadata'  data_path  = '"
-														+ path
-														+ "' href='javascript:void(0);' "
-														+ "><img src='images/Download-Metadata.png' data-toggle='tooltip' title='Download File Metadata' th:src='@{/images/Download-Metadata.png}' "
-														+ "style='width:17px;' alt='Download File Metadata'></a>";
-													html1 += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLink' href='javascript:void(0);' "
-														+ "data-fileName = "
-														+ downdloadFileName
-														+ " data-path="
-														+ value.path
-														+ " "
-														+ "><img src='images/Download.png' data-toggle='tooltip' title='Download File' th:src='@{/images/Download.png}' "
-														+ "style='width:17px;' alt='download file'></a>";
-											
+								table = tableHtml + "</div></tbody></table>";
+								thistr.after(table);
+								$this.find("i.expand.far").toggleClass('fa-folder fa-folder-open');
+								thistr.addClass('shown');
 
-												html += value.name + "&nbsp;&nbsp;<a class='cil_12_no_color button2a' "
-														+ "userMetadata = '"
-														+ userMetadata
-														+ "' file_name = '"
-														+ value.name
-														+ "' sys_metadata = '"
-														+ systemMetadata
-														+ "' "
-														+ "tabindex='0'"
-														+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
-														+ "data-popover-content='#a01' style='float:right'><img src='images/Status.info-tooltip.png' th:src='@{/images/Status.info-tooltip.png}' class='infoMetadata' data-toggle='tooltip' title='File Metadata' alt='Status info'></a>";
+							},
+							error: function(e) {
+								console.log('ERROR: ', e);
+								$("#spinner").hide();
+								$("#dimmer").hide();
+								
+							}
+						});												
 
-												html += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;float:right;' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
-														+ "title='Copy File Path' data-clipboard-text='"
-														+ value.path
-														+ "'>"
-														+ "<img src='images/Copy-FilePath.png' th:src='@{/images/Copy-FilePath.png}' "
-														+ "style='width:17px;' alt='copy file path'></button>";
-												
-												if (accessgroups && accessgroups.indexOf("public") == -1 && permissions
-														&& permissions == 'Owner') {
-
-													html1 += "<span style='border: transparent;' data-filePath = '"
-															+ path
-															+ "' class='btn btn-link btn-sm deleteDataFileBtn'>"
-															+ "<img src='images/Delete.png' data-toggle='tooltip' title='Delete File' th:src='@{/images/Delete.png}' "
-															+ "style='width:15px;' alt='Delete File'></span>";
-												}												
-												tableHtml+=
-														"<tr><td style='background-color: #d3d3d347 !important;width: 15%;'>" + selectHtml + "</td>"
-																+ "<td style='background-color: #d3d3d347 !important;width:40%'>" + html
-																+ "</td><td style='background-color: #d3d3d347 !important;width:20%;'>" + value.fileSize
-																+ "</td><td style='background-color: #d3d3d347 !important;width:25%;'>" + html1 + "</td><tr>";
-											});
-							 							
-						}
-						table = tableHtml + "</tbody></table>";
-						row.child(table, className + " folder_subrow").show();						
-						$(this).find("i.expand.far").toggleClass('fa-folder fa-folder-open');
-						tr.addClass('shown');
 					}
 });
 
@@ -925,36 +784,23 @@ function renderPredictionsName(data, type, row) {
 function renderDataSetPath(data, type, row) {
 
 	var html = "";
-	var userMetadata = "";
-	var systemMetadata = "";
 	var title = "";
-	var metadatatitle= ""
-	if (row.systemMetadata && row.systemMetadata.length > 0) {
-		systemMetadata = JSON.stringify(row.systemMetadata);
-	}
-
-	if (row.selfMetadata && row.selfMetadata.length > 0) {
-		userMetadata = JSON.stringify(row.selfMetadata);
-	}
+	var metadatatitle= "";
+	var collection_type ="";
 
 	if (row.isFolder && row.isFolder == true) {
 		title = "Copy Folder Path";
 		metadatatitle ="Folder Metadata";
-		html+= "<a class='detail-control' style='float:left;margin-left:-25px;'><i class='expand far fa-folder'></i></a>";
+		collection_type = "Folder";
+		html+= "<a class='detail-control' data-name = '"+row.name+"' style='float:left;margin-left:-25px;'><i class='expand far fa-folder'></i></a>";
 	} else {
 		title = "Copy File Path";
 		metadatatitle = "File Metadata";
+		collection_type = "DataObject";
 	}
 
 	html += row.name+"&nbsp;&nbsp;" +
-			"<a class='cil_12_no_color button2a' "
-			+ "userMetadata = '"
-			+ userMetadata
-			+ "' file_name = '"
-			+ row.name
-			+ "' sys_metadata = '"
-			+ systemMetadata
-			+ "' "
+			"<a class='cil_12_no_color button2a' selected_path='"+row.path+"' collection_type= " + collection_type + " file_name = '" + row.name +"'"
 			+ "tabindex='0'"
 			+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
 			+ "data-popover-content='#a01' style='float:right'><img src='images/Status.info-tooltip.png'" +
@@ -979,7 +825,6 @@ function renderFileSize(data, type, row) {
 	return "";
 
 }
-
 
 function renderDownload(data, type, row) {
 
@@ -1081,7 +926,7 @@ function renderGeneratePredDownload(data, type, row) {
 	return html;
 }
 
-$('#dataSetTable tbody').on('click', '.deleteDataFileBtn', function(e) {
+$('#dataSetTable tbody').on('click', '.deleteDataFileBtn', function() {
 	var path = $(this).attr('data-filePath');
 	bootbox.confirm({
 		message : "Are you sure you want to delete this?",
@@ -1137,7 +982,7 @@ $('#dataSetTable tbody').on('click', '.deleteDataFileBtn', function(e) {
 $('#dataSetTable tbody').on(
 		'click',
 		'.downloadMetadata',
-		function(e) {			
+		function() {			
 			exportDataObjectMetadataResults($(this));
 
 });
@@ -1244,7 +1089,7 @@ function onClickOfBulkDownloadBtn(tableName) {
 
 
 function displayPopoverDataSet() {
-	$('.button2a').on('click', function(e) {
+	$('.button2a').on('click', function() {
 		openPopOverDataSet($(this));
 	});
 	$('.button2a').on('keypress', function(e) {
@@ -1314,8 +1159,7 @@ function openPopOverDataSet($this) {
 	table += ind + content + "</div> </div></div> </div>";
 	$("#a01").remove();
 	pop.after(table);
-	initializePopover();
-	var x = pop.data('bs.popover');	
+	initializePopover();	
 	pop.data('bs.popover').setContent();
 	pop.popover('show');
 

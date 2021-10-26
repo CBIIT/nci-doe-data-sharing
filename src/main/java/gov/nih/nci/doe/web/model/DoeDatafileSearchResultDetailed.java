@@ -9,17 +9,7 @@ public class DoeDatafileSearchResultDetailed {
 	private List<KeyValueBean> selfMetadata;
 	private List<KeyValueBean> systemMetadata;
 	private Boolean isFolder;
-	private List<DoeDatafileSearchResultDetailed> filesList;
 	private Integer collectionId;
-	private List<DoeDatafileSearchResultDetailed> nestedFolders;
-
-	public List<DoeDatafileSearchResultDetailed> getNestedFolders() {
-		return nestedFolders;
-	}
-
-	public void setNestedFolders(List<DoeDatafileSearchResultDetailed> nestedFolders) {
-		this.nestedFolders = nestedFolders;
-	}
 
 	public Integer getCollectionId() {
 		return collectionId;
@@ -27,14 +17,6 @@ public class DoeDatafileSearchResultDetailed {
 
 	public void setCollectionId(Integer collectionId) {
 		this.collectionId = collectionId;
-	}
-
-	public List<DoeDatafileSearchResultDetailed> getFilesList() {
-		return filesList;
-	}
-
-	public void setFilesList(List<DoeDatafileSearchResultDetailed> filesList) {
-		this.filesList = filesList;
 	}
 
 	public Boolean getIsFolder() {
