@@ -33,7 +33,7 @@ import gov.nih.nci.hpc.domain.datatransfer.HpcFileLocation;
 import gov.nih.nci.hpc.domain.datatransfer.HpcGlobusDownloadDestination;
 import gov.nih.nci.hpc.domain.datatransfer.HpcS3Account;
 import gov.nih.nci.hpc.domain.datatransfer.HpcS3DownloadDestination;
-import gov.nih.nci.hpc.domain.datatransfer.HpcGoogleDriveDownloadDestination;
+import gov.nih.nci.hpc.domain.datatransfer.HpcGoogleDownloadDestination;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectDownloadRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectDownloadResponseDTO;
 import gov.nih.nci.doe.web.service.DoeAuthorizationService;
@@ -130,7 +130,7 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 				dto.setS3DownloadDestination(destination);
 			} else if (downloadFile.getSearchType() != null && downloadFile.getSearchType().equals("drive")) {
 				String accessToken = (String) session.getAttribute("accessToken");
-				HpcGoogleDriveDownloadDestination destination = new HpcGoogleDriveDownloadDestination();
+				HpcGoogleDownloadDestination destination = new HpcGoogleDownloadDestination();
 				HpcFileLocation location = new HpcFileLocation();
 				location.setFileContainerId("MyDrive");
 				location.setFileId(downloadFile.getDrivePath().trim());
