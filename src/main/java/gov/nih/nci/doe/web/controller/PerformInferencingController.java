@@ -123,7 +123,6 @@ public class PerformInferencingController extends AbstractDoeController {
 			// copy the test dataset file to IRODsTest mount through sftp transfer
 			File file = new File("/mnt/IRODsTest/" + uploadTestInferFile.getOriginalFilename());
 			OutputStream out = new FileOutputStream(file);
-			// Write your data
 			out.close();
 
 			return "Perform Inferencing task Submitted. Your task Id is " + taskId;
