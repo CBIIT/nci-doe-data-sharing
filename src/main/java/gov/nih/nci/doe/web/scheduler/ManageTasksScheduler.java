@@ -1,8 +1,8 @@
 package gov.nih.nci.doe.web.scheduler;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -16,9 +16,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.SftpException;
 
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.controller.AbstractDoeController;
@@ -216,14 +213,12 @@ public class ManageTasksScheduler extends AbstractDoeController {
 
 			try {
 				log.info("verify if inferencing file is available on mount " + fileNameOriginal);
-				ChannelSftp channelSftp1 = setupJsch();
-				channelSftp1.connect();
-				String remoteDir = "/mnt/IRODsTest/" + fileNameOriginal;
-				try {
-					channelSftp1.lstat(remoteDir);
-					// if predictions file is available, create a collection folder under Asset and
-					// upload
-					// prediction under this folder
+
+				boolean check = new File("/mnt/IRODsTest/" + fileNameOriginal).exists();
+				// if predictions file is available, create a collection folder under Asset and
+				// upload
+				// prediction under this folder
+				if (Boolean.TRUE.equals(check)) {
 					String parentPath = t.getTestDataSetPath().substring(0, t.getTestDataSetPath().lastIndexOf('/'));
 					String folderPath = parentPath + "/Predictions_" + t.getUserId();
 					HpcCollectionRegistrationDTO dto = new HpcCollectionRegistrationDTO();
@@ -276,19 +271,10 @@ public class ManageTasksScheduler extends AbstractDoeController {
 							t.setTestDataSetPath(folderPath + "/" + testDataSetFileName);
 							t.setResultPath(folderPath + "/" + fileNameOriginal);
 							t.setDmeTaskId(dmeTaskId);
-							//t.setStatus("COMPLETED");
-							//t.setCompletedDate(new Date());
 							inferencingTaskRepository.saveAndFlush(t);
 						}
 					}
-				} catch (SftpException e) {
-					if (e.id == ChannelSftp.SSH_FX_NO_SUCH_FILE) {
-						log.error("File does not exist" + fileNameOriginal);
-					} else {
-						log.error("Error in get file: " + e);
-					}
 				}
-				channelSftp1.exit();
 
 			} catch (Exception e) {
 				log.error("Exception in verifying predictions file and uploading: " + e);

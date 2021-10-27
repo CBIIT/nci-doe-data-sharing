@@ -1,7 +1,10 @@
 package gov.nih.nci.doe.web.controller;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,7 +33,6 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jcraft.jsch.ChannelSftp;
 
 import javax.ws.rs.core.Response;
 import gov.nih.nci.doe.web.DoeWebException;
@@ -119,14 +121,11 @@ public class PerformInferencingController extends AbstractDoeController {
 					testModelPath, modelh5Path);
 
 			// copy the test dataset file to IRODsTest mount through sftp transfer
-			ChannelSftp channelSftp = setupJsch();
-			channelSftp.connect();
-			InputStream is = uploadTestInferFile.getInputStream();
-			String remoteDir = "/mnt/IRODsTest/" + uploadTestInferFile.getOriginalFilename();
+			File file = new File("/mnt/IRODsTest/" + uploadTestInferFile.getOriginalFilename());
+			OutputStream out = new FileOutputStream(file);
+			// Write your data
+			out.close();
 
-			channelSftp.put(is, remoteDir);
-
-			channelSftp.exit();
 			return "Perform Inferencing task Submitted. Your task Id is " + taskId;
 		} catch (Exception e) {
 			log.error("Exception in uploading inferencing file: " + e);

@@ -39,10 +39,6 @@ import org.springframework.web.context.request.WebRequest;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
 
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.domain.LookUp;
@@ -993,16 +989,4 @@ public abstract class AbstractDoeController {
 		return sortedList;
 	}
 
-	public ChannelSftp setupJsch() throws JSchException {
-		log.info("setting up secure transfer connection");
-		JSch jsch = new JSch();
-		Session jschSession = jsch.getSession(writeAccessUserName, "fsdmel-modac01d.ncifcrf.gov");
-		java.util.Properties config = new java.util.Properties();
-		config.put("StrictHostKeyChecking", "no");
-		jschSession.setConfig(config);
-		jschSession.setPassword(writeAccessUserPassword);
-		jschSession.connect();
-		return (ChannelSftp) jschSession.openChannel("sftp");
-
-	}
 }
