@@ -37,8 +37,8 @@ def downloadFile(fileName):
     # Server connection information
     # this is used when running on local
     host_name = 'fsdmel-modac01d.ncifcrf.gov'
-    user_name = 'ncidoesvct1'
-    password = 'Cancer$0rSep30t'
+    user_name = 'ncidoesvct2'
+    password = '#'
 
     # Connect to remote server
     t = paramiko.Transport(host_name)

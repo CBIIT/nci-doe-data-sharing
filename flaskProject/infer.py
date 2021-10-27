@@ -34,8 +34,8 @@ def main(fname, model_name, testdataset):
     hist_site_dataframe.to_csv(fname);
     if os.path.isfile(fname):
         host_name = 'fsdmel-modac01d.ncifcrf.gov'
-        user_name = 'ncidoesvct1'
-        password = 'Cancer$0rSep30t'
+        user_name = 'ncidoesvct2'
+        password = '#'
         # Connect to remote server
         t = paramiko.Transport(host_name)
         t.connect(username=user_name, password=password)
