@@ -10,6 +10,8 @@ def modac_routing():
     datafilename = request.args.get("dataFileName", None)
     modelfilename = request.args.get("modelName", None)
     predictions_filename = request.args.get("resultFileName", None)
+    if modelfilename is None or not modelfilename:
+        modelfilename = 'mt_cnn_model.h5'
     print(predictions_filename)
     print(modelfilename)
     print(datafilename)
