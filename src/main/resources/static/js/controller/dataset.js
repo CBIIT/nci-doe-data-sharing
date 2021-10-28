@@ -555,7 +555,7 @@ $('#dataSetTable tbody').on('click','a.detail-control',function() {
 								var tableId = 'table_' + name;
 								var accessgroups = $("#assetAccessGrp").val();
 								var permissions = $("#assetPermission").val();
-								var tableHtml = "<div class='subFoldersDiv' style='width:200px;'><table style='width:1369px;'class='table display" +
+								var tableHtml = "<div class='subFoldersDiv' style='width:200px;'><table style='width:1409px;'class='table display" +
 									" dt-responsive wrap subAssetsDataSetTable' id='" + tableId + "'role='grid'>" +
 									"<tbody>";
 									
