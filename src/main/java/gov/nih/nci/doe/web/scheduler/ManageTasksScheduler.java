@@ -144,8 +144,6 @@ public class ManageTasksScheduler extends AbstractDoeController {
 	@Scheduled(cron = "${doe.scheduler.cron.infer}")
 	public void performInferencing() throws DoeWebException, MalformedURLException {
 
-		log.info("scheduler for inferencing");
-
 		// get all not Started tasks to call the flask web service to perform
 		// inferencing
 		List<InferencingTask> getAllNotStartedTasks = inferencingTaskRepository.getAllNotStartedTasks("NOTSTARTED");
@@ -153,7 +151,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 		String authToken = DoeClientUtil.getAuthenticationToken(writeAccessUserName, writeAccessUserPassword,
 				authenticateURL);
 		for (InferencingTask t : getAllNotStartedTasks) {
-
+			log.info("call flask API for File Path: " + t.getTestDataSetPath());
 			try {
 				String dataFilePath = t.getTestDataSetPath();
 				String modelh5Path = t.getModelh5Path();
