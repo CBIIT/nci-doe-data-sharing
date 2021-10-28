@@ -549,7 +549,7 @@
             "attribute": false,
             "wrapped": false
           },
-          "$ref": "#/definitions/HpcGoogleDriveDownloadDestination"
+          "$ref": "#/definitions/HpcGoogleDownloadDestination"
         },
         "s3DownloadDestination": {
           "xml": {
@@ -1709,7 +1709,7 @@
             "attribute": false,
             "wrapped": false
           },
-          "$ref": "#/definitions/HpcGoogleDriveDownloadDestination"
+          "$ref": "#/definitions/HpcGoogleDownloadDestination"
         },
         "s3DownloadDestination": {
           "xml": {
@@ -1792,7 +1792,7 @@
         "wrapped": false
       }
     },
-    "HpcGoogleDriveDownloadDestination": {
+    "HpcGoogleDownloadDestination": {
       "type": "object",
       "properties": {
         "accessToken": {
@@ -1812,9 +1812,9 @@
           "$ref": "#/definitions/HpcFileLocation"
         }
       },
-      "title": "HpcGoogleDriveDownloadDestination",
+      "title": "HpcGoogleDownloadDestination",
       "xml": {
-        "name": "HpcGoogleDriveDownloadDestination",
+        "name": "HpcGoogleDownloadDestination",
         "attribute": false,
         "wrapped": false
       }

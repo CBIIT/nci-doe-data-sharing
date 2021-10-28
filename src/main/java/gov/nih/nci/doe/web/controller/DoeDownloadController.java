@@ -36,7 +36,7 @@ import gov.nih.nci.hpc.domain.datatransfer.HpcGlobusDownloadDestination;
 import gov.nih.nci.hpc.domain.datatransfer.HpcS3Account;
 import gov.nih.nci.hpc.domain.datatransfer.HpcS3DownloadDestination;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO;
-import gov.nih.nci.hpc.domain.datatransfer.HpcGoogleDriveDownloadDestination;
+import gov.nih.nci.hpc.domain.datatransfer.HpcGoogleDownloadDestination;
 
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -166,7 +166,7 @@ public class DoeDownloadController extends AbstractDoeController {
 				dto.setS3DownloadDestination(destination);
 			} else if (downloadFile.getSearchType() != null && downloadFile.getSearchType().equals("drive")) {
 				String accessToken = (String) session.getAttribute("accessToken");
-				HpcGoogleDriveDownloadDestination destination = new HpcGoogleDriveDownloadDestination();
+				HpcGoogleDownloadDestination destination = new HpcGoogleDownloadDestination();
 				HpcFileLocation location = new HpcFileLocation();
 				location.setFileContainerId("MyDrive");
 				location.setFileId(downloadFile.getDrivePath().trim());
