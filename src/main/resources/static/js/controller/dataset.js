@@ -534,7 +534,7 @@ $('#dataSetTable tbody').on('click','a.detail-control',function() {
 	    var $this = $(this);
 
 	         if (thistr.hasClass('shown')) {
-					$this.closest('tr').next('div.subFoldersDiv').hide();
+					$this.closest('tr').next('div.subFoldersDiv').remove();
 					thistr.removeClass('shown');
 					$this.find("i.expand.far").toggleClass('fa-folder fa-folder-open');
 				} else {
