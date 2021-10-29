@@ -15,15 +15,6 @@ public class TaskManagerDto {
 	private String dataSetName;
 	private Date taskCreatedDate;
 	private String taskCompletedDate;
-	private String assetPath;
-
-	public String getAssetPath() {
-		return assetPath;
-	}
-
-	public void setAssetPath(String assetPath) {
-		this.assetPath = assetPath;
-	}
 
 	public String getTaskCompletedDate() {
 		return taskCompletedDate;

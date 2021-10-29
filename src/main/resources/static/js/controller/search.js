@@ -210,8 +210,8 @@ function dataTableInit(isVisible) {
         	}
 
            $(".dataSetFragment").click(function() {
-        	   var assetPath = $(this).attr('data_set_path');
-        	   location.replace('/assetDetails?returnToSearch=true&&assetPath='+assetPath);
+        	   var dmeDataId = $(this).attr('dme_data_id');
+        	   location.replace('/assetDetails?returnToSearch=true&&dme_data_id='+dmeDataId);
            });
            
            $(".editCollectionMetadata").click(function(){

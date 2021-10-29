@@ -127,19 +127,16 @@ public class TaskManagerCotroller extends AbstractDoeController {
 						&& CollectionUtils.isNotEmpty(download.getItems())) {
 					path = download.getItems().get(0).getPath();
 				}
-				String assetPath = null;
 				if (StringUtils.isNotEmpty(path)) {
 					String[] collectionNames = path.split("/");
 					task.setProgName(collectionNames[2]);
 					task.setStudyName(collectionNames[3]);
 					task.setDataSetName(collectionNames[4]);
-					assetPath = basePath + "/" + collectionNames[2] + "/" + collectionNames[3] + "/"
-							+ collectionNames[4];
 				}
 
-				if (StringUtils.isNotEmpty(assetPath) && StringUtils.isNotEmpty(t.getTaskName())) {
-					task.setTaskName("<a href=" + webServerName + "/assetDetails?assetPath=" + assetPath + ">"
-							+ t.getTaskName() + "</a>");
+				if (StringUtils.isNotEmpty(task.getDataSetName()) && StringUtils.isNotEmpty(t.getTaskName())) {
+					task.setTaskName("<a href=" + webServerName + "/assetDetails?assetIdentifier=" + task.getDataSetName()
+							+ ">" + t.getTaskName() + "</a>");
 				} else {
 					task.setTaskName(t.getTaskName());
 				}
@@ -177,7 +174,6 @@ public class TaskManagerCotroller extends AbstractDoeController {
 				TaskManager t = results.stream().filter(x -> upload.getTaskId().equals(x.getTaskId())).findAny()
 						.orElse(null);
 				String path = null;
-				String assetPath = null;
 				task.setTaskId(upload.getTaskId());
 				task.setTaskCreatedDate(t != null ? t.getTaskDate() : null);
 				task.setTaskCompletedDate(
@@ -202,13 +198,12 @@ public class TaskManagerCotroller extends AbstractDoeController {
 					task.setProgName(collectionNames[2]);
 					task.setStudyName(collectionNames[3]);
 					task.setDataSetName(collectionNames[4]);
-					assetPath = basePath + "/" + collectionNames[2] + "/" + collectionNames[3] + "/"
-							+ collectionNames[4];
 				}
 
-				if (StringUtils.isNotEmpty(assetPath) && t != null && StringUtils.isNotEmpty(t.getTaskName())) {
-					task.setTaskName("<a href=" + webServerName + "/assetDetails?assetPath=" + assetPath + ">"
-							+ t.getTaskName() + "</a>");
+				if (StringUtils.isNotEmpty(task.getDataSetName()) && t != null
+						&& StringUtils.isNotEmpty(t.getTaskName())) {
+					task.setTaskName("<a href=" + webServerName + "/assetDetails?assetIdentifier=" + task.getDataSetName()
+							+ ">" + t.getTaskName() + "</a>");
 				} else {
 					task.setTaskName(t != null ? t.getTaskName() : "");
 				}

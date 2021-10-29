@@ -141,7 +141,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 		}
 	}
 
-	@Scheduled(cron = "${doe.scheduler.cron.infer}")
+	//@Scheduled(cron = "${doe.scheduler.cron.infer}")
 	public void performInferencing() throws DoeWebException, MalformedURLException {
 
 		// get all not Started tasks to call the flask web service to perform

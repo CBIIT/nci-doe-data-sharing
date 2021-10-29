@@ -351,8 +351,8 @@ $(document)
 					});
 
 					$(".backtoAssetFromDwnldBtn").click(function(e) {
-						var assetPath = $("#assetPath").val();
-						location.replace('/assetDetails?assetPath=' + assetPath + '&&returnToSearch=true');
+						var assetIdentifier = $("#assetIdentifier").val();
+						location.replace('/assetDetails?assetIdentifier=' + assetIdentifier + '&&returnToSearch=true');
 					});
 
 					$("#backtoSearch").click(function(e) {
@@ -431,7 +431,7 @@ $(document)
 									type : $("#downloadType").val(),
 									downloadFilePath : $("#selectedFilesList").val(),
 									action : "Drive",
-									assetPath : $("#assetPath").val(),
+									assetIdentifier : $("#assetIdentifier").val(),
 									returnToStatus : $("#returnToStatus").val(),
 									returnToSearch : $("#returnToSearch").val()
 								}
@@ -446,7 +446,7 @@ $(document)
 									type : $("#downloadType").val(),
 									downloadFilePath : $("#selectedFilesList").val(),
 									action : "Globus",
-									assetPath : $("#assetPath").val(),
+									assetIdentifier : $("#assetIdentifier").val(),
 									returnToStatus : $("#returnToStatus").val(),
 									returnToSearch : $("#returnToSearch").val()
 								}

@@ -1035,7 +1035,7 @@ function exportDataObjectMetadataResults($this) {
 
 function onClickOfModelAnlysisBulkDownloadBtn($this) {
 	var selectedPaths = [];
-	var assetPath = $("#assetPath").val();
+	var assetIdentifier = $("#assetIdentifier").val();
 
 	if ($this) {
 		selectedPaths.push($this.attr('dataset_path'));
@@ -1047,20 +1047,20 @@ function onClickOfModelAnlysisBulkDownloadBtn($this) {
 		});
 	}
 
-	location.replace('/downloadTab?selectedPaths=' + selectedPaths + '&&assetPath=' + assetPath
+	location.replace('/downloadTab?selectedPaths=' + selectedPaths + '&&assetIdentifier=' + assetIdentifier
 			+ '&&downloadAsyncType=datafiles&&returnToSearch=false');
 
 }
 
 function downloadFunction(path, fileName) {
 	
-	var assetPath = $("#assetPath").val();
+	var assetIdentifier = $("#assetIdentifier").val();
 	if(!fileName) {
 		location.replace('/downloadTab?selectedPaths=' + path
-				+ '&&assetPath='+assetPath+'&&downloadAsyncType=collection&&returnToSearch=false');
+				+ '&&assetIdentifier='+assetIdentifier+'&&downloadAsyncType=collection&&returnToSearch=false');
 	} else {
-		location.replace('/downloadTab?selectedPaths=' + path + '&&fileName=' + fileName + '&&assetPath='
-				+ assetPath + '&&downloadAsyncType=data_object&&returnToSearch=false');
+		location.replace('/downloadTab?selectedPaths=' + path + '&&fileName=' + fileName + '&&assetIdentifier='
+				+ assetIdentifier + '&&downloadAsyncType=data_object&&returnToSearch=false');
 	}
 
 	
@@ -1069,7 +1069,7 @@ function downloadFunction(path, fileName) {
 
 function onClickOfBulkDownloadBtn(tableName) {
 	var selectedPaths = [];
-	var assetPath = $("#assetPath").val();
+	var assetIdentifier = $("#assetIdentifier").val();
 	var fileName;
 
 	var len = $("#" + tableName + " tbody input[type=checkbox].selectIndividualCheckbox:checked").length;
@@ -1083,9 +1083,9 @@ function onClickOfBulkDownloadBtn(tableName) {
 	if (selectedPaths.length == 1) {
 
 		location.replace('/downloadTab?selectedPaths=' + selectedPaths + '&&fileName=' + fileName
-				+ '&&assetPath=' + assetPath + '&&downloadAsyncType=data_object&&returnToSearch=false');
+				+ '&&assetIdentifier=' + assetIdentifier + '&&downloadAsyncType=data_object&&returnToSearch=false');
 	} else {
-		location.replace('/downloadTab?selectedPaths=' + selectedPaths + '&&assetPath=' + assetPath
+		location.replace('/downloadTab?selectedPaths=' + selectedPaths + '&&assetIdentifier=' + assetIdentifier
 				+ '&&downloadAsyncType=datafiles&&returnToSearch=false');
 	}
 }
