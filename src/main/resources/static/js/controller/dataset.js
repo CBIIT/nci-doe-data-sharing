@@ -530,6 +530,9 @@ $('#dataSetTable tbody').on('click', '.editDataFileCollectionMetadata', function
 
 // expand and close folder row
 $('#dataSetTable tbody').on('click','a.detail-control',function() {
+	   var leftCss = parseInt($(this).css('margin-left'));
+	   leftCss+=12;
+	   var fileLeftCss = leftCss+15;
 	    var thistr = $(this).closest('tr');
 	    var $this = $(this);
 
@@ -575,12 +578,12 @@ $('#dataSetTable tbody').on('click','a.detail-control',function() {
 								if (value.isFolder == false) {
 									 selectHtml = "<input type='checkbox' id='" + value.path + "' class='dt-checkboxes selectIndividualCheckbox'"
 										+ " aria-label='select'/>";
-									iconHtml += "<span class='collectionName'>" + value.name + "</span>";
+									iconHtml += "<span class='collectionName' style='margin-left:"+fileLeftCss+"px;'>" + value.name + "</span>";
 									collection_type = "DataObject";
 									fileSize = value.fileSize;
 								}	
 								if (value.isFolder == true) {
-								  iconHtml += "<a class='detail-control detail-control-sub-folder' data-name = '"+name+"/"+value.name+"'>"
+								  iconHtml += "<a class='detail-control detail-control-sub-folder' style='margin-left:"+leftCss+"px;' data-name = '"+name+"/"+value.name+"'>"
 								           +"<i class='expand far fa-folder'></i></a>"+value.name+"";
 								  metadataInfoTitle = "Folder Metadata";
 								  copyPathTitle = "Copy Folder Path";
