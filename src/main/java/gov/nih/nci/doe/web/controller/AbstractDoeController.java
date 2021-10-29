@@ -262,8 +262,9 @@ public abstract class AbstractDoeController {
 		if (list == null)
 			return null;
 
-		HpcMetadataEntry entry = list.stream().filter(
-				e -> e.getAttribute().equalsIgnoreCase(attrName) && levelName.equalsIgnoreCase(e.getLevelLabel()))
+		HpcMetadataEntry entry = list.stream()
+				.filter(e -> e.getAttribute().equalsIgnoreCase(attrName)
+						&& (levelName == null || (levelName != null && levelName.equalsIgnoreCase(e.getLevelLabel()))))
 				.findAny().orElse(null);
 		if (entry != null) {
 			// this is a temporary fix to escape json.stringify error with single and double
@@ -575,7 +576,6 @@ public abstract class AbstractDoeController {
 
 		Map<String, List<HpcMetadataQuery>> attrNamesMap = new HashMap<String, List<HpcMetadataQuery>>();
 
-		// List<HpcMetadataQuery> queries = new ArrayList<HpcMetadataQuery>();
 		Iterator<String> iter = queriesMap.keySet().iterator();
 
 		while (iter.hasNext()) {
@@ -590,7 +590,7 @@ public abstract class AbstractDoeController {
 				list.add(queriesMap.get(iterVal));
 				attrNamesMap.put(attrName, list);
 			}
-			// queries.add(queriesMap.get(iterVal));
+
 		}
 		Iterator<String> iter1 = attrNamesMap.keySet().iterator();
 		while (iter1.hasNext()) {
@@ -601,8 +601,6 @@ public abstract class AbstractDoeController {
 			q.getQueries().addAll(attrNameslist);
 			query.getCompoundQueries().add(q);
 		}
-
-		// query.getQueries().addAll(queries);
 
 		// add criteria for access group public and other prog names for logged on user.
 		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList().getBody();
@@ -714,41 +712,15 @@ public abstract class AbstractDoeController {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void getAssetDetails(HttpSession session, String dmeDataId, String returnToSearch, String assetIdentifier,
-			Model model) throws DoeWebException {
+	public void getAssetDetails(HttpSession session, String returnToSearch, String assetPath, Model model)
+			throws DoeWebException {
 
-		log.info("get Asset detials for dmeDataId: " + dmeDataId + " is returnToSearch: " + returnToSearch
-				+ " and assetIdentifier is : " + assetIdentifier);
+		log.info("get Asset detials for returnToSearch: " + returnToSearch + " and assetPath is : " + assetPath);
 		String authToken = (String) session.getAttribute("hpcUserToken");
 		log.info("authToken: " + authToken);
 		String user = getLoggedOnUserInfo();
 		log.info("asset details for user: " + user);
 		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList().getBody();
-		DoeSearch search = new DoeSearch();
-
-		if (StringUtils.isNotEmpty(dmeDataId)) {
-			String[] attrNames = { "collection_type", "dme_data_id" };
-			String[] attrValues = { "Asset", dmeDataId };
-			search.setAttrName(attrNames);
-			search.setAttrValue(attrValues);
-		} else if (StringUtils.isNotEmpty(assetIdentifier)) {
-
-			String[] attrNames = { "collection_type", "asset_identifier" };
-			String[] attrValues = { "Asset", assetIdentifier };
-			search.setAttrName(attrNames);
-			search.setAttrValue(attrValues);
-		}
-		String[] levelValues = { "ANY", "Asset" };
-		boolean[] isExcludeParentMetadata = { false, false };
-		String[] rowIds = { "1", "2" };
-		String[] operators = { "LIKE", "LIKE" };
-		boolean[] iskeyWordSearch = { true, false };
-
-		search.setLevel(levelValues);
-		search.setIsExcludeParentMetadata(isExcludeParentMetadata);
-		search.setRowId(rowIds);
-		search.setOperator(operators);
-		search.setIskeyWordSearch(iskeyWordSearch);
 
 		List<String> systemAttrs = (List<String>) session.getAttribute("systemAttrs");
 		if (CollectionUtils.isEmpty(systemAttrs)) {
@@ -767,25 +739,17 @@ public abstract class AbstractDoeController {
 		}
 
 		try {
-			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search, "Asset");
-			compoundQuery.setDetailedResponse(true);
-			log.info("search compund query" + compoundQuery);
 
-			Response restResponse = DoeClientUtil.getDataObjectQuery(authToken, compoundDataObjectSearchServiceURL,
-					true, compoundQuery);
+			HpcCollectionListDTO assetCollection = DoeClientUtil.getCollection(authToken, serviceURL, assetPath, false);
 
-			if (restResponse.getStatus() == 200) {
+			if (assetCollection != null && assetCollection.getCollections().get(0).getCollection() != null) {
+
 				HpcCompoundMetadataQueryDTO compoundQuerySession = (HpcCompoundMetadataQueryDTO) session
 						.getAttribute("compoundQuery");
 
-				if (compoundQuerySession == null) {
-					session.setAttribute("compoundQuery", compoundQuery);
-				}
+				session.setAttribute("compoundQuery", compoundQuerySession);
 
-				MappingJsonFactory factory = new MappingJsonFactory();
-				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-				HpcCollectionListDTO collections = parser.readValueAs(HpcCollectionListDTO.class);
-				HpcCollectionDTO collection = collections.getCollections().get(0);
+				HpcCollectionDTO collection = assetCollection.getCollections().get(0);
 
 				String studyName = getAttributeValue("study_name",
 						collection.getMetadataEntries().getParentMetadataEntries(), "Study");
@@ -797,22 +761,22 @@ public abstract class AbstractDoeController {
 						loggedOnUserPermissions);
 
 				String accessGrp = getAttributeValue("access_group",
-						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
+						collection.getMetadataEntries().getSelfMetadataEntries(), null);
 
 				String assetName = getAttributeValue("asset_name",
-						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
+						collection.getMetadataEntries().getSelfMetadataEntries(), null);
 
 				String asset_Identifier = getAttributeValue("asset_identifier",
-						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
+						collection.getMetadataEntries().getSelfMetadataEntries(), null);
 
 				String dme_Data_Id = getAttributeValue("dme_data_id",
-						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
+						collection.getMetadataEntries().getSelfMetadataEntries(), null);
 
 				String assetType = getAttributeValue("asset_type",
-						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
+						collection.getMetadataEntries().getSelfMetadataEntries(), null);
 
 				List<KeyValueBean> selfMetadata = getUserMetadata(
-						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset", systemAttrs);
+						collection.getMetadataEntries().getSelfMetadataEntries(), null, systemAttrs);
 
 				if (StringUtils.isNotEmpty(returnToSearch)) {
 					model.addAttribute("returnToSearch", true);
@@ -828,7 +792,8 @@ public abstract class AbstractDoeController {
 				model.addAttribute("progName", progName);
 				model.addAttribute("assetPath", collection.getCollection().getCollectionName());
 				model.addAttribute("assetPermission", assetPermission);
-				model.addAttribute("assetLink", webServerName + "/assetDetails?dme_data_id=" + dme_Data_Id);
+				model.addAttribute("assetLink",
+						webServerName + "/assetDetails?assetPath=" + collection.getCollection().getCollectionName());
 
 				// verify if prediction folder exists, else hide the generate predictions sub
 				// tab

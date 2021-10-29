@@ -671,7 +671,7 @@ $('#dataSetTable tbody').on('click','a.detail-control',function() {
 
 							});
 
-								table = tableHtml + "</div></tbody></table>";
+								table = tableHtml + "</tbody></table></div>";
 								thistr.after(table);
 								$this.find("i.expand.far").toggleClass('fa-folder fa-folder-open');
 								thistr.addClass('shown');
@@ -1032,7 +1032,7 @@ function exportDataObjectMetadataResults($this) {
 
 function onClickOfModelAnlysisBulkDownloadBtn($this) {
 	var selectedPaths = [];
-	var assetIdentifier = $("#assetIdentifier").val();
+	var assetPath = $("#assetPath").val();
 
 	if ($this) {
 		selectedPaths.push($this.attr('dataset_path'));
@@ -1044,20 +1044,20 @@ function onClickOfModelAnlysisBulkDownloadBtn($this) {
 		});
 	}
 
-	location.replace('/downloadTab?selectedPaths=' + selectedPaths + '&&assetIdentifier=' + assetIdentifier
+	location.replace('/downloadTab?selectedPaths=' + selectedPaths + '&&assetPath=' + assetPath
 			+ '&&downloadAsyncType=datafiles&&returnToSearch=false');
 
 }
 
 function downloadFunction(path, fileName) {
 	
-	var assetIdentifier = $("#assetIdentifier").val();
+	var assetPath = $("#assetPath").val();
 	if(!fileName) {
 		location.replace('/downloadTab?selectedPaths=' + path
-				+ '&&assetIdentifier='+assetIdentifier+'&&downloadAsyncType=collection&&returnToSearch=false');
+				+ '&&assetPath='+assetPath+'&&downloadAsyncType=collection&&returnToSearch=false');
 	} else {
-		location.replace('/downloadTab?selectedPaths=' + path + '&&fileName=' + fileName + '&&assetIdentifier='
-				+ assetIdentifier + '&&downloadAsyncType=data_object&&returnToSearch=false');
+		location.replace('/downloadTab?selectedPaths=' + path + '&&fileName=' + fileName + '&&assetPath='
+				+ assetPath + '&&downloadAsyncType=data_object&&returnToSearch=false');
 	}
 
 	
@@ -1066,7 +1066,7 @@ function downloadFunction(path, fileName) {
 
 function onClickOfBulkDownloadBtn(tableName) {
 	var selectedPaths = [];
-	var assetIdentifier = $("#assetIdentifier").val();
+	var assetPath = $("#assetPath").val();
 	var fileName;
 
 	var len = $("#" + tableName + " tbody input[type=checkbox].selectIndividualCheckbox:checked").length;
@@ -1080,9 +1080,9 @@ function onClickOfBulkDownloadBtn(tableName) {
 	if (selectedPaths.length == 1) {
 
 		location.replace('/downloadTab?selectedPaths=' + selectedPaths + '&&fileName=' + fileName
-				+ '&&assetIdentifier=' + assetIdentifier + '&&downloadAsyncType=data_object&&returnToSearch=false');
+				+ '&&assetPath=' + assetPath + '&&downloadAsyncType=data_object&&returnToSearch=false');
 	} else {
-		location.replace('/downloadTab?selectedPaths=' + selectedPaths + '&&assetIdentifier=' + assetIdentifier
+		location.replace('/downloadTab?selectedPaths=' + selectedPaths + '&&assetPath=' + assetPath
 				+ '&&downloadAsyncType=datafiles&&returnToSearch=false');
 	}
 }

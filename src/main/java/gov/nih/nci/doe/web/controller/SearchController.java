@@ -58,9 +58,6 @@ public class SearchController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.metadataattributes}")
 	private String hpcMetadataAttrsURL;
 
-	@Value("${gov.nih.nci.hpc.server.collection}")
-	private String serviceURL;
-
 	@GetMapping
 	public ResponseEntity<?> search(HttpSession session, @RequestHeader HttpHeaders headers, HttpServletRequest request,
 			DoeSearch search) throws DoeWebException {
@@ -86,7 +83,6 @@ public class SearchController extends AbstractDoeController {
 			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search, "Asset");
 			compoundQuery.setDetailedResponse(true);
 			log.info("search compund query" + compoundQuery);
-			serviceURL = compoundDataObjectSearchServiceURL;
 
 			UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(compoundDataObjectSearchServiceURL);
 

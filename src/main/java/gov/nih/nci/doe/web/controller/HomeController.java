@@ -162,12 +162,11 @@ public class HomeController extends AbstractDoeController {
 
 	@GetMapping(value = "/assetDetails")
 	public String getAssetDetailsTab(Model model, HttpSession session, HttpServletRequest request,
-			@RequestParam(value = "dme_data_id", required = false) String dmeDataId,
 			@RequestParam(value = "returnToSearch", required = false) String returnToSearch,
-			@RequestParam(value = "assetIdentifier", required = false) String assetIdentifier) throws DoeWebException {
+			@RequestParam(value = "assetPath", required = false) String assetPath) throws DoeWebException {
 
 		log.info("get asset details");
-		getAssetDetails(session, dmeDataId, returnToSearch, assetIdentifier, model);
+		getAssetDetails(session, returnToSearch, assetPath, model);
 		return "assetDetails";
 	}
 
@@ -180,20 +179,20 @@ public class HomeController extends AbstractDoeController {
 			@RequestParam(value = "fileName", required = false) String fileName,
 			@RequestParam(value = "returnToSearch", required = false) String returnToSearch,
 			@RequestParam(value = "returnToStatus", required = false) String returnToStatus,
-			@RequestParam(value = "assetIdentifier", required = false) String assetIdentifier) throws DoeWebException {
+			@RequestParam(value = "assetPath", required = false) String assetPath) throws DoeWebException {
 
 		log.info("get download tab details");
 		model.addAttribute("selectedPathsString", selectedPaths);
 		model.addAttribute("downloadAsyncType", downloadAsyncType);
 		model.addAttribute("fileName", fileName);
 		model.addAttribute("clientId", clientId);
-		String identifier = (String) session.getAttribute("assetIdentifier");
+		String assetPaths = (String) session.getAttribute("assetPath");
 		String returnSearch = (String) session.getAttribute("returnToSearch");
 
-		if (StringUtils.isNotEmpty(assetIdentifier)) {
-			model.addAttribute("assetIdentifier", assetIdentifier);
-		} else if (StringUtils.isNotEmpty(identifier)) {
-			model.addAttribute("assetIdentifier", identifier);
+		if (StringUtils.isNotEmpty(assetPath)) {
+			model.addAttribute("assetPath", assetPath);
+		} else if (StringUtils.isNotEmpty(assetPaths)) {
+			model.addAttribute("assetPath", assetPaths);
 		}
 
 		if (StringUtils.isNotEmpty(returnToSearch)) {
