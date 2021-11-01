@@ -1,13 +1,22 @@
 import json
 import os
+import sys
 
 from keras.models import load_model
 import numpy as np
 import pandas as pd
 
-fname = 'y_pred.csv'
-modelfilename = 'mt_cnn_model.h5'
-datafilename = 'test_X.npy'
+datafilename = sys.argv[1]
+modelfilename = sys.argv[2]
+fname = sys.argv[3]
+
+print("data filename: "+datafilename)
+print("model file Name:"+datafilename)
+print("fname:"+fname)
+
+#fname = 'y_pred.csv'
+#modelfilename = 'mt_cnn_model.h5'
+#datafilename = 'test_X.npy'
 
 test_x = np.load('/mnt/IRODsTest/'+datafilename)
 # Predict on Test data
