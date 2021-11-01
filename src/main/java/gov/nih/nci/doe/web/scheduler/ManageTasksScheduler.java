@@ -8,6 +8,7 @@ import java.util.List;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -141,7 +142,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 		}
 	}
 
-	//@Scheduled(cron = "${doe.scheduler.cron.infer}")
+	@Scheduled(cron = "${doe.scheduler.cron.infer}")
 	public void performInferencing() throws DoeWebException, MalformedURLException {
 
 		// get all not Started tasks to call the flask web service to perform
@@ -162,33 +163,35 @@ public class ManageTasksScheduler extends AbstractDoeController {
 						: null;
 				String modelName = modelh5Path != null
 						? modelh5Path.substring(modelh5Path.lastIndexOf('/') + 1, modelh5Path.length())
-						: null;
+						: "mt_cnn_model.h5";
 				String resultFileName = resultPath != null
 						? resultPath.substring(resultPath.lastIndexOf('/') + 1, resultPath.length())
 						: null;
+				if (StringUtils.isNotEmpty(dataFileName) && StringUtils.isNotEmpty(modelName)
+						&& StringUtils.isNotEmpty(resultFileName)) {
+					// call flask API for each not started task
+					log.info("call flask web service for " + dataFileName);
+					String url = modacFlaskServer + "modac-routing";
+					UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(url);
 
-				// call flask API for each not started task
-				log.info("call flask web service for " + dataFileName);
-				String url = modacFlaskServer + "modac-routing";
-				UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(url);
+					ucBuilder.queryParam("dataFileName", dataFileName);
+					ucBuilder.queryParam("modelName", modelName);
+					ucBuilder.queryParam("resultFileName", resultFileName);
 
-				ucBuilder.queryParam("dataFileName", dataFileName);
-				ucBuilder.queryParam("modelName", modelName);
-				ucBuilder.queryParam("resultFileName", resultFileName);
+					final String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
 
-				final String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
+					WebClient client1 = DoeClientUtil.getWebClient(requestURL);
+					Response restResponse1 = client1.invoke("GET", null);
 
-				WebClient client1 = DoeClientUtil.getWebClient(requestURL);
-				Response restResponse1 = client1.invoke("GET", null);
-
-				try {
-					log.info("response from flask web service" + restResponse1);
-					if (restResponse1.getStatus() == 200 || restResponse1.getStatus() == 201) {
-						t.setStatus("INPROGRESS");
-						inferencingTaskRepository.saveAndFlush(t);
+					try {
+						log.info("response from flask web service" + restResponse1);
+						if (restResponse1.getStatus() == 200 || restResponse1.getStatus() == 201) {
+							t.setStatus("INPROGRESS");
+							inferencingTaskRepository.saveAndFlush(t);
+						}
+					} catch (Exception e) {
+						log.error(e.getMessage());
 					}
-				} catch (Exception e) {
-					log.error(e.getMessage());
 				}
 			} catch (Exception e) {
 				log.error(e.getMessage());
