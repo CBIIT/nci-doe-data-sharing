@@ -12,7 +12,7 @@ modelfilename = sys.argv[2]
 fname = sys.argv[3]
 
 print("data filename: "+datafilename)
-print("model file Name:"+datafilename)
+print("model file Name:"+modelfilename)
 print("fname:"+fname)
 
 #fname = 'y_pred.csv'

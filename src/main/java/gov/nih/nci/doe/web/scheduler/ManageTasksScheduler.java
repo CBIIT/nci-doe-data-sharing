@@ -1,6 +1,7 @@
 package gov.nih.nci.doe.web.scheduler;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.MappingJsonFactory;
 
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.controller.AbstractDoeController;
@@ -186,11 +190,21 @@ public class ManageTasksScheduler extends AbstractDoeController {
 					try {
 						log.info("response from flask web service" + restResponse);
 						if (restResponse.getStatus() == 200 || restResponse.getStatus() == 201) {
-							t.setStatus("INPROGRESS");
-							inferencingTaskRepository.saveAndFlush(t);
+							MappingJsonFactory factory = new MappingJsonFactory();
+							JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+							String jobId = parser.readValueAs(String.class);
+							if (StringUtils.isNotEmpty(jobId)) {
+								t.setBatchId(jobId);
+								t.setStatus("INPROGRESS");
+								inferencingTaskRepository.saveAndFlush(t);
+							}
+
+						} else {
+							String errorMessage = DoeClientUtil.getErrorMessage(restResponse);
+							throw new DoeWebException(errorMessage, restResponse.getStatus());
 						}
 					} catch (Exception e) {
-						log.error(e.getMessage());
+						throw new DoeWebException(e.getMessage());
 					}
 				}
 			} catch (Exception e) {
@@ -279,6 +293,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 
 			} catch (Exception e) {
 				log.error("Exception in verifying predictions file and uploading: " + e);
+				throw new DoeWebException(e.getMessage());
 			}
 
 		}

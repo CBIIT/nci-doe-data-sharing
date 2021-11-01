@@ -1,4 +1,6 @@
 import os
+import subprocess
+
 from flask import Flask, request
 
 
@@ -15,9 +17,12 @@ def modac_routing():
     print(modelfilename)
     print(datafilename)
     print('submit batch job')
-    #main(predictions_filename, modelfilename, datafilename)
-    os.system('sbatch infer_1.sh datafilename modelfilename predictions_filename')
-    return "OK"
+    sbatch_command = "sbatch infer.sh " + datafilename + " " + modelfilename + " " + predictions_filename
+    sbatch_response = subprocess.getoutput(sbatch_command)
+    print(sbatch_response)
+    job_id = sbatch_response.split(' ')[-1].strip()
+    print(job_id)
+    return job_id
 
 if __name__ == '__main__':
     app.run()
