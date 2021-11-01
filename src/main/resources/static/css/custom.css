@@ -1225,6 +1225,17 @@ padding-right: 10px;
     color: #397ded;
 }
 
+.cil_13_no_color {
+	cursor: pointer;
+    font-family: 'latoregular';
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 27px;
+    height: 42px;
+    width: 80px;
+    color: #397ded;
+}
+
 div.dataDivCollapse :not(:first-child) {
     margin-top:-6px;
 }

@@ -592,7 +592,7 @@ $('#dataSetTable tbody').on('click','a.detail-control',function() {
 								  collection_type = "Folder";
 								}					
 
-								iconHtml += "<a class='cil_12_no_color button2a' selected_path='"+value.path+"' collection_type = " + collection_type + " file_name = '"+ value.name +"'"
+								iconHtml += "<a class='cil_13_no_color button2a' selected_path='"+value.path+"' collection_type = " + collection_type + " file_name = '"+ value.name +"'"
 									+ "tabindex='0'"
 									+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
 									+ "data-popover-content='#a01' style='float:right'><img src='images/Status.info-tooltip.png'"
@@ -728,7 +728,7 @@ function renderInputDatasetName(data, type, row) {
 
 	html += "&nbsp;&nbsp;&nbsp;"
 			+ row.inputDatasetName
-			+ "&nbsp;&nbsp;<a class='cil_12_no_color button2a' "
+			+ "&nbsp;&nbsp;<a class='cil_13_no_color button2a' "
 			+ "userMetadata = '"
 			+ userMetadata
 			+ "' file_name = '"
@@ -764,7 +764,7 @@ function renderPredictionsName(data, type, row) {
 
 	html += "&nbsp;&nbsp;&nbsp;"
 			+ row.predictionsName
-			+ "&nbsp;&nbsp;<a class='cil_12_no_color button2a' "
+			+ "&nbsp;&nbsp;<a class='cil_13_no_color button2a' "
 			+ "userMetadata = '"
 			+ userMetadata
 			+ "' file_name = '"
@@ -805,7 +805,7 @@ function renderDataSetPath(data, type, row) {
 	}
 
 	html += row.name+"&nbsp;&nbsp;" +
-			"<a class='cil_12_no_color button2a' selected_path='"+row.path+"' collection_type= " + collection_type + " file_name = '" + row.name +"'"
+			"<a class='cil_13_no_color button2a' selected_path='"+row.path+"' collection_type= " + collection_type + " file_name = '" + row.name +"'"
 			+ "tabindex='0'"
 			+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
 			+ "data-popover-content='#a01' style='float:right'><img src='images/Status.info-tooltip.png'" +
