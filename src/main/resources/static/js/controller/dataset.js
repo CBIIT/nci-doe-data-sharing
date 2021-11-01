@@ -533,8 +533,8 @@ $('#dataSetTable tbody').on('click','a.detail-control',function() {
 	   var leftCss = parseInt($(this).css('margin-left'));
 	   var widthCss = parseInt($("#dataSetTable").css('width'));
 	   var tableWidth = widthCss;
-	   leftCss+=12;
-	   var fileLeftCss = leftCss+16;
+	   leftCss+=25;
+	   var fileLeftCss = leftCss+14;
 	    var thistr = $(this).closest('tr');
 	    var $this = $(this);
 
