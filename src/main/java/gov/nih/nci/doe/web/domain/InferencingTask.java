@@ -20,6 +20,7 @@ public class InferencingTask {
 	private String modelh5Path;
 	private String testDataSetPath;
 	private String assetPath;
+	private String batchId;
 
 	public boolean equals(Object object) {
 		if (this == object) {
@@ -169,8 +170,7 @@ public class InferencingTask {
 	public void setResultPath(String resultPath) {
 		this.resultPath = resultPath;
 	}
-	
-	
+
 	@Basic
 	@Column(name = "ASSET_PATH")
 	public String getAssetPath() {
@@ -179,6 +179,16 @@ public class InferencingTask {
 
 	public void setAssetPath(String assetPath) {
 		this.assetPath = assetPath;
+	}
+
+	@Basic
+	@Column(name = "BATCH_ID")
+	public String getBatchId() {
+		return batchId;
+	}
+
+	public void setBatchId(String batchId) {
+		this.batchId = batchId;
 	}
 
 	@Override

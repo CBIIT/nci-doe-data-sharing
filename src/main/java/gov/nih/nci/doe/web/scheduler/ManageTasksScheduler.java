@@ -181,11 +181,11 @@ public class ManageTasksScheduler extends AbstractDoeController {
 					final String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
 
 					WebClient client1 = DoeClientUtil.getWebClient(requestURL);
-					Response restResponse1 = client1.invoke("GET", null);
+					Response restResponse = client1.invoke("GET", null);
 
 					try {
-						log.info("response from flask web service" + restResponse1);
-						if (restResponse1.getStatus() == 200 || restResponse1.getStatus() == 201) {
+						log.info("response from flask web service" + restResponse);
+						if (restResponse.getStatus() == 200 || restResponse.getStatus() == 201) {
 							t.setStatus("INPROGRESS");
 							inferencingTaskRepository.saveAndFlush(t);
 						}
