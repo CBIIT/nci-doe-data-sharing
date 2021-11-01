@@ -531,8 +531,10 @@ $('#dataSetTable tbody').on('click', '.editDataFileCollectionMetadata', function
 // expand and close folder row
 $('#dataSetTable tbody').on('click','a.detail-control',function() {
 	   var leftCss = parseInt($(this).css('margin-left'));
+	   var widthCss = parseInt($("#dataSetTable").css('width'));
+	   var tableWidth = widthCss;
 	   leftCss+=12;
-	   var fileLeftCss = leftCss+15;
+	   var fileLeftCss = leftCss+16;
 	    var thistr = $(this).closest('tr');
 	    var $this = $(this);
 
@@ -558,7 +560,7 @@ $('#dataSetTable tbody').on('click','a.detail-control',function() {
 								var tableId = 'table_' + name;
 								var accessgroups = $("#assetAccessGrp").val();
 								var permissions = $("#assetPermission").val();
-								var tableHtml = "<div class='subFoldersDiv' style='width:200px;'><table style='width:1409px;'class='table display" +
+								var tableHtml = "<div class='subFoldersDiv' style='width:200px;'><table style='width:"+tableWidth+"px;'class='table display" +
 									" dt-responsive wrap subAssetsDataSetTable' id='" + tableId + "'role='grid'>" +
 									"<tbody>";
 									
