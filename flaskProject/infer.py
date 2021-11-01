@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+from shutil import copy
 
 from keras.models import load_model
 import numpy as np
@@ -43,5 +44,4 @@ hist_site_dataframe = pd.DataFrame(hist_site_pred)
 hist_site_dataframe.to_csv(fname)
 if os.path.isfile(fname):
     print('file exists ' + fname)
-    with open(os.path.join('/mnt/IRODsTest/', fname), "w") as file1:
-        file1.write(fname)
+    copy(fname, '/mnt/IRODsTest/')
