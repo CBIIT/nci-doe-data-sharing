@@ -893,15 +893,19 @@ function showFirstFewFields($this, oper) {
 			});
 		} else if (oper == 'Less') {
 			var len = $this.find('.filterGroupDiv:visible').length;
-			var modifiedSize = len - 4;
-			$this.find('.filterGroupDiv:visible').each(function(index) {
-				if (index > 3) {
-					$(this).find('.showMorefields').hide();
-				} else {
-					$(this).find('.showMorefields').show();
-				}
-			});
-			$this.find(".showMore").text(modifiedSize + " More ..");
+			if (len > 4) {
+				var modifiedSize = len - 4;
+				$this.find('.filterGroupDiv:visible').each(function(index) {
+					if (index > 3) {
+						$(this).find('.showMorefields').hide();
+					} else {
+						$(this).find('.showMorefields').show();
+					}
+				});
+				$this.find(".showMore").text(modifiedSize + " More ..");
+			} else {
+				$this.find('.css-17rpx5x').hide();				
+			}
 		}
 
 	} else {
