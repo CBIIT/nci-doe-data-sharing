@@ -15,10 +15,6 @@ print("data filename: "+datafilename)
 print("model file Name:"+modelfilename)
 print("fname:"+fname)
 
-#fname = 'y_pred.csv'
-#modelfilename = 'mt_cnn_model.h5'
-#datafilename = 'test_X.npy'
-
 test_x = np.load('/mnt/IRODsTest/'+datafilename)
 # Predict on Test data
 model = load_model('/mnt/IRODsTest/'+modelfilename)

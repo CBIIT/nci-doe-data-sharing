@@ -1,7 +1,5 @@
 #!/bin/bash -l
 #SBATCH --job-name=infer
-#SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=gantam2@nih.gov
 #SBATCH --account=ncidoesvct2
 #SBATCH --chdir=/home/ncidoesvct2
 echo "Starting infer script"
