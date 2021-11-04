@@ -213,7 +213,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 
 		}
 
-		// verify all the in-progress tasks to check if the y_prediction file is
+		// verify all the in-progress tasks with dmeTaskId not null to check if the y_prediction file is
 		// available to download.
 
 		List<InferencingTask> getAllInProgressTasks = inferencingTaskRepository.getAllNotStartedTasks("INPROGRESS");
@@ -234,6 +234,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 				// upload
 				// prediction under this folder
 				if (Boolean.TRUE.equals(check)) {
+					log.info("pred file available on mount: " + fileNameOriginal);
 					String parentPath = t.getTestDataSetPath().substring(0, t.getTestDataSetPath().lastIndexOf('/'));
 					String folderPath = parentPath + "/Predictions_" + t.getUserId();
 					HpcCollectionRegistrationDTO dto = new HpcCollectionRegistrationDTO();

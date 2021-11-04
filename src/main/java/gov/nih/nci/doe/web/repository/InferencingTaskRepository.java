@@ -12,7 +12,7 @@ public interface InferencingTaskRepository extends JpaRepository<InferencingTask
 	@Query("select a from InferencingTask a where a.taskId =?1")
 	InferencingTask getInferenceTask(String taskId);
 	
-	@Query("select a from InferencingTask a where a.status =?1")
+	@Query("select a from InferencingTask a where a.status =?1 and a.dmeTaskId IS NOT NULL")
 	List<InferencingTask> getAllNotStartedTasks(String status);
 	
 	@Query("select a from InferencingTask a where a.userId =?1")
