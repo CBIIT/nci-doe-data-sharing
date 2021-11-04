@@ -1,10 +1,10 @@
 package gov.nih.nci.doe.web.controller;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
 
@@ -119,11 +119,10 @@ public class PerformInferencingController extends AbstractDoeController {
 			// save the inferencing task
 			inferencingTaskService.saveInferenceTask(getLoggedOnUserInfo(), taskId, parentPath, resultPath,
 					testModelPath, modelh5Path);
-
-			// copy the test dataset file to IRODsTest mount through sftp transfer
-			File file = new File("/mnt/IRODsTest/" + uploadTestInferFile.getOriginalFilename());
-			OutputStream out = new FileOutputStream(file);
-			out.close();
+			// copy the test dataset file to IRODsTest mount
+			Files.copy(uploadTestInferFile.getInputStream(),
+					Paths.get(uploadPath + uploadTestInferFile.getOriginalFilename()),
+					StandardCopyOption.REPLACE_EXISTING);
 
 			return "Perform Inferencing task Submitted. Your task Id is " + taskId;
 		} catch (Exception e) {
