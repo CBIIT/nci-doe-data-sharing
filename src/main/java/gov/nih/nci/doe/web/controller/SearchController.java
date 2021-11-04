@@ -84,13 +84,13 @@ public class SearchController extends AbstractDoeController {
 			compoundQuery.setDetailedResponse(true);
 			log.info("search compund query" + compoundQuery);
 
-			UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(compoundDataObjectSearchServiceURL);
+			UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(compoundCollectionSearchServiceURL);
 
 			if (ucBuilder == null) {
 				return null;
 			}
 
-			ucBuilder.queryParam("returnParent", Boolean.TRUE);
+			//ucBuilder.queryParam("returnParent", Boolean.TRUE);
 			final String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
 
 			WebClient client = DoeClientUtil.getWebClient(requestURL);
