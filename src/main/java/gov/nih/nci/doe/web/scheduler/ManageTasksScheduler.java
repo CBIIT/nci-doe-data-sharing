@@ -216,7 +216,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 		// verify all the in-progress tasks with dmeTaskId not null to check if the y_prediction file is
 		// available to download.
 
-		List<InferencingTask> getAllInProgressTasks = inferencingTaskRepository.getAllNotStartedTasks("INPROGRESS");
+		List<InferencingTask> getAllInProgressTasks = inferencingTaskRepository.getAllInProgressTasks("INPROGRESS");
 
 		for (InferencingTask t : getAllInProgressTasks) {
 
