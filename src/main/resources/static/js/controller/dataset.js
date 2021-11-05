@@ -668,11 +668,19 @@ $('#dataSetTable tbody').on('click','a.detail-control',function() {
 										+ "<img src='images/Delete.png' data-toggle='tooltip' title='Delete File' th:src='@{/images/Delete.png}' "
 										+ "style='width:15px;' alt='Delete File'></span>";
 								}
-								tableHtml +=
-									"<tr><td style='background-color: #d3d3d347 !important;width: 15%;'>"+selectHtml+"</td>"
-									+ "<td style='background-color: #d3d3d347 !important;width:40%'>" + iconHtml
-									+ "</td><td style='background-color: #d3d3d347 !important;width:20%;'>"+fileSize+"</td>"
-									+ "<td style = 'background-color: #d3d3d347 !important;width:25%;' > " + nestedEditPermissionsHtml + "</td > <tr>";
+								if(loggedOnUserInfo) {
+									tableHtml +=
+										"<tr><td style='background-color: #d3d3d347 !important;width: 15%;'>"+selectHtml+"</td>"
+										+ "<td style='background-color: #d3d3d347 !important;width:40%'>" + iconHtml
+										+ "</td><td style='background-color: #d3d3d347 !important;width:20%;'>"+fileSize+"</td>"
+										+ "<td style = 'background-color: #d3d3d347 !important;width:25%;' > " + nestedEditPermissionsHtml + "</td > <tr>";
+								} else {
+									tableHtml +=
+										"<tr>"
+										+ "<td style='background-color: #d3d3d347 !important;width:40%'>" + iconHtml
+										+ "</td><td style='background-color: #d3d3d347 !important;width:20%;'>"+fileSize+"</td><tr>";
+								}
+								
 
 							});
 
@@ -792,12 +800,22 @@ function renderDataSetPath(data, type, row) {
 	var title = "";
 	var metadatatitle= "";
 	var collection_type ="";
+	var marginLeftCss;
+	var marginRightCss;
+	if(loggedOnUserInfo) {
+		marginLeftCss = -25
+		 marginRightCss = 0
+	} else {
+		marginLeftCss = 0
+		 marginRightCss = 10
+	}
 
 	if (row.isFolder && row.isFolder == true) {
 		title = "Copy Folder Path";
 		metadatatitle ="Folder Metadata";
 		collection_type = "Folder";
-		html+= "<a class='detail-control' data-name = '"+row.name+"' style='float:left;margin-left:-25px;'><i class='expand far fa-folder'></i></a>";
+		html+= "<a class='detail-control' data-name = '"+row.name+"'" +
+				"style='float:left;margin-right:"+marginRightCss+"px;margin-left:"+marginLeftCss+"px;'><i class='expand far fa-folder'></i></a>";
 	} else {
 		title = "Copy File Path";
 		metadatatitle = "File Metadata";
