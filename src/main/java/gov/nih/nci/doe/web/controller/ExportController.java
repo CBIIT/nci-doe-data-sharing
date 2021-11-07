@@ -26,7 +26,14 @@ import com.fasterxml.jackson.databind.MappingJsonFactory;
 
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.doe.web.util.ExcelExportProc;
+import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
+import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQueryOperator;
+import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQueryType;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
+import gov.nih.nci.hpc.domain.metadata.HpcMetadataQuery;
+import gov.nih.nci.hpc.domain.metadata.HpcMetadataQueryAttributeMatch;
+import gov.nih.nci.hpc.domain.metadata.HpcMetadataQueryLevelFilter;
+import gov.nih.nci.hpc.domain.metadata.HpcMetadataQueryOperator;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
 import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
@@ -51,14 +58,38 @@ public class ExportController extends AbstractDoeController {
 		String authToken = (String) session.getAttribute("hpcUserToken");
 		List<String> headers = new ArrayList<String>();
 
-		HpcCompoundMetadataQueryDTO compoundQuery = (HpcCompoundMetadataQueryDTO) session.getAttribute("compoundQuery");
+		HpcCompoundMetadataQueryDTO compoundQuery = new HpcCompoundMetadataQueryDTO();
+		String[] paths = selectedPaths.split(",");
+		List<String> pathsList = new ArrayList<>(Arrays.asList(paths));
+
+		HpcCompoundMetadataQuery query = new HpcCompoundMetadataQuery();
+		query.setOperator(HpcCompoundMetadataQueryOperator.OR);
+		for (String path : pathsList) {
+			HpcMetadataQueryLevelFilter levelFilter = new HpcMetadataQueryLevelFilter();
+			String dataObjectName = path != null ? path.substring(path.lastIndexOf('/') + 1, path.length()) : null;
+			HpcMetadataQuery q = new HpcMetadataQuery();
+			q.setAttributeMatch(HpcMetadataQueryAttributeMatch.ANY);
+			q.setValue('%' + dataObjectName + '%');
+			q.setOperator(HpcMetadataQueryOperator.LIKE);
+			levelFilter.setLevel(1);
+			levelFilter.setOperator(HpcMetadataQueryOperator.NUM_GREATER_OR_EQUAL);
+			q.setLevelFilter(levelFilter);
+			query.getQueries().add(q);
+		}
+
+		compoundQuery.setCompoundQuery(query);
+		compoundQuery.setTotalCount(true);
+		compoundQuery.setCompoundQueryType(HpcCompoundMetadataQueryType.DATA_OBJECT);
+		compoundQuery.setPage(1);
+		compoundQuery.setPageSize(5000);
+		compoundQuery.setDetailedResponse(true);
 
 		UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(compoundDataObjectSearchServiceURL);
 
 		if (ucBuilder == null) {
 			return null;
 		}
-		ucBuilder.pathSegment(assetIdentifier.substring(1, assetIdentifier.length()));
+
 		final String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
 
 		WebClient client = DoeClientUtil.getWebClient(requestURL);
@@ -67,8 +98,6 @@ public class ExportController extends AbstractDoeController {
 
 		if (StringUtils.isNotEmpty(selectedPaths)) {
 
-			String[] paths = selectedPaths.split(",");
-			List<String> pathsList = new ArrayList<>(Arrays.asList(paths));
 			List<List<String>> rows = new ArrayList<>();
 
 			if (restResponse.getStatus() == 200) {
