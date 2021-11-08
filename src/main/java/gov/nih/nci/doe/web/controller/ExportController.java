@@ -58,7 +58,7 @@ public class ExportController extends AbstractDoeController {
 		String authToken = (String) session.getAttribute("hpcUserToken");
 		List<String> headers = new ArrayList<String>();
 
-		HpcCompoundMetadataQueryDTO compoundQuery = new HpcCompoundMetadataQueryDTO();
+		HpcCompoundMetadataQueryDTO dataObjectCompoundQuery = new HpcCompoundMetadataQueryDTO();
 		String[] paths = selectedPaths.split(",");
 		List<String> pathsList = new ArrayList<>(Arrays.asList(paths));
 
@@ -77,12 +77,12 @@ public class ExportController extends AbstractDoeController {
 			query.getQueries().add(q);
 		}
 
-		compoundQuery.setCompoundQuery(query);
-		compoundQuery.setTotalCount(true);
-		compoundQuery.setCompoundQueryType(HpcCompoundMetadataQueryType.DATA_OBJECT);
-		compoundQuery.setPage(1);
-		compoundQuery.setPageSize(5000);
-		compoundQuery.setDetailedResponse(true);
+		dataObjectCompoundQuery.setCompoundQuery(query);
+		dataObjectCompoundQuery.setTotalCount(true);
+		dataObjectCompoundQuery.setCompoundQueryType(HpcCompoundMetadataQueryType.DATA_OBJECT);
+		dataObjectCompoundQuery.setPage(1);
+		dataObjectCompoundQuery.setPageSize(5000);
+		dataObjectCompoundQuery.setDetailedResponse(true);
 
 		UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(compoundDataObjectSearchServiceURL);
 
@@ -94,7 +94,7 @@ public class ExportController extends AbstractDoeController {
 
 		WebClient client = DoeClientUtil.getWebClient(requestURL);
 		client.header("Authorization", "Bearer " + authToken);
-		Response restResponse = client.invoke("POST", compoundQuery);
+		Response restResponse = client.invoke("POST", dataObjectCompoundQuery);
 
 		if (StringUtils.isNotEmpty(selectedPaths)) {
 
