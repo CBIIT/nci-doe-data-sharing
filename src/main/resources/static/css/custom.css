@@ -628,7 +628,7 @@ table#manageTasksTable thead .sorting,table#dataSetTable thead .sorting,table#in
    	
 }
 table#dataSetTable thead .sorting,table#dataSetTable thead .sorting_asc,table#dataSetTable thead .sorting_desc {
-	background-position: center center;
+	background-position: 28% 60%;
 }
 
 table#manageTasksTable thead .sorting,table#manageTasksTable thead .sorting_asc,
