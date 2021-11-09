@@ -357,7 +357,7 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 	font-size: 19px;
     font-weight: 500;
     font-family: 'latoregular';
-    margin-left: -4px;
+    margin-left: 3px;
     color: #5099AB;
 }
 table.subAssetsDataSetTable,table.subFolderAssetsDataSetTable{

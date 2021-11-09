@@ -145,6 +145,9 @@ public abstract class AbstractDoeController {
 
 	@Value("${asset.bulk.collections}")
 	public String bulkAssetsPaths;
+	
+	@Value("${predictions.display.assets}")
+	public String predictionPaths;
 
 	@Autowired
 	InferencingTaskService inferencingTaskService;
@@ -816,6 +819,12 @@ public abstract class AbstractDoeController {
 					model.addAttribute("returnToSearch", true);
 				}
 
+				if(StringUtils.isNotEmpty(predictionPaths)) {
+					List<String> predictionPathsList = Arrays.asList(predictionPaths.split(","));
+					Boolean showGeneratePredictions = predictionPathsList.stream()
+							.anyMatch(s -> collection.getCollection().getCollectionName().equalsIgnoreCase(s));
+					model.addAttribute("showGeneratePredictions", showGeneratePredictions);
+				}
 				model.addAttribute("assetType", assetType);
 				model.addAttribute("dme_Data_Id", dme_Data_Id);
 				model.addAttribute("asset_Identifier", asset_Identifier);
