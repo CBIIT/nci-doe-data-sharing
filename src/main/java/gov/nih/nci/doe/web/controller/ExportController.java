@@ -68,11 +68,11 @@ public class ExportController extends AbstractDoeController {
 			HpcMetadataQueryLevelFilter levelFilter = new HpcMetadataQueryLevelFilter();
 			String dataObjectName = path != null ? path.substring(path.lastIndexOf('/') + 1, path.length()) : null;
 			HpcMetadataQuery q = new HpcMetadataQuery();
-			q.setAttributeMatch(HpcMetadataQueryAttributeMatch.ANY);
-			q.setValue('%' + dataObjectName + '%');
+			q.setAttribute("archive_file_id");
+			q.setValue('%' + dataObjectName);
 			q.setOperator(HpcMetadataQueryOperator.LIKE);
 			levelFilter.setLevel(1);
-			levelFilter.setOperator(HpcMetadataQueryOperator.NUM_GREATER_OR_EQUAL);
+			levelFilter.setOperator(HpcMetadataQueryOperator.EQUAL);
 			q.setLevelFilter(levelFilter);
 			query.getQueries().add(q);
 		}
@@ -81,7 +81,7 @@ public class ExportController extends AbstractDoeController {
 		dataObjectCompoundQuery.setTotalCount(true);
 		dataObjectCompoundQuery.setCompoundQueryType(HpcCompoundMetadataQueryType.DATA_OBJECT);
 		dataObjectCompoundQuery.setPage(1);
-		dataObjectCompoundQuery.setPageSize(5000);
+		dataObjectCompoundQuery.setPageSize(500);
 		dataObjectCompoundQuery.setDetailedResponse(true);
 
 		UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(compoundDataObjectSearchServiceURL);
@@ -90,10 +90,13 @@ public class ExportController extends AbstractDoeController {
 			return null;
 		}
 
+		ucBuilder.pathSegment(assetIdentifier.substring(1, assetIdentifier.length()));
+
 		final String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
 
 		WebClient client = DoeClientUtil.getWebClient(requestURL);
 		client.header("Authorization", "Bearer " + authToken);
+
 		Response restResponse = client.invoke("POST", dataObjectCompoundQuery);
 
 		if (StringUtils.isNotEmpty(selectedPaths)) {
