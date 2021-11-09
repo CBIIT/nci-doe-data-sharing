@@ -89,6 +89,14 @@ public class PerformInferencingController extends AbstractDoeController {
 						}
 					}
 				}
+				
+				if(t.getStatus() != null && t.getStatus().equalsIgnoreCase("NOTSTARTED")) {
+					t.setStatus("Not Started");
+				} else if(t.getStatus() != null && t.getStatus().equalsIgnoreCase("INPROGRESS")) {
+					t.setStatus("In Progress");
+				} else if(t.getStatus() != null && t.getStatus().equalsIgnoreCase("COMPLETED")) {
+					t.setStatus("Completed");
+				}
 			}
 
 		}
