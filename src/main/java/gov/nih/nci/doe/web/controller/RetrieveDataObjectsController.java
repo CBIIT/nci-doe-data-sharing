@@ -148,11 +148,9 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 		}
 
 		if (!Collections.isEmpty(subCollections)) {
-			String user = getLoggedOnUserInfo();
 			for (HpcCollectionListingEntry collection : subCollections) {
 				String name = collection.getPath().substring(collection.getPath().lastIndexOf('/') + 1);
-				if ((user == null && !name.startsWith("Predictions_"))
-						|| (user != null && !("Predictions_" + user).equalsIgnoreCase(name))) {
+				if (!name.startsWith("Predictions_")) {
 					DoeDatafileSearchResultDetailed returnResult = new DoeDatafileSearchResultDetailed();
 					returnResult.setPath(collection.getPath());
 					returnResult.setName(name);

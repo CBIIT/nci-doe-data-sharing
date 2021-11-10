@@ -819,7 +819,7 @@ public abstract class AbstractDoeController {
 					model.addAttribute("returnToSearch", true);
 				}
 
-				if(StringUtils.isNotEmpty(predictionPaths)) {
+				if(StringUtils.isNotEmpty(predictionPaths) && Boolean.TRUE.equals(getIsUploader())) {
 					List<String> predictionPathsList = Arrays.asList(predictionPaths.split(","));
 					Boolean showGeneratePredictions = predictionPathsList.stream()
 							.anyMatch(s -> collection.getCollection().getCollectionName().equalsIgnoreCase(s));
@@ -848,7 +848,7 @@ public abstract class AbstractDoeController {
 						String folderPermissions = getPermissionRole(user,
 								folderCollections.getCollections().get(0).getCollection().getCollectionId(),
 								loggedOnUserPermissions);
-						if ("Owner".equalsIgnoreCase(folderPermissions) && Boolean.TRUE.equals(getIsUploader())) {
+						if ("Owner".equalsIgnoreCase(folderPermissions)) {
 							model.addAttribute("showGeneratePredTab", true);
 						}
 
