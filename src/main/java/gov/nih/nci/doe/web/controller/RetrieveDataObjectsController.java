@@ -151,7 +151,8 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 			String user = getLoggedOnUserInfo();
 			for (HpcCollectionListingEntry collection : subCollections) {
 				String name = collection.getPath().substring(collection.getPath().lastIndexOf('/') + 1);
-				if (!("Predictions_" + user).equalsIgnoreCase(name)) {
+				if ((user == null && !name.startsWith("Predictions_"))
+						|| (user != null && !("Predictions_" + user).equalsIgnoreCase(name))) {
 					DoeDatafileSearchResultDetailed returnResult = new DoeDatafileSearchResultDetailed();
 					returnResult.setPath(collection.getPath());
 					returnResult.setName(name);
@@ -174,9 +175,8 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 
 		returnResult.setSelfMetadata(getUserMetadata(
 				result.getMetadataEntries().getSelfMetadataEntries().getUserMetadataEntries(), null, systemAttrs));
-		returnResult.setSystemMetadata(
-				getSystemMetaData(result.getMetadataEntries().getSelfMetadataEntries().getSystemMetadataEntries(),
-						null, systemAttrs));
+		returnResult.setSystemMetadata(getSystemMetaData(
+				result.getMetadataEntries().getSelfMetadataEntries().getSystemMetadataEntries(), null, systemAttrs));
 
 		return returnResult;
 
