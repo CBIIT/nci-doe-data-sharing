@@ -848,7 +848,7 @@ public abstract class AbstractDoeController {
 						String folderPermissions = getPermissionRole(user,
 								folderCollections.getCollections().get(0).getCollection().getCollectionId(),
 								loggedOnUserPermissions);
-						if ("Owner".equalsIgnoreCase(folderPermissions)) {
+						if ("Owner".equalsIgnoreCase(folderPermissions) && Boolean.TRUE.equals(getIsUploader())) {
 							model.addAttribute("showGeneratePredTab", true);
 						}
 
