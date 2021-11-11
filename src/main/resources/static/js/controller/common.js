@@ -729,6 +729,7 @@ function filterNext($this, attributeTypeName) {
 	var isExcludeParentMetadata = [];
 	var rowIds = [];
 	var operators = [];
+	var iskeyWordSearch = [];
 
 	// filter a list based on the parent level selection
 	$this.closest('.filterComponentDiv').prevAll().find(".filteritem:checked").each(function() {
@@ -740,6 +741,7 @@ function filterNext($this, attributeTypeName) {
 			rowIds.push(rowId);
 			isExcludeParentMetadata.push(false);
 			operators.push("EQUAL");
+			iskeyWordSearch.push(false);
 			rowId = rowId + 1;
 		}
 	});
@@ -749,6 +751,7 @@ function filterNext($this, attributeTypeName) {
 	d.isExcludeParentMetadata = isExcludeParentMetadata.join();
 	d.rowId = rowIds.join();
 	d.operator = operators.join();
+	d.iskeyWordSearch = iskeyWordSearch.join();
 	d.searchName = attributeName;
 
 	$.ajax({
@@ -807,6 +810,7 @@ function filterPrev($this, attributeTypeName) {
 	var isExcludeParentMetadata = [];
 	var rowIds = [];
 	var operators = [];
+	var iskeyWordSearch = [];
 	var url;
 
 	// filter a list based on the parent level selection
@@ -819,6 +823,7 @@ function filterPrev($this, attributeTypeName) {
 			rowIds.push(rowId);
 			isExcludeParentMetadata.push(false);
 			operators.push("EQUAL");
+			iskeyWordSearch.push(false);
 			rowId = rowId + 1;
 		}
 	});
@@ -828,6 +833,7 @@ function filterPrev($this, attributeTypeName) {
 	d.isExcludeParentMetadata = isExcludeParentMetadata.join();
 	d.rowId = rowIds.join();
 	d.operator = operators.join();
+	d.iskeyWordSearch = iskeyWordSearch.join();
 	d.searchName = attributeName;
 	if (attributeTypeName == 'Asset Type') {
 		url = '/getFilterList';
