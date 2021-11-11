@@ -1,935 +1,737 @@
-$(document)
-		.ready(
-				function() {
-					console.log("initialize dirty checking");
-					$('form.dirty-check').areYouSure();
 
-					// Auto-lowercase Email Username (Usernames are always
-					// stored in lowercase)
-					$('#username').blur(function() {
-						$(this).val($(this).val().trim().toLowerCase());
-					});
-
-					$("#id_user_email").blur(function() {
-						$(this).val($(this).val().trim().toLowerCase());
-					});
-
-					$("#txtResetPswdLink").blur(function() {
-						$(this).val($(this).val().trim().toLowerCase());
-					});
-
-					$(".loginFieldsTextBox").keyup(function() {
-						if ($(this).val()) {
-							$(this).parent().find('.TextField-floatingLabel-qefpP').show();
-						} else {
-							$(this).parent().find('.TextField-floatingLabel-qefpP').hide();
-						}
-					});
-
-					$(window).scroll(function() {
-						if ($(this).scrollTop() >= 50) { // If page is
-							// scrolled more
-							// than 50px
-							$('#return-to-top').show(200); // Fade in the arrow
-						} else {
-							$('#return-to-top').hide(200); // Else fade out the
-							// arrow
-						}
-					});
-
-					$('#return-to-top').click(function() { // When arrow is
-						// clicked
-						$('body,html').animate({
-							scrollTop : 0
-						// Scroll to top of body
-						}, 500);
-					});
-
-					$('.simple-select2').select2({
-						theme : 'bootstrap4',
-						allowClear : false
-					});
-
-					$('.simple-select2-sm').select2({
-						theme : 'bootstrap4',
-						containerCssClass : ':all:',
-						placeholder : "",
-						allowClear : false,
-					});
-
-					$('[data-toggle="tooltip"]').tooltip();
-
-					$("#searchBtn").click(function(e) {
-						e.preventDefault();
-						populateSearchCriteria('simpleSearch');
-					});
-
-					$("#downloadSelected").click(
-							function(e) {
-								var selectedPaths = [];
-								$("#searchResultTable tbody input[type=checkbox]:checked").each(function() {
-									selectedPaths.push($(this).attr('id'));
-								});
-								if (selectedPaths.length == 0) {
-									$("#searchResultTable tbody input[type=radio]:checked").each(function() {
-										selectedPaths.push($(this).attr('id'));
-									});
-								}
-
-								if (selectedPaths.length == 1) {
-									location.replace('/downloadTab?selectedPaths=' + selectedPaths
-											+ '&&downloadAsyncType=collection&&returnToSearch=true');
-								} else {
-									$("#downloadType").val("collectionfiles");
-									location.replace('/downloadTab?selectedPaths=' + selectedPaths
-											+ '&&downloadAsyncType=collectionfiles&&returnToSearch=true');
-								}
-
-							});
-
-					var selectedPathsString = $("#selectedPathsString").val();
-					var downloadType = $("#downloadType").val();
-					var downloadFileName = $("#downloadFileName").val();
-					var asyncSearchType = $("#asyncSearchType").val();
-
-					if (selectedPathsString && downloadType
-							&& (downloadType == 'collection' || downloadType == 'collectionfiles')) {
-						$("#syncRadioSet").hide();
-						$("#SyncDiv").hide();
-						if (asyncSearchType) {
-							$("input[name=searchType][value=" + asyncSearchType + "]").click();
-						}
-
-						var selectedPaths = selectedPathsString.split(',');
-						$("#selectedFilesList").val(selectedPaths);
-
-						$.each(selectedPaths, function(index, value) {
-							$(".selectedFilesListDisplay").append("<p>" + value + "</p>");
-						});
-						$(".selectedFilesDiv").show();
-
-						if (selectedPaths.length == 1) {
-							$("#destinationPathId").val(selectedPaths);
-						}
-
-						$("#informationalText")
-								.html(
-										"This page allows you to download the "
-												+ "selected data files "
-												+ "asynchronously to a Globus endpoint location, an S3 bucket, or Google Drive.");
-					} else if (selectedPathsString && downloadType
-							&& (downloadType == 'data_object' || downloadType == 'datafiles')) {
-
-						if (downloadFileName && downloadFileName != "null" && downloadType == 'data_object') {
-							$("#syncRadioSet").show();
-							$(".selectedFilesListDisplay").append("<p>" + selectedPathsString + "</p>");
-							$(".selectedFilesDiv").show();
-							$("#destinationPathId").val(selectedPathsString);
-							$("#drivePath").val(downloadFileName);
-							$("#informationalText")
-									.html(
-											"This page allows you to download the "
-													+ "selected data file either synchronously to your computer or asynchronously "
-													+ "to Globus endpoint location, an S3 bucket, or Google Drive.");
-							if (asyncSearchType) {
-								$("input[name=searchType][value=" + asyncSearchType + "]").click();
-							} else {
-								$("#searchTypeSync").click();
-							}
-
-						} else {
-							$("#syncRadioSet").hide();
-							$("#SyncDiv").hide();
-							if (asyncSearchType) {
-								$("input[name=searchType][value=" + asyncSearchType + "]").click();
-							}
-							$("#informationalText")
-									.html(
-											"This page allows you to download the "
-													+ "selected data files "
-													+ "asynchronously to a Globus endpoint location, an S3 bucket, or Google Drive.");
-
-							var selectedPaths = selectedPathsString.split(',');
-							$("#selectedFilesList").val(selectedPaths);
-
-							$.each(selectedPaths, function(index, value) {
-								$(".selectedFilesListDisplay").append("<p><input type='checkbox' class='checkboxMultipleDwnlodPaths' checked='true' value="+value+"> &nbsp;&nbsp;" + value + "</p>");
-							});
-							$(".selectedFilesDiv").show();
-
-							if (selectedPaths.length == 1) {
-								$("#destinationPathId").val(selectedPaths);
-							}
-						}
-
-					}
-
-					$("#download-btn")
-							.click(
-									function(e) {
-										e.preventDefault();
-										var selectedFiles = $("#selectedFilesList").val();
-										var searchType = $('input[name=searchType]:checked:visible').val();
-										var d = {};
-										d.searchType = searchType;
-										d.destinationPath = $("#destinationPathId").val();
-										d.downloadType = $("#downloadType").val();
-										d.downloadFileName = $("#downloadFileNameVal").val();
-										$("#message").hide();
-										var validate = true;
-										if (!searchType) {
-											$('.downloadErrorMsg').html("Select a download destination.");
-											$("#message").show();
-										} else if (searchType == 's3' || searchType == 'async' || searchType == 'drive'
-												|| selectedFiles) {
-											d.bucketName = $("#downloadBucketName").val();
-											d.s3Path = $("#downloadS3Path").val();
-											d.accessKey = $("#downloadAccessKey").val();
-											d.secretKey = $("#downloadSecretKey").val();
-											d.region = $("#downloadRegion").val();
-											d.endPointName = $("#endPointName").val();
-											d.endPointLocation = $("#endPointLocation").val();
-											d.drivePath = $("#drivePath").val();
-
-											var url;
-											if (selectedFiles) {
-												url = "/downloadfiles/download";
-												d.selectedPaths = selectedFiles;
-											} else {
-												url = "/download";
-
-											}
-											if (searchType == 'async') {
-												$('div#AsyncDiv input[type="text"]').each(function() {
-													if (!$(this).val()) {
-														validate = false;
-													}
-												});
-											} else if (searchType == 's3') {
-												$('div#s3Div input[type="text"]').each(function() {
-													if (!$(this).val()) {
-														validate = false;
-													}
-												});
-											} else if (searchType == 'drive') {
-												$('div#driveDiv input[type="text"]').each(function() {
-													if (!$(this).val()) {
-														validate = false;
-													}
-												});
-											}
-
-											if (!validate) {
-												$('.downloadErrorMsg').html("Enter the destination information.");
-												$("#message").show();
-											} else {
-												$
-														.ajax({
-															type : "POST",
-															url : url,
-															contentType : 'application/json',
-															data : JSON.stringify(d),
-															beforeSend : function() {
-																$("#spinner").show();
-																$("#dimmer").show();
-															},
-															success : function(msg) {
-																$("#spinner").hide();
-																$("#dimmer").hide();
-																console.log('SUCCESS: ', msg);
-
-																if (msg
-																		&& msg.message
-																		&& msg.message
-																				.indexOf("Download request is not successful:") != -1) {
-																	$('.downloadErrorMsg').html(msg.message);
-																	$("#message").show();
-																	$('.downloadSuccessMsg').html("");
-																	$("#successBlockDownload").hide();
-																} else {
-																	$('.downloadSuccessMsg').html(msg.message);
-																	$("#successBlockDownload").show();
-																	$('.downloadErrorMsg').html("");
-																	$("#message").hide();
-																}
-
-															},
-															error : function(e) {
-																console.log('ERROR: ', e);
-																$("#spinner").hide();
-																$("#dimmer").hide();
-																$('#downloadErrorMsg').html(e.message);
-																$("#message").show();
-															}
-														});
-											}
-										} else {
-											$('div#SyncDiv input[type="text"]').each(function() {
-												if (!$(this).val()) {
-													validate = false;
-												}
-											});
-											if (!validate) {
-												$('.downloadErrorMsg').html("Enter the destination information.");
-												$("#message").show();
-											} else {
-												$('#downloadSyncForm').attr('action', '/downloadsync');
-												$("#downloadSyncForm").submit();
-											}
-										}
-
-									});
-
-					$("#btnRegister").click(function(e) {
-						callRegisterFormValidation();
-
-					});
-
-					$("#loginButton").click(function(e) {
-						validateUserLogin();
-
-					});
-
-					$("#btnforgotPassword").click(function(e) {
-						validateForgotPassword();
-					});
-
-					$("#forgotPswdLink").click(function(e) {
-						$("#forgotPasswordLightbox").find(".forgotPswdErrorMsg").html("");
-						$("#forgotPasswordLightbox").find(".forgorPswdErrorBlock").hide();
-						$("#forgotPasswordLightbox").find(".forgotPswdSuccessMsg").html("");
-						$("#forgotPasswordLightbox").find(".forgorPswdSuccessBlock").hide();
-						$("#forgotPasswordLightbox").find("#txtResetPswdLink").val("");
-						$("#forgotPasswordLightbox").modal('show');
-
-					});
-
-					$("#btnSubmitPswdLink").click(function(e) {
-
-						var params = {
-							emailAddr : $('#forgotPasswordLightbox').find("#txtResetPswdLink").val()
-						};
-						invokeAjax('/resetPasswordLink', 'GET', params, postResetLinkFunction, null, null, 'text');
-					});
-
-					$("#logout").click(function(e) {
-						invokeAjax('/logOut', 'POST', null, postLogOutFunction, null, null, 'text');
-					});
-
-					$("#register-tab").click(function(e) {
-						$("#registrationTab").show();
-						$("#loginSubTab").hide();
-					});
-
-					$("#returnToLoginForm").click(function(e) {
-						$("#registrationTab").hide();
-						$("#loginSubTab").show();
-					});
-
-					invokeAjax('/user-info', 'GET', {
-						emailAddr : $("#emailAddrTxt").text()
-					}, postGetUserInfoFunction, null, null, 'text');
-
-					$("#btnUpdateProfile").click(function(e) {
-						validateUpdateProfile();
-					});
-
-					$("#resetBtn").click(function(e) {
-						$("#attributeVal").val("");
-						$("#searchResultsDiv").hide();
-					});
-
-					$(".backToSearchBtn").click(function(e) {
-						$("#searchFragmentDiv").show();
-						$("#dataSetFragment").hide();
-						$("#editCollectionFragment").hide();
-					});
-
-					$(".backToAssetDetailsBtn").click(function(e) {
-						$("#assetDetailsFragment").show();
-						$("#editCollectionFragment").hide();
-					});
-
-					$(".backtoAssetFromDwnldBtn").click(function(e) {
-						var assetIdentifier = $("#assetIdentifier").val();
-						location.replace('/assetDetails?assetIdentifier=' + assetIdentifier + '&&returnToSearch=true');
-					});
-
-					$("#backtoSearch").click(function(e) {
-						location.replace("/searchTab?returnToSearch=true");
-					});
-
-					$(".backToStatusTabLink").click(function(e) {
-						location.replace("/tasksTab");
-					});
-
-					$("#addAsets").click(function(e) {
-						resetAssetsSelection();
-					});
-
-					$('body').on('click', 'a.button.closeBtn', function() {
-						$(this).closest('div.popover').popover('hide');
-					});
-
-					$('body').on('click',function(e) {
-						 $('[data-toggle=popover]').each(function() {
-							 if (!$(this).is(e.target) && $(this).has(e.target).length === 0
-								   && $('.popover').has(e.target).length === 0) {
-								 (($(this).popover('hide').data('bs.popover') || {}).inState || {}).click = false;
+$(document).ready(function () {
+	$("#landing-tab").removeClass('active');
+	$("#search-tab").addClass('active');
+	if($(".backToStatusTabLink").is(':visible')) {
+		$("#search-tab").removeClass('active');
+		$("#manageTasks-tab").addClass('active');
+	} else {
+		$("#search-tab").addClass('active');
+		$("#manageTasks-tab").removeClass('active');
+	}
+	
+	 $('.dt-responsive tbody').on('click', 'td', function () {
+		 initializeToolTips();
+		
+	 });
+	 $('body').tooltip({selector: '[data-toggle="tooltip"]'});
+	 var dmeDataId = $("#dmeDataId").val();
+	 var doiId = $("#doi").val();
+	 var returnToSearch = $("#returnToSearch").val();
+	 if(dmeDataId || doiId) {
+		 populateSearchCriteria('datasetUrl');
+	 } else if(returnToSearch) {
+		 var search = $("#searchQuery").val();
+		 var list= JSON.parse(search);
+		 for (var i = 1; i < list.attrName.length; i++) {
+			 var attrVal = list.attrValuesString.split('@@');
+			 var iskeyWordSearch = list.iskeyWordSearch[i];
+			 if(iskeyWordSearch == true) {
+				 var attrval = attrVal[i];
+				 var newAttrVal = attrval.replaceAll('%', '');
+				 $("#attributeVal").val(newAttrVal);
+			 } else {
+				 var attrName = list.attrName[i];
+				 var attrVal = attrVal[i];
+				 $(".attrName").each(function(){
+					 if($(this).text() == attrName) {
+						 $(this).parent().parent().find(".filteritem").each(function(){
+							 if($(this).val() == attrVal) {
+								 $(this).prop("checked",true);
+								 $(this).trigger('change');
 							 }
-						 });
-					});
+						 })
+					 }
+				 })
+			 }
+		 }
+		 populateSearchCriteria(null);
+	 } else {
+		 populateSearchCriteria(null);
+	 }
+	 
+	 showFirstFewFields();
 
-					$("#addMetaData").click(function(e) {
-						addCollectionMetaDataRows();
-					});
+	 
+	 $(document).keypress(function(event){	
+			var keycode = (event.keyCode ? event.keyCode : event.which);
+			if(keycode == '13'){
+				 event.preventDefault();
+				 populateSearchCriteria('displayAllResults');
+			}
 
-					$("#updateMetaData").click(function(e) {
-						updateMetaDataCollection();
-					});
+		});
+});
 
-					$("#registerCollectionBtn").click(function(e) {
-						registerCollection();
-					});
 
-					$("#registerDataFileBtn").click(function(e) {
-						registerDataFile();
-					});
+function populateSearchCriteria(searchType) {
+	
+	$("#searchResultsDiv").show();
+	search_criteria_json.detailed = true;
+	search_criteria_json.searchType = "dataobject";	
+	
+	var attrNames = [] ;
+	var attrValues = [];
+	var levelValues= [];
+	var isExcludeParentMetadata = [];
+	var rowIds = [];
+	var operators = [];
+	var iskeyWordSearch = [];
+	
+	attrNames.push("collection_type");
+	attrValues.push("Asset");
+	levelValues.push("ANY");
+	isExcludeParentMetadata.push(false);
+	rowIds.push(1);
+	operators.push("EQUAL");
+	iskeyWordSearch.push(false);
 
-					$("#registerBulkAssets").click(function(e) {
-						registerBulkAssets();
-					});
+			
+	 if($("#attributeVal").val()) {
+		    attrNames.push("ANY");
+			attrValues.push('%' + $("#attributeVal").val().trim() + '%');
+			levelValues.push("ANY");
+			isExcludeParentMetadata.push(false);
+			rowIds.push(2);
+			operators.push("LIKE");
+			iskeyWordSearch.push(true);
+	} 
 
-					$("#doeDataFile").change(function(e) {
-						appendFileName($(this));
+		var rowId = 3;
+		$(".filteritem:checked").each(function () {
+			var attrName = $(this).parent().parent().attr('id');
+	        var attrVal = $(this).val();					
+	        attrNames.push(attrName);
+			levelValues.push("ANY");
+			attrValues.push(attrVal);
+			rowIds.push(rowId);
+			isExcludeParentMetadata.push(false);
+			operators.push("EQUAL");
+			iskeyWordSearch.push(false);
+			rowId =  rowId + 1 ;
+			
+		});	
 
-					});
+	 if(searchType == 'datasetUrl') {
+		 var rowId = 3;
+		 var attrVal = $("#dmeDataId").val();
+		 var attrVal1 = $("#doi").val();
+		 if(attrVal) {
+			 attrNames.push('dme_data_id');
+			 attrValues.push('%' + attrVal + '%' );
+		 } else if(attrVal1) {
+			 attrNames.push('doi');
+			 attrValues.push('%' + attrVal1 + '%' );
+		 }
+		    iskeyWordSearch.push(false);
+			levelValues.push("Asset");
+			rowIds.push(rowId);
+			isExcludeParentMetadata.push(false);
+			operators.push("LIKE");
+	 }
+	 
+		 
+	 
+		search_criteria_json.attrName = attrNames.join();
+		search_criteria_json.attrValuesString = attrValues.join("@@");
+		search_criteria_json.rowId = rowIds.join();	
+		search_criteria_json.level = levelValues.join();
+		search_criteria_json.isExcludeParentMetadata = isExcludeParentMetadata.join();
+		search_criteria_json.iskeyWordSearch = iskeyWordSearch.join();
+		search_criteria_json.operator = operators.join();
+		refreshDataTable();
+}
 
-					$("#addBulkDataFiles").click(function(e) {
-						$("#uploadDataFilesTab").show();
-						openBulkDataRegistration();
-					});
+function refreshDataTable() {
+	var isVisible = (loggedOnUserInfo ? true:false);
+    console.log("refresh datatable");
+    if (!$.fn.DataTable.isDataTable('#searchResultTable')) {
+        dataTableInit(isVisible);
+    } else {    	
+        var t = $('#searchResultTable').DataTable();
+        console.log(t);
+        t.ajax.reload(null, true);
+    }
+}
 
-					$("#cancelBulkRegister").click(function(e) {
-						$("#uploadDataFilesTab").hide();
-						$("#uploadSubFragmentTab").show();
-						cancelAndReturnToUploadTab();
-					});
+function dataTableInit(isVisible) {
+    $('#searchResultTable').DataTable({
+        "paging": true,
+        "ordering": false,
+        "info": true,
+        "pageLength": 25,
+        "ajax": {
+            "url": "/search",
+            "type": "GET",
+            "data": function (d) {
+            	d.searchType = search_criteria_json.searchType;
+                d.detailed = search_criteria_json.detailed;
+                d.level = search_criteria_json.level;
+               d.attrName =search_criteria_json.attrName;
+               d.attrValuesString =search_criteria_json.attrValuesString;
+               d.rowId = search_criteria_json.rowId;
+               d.isExcludeParentMetadata = search_criteria_json.isExcludeParentMetadata;
+               d.iskeyWordSearch = search_criteria_json.iskeyWordSearch;
+               d.operator = search_criteria_json.operator;
+            },
+            "dataSrc": function (data) {
+                return data;
+            },
+            "error": function (xhr, error, thrown) {
+                console.log("Response status: " + xhr.status + " (" + xhr.statusText + ")");
+                console.log(error + ": " + thrown + " [" + xhr.status + " (" + xhr.statusText + ")]");
+                console.log(xhr.responseText);
+                console.log(xhr);
+                $("#spinner").hide();
+                $("#dimmer").hide();
+            },
 
-					$("#registerBulkDataFileBtn").click(function(e) {
-						registerBulkDataFile();
-					});
+            "beforeSend": function () {
+                $("#spinner").show();
+                $("#dimmer").show();
+            },
 
-					$("#bulkDoeDataFile").change(function(e) {
-						appendBulkFileName($(this));
+            "complete": function () {
+                $("#spinner").hide();
+                $("#dimmer").hide();
+            }
+        },
 
-					});
+        "initComplete": function () {
+        	$('body').tooltip({selector: '[data-toggle="tooltip"]'});
+        },
 
-					$("#driveAuthlink").click(
-							function(e) {
-								var params = {
-									type : $("#downloadType").val(),
-									downloadFilePath : $("#selectedFilesList").val(),
-									action : "Drive",
-									assetIdentifier : $("#assetIdentifier").val(),
-									returnToStatus : $("#returnToStatus").val(),
-									returnToSearch : $("#returnToSearch").val()
-								}
+        "drawCallback": function () {
+        	$("#searchResultTable thead").remove();
+        	if(isVisible) {
+        		$("#downloadSelected").show();
+        	} else {
+        		$("#downloadSelected").hide();
+        	}
 
-								invokeAjax('/download', 'GET', params, postGoogleDriveFunction, postFailureFunction,
-										null, 'text');
-							});
+           $(".dataSetFragment").click(function() {
+        	   var dmeDataId = $(this).attr('dme_data_id');
+        	   location.replace('/assetDetails?returnToSearch=true&&dme_data_id='+dmeDataId);
+           });
+           
+           $(".editCollectionMetadata").click(function(){
+        	   $("#searchFragmentDiv").hide();
+        	   $("#dataSetFragment").hide();
+        	   $("#editCollectionFragment").show();
+        	   $(".backToAssetDetailsBtn").hide();
+   	           $(".backToSearchBtn").show();
+        	   var metaDataPath = $(this).attr('metadata_path');
+        	   var permissionsRole = $(this).attr('permissions_role');
+        	   var collectionId = $(this).attr('collectionId');
+        	   var fileName = $(this).attr('data-fileName');
+        	   var selectedCollection = $(this).attr('selectedCollection');
+        	   var assetType =  $(this).attr('asset_type');
 
-					$("#downloadGlobuslink").click(
-							function(e) {
-								var params = {
-									type : $("#downloadType").val(),
-									downloadFilePath : $("#selectedFilesList").val(),
-									action : "Globus",
-									assetIdentifier : $("#assetIdentifier").val(),
-									returnToStatus : $("#returnToStatus").val(),
-									returnToSearch : $("#returnToSearch").val()
-								}
+   				$("#userMetaData tbody").html("");
+   				$("#path").val(metaDataPath);
+   				$(".editCollectionSuccess").hide();
+   				$(".editCollectionMsg").html("");
+   				$(".editCollectionError").hide();
+   				$(".editCollectionErrorMsg").html("");
+   				$("#collectionId").val(collectionId);
+   				$("#isDataObject").val(false);
+   				$("#editUserMetadataFileName").html(fileName);
+   			 
+   				if(permissionsRole && permissionsRole == 'Owner') {
+   					$("#updatePermissions").show();
+   				} else {
+   					$("#updatePermissions").hide();
+   				}
+     			 
+   				var params1= {selectedPath:metaDataPath,collectionType:selectedCollection,controllerValue:assetType,refresh:false,controllerAttribute:'asset_type'};
+   				invokeAjax('/addCollection','GET',params1,constructEditCollectionMetadata,null,null,null);
+        	   
+           });
+           
+           $(".editAccessGroupPermissions").click(function(){
+         	 var collectionId = $(this).attr('collectionId');
+         	 var metaDataPath = $(this).attr('metadata_path');
+         	 var selectedCollection = $(this).attr('selectedCollection');
+         	 var collectionName = $(this).attr('collection_name');
+     	     var params= {selectedPath:metaDataPath,levelName:selectedCollection};
+    	   
+  			$.ajax({
+				type : "GET",
+			     url : '/getAccessgroups',
+			     contentType : 'application/json',
+				 data : params,
+				 beforeSend: function () {
+			    	   $("#spinner").show();
+			           $("#dimmer").show();
+			       },
+				 success : function(msg) {
+					 $("#spinner").hide();
+			         $("#dimmer").hide();
+			         editAccessPermissions(collectionId,metaDataPath,msg,selectedCollection,collectionName);
+				 },
+				error : function(e) {
+					 console.log('ERROR: ', e);
+					 $("#spinner").hide();
+			         $("#dimmer").hide();
+				}
+			});
+        	   
+           });
+           
+           $(".selectCheckboxForIns").click(function(e){
+        	   var table = $(e.target).closest('table').attr('id');
+        	   var len = $('#' + table).find("input[type=checkbox]:checked").length;
+        	   if (len >= 1) {
+        		   $("#downloadSelected").prop("disabled", false);
+        	   } else {
+        		   $("#downloadSelected").prop("disabled", true);
+        	   }
+        	   
+           });
+           
+           $(".selectRadioForDataSet").click(function(e){
+        	   var table = $(e.target).closest('table').attr('id');
+        	   var len = $('#' + table).find("input[type=radio]:checked").length;
+        	   if (len >= 1) {
+        		   $("#downloadSelected").prop("disabled", false);
+        	   } else {
+        		   $("#downloadSelected").prop("disabled", true);
+        	   }
+        	   
+           });
+ 
+        	   var clipboard = new ClipboardJS('.share-link-copy-button');
 
-								invokeAjax('/download', 'GET', params, postGoogleDriveFunction, postFailureFunction,
-										null, 'text');
-							});
+        	   clipboard.on('success', function(e) {
+          	     console.log(e);
+          	     $(e.trigger).tooltip('hide').attr('data-original-title', 'Copied').tooltip('show');
+          	     setTimeout(function() {
+                       $(e.trigger).tooltip('hide');
+                       $(e.trigger).attr('data-original-title', 'Copy to Clipboard');
+                         }, 2000);
+          	  
+          	   });
 
-					$("#primaryGlobusButton").click(function(e) {
+        	   clipboard.on('error', function(e) {
+        	     console.log(e);
+        	   });
+        	   
+           initializeToolTips();
+           initializePopover();
+           displayPopover();
+        },
 
-						var d = {};
-						d.institutionPath = $("#instituteList").val();
-						d.studyPath = $("#studyList").val();
-						d.dataSetPath = $("#dataList").val();
+        "columns": [
+        	{"data": "path", "render": function (data, type, row) {
+                return renderDataSetName(data, type, row);
+            },
+        	},
+            {"data": "path", "render": function (data, type, row) {
+                    return renderPath(data, type, row);
+                },
+        },
 
-						invokeAjax('/upload', 'GET', d, postUploadGlobusFunction, postFailureFunction, null, 'text');
-					});
+        ],
+        "columnDefs": [
+            {className: "td_class_7", "targets": [0]},
+            {className: "td_class_9", "targets": [1]},
+        ],
+        
+        "dom": '<"top"lip>rt<"bottom"ip>',
+        
+        "pagingType": "simple",
 
-					$("#assetSelectionGlobusButton").click(function(e) {
-						var d = {};
-						d.institutionPath = $("#instituteList").val();
-						d.studyPath = $("#studyList").val();
-						d.uploadType = "assetBulkUpload";
+        "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
 
-						invokeAjax('/upload', 'GET', d, postUploadGlobusFunction, postFailureFunction, null, 'text');
-					});
+        "language": {
+        	"sLoadingRecords": "Loading...",
+        	"lengthMenu": "ROWS PER PAGE &nbsp;&nbsp; _MENU_",
+            "zeroRecords": "Nothing found to display",
+            "paginate": {
+            	 next: '<i style="color:#000;font-size:17px;" class="fas fa-caret-right"></i>',
+                 previous: '<i style="color:#000;font-size:17px;" class="fas fa-caret-left"></i>'
+              }
+        }
+    });
+}
 
-					$("#driveUploadAuthlink").click(function(e) {
-						var d = {};
-						d.institutionPath = $("#instituteList").val();
-						d.studyPath = $("#studyList").val();
-						d.dataSetPath = $("#dataList").val();
-						d.action = "Drive";
-						invokeAjax('/upload', 'GET', d, postUploadGlobusFunction, postFailureFunction, null, 'text');
-					});
+    
+function renderDataSetName(data, type, row){
+	
+	var html = "";
+	var isLoggedOnuserExists = (loggedOnUserInfo ? true:false);
 
-					function postGoogleDriveFunction(data, status) {
-						location.replace(data);
-					}
 
-					$(".addNewMetaDataForDataFiles").click(function(e) {
-						addNewMetaDataRowsForDataFile($(this));
-					});
-
-					$("#updatePermissions").click(function(e) {
-						editPermissionsOpenModal();
-					});
-
-					$("#btnUpdatePermissions").click(function(e) {
-						updatePermissionsFunction();
-					});
-					$("#btnUpdateAccessGroup").click(function(e) {
-						updateAccessGroupsFunction();
-					});
-
-					$('.asset-attributes').click(function() {
-						if ($(this).hasClass('collapsed')) {
-							$(this).find('img').attr('src', '/images/arrow.collapse-open.svg')
-						} else {
-							$(this).find('img').attr('src', '/images/arrow.collapse.svg')
-						}
-					});
-
-					$(".select2-selection").removeAttr("role");
-					$(".select2-search__field").removeAttr("role");
-					$(".select2-search__field").attr("aria-label", "textbox");
-					$(".select2-search__field").attr("type", "textbox");
-
-					$(document).ajaxStop(function() {
-						console.log("Last ajax call completed");
-						$(".select2-selection").removeAttr("role");
-						$(".select2-search__field").removeAttr("role");
-						$(".select2-search__field").attr("aria-label", "textbox");
-						$(".select2-search__field").attr("type", "textbox");
-					});
-
-				});
-
-$(document).on('change','.checkboxMultipleDwnlodPaths', function() {
-	var selectedPaths = [];
-	$(".checkboxMultipleDwnlodPaths").each(function(e){
-		if($(this).is(':checked')) {
-			selectedPaths.push($(this).val());
+	if(isLoggedOnuserExists) {
+		var editDataSetHtml = "";
+		var checkboxHtml = "";
+		
+		if(row.isBulkAsset == false) {
+		   if(isUploader && isUploader == true) {
+			checkboxHtml += "<input aria-label='checkbox' type='checkbox' id=" + row.dataSetPath + " " +
+					        "class='selectCheckboxForIns'/>";
+		    } else {
+			checkboxHtml += "<input aria-label='radio' type='radio' id=" + row.dataSetPath + " class='selectRadioForDataSet'/>";
+		    }
+		} else  {
+			checkboxHtml += "<input aria-label='checkbox' style='display:none;' type='checkbox' id=" + row.dataSetPath + " " +
+	        "class='selectCheckboxForIns'/>";
 		}
-	});
-	$("#selectedFilesList").val(selectedPaths.join(","));
-});
-
-$(document).on('change', '#editPublicAccess', function() {
-	if ($(this).is(":checked")) {
-		$("#updateAccessPermissionsModal").find("#updateAccessGroupsList").next(".select2-container").hide();
-		$("#updateAccessPermissionsModal").find("#updateAccessGroupsList").val("").trigger('change');
+		
+		if(row.dataSetPermissionRole && row.dataSetPermissionRole != 'No Permissions') {
+			editDataSetHtml = "<span class='editCollectionMetadata' asset_type = "+ row.assetType+" selectedCollection = 'Asset' " +
+					          "data-fileName = '" + row.dataSetName + "' collectionId  = '" + row.dataSetCollectionId + "' " +
+			                  "permissions_role = '" + row.dataSetPermissionRole + "'" +
+			                  " metadata_path  = '" + row.dataSetPath+ "'>" +
+                              "<img src='images/Search_EditMetaData.svg' data-toggle='tooltip' title='Edit Asset Metadata' th:src='@{/images/Search_EditMetaData.svg}' " +
+			                  "style='width:15px;' alt='edit collection'></span>";
+			
+			if(row.dataSetPermissionRole == 'Owner') {
+				editDataSetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collection_name = '" + row.dataSetName + "' " +
+						            "collectionId  = '" + row.dataSetCollectionId + "' " +
+			                        " selectedCollection = 'Asset' " +
+			    		            "metadata_path  = '" + row.dataSetPath+ "'>" +
+                                    "<img src='images/Search_AccessGroups.svg' data-toggle='tooltip' " +
+                                    "title='Edit Asset Access Permissions' " +
+                                    "th:src='@{/images/Search_AccessGroups.svg}' " +
+			                        "style='width:15px;' alt='Edit Asset Access Permissions'></span>";
+			}
+		}
+			
+		html += "<div class='col-md-12' style='font-size:16px;margin-top:10px;'><div class='row'><div class='col-md-12'>" +
+				""+checkboxHtml+"&nbsp;&nbsp;&nbsp;" +
+				"<a href='#' class='dataSetFragment' " +
+			    "dme_data_id  = '" + row.dmeDataId + "' permissions_role = '" + row.dataSetPermissionRole + "' " +
+				"data_set_path = " + row.dataSetPath + ">" +
+				"<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span></a>" +
+			    "&nbsp&nbsp;" + editDataSetHtml + "</div></div></div>";
 
 	} else {
-		$("#updateAccessPermissionsModal").find("#updateAccessGroupsList").next(".select2-container").show();
+		html += "<div class='col-md-12' style='font-size:16px;margin-top:10px;'><div class='row'><div class='col-md-12'>"+
+		        "&nbsp;&nbsp;&nbsp;<a href='#' class='dataSetFragment' " +
+				"dme_data_id  = '" + row.dmeDataId + "' permissions_role = '" + row.dataSetPermissionRole + "'" +
+				"data_set_path = " + row.dataSetPath + ">" +
+				"<span class='cil_14_bold_no_color'>" + row.dataSetName + "</span></a>" +
+		        "&nbsp&nbsp;</div></div></div>";
 	}
+	
+	html+= "<div class='col-md-12' style='margin-left: 25px;'><span class='sharableLink'>Sharable Link: " +
+			"<i class='fas fa-share'></i></span><p style='display: none;' class ='sharableLinkDiv'><input type='text' " +
+			"id= 'colId"+row.dataSetCollectionId+"' value='"+ row.dataSetdmeDataId + "' readonly='true'/> &nbsp; " +
+			"<button type='button' class='share-link-copy-button' data-toggle='tooltip' data-placement='bottom' " +
+			"title='Copy to clipboard' data-clipboard-target='#colId"+row.dataSetCollectionId+"'>" +
+			"<img src='images/clippy.svg' width='13' alt='Copy to clipboard'/></button></p></div>";
+    
+    return html;	
+ }
 
-});
+function renderPath(data, type, row) {
+	
+	var html = "";
+	var isLoggedOnuserExists = (loggedOnUserInfo ? true:false);
+	
+	if(isLoggedOnuserExists) {
+		var editStudySetHtml = "";
+		var editProgramSetHtml = "";
+		
+				
+		if(row.studyPermissionRole && row.studyPermissionRole != 'No Permissions') {
+			editStudySetHtml = "<span class='editCollectionMetadata' selectedCollection = 'Study' " +
+					           "data-fileName = '" + row.studyName + "' collectionId  = '" + row.studyCollectionId + "' " +
+					           "permissions_role = '" + row.studyPermissionRole + "' metadata_path  = '" + row.studyPath+ "'> " +
+					           "<img src='images/Search_EditMetaData.svg' data-toggle='tooltip' title='Edit Study Metadata'" +
+					           "th:src='@{/images/Search_EditMetaData.svg}' style='width:15px;' alt='edit collection'></span>";
+			
+			
+		if(row.studyPermissionRole == 'Owner') {
+			editStudySetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collection_name ='" +row.studyName + "'" +
+						        " collectionId  = '" + row.studyCollectionId + "' " +
+			                    " selectedCollection = 'Study'  " +
+			    		        "metadata_path  = '" + row.studyPath+ "'>" +
+                                "<img src='images/Search_AccessGroups.svg' data-toggle='tooltip' title='Edit Study Access Permissions' " +
+                                "th:src='@{/images/Search_AccessGroups.svg}' " +
+			                    "style='width:15px;' alt='Edit Study Access Permissions'</span>";
+			}
+		}
+		
+		if(row.programPermissionRole && row.programPermissionRole != 'No Permissions') {
+			editProgramSetHtml = "<span class='editCollectionMetadata' selectedCollection = 'Program' " +
+					"data-fileName = '" + row.programName + "' collectionId  = '" + row.programCollectionId + "'" +
+					" permissions_role = '" + row.programPermissionRole + "' " +
+					"metadata_path  = '" + row.institutePath+ "' >" +
+			        "<img src='images/Search_EditMetaData.svg' data-toggle='tooltip' title='Edit Program Metadata' " +
+			        "th:src='@{/images/Search_EditMetaData.svg}' " +
+			        "style='width:15px;' alt='edit collection'></span>"; 
+			
+			if(row.programPermissionRole == 'Owner') {
+				editProgramSetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' " +
+				"collection_name ='" +row.programName + "' collectionId  = '" + row.programCollectionId + "' " +
+			    "selectedCollection = 'Program'  " +
+			    "metadata_path  = '" + row.institutePath+ "'>" +
+                "<img src='images/Search_AccessGroups.svg' data-toggle='tooltip' title='Edit Program Access Permissions' " +
+                "th:src='@{/images/Search_AccessGroups.svg}' " +
+			    "style='width:15px;' alt='Edit Program Access Permissions'</span>";
+			}
+		}
+	
+		html += "<div class='col-md-10' style='font-size:16px;margin-top:10px;margin-bottom: 10px;'><div class='row'>" +
+				"<div class='col-md-12'></div>" +
+			    "<div class='col-md-12 cil_12_bold_no_color_dataset'>" +
+				"<span style='word-break: break-all;'>" + row.dataSetDescription + "</span>" +
+			    "<br></div><div class='col-md-12' style='margin-left:22px;margin-top: 10px;'>" +
+			    "<span style='color: #747474;' class='cil_12_bold_no_color'>STUDY: </span>" +
+			    "<a class='cil_12_no_color button2a' " +
+			    "selected_path='"+row.studyPath+"' collection_type='Study' tabindex='0'" +
+			    " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
+			    "data-popover-content='#a01'>" + row.studyName + "</a>" +
+				"&nbsp&nbsp;"+editStudySetHtml+"</div>" +
+			    "<div class='col-md-12 top-buffer' style='margin-left:22px;'>" +
+			    "<span style='color: #747474;' class='cil_12_bold_no_color'>PROGRAM: </span><a class='cil_12_no_color button2a' " +
+				" selected_path='"+row.institutePath+"' collection_type='Program' tabindex='0'" +
+			    " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
+			    "data-popover-content='#a01'>" + row.programName + "</a>" +
+				"&nbsp&nbsp;"+editProgramSetHtml+"</div></div></div>";
 
-$(document).on('click', '#pickerUploadLink', function() {
-	loadUploadPicker();
-});
-$(document).on('click', '#pickerLink', function() {
-	loadDownloadPicker();
-});
-
-$(document).on('click', '.dataTargetCollapse', function() {
-	if ($(this).parent().parent().find('div.dataDivCollapse').is(":visible")) {
-		$(this).parent().css('margin-bottom', '-1px');
-		$(this).parent().parent().find('div.dataDivCollapse').css('display', 'none');
-		$(this).parent().parent().find('.filterSearchBox').css('display', 'none');
-		$(this).attr('src', '/images/AccordionUp.svg');
-		$(this).parent().parent().find(".css-17rpx5x").hide();
-		$(this).parent().parent().find(".css-17rpx5xLess").hide();
 	} else {
-		$(this).parent().css('margin-bottom', '15px');
-		$(this).parent().parent().find('div.dataDivCollapse').css('display', 'block');
-		$(this).parent().parent().find('.filterSearchBox').css('display', 'none');
-		$(this).attr('src', '/images/AccordionDown.svg');
-		$(this).parent().parent().find('.css-17rpx5x').show();
-		$(this).parent().parent().find('.showMore').show();
-		showFirstFewFields($(this).parent().parent(), 'Less');
+		html += "<div class='col-md-10' style='font-size:16px;margin-top:10px;margin-bottom: 10px;'><div class='row'>" +
+				"<div class='col-md-12'></div>" +
+		        "<div class='col-md-12 cil_12_bold_no_color_dataset' >" +
+				"<span style='word-break: break-all;'>" + row.dataSetDescription + "</span>" +
+		        "</a><br></div><div class='col-md-12' style='margin-left:22px;margin-top: 10px;'>" +
+		        "<span style='color: #747474;' class='cil_12_bold_no_color'>STUDY: </span><a class='cil_12_no_color button2a'" +
+		        "selected_path='"+row.studyPath+"' collection_type='Study' tabindex='0'" +
+		        " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
+		        "data-popover-content='#a01'>" + row.studyName + "</a>" +
+				"&nbsp&nbsp;</div>" +
+		        "<div class='col-md-12 top-buffer' style='margin-left:22px;'>" +
+		        "<span style='color: #747474;' class='cil_12_bold_no_color'>PROGRAM: </span><a class='cil_12_no_color button2a' " +
+				"selected_path='"+row.institutePath+"' collection_type='Program' tabindex='0'" +
+		        " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
+		        "data-popover-content='#a01'>" + row.programName + "</a>" +
+				"&nbsp&nbsp;</div></div></div>";
 	}
-});
+    return html;
+}
 
-$(document).on('click', '.searchCheckBoxlist', function() {
-	if ($(this).parent().parent().find('.filterSearchBox').is(":visible")) {
-		$(this).parent().parent().find('.filterSearchBox').css('display', 'none');
+
+function display(value) {
+	if (value == "async") {
+		$("#AsyncDiv").show();
+		$("#SyncDiv").hide();
+		$("#s3Div").hide();
+		$("#driveDiv").hide();
+	} else if (value == "sync") {
+		$("#SyncDiv").show();
+		$("#AsyncDiv").hide();
+		$("#s3Div").hide();
+		$("#driveDiv").hide();
+	} else if (value == "drive") {
+		$("#SyncDiv").hide();
+		$("#AsyncDiv").hide();
+		$("#s3Div").hide();
+		$("#driveDiv").show();
 	} else {
-		$(this).parent().parent().find('.filterSearchBox').css('display', 'block');
+		$("#SyncDiv").hide();
+		$("#AsyncDiv").hide();
+		$("#s3Div").show();
+		$("#driveDiv").hide();
 	}
-});
+}
 
-$(document).on('keyup', '.filterSearchBox', function() {
-	var query = $(this).val().toLowerCase();
-	$(this).parent().find('.filteritem').each(function(i, elem) {
-		var x = $(this).val().toLowerCase();
-		;
-		if (x.indexOf(query) != -1) {
-			$(this).parent().show();
+function initializeToolTips() {
+    $('[data-toggle="tooltip"]').tooltip();
+    $('body').tooltip({selector: '[data-toggle="tooltip"]'});
+}
 
+function initializePopover() {
+    $("[data-toggle=popover]").popover({
+        html: true,
+        trigger: 'manual',
+        container: 'body',
+        placement: 'left',
+        delay: {show: 50, hide: 50},
+        content: function () {
+            var content = $(this).attr("data-popover-content");
+            return $(content).children(".popover-body").html();
+        },
+        title: function () {
+            var title = $(this).attr("data-popover-content");
+            return $(title).children(".popover-heading").html();
+        }
+    });
+}
+
+
+function displayPopover() {
+    $('.button2a').on('click', function () {
+        openPopOver($(this));
+        
+    });
+    $('.button2a').on('keypress', function (e) {
+        if (e.which == 13 || e.keyCode == 13) {
+            openPopOver($(this));
+        }
+    });
+}
+
+function openPopOver($this) {
+    var pop = $this;
+    $('.button2a').not($this).popover('hide');
+    var headerTest = 'User Metadata';
+    var selectedPath = $this.attr('selected_path');
+    var collection_type = $this.attr('collection_type');
+    
+  if(collection_type != 'DataObject') {
+     var params= {selectedPath:selectedPath,collectionType:collection_type,refresh:false};	
+		$.ajax({
+		       url: '/addCollection',
+		       type: 'GET',
+		       contentType: 'application/json',
+		       dataType: 'json',
+		       data: params,
+		       beforeSend: function () {
+		    	   $("#spinner").show();
+		           $("#dimmer").show();
+		       },
+		       success: function (data, status) {
+		    	   $("#spinner").hide();
+		           $("#dimmer").hide();
+                   var table ="";
+                   
+				   if(data.length > 0) {
+		    	      
+		    	      var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\">" +
+		                "" + headerTest +" <a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a> </div>" +
+		                "<div class='popover-body'> <div class='divTable' style='width: 100%;border: 1px solid #000;'>" +
+		                "<div class='divTableBody'><div class='divTableRow'>" +
+		                "<div class='divTableHead'>ATTRIBUTE</div>" + 
+		                "<div class='divTableHead'>VALUE</div></div>";
+
+		               var content = "";
+
+		             $.each(data, function( key, value ) {	
+		            	var attrVal = value.attrValue;
+		            	if(attrVal.startsWith('https') || attrVal.startsWith('http')) {
+		            		content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
+		                    "<div class='divTableCell'><a target='_blank' href=" + attrVal + ">" + attrVal + "</a></div></div>";
+		            	} else if(value.attrName.indexOf("access_group") == -1){
+		            		content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
+		                    "<div class='divTableCell'>" + attrVal + "</div></div>";
+		            	}
+		                
+		              });
+					  table = ind + content + "</div> </div></div> </div>";
+					} else {
+						table = "<div id=\"a01\" class=\"col-md-12 hidden\">" 
+						+"<div class=\"popover-heading\"> No User Metadata &nbsp;&nbsp;" +
+		                "<a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a> </div>" +
+		                "<div class='popover-body'></div></div>";
+					}
+		            
+		            
+		            $("#a01").remove();
+		            pop.after(table);
+					initializePopover();
+		            pop.data('bs.popover').setContent();
+		            pop.popover('show');
+		       },
+		       error: function (data, status, error) {
+		    	   $("#spinner").hide();
+		           $("#dimmer").hide();
+				   console.log("===> data: ", data);
+		    	   console.log("===> status: ", status);
+		    	   console.log("===> error: ", error);
+		       }
+
+		   }); 
 		} else {
-			$(this).parent().hide();
+			openDataObjectPopOver($this);
 		}
-	});
-});
+}
 
-$(document).on('click', '#clearFilters', function() {
-	$(".filterGroupDiv").each(function(e) {
-		$(this).show();
-		$(this).find('.showMorefields').show();
-		$(this).find('.filteritem').prop('checked', false);
-		$(this).find('span').css('color', '#212529');
-	});
-	$("#searchResultsDiv").hide();
-	showFirstFewFields();
-});
 
-$(document).on('click', '.sharableLink', function() {
-	if ($(this).parent().find('.sharableLinkDiv:visible').length == 0) {
-		$(this).parent().find('.sharableLinkDiv').show();
-	} else {
-		$(this).parent().find('.sharableLinkDiv').hide();
-	}
+function openDataObjectPopOver($this) {
+	var pop = $this;
+	$('.button2a').not($this).popover('hide');
+	var fileName = $this.attr('file_name');
+	var selectedPath = $this.attr('selected_path');
 
-});
+	var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"><div class=\"popover-heading\">" + "Metadata for " + fileName
+		+ "<a class=\"button closeBtn float-right\" href=\"javascript:void(0);\">"
+		+ "<i class=\"fa fa-times\"></i></a> </div><div class='popover-body'>";
+	var table = "";
+	var content = "";
 
-$(document).on('change', '#uploadTestInferFile', function() {
-	var $this = $(this);
-	var filename = $this.val().replace(/^C:\\fakepath\\/, "")
-	var value = $("#testModelPath").val() + "/" + filename;
-	$("#registerFileModal").find("#testModelPath").val(value);
-});
-
-$(document).on('click', '#openInferModal', function() {
-	$("#dataSetTable tr").each(function() {
-		var len = $(this).find('td:first input[type=checkbox]').length;
-		if (len > 0) {
-			var value = $(this).find('td:first input[type=checkbox]').attr('id');
-			if (value && value.indexOf('.h5') != -1) {
-				$("#registerFileModal").find("#modelPath").val(value);
-			}
-		}
-	});
-
-	$("#registerFileModal").find("#testModelPath").val($("#selectedAssetPath").text());
-	$("#registerFileModal").modal('show');
-
-});
-
-$(document).on('click', '#btnRegisterFile', function() {
-
-	var testModelPath = $("#registerFileModal").find("#testModelPath").val();
-	// $("#performInferForm").attr('testModelPath', testModelPath);
-	var form = $('#performInferForm')[0];
-	var data = new FormData(form);
-
+	var params= {selectedPath:selectedPath};
+	
 	$.ajax({
-		type : "POST",
-		enctype : "multipart/form-data",
-		url : "/performInferencing",
-		data : data,
-		processData : false,
-		contentType : false,
-		beforeSend : function() {
+		url: '/getDataObjects/getMetadata',
+		type: 'GET',
+		contentType: 'application/json',
+		dataType: 'json',
+		data: params,
+		beforeSend: function() {
 			$("#spinner").show();
 			$("#dimmer").show();
 		},
-		success : function(msg) {
+		success: function(data, status) {
 			$("#spinner").hide();
 			$("#dimmer").hide();
-			$("#registerFileModal").modal('hide');
-			bootbox.dialog({
-				message : msg
-			});
+			console.log("success status: ", status);
+			
+			if (data.selfMetadata.length > 0) {
 
-		},
-		error : function(e) {
-			$("#spinner").hide();
-			$("#dimmer").hide();
-			console.log('ERROR: ', e);
-			bootbox.dialog({
-				message : e
-			});
-		}
-	});
-});
+				ind += "<p><b>User Metadata </b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>"
+					+ "<div class='divTableBody'><div class='divTableRow'>"
+					+ "<div class='divTableHead rowAttribute'>ATTRIBUTE</div>"
+					+ "<div class='divTableHead'>VALUE</div></div>";
 
-$(document).on('click', '.clearMetadata', function() {
-	$(this).parent().find("input[type='text']").val("");
-});
-
-$(document).on('change', '.filteritem', function() {
-
-	if ($(this).is(':checked')) {
-		$(this).parent().find('span').css('color', '#2E76ED');
-	} else {
-		$(this).parent().find('span').css('color', '#212529');
-	}
-	var attrName = $(this).parent().parent().attr('id');
-
-	// based on child selection, search at parent level and check the
-	// parent checkbox
-	$(this).closest('.filterComponentDiv').prev().find('.attributeLabel').each(function(e) {
-		filterPrev($(this), attrName);
-	});
-
-	// always filter the metadata on the children level
-	// do not remove parent based on child selection
-	$(this).closest('.filterComponentDiv').next().find('.attributeLabel').each(function(e) {
-		filterNext($(this), attrName);
-	});
-
-	populateSearchCriteria('simpleSearch');
-});
-
-$(document).on('click', '.showMore', function() {
-
-	$(this).parent().hide();
-	$(this).parent().parent().find(".css-17rpx5xLess").show();
-	showFirstFewFields($(this).parent().parent(), 'More');
-});
-
-$(document).on('click', '.showLess', function() {
-
-	$(this).parent().hide();
-	$(this).parent().parent().find(".css-17rpx5x").show();
-	$(this).parent().parent().find(".showMore").show();
-	showFirstFewFields($(this).parent().parent(), 'Less');
-});
-
-function filterNext($this, attributeTypeName) {
-
-	var attributeName = $this.find('label').text();
-
-	var rowId = 1;
-	var d = {};
-	var attrNames = [];
-	var attrValues = [];
-	var isExcludeParentMetadata = [];
-	var rowIds = [];
-	var operators = [];
-
-	// filter a list based on the parent level selection
-	$this.closest('.filterComponentDiv').prevAll().find(".filteritem:checked").each(function() {
-		var attrName = $(this).parent().parent().attr('id');
-		var attrVal = $(this).val();
-		if (attrName != attributeName) {
-			attrNames.push(attrName);
-			attrValues.push(attrVal);
-			rowIds.push(rowId);
-			isExcludeParentMetadata.push(false);
-			operators.push("EQUAL");
-			rowId = rowId + 1;
-		}
-	});
-
-	d.attrName = attrNames.join();
-	d.attrValuesString = attrValues.join('@@');
-	d.isExcludeParentMetadata = isExcludeParentMetadata.join();
-	d.rowId = rowIds.join();
-	d.operator = operators.join();
-	d.searchName = attributeName;
-
-	$.ajax({
-		url : '/getFilterList',
-		type : 'GET',
-		async : false,
-		contentType : 'application/json',
-		dataType : 'text',
-		data : d,
-		success : function(data, status) {
-			var list = JSON.parse(data);
-			var len = list.length;
-
-			$this.parent().find('.filterGroupDiv').each(function(e) {
-				var val = $(this).find('.filteritem').val();
-				if (list.indexOf(val) != -1) {
-					$(this).show();
-					$(this).find('.showMorefields').show();
-				} else {
-					$(this).hide();
-					$(this).find('.filteritem').prop("checked", false);
-					$(this).find('span').css('color', '#212529');
-				}
-			});
-
-			if (len && len > 4) {
-				$this.parent().find('.css-17rpx5x').show();
-				$this.parent().find('.showMore').show();
-				$this.parent().find('.css-17rpx5xLess').hide();
-				showFirstFewFields($this.parent(), 'Less');
-			} else {
-				$this.parent().find('.css-17rpx5xLess').hide();
-				$this.parent().find('.css-17rpx5x').hide();
-			}
-
-		},
-		error : function(data, status, error) {
-			console.log("===> status: ", status);
-			console.log("===> error: ", error);
-			console.log("===> data: ", data);
-		}
-	}).done(function(e) {
-		$this.closest('.filterComponentDiv').next().find('.attributeLabel').each(function(e) {
-			filterNext($(this));
-		});
-	});
-}
-
-function filterPrev($this, attributeTypeName) {
-	var attributeName = $this.find('label').text();
-
-	var rowId = 1;
-	var d = {};
-	var attrNames = [];
-	var attrValues = [];
-	var isExcludeParentMetadata = [];
-	var rowIds = [];
-	var operators = [];
-	var url;
-
-	// filter a list based on the parent level selection
-	$this.closest('.filterComponentDiv').nextAll().find(".filteritem:checked").each(function() {
-		var attrName = $(this).parent().parent().attr('id');
-		var attrVal = $(this).val();
-		if (attrName != attributeName) {
-			attrNames.push(attrName);
-			attrValues.push(attrVal);
-			rowIds.push(rowId);
-			isExcludeParentMetadata.push(false);
-			operators.push("EQUAL");
-			rowId = rowId + 1;
-		}
-	});
-
-	d.attrName = attrNames.join();
-	d.attrValuesString = attrValues.join('@@');
-	d.isExcludeParentMetadata = isExcludeParentMetadata.join();
-	d.rowId = rowIds.join();
-	d.operator = operators.join();
-	d.searchName = attributeName;
-	if (attributeTypeName == 'Asset Type') {
-		url = '/getFilterList';
-	} else {
-		url = '/getFilterList?retrieveParent=true';
-	}
-
-	$.ajax({
-		url : url,
-		type : 'GET',
-		async : false,
-		contentType : 'application/json',
-		dataType : 'text',
-		data : d,
-		beforeSend : function() {
-			$("#spinner").show();
-			$("#dimmer").show();
-		},
-		success : function(data, status) {
-			var list = JSON.parse(data);
-			var len = list.length;
-
-			$this.parent().find('.filterGroupDiv').each(function(e) {
-				var val = $(this).find('.filteritem').val();
-				if (list.indexOf(val) != -1) {
-					$(this).show();
-					$(this).find('.showMorefields').show();
-				} else {
-					$(this).hide();
-					$(this).find('.filteritem').prop("checked", false);
-					$(this).find('span').css('color', '#212529');
-				}
-			});
-
-			if (len && len > 4) {
-				$this.parent().find('.css-17rpx5x').show();
-				$this.parent().find('.showMore').show();
-				$this.parent().find('.css-17rpx5xLess').hide();
-				showFirstFewFields($this.parent(), 'Less');
-			} else {
-				$this.parent().find('.css-17rpx5xLess').hide();
-				$this.parent().find('.css-17rpx5x').hide();
-			}
-		},
-		error : function(data, status, error) {
-			console.log("===> status: ", status);
-			console.log("===> error: ", error);
-			console.log("===> data: ", data);
-		}
-	}).done(function(e) {
-		$this.closest('.filterComponentDiv').prev().find('.attributeLabel').each(function(e) {
-			filterPrev($(this));
-		});
-	});
-}
-
-function showFirstFewFields($this, oper) {
-	if ($this) {
-		if (oper == 'More') {
-			$this.find('.filterGroupDiv:visible').each(function(index) {
-				$(this).find('.showMorefields').show();
-
-			});
-		} else if (oper == 'Less') {
-			var len = $this.find('.filterGroupDiv:visible').length;
-			if (len > 4) {
-				var modifiedSize = len - 4;
-				$this.find('.filterGroupDiv:visible').each(function(index) {
-					if (index > 3) {
-						$(this).find('.showMorefields').hide();
+				$.each(data.selfMetadata, function(key, value) {
+					if (value.value.startsWith('https') || value.value.startsWith('http')) {
+						content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>"
+							+ "<div class='divTableCell'><a target='_blank' href=" + value.value + ">" + value.value
+							+ "</a></div></div>";
 					} else {
-						$(this).find('.showMorefields').show();
-					}
-				});
-				$this.find(".showMore").text(modifiedSize + " More ..");
-			} else {
-				$this.find('.css-17rpx5x').hide();				
-			}
-		}
-
-	} else {
-		$(".dataDivCollapse").each(function(e) {
-			var len = $(this).find('.filterGroupDiv:visible').length;
-			var modifiedSize = len - 4;
-			if (len > 4) {
-				$(this).parent().find('.showMore').text(modifiedSize + " More..");
-				$(this).parent().find('.showMore').show();
-				$(this).parent().find('.css-17rpx5x').show();
-				$(this).parent().find('.css-17rpx5xLess').hide();
-				$(this).find('.filterGroupDiv:visible').each(function(index) {
-					if (index > 3) {
-						$(this).find(".showMorefields").hide();
-					} else {
-						$(this).find(".showMorefields").show();
+						content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>"
+							+ "<div class='divTableCell'>" + value.value + "</div></div>";
 					}
 
 				});
-			} else {
-				$(this).parent().find('.css-17rpx5x').hide();
-				$(this).parent().find('.css-17rpx5xLess').hide();
+				content += "</div> </div><br/>";
+
 			}
 
-		});
-	}
+			if (data.systemMetadata.length > 0) {
+				content += "<p><b>Key System Metadata </b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>"
+					+ "<div class='divTableBody'><div class='divTableRow'>"
+					+ "<div class='divTableHead rowAttribute'>ATTRIBUTE</div>"
+					+ "<div class='divTableHead'>VALUE</div></div>";
+
+				$.each(data.systemMetadata, function(key, value) {
+					content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>"
+						+ "<div class='divTableCell'>" + value.value + "</div></div>";
+				});
+
+				content += "</div> </div>";
+
+			}
+
+			table += ind + content + "</div> </div></div> </div>";
+			$("#a01").remove();
+			pop.after(table);
+			initializePopover();
+			pop.data('bs.popover').setContent();
+			pop.popover('show');
+
+		},
+		error: function(data, status, error) {
+			$("#spinner").hide();
+			$("#dimmer").hide();
+			console.log("===> data: ", data);
+			console.log("===> status: ", status);
+			console.log("===> error: ", error);
+		}
+
+	});
+
 }
