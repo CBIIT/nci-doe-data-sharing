@@ -145,7 +145,7 @@ public abstract class AbstractDoeController {
 
 	@Value("${asset.bulk.collections}")
 	public String bulkAssetsPaths;
-	
+
 	@Value("${predictions.display.assets}")
 	public String predictionPaths;
 
@@ -657,6 +657,7 @@ public abstract class AbstractDoeController {
 			String operator = search.getOperator()[i];
 			String level = null;
 			boolean selfMetadata = search.getIsExcludeParentMetadata()[i];
+			boolean isKeywordSearch = search.getIskeyWordSearch()[i];
 
 			LookUp val = lookUpService.getLookUpByDisplayName(attrName);
 
@@ -692,12 +693,16 @@ public abstract class AbstractDoeController {
 				}
 				if (level != null) {
 					HpcMetadataQueryLevelFilter levelFilter = new HpcMetadataQueryLevelFilter();
-					if (selfMetadata) {
+
+					if (isKeywordSearch) {
+						levelFilter.setLevel(1);
+						levelFilter.setOperator(HpcMetadataQueryOperator.NUM_GREATER_OR_EQUAL);
+					} else if (selfMetadata) {
 						levelFilter.setLevel(1);
 						levelFilter.setOperator(HpcMetadataQueryOperator.EQUAL);
 					} else if (level.equals("ANY")) {
 						levelFilter.setLevel(1);
-						levelFilter.setOperator(HpcMetadataQueryOperator.NUM_GREATER_OR_EQUAL);
+						levelFilter.setOperator(HpcMetadataQueryOperator.EQUAL);
 					} else {
 						if (level.equals("Data file") || level.equals("DataObject"))
 							levelFilter.setLevel(1);
@@ -819,7 +824,7 @@ public abstract class AbstractDoeController {
 					model.addAttribute("returnToSearch", true);
 				}
 
-				if(StringUtils.isNotEmpty(predictionPaths) && Boolean.TRUE.equals(getIsUploader())) {
+				if (StringUtils.isNotEmpty(predictionPaths) && Boolean.TRUE.equals(getIsUploader())) {
 					List<String> predictionPathsList = Arrays.asList(predictionPaths.split(","));
 					Boolean showGeneratePredictions = predictionPathsList.stream()
 							.anyMatch(s -> collection.getCollection().getCollectionName().equalsIgnoreCase(s));
