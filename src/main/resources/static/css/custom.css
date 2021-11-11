@@ -792,6 +792,9 @@ a.detail-control-sub-folder{
     margin-right: 10px;
 }
 
+a.detail-control {
+    margin-top: 5px;
+}
 
 .Aboutbuttoncontainer {
 margin-bottom: 110px;
