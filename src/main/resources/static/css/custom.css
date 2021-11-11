@@ -1240,11 +1240,13 @@ padding-right: 10px;
 }
 
 div.dataDivCollapse :not(:first-child) {
-    margin-top:-6px;
+    margin-top:-9px;
 }
 div.dataDivCollapse :first-child {
     margin-top:5px;
 }
+
+div.dataDivCollapse :last-child {padding-bottom: 5px;}
 
 .btn-danger {
     color: #fff!important;
