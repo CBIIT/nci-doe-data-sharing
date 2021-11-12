@@ -794,6 +794,7 @@ a.detail-control-sub-folder{
 
 a.detail-control {
     margin-top: 5px;
+    cursor: pointer;
 }
 
 .Aboutbuttoncontainer {
