@@ -592,20 +592,22 @@ $('#dataSetTable tbody').on('click','a.detail-control',function() {
 								  collection_type = "Folder";
 								}					
 
-								iconHtml += "<a class='cil_13_no_color button2a' selected_path='"+value.path+"' collection_type = " + collection_type + " file_name = '"+ value.name +"'"
-									+ "tabindex='0'"
-									+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
-									+ "data-popover-content='#a01' style='float:right'><img src='images/Status.info-tooltip.png'"
-									+ "th:src='@{/images/Status.info-tooltip.png}' class='infoMetadata' data-toggle='tooltip'" 
-									+ "title='"+metadataInfoTitle+"' alt='Status info'></a>";
+								
 
 								iconHtml += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;"
-								         +"float:right;' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
+								         +"' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
 									     + "title='"+copyPathTitle+"' data-clipboard-text='"
 									     + value.path
 									     + "'>"
 									     + "<img src='images/Copy-FilePath.png' th:src='@{/images/Copy-FilePath.png}' "
 									     + "style='width:17px;' alt='copy file path'></button>";
+								
+								iconHtml += "<a class='cil_13_no_color button2a' selected_path='"+value.path+"' collection_type = " + collection_type + " file_name = '"+ value.name +"'"
+								+ "tabindex='0'"
+								+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
+								+ "data-popover-content='#a01'><img src='images/Status.info-tooltip.png'"
+								+ "th:src='@{/images/Status.info-tooltip.png}' class='infoMetadata' data-toggle='tooltip'" 
+								+ "title='"+metadataInfoTitle+"' alt='Status info'></a>";
 									
 								if (permissions && permissions != 'No Permissions') {
 									if (value.isFolder && value.isFolder == true) {
@@ -822,14 +824,9 @@ function renderDataSetPath(data, type, row) {
 		collection_type = "DataObject";
 	}
 
-	html += row.name+"&nbsp;&nbsp;" +
-			"<a class='cil_13_no_color button2a' selected_path='"+row.path+"' collection_type= " + collection_type + " file_name = '" + row.name +"'"
-			+ "tabindex='0'"
-			+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
-			+ "data-popover-content='#a01' style='float:right'><img src='images/Status.info-tooltip.png'" +
-					" th:src='@{/images/Status.info-tooltip.png}' class='infoMetadata' alt='Status info' data-toggle='tooltip' title='"+metadatatitle+"'></a>";
+	html += row.name+"&nbsp;&nbsp;";
 
-	html += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;float:right;' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
+	html += "<button type='button' style='border: transparent;margin-top: -6px;' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
 			+ "title='"
 			+ title
 			+ "' data-clipboard-text='"
@@ -837,6 +834,13 @@ function renderDataSetPath(data, type, row) {
 			+ "'>"
 			+ "<img src='images/Copy-FilePath.png' th:src='@{/images/Copy-FilePath.png}' "
 			+ "style='width:17px;' alt='copy file path'></button>";
+	
+	html += "<a class='cil_13_no_color button2a' selected_path='"+row.path+"' collection_type= " + collection_type + " file_name = '" + row.name +"'"
+			+ "tabindex='0'"
+			+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
+			+ "data-popover-content='#a01'><img src='images/Status.info-tooltip.png'" +
+		    "th:src='@{/images/Status.info-tooltip.png}' class='infoMetadata' alt='metadata info' " +
+		    "data-toggle='tooltip' title='"+metadatatitle+"'></a>";
 	return html;
 }
 

@@ -697,7 +697,7 @@ public abstract class AbstractDoeController {
 						levelFilter.setOperator(HpcMetadataQueryOperator.EQUAL);
 					} else if (level.equals("ANY")) {
 						levelFilter.setLevel(1);
-						levelFilter.setOperator(HpcMetadataQueryOperator.EQUAL);
+						levelFilter.setOperator(HpcMetadataQueryOperator.NUM_GREATER_OR_EQUAL);
 					} else {
 						if (level.equals("Data file") || level.equals("DataObject"))
 							levelFilter.setLevel(1);
