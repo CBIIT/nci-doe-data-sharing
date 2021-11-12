@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -461,16 +462,18 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 
 			}
 		}
+		log.info("base path rules:" + rules);
+		List<HpcMetadataValidationRule> filteredRules = rules.stream()
+				.filter(e -> e.getCollectionTypes().contains(collectionType)).collect(Collectors.toList());
 
 		HpcCollectionDTO collectionDTO = (HpcCollectionDTO) session.getAttribute("parentCollection");
 		List<DoeMetadataAttrEntry> metadataEntries = new ArrayList<DoeMetadataAttrEntry>();
 		List<String> attributeNames = new ArrayList<String>();
-		log.info("base path rules:" + rules);
+		log.info("base path rules for collection type:" + collectionType + " are: " + filteredRules);
 
-		if (rules != null && !rules.isEmpty()) {
-			for (HpcMetadataValidationRule rule : rules) {
-				if ((rule.getCollectionTypes().contains(collectionType) || rule.getCollectionTypes().isEmpty())
-						&& !rule.getAttribute().equalsIgnoreCase("collection_type")) {
+		if (filteredRules != null && !filteredRules.isEmpty()) {
+			for (HpcMetadataValidationRule rule : filteredRules) {
+				if (!rule.getAttribute().equalsIgnoreCase("collection_type")) {
 					log.info("get HpcMetadataValidationRule:" + rule);
 					Boolean isValid = true;
 					Boolean isConditonalMetaData = false;
@@ -536,7 +539,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		if (!refresh) {
 			// add cached entries which are not included in rules
 			List<String> attrNames = LambdaUtils.map(cachedEntries, DoeMetadataAttrEntry::getAttrName);
-			List<String> ruleAttrNames = LambdaUtils.map(rules, HpcMetadataValidationRule::getAttribute);
+			List<String> ruleAttrNames = LambdaUtils.map(filteredRules, HpcMetadataValidationRule::getAttribute);
 			List<String> userDefinedAttrNames = LambdaUtils.filter(attrNames, (String n) -> !ruleAttrNames.contains(n));
 
 			log.info("user defined attrnames :" + userDefinedAttrNames);
