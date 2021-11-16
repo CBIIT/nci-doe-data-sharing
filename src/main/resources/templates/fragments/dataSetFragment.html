@@ -92,7 +92,7 @@
      th:if= "${loggedOnUser != null and assetType == 'Model' and showGeneratePredictions eq true}">
      <button  id="openInferModal" type="button" class="btn btn-primary float-right mb-2 mr-2">Generate Predictions</button></div>
  </div>
-  <div th:if="${showGeneratePredTab ne true}">
+  <div th:if="${showGeneratePredTab ne true}" style="margin-bottom:-40px;">
  <p class="assetFilesheader">Asset Files</p>
   </div>
   

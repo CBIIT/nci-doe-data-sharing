@@ -256,7 +256,7 @@ function downloadFunction(path) {
 
 function renderInferStatus(data,type,row) {
 	var html = "";
-	if(data == 'COMPLETED') {
+	if(data == 'Completed') {
 		html += data + "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLink' href='javascript:void(0);' " +
         "data-path=" + row.resultPath + " " +
         "><img src='images/Download.png' data-toggle='tooltip' title='Download File' th:src='@{/images/Download.png}' " +
