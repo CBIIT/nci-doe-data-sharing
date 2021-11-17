@@ -3,8 +3,11 @@ package gov.nih.nci.doe.web.scheduler;
 import java.io.File;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.core.Response;
 
@@ -213,7 +216,8 @@ public class ManageTasksScheduler extends AbstractDoeController {
 
 		}
 
-		// verify all the in-progress tasks with dmeTaskId not null to check if the y_prediction file is
+		// verify all the in-progress tasks with dmeTaskId not null to check if the
+		// y_prediction file is
 		// available to download.
 
 		List<InferencingTask> getAllInProgressTasks = inferencingTaskRepository.getAllInProgressTasks("INPROGRESS");
@@ -230,6 +234,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 				log.info("verify if inferencing file is available on mount " + fileNameOriginal);
 
 				boolean check = new File("/mnt/IRODsTest/" + fileNameOriginal).exists();
+				boolean isErrorFile = new File("/mnt/IRODsTest" + fileNameOriginal + "_error.txt").exists();
 				// if predictions file is available, create a collection folder under Asset and
 				// upload
 				// prediction under this folder
@@ -290,6 +295,15 @@ public class ManageTasksScheduler extends AbstractDoeController {
 							inferencingTaskRepository.saveAndFlush(t);
 						}
 					}
+				} else if (Boolean.TRUE.equals(isErrorFile)) {
+					t.setStatus("FAILED");
+					// read contents of error file
+					String content = Files.lines(Paths.get("/mnt/IRODsTest" + fileNameOriginal + "_error.txt"))
+							.collect(Collectors.joining(System.lineSeparator()));
+
+					t.setErrorMessage(content);
+					inferencingTaskRepository.saveAndFlush(t);
+
 				}
 
 			} catch (Exception e) {
