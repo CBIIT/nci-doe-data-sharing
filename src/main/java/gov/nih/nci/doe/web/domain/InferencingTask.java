@@ -21,6 +21,7 @@ public class InferencingTask {
 	private String testDataSetPath;
 	private String assetPath;
 	private String batchId;
+	private String errorMessage;
 
 	public boolean equals(Object object) {
 		if (this == object) {
@@ -189,6 +190,16 @@ public class InferencingTask {
 
 	public void setBatchId(String batchId) {
 		this.batchId = batchId;
+	}
+
+	@Basic
+	@Column(name = "ERROR_MESSAGE")
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
 	}
 
 	@Override
