@@ -234,7 +234,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 				log.info("verify if inferencing file is available on mount " + fileNameOriginal);
 
 				boolean check = new File("/mnt/IRODsTest/" + fileNameOriginal).exists();
-				boolean isErrorFile = new File("/mnt/IRODsTest" + fileNameOriginal + "_error.txt").exists();
+				boolean isErrorFile = new File("/mnt/IRODsTest/" + fileNameOriginal + "_error.txt").exists();
 				// if predictions file is available, create a collection folder under Asset and
 				// upload
 				// prediction under this folder
@@ -296,9 +296,10 @@ public class ManageTasksScheduler extends AbstractDoeController {
 						}
 					}
 				} else if (Boolean.TRUE.equals(isErrorFile)) {
+					log.info("error file available on mount: " + fileNameOriginal + "_error.txt");
 					t.setStatus("FAILED");
 					// read contents of error file
-					String content = Files.lines(Paths.get("/mnt/IRODsTest" + fileNameOriginal + "_error.txt"))
+					String content = Files.lines(Paths.get("/mnt/IRODsTest/" + fileNameOriginal + "_error.txt"))
 							.collect(Collectors.joining(System.lineSeparator()));
 
 					t.setErrorMessage(content);
