@@ -45,7 +45,7 @@ function refreshTaskDatatable(table) {
 function dataTableInitInferenceTaskManager() {
     $('#inferencingTable').DataTable({
         "paging": true,
-        "order": [[2, 'desc']],
+        "order": [[4, 'desc']],
         "ordering": true,
         "info": true,
         "pageLength": 25,
@@ -261,6 +261,9 @@ function renderInferStatus(data,type,row) {
         "data-path=" + row.resultPath + " " +
         "><img src='images/Download.png' data-toggle='tooltip' title='Download File' th:src='@{/images/Download.png}' " +
 		"style='width:17px;' alt='download file'></a>";
+	} else if(data == 'Failed') {
+		html += data + "&nbsp;&nbsp;<img style='width:12px;' data-toggle='tooltip'" +
+				"src='images/Status.info-tooltip.png' alt='failed message' title='" + row.errorMessage + "'>";
 	} else {
 		html += data;
 	}
