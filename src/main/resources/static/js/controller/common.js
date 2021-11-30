@@ -3,7 +3,7 @@ $(document)
 				function() {
 					console.log("initialize dirty checking");
 					$('form.dirty-check').areYouSure();
-
+				      
 					// Auto-lowercase Email Username (Usernames are always
 					// stored in lowercase)
 					$('#username').blur(function() {
@@ -284,6 +284,12 @@ $(document)
 						callRegisterFormValidation();
 
 					});
+					
+					$("#btnSubmitEmail").click(function(e) {
+						callContactUsFormValidation();
+
+					});
+					
 
 					$("#loginButton").click(function(e) {
 						validateUserLogin();

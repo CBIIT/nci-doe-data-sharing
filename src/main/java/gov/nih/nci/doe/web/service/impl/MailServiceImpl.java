@@ -11,6 +11,7 @@ import javax.mail.internet.InternetAddress;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.VelocityException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,16 +39,14 @@ public class MailServiceImpl implements MailService {
 	@Autowired
 	private MailTemplateRepository templateDAO;
 
-	@Value("${email.from}")
-	private String from;
-	@Value("${email.from.display}")
-	private String fromDisplay;
 	@Value("${mail.override}")
 	private boolean override;
 	@Value("${mail.override.addresses}")
 	private String overrideAddresses;
 	@Value("${mail.admin.address}")
 	private String adminAddress;
+	@Value("${mail.support.email}")
+	private String supportEmail;
 
 	/**
 	 * Very simple mail sender method using Velocity templates pulled from a
@@ -95,6 +94,7 @@ public class MailServiceImpl implements MailService {
 			if (to != null) {
 				final String[] cc = (String[]) vc.get(CC);
 				final String[] bcc = (String[]) vc.get(BCC);
+				final String fromAddress = (String) vc.get(FROM);
 
 				final StringWriter body = new StringWriter();
 				final StringWriter subjectWriter = new StringWriter();
@@ -144,7 +144,11 @@ public class MailServiceImpl implements MailService {
 
 					helper.setText(body.toString(), true);
 					helper.setSubject(subject);
-					helper.setFrom(new InternetAddress(from));
+					if (StringUtils.isEmpty(fromAddress)) {
+						helper.setFrom(new InternetAddress(supportEmail));
+					} else {
+						helper.setFrom(new InternetAddress(fromAddress));
+					}
 
 					log.info("invoking mailSender");
 					log.info("Sending email to -> " + toAdds + "; cc -> " + ccAdds);
@@ -219,5 +223,18 @@ public class MailServiceImpl implements MailService {
 		params.put("user_Id", user);
 		send("EXCEPTION_EMAIL", params);
 
+	}
+
+	@Override
+	public void sendContactUsEmail(String name, String email, String message) {
+		log.info("Sending contact us email");
+		final Map<String, Object> params = new HashMap<String, Object>();
+		final List<String> to = new ArrayList<String>();
+		to.add(supportEmail);
+		params.put(FROM, email);
+		params.put(TO, to.toArray(new String[0]));
+		params.put("message", message);
+		params.put("username", name);
+		send("CONTACT_US_EMAIL", params);
 	}
 }

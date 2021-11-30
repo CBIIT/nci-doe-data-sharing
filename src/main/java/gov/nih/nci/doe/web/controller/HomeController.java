@@ -155,6 +155,11 @@ public class HomeController extends AbstractDoeController {
 		return "resetPassword";
 	}
 
+	@GetMapping(value = "/contactUs")
+	public String getContactUs(HttpSession session, HttpServletRequest request) {
+		return "contactUsTab";
+	}
+
 	@GetMapping(value = "/aboutTab")
 	public String getAboutTab(HttpSession session, HttpServletRequest request) {
 		return "aboutTab";

@@ -10,9 +10,11 @@ public interface MailService {
 	public void sendActivationEmail(String webServerName, String email, String uuid);
 
 	public void sendResetPasswordEmail(String password, String email);
-	
-	public void sendCollectionRegistationFailure(String email, String collectionPath,Exception e, String taskId);
-	
+
+	public void sendCollectionRegistationFailure(String email, String collectionPath, Exception e, String taskId);
+
 	public void sendErrorEmail(Exception e, String user);
+
+	public void sendContactUsEmail(String name, String email, String message);
 
 }

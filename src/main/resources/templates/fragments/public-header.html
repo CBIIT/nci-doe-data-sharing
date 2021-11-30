@@ -59,7 +59,7 @@
                         <a class="dropdown-item" id="about-tab" th:href="@{/aboutTab}">About MoDaC</a>
                         <a th:if= "${showApiDocs}" class="dropdown-item" id="api-docs" target="_blank" th:href="@{/swagger-ui/index.html?urls.primaryName=api-docs#}">API Documentation</a>
                         <a class="dropdown-item" target="_blank" href="https://wiki.nci.nih.gov/display/MoDaCdoc">User Guide</a>
-                        <a class="dropdown-item" href="mailto:modac-support@mail.nih.gov?">Contact</a>
+                        <a class="dropdown-item" th:href="@{/contactUs}">Contact</a>
                     </div>
 
                 </li>
