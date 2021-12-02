@@ -28,7 +28,7 @@
                         </div>
                     </div>
                 </div>
-                  
+
                     <br>
                         
                         <div class="row row-buffer" style="padding-top:0px;">
@@ -38,7 +38,7 @@
                             <div class="col-lg-9">
                                <input type="text" th:value="${fullName}" th:disabled="${fullName != null}"
                                 th:style="${loggedOnUser != null ? 'background-color: #A1C1DB;color: #000000;': ''}"
-                                autocomplete="off" id="contact_us_name" name="contact_us_name" 
+                                autocomplete="off" id="contact_us_name" name="contact_us_name" placeholder="Name" 
                                 maxlength="20" class="form-control defaultFocus myaccountTextbox">                            
                             </div>
                         </div>
@@ -48,7 +48,7 @@
                          <label class="infoLabel" for="contact-us-email">Email <span>*</span></label>
                             </div>
                             <div class="col-lg-9">
-                            <input type="text" th:value="${loggedOnUser}" 
+                            <input type="text" th:value="${loggedOnUser}" placeholder="Email"
                             th:style="${loggedOnUser != null ? 'background-color: #A1C1DB;color: #000000;': ''}"
                             th:disabled="${loggedOnUser != null}" autocomplete="off"  
                             id="id_user_email" name="id_user_email" maxlength="50" 
@@ -60,7 +60,7 @@
                         <label class="infoLabel" for="contact_us_txtarea">Message<span>*</span></label>
                             </div>
                             <div class="col-lg-9">
-                         <textarea id="contact_us_txtarea" name="contact_us_txtarea" rows="5" class="form-control defaultFocus"></textarea>
+                         <textarea id="contact_us_txtarea" placeholder="Type your message here" name="contact_us_txtarea" rows="5" class="form-control defaultFocus"></textarea>
                                 
                             </div>
                         </div>

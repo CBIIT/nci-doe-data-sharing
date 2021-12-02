@@ -63,14 +63,14 @@ function callContactUsFormValidation() {
 function postRegisterFunction(data, status) {
 	if(data == 'SUCCESS') {
 		$('#btnSubmitEmail').prop('disabled',false);
-		$(".errorBlockRegister").hide();
-		$(".successBlockRegister").show();
-		$(".successMsgRegister").html("Check your email inbox for an activation link.");
+		$(".errorBlock").hide();
+		$(".successBlock").show();
+		$(".successMsg").html("Message sent. We'll contact you soon.");
 	} else  {
 		$('#btnSubmitEmail').prop('disabled',false);
-		$(".successBlockRegister").hide();
-		$(".errorBlockRegister").show();
-		$(".errorMsgRegister").html(data);
+		$(".successBlock").hide();
+		$(".errorBlock").show();
+		$(".errorMsg").html(data);
 	}
 }
 
