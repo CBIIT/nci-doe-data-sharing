@@ -74,7 +74,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 				log.info("Account is locked for username: {}", username);
 				status = LoginStatusCode.LOGIN_LOCKED;
 
-			} else if (Boolean.FALSE.equals(user.getIsActivated())) {
+			} else if (!Boolean.TRUE.equals(user.getIsActivated())) {
 				log.info("Account is not activated for username: {}", username);
 				status = LoginStatusCode.LOGIN_INACTIVATED;
 
