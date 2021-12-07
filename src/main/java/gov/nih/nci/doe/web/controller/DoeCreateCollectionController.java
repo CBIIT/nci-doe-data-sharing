@@ -1,8 +1,6 @@
 package gov.nih.nci.doe.web.controller;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -189,7 +187,6 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 			metadataEntries = populateFormAttributes(request, session, basePath, collectionType, controllerAttribute,
 					controllerValue, refresh, cachedEntries);
 
-			Collections.sort(metadataEntries, Comparator.comparing(DoeMetadataAttrEntry::getAttrName));
 			return new ResponseEntity<>(metadataEntries, HttpStatus.OK);
 
 		} catch (Exception e) {

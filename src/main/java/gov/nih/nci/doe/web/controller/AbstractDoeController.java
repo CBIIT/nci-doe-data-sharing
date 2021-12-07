@@ -146,9 +146,12 @@ public abstract class AbstractDoeController {
 
 	@Value("${asset.bulk.collections}")
 	public String bulkAssetsPaths;
-	
+
 	@Value("${predictions.display.assets}")
 	public String predictionPaths;
+	
+	@Value("${google.captcha.sitekey}")
+	public String siteKey;
 
 	@Autowired
 	InferencingTaskService inferencingTaskService;
@@ -218,7 +221,7 @@ public abstract class AbstractDoeController {
 		}
 		return null;
 	}
-	
+
 	@ModelAttribute("fullName")
 	public String getLoggedOnUserFullName() {
 		String emailAddr = getLoggedOnUserInfo();
@@ -236,7 +239,7 @@ public abstract class AbstractDoeController {
 		String emailAddr = getLoggedOnUserInfo();
 		if (!StringUtils.isEmpty(emailAddr)) {
 			DoeUsersModel user = authenticateService.getUserInfo(emailAddr);
-			if (user.getIsWrite() != null && user.getIsWrite()) {
+			if (user != null && Boolean.TRUE.equals(user.getIsWrite())) {
 				return true;
 			}
 		}
@@ -252,14 +255,15 @@ public abstract class AbstractDoeController {
 		for (HpcMetadataEntry entry : list) {
 			if (systemAttrs != null && !systemAttrs.contains(entry.getAttribute()) && (levelName == null
 					|| (levelName != null && levelName.equalsIgnoreCase(entry.getLevelLabel())))) {
-				String attrName = lookUpService.getDisplayName(levelName, entry.getAttribute());
+				LookUp lookUpVal = lookUpService.getLookUpByLevelAndName(levelName, entry.getAttribute());
 				KeyValueBean k = null;
 				// this is a temporary fix to escape json.stringify error with single and double
 				// quotes
 				String updatedString = entry.getValue().replaceAll("[\"']", "");
-				if (!StringUtils.isEmpty(attrName)) {
+				if (lookUpVal != null) {
 
-					k = new KeyValueBean(entry.getAttribute(), attrName, updatedString);
+					k = new KeyValueBean(entry.getAttribute(), lookUpVal.getDisplayName(), updatedString,
+							lookUpVal.getDisplayOrder());
 				} else {
 					k = new KeyValueBean(entry.getAttribute(), entry.getAttribute(), updatedString);
 				}
@@ -268,6 +272,10 @@ public abstract class AbstractDoeController {
 			}
 
 		}
+
+		Collections.sort(entryList,
+				Comparator.comparing(KeyValueBean::getDisplayOrder, Comparator.nullsLast(Comparator.naturalOrder()))
+						.thenComparing(KeyValueBean::getDisplayName));
 
 		return entryList;
 	}
@@ -359,12 +367,14 @@ public abstract class AbstractDoeController {
 						HpcCollectionDTO collection = collections.getCollections().get(0);
 						for (HpcMetadataEntry entry : collection.getMetadataEntries().getSelfMetadataEntries()) {
 							if (!systemAttrs.contains(entry.getAttribute())) {
-								String attrName = lookUpService.getDisplayName(levelName, entry.getAttribute());
+								LookUp val = lookUpService.getLookUpByLevelAndName(levelName, entry.getAttribute());
 								KeyValueBean k = null;
-								if (!StringUtils.isEmpty(attrName)) {
-									k = new KeyValueBean(entry.getAttribute(), attrName, entry.getValue());
+								if (val != null) {
+									k = new KeyValueBean(entry.getAttribute(), val.getDisplayName(), entry.getValue(),
+											val.getDisplayOrder());
 								} else {
-									k = new KeyValueBean(entry.getAttribute(), entry.getAttribute(), entry.getValue());
+									k = new KeyValueBean(entry.getAttribute(), entry.getAttribute(), entry.getValue(),
+											null);
 								}
 
 								entryList.add(k);
@@ -399,6 +409,11 @@ public abstract class AbstractDoeController {
 			log.error(errMsg, e);
 		}
 		log.info("entry list data :" + entryList);
+
+		Collections.sort(entryList,
+				Comparator.comparing(KeyValueBean::getDisplayOrder, Comparator.nullsLast(Comparator.naturalOrder()))
+						.thenComparing(KeyValueBean::getDisplayName));
+
 		return entryList;
 	}
 
@@ -828,12 +843,11 @@ public abstract class AbstractDoeController {
 				List<KeyValueBean> selfMetadata = getUserMetadata(
 						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset", systemAttrs);
 
-				Collections.sort(selfMetadata, Comparator.comparing(KeyValueBean::getDisplayName));
 				if (StringUtils.isNotEmpty(returnToSearch)) {
 					model.addAttribute("returnToSearch", true);
 				}
 
-				if(StringUtils.isNotEmpty(predictionPaths) && Boolean.TRUE.equals(getIsUploader())) {
+				if (StringUtils.isNotEmpty(predictionPaths) && Boolean.TRUE.equals(getIsUploader())) {
 					List<String> predictionPathsList = Arrays.asList(predictionPaths.split(","));
 					Boolean showGeneratePredictions = predictionPathsList.stream()
 							.anyMatch(s -> collection.getCollection().getCollectionName().equalsIgnoreCase(s));

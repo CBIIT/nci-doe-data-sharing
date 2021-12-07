@@ -314,7 +314,7 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 	line-height: 17px;
 }
 #updateMetaData,#addMetaData,#addBulkDataFiles,#addNewMetaDataForSingleDataFile,#btnRegisterFile,
-#registerBulkDataFileBtn,#registerCollectionBtn,#updatePermissions,#addUserMetadataForBulkAssets,#cancelRegisterBtn {
+#registerBulkDataFileBtn,#registerCollectionBtn,#updatePermissions,#addUserMetadataForBulkAssets,#cancelRegisterBtn,#registerFolder {
 	background-color: #E87B05!important;
 }
 
@@ -334,12 +334,13 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 }
 
 .parentCollectionName {
-	width: 130%;
+	/*width: 130%;*/
     height: 46px;
     padding-left: 25px;
     border: none;
     background-color: #E0F0F4;
     color: #000;
+    flex: 1;
 }
 .closeButtons {
 	margin-left: -12px;
@@ -1708,7 +1709,6 @@ th.active .arrow {
     height: 1px;
 }
 .labelEditCollection {
-	margin-top: -30px;
     margin-bottom: 22px;
 	height: 46px;
 	background-color: #194F85;

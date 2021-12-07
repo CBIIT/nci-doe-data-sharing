@@ -3,6 +3,7 @@ package gov.nih.nci.doe.web.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,7 +44,7 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
 import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
-import io.jsonwebtoken.lang.Collections;
+import java.util.Collections;
 
 /**
  *
@@ -134,7 +135,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 
 		List<HpcCollectionListingEntry> subCollections = searchResults.get(0).getCollection().getSubCollections();
 
-		if (!Collections.isEmpty(dataObjectsList)) {
+		if (!CollectionUtils.isEmpty(dataObjectsList)) {
 			for (HpcCollectionListingEntry dataObject : dataObjectsList) {
 				String name = dataObject.getPath().substring(dataObject.getPath().lastIndexOf('/') + 1);
 				DoeDatafileSearchResultDetailed returnResult = new DoeDatafileSearchResultDetailed();
@@ -147,7 +148,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 
 		}
 
-		if (!Collections.isEmpty(subCollections)) {
+		if (!CollectionUtils.isEmpty(subCollections)) {
 			for (HpcCollectionListingEntry collection : subCollections) {
 				String name = collection.getPath().substring(collection.getPath().lastIndexOf('/') + 1);
 				if (!name.startsWith("Predictions_")) {
@@ -380,6 +381,8 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 					session.setAttribute("compoundQuery", compoundQuery);
 
 					dataResults = processDataObjectResponseResults(restResponse, path, session);
+					Collections.sort(dataResults,
+							Comparator.comparing(DoeDatafileSearchResultDetailed::getIsFolder).reversed());
 					return new ResponseEntity<>(dataResults, HttpStatus.OK);
 
 				} else if (restResponse.getStatus() == 204) {

@@ -13,6 +13,15 @@ public class DoeMetadataAttrEntry {
 	private Boolean mandatory;
 	private String displayName;
 	private Boolean isEditable;
+	private Integer displayOrder;
+
+	public Integer getDisplayOrder() {
+		return displayOrder;
+	}
+
+	public void setDisplayOrder(Integer displayOrder) {
+		this.displayOrder = displayOrder;
+	}
 
 	public Boolean getIsEditable() {
 		return isEditable;

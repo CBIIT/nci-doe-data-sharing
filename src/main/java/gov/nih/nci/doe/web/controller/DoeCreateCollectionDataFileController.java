@@ -4,6 +4,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
@@ -526,6 +528,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 						if (val != null) {
 							entry.setDisplayName(val.getDisplayName());
 							entry.setIsEditable(val.getIsEditable());
+							entry.setDisplayOrder(val.getDisplayOrder());
 						} else {
 							entry.setDisplayName(rule.getAttribute());
 							entry.setIsEditable(true);
@@ -549,6 +552,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 					if (lookUpVal != null) {
 						x.setDisplayName(lookUpVal.getDisplayName());
 						x.setIsEditable(lookUpVal.getIsEditable());
+						x.setDisplayOrder(lookUpVal.getDisplayOrder());
 					} else {
 						x.setDisplayName(x.getAttrName());
 						x.setIsEditable(true);
@@ -557,6 +561,13 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				}
 			}
 		}
+
+		Collections.sort(metadataEntries,
+				Comparator
+						.comparing(DoeMetadataAttrEntry::getDisplayOrder,
+								Comparator.nullsLast(Comparator.naturalOrder()))
+						.thenComparing(DoeMetadataAttrEntry::getAttrName));
+
 		session.setAttribute("metadataEntries", metadataEntries);
 		return metadataEntries;
 

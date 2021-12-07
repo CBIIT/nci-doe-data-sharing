@@ -156,7 +156,8 @@ public class HomeController extends AbstractDoeController {
 	}
 
 	@GetMapping(value = "/contactUs")
-	public String getContactUs(HttpSession session, HttpServletRequest request) {
+	public String getContactUs(Model model,HttpSession session, HttpServletRequest request) {
+		model.addAttribute("siteKey", siteKey);
 		return "contactUsTab";
 	}
 
