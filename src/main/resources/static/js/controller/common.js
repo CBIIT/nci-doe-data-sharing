@@ -492,6 +492,14 @@ $(document)
 					function postGoogleDriveFunction(data, status) {
 						location.replace(data);
 					}
+					
+					function postGetUserInfoFunction (data,status) {
+						var userData = JSON.parse(data);
+						$("#firstNameTxt").val(userData.firstName);
+						$("#lastNameTxt").val(userData.lastName);
+						$("#institutionTxt").val(userData.institution);
+						$("#groupNames").text(userData.programName);
+					}
 
 					$(".addNewMetaDataForDataFiles").click(function(e) {
 						addNewMetaDataRowsForDataFile($(this));
