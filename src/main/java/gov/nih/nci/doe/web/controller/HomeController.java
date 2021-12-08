@@ -124,6 +124,7 @@ public class HomeController extends AbstractDoeController {
 		if (CollectionUtils.isNotEmpty(getAllInferencingTasks)) {
 			model.addAttribute("showModelAnalysisTab", true);
 		}
+
 		return "tasksTab";
 	}
 
@@ -141,6 +142,8 @@ public class HomeController extends AbstractDoeController {
 		} catch (Exception e) {
 			throw new DoeWebException("Failed to send registration email" + e.getMessage());
 		}
+
+		model.addAttribute("siteKey", siteKey);
 
 		return "loginTab";
 	}

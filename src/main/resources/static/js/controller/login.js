@@ -1,7 +1,7 @@
 var onloadCallback = function() {
 	var siteKey = $("#siteKey").val();
-	grecaptcha.render('logincaptchadiv', {'sitekey' : '6LcdTWwdAAAAAF7D-Gm3B_zSBdALSOtEnXBIqJEq'});
-    grecaptcha.render('signupcaptchadiv', {'sitekey' : '6LcdTWwdAAAAAF7D-Gm3B_zSBdALSOtEnXBIqJEq'});
+	grecaptcha.render('logincaptchadiv', {'sitekey' : siteKey});
+    grecaptcha.render('signupcaptchadiv', {'sitekey' : siteKey});
 };
 $(document).ready(function () {
 	
