@@ -401,7 +401,7 @@ table.subAssetsDataSetTable,table.subFolderAssetsDataSetTable{
     border: 2.5px solid #214C75;
     box-sizing: border-box;opacity: 0.96;
     border-radius: 11px;
-    height: 575px;
+    height: fit-content;
 }
 #myAccountSubTab {
 	    background-color: #6496C6;
@@ -438,7 +438,7 @@ background-color: rgb(100, 150, 198);
     border: 2.5px solid #214C75;
     opacity: 0.96;
     border-radius: 11px;
-   height: 770px;
+  	height: fit-content;
     margin-top: 50px;
     width: 838px;
     display:none;

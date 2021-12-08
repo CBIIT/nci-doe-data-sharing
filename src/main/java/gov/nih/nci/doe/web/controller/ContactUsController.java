@@ -1,5 +1,6 @@
 package gov.nih.nci.doe.web.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.ContactUs;
+import gov.nih.nci.doe.web.util.DoeClientUtil;
 
 /**
  *
@@ -30,11 +32,20 @@ public class ContactUsController extends AbstractDoeController {
 			throws Exception {
 		log.info("contact us");
 		try {
+			if (StringUtils.isEmpty(contactUs.getResponse())) {
+				return new ResponseEntity<>("Captcha is Empty", HttpStatus.OK);
+			} else {
+				Boolean success = DoeClientUtil.getResponseFromGoogleCaptcha(secretKey, contactUs.getResponse());
+				if (Boolean.TRUE.equals(success)) {
+					mailService.sendContactUsEmail(contactUs.getName(), contactUs.getEmailAddress(),
+							contactUs.getMessage());
 
-			mailService.sendContactUsEmail(contactUs.getName(), contactUs.getEmailAddress(), contactUs.getMessage());
-
-			log.info("successfully reset the password...");
-			return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+					log.info("successfully reset the password...");
+					return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+				} else {
+					return new ResponseEntity<>("Failed to validate captcha.", HttpStatus.OK);
+				}
+			}
 
 		} catch (Exception e) {
 			throw new DoeWebException("Failed to send email to modac support " + e.getMessage());

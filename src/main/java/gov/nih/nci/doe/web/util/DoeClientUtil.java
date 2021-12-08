@@ -63,6 +63,7 @@ import org.apache.cxf.jaxrs.ext.multipart.ContentDisposition;
 import org.apache.cxf.jaxrs.ext.multipart.MultipartBody;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -419,6 +420,39 @@ public class DoeClientUtil {
 
 	}
 
+	public static Boolean getResponseFromGoogleCaptcha(String secretKey, String response)
+			throws IOException, DoeWebException {
+
+		log.info("validate google catpcha token for response: " + response);
+		try {
+			UriComponentsBuilder ucBuilder = UriComponentsBuilder
+					.fromHttpUrl("https://www.google.com/recaptcha/api/siteverify");
+			ucBuilder.queryParam("secret", secretKey);
+			ucBuilder.queryParam("response", response);
+			String requestUrl = ucBuilder.build().encode().toUri().toURL().toExternalForm();
+			WebClient client = DoeClientUtil.getWebClient(requestUrl);
+
+			Response restResponse = client.invoke("POST", null);
+			if (restResponse.getStatus() == 200) {
+
+				MappingJsonFactory factory = new MappingJsonFactory();
+				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+				String stringResponse = parser.readValueAs(String.class);
+				JSONObject jsonObject = new JSONObject(stringResponse);
+				Boolean success = jsonObject.getBoolean("success");
+				return success;
+			} else {
+				log.error("Failed to validate captcha");
+				String errorMessage = getErrorMessage(restResponse);
+				throw new DoeWebException(errorMessage, restResponse.getStatus());
+			}
+		} catch (Exception e) {
+			log.error("Error in validating captcha.");
+			throw new DoeWebException(e);
+		}
+
+	}
+
 	public static boolean createCollection(String token, String hpcCollectionURL,
 			HpcCollectionRegistrationDTO collectionDTO, String path) throws DoeWebException {
 		try {
@@ -566,7 +600,7 @@ public class DoeClientUtil {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 			String json = mapper.writeValueAsString(datafileDTO);
-			
+
 			atts.add(new org.apache.cxf.jaxrs.ext.multipart.Attachment("dataObjectRegistration", "application/json",
 					json));
 

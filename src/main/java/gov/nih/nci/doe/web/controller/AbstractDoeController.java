@@ -149,9 +149,12 @@ public abstract class AbstractDoeController {
 
 	@Value("${predictions.display.assets}")
 	public String predictionPaths;
-	
+
 	@Value("${google.captcha.sitekey}")
 	public String siteKey;
+
+	@Value("${google.captcha.secretkey}")
+	public String secretKey;
 
 	@Autowired
 	InferencingTaskService inferencingTaskService;

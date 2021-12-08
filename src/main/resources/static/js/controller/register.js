@@ -65,17 +65,25 @@ function callRegisterFormValidation() {
 			  },
 		  },
 		  submitHandler: function(form) {
-			$('#btnRegister').prop('disabled',true);
-			$("#spinner").show();
-            $("#dimmer").show();
-			var registerForm= {};
-			registerForm.firstName = $("#id_first_name").val();
-			registerForm.lastName = $("#id_last_name").val();
-			registerForm.emailAddress = $("#id_user_email").val();
-			registerForm.password = $("#id_password").val();
-			registerForm.confirmPassword = $("#id_password_confirm").val();
-			registerForm.institution = $("#id_institution").val();
-			invokeAjax('/register','POST',JSON.stringify(registerForm),postRegisterFunction,postRegistrationFailure,null,'text');
+			var rcres = grecaptcha.getResponse(1);
+	        if(rcres.length){
+	        	$('#btnRegister').prop('disabled',true);
+				$("#spinner").show();
+	            $("#dimmer").show();
+				var registerForm= {};
+				registerForm.firstName = $("#id_first_name").val();
+				registerForm.lastName = $("#id_last_name").val();
+				registerForm.emailAddress = $("#id_user_email").val();
+				registerForm.password = $("#id_password").val();
+				registerForm.confirmPassword = $("#id_password_confirm").val();
+				registerForm.institution = $("#id_institution").val();
+				registerForm.response = rcres;
+				invokeAjax('/register','POST',JSON.stringify(registerForm),postRegisterFunction,postRegistrationFailure,null,'text');	
+	        } else {
+	        	alert("Please verify reCAPTCHA");
+            	return false; 
+	        }
+			
 		  },
 	});
 }

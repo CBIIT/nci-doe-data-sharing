@@ -5,6 +5,15 @@ public class ContactUs {
 	private String name;
 	private String emailAddress;
 	private String message;
+	private String response;
+
+	public String getResponse() {
+		return response;
+	}
+
+	public void setResponse(String response) {
+		this.response = response;
+	}
 
 	public String getName() {
 		return name;
