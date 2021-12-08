@@ -12,6 +12,7 @@ import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.AjaxResponseBody;
+import gov.nih.nci.doe.web.model.GoogleResponse;
 import gov.nih.nci.hpc.domain.datamanagement.HpcPermission;
 import gov.nih.nci.hpc.domain.datamanagement.HpcPermissionForCollection;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
@@ -437,9 +438,8 @@ public class DoeClientUtil {
 
 				MappingJsonFactory factory = new MappingJsonFactory();
 				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-				String stringResponse = parser.readValueAs(String.class);
-				JSONObject jsonObject = new JSONObject(stringResponse);
-				Boolean success = jsonObject.getBoolean("success");
+				GoogleResponse googleResponse = parser.readValueAs(GoogleResponse.class);
+				Boolean success = googleResponse.getSuccess();
 				return success;
 			} else {
 				log.error("Failed to validate captcha");
