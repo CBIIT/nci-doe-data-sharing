@@ -306,6 +306,8 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 
 		}
 
+		Collections.sort(entryList, Comparator.comparing(KeyValueBean::getDisplayName));
+
 		return entryList;
 	}
 
