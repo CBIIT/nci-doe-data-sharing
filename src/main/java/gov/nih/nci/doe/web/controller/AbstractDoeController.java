@@ -746,7 +746,7 @@ public abstract class AbstractDoeController {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void getAssetDetails(HttpSession session, String dmeDataId, String returnToSearch, String assetIdentifier,
+	public String getAssetDetails(HttpSession session, String dmeDataId, String returnToSearch, String assetIdentifier,
 			Model model) throws DoeWebException {
 
 		log.info("get Asset detials for dmeDataId: " + dmeDataId + " is returnToSearch: " + returnToSearch
@@ -890,11 +890,16 @@ public abstract class AbstractDoeController {
 				}
 
 			} else {
-				throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
+				if (StringUtils.isEmpty(user)) {
+					return "loginTab";
+				} else {
+					throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
+				}
 			}
 		} catch (Exception e) {
 			throw new DoeWebException(e.getMessage());
 		}
+		return "assetDetails";
 
 	}
 

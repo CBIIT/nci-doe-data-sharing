@@ -176,8 +176,8 @@ public class HomeController extends AbstractDoeController {
 			@RequestParam(value = "assetIdentifier", required = false) String assetIdentifier) throws DoeWebException {
 
 		log.info("get asset details");
-		getAssetDetails(session, dmeDataId, returnToSearch, assetIdentifier, model);
-		return "assetDetails";
+		return getAssetDetails(session, dmeDataId, returnToSearch, assetIdentifier, model);
+
 	}
 
 	@GetMapping(value = "/downloadTab")
