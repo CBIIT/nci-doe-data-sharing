@@ -56,6 +56,7 @@ function callContactUsFormValidation() {
 								postRegistrationFailure, null, 'text');
 					} else {
 						alert("Please verify reCAPTCHA");
+						$('#btnSubmitEmail').prop('disabled', false);
 						return false;
 					}
 

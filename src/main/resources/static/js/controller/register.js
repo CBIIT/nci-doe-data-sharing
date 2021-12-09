@@ -81,6 +81,7 @@ function callRegisterFormValidation() {
 				invokeAjax('/register','POST',JSON.stringify(registerForm),postRegisterFunction,postRegistrationFailure,null,'text');	
 	        } else {
 	        	alert("Please verify reCAPTCHA");
+	        	$('#btnRegister').prop('disabled',false);
             	return false; 
 	        }
 			
