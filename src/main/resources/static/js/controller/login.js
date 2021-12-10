@@ -137,6 +137,14 @@ function postLogOutFunction(data, status) {
 	location.replace("/");
 }
 
+function postGetUserInfoFunction (data,status) {
+	var userData = JSON.parse(data);
+	$("#firstNameTxt").val(userData.firstName);
+	$("#lastNameTxt").val(userData.lastName);
+	$("#institutionTxt").val(userData.institution);
+	$("#groupNames").text(userData.programName);
+}
+
 function postUpdateUserFunction(data,status) {
 	location.replace("/");
 }
