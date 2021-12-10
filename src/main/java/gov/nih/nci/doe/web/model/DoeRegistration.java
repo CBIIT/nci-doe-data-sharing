@@ -3,29 +3,39 @@ package gov.nih.nci.doe.web.model;
 public class DoeRegistration {
 
 	private String firstName;
-	
+
 	private String lastName;
-	
+
 	private String emailAddress;
 
 	private String password;
 
 	private String confirmPassword;
-	
+
 	private String institution;
-	
+
+	private String response;
+
+	public String getResponse() {
+		return response;
+	}
+
+	public void setResponse(String response) {
+		this.response = response;
+	}
+
 	public String getPassword() {
 		return password;
 	}
-	
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	public String getEmailAddress() {
 		return emailAddress;
 	}
-	
+
 	public void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;
 	}
@@ -61,5 +71,5 @@ public class DoeRegistration {
 	public void setInstitution(String institution) {
 		this.institution = institution;
 	}
-	
+
 }

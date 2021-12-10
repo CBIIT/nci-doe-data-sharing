@@ -1,6 +1,9 @@
 package gov.nih.nci.doe.web.controller;
 
 import javax.servlet.http.HttpSession;
+
+import org.apache.commons.lang3.StringUtils;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +19,7 @@ import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.constants.PasswordStatusCode;
 import gov.nih.nci.doe.web.domain.DoeUsers;
 import gov.nih.nci.doe.web.model.DoeRegistration;
+import gov.nih.nci.doe.web.util.DoeClientUtil;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -41,21 +45,35 @@ public class RegistrationController extends AbstractDoeController {
 		log.info("register user");
 
 		try {
-			// validate the password first
-			PasswordStatusCode status = authService.validatePassword(register.getPassword(), null);
-			if (authService.doesUsernameExist(register.getEmailAddress().trim().toLowerCase())) {
-				log.info("Email already found in the system...");
-				return new ResponseEntity<>("Email address already exists.", HttpStatus.OK);
-			} else if (!status.equals(PasswordStatusCode.SUCCESS)) {
-				log.info("Password validation failed...");
-				return new ResponseEntity<>(
-						"Enter a password with valid length and format. Refer to Password Constraints.", HttpStatus.OK);
+
+			if (StringUtils.isEmpty(register.getResponse())) {
+				log.info("Captcha missing");
+				return new ResponseEntity<>("Please verify reCAPTCHA", HttpStatus.OK);
 			} else {
-				// register the user in the system
-				DoeUsers user = authService.register(register);
-				// send an activation link after registration
-				mailService.sendActivationEmail(webServerName, register.getEmailAddress(), user.getUuid());
-				return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+				Boolean success = DoeClientUtil.getResponseFromGoogleCaptcha(secretKey, register.getResponse());
+
+				if (Boolean.TRUE.equals(success)) {
+					// validate the password first
+					PasswordStatusCode status = authService.validatePassword(register.getPassword(), null);
+					if (authService.doesUsernameExist(register.getEmailAddress().trim().toLowerCase())) {
+						log.info("Email already found in the system...");
+						return new ResponseEntity<>("Email address already exists.", HttpStatus.OK);
+					} else if (!status.equals(PasswordStatusCode.SUCCESS)) {
+						log.info("Password validation failed...");
+						return new ResponseEntity<>(
+								"Enter a password with valid length and format. Refer to Password Constraints.",
+								HttpStatus.OK);
+					} else {
+						// register the user in the system
+						DoeUsers user = authService.register(register);
+						// send an activation link after registration
+						mailService.sendActivationEmail(webServerName, register.getEmailAddress(), user.getUuid());
+						return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+
+					}
+				} else {
+					return new ResponseEntity<>("IFailed to validate captcha.", HttpStatus.OK);
+				}
 
 			}
 

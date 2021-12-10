@@ -1,4 +1,8 @@
-
+var onloadCallback = function() {
+	var siteKey = $("#siteKey").val();
+	grecaptcha.render('logincaptchadiv', {'sitekey' : siteKey});
+    grecaptcha.render('signupcaptchadiv', {'sitekey' : siteKey});
+};
 $(document).ready(function () {
 	
   $(document).keypress(function(event){	
@@ -50,22 +54,29 @@ function validateUserLogin() {
 		},
 		submitHandler: function(form) {
 			$('#loginButton').prop('disabled',true);
-			  //var data = 'username=' + $('#username').val() + '&password=' + $('#password').val();	
-			  var data = $('#userlogin').serialize();
-			   $.ajax({
-			      data: data,
-			      type: 'POST',
-			      url: '/login',
-			      success: function (data, status) {
-			    	  $('#loginButton').prop('disabled',false);
-			    	  postLoginFunction(data,status);
-			      },
-			      error: function (data, status, error) {
-			    	  $('#loginButton').prop('disabled',false);
-			          handleAjaxError(url, params, status, error, data);
-			          loginFailureFunction(data,status);
-			      }
-			    });
+			var rcres = grecaptcha.getResponse(0);
+			if(rcres.length){
+				 var data = $('#userlogin').serialize();
+				   $.ajax({
+				      data: data,
+				      type: 'POST',
+				      url: '/login',
+				      success: function (data, status) {
+				    	  $('#loginButton').prop('disabled',false);
+				    	  postLoginFunction(data,status);
+				      },
+				      error: function (data, status, error) {
+				    	  $('#loginButton').prop('disabled',false);
+				          handleAjaxError('/login', null, status, error, data);
+				          loginFailureFunction(data,status);
+				      }
+				    });
+			} else {
+				alert("Please verify reCAPTCHA");
+				$('#loginButton').prop('disabled',false);
+            	return false; 
+			}
+			 
 		}
 	});		
 }
@@ -98,28 +109,32 @@ function postLoginFunction(data,status) {
 		$(".errorBlockLogin").show();
 		$(".errorMsgLogin").html("Check your email inbox for an activation link.");
 		
+	} else if("InvalidCaptcha" == data) {
+		$(".errorBlockLogin").show();
+		$(".errorMsgLogin").html("Invalid Captcha.");
+		
 	} else {
 		location.replace("/");
 	}
 	
 }
 
-function loginFailureFunction(data,status) {
+function loginFailureFunction(data, status) {
 	$(".successBlockLogin").hide();
 	$(".errorBlockLogin").show();
-	$(".errorMsgLogin").html(data);
+	if (data && data.responseText) {
+		var errorJson = JSON.parse(data.responseText);
+
+		$(".errorMsgLogin").html(errorJson.message);
+
+	} else {
+		$(".errorMsgLogin").html("Unknown Error. Contact Technical Support!");
+	}
+
 }
 
 function postLogOutFunction(data, status) {
 	location.replace("/");
-}
-
-function postGetUserInfoFunction (data,status) {
-	var userData = JSON.parse(data);
-	$("#firstNameTxt").val(userData.firstName);
-	$("#lastNameTxt").val(userData.lastName);
-	$("#institutionTxt").val(userData.institution);
-	$("#groupNames").text(userData.programName);
 }
 
 function postUpdateUserFunction(data,status) {

@@ -10,6 +10,7 @@
     
         <div class="form-row jumbotron pt-2 pb-2 mb-2" id="loginSubTab">
                  <form role="form" id="userlogin" style="width:100%;">
+                 <input type="hidden" id="siteKey" th:value="${siteKey}"/>
                         <p style="text-align: center;font-family: latoregular;font-size: 26px;color: #FFFFFF;padding-top: 18px;
                          padding-bottom: 14px;">LOGIN</p>
                          
@@ -53,6 +54,12 @@
                            style="color:#fff!important;font-family: 'inter_medium';font-size: 13px;">Create Account</a></div>
                         </div>
     
+    					<div class="row row-buffer">
+                        <div class="col-lg-3"></div>
+                        <div class="col-lg-9">                        
+        				<div id="logincaptchadiv"></div>      				
+      					</div>
+                        </div>
                      <hr class="loginHr">
                         <div class="row" style="justify-content: center;padding-top: 30px;">
                         

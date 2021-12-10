@@ -142,6 +142,8 @@ public class HomeController extends AbstractDoeController {
 			throw new DoeWebException("Failed to send registration email" + e.getMessage());
 		}
 
+		model.addAttribute("siteKey", siteKey);
+
 		return "loginTab";
 	}
 

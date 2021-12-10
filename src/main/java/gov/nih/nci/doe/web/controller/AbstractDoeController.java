@@ -145,9 +145,15 @@ public abstract class AbstractDoeController {
 
 	@Value("${asset.bulk.collections}")
 	public String bulkAssetsPaths;
-	
+
 	@Value("${predictions.display.assets}")
 	public String predictionPaths;
+
+	@Value("${google.captcha.sitekey}")
+	public String siteKey;
+
+	@Value("${google.captcha.secretkey}")
+	public String secretKey;
 
 	@Autowired
 	InferencingTaskService inferencingTaskService;
@@ -819,7 +825,7 @@ public abstract class AbstractDoeController {
 					model.addAttribute("returnToSearch", true);
 				}
 
-				if(StringUtils.isNotEmpty(predictionPaths) && Boolean.TRUE.equals(getIsUploader())) {
+				if (StringUtils.isNotEmpty(predictionPaths) && Boolean.TRUE.equals(getIsUploader())) {
 					List<String> predictionPathsList = Arrays.asList(predictionPaths.split(","));
 					Boolean showGeneratePredictions = predictionPathsList.stream()
 							.anyMatch(s -> collection.getCollection().getCollectionName().equalsIgnoreCase(s));
