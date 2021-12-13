@@ -117,7 +117,7 @@ public class HomeController extends AbstractDoeController {
 		log.info("tasks Tab");
 		String user = getLoggedOnUserInfo();
 		if (StringUtils.isEmpty(user)) {
-			return "loginTab";
+			return "redirect:/loginTab";
 		}
 
 		List<InferencingTask> getAllInferencingTasks = inferencingTaskService.getAllTaskByUserId(user);
