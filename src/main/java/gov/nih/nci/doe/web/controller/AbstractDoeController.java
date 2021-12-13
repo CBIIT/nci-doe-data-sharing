@@ -891,7 +891,7 @@ public abstract class AbstractDoeController {
 
 			} else {
 				if (StringUtils.isEmpty(user)) {
-					return "loginTab";
+					return "redirect:/loginTab";
 				} else {
 					throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
 				}

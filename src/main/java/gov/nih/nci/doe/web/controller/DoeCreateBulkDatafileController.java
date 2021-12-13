@@ -73,7 +73,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 
 		String user = getLoggedOnUserInfo();
 		if (StringUtils.isEmpty(user)) {
-			return "loginTab";
+			return "redirect:/loginTab";
 		}
 		String code = request.getParameter("code");
 		model.addAttribute("clientId", clientId);
@@ -145,7 +145,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 		log.info("bulk upload and isFormBulkUpload : " + isFormBulkUpload);
 		String user = getLoggedOnUserInfo();
 		if (StringUtils.isEmpty(user)) {
-			return "loginTab";
+			return "redirect:/loginTab";
 		}
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 
