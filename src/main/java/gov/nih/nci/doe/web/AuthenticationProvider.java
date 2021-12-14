@@ -3,8 +3,8 @@ package gov.nih.nci.doe.web;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +21,7 @@ public class AuthenticationProvider implements org.springframework.security.auth
 	@Autowired
 	private AuthenticateService authService;
 
-	protected final Logger log = LogManager.getLogger(this.getClass());
+	protected Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Override
 	public Authentication authenticate(final Authentication authentication) {
