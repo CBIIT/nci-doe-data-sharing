@@ -687,7 +687,6 @@ function displaySuccessMsg(data,status) {
 function openBulkDataRegistration(folderPath) {
 	var datafilePath = $("#dataList").val();
 	if(folderPath) {
-		$("#isFolderPath").val(folderPath);
 		datafilePath += "/" + folderPath;
 	}
 	$("#bulkDataFilePath").val(datafilePath);
