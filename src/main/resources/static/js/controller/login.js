@@ -133,10 +133,6 @@ function loginFailureFunction(data, status) {
 
 }
 
-function postLogOutFunction(data, status) {
-	location.replace("/");
-}
-
 function postUpdateUserFunction(data,status) {
 	location.replace("/");
 }

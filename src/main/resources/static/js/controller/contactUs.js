@@ -1,3 +1,11 @@
+$(".contactUsTextbox").keyup(function() {
+	if ($(this).val()) {
+		$(this).parent().find('.TextField-floatingLabel-qefpP').show();
+	} else {
+		$(this).parent().find('.TextField-floatingLabel-qefpP').hide();
+	}
+});
+
 var onloadCallback = function() {
 	var siteKey = $("#siteKey").val();
 	grecaptcha.render('google_recaptcha', {

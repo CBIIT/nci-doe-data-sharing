@@ -167,20 +167,6 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 
 	}
 
-	private DoeDatafileSearchResultDetailed getAssetFile(gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectDTO result,
-			List<String> systemAttrs) {
-
-		DoeDatafileSearchResultDetailed returnResult = new DoeDatafileSearchResultDetailed();
-
-		returnResult.setSelfMetadata(getUserMetadata(
-				result.getMetadataEntries().getSelfMetadataEntries().getUserMetadataEntries(), null, systemAttrs));
-		returnResult.setSystemMetadata(getSystemMetaData(
-				result.getMetadataEntries().getSelfMetadataEntries().getSystemMetadataEntries(), null, systemAttrs));
-
-		return returnResult;
-
-	}
-
 	private List<MoDaCPredictionsResults> processGeneratedPredDataObjects(Response restResponse,
 			List<String> systemAttrs) throws IOException {
 		MappingJsonFactory factory = new MappingJsonFactory();
@@ -399,5 +385,19 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 
 		}
 		return new ResponseEntity<>(dataResults, HttpStatus.NO_CONTENT);
+	}
+
+	private DoeDatafileSearchResultDetailed getAssetFile(gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectDTO result,
+			List<String> systemAttrs) {
+
+		DoeDatafileSearchResultDetailed returnResult = new DoeDatafileSearchResultDetailed();
+
+		returnResult.setSelfMetadata(getUserMetadata(
+				result.getMetadataEntries().getSelfMetadataEntries().getUserMetadataEntries(), null, systemAttrs));
+		returnResult.setSystemMetadata(getSystemMetaData(
+				result.getMetadataEntries().getSelfMetadataEntries().getSystemMetadataEntries(), null, systemAttrs));
+
+		return returnResult;
+
 	}
 }

@@ -495,6 +495,10 @@ $(document)
 						$("#groupNames").text(userData.programName);
 					}
 
+					function postLogOutFunction(data, status) {
+						location.replace("/");
+					}
+					
 					$(".addNewMetaDataForDataFiles").click(function(e) {
 						addNewMetaDataRowsForDataFile($(this));
 					});
