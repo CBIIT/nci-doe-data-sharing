@@ -610,6 +610,10 @@ function postSuccessRegisterCollection(data,collectionType) {
 			loadJsonData('/browse/collection', $("#dataList"), true, params, displaySuccessMsg, null, "key", "value");
 			resetAssetsSelection();
 			$("#assetUploadDiv").removeClass('show');
+		} else if(collectionType == 'Folder') {
+			constructAssetFileAndFoldersDiv($("#dataList").val());
+			displaySuccessMsg();
+			
 		}
 	} else {
 		$(".registerErrorMsg").html("Error in create collection:" + data);
