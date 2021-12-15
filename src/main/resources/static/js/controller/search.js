@@ -153,11 +153,14 @@ function refreshDataTable() {
         var t = $('#searchResultTable').DataTable();
         console.log(t);
         t.ajax.reload(null, true);
+       
     }
-    
-    $("div.toolbar").prepend('<div>'+
-       	   '<label><input type="checkbox" id="myCollections" style="transform: translateY(1.5px);">'+
-      	   '&nbsp;&nbsp;Display My Collections</label></div>');
+    if(isVisible && !$("#myCollections").is(':visible')) {
+    	 $("div.toolbar").prepend('<div style="float: left;">'+
+            	   '<label><input type="checkbox" id="myCollections" value="false" style="transform: translateY(1.5px);">'+
+           	   '&nbsp;&nbsp;Display My Collections</label></div>');
+    }
+   
 }
 
 function dataTableInit(isVisible) {

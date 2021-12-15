@@ -38,7 +38,7 @@
 								<div class="pull-left" style="margin-left: 15px">
 									<label class="uploadLabels radio-inline"><input
 										type="radio" name="selectProgram"
-										class="registeRadioButtons createCollectionFragment"
+										class="registeRadioButtons"
 										onclick="createCollectionDiv('basePath')"
 										value="Register Program">&nbsp;&nbsp; Register Program</label>
 								</div>
@@ -82,7 +82,7 @@
 								<div class="pull-left" style="margin-left: 15px">
 									<label class="uploadLabels radio-inline"><input
 										type="radio" name="selectStudy"
-										class="registeRadioButtons createCollectionFragment"
+										class="registeRadioButtons"
 										onclick="createCollectionDiv('instituteList')"
 										value="Register Study">&nbsp;&nbsp; Register Study</label>
 								</div>
@@ -325,12 +325,12 @@
 											</div>
 											<div class="form-row col-md-12 col-sm-12"
 												id="formAssetSelection" style="display: none;">
-												<div class="form-group col-md-12 col-sm-12">
+												<div class="form-group col-md-6 col-sm-6">
 													<label
 														style="color: #C06400; font-family: 'inter_regular'; font-size: 15px; font-weight: 500;">Asset
 														Type: <select class="simple-select2" id="assetTypeSelect"
 														name="assetType"
-														style="border: 2px solid #E87B05; color: #C06400; width: 30%"
+														style="border: 2px solid #E87B05; color: #C06400; width: 40%"
 														onChange="retrieveAssetTypeDiv(this.options[this.selectedIndex])">
 															<option value="Select">Select</option>
 															<option value="Dataset">Dataset</option>
@@ -341,7 +341,7 @@
 												<div class="form-group col-md-12 col-sm-12"
 													id="addMetadataDiv" style="display: none;">
 													<input type="hidden" name="collection_type" value="Asset" />
-													<div class="form-group col-md-8 col-sm-8">
+													<div class="col-md-3 col-sm-3 addUserMetadaDiv">
 														<button id="addUserMetadataForBulkAssets" type="button"
 															class="btn btn-primary mb-2 mr-2"
 															onclick="addNewMetaDataCollection('assetBulkMetadataTable')">Add
@@ -381,8 +381,8 @@
 							class="form-row jumbotron pt-2 pb-2 mb-2 col-lg-10 col-md-10 registerDiv"
 							id="uploadAndRegisterFiles" style="display: none;">
 
-							<div class="form-group col-lg-4 col-md-4"
-								style="margin-top: 10px; text-align: center;">
+							<div class="form-group col-lg-5 col-md-5"
+								style="margin-top: 10px;padding-left:93px;">
 
 								<a href="#" id="addBulkDataFiles" class="addDeleteUploadLabels"
 									data-toggle="tooltip"> <i class="fas fa-upload"></i> Upload
@@ -390,11 +390,11 @@
 								</a>
 							</div>
 
-							<div class="form-group col-lg-6 col-md-6"
-								style="margin-top: 10px; text-align: center;">
+							<div class="form-group col-lg-5 col-md-5"
+								style="margin-top: 10px;">
 								<a href="javascript:void(0)" id="registerFolder"
 									data-toggle="tooltip"
-									class="addDeleteUploadLabels createCollectionFragment"
+									class="addDeleteUploadLabels"
 									onclick="createCollectionDiv('dataList')"><img
 									src="images/Uploads.add.png"
 									th:src="@{/images/Uploads.add.png}" class="uploadslogo"

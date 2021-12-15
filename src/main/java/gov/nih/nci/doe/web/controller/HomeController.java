@@ -192,6 +192,11 @@ public class HomeController extends AbstractDoeController {
 			@RequestParam(value = "assetIdentifier", required = false) String assetIdentifier) throws DoeWebException {
 
 		log.info("get download tab details");
+
+		String user = getLoggedOnUserInfo();
+		if (StringUtils.isEmpty(user)) {
+			return "redirect:/loginTab";
+		}
 		model.addAttribute("selectedPathsString", selectedPaths);
 		model.addAttribute("downloadAsyncType", downloadAsyncType);
 		model.addAttribute("fileName", fileName);

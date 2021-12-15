@@ -141,7 +141,7 @@ public class SearchController extends AbstractDoeController {
 				if (list.length == 5) {
 					String dataSetPermissionRole = getPermissionRole(user, result.getCollection().getCollectionId(),
 							loggedOnUserPermissions);
-					if (Boolean.FALSE.equals(search.getIsShowMyCollection())
+					if (Boolean.FALSE.equals(search.getIsShowMyCollection() || search.getIsShowMyCollection() == null)
 							|| (Boolean.TRUE.equals(search.getIsShowMyCollection())
 									&& !"No Permissions".equalsIgnoreCase(dataSetPermissionRole))) {
 

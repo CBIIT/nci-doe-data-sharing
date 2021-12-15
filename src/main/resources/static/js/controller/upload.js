@@ -6,12 +6,6 @@ $(document).ready(function () {
 		selector : '[data-toggle="tooltip"]'
 	});
 
-	$(".createCollectionFragment").click(function(e){
-		$("#createCollectionFragment").show();
-		$("#uploadSectionDiv").hide();
-		$("#uploadHeader").hide();
-	});
-	
 	$(document).on('click', '.uploadDataSet', function() {
 		var folderPath = $(this).parent().find('a').attr('data-name');
 		$("#uploadSectionDiv").hide();
@@ -274,7 +268,7 @@ function contructDataListDiv(data,status) {
 				html += '<li><a class="detail-control" data-name = '+value.name+'>'+
 				'<i class="expand far fa-folder"></i></a>&nbsp;'+value.name+' &nbsp;&nbsp;'+
 				'<a href="#" class="uploadDataSet" title="Upload Data set" style="font-size: 15px;color: #F39530;"><i class="fas fa-upload">'+
-				'</i></a> &nbsp;&nbsp;<a href="#" title="Register New Folder" onclick="createCollectionDiv(\'' + datalist + '\',\''+value.name+'\')"class="createCollectionFragment addDeleteUploadLabels">'+        
+				'</i></a> &nbsp;&nbsp;<a href="#" title="Register New Folder" onclick="createCollectionDiv(\'' + datalist + '\',\''+value.name+'\')" class="addDeleteUploadLabels">'+        
 	            '<img src="/images/Uploads.add.png" class="uploadslogo" alt="register"></a></li>';
 			} else {
 				html += '<li><a class="detail-control" data-name = '+value.name+'>'+
@@ -479,7 +473,7 @@ function retrieveCollectionList(data,status) {
 } 
 
 function createCollectionDiv(selectTarget, folderPath) {
-	
+
 	var selectedIndexPathVal = $("#" + selectTarget).val();	
 	var parentName = $( "#" +selectTarget+ " option:selected" ).text();
 	if(folderPath) {
@@ -510,6 +504,12 @@ function createCollectionDiv(selectTarget, folderPath) {
 	invokeAjax('/addCollection/collectionTypes','GET',params,retrieveCollectionList,null,null,null);
 	//loadJson for permissions list
 	loadJsonData('/metaDataPermissionsList', $("#metaDataPermissionsList"), false, null, null, null, "key", "value"); 
+	
+	//show create fragment
+	$("#createCollectionFragment").show();
+	$("#uploadSectionDiv").hide();
+	$("#uploadHeader").hide();
+	
 }
 
 function registerCollection() {
@@ -593,7 +593,6 @@ function registerCollection() {
 			}
 		});
 	}
-	
 }
 
 function postSuccessRegisterCollection(data,collectionType) {
@@ -619,8 +618,6 @@ function postSuccessRegisterCollection(data,collectionType) {
 		$(".registerErrorMsg").html("Error in create collection:" + data);
 		$(".registerMsgErrorBlock").show();
 	}
-
-	
 }
 
 function resetAssetsSelection(reset) {
@@ -770,10 +767,7 @@ function registerBulkAssets() {
     	    message: 'Upload CSV Metadata file.'
     	});
     }
-    
-    
-    
-    
+
 	$('table#assetBulkMetadataTable input[type="text"]').each(function(){
 		var name = $(this).val();
 		var ismandatory = $(this).attr('is_mandatory');
@@ -832,9 +826,7 @@ function registerBulkAssets() {
 	     	    onEscape: function() {
 	     		  location.replace("/addbulk");
 	     	    }
-	     	});
-	    	 
-	    	 
+	     	}); 
 		 },
 		error : function(e) {
 			 $("#spinner").hide();

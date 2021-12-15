@@ -753,10 +753,10 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before
   font-weight: 500; 
 }
 
-#addUserMetadataForBulkAssets {
-	margin-right: -30px!important;
-    margin-top: -42px;
+.addUserMetadaDiv {
+	margin-top: -42px;
     float: right;
+    padding-left: 0px;
 }
 
 .wrapper {

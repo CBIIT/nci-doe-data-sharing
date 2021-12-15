@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
@@ -193,7 +194,6 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 			log.debug(e.getMessage());
 		}
 
-		
 		return new ResponseEntity<>(metadataEntries, HttpStatus.OK);
 
 	}
@@ -216,6 +216,10 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 			HttpServletRequest request, HttpServletResponse response) throws DoeWebException {
 
 		log.info("create collection");
+		String user = getLoggedOnUserInfo();
+		if (StringUtils.isEmpty(user)) {
+			return "redirect:/loginTab";
+		}
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		String[] path = request.getParameterValues("path");
 		if (path[0] != null) {
@@ -287,7 +291,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 
 					// save collection permissions in MoDaC DB
 
-					metaDataPermissionService.savePermissionsList(getLoggedOnUserInfo(),
+					metaDataPermissionService.savePermissionsList(user,
 							progList != null ? String.join(",", progList) : null,
 							collection.getCollection().getCollectionId(), doeCollection.getPath());
 
@@ -296,12 +300,12 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 							.filter(e -> e.getAttribute().equalsIgnoreCase("access_group")).findAny().orElse(null);
 					if (selectedEntry != null) {
 						accessGroupsService.saveAccessGroups(collection.getCollection().getCollectionId(),
-								doeCollection.getPath(), selectedEntry.getValue(), getLoggedOnUserInfo());
+								doeCollection.getPath(), selectedEntry.getValue(), user);
 					}
 
 					// store the auditing info
 					AuditingModel audit = new AuditingModel();
-					audit.setName(getLoggedOnUserInfo());
+					audit.setName(user);
 					audit.setOperation("register collection");
 					audit.setStartTime(new Date());
 					audit.setPath(doeCollection.getPath());
