@@ -43,6 +43,7 @@ public class UploadController extends AbstractDoeController {
 		session.setAttribute("datafilePath", uploadCollectionModel.getDataSetPath());
 		session.setAttribute("institutePath", uploadCollectionModel.getInstitutionPath());
 		session.setAttribute("studyPath", uploadCollectionModel.getStudyPath());
+		session.setAttribute("uploadPath", uploadCollectionModel.getUploadPath());
 		session.removeAttribute("fileIds");
 		session.removeAttribute("folderIds");
 		session.removeAttribute("accessToken");

@@ -10,6 +10,15 @@ public class UploadCollectionModel {
 	private List<KeyValueBean> dataObjectsList;
 	private String action;
 	private String uploadType;
+	private String uploadPath;
+
+	public String getUploadPath() {
+		return uploadPath;
+	}
+
+	public void setUploadPath(String uploadPath) {
+		this.uploadPath = uploadPath;
+	}
 
 	public String getUploadType() {
 		return uploadType;

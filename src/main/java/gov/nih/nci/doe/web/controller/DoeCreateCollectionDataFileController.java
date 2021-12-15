@@ -69,6 +69,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		session.removeAttribute("parent");
 		session.removeAttribute("institutePath");
 		session.removeAttribute("studyPath");
+		session.removeAttribute("uploadPath");
 		session.removeAttribute("fileIds");
 		session.removeAttribute("folderIds");
 		session.removeAttribute("accessToken");
@@ -186,6 +187,8 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		model.addAttribute("institutePath", session.getAttribute("institutePath"));
 		model.addAttribute("studyPath", session.getAttribute("studyPath"));
 		model.addAttribute("bulkUploadCollection", session.getAttribute("bulkUploadCollection"));
+		model.addAttribute("uploadPath", session.getAttribute("uploadPath"));
+		
 
 	}
 
@@ -194,7 +197,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			HttpServletRequest request, HttpSession session, String path, Map<String, String> assetIdentifierMapping) {
 		gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO dto = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO();
 
-		String datafilePath = (String) session.getAttribute("datafilePath");
+		String datafilePath = (String) session.getAttribute("uploadPath");
 
 		if (datafilePath == null) {
 			datafilePath = (String) session.getAttribute("studyPath");

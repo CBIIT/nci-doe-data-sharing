@@ -411,20 +411,6 @@ $(document)
 
 					});
 
-					$("#addBulkDataFiles").click(function(e) {
-						$("#uploadDataFilesTab").show();
-						openBulkDataRegistration();
-					});
-
-					$("#registerBulkDataFileBtn").click(function(e) {
-						registerBulkDataFile();
-					});
-
-					$("#bulkDoeDataFile").change(function(e) {
-						appendBulkFileName($(this));
-
-					});
-
 					$("#driveAuthlink").click(
 							function(e) {
 								var params = {
@@ -454,34 +440,6 @@ $(document)
 								invokeAjax('/download', 'GET', params, postGoogleDriveFunction, postFailureFunction,
 										null, 'text');
 							});
-
-					$("#primaryGlobusButton").click(function(e) {
-
-						var d = {};
-						d.institutionPath = $("#instituteList").val();
-						d.studyPath = $("#studyList").val();
-						d.dataSetPath = $("#dataList").val();
-
-						invokeAjax('/upload', 'GET', d, postUploadGlobusFunction, postFailureFunction, null, 'text');
-					});
-
-					$("#assetSelectionGlobusButton").click(function(e) {
-						var d = {};
-						d.institutionPath = $("#instituteList").val();
-						d.studyPath = $("#studyList").val();
-						d.uploadType = "assetBulkUpload";
-
-						invokeAjax('/upload', 'GET', d, postUploadGlobusFunction, postFailureFunction, null, 'text');
-					});
-
-					$("#driveUploadAuthlink").click(function(e) {
-						var d = {};
-						d.institutionPath = $("#instituteList").val();
-						d.studyPath = $("#studyList").val();
-						d.dataSetPath = $("#dataList").val();
-						d.action = "Drive";
-						invokeAjax('/upload', 'GET', d, postUploadGlobusFunction, postFailureFunction, null, 'text');
-					});
 
 					function postGoogleDriveFunction(data, status) {
 						location.replace(data);
