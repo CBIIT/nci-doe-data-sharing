@@ -24,7 +24,7 @@ $(document).ready(function () {
 		 var list= JSON.parse(search);
 		 var isShowMyCollection = list.isShowMyCollection;
 		 if(isShowMyCollection) {
-			 $("#isShowMyCollection").prop('checked',true);
+			 $("#myCollections").prop('checked',true);
 		 }
 		 for (var i = 1; i < list.attrName.length; i++) {
 			 var attrVal = list.attrValuesString.split('@@');
