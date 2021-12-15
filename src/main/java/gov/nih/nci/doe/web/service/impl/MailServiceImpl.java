@@ -11,8 +11,8 @@ import javax.mail.internet.InternetAddress;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.VelocityException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -27,7 +27,7 @@ import gov.nih.nci.doe.web.repository.MailTemplateRepository;
 @Component
 public class MailServiceImpl implements MailService {
 
-	protected final Logger log = LogManager.getLogger(this.getClass());
+	protected final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private JavaMailSender mailSender;
