@@ -1,212 +1,296 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<meta charset="UTF-8">
+<title>Title</title>
 </head>
 <body>
-      <div class="form-row col-md-10 col-sm-10" id="uploadDataFilesTab" th:fragment="uploadDataFiles" 
-      style="display:none;margin-top:40px;margin-left:100px;border-top: 2px solid #E87B05;">
-                <div class="col-md-12 col-sm-12 p-0 m-0">
-                 <div class="alert alert-danger uploadBulkDataError" role="alert" style="display:none;margin-bottom:10px;">
-           <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
-                            <h6 class="uploadBulkDataErrorMsg"></h6>                       
-                    </div>
-        </div>
-                    
-                </div>
-       
-             <input type="hidden" id="bulkDataFilePathCollection" name="bulkDataFilePathCollection"/>
-             
-                     
-                   <div class="form-row col-md-12 col-sm-12" style="margin-left:20px;margin-top: 20px;">
-                       <div class="form-group">
-										<div class="pull-left">
-										<label class="uploadLabels radio-inline"><input type="radio" id="datafileTypeSingle" name="datafileTypeUpload" value="singleData" 
-										onchange="displayDataFileSection('singleData')"> &nbsp;&nbsp; Select a File</label>
-										</div>
-                        </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <div class="form-group">
-										<div class="pull-left" style="margin-left: 15px">
-										<label class="uploadLabels radio-inline"><input type="radio" name="datafileTypeUpload" id="datafileTypeGlobusUpload" value="globus" 
-										onchange="displayDataFileSection('globus')">&nbsp;&nbsp; Transfer from Globus Endpoint</label>
-										</div>
-                         </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                         
-                          <div class="form-group">
-										<div class="pull-left" style="margin-left: 15px">
-										<label class="uploadLabels radio-inline"><input type="radio" name="datafileTypeUpload" id="datafileTypes3Upload" value="s3" 
-										onchange="displayDataFileSection('s3')">&nbsp;&nbsp; Transfer from AWS S3 Bucket</label>
-										</div>
-                         </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                         
-                         <div class="form-group">
-										<div class="pull-left" style="margin-left: 15px">
-										<label class="uploadLabels radio-inline"><input type="radio" name="datafileTypeUpload" id="datafileTypeDriveUpload" value="drive" 
-										onchange="displayDataFileSection('drive')">&nbsp;&nbsp; Transfer from Google Drive</label>
-										</div>
-                         </div>
-                        
-								
-                <div class="col-md-12 col-sm-12" id="singleFileDataUploadSection" style="display:none;">
-                <form class="form-horizontal" id="registerDataFileForm"  method="POST"> 
-                    <div class="col-md-12 col-sm-12">
-                        <div class="form-row" style=" margin-top: 20px;">
-                             
-                               <div class="form-group col-lg-12 col-md-12" style="display:none;">
-                            <label for="collectionPath">Data File Path</label>
-                               <input type="text" id="dataFilePath" disabled name="path" style="width:70%;"/>
-                            </div>
-                             
-                             <div class="form-group col-lg-12 col-md-12" style="margin-left: 10px;">
-                            
-                            <label class="uploadLabels" for="collectionPath">Data Source &nbsp;&nbsp; 
-                       <input type="file" aria-label="doe data file" name="doeDataFile" id="doeDataFile" style="width: 235px;">
-                        &nbsp;&nbsp;<span style="font-size: 12px;color: #000;font-family: 'latoregular';">
-                        <img src='images/Status.info-tooltip.png' th:src='@{/images/Status.info-tooltip.png}' 
-                        style='width:12px;' alt='Status info'>
-                         Max File Size: 2 GB</span></label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="col-md-12 col-sm-12">
-                      
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                        <button id="addNewMetaDataForSingleDataFile" type="button" class="btn btn-primary float-right mb-2 mr-2" onclick="addNewMetaDataCollection('newMetaDataTableForSingleFile')">Add Metadata</button>
-                        <table id="newMetaDataTableForSingleFile" class="table display dt-responsive wrap" style="width:75%;border:none">
-                         <thead>
-							<tr>
-                                <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col">Attribute Name</th>
-                                 <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col">Value</th>
-                            </tr>
-                        </thead>
-                        <tbody>                      
-                        </tbody>
-                    </table> 
-                        </div>
-               
-                    </div>
-                    </form>
-                </div>
-          
-           <div class="col-md-12 col-sm-12" id="bulkFileUploadSection" style="display:none;">   
-                 <form class="form-horizontal" id="registerBulkDataForm" enctype="multipart/form-data" method="POST" style="display:none;"> 
-                    <input type="hidden" id="bulkDatafilePath" name="bulkDatafilePath"/>
-                    <input type="hidden" id="uploadType" name="uploadType"/>
-                       <input type="hidden" id="accessToken" name="accessToken"/>
-                    <div class="col-md-12 col-sm-12">
-                        <div class="form-row" style=" margin-top: 20px;">
-                             <div class="form-group col-lg-12 col-md-12" id="displayGlobusUploadDiv" style="display:none;">
-                               <div class="form-group col-lg-12 col-md-12">
-                               <button type="button" class="btn btn-md btn-link" id="primaryGlobusButton">
-                               Select Files from <img src="images/Uploads-Globus.icon.png" th:src="@{/images/Uploads-Globus.icon.png}" style="width:20px;" alt="globus"> Globus Endpoint
-                               </button>
-                            
-                            </div>
-                                                        
-                            <div class="form-group col-lg-12 col-md-12" id="globusEndPointInformation" th:if="${endpoint_id != null}">
-									
-									
-									<label for="${endpoint_id}">Globus Endpoint ID:
-									<span id="${endpoint_id}" th:text="${endpoint_id}" style="font-weight: normal;"></span></label>
-									
-									<br />
-									
-									<label for="${endpoint_path}">Globus Endpoint Path:
-									<span id="${endpoint_path}" th:text="${endpoint_path}" style="font-weight: normal;"></span></label>
-									<br />
-							</div>
-							</div>	
-							
-							
-							
-							<div class="form-group col-lg-12 col-md-12" id="displayDriveUploadDiv" 
-							style="display:none;">
-							<div th:if="${authorized != null}" class="alert-success" style="margin-left: 13px"
-							 ><i class="fa fa-check">&nbsp;</i>Access Token successfully generated</div>
-                               <div class="form-group" style="margin-left: 13px">
-								<button type="button" class="btn btn-primary" id="driveUploadAuthlink"
-								onClick="return refreshAttributes('Drive')">
-								Authorize MoDaC to Access Your Google Drive</button>
-								</div>
-								
-                            <div th:if="${authorized != null}" class="col-sm-12 column" id="driveDiv">
-							  <a href="javascript:void();" id="pickerUploadLink">
-							  Select Files from Google Drive</a>
-							</div>
-                            
-							</div>	
-							
-							   <div class="form-group col-lg-12 col-md-12" id="displayS3UploadDiv" style="display:none;background-color: #E0F0F4;padding-bottom: 20px;">
-                               <div class="form-group col-lg-12 col-md-12">
-                          <label for="bucketName">S3 Bucket:</label>
-										<input
-											type="text" class="form-control" name="bucketName" 
-											id="bucketName" placeholder="Enter S3 Bucket Name" />
-									</div>
-									<div class="col-sm-12 column">
-										<label for="s3Path">S3 (Source) Path:</label> <input
-											type="text" class="form-control"
-											name="s3Path" id="s3Path"
-											placeholder="Enter S3 (Destination) Path" size="40" />
-											<input aria-label="s3 file" type="checkbox" name="s3File" id="s3File">
-											Check this if the source path is a file and not a folder.
-															
-									</div>
-									<div class="col-sm-12 column">
-										<label for="accessKey">Access Key:</label> <input
-											type="text" class="form-control"
-											name="accessKey" id="accessKey"
-											placeholder="Enter Access Key" size="40" />
-									</div>
-									<div class="col-sm-12 column">
-										<label for="secretKey">Secret Access Key:</label> <input
-											type="password" class="form-control"
-											name="secretKey" id="secretKey"
-											placeholder="Enter Secret Access Key" size="40" />
-									</div>
-									<div class="col-sm-12 column">
-										<label for="region">Region:</label> <input
-											type="text" class="form-control"
-											name="region" id="region"
-											placeholder="Enter Region (for Example us-east-1)" size="40" />
-									</div>         
-                            </div>                                                       
-							</div>
-							
-                             <div class="form-group col-lg-12 col-md-12" id="fileNamesDiv" 
-							th:style="${fileNames != null ? 'display:block' : 'display:none'}">
-                             <label for="fileName">Selected Files:</label>
-                            <div class="form-group col-lg-12 col-md-12">                             
-                             <ul> 
-                                <li th:each="fileName:${fileNames}" th:text="${fileName}"></li>
-                              </ul>
-                          </div>  
-                          <input th:if="${fileIds != null}" type="hidden" name="fileIds" th:value="${fileId}"
-							th:each="fileId : ${fileIds}"/>                      
-                        </div>
 
-                    <div class="form-group col-lg-12 col-md-12" id="folderNamesDiv" 
-					th:style="${folderNames != null ? 'display:block' : 'display:none'}">
-                       <label for="folderName">Selected Folders:</label>                          
-                          <ul> 
-                               <li th:each="folderName:${folderNames}" th:text="${folderName}"></li>
-                          </ul>
-                          <input th:if="${folderIds != null}" type="hidden" name="folderIds" th:value="${folderId}"
-																	th:each="folderId : ${folderIds}"/>
-                    </div>     
-                     </div>
-                 </form>
-                    </div>
-                    
-                </div>
-           
-            <div class="form-group col-lg-8 col-md-8" id="registerFileBtnsDiv" style="text-align:center;
-            display:none;margin-top:35px;margin-bottom:15px;padding: 5px;margin-left: 65px;">
-             <input type="button" value="Upload" class="btn btn-primary" id="registerBulkDataFileBtn">
-           </div>             
-          
-    </div>
+	<div class="form-row jumbotron pt-2 pb-2 mb-2" id="uploadDataFilesTab"
+		th:fragment="uploadDataFiles"
+		style="display: none; font-size: 13px; background-color: transparent;">
+
+		<div class="col-lg-12 col-md-12 col-sm-12 float-right"
+			style="margin-top: -16px; margin-left: -7px;">
+			<div class="controls controls-row mt-4">
+				<a class="float-left mb-2 mr-2 backToUploadTab"> <img
+					src="/images/BackSearch-icon.png"
+					th:src="@{/images/BackSearch-icon.png}" data-toggle="tooltip"
+					title="Back to UploadTab" style="width: 50px;" alt="back to Upload">
+					&nbsp;&nbsp;<span class="backToUpload">Back to Upload Tab</span></a>
+			</div>
+		</div>
+
+		<div class="col-md-10 col-sm-10 clearfix registerBulkDataFileSuccess"
+			style="display: none; margin-left: 22px;">
+			<div class="col-md-12"
+				style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
+				<div class="alert alert-success">
+					<h6 class="registerBulkDataFile"></h6>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-10 col-sm-10" style="margin-left: 22px;">
+			<div class="alert alert-danger uploadBulkDataError" role="alert"
+				style="display: none; margin-bottom: 10px;">
+				<div class="col-md-12"
+					style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
+					<h6 class="uploadBulkDataErrorMsg"></h6>
+				</div>
+			</div>
+
+		</div>
+
+		<input type="hidden" id="bulkDataFilePathCollection"
+			name="bulkDataFilePathCollection" />
+		<div class="col-lg-12 col-md-12 col-sm-12 float-right"
+			style="font-size: 20px; font-weight: 500; font-family: latoregular; color: #242525; margin-left: 31px; margin-top: 16px;">
+			<p style="font-size: 20px; font-weight: 500; margin-left: -4px;">
+				<span> Upload Files</span>
+			</p>
+			<hr
+				style="height: 8px; background-color: #194F85; margin-left: -4px; width: 94.5%;">
+		</div>
+
+		<div class="col-md-12 col-sm-12">
+			<div class="col-md-12 col-sm-12">
+
+				<div class="form-row" style="margin-top: 79px; font-size: 65px;">
+
+					<div class="form-group col-lg-2 col-md-2 labelEditCollection"
+						style="margin-top: -62px; margin-left: 16px">
+						<span>Collection Path</span>
+
+					</div>
+					<div class="form-group col-lg-8 col-md-8 labelEditCollection "
+						style="background-color: transparent; margin-top: -62px; margin-left: -16px; display: flex;">
+
+						<input type="text" disabled id="uploadCollectionPath"
+							class="parentCollectionName" />
+					</div>
+				</div>
+
+
+			</div>
+		</div>
+
+		<div class="form-row col-md-12 col-sm-12"
+			style="margin-left: 35px; margin-top: 20px;">
+			<div class="form-group">
+				<div class="pull-left">
+					<label class="uploadLabels radio-inline"><input
+						type="radio" id="datafileTypeSingle" name="datafileTypeUpload"
+						value="singleData" onchange="displayDataFileSection('singleData')">
+						&nbsp;&nbsp; Select a File</label>
+				</div>
+			</div>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<div class="form-group">
+				<div class="pull-left" style="margin-left: 15px">
+					<label class="uploadLabels radio-inline"><input
+						type="radio" name="datafileTypeUpload"
+						id="datafileTypeGlobusUpload" value="globus"
+						onchange="displayDataFileSection('globus')">&nbsp;&nbsp;
+						Transfer from Globus Endpoint</label>
+				</div>
+			</div>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+			<div class="form-group">
+				<div class="pull-left" style="margin-left: 15px">
+					<label class="uploadLabels radio-inline"><input
+						type="radio" name="datafileTypeUpload" id="datafileTypes3Upload"
+						value="s3" onchange="displayDataFileSection('s3')">&nbsp;&nbsp;
+						Transfer from AWS S3 Bucket</label>
+				</div>
+			</div>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+			<div class="form-group">
+				<div class="pull-left" style="margin-left: 15px">
+					<label class="uploadLabels radio-inline"><input
+						type="radio" name="datafileTypeUpload"
+						id="datafileTypeDriveUpload" value="drive"
+						onchange="displayDataFileSection('drive')">&nbsp;&nbsp;
+						Transfer from Google Drive</label>
+				</div>
+			</div>
+
+
+			<div class="col-md-12 col-sm-12" id="singleFileDataUploadSection"
+				style="display: none;">
+				<form class="form-horizontal" id="registerDataFileForm"
+					method="POST">
+					<div class="col-md-12 col-sm-12">
+						<div class="form-row" style="margin-top: 20px;">
+
+							<div class="form-group col-lg-12 col-md-12"
+								style="display: none;">
+								<label for="collectionPath">Data File Path</label> <input
+									type="text" id="dataFilePath" disabled name="path"
+									style="width: 70%;" />
+							</div>
+
+							<div class="form-group col-lg-12 col-md-12"
+								style="margin-left: 10px;">
+
+								<label class="uploadLabels" for="collectionPath">Data
+									Source &nbsp;&nbsp; <input type="file"
+									aria-label="doe data file" name="doeDataFile" id="doeDataFile"
+									style="width: 235px;"> &nbsp;&nbsp;<span
+									style="font-size: 12px; color: #000; font-family: 'latoregular';">
+										<img src='images/Status.info-tooltip.png'
+										th:src='@{/images/Status.info-tooltip.png}'
+										style='width: 12px;' alt='Status info'> Max File Size: 2
+										GB
+								</span>
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-12 col-sm-12">
+
+						<div class="col-lg-12 col-md-12 col-sm-12">
+							<button id="addNewMetaDataForSingleDataFile" type="button"
+								class="btn btn-primary float-right mb-2 mr-2"
+								onclick="addNewMetaDataCollection('newMetaDataTableForSingleFile')">Add
+								Metadata</button>
+							<table id="newMetaDataTableForSingleFile"
+								class="table display dt-responsive wrap"
+								style="width: 75%; border: none">
+								<thead>
+									<tr>
+										<th aria-sort="none" class="sortable" data-sort="text"
+											role="columnheader" scope="col">Attribute Name</th>
+										<th aria-sort="none" class="sortable" data-sort="text"
+											role="columnheader" scope="col">Value</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+
+					</div>
+				</form>
+			</div>
+
+			<div class="col-md-12 col-sm-12" id="bulkFileUploadSection"
+				style="display: none;">
+				<form class="form-horizontal" id="registerBulkDataForm"
+					enctype="multipart/form-data" method="POST">
+					<input type="hidden" id="bulkDatafilePath" name="bulkDatafilePath" />
+					<input type="hidden" id="uploadType" name="uploadType" /> <input
+						type="hidden" id="folderPath" name="folderPath" /> <input
+						type="hidden" id="accessToken" name="accessToken" />
+					<div class="col-md-12 col-sm-12">
+						<div class="form-row" style="margin-top: 20px;">
+							<div class="form-group col-lg-12 col-md-12"
+								id="displayGlobusUploadDiv" style="display: none;">
+								<div class="form-group col-lg-12 col-md-12">
+									<button type="button" class="btn btn-md btn-link"
+										id="primaryGlobusButton">
+										Select Files from <img src="images/Uploads-Globus.icon.png"
+											th:src="@{/images/Uploads-Globus.icon.png}"
+											style="width: 20px;" alt="globus"> Globus Endpoint
+									</button>
+								</div>
+								<div class="form-group col-lg-12 col-md-12"
+									id="globusEndPointInformation" th:if="${endpoint_id != null}">
+									<label for="${endpoint_id}">Globus Endpoint ID: <span
+										id="${endpoint_id}" th:text="${endpoint_id}"
+										style="font-weight: normal;"></span></label> <br /> <label
+										for="${endpoint_path}">Globus Endpoint Path: <span
+										id="${endpoint_path}" th:text="${endpoint_path}"
+										style="font-weight: normal;"></span></label> <br />
+								</div>
+							</div>
+
+							<div class="form-group col-lg-12 col-md-12"
+								id="displayDriveUploadDiv" style="display: none;">
+								<div th:if="${authorized != null}" class="alert-success"
+									style="margin-left: 13px">
+									<i class="fa fa-check">&nbsp;</i>Access Token successfully
+									generated
+								</div>
+								<div class="form-group" style="margin-left: 13px">
+									<button type="button" class="btn btn-primary"
+										id="driveUploadAuthlink"
+										onClick="return refreshAttributes('Drive')">
+										Authorize MoDaC to Access Your Google Drive</button>
+								</div>
+
+								<div th:if="${authorized != null}" class="col-sm-12 column"
+									id="driveDiv">
+									<a href="javascript:void();" id="pickerUploadLink"> Select
+										Files from Google Drive</a>
+								</div>
+							</div>
+							<div class="form-group col-lg-12 col-md-12"
+								id="displayS3UploadDiv"
+								style="display: none; background-color: #E0F0F4; padding-bottom: 20px;">
+								<div class="form-group col-lg-12 col-md-12">
+									<label for="bucketName">S3 Bucket:</label> <input type="text"
+										class="form-control" name="bucketName" id="bucketName"
+										placeholder="Enter S3 Bucket Name" />
+								</div>
+								<div class="col-sm-12 column">
+									<label for="s3Path">S3 (Source) Path:</label> <input
+										type="text" class="form-control" name="s3Path" id="s3Path"
+										placeholder="Enter S3 (Destination) Path" size="40" /> <input
+										aria-label="s3 file" type="checkbox" name="s3File" id="s3File">
+									Check this if the source path is a file and not a folder.
+								</div>
+								<div class="col-sm-12 column">
+									<label for="accessKey">Access Key:</label> <input type="text"
+										class="form-control" name="accessKey" id="accessKey"
+										placeholder="Enter Access Key" size="40" />
+								</div>
+								<div class="col-sm-12 column">
+									<label for="secretKey">Secret Access Key:</label> <input
+										type="password" class="form-control" name="secretKey"
+										id="secretKey" placeholder="Enter Secret Access Key" size="40" />
+								</div>
+								<div class="col-sm-12 column">
+									<label for="region">Region:</label> <input type="text"
+										class="form-control" name="region" id="region"
+										placeholder="Enter Region (for Example us-east-1)" size="40" />
+								</div>
+							</div>
+						</div>
+						<div class="form-group col-lg-12 col-md-12" id="fileNamesDiv"
+							th:style="${fileNames != null ? 'display:block;margin-left: 10px;' : 'display:none'}">
+							<label for="fileName">Selected Files:</label>
+							<div class="form-group col-lg-12 col-md-12">
+								<ul>
+									<li th:each="fileName:${fileNames}" th:text="${fileName}"></li>
+								</ul>
+							</div>
+							<input th:if="${fileIds != null}" type="hidden" name="fileIds"
+								th:value="${fileId}" th:each="fileId : ${fileIds}" />
+						</div>
+
+						<div class="form-group col-lg-12 col-md-12" id="folderNamesDiv"
+							th:style="${folderNames != null ? 'display:block;margin-left: 10px;' : 'display:none'}">
+							<label for="folderName">Selected Folders:</label>
+							<ul>
+								<li th:each="folderName:${folderNames}" th:text="${folderName}"></li>
+							</ul>
+							<input th:if="${folderIds != null}" type="hidden"
+								name="folderIds" th:value="${folderId}"
+								th:each="folderId : ${folderIds}" />
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="form-group col-lg-8 col-md-8" id="registerFileBtnsDiv"
+			style="text-align: center; display: none; margin-top: 35px; margin-bottom: 15px; padding: 5px; margin-left: 65px;">
+			<input type="button" value="Upload" class="btn btn-primary"
+				id="registerBulkDataFileBtn">
+		</div>
+	</div>
 </body>
 </html>

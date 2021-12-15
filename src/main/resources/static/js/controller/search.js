@@ -1,4 +1,3 @@
-
 $(document).ready(function () {
 	$("#landing-tab").removeClass('active');
 	$("#search-tab").addClass('active');
@@ -23,6 +22,10 @@ $(document).ready(function () {
 	 } else if(returnToSearch) {
 		 var search = $("#searchQuery").val();
 		 var list= JSON.parse(search);
+		 var isShowMyCollection = list.isShowMyCollection;
+		 if(isShowMyCollection) {
+			 $("#isShowMyCollection").prop('checked',true);
+		 }
 		 for (var i = 1; i < list.attrName.length; i++) {
 			 var attrVal = list.attrValuesString.split('@@');
 			 var iskeyWordSearch = list.iskeyWordSearch[i];
@@ -51,7 +54,6 @@ $(document).ready(function () {
 	 }
 	 
 	 showFirstFewFields();
-
 	 
 	 $(document).keypress(function(event){	
 			var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -62,7 +64,6 @@ $(document).ready(function () {
 
 		});
 });
-
 
 function populateSearchCriteria(searchType) {
 	
@@ -139,6 +140,7 @@ function populateSearchCriteria(searchType) {
 		search_criteria_json.isExcludeParentMetadata = isExcludeParentMetadata.join();
 		search_criteria_json.iskeyWordSearch = iskeyWordSearch.join();
 		search_criteria_json.operator = operators.join();
+		search_criteria_json.isShowMyCollection = $("#myCollections").val();
 		refreshDataTable();
 }
 
@@ -152,6 +154,10 @@ function refreshDataTable() {
         console.log(t);
         t.ajax.reload(null, true);
     }
+    
+    $("div.toolbar").prepend('<div>'+
+       	   '<label><input type="checkbox" id="myCollections" style="transform: translateY(1.5px);">'+
+      	   '&nbsp;&nbsp;Display My Collections</label></div>');
 }
 
 function dataTableInit(isVisible) {
@@ -164,15 +170,16 @@ function dataTableInit(isVisible) {
             "url": "/search",
             "type": "GET",
             "data": function (d) {
-            	d.searchType = search_criteria_json.searchType;
-                d.detailed = search_criteria_json.detailed;
-                d.level = search_criteria_json.level;
+               d.searchType = search_criteria_json.searchType;
+               d.detailed = search_criteria_json.detailed;
+               d.level = search_criteria_json.level;
                d.attrName =search_criteria_json.attrName;
                d.attrValuesString =search_criteria_json.attrValuesString;
                d.rowId = search_criteria_json.rowId;
                d.isExcludeParentMetadata = search_criteria_json.isExcludeParentMetadata;
                d.iskeyWordSearch = search_criteria_json.iskeyWordSearch;
                d.operator = search_criteria_json.operator;
+               d.isShowMyCollection = search_criteria_json.isShowMyCollection;
             },
             "dataSrc": function (data) {
                 return data;
@@ -201,7 +208,16 @@ function dataTableInit(isVisible) {
         	$('body').tooltip({selector: '[data-toggle="tooltip"]'});
         },
 
-        "drawCallback": function () {
+        "drawCallback": function () {      	     	 
+			$("#myCollections").on('change', function() {
+				if ($(this).is(':checked')) {
+					$(this).attr('value', 'true');
+				} else {
+					$(this).attr('value', 'false');
+				}
+				populateSearchCriteria('displayAllResults');
+			});
+       	 
         	$("#searchResultTable thead").remove();
         	if(isVisible) {
         		$("#downloadSelected").show();
@@ -336,8 +352,8 @@ function dataTableInit(isVisible) {
             {className: "td_class_7", "targets": [0]},
             {className: "td_class_9", "targets": [1]},
         ],
-        
-        "dom": '<"top"lip>rt<"bottom"ip>',
+        	   
+        "dom": '<"toolbar top"lip>rt<"bottom"ip>',
         
         "pagingType": "simple",
 
@@ -611,7 +627,7 @@ function openPopOver($this) {
 
 		             $.each(data, function( key, value ) {	
 		            	var attrVal = value.attrValue;
-		            	if(attrVal.startsWith('https') || attrVal.startsWith('http')) {
+		            	if(attrVal && attrVal.startsWith('https') || attrVal.startsWith('http')) {
 		            		content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
 		                    "<div class='divTableCell'><a target='_blank' href=" + attrVal + ">" + attrVal + "</a></div></div>";
 		            	} else if(value.attrName.indexOf("access_group") == -1){

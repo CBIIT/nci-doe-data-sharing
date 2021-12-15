@@ -107,7 +107,7 @@ public class SearchController extends AbstractDoeController {
 				session.setAttribute("searchQuery", searchQuery);
 				log.info("Search query" + search);
 				if (search.getSearchType() != null && search.getSearchType().equals("dataobject")) {
-					results = processResponseResults(systemAttrs, restResponse);
+					results = processCollectionResults(systemAttrs, restResponse, search);
 					return new ResponseEntity<>(results, HttpStatus.OK);
 				}
 
@@ -122,20 +122,9 @@ public class SearchController extends AbstractDoeController {
 
 	}
 
-	private List<DoeSearchResult> processResponseResults(List<String> systemAttrs, Response restResponse)
-			throws IOException {
-
-		List<DoeSearchResult> returnResults = new ArrayList<DoeSearchResult>();
-
-		returnResults = processCollectionResults(systemAttrs, restResponse);
-
-		return returnResults;
-
-	}
-
 	@SuppressWarnings("unchecked")
-	private List<DoeSearchResult> processCollectionResults(List<String> systemAttrs, Response restResponse)
-			throws IOException {
+	private List<DoeSearchResult> processCollectionResults(List<String> systemAttrs, Response restResponse,
+			DoeSearch search) throws IOException {
 		MappingJsonFactory factory = new MappingJsonFactory();
 		JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 		HpcCollectionListDTO collections = parser.readValueAs(HpcCollectionListDTO.class);
@@ -150,44 +139,53 @@ public class SearchController extends AbstractDoeController {
 			if (StringUtils.isNotEmpty(absolutePath)) {
 				String[] list = absolutePath.split("/");
 				if (list.length == 5) {
-					List<HpcMetadataEntry> selfMetadatEntries = result.getMetadataEntries().getSelfMetadataEntries();
-					DoeSearchResult returnResult = new DoeSearchResult();
-					String studyPath = result.getCollection().getCollectionParentName();
-					String programPath = studyPath.substring(0, studyPath.lastIndexOf('/'));
-					Integer studyCollectionId = getCollectionId(result.getMetadataEntries().getParentMetadataEntries(),
-							"Study");
-					Integer programCollectionId = getCollectionId(
-							result.getMetadataEntries().getParentMetadataEntries(), "Program");
+					String dataSetPermissionRole = getPermissionRole(user, result.getCollection().getCollectionId(),
+							loggedOnUserPermissions);
+					if (Boolean.FALSE.equals(search.getIsShowMyCollection())
+							|| (Boolean.TRUE.equals(search.getIsShowMyCollection())
+									&& !"No Permissions".equalsIgnoreCase(dataSetPermissionRole))) {
 
-					Boolean isBulkAsset = bulkAssetsList.stream()
-							.anyMatch(s -> result.getCollection().getCollectionName().equalsIgnoreCase(s));
-					returnResult.setIsBulkAsset(isBulkAsset);
-					returnResult.setDataSetPath(result.getCollection().getCollectionName());
-					returnResult.setDataSetCollectionId(result.getCollection().getCollectionId());
-					returnResult.setStudyCollectionId(studyCollectionId);
-					returnResult.setProgramCollectionId(programCollectionId);
+						List<HpcMetadataEntry> selfMetadatEntries = result.getMetadataEntries()
+								.getSelfMetadataEntries();
+						DoeSearchResult returnResult = new DoeSearchResult();
 
-					returnResult.setDataSetPermissionRole(
-							getPermissionRole(user, result.getCollection().getCollectionId(), loggedOnUserPermissions));
+						String studyPath = result.getCollection().getCollectionParentName();
+						String programPath = studyPath.substring(0, studyPath.lastIndexOf('/'));
+						Integer studyCollectionId = getCollectionId(
+								result.getMetadataEntries().getParentMetadataEntries(), "Study");
+						Integer programCollectionId = getCollectionId(
+								result.getMetadataEntries().getParentMetadataEntries(), "Program");
 
-					returnResult.setStudyPermissionRole(
-							getPermissionRole(user, studyCollectionId, loggedOnUserPermissions));
-					returnResult.setProgramPermissionRole(
-							getPermissionRole(user, programCollectionId, loggedOnUserPermissions));
+						Boolean isBulkAsset = bulkAssetsList.stream()
+								.anyMatch(s -> result.getCollection().getCollectionName().equalsIgnoreCase(s));
+						returnResult.setIsBulkAsset(isBulkAsset);
+						returnResult.setDataSetPath(result.getCollection().getCollectionName());
+						returnResult.setDataSetCollectionId(result.getCollection().getCollectionId());
+						returnResult.setStudyCollectionId(studyCollectionId);
+						returnResult.setProgramCollectionId(programCollectionId);
 
-					returnResult.setDataSetName(getAttributeValue("asset_name", selfMetadatEntries, "Asset"));
-					returnResult.setDataSetDescription(getAttributeValue("description", selfMetadatEntries, "Asset"));
-					returnResult.setStudyPath(studyPath);
-					returnResult.setInstitutePath(programPath);
-					returnResult.setProgramName(getAttributeValue("program_name",
-							result.getMetadataEntries().getParentMetadataEntries(), "Program"));
-					returnResult.setStudyName(getAttributeValue("study_name",
-							result.getMetadataEntries().getParentMetadataEntries(), "Study"));
-					returnResult.setDataSetdmeDataId(webServerName + "/searchTab?dme_data_id="
-							+ getAttributeValue("dme_data_id", selfMetadatEntries, "Asset"));
-					returnResult.setAssetType(getAttributeValue("asset_type", selfMetadatEntries, "Asset"));
-					returnResult.setDmeDataId(getAttributeValue("dme_data_id", selfMetadatEntries, "Asset"));
-					returnResults.add(returnResult);
+						returnResult.setDataSetPermissionRole(dataSetPermissionRole);
+
+						returnResult.setStudyPermissionRole(
+								getPermissionRole(user, studyCollectionId, loggedOnUserPermissions));
+						returnResult.setProgramPermissionRole(
+								getPermissionRole(user, programCollectionId, loggedOnUserPermissions));
+
+						returnResult.setDataSetName(getAttributeValue("asset_name", selfMetadatEntries, "Asset"));
+						returnResult
+								.setDataSetDescription(getAttributeValue("description", selfMetadatEntries, "Asset"));
+						returnResult.setStudyPath(studyPath);
+						returnResult.setInstitutePath(programPath);
+						returnResult.setProgramName(getAttributeValue("program_name",
+								result.getMetadataEntries().getParentMetadataEntries(), "Program"));
+						returnResult.setStudyName(getAttributeValue("study_name",
+								result.getMetadataEntries().getParentMetadataEntries(), "Study"));
+						returnResult.setDataSetdmeDataId(webServerName + "/searchTab?dme_data_id="
+								+ getAttributeValue("dme_data_id", selfMetadatEntries, "Asset"));
+						returnResult.setAssetType(getAttributeValue("asset_type", selfMetadatEntries, "Asset"));
+						returnResult.setDmeDataId(getAttributeValue("dme_data_id", selfMetadatEntries, "Asset"));
+						returnResults.add(returnResult);
+					}
 				}
 			}
 

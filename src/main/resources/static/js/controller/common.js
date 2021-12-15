@@ -416,12 +416,6 @@ $(document)
 						openBulkDataRegistration();
 					});
 
-					$("#cancelBulkRegister").click(function(e) {
-						$("#uploadDataFilesTab").hide();
-						$("#uploadSubFragmentTab").show();
-						cancelAndReturnToUploadTab();
-					});
-
 					$("#registerBulkDataFileBtn").click(function(e) {
 						registerBulkDataFile();
 					});

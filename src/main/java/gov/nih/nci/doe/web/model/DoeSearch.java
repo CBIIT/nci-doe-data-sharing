@@ -14,6 +14,15 @@ public class DoeSearch {
 	private boolean[] isExcludeParentMetadata;
 	private boolean[] iskeyWordSearch;
 	private String searchName;
+	private Boolean isShowMyCollection;
+
+	public Boolean getIsShowMyCollection() {
+		return isShowMyCollection;
+	}
+
+	public void setIsShowMyCollection(Boolean isShowMyCollection) {
+		this.isShowMyCollection = isShowMyCollection;
+	}
 
 	public String getAttrValuesString() {
 		return attrValuesString;
