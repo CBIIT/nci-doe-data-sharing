@@ -140,7 +140,7 @@ function populateSearchCriteria(searchType) {
 		search_criteria_json.isExcludeParentMetadata = isExcludeParentMetadata.join();
 		search_criteria_json.iskeyWordSearch = iskeyWordSearch.join();
 		search_criteria_json.operator = operators.join();
-		search_criteria_json.isShowMyCollection = $("#myCollections").val();
+		search_criteria_json.isShowMyCollection = $("#myCollections").is(':checked');
 		refreshDataTable();
 }
 
@@ -157,7 +157,7 @@ function refreshDataTable() {
     }
     if(isVisible && !$("#myCollections").is(':visible')) {
     	 $("div.toolbar").prepend('<div style="float: left;">'+
-            	   '<label><input type="checkbox" id="myCollections" value="false" style="transform: translateY(1.5px);">'+
+            	   '<label><input type="checkbox" id="myCollections" style="transform: translateY(1.5px);">'+
            	   '&nbsp;&nbsp;Display My Collections</label></div>');
     }
    
@@ -214,9 +214,9 @@ function dataTableInit(isVisible) {
         "drawCallback": function () {      	     	 
 			$("#myCollections").on('change', function() {
 				if ($(this).is(':checked')) {
-					$(this).attr('value', 'true');
+					$(this).prop('checked', true);
 				} else {
-					$(this).attr('value', 'false');
+					$(this).prop('checked', false);
 				}
 				populateSearchCriteria('displayAllResults');
 			});
