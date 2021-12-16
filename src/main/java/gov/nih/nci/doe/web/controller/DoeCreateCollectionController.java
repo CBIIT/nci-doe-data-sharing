@@ -113,7 +113,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 					List<String> subCollections = getSubCollectionTypes(collectionType,
 							basePathRules.getDataHierarchy());
 					if ((subCollections == null || subCollections.isEmpty()) && !rules.isEmpty())
-						throw new DoeWebException("Adding a sub collection is not allowed with: " + parent);
+						throw new DoeWebException("Adding a subcollection is not allowed with: " + parent);
 					for (String type : subCollections)
 						collectionTypesSet.add(type);
 				}

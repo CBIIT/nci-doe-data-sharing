@@ -1,3 +1,5 @@
+$("#landing-tab").removeClass('active');
+$("#contact-tab").addClass('active');
 $(".contactUsTextbox").keyup(function() {
 	if ($(this).val()) {
 		$(this).parent().find('.TextField-floatingLabel-qefpP').show();

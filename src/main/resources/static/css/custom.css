@@ -389,7 +389,7 @@ table.subAssetsDataSetTable,table.subFolderAssetsDataSetTable{
 
 .addDeleteUploadLabels {
 	color: #F39530;
-  font-family: Inter;
+  font-family: 'inter_regular';
   font-size: 14px;
 }
 
@@ -509,7 +509,7 @@ background-color: rgb(100, 150, 198);
 
 #footer_items{
 	color: #fff;
-    font-family: Inter;
+    font-family: 'inter_regular';
     font-size: 13px;
     line-height: 30px;
 }
@@ -1452,7 +1452,9 @@ i.expand {
 /* background colors */
 .bg-dark{background-color:#616A70!important;}
 .bg-grant{background-color: #e1f1fd!important;}
-.jumbotron{box-shadow:0 1px 5px rgba(0, 0, 0, 0.35);}
+
+/*.jumbotron{box-shadow:0 1px 5px rgba(0, 0, 0, 0.35);}*/
+
 #pisearch1.jumbotron, #pisearch2.jumbotron{background-color: rgb(243, 248, 252);box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);}
 .input-group-prepend{background-color:#d9eaf6;}
 .input-group-text{padding:.3rem .75rem;}

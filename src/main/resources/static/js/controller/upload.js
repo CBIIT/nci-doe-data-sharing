@@ -309,7 +309,7 @@ function contructDataListDiv(data,status) {
 			if(assetPermissions && assetPermissions == 'true') {
 				html += '<li><a class="detail-control" data-name = '+value.name+'>'+
 				'<i class="expand far fa-folder"></i></a>&nbsp;'+value.name+' &nbsp;&nbsp;'+
-				'<a href="#" class="uploadDataSet" title="Upload Data set" style="font-size: 15px;color: #F39530;"><i class="fas fa-upload">'+
+				'<a href="#" class="uploadDataSet" title="Upload Files to Asset Subcollection" style="font-size: 15px;color: #F39530;"><i class="fas fa-upload">'+
 				'</i></a> &nbsp;&nbsp;<a href="#" title="Register New Folder" onclick="createCollectionDiv(\'' + datalist + '\',\''+value.name+'\')" class="addDeleteUploadLabels">'+        
 	            '<img src="/images/Uploads.add.png" class="uploadslogo" alt="register"></a></li>';
 			} else {
@@ -353,7 +353,7 @@ $('#dataListing').on('click','a.detail-control',function() {
 										if(assetPermissions && assetPermissions == 'true') {
 											html += '<li><a class="detail-control" data-name = '+name+"/"+value.name+'>'+
 											'<i class="expand far fa-folder"></i></a>&nbsp;'+value.name+' &nbsp;&nbsp;'+
-											'<a href="#" class="uploadDataSet"  title="Upload Data set" style="font-size: 15px;color: #F39530;">'+
+											'<a href="#" class="uploadDataSet"  title="Upload Files to Asset Subcollection" style="font-size: 15px;color: #F39530;">'+
 											'<i class="fas fa-upload"></i></a></li>';
 										} else {
 											html += '<li><a class="detail-control" data-name = '+name+"/"+value.name+'>'+
@@ -495,7 +495,7 @@ function retrieveCollectionList(data,status) {
 	 }
 	 
 	 if(collectionType  ==  'Folder') {
-		 displayCollectionType ='Asset Sub Collection'; 
+		 displayCollectionType ='Asset Subcollection'; 
 	 } else {
 		 displayCollectionType = collectionType;
 	 }
