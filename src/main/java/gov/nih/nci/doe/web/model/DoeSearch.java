@@ -14,13 +14,13 @@ public class DoeSearch {
 	private boolean[] isExcludeParentMetadata;
 	private boolean[] iskeyWordSearch;
 	private String searchName;
-	private Boolean isShowMyCollection;
+	private String isShowMyCollection;
 
-	public Boolean getIsShowMyCollection() {
+	public String getIsShowMyCollection() {
 		return isShowMyCollection;
 	}
 
-	public void setIsShowMyCollection(Boolean isShowMyCollection) {
+	public void setIsShowMyCollection(String isShowMyCollection) {
 		this.isShowMyCollection = isShowMyCollection;
 	}
 

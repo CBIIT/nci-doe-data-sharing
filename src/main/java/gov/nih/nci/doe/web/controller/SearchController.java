@@ -132,8 +132,9 @@ public class SearchController extends AbstractDoeController {
 		List<HpcCollectionDTO> searchResults = collections.getCollections();
 		List<DoeSearchResult> returnResults = new ArrayList<DoeSearchResult>();
 		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList().getBody();
-		String user = getLoggedOnUserInfo();
+		String user = getLoggedOnUserInfo();		
 		List<String> bulkAssetsList = Arrays.asList(bulkAssetsPaths.split(","));
+		
 		for (HpcCollectionDTO result : searchResults) {
 			String absolutePath = result.getCollection().getAbsolutePath();
 			if (StringUtils.isNotEmpty(absolutePath)) {
@@ -141,8 +142,9 @@ public class SearchController extends AbstractDoeController {
 				if (list.length == 5) {
 					String dataSetPermissionRole = getPermissionRole(user, result.getCollection().getCollectionId(),
 							loggedOnUserPermissions);
-					if (Boolean.FALSE.equals(search.getIsShowMyCollection() || search.getIsShowMyCollection() == null)
-							|| (Boolean.TRUE.equals(search.getIsShowMyCollection())
+					if ("false".equalsIgnoreCase(search.getIsShowMyCollection())
+							|| StringUtils.isEmpty(search.getIsShowMyCollection())
+							|| ("true".equalsIgnoreCase(search.getIsShowMyCollection())
 									&& !"No Permissions".equalsIgnoreCase(dataSetPermissionRole))) {
 
 						List<HpcMetadataEntry> selfMetadatEntries = result.getMetadataEntries()

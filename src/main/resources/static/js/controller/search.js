@@ -24,7 +24,7 @@ $(document).ready(function () {
 		 var list= JSON.parse(search);
 		 var isShowMyCollection = list.isShowMyCollection;
 		 if(isShowMyCollection) {
-			 $("#myCollections").prop('checked',true);
+			 $("#returnToSearchMyCollection").val(isShowMyCollection);
 		 }
 		 for (var i = 1; i < list.attrName.length; i++) {
 			 var attrVal = list.attrValuesString.split('@@');
@@ -140,7 +140,8 @@ function populateSearchCriteria(searchType) {
 		search_criteria_json.isExcludeParentMetadata = isExcludeParentMetadata.join();
 		search_criteria_json.iskeyWordSearch = iskeyWordSearch.join();
 		search_criteria_json.operator = operators.join();
-		search_criteria_json.isShowMyCollection = $("#myCollections").is(':checked');
+		var myCollection = $("#returnToSearchMyCollection").val();
+		search_criteria_json.isShowMyCollection = myCollection;
 		refreshDataTable();
 }
 
@@ -156,9 +157,17 @@ function refreshDataTable() {
        
     }
     if(isVisible && !$("#myCollections").is(':visible')) {
-    	 $("div.toolbar").prepend('<div style="float: left;">'+
-            	   '<label><input type="checkbox" id="myCollections" style="transform: translateY(1.5px);">'+
-           	   '&nbsp;&nbsp;Display My Collections</label></div>');
+    	var myCollection = $("#returnToSearchMyCollection").val();
+    	if(myCollection && myCollection == "true") {
+    		 $("div.toolbar").prepend('<div style="float: left;">'+
+              	   '<label><input type="checkbox" checked="true" id="myCollections" style="transform: translateY(1.5px);">'+
+             	   '&nbsp;&nbsp;Display My Collections</label></div>');
+    	} else {
+    		 $("div.toolbar").prepend('<div style="float: left;">'+
+              	   '<label><input type="checkbox" id="myCollections" style="transform: translateY(1.5px);">'+
+             	   '&nbsp;&nbsp;Display Collections I Can Edit</label></div>');
+    	}
+    	
     }
    
 }
@@ -211,12 +220,15 @@ function dataTableInit(isVisible) {
         	$('body').tooltip({selector: '[data-toggle="tooltip"]'});
         },
 
-        "drawCallback": function () {      	     	 
+        "drawCallback": function () {
+        	
 			$("#myCollections").on('change', function() {
 				if ($(this).is(':checked')) {
 					$(this).prop('checked', true);
+					$("#returnToSearchMyCollection").val("true");
 				} else {
 					$(this).prop('checked', false);
+					$("#returnToSearchMyCollection").val("false");
 				}
 				populateSearchCriteria('displayAllResults');
 			});
