@@ -62,11 +62,12 @@ $(document).ready(function () {
 		openBulkDataRegistration();
 	});
 	
-	$(".backToUploadTab").click(function(e){
+	$(".backToUploadTab").click(function(e){	
 		$("#createCollectionFragment").hide();
 		$("#uploadSectionDiv").show();
 		$("#uploadHeader").show();
 		$("#uploadDataFilesTab").hide();
+		resetSelectionsForBackToUploadTab();
 	});
 	
 	$("#btnSelectAssetType").click(function(e) {
@@ -88,26 +89,6 @@ $(document).ready(function () {
 	});
 });
 
-function showSelect(collection) {
-	if (collection == 'Program') {
-		$("#showSelectProgramDiv").show();
-	} else if (collection == 'Study') {
-		$("#showSelectStudyDiv").show();
-	} else if (collection == 'Asset') {
-		resetAssetsSelection(true);
-		$("#showSelectAssetDiv").show();
-		$("#showSubAssetSelectionDiv").hide();
-		$("#assetUploadDiv").removeClass('show');
-		$('input[name="assetSelection"]').prop('checked', false);
-	} else if (collection == 'subAsset') {
-		$("#showSubAssetSelectionDiv").show();
-		$("#showSelectAssetDiv").hide();
-		$("#uploadAndRegisterFiles").hide();
-		$("#dataListDiv").hide();
-		$("#assetUploadDiv").removeClass('show');
-	}
-}
-
 function loadUploadTab() {	 
 	 
 	var ins = $("#institutePath").val();
@@ -117,13 +98,13 @@ function loadUploadTab() {
 	var uploadPath = $("#uploadPath").val();
 	
 	if(ins){
-		$("input[name=selectProgram][value='Select Program']").click();
-		loadJsonData('/browse', $("#instituteList"), true, null, null, null, "key", "value"); 
-		loadJsonData('/browse/collection', $("#studyList"), true, {selectedPath:ins}, null, null, "key", "value");
+		$("input[name=selectProgram][value='Select Program']").prop("checked",true);
+		showSelect('Program','true');
 		$("#studyListDiv").show();
 		$("#deleteProgram").show();
 		if(stu) {
-			$("input[name=selectStudy][value='Select Study']").click();
+			$("input[name=selectStudy][value='Select Study']").prop("checked",true);
+			showSelect('Study',ins);
 			$("#dataSetListDiv").show();
 			$("#deleteStudy").show();
 			$("#addAsets").show();
@@ -132,12 +113,12 @@ function loadUploadTab() {
 				$("input[name=selectAsset][value='Register Asset']").click();
 
 			}
-			
-			loadJsonData('/browse/collection', $("#dataList"), true, {selectedPath:stu}, null, null, "key", "value");
 			if (data) {
 				if (!bulkUploadCollection) {
-					$("input[name=selectAsset][value='Select Asset']").click();
-				}	
+					showSelect('Asset',stu);
+				}
+				$("input[name=selectAsset][value='Select Asset']").prop("checked",true);
+				$("#deleteDataSet").show();
 				constructAssetFileAndFoldersDiv(data);
 			    $("#uploadAndRegisterFiles").show();
 				$("#uploadDataFilesTab").show();
@@ -166,78 +147,31 @@ function loadUploadTab() {
 			$("#uploadDataFilesTab").show();
 			$("#uploadCollectionPath").val(uploadPath);
 		}
-	} else {
-		 loadJsonData('/browse', $("#instituteList"), true, null, null, null, "key", "value"); 
-	}
+	} 
   
 }
 
-function retrieveCollections($this, selectedIndex,action) {
-	
+function retrieveCollections($this, selectedIndex, action) {
+
 	$("#assetUploadDiv").removeClass('show');
 	var selectTarget = $this;
 	var params;
 	var selectedValue;
-	if(action  == 'onChange') {
-	     selectedValue = selectedIndex.value;
-		 params = {selectedPath:selectedIndex.value};
-		 if(selectedIndex && selectedIndex.value != 'ANY') {
-			 $("#" +selectTarget+ " option[value='ANY']").remove(); 
-		 }
+	if (action == 'onChange') {
+		selectedValue = selectedIndex.value;
+		params = {
+			selectedPath : selectedIndex.value
+		};
+		if (selectedIndex && selectedIndex.value != 'ANY') {
+			$("#" + selectTarget + " option[value='ANY']").remove();
+		}
 	} else {
-		 selectedValue = selectedIndex;
-		 params= {selectedPath:selectedIndex};
+		selectedValue = selectedIndex;
+		params = {
+			selectedPath : selectedIndex
+		};
 	}
-	
-	
-	if(selectTarget == 'instituteList') {
-
-		$("#uploadAndRegisterFiles").hide();
-		$("#addAsets").hide();
-		if(selectedValue && selectedValue != 'ANY') {
-			loadJsonData('/browse/collection', $("#studyList"), true, params, null, null, "key", "value");
-			$("#studyListDiv").show();
-			$("#deleteProgram").show();
-			$("#dataSetListDiv").hide();
-			$("#dataListDiv").hide();
-		} else {
-			$("#studyListDiv").hide();
-			$("#dataSetListDiv").hide();
-			$("#dataListDiv").hide();
-			$("#deleteProgram").hide();
-		}
-		
-		
-	} else if(selectTarget == 'studyList') {
-		$("#uploadAndRegisterFiles").hide();
-		$("#dataListDiv").hide();
-		 if(selectedValue && selectedValue != 'ANY') {
-			var params1= {selectedPath:selectedValue,refreshNode:'true'};			
-		    loadJsonData('/browse/collection', $("#dataList"), true, params1, null, null, "key", "value");
-		    $("#studyListDiv").show();
-		    $("#dataSetListDiv").show();
-		    $("#deleteStudy").show();
-		    $("#addAsets").show();
-		 } else {
-			$("#studyListDiv").show();
-			$("#dataSetListDiv").hide();
-			$("#deleteStudy").hide();
-			$("#addAsets").hide();
-		}
-		
-	} else if(selectTarget == 'dataList') {	
-		$("#studyListDiv").show();
-		if(selectedValue && selectedValue != 'ANY') {	
-			$("#uploadAndRegisterFiles").show();
-			constructAssetFileAndFoldersDiv(selectedValue);
-			$("#deleteDataSet").show();
-			
-		} else {
-			$("#dataListDiv").hide();
-			$("#uploadAndRegisterFiles").hide();
-			$("#deleteDataSet").hide();			
-		}
-	}
+	resetOnChangeofSelectCollection(selectTarget, selectedValue);
 }
 
 function clearRegisterDataDiv() {
@@ -544,10 +478,10 @@ function createCollectionDiv(selectTarget, folderPath) {
 	$(".registerErrorMsg").html("");
 	var params= {parent:selectedIndexPathVal};
 	invokeAjax('/addCollection/collectionTypes','GET',params,retrieveCollectionList,null,null,null);
-	//loadJson for permissions list
+	// loadJson for permissions list
 	loadJsonData('/metaDataPermissionsList', $("#metaDataPermissionsList"), false, null, null, null, "key", "value"); 
 	
-	//show create fragment
+	// show create fragment
 	$("#createCollectionFragment").show();
 	$("#uploadSectionDiv").hide();
 	$("#uploadHeader").hide();
@@ -637,26 +571,158 @@ function registerCollection() {
 	}
 }
 
+function showSelect(collection,selection) {
+	
+	var isEmptyOption;
+	var seclectedValue;
+	
+	if(selection) {
+		isEmptyOption = false;
+	} else {
+		isEmptyOption =true;
+	}
+	
+	if (collection == 'Program') {		
+		loadJsonData('/browse', $("#instituteList"), isEmptyOption, null, null, null, "key", "value");		
+		$("#showSelectProgramDiv").show();
+		
+	} else if (collection == 'Study') {
+		
+		if(selection) {
+			seclectedValue= selection;
+		} else {
+			seclectedValue = $("#instituteList").val();
+		}
+		
+		var params = {
+				selectedPath : seclectedValue,
+			};
+		
+		loadJsonData('/browse/collection', $("#studyList"), isEmptyOption, params, null, null, "key", "value");
+
+		$("#showSelectStudyDiv").show();
+	} else if (collection == 'Asset') {
+				
+		if(selection) {
+			seclectedValue= selection;
+		} else {
+			seclectedValue = $("#studyList").val();
+		}
+		
+		var params = {
+			selectedPath : seclectedValue,
+			refreshNode : 'true'
+		};
+		loadJsonData('/browse/collection', $("#dataList"), isEmptyOption, params, null, null, "key", "value");
+		resetAssetsSelection(true);
+		$("#showSelectAssetDiv").show();
+		$("#showSubAssetSelectionDiv").hide();
+		$("#assetUploadDiv").removeClass('show');
+		$('input[name="assetSelection"]').prop('checked', false);
+	} else if (collection == 'subAsset') {
+		$("#showSubAssetSelectionDiv").show();
+		$("#showSelectAssetDiv").hide();
+		$("#uploadAndRegisterFiles").hide();
+		$("#dataListDiv").hide();
+		$("#assetUploadDiv").removeClass('show');
+	}
+}
+
+function resetSelectionsForBackToUploadTab() {
+
+	if ($("input[name=selectProgram]").is(":visible")) {
+		if ($("#instituteList").is(":visible")) {
+			$("input[name=selectProgram][value='Select Program']").prop("checked", true);
+		} else {
+			$("input[name=selectProgram][value='Select Program']").click();
+		}
+	}
+	if ($("input[name=selectStudy]").is(":visible")) {
+		if ($("#studyList").is(":visible")) {
+			$("input[name=selectStudy][value='Select Study']").prop("checked", true);
+		} else {
+			$("input[name=selectStudy][value='Select Study']").click();
+		}
+	}
+	if ($("input[name=selectAsset]").is(":visible")) {
+		if ($("#dataList").is(":visible")) {
+			$("input[name=selectAsset][value='Select Asset']").prop("checked", true);
+		} else {
+			$("input[name=selectAsset][value='Select Asset']").click();
+		}
+	}
+}
+
+function resetOnChangeofSelectCollection(selectTarget, selectedValue) {
+	if (selectTarget == 'instituteList') {
+		$("#uploadAndRegisterFiles").hide();
+		$("#addAsets").hide();
+		if (selectedValue && selectedValue != 'ANY') {
+			$("#studyListDiv").show();
+			$("#deleteStudy").hide();
+			$("#deleteProgram").show();
+			$("#dataSetListDiv").hide();
+			$("#dataListDiv").hide();
+			$("#showSelectStudyDiv").hide();
+			$("input[name=selectStudy][value='Select Study']").prop("checked", false);
+		} else {
+			$("#studyListDiv").hide();
+			$("#dataSetListDiv").hide();
+			$("#dataListDiv").hide();
+			$("#deleteProgram").hide();
+		}
+	} else if (selectTarget == 'studyList') {
+		$("#uploadAndRegisterFiles").hide();
+		$("#dataListDiv").hide();
+		if (selectedValue && selectedValue != 'ANY') {
+			$("#studyListDiv").show();
+			$("#dataSetListDiv").show();
+			$("#deleteStudy").show();
+			$("#addAsets").show();
+			$("#deleteDataSet").hide();
+			$("#showSelectAssetDiv").hide();
+			$("#showSubAssetSelectionDiv").hide();
+			$("input[name=selectAsset]").prop("checked", false);
+			$('input[name="assetSelection"]').prop('checked', false);
+			
+		} else {
+			$("#studyListDiv").show();
+			$("#dataSetListDiv").hide();
+			$("#deleteStudy").hide();
+			$("#addAsets").hide();
+		}
+	} else if (selectTarget == 'dataList') {
+		$("#studyListDiv").show();
+		if (selectedValue && selectedValue != 'ANY') {
+			$("#uploadAndRegisterFiles").show();
+			constructAssetFileAndFoldersDiv(selectedValue);
+			$("#deleteDataSet").show();
+
+		} else {
+			$("#dataListDiv").hide();
+			$("#uploadAndRegisterFiles").hide();
+			$("#deleteDataSet").hide();
+		}
+	}
+}
 function postSuccessRegisterCollection(data,collectionType) {
 	if(data.indexOf("Collection is created") != -1) {
 		if(collectionType  == 'Program') {
 			var params= {selectedPath:$("#basePath").val(),refreshNode:'true'};
-			loadJsonData('/browse/collection', $("#instituteList"), true, params, displaySuccessMsg, null, "key", "value"); 
-			$("input[name=selectProgram][value='Select Program']").click();
+			loadJsonData('/browse/collection', $("#instituteList"), true, params, displaySuccessMsg, null, "key", "value"); 	
+			resetOnChangeofSelectCollection("instituteList",null);
 		} else if(collectionType == 'Study') {
 			var params= {selectedPath:$("#instituteList").val(),refreshNode:'true'};
 			loadJsonData('/browse/collection', $("#studyList"), true, params, displaySuccessMsg, null, "key", "value");
-			$("input[name=selectStudy][value='Select Study']").click();
+			resetOnChangeofSelectCollection("studyList",null);
 		} else if(collectionType == 'Asset') {
 			var params= {selectedPath:$("#studyList").val(),refreshNode:'true'};
 			loadJsonData('/browse/collection', $("#dataList"), true, params, displaySuccessMsg, null, "key", "value");
 			resetAssetsSelection();
 			$("#assetUploadDiv").removeClass('show');
-			$("input[name=selectAsset][value='Select Asset']").click();
 		} else if(collectionType == 'Folder') {
 			constructAssetFileAndFoldersDiv($("#dataList").val());
 			displaySuccessMsg();
-			
 		}
 	} else {
 		$(".registerErrorMsg").html("Error in create collection:" + data);
@@ -763,10 +829,9 @@ function constructAssetTypeBulkDiv(data,status) {
 		   }
 	   }      
 		
-	});
-	
-	
+	});	
 }
+
 function registerBulkAssets() {
     var studyPath = $("#studyPath").val();
 	$("#registerBulkAssetForm").attr('bulkDatafilePath', studyPath);	
@@ -1025,7 +1090,7 @@ function registerBulkDataFile() {
 }
 
 function appendFileName($this) {
-    //Append the file name to the data file path
+    // Append the file name to the data file path
     var filename = $this.val().replace(/^C:\\fakepath\\/, "")
     var value = $("#bulkDataFilePathCollection").val() + "/" + filename;
     $("#dataFilePath").val(value);
