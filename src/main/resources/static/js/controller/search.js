@@ -642,7 +642,7 @@ function openPopOver($this) {
 
 		             $.each(data, function( key, value ) {	
 		            	var attrVal = value.attrValue;
-		            	if(attrVal && attrVal.startsWith('https') || attrVal.startsWith('http')) {
+		            	if(attrVal && (attrVal.startsWith('https') || attrVal.startsWith('http'))) {
 		            		content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>" +
 		                    "<div class='divTableCell'><a target='_blank' href=" + attrVal + ">" + attrVal + "</a></div></div>";
 		            	} else if(value.attrName.indexOf("access_group") == -1){
