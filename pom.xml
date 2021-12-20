@@ -24,6 +24,7 @@
         <resources.basedir>src/main/resources</resources.basedir>
         <app.configs.dir>${resources.basedir}/appconfigs</app.configs.dir>
          <google-drive-sdk.version>1.25.0</google-drive-sdk.version>
+        <log4j2.version>2.16.0</log4j2.version>
     </properties>
     <dependencies>
     <dependency> 
