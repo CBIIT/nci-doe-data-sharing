@@ -161,7 +161,7 @@ function refreshDataTable() {
     	if(myCollection && myCollection == "true") {
     		 $("div.toolbar").prepend('<div style="float: left;">'+
               	   '<label><input type="checkbox" checked="true" id="myCollections" style="transform: translateY(1.5px);">'+
-             	   '&nbsp;&nbsp;Display My Collections</label></div>');
+             	   '&nbsp;&nbsp;Display Collections I Can Edit</label></div>');
     	} else {
     		 $("div.toolbar").prepend('<div style="float: left;">'+
               	   '<label><input type="checkbox" id="myCollections" style="transform: translateY(1.5px);">'+
