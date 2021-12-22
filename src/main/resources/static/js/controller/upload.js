@@ -192,7 +192,7 @@ function postSuccessCanEdit(data) {
 	$("#assetPermissions").val(data);
 	if(data == false) {
 		$("#registerFolder").css('pointer-events','none');
-		$("#registerFolder").parent().prop("title","Insufficient permissions to register folder.");
+		$("#registerFolder").parent().prop("title","Insufficient permissions to register subcollection.");
 		$("#addBulkDataFiles").css('pointer-events','none');
 		$("#addBulkDataFiles").parent().prop("title","Insufficient permissions to add data.");
 	} else {
