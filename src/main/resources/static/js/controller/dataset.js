@@ -17,6 +17,18 @@ $(document).ready(function() {
 		refreshTaskDatatable('generatePredTable');
 	});
 	
+	$("#filterSearchBox").keyup(function() {
+		var filterVal = $(this).val().trim();
+		$("#dataSetTable tbody tr").each(function() {
+			var fileName = $(this).find('td').eq(1).text().trim();
+			if(fileName && fileName.indexOf(filterVal.trim()) != -1) {
+				$(this).show();
+			} else {
+				$(this).hide();
+			}
+		});
+	});
+	
 });
 
 function refreshTaskDatatable(table) {
@@ -35,6 +47,10 @@ function refreshTaskDatatable(table) {
 		var t = $('#' + table).DataTable();
 		console.log(t);
 		t.ajax.reload(null, false);
+	}
+	if(isVisible && !$("#filterSearchBox").is(':visible')) {
+    	$("div.toolbar").append('<div style="float: right;margin-top: -10px;margin-bottom: 10px;">'+
+        '<label>Filter: <input type="textbox" id="filterSearchBox"/></label></div>');
 	}
 }
 
@@ -386,7 +402,7 @@ function dataTableInitDataSet(isVisible) {
 			className: "td_class_7"
 		} ],
 
-		"dom" : '<"top"lip>rt<"bottom"ip>',
+		"dom" : '<"toolbar top"lip>rt<"bottom"ip>',
 		"pagingType" : "simple",
 
 		"lengthMenu" : [ [ 10, 25, 50, 100 ], [ 10, 25, 50, 100 ] ],
