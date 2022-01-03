@@ -725,8 +725,11 @@ function postSuccessRegisterCollection(data,collectionType) {
 			displaySuccessMsg();
 		}
 	} else {
-		$(".registerErrorMsg").html("Error creating collection:" + data);
+		$(".registerMsg").html("");
+		$(".registerMsgBlock").hide();	
+		$(".registerErrorMsg").html("Error creating collection: " + data);
 		$(".registerMsgErrorBlock").show();
+		
 	}
 }
 
@@ -746,6 +749,8 @@ function resetAssetsSelection(reset) {
 }
 
 function displaySuccessMsg(data,status) {
+	$(".registerErrorMsg").html("");
+	$(".registerMsgErrorBlock").hide();
 	$(".registerMsg").html("Collection created successfully.");
 	$(".registerMsgBlock").show();	
 }
