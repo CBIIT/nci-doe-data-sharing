@@ -244,7 +244,7 @@ function contructDataListDiv(data,status) {
 				html += '<li><a class="detail-control" data-name = '+value.name+'>'+
 				'<i class="expand far fa-folder"></i></a>&nbsp;'+value.name+' &nbsp;&nbsp;'+
 				'<a href="#" class="uploadDataSet" title="Upload Files to Asset Subcollection" style="font-size: 15px;color: #F39530;"><i class="fas fa-upload">'+
-				'</i></a> &nbsp;&nbsp;<a href="#" title="Register SubCollection" onclick="createCollectionDiv(\'' + datalist + '\',\''+value.name+'\')" class="addDeleteUploadLabels">'+        
+				'</i></a> &nbsp;&nbsp;<a href="#" title="Register Subcollection" onclick="createCollectionDiv(\'' + datalist + '\',\''+value.name+'\')" class="addDeleteUploadLabels">'+        
 	            '<img src="/images/Uploads.add.png" class="uploadslogo" alt="register"></a></li>';
 			} else {
 				html += '<li><a class="detail-control" data-name = '+value.name+'>'+
