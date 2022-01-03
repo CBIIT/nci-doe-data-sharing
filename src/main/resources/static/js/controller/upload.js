@@ -725,7 +725,7 @@ function postSuccessRegisterCollection(data,collectionType) {
 			displaySuccessMsg();
 		}
 	} else {
-		$(".registerErrorMsg").html("Error in create collection:" + data);
+		$(".registerErrorMsg").html("Error creating collection:" + data);
 		$(".registerMsgErrorBlock").show();
 	}
 }
