@@ -276,7 +276,7 @@ public class HomeController extends AbstractDoeController {
 
 	@GetMapping(value = "/metaDataPermissionsList")
 	public ResponseEntity<?> getPermissionsList() {
-		return getMetaDataPermissionsList();
+		return getMetaDataPermissionsList(null);
 	}
 
 	@PostMapping(value = "/metaDataPermissionsList")

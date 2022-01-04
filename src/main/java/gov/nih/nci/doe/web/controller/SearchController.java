@@ -128,13 +128,13 @@ public class SearchController extends AbstractDoeController {
 		MappingJsonFactory factory = new MappingJsonFactory();
 		JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 		HpcCollectionListDTO collections = parser.readValueAs(HpcCollectionListDTO.class);
-
+		String user = getLoggedOnUserInfo();
 		List<HpcCollectionDTO> searchResults = collections.getCollections();
 		List<DoeSearchResult> returnResults = new ArrayList<DoeSearchResult>();
-		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList().getBody();
-		String user = getLoggedOnUserInfo();		
+		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(user).getBody();
+
 		List<String> bulkAssetsList = Arrays.asList(bulkAssetsPaths.split(","));
-		
+
 		for (HpcCollectionDTO result : searchResults) {
 			String absolutePath = result.getCollection().getAbsolutePath();
 			if (StringUtils.isNotEmpty(absolutePath)) {

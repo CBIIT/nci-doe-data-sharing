@@ -188,7 +188,6 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		model.addAttribute("studyPath", session.getAttribute("studyPath"));
 		model.addAttribute("bulkUploadCollection", session.getAttribute("bulkUploadCollection"));
 		model.addAttribute("uploadPath", session.getAttribute("uploadPath"));
-		
 
 	}
 
@@ -689,13 +688,34 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 	public Boolean verifyCollectionPermissions(String parentPath, HpcCollectionListDTO parentCollectionDto) {
 
 		log.info("verify collection permissions for : " + parentPath);
+		Integer parentCollectionId = null;
 		if (!parentPath.equalsIgnoreCase(basePath) && parentCollectionDto != null
 				&& parentCollectionDto.getCollections() != null
 				&& !CollectionUtils.isEmpty(parentCollectionDto.getCollections())) {
 			HpcCollectionDTO collection = parentCollectionDto.getCollections().get(0);
-			List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList().getBody();
-			String role = getPermissionRole(getLoggedOnUserInfo(), collection.getCollection().getCollectionId(),
-					loggedOnUserPermissions);
+			List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(null)
+					.getBody();
+
+			/**
+			 * when the parentPath collection is lower than Asset level, loop through the
+			 * parentCollectionDto parent metadata entries to get the asset level
+			 * permissions. Currently, when registering folder subcollections and uploading
+			 * files to subcollections, the permissions are retrieved from asset level.
+			 * 
+			 */
+
+			HpcMetadataEntry assetCollection = collection.getMetadataEntries().getParentMetadataEntries().stream()
+					.filter(e -> e.getAttribute().equalsIgnoreCase("collection_type")
+							&& e.getLevelLabel().equalsIgnoreCase("Asset"))
+					.findAny().orElse(null);
+
+			if (assetCollection != null) {
+				parentCollectionId = assetCollection.getCollectionId();
+			} else {
+				parentCollectionId = collection.getCollection().getCollectionId();
+			}
+
+			String role = getPermissionRole(getLoggedOnUserInfo(), parentCollectionId, loggedOnUserPermissions);
 			if (StringUtils.isNotEmpty(role)
 					&& (role.equalsIgnoreCase("Owner") || role.equalsIgnoreCase("Group User"))) {
 				return true;

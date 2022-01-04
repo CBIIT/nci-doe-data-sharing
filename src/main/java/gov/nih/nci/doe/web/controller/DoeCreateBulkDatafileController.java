@@ -171,7 +171,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 						dataFilePath, true);
 				Boolean isValidPermissions = verifyCollectionPermissions(dataFilePath, parentCollectionDto);
 				if (Boolean.FALSE.equals(isValidPermissions)) {
-					return "Insufficient privileges to create collection";
+					return "Insufficient privileges to register data files.";
 				}
 			}
 

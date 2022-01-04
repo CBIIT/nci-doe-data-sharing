@@ -160,8 +160,8 @@ public class RestAPICommonController extends AbstractDoeController {
 		String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
 
 		// verify group or owner permissions on the collection path
-		if (StringUtils.isNotEmpty(accessGrp) && ("public".equalsIgnoreCase(accessGrp)
-				|| Boolean.TRUE.equals(hasCollectionPermissions(doeLogin, parentPath, collectionDto)))) {
+		if ("public".equalsIgnoreCase(accessGrp)
+				|| Boolean.TRUE.equals(hasCollectionPermissions(doeLogin, parentPath, collectionDto))) {
 			isPermissions = true;
 		}
 
@@ -284,8 +284,8 @@ public class RestAPICommonController extends AbstractDoeController {
 		HpcCollectionDTO result = collectionDto.getCollections().get(0);
 		String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
 
-		if (StringUtils.isNotEmpty(accessGrp) && ("public".equalsIgnoreCase(accessGrp)
-				|| Boolean.TRUE.equals(hasCollectionPermissions(doeLogin, path, collectionDto)))) {
+		if ("public".equalsIgnoreCase(accessGrp)
+				|| Boolean.TRUE.equals(hasCollectionPermissions(doeLogin, path, collectionDto))) {
 			isPermissions = true;
 		}
 
@@ -362,8 +362,8 @@ public class RestAPICommonController extends AbstractDoeController {
 		String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
 
 		// verify group or owner permissions on the collection path
-		if (StringUtils.isNotEmpty(accessGrp) && ("public".equalsIgnoreCase(accessGrp)
-				|| Boolean.TRUE.equals(hasCollectionPermissions(doeLogin, parentPath, collectionDto)))) {
+		if ("public".equalsIgnoreCase(accessGrp)
+				|| Boolean.TRUE.equals(hasCollectionPermissions(doeLogin, parentPath, collectionDto))) {
 			isPermissions = true;
 		}
 
@@ -433,8 +433,8 @@ public class RestAPICommonController extends AbstractDoeController {
 		HpcCollectionDTO result = collectionDto.getCollections().get(0);
 		String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
 
-		if (StringUtils.isNotEmpty(accessGrp) && ("public".equalsIgnoreCase(accessGrp)
-				|| Boolean.TRUE.equals(hasCollectionPermissions(doeLogin, parentPath, collectionDto)))) {
+		if ("public".equalsIgnoreCase(accessGrp)
+				|| Boolean.TRUE.equals(hasCollectionPermissions(doeLogin, parentPath, collectionDto))) {
 			isPermissions = true;
 		}
 
@@ -526,8 +526,8 @@ public class RestAPICommonController extends AbstractDoeController {
 			HpcCollectionDTO result = collectionDto.getCollections().get(0);
 			String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
 
-			if (StringUtils.isNotEmpty(accessGrp) && ("public".equalsIgnoreCase(accessGrp)
-					|| Boolean.TRUE.equals(hasCollectionPermissions(doeLogin, path, collectionDto)))) {
+			if ("public".equalsIgnoreCase(accessGrp)
+					|| Boolean.TRUE.equals(hasCollectionPermissions(doeLogin, path, collectionDto))) {
 				isPermissions = true;
 			}
 
@@ -581,8 +581,8 @@ public class RestAPICommonController extends AbstractDoeController {
 		HpcCollectionDTO result = collectionDto.getCollections().get(0);
 		String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
 
-		if (StringUtils.isNotEmpty(accessGrp) && ("public".equalsIgnoreCase(accessGrp)
-				|| Boolean.TRUE.equals(hasCollectionPermissions(doeLogin, path, collectionDto)))) {
+		if ("public".equalsIgnoreCase(accessGrp)
+				|| Boolean.TRUE.equals(hasCollectionPermissions(doeLogin, path, collectionDto))) {
 			isPermissions = true;
 		}
 
@@ -1060,18 +1060,17 @@ public class RestAPICommonController extends AbstractDoeController {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private Boolean hasCollectionPermissions(String loggedOnUser, String parentPath,
 			HpcCollectionListDTO parentCollectionDto) {
 
 		log.info("has collection permssions for " + loggedOnUser + " path: " + parentPath);
+		Integer parentCollectionId = null;
 		List<KeyValueBean> keyValueBeanResults = new ArrayList<>();
 		if (!StringUtils.isEmpty(loggedOnUser)) {
 			// get logged on user prog list to keyvaluebean list
-			DoeUsersModel user = authenticateService.getUserInfo(loggedOnUser);
-			if (user != null && !StringUtils.isEmpty(user.getProgramName())) {
-				List<String> progList = Arrays.asList(user.getProgramName().split(","));
-				progList.stream().forEach(e -> keyValueBeanResults.add(new KeyValueBean(e, e)));
-			}
+			keyValueBeanResults = (List<KeyValueBean>) getMetaDataPermissionsList(loggedOnUser).getBody();
+
 		}
 
 		// verify collection path permissions
@@ -1079,12 +1078,24 @@ public class RestAPICommonController extends AbstractDoeController {
 				&& parentCollectionDto.getCollections() != null
 				&& !CollectionUtils.isEmpty(parentCollectionDto.getCollections())) {
 			HpcCollectionDTO collection = parentCollectionDto.getCollections().get(0);
-			String role = getPermissionRole(loggedOnUser, collection.getCollection().getCollectionId(),
-					keyValueBeanResults);
+
+			HpcMetadataEntry assetCollection = collection.getMetadataEntries().getParentMetadataEntries().stream()
+					.filter(e -> e.getAttribute().equalsIgnoreCase("collection_type")
+							&& e.getLevelLabel().equalsIgnoreCase("Asset"))
+					.findAny().orElse(null);
+
+			if (assetCollection != null) {
+				parentCollectionId = assetCollection.getCollectionId();
+			} else {
+				parentCollectionId = collection.getCollection().getCollectionId();
+			}
+
+			String role = getPermissionRole(loggedOnUser, parentCollectionId, keyValueBeanResults);
 			if (StringUtils.isNotEmpty(role)
 					&& (role.equalsIgnoreCase("Owner") || role.equalsIgnoreCase("Group User"))) {
 				return true;
 			}
+
 		}
 		return false;
 

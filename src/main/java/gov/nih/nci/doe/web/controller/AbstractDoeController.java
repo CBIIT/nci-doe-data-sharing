@@ -420,10 +420,12 @@ public abstract class AbstractDoeController {
 		return entryList;
 	}
 
-	public ResponseEntity<?> getMetaDataPermissionsList() {
+	public ResponseEntity<?> getMetaDataPermissionsList(String loggedOnUser) {
 
 		log.info("get meta data permissions list");
-		String loggedOnUser = getLoggedOnUserInfo();
+		if (StringUtils.isEmpty(loggedOnUser)) {
+			loggedOnUser = getLoggedOnUserInfo();
+		}
 		List<KeyValueBean> keyValueBeanResults = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(loggedOnUser)) {
@@ -637,7 +639,7 @@ public abstract class AbstractDoeController {
 		}
 
 		// add criteria for access group public and other prog names for logged on user.
-		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList().getBody();
+		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(null).getBody();
 
 		HpcCompoundMetadataQuery query1 = new HpcCompoundMetadataQuery();
 		query1.setOperator(HpcCompoundMetadataQueryOperator.OR);
@@ -755,7 +757,7 @@ public abstract class AbstractDoeController {
 		log.info("authToken: " + authToken);
 		String user = getLoggedOnUserInfo();
 		log.info("asset details for user: " + user);
-		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList().getBody();
+		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(user).getBody();
 		DoeSearch search = new DoeSearch();
 
 		if (StringUtils.isNotEmpty(dmeDataId)) {
