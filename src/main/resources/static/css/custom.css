@@ -320,8 +320,17 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 	line-height: 17px;
 }
 #updateMetaData,#addMetaData,#addNewMetaDataForSingleDataFile,#btnRegisterFile,
-#registerBulkDataFileBtn,#registerCollectionBtn,#updatePermissions,#addUserMetadataForBulkAssets,#cancelRegisterBtn {
+#registerBulkDataFileBtn,#registerCollectionBtn,#updatePermissions,#addUserMetadataForBulkAssets {
 	background-color: #E87B05!important;
+}
+
+#cancelRegisterBtn {
+	background-color: #E87B05 !important;
+	color: #fff !important;
+    border-radius: 15px;
+    width: 90px;
+    font-size: 15px;
+    font-family: 'inter_regular';
 }
 
 #btnRegisterFile {
@@ -336,7 +345,11 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
  font-weight: 900;
 }
 #registerCollectionBtn {
-    border-radius: 10px;
+    color: #fff !important;
+    border-radius: 15px;
+    width: 147px;
+    font-size: 15px;
+    font-family: 'inter_regular';
 }
 
 .parentCollectionName {
@@ -397,8 +410,9 @@ table.subAssetsDataSetTable,table.subFolderAssetsDataSetTable{
 	background-color: #E87B05;
     color: #fff !important;
     border-radius: 15px;
-    width: 300px;
+    width: 326px;
     font-size: 15px;
+    font-family: 'inter_regular';
 }
 
 #loginSubTab{
@@ -1324,7 +1338,7 @@ div.dataDivCollapse :last-child {padding-bottom: 5px;}
     }
     
 #registerBulkAssets,#registerBulkDataFileBtn {
-    margin-top:5px;
+margin-top: 5px;
     background-color: #E87B05;
     color: #fff;
     border-radius: 14px;
@@ -1332,7 +1346,6 @@ div.dataDivCollapse :last-child {padding-bottom: 5px;}
     font-family: 'inter_regular';
     font-size: 15px;
     letter-spacing: 0.5px;
-    /*margin-left: 82px;*/
 }
 
 .help-inline{font-size:12px;}
@@ -1761,7 +1774,7 @@ th.active .arrow {
     font-size: 12px;
     font-weight: 500;
     line-height: 48px;
-    padding-left: 15px !important;
+    padding-left: 12px !important;
 }
 #spinner {
 position: absolute;
