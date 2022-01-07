@@ -398,6 +398,7 @@ table.subAssetsDataSetTable,table.subFolderAssetsDataSetTable{
     color: #fff !important;
     border-radius: 15px;
     width: 300px;
+    font-size: 15px;
 }
 
 #loginSubTab{

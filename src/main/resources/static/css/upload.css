@@ -16,10 +16,13 @@ table#newMetaDataTableForSingleFile thead tr th {
 
 table#newMetaDataTable tbody tr td {
 	background-color: #E0F0F4;
+	font-family: 'latoregular';
 }
 
 table#newMetaDataTable thead tr th {
 	background-color: #194F85;
+	font-size: 13px;
+    font-family: 'inter_medium';
 
 }
 
