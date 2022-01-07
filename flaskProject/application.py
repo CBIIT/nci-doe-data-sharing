@@ -17,7 +17,10 @@ def modac_routing():
     print(modelfilename)
     print(datafilename)
     print('submit batch job')
-    sbatch_command = "sbatch infer.sh " + datafilename + " " + modelfilename + " " + predictions_filename
+    if modelfilename == 'mt_cnn_model.h5':
+        sbatch_command = "sbatch infer.sh " + datafilename + " " + modelfilename + " " + predictions_filename
+    else:
+        sbatch_command = "sbatch tc1_infer.sh " + datafilename + " " + modelfilename + " " + predictions_filename
     sbatch_response = subprocess.getoutput(sbatch_command)
     print(sbatch_response)
     job_id = sbatch_response.split(' ')[-1].strip()
