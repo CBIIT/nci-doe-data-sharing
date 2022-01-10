@@ -170,7 +170,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 						: null;
 				String modelName = modelh5Path != null
 						? modelh5Path.substring(modelh5Path.lastIndexOf('/') + 1, modelh5Path.length())
-						: "mt_cnn_model.h5";
+						: null;
 				String resultFileName = resultPath != null
 						? resultPath.substring(resultPath.lastIndexOf('/') + 1, resultPath.length())
 						: null;
@@ -248,6 +248,13 @@ public class ManageTasksScheduler extends AbstractDoeController {
 					entry.setValue("Folder");
 					entry.setAttribute("collection_type");
 					metadataEntries.add(entry);
+
+					// add folder identifier metadata
+					HpcMetadataEntry folderIdentifierMetadata = new HpcMetadataEntry();
+					folderIdentifierMetadata.setValue("Predictions_" + t.getUserId());
+					folderIdentifierMetadata.setAttribute("folder_identifier");
+					metadataEntries.add(folderIdentifierMetadata);
+
 					dto.getMetadataEntries().addAll(metadataEntries);
 					Integer responseStatus = DoeClientUtil.updateCollection(authToken, serviceURL, dto, folderPath);
 					if (responseStatus == 200 || responseStatus == 201) {
