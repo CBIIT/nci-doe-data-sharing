@@ -125,7 +125,7 @@ function dataTableInitInferenceTaskManager() {
             {className: "td_class_2", "targets": [2]},
             {className: "td_class_2", "targets": [3]},
             {className: "td_class_5", "targets": [-1]},
-            {type: "date", "targets": [2,3]}
+            {type: "date", "targets": [4,5]}
         ],
         
         "dom": '<"top"lip>rt<"bottom"ip>',
