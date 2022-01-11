@@ -4,6 +4,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,48 +45,48 @@ public class HomeController extends AbstractDoeController {
 	private String serviceURL;
 
 	@GetMapping
-	public String index(HttpSession session, HttpServletRequest request) {
+	public String homePage(HttpSession session, HttpServletRequest request) {
 
 		log.info("home page");
 		return "home";
 
 	}
 
-	/**
-	 * @param headers
-	 * @return
-	 */
-	@GetMapping(value = "user-info")
-	public ResponseEntity<?> getUserInfo(HttpSession session, @RequestHeader HttpHeaders headers) {
-		log.info("getting user info");
+	@GetMapping(value = "/myaccount")
+	public String getMyAccount(Model model, HttpSession session, HttpServletRequest request) {
+		log.info("get account");
+		String user = getLoggedOnUserInfo();
+		if (StringUtils.isEmpty(user)) {
+			return "redirect:/loginTab";
+		}
 		try {
-			String user = getLoggedOnUserInfo();
-			if (StringUtils.isEmpty(user)) {
-				return new ResponseEntity<>("redirect:/loginTab", HttpStatus.OK);
-			}
+			log.info("get user details for : " + user);
 			DoeUsersModel userInfo = authService.getUserInfo(user);
-			return new ResponseEntity<>(userInfo, headers, HttpStatus.OK);
+			model.addAttribute("userInfo", userInfo);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<>(null, headers, HttpStatus.SERVICE_UNAVAILABLE);
 		}
+
+		return "myAccount";
 	}
 
 	@PostMapping(value = "user-info")
-	public ResponseEntity<?> updateUserInfo(@RequestBody DoeUsersModel doeModel, @RequestHeader HttpHeaders headers) {
+	public String updateUserInfo(@Valid DoeUsersModel doeModel, HttpSession session, HttpServletRequest request,
+			HttpServletResponse response) throws DoeWebException {
+
 		log.info("update user info for user " + doeModel.getFirstName());
 		try {
 			String user = getLoggedOnUserInfo();
 			if (StringUtils.isEmpty(user)) {
-				return new ResponseEntity<>("redirect:/loginTab", HttpStatus.OK);
+				return "redirect:/loginTab";
 			}
 			doeModel.setEmailAddrr(user);
 			authService.saveUserInfo(doeModel);
 
-			return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+			return "redirect:/";
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
+			throw new DoeWebException("Failed to update user info: " + e.getMessage());
 		}
 
 	}
@@ -155,13 +155,12 @@ public class HomeController extends AbstractDoeController {
 		return "loginTab";
 	}
 
-	@GetMapping(value = "/myaccount")
-	public String getMyAccount(HttpSession session, HttpServletRequest request) {
-		return "myAccount";
-	}
-
 	@GetMapping(value = "/resetPassword")
 	public String getResetPassword(HttpSession session, HttpServletRequest request) {
+		String user = getLoggedOnUserInfo();
+		if (StringUtils.isEmpty(user)) {
+			return "redirect:/loginTab";
+		}
 		return "resetPassword";
 	}
 

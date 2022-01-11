@@ -1,7 +1,5 @@
 package gov.nih.nci.doe.web.model;
 
-import java.util.Date;
-
 public class DoeUsersModel {
 
 	private String firstName;

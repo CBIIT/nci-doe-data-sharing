@@ -62,8 +62,8 @@ function callContactUsFormValidation() {
 						contactusForm.emailAddress = $("#id_user_email").val();
 						contactusForm.message = $("#contact_us_txtarea").val();
 						contactusForm.response = rcres;
-						invokeAjax('/contactUs', 'POST', JSON.stringify(contactusForm), postRegisterFunction,
-								postRegistrationFailure, null, 'text');
+						invokeAjax('/contactUs', 'POST', JSON.stringify(contactusForm), postContactUsFunction,
+								postContactUsFailure, null, 'text');
 					} else {
 						alert("Please verify reCAPTCHA");
 						$('#btnSubmitEmail').prop('disabled', false);
@@ -74,7 +74,7 @@ function callContactUsFormValidation() {
 			});
 }
 
-function postRegisterFunction(data, status) {
+function postContactUsFunction(data, status) {
 	if (data == 'SUCCESS') {
 		$('#btnSubmitEmail').prop('disabled', false);
 		$(".errorBlock").hide();
@@ -88,6 +88,6 @@ function postRegisterFunction(data, status) {
 	}
 }
 
-function postRegistrationFailure(url, params, status, error, data) {
+function postContactUsFailure(url, params, status, error, data) {
 	alert(error);
 }

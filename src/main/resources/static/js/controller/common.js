@@ -332,8 +332,6 @@ $(document)
 						$("#loginSubTab").show();
 					});
 
-					invokeAjax('/user-info', 'GET',null, postGetUserInfoFunction, null, null, 'text');
-
 					$("#btnUpdateProfile").click(function(e) {
 						validateUpdateProfile();
 					});
@@ -443,14 +441,6 @@ $(document)
 						location.replace(data);
 					}
 					
-					function postGetUserInfoFunction (data,status) {
-						var userData = JSON.parse(data);
-						$("#firstNameTxt").val(userData.firstName);
-						$("#lastNameTxt").val(userData.lastName);
-						$("#institutionTxt").val(userData.institution);
-						$("#groupNames").text(userData.programName);
-					}
-
 					function postLogOutFunction(data, status) {
 						location.replace("/");
 					}
