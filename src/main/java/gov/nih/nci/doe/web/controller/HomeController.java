@@ -57,12 +57,15 @@ public class HomeController extends AbstractDoeController {
 	 * @return
 	 */
 	@GetMapping(value = "user-info")
-	public ResponseEntity<?> getUserInfo(HttpSession session, @RequestHeader HttpHeaders headers,
-			@RequestParam(value = "emailAddr") String emailAddr) {
-		log.info("getting user info with email address " + emailAddr);
+	public ResponseEntity<?> getUserInfo(HttpSession session, @RequestHeader HttpHeaders headers) {
+		log.info("getting user info");
 		try {
-			DoeUsersModel user = authService.getUserInfo(emailAddr);
-			return new ResponseEntity<>(user, headers, HttpStatus.OK);
+			String user = getLoggedOnUserInfo();
+			if (StringUtils.isEmpty(user)) {
+				return new ResponseEntity<>("redirect:/loginTab", HttpStatus.OK);
+			}
+			DoeUsersModel userInfo = authService.getUserInfo(user);
+			return new ResponseEntity<>(userInfo, headers, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return new ResponseEntity<>(null, headers, HttpStatus.SERVICE_UNAVAILABLE);
@@ -71,11 +74,15 @@ public class HomeController extends AbstractDoeController {
 
 	@PostMapping(value = "user-info")
 	public ResponseEntity<?> updateUserInfo(@RequestBody DoeUsersModel doeModel, @RequestHeader HttpHeaders headers) {
-		log.info("update user info for user " + doeModel.getEmailAddrr());
+		log.info("update user info for user " + doeModel.getFirstName());
 		try {
-			if (doeModel.getEmailAddrr() != null) {
-				authService.saveUserInfo(doeModel);
+			String user = getLoggedOnUserInfo();
+			if (StringUtils.isEmpty(user)) {
+				return new ResponseEntity<>("redirect:/loginTab", HttpStatus.OK);
 			}
+			doeModel.setEmailAddrr(user);
+			authService.saveUserInfo(doeModel);
+
 			return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);

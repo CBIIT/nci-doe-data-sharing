@@ -128,10 +128,9 @@ function validateUpdateProfile(){
       	d.firstName = $("#firstNameTxt").val();
       	d.lastName = $("#lastNameTxt").val();
       	d.institution = $("#institutionTxt").val();
-      	d.emailAddrr = $("#emailAddrTxt").text();
       	
       	invokeAjax('/user-info','POST',JSON.stringify(d),postUpdateUserFunction,postFailureFunction,null,'text')
-		  },
+	  },
 	});
 }
 
@@ -157,7 +156,6 @@ function validateForgotPassword () {
 			$("#spinner").show();
             $("#dimmer").show();
         	var forgot_password = {};
-        	forgot_password.emailAddrr = $("#txtforgotPasswordEmail").text();
         	forgot_password.password = $("#forgot_password").val();
         	forgot_password.confirmPassword = $("#forgot_password_confirm").val();
         	

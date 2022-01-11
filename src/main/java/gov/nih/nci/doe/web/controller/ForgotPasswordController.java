@@ -32,11 +32,12 @@ public class ForgotPasswordController extends AbstractDoeController {
 			@RequestBody ForgotPassword forgotPassword) throws Exception {
 		log.info("forgot password");
 		try {
-			if (forgotPassword.getEmailAddrr() == null || StringUtils.isEmpty(forgotPassword.getEmailAddrr())) {
-				log.error("User ID is required.");
-				return new ResponseEntity<>("Enter an email address.", HttpStatus.OK);
+			String user = getLoggedOnUserInfo();
+			if (StringUtils.isEmpty(user)) {
+				return new ResponseEntity<>("redirect:/loginTab", HttpStatus.OK);
+			}
 
-			} else if (forgotPassword.getPassword() == null || StringUtils.isEmpty(forgotPassword.getPassword())) {
+			if (forgotPassword.getPassword() == null || StringUtils.isEmpty(forgotPassword.getPassword())) {
 				log.info("Enter password.");
 				return new ResponseEntity<>("Enter a password.", HttpStatus.OK);
 
@@ -45,16 +46,15 @@ public class ForgotPasswordController extends AbstractDoeController {
 				log.info("Repeat your password to confirm.");
 				return new ResponseEntity<>("Repeat your password to confirm.", HttpStatus.OK);
 
-			} else if (!authService.doesUsernameExist(forgotPassword.getEmailAddrr().trim().toLowerCase())) {
+			} else if (!authService.doesUsernameExist(user)) {
 				log.info("Email not found to reset password");
 				return new ResponseEntity<>("Enter a valid email address.", HttpStatus.OK);
 			}
 
-			log.info("About to set a new password for user ID {}", forgotPassword.getEmailAddrr());
+			log.info("About to set a new password for user ID {}", user);
 
 			// validate the user's email address and password.
-			PasswordStatusCode status = authService.saveUserPassword(forgotPassword.getPassword(),
-					forgotPassword.getEmailAddrr(), true);
+			PasswordStatusCode status = authService.saveUserPassword(forgotPassword.getPassword(), user, true);
 
 			if (PasswordStatusCode.SUCCESS == status) {
 
@@ -66,12 +66,13 @@ public class ForgotPasswordController extends AbstractDoeController {
 				log.info("failed to reset applicant's password...");
 				// failed to reset the password. set the error message
 				if (PasswordStatusCode.INVALID_FORMAT == status || PasswordStatusCode.INVALID_LENGTH == status) {
-					return new ResponseEntity<>("Enter a password with valid length and format. Refer to Password Constraints.", HttpStatus.OK);
+					return new ResponseEntity<>(
+							"Enter a password with valid length and format. Refer to Password Constraints.",
+							HttpStatus.OK);
 				}
 				if (PasswordStatusCode.NEW_PASSWD_SAME_AS_PREV_PASSWD == status) {
 					return new ResponseEntity<>(
-							"Your new password is the same as your current one. Enter a new password.",
-							HttpStatus.OK);
+							"Your new password is the same as your current one. Enter a new password.", HttpStatus.OK);
 				} else {
 					return new ResponseEntity<>(status, HttpStatus.OK);
 				}

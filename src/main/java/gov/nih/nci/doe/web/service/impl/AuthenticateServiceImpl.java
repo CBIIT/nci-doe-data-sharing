@@ -108,7 +108,6 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		return status;
 	}
 
-
 	private LoginStatusCode lockOrUnlockUser(final String user, final boolean lock) throws Exception {
 		// sanity check
 		if (user == null) {
@@ -305,7 +304,6 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 			d.setFirstName(doeModel.getFirstName());
 			d.setInstitution(doeModel.getInstitution());
 			d.setLastName(doeModel.getLastName());
-			d.setEmailAddrr(doeModel.getEmailAddrr());
 			d.setLastChangedDate(new Date());
 			doeUserRepository.saveAndFlush(d);
 		}
