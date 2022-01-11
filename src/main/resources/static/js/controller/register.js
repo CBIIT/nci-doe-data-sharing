@@ -175,7 +175,10 @@ function postForgotPassword(data,status) {
 		$(".successMsg").html("Password change successful.");
 		$(".successBlock").show();
 		$(".errorBlock").hide();
-	} else {
+	} else if(data == 'loginTab') {
+		location.replace("/loginTab");
+	}
+	else {
 		$('#btnforgotPassword').prop('disabled',false);
 		$(".errorMsg").html(data);
 		$(".errorBlock").show();

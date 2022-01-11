@@ -34,7 +34,7 @@ public class ForgotPasswordController extends AbstractDoeController {
 		try {
 			String user = getLoggedOnUserInfo();
 			if (StringUtils.isEmpty(user)) {
-				return new ResponseEntity<>("redirect:/loginTab", HttpStatus.OK);
+				return new ResponseEntity<>("loginTab", HttpStatus.OK);
 			}
 
 			if (forgotPassword.getPassword() == null || StringUtils.isEmpty(forgotPassword.getPassword())) {
