@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.constants.PasswordStatusCode;
-import gov.nih.nci.doe.web.model.ForgotPassword;
+import gov.nih.nci.doe.web.model.ChangePassword;
 
 /**
  *
@@ -24,12 +24,12 @@ import gov.nih.nci.doe.web.model.ForgotPassword;
 
 @Controller
 @EnableAutoConfiguration
-@RequestMapping("/forgotPassword")
-public class ForgotPasswordController extends AbstractDoeController {
+@RequestMapping("/changePassword")
+public class ChangePasswordController extends AbstractDoeController {
 
 	@PostMapping
-	public ResponseEntity<?> forgotPassword(@RequestHeader HttpHeaders headers,
-			@RequestBody ForgotPassword forgotPassword) throws Exception {
+	public ResponseEntity<?> changePassword(@RequestHeader HttpHeaders headers,
+			@RequestBody ChangePassword changePassword) throws Exception {
 		log.info("forgot password");
 		try {
 			String user = getLoggedOnUserInfo();
@@ -37,12 +37,12 @@ public class ForgotPasswordController extends AbstractDoeController {
 				return new ResponseEntity<>("loginTab", HttpStatus.OK);
 			}
 
-			if (forgotPassword.getPassword() == null || StringUtils.isEmpty(forgotPassword.getPassword())) {
+			if (changePassword.getPassword() == null || StringUtils.isEmpty(changePassword.getPassword())) {
 				log.info("Enter password.");
 				return new ResponseEntity<>("Enter a password.", HttpStatus.OK);
 
-			} else if (forgotPassword.getConfirmPassword() == null
-					|| StringUtils.isEmpty(forgotPassword.getConfirmPassword())) {
+			} else if (changePassword.getConfirmPassword() == null
+					|| StringUtils.isEmpty(changePassword.getConfirmPassword())) {
 				log.info("Repeat your password to confirm.");
 				return new ResponseEntity<>("Repeat your password to confirm.", HttpStatus.OK);
 
@@ -54,7 +54,7 @@ public class ForgotPasswordController extends AbstractDoeController {
 			log.info("About to set a new password for user ID {}", user);
 
 			// validate the user's email address and password.
-			PasswordStatusCode status = authService.saveUserPassword(forgotPassword.getPassword(), user, true);
+			PasswordStatusCode status = authService.saveUserPassword(changePassword.getPassword(), user, true);
 
 			if (PasswordStatusCode.SUCCESS == status) {
 

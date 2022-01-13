@@ -1,6 +1,6 @@
 package gov.nih.nci.doe.web.model;
 
-public class ForgotPassword {
+public class ChangePassword {
 
 	private String password;
 
