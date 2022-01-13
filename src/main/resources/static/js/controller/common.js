@@ -326,10 +326,6 @@ $(document)
 						$("#loginSubTab").show();
 					});
 
-					invokeAjax('/user-info', 'GET', {
-						emailAddr : $("#emailAddrTxt").text()
-					}, postGetUserInfoFunction, null, null, 'text');
-
 					$("#btnUpdateProfile").click(function(e) {
 						validateUpdateProfile();
 					});

@@ -305,7 +305,6 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 			d.setFirstName(doeModel.getFirstName());
 			d.setInstitution(doeModel.getInstitution());
 			d.setLastName(doeModel.getLastName());
-			d.setEmailAddrr(doeModel.getEmailAddrr());
 			d.setLastChangedDate(new Date());
 			doeUserRepository.saveAndFlush(d);
 		}

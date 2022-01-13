@@ -6,39 +6,39 @@
 </head>
 <body>
  <div class="M-4 p-4 mx-auto" id="myAccount" th:fragment="myaccount" style="
-    width: 700px;height: 685px;margin-left: 350px;">
+    width: 700px;height: 685px;">
   
         <div class="form-row jumbotron pt-2 pb-2 mb-2" id="myAccountSubTab">
-           <form role="form" id="update-profile-form" style="width: 100%;">
+           <form role="form" id="update-profile-form" style="width: 100%;" method="POST">
                <h3 style="text-align: center;font-family: latoregular;padding-top: 18px;
                    padding-bottom: 14px;font-size: 26px;color: #fff;">MANAGE ACCOUNT</h3>
   
              <hr class="loginHr">
                         <div class="row row-buffer" style="margin-top: 10px;">
                             <div class="col-lg-3">
-                              <label class="infoLabel" for="firstNameTxt">First Name <span>*</span></label>
+                              <label class="infoLabel" for="firstName">First Name <span>*</span></label>
                             </div>
                             <div class="col-lg-9">
-                              <input type="text" id="firstNameTxt" name="firstNameTxt" maxlength="50" class="form-control defaultFocus myaccountTextbox">
+                              <input type="text" id="firstName" th:value="${userInfo.firstName}"  name="firstName" maxlength="50" class="form-control defaultFocus myaccountTextbox">
                                 
                             </div>
                         </div>
                         
                  <div class="row row-buffer">
                             <div class="col-lg-3">
-                          <label class="infoLabel" for="lastNameTxt">Last Name <span>*</span></label>
+                          <label class="infoLabel" for="lastName">Last Name <span>*</span></label>
                             </div>
                             <div class="col-lg-9">
-                            <input type="text" id="lastNameTxt" name="lastNameTxt" maxlength="20" class="form-control defaultFocus myaccountTextbox">
+                            <input type="text" id="lastName" th:value="${userInfo.lastName}"  name="lastName" maxlength="20" class="form-control defaultFocus myaccountTextbox">
                                 
                             </div>
                         </div>
                          <div class="row row-buffer">
                             <div class="col-lg-3">
-                          <label class="infoLabel" for="institutionTxt">Institution / Organization  <span>*</span></label>
+                          <label class="infoLabel" for="institution">Institution / Organization  <span>*</span></label>
                             </div>
                             <div class="col-lg-9">
-                          <input type="text" id="institutionTxt" name="institutionTxt" maxlength="20" class="form-control defaultFocus myaccountTextbox">
+                          <input type="text" id="institution" th:value="${userInfo.institution}" name="institution" maxlength="20" class="form-control defaultFocus myaccountTextbox">
                                 
                             </div>
                         </div>
@@ -60,7 +60,7 @@
                              <label class="infoLabel" for="groupNames">Group Names </label>
                             </div>
                             <div class="col-lg-9">
-                             <span id="groupNames"
+                             <span id="groupNames" th:text="${userInfo.programName}"
                              class="form-control defaultFocus myaccountTextbox"></span>                       
                                 
                             </div>

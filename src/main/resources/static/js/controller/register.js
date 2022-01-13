@@ -110,29 +110,29 @@ function postRegistrationFailure(url, params, status, error, data) {
 function validateUpdateProfile(){
 	$("#update-profile-form").validate({
 		  rules: {			  
-			  firstNameTxt: {
+			  firstName: {
 				  required: true
 			  },
-			  lastNameTxt: {
+			  lastName: {
 				  required: true,
 			  },
-			  institutionTxt: {
+			  institution: {
 				  required: true,
 			  },
 		  },
 		  submitHandler: function(form) {
 			$('#btnUpdateProfile').prop('disabled',true);
 			$("#spinner").show();
-          $("#dimmer").show();
-          var d= {};
-      	d.firstName = $("#firstNameTxt").val();
-      	d.lastName = $("#lastNameTxt").val();
-      	d.institution = $("#institutionTxt").val();
-      	d.emailAddrr = $("#emailAddrTxt").text();
-      	
-      	invokeAjax('/user-info','POST',JSON.stringify(d),postUpdateUserFunction,postFailureFunction,null,'text')
-		  },
+            $("#dimmer").show();
+            
+            $('#update-profile-form').attr('action', '/user-info');
+			$("#update-profile-form").submit();
+	     },
 	});
+}
+
+function postUpdateUserFunction(data,status) {
+	location.replace("/");
 }
 
 function validateForgotPassword () {
@@ -157,7 +157,6 @@ function validateForgotPassword () {
 			$("#spinner").show();
             $("#dimmer").show();
         	var forgot_password = {};
-        	forgot_password.emailAddrr = $("#txtforgotPasswordEmail").text();
         	forgot_password.password = $("#forgot_password").val();
         	forgot_password.confirmPassword = $("#forgot_password_confirm").val();
         	
