@@ -35,7 +35,7 @@ import gov.nih.nci.doe.web.DoeWebException;
 public class ResetPasswordController extends AbstractDoeController {
 
 	@GetMapping
-	public ResponseEntity<?> forgotPassword(HttpSession session, @RequestHeader HttpHeaders headers,
+	public ResponseEntity<?> resetPassword(HttpSession session, @RequestHeader HttpHeaders headers,
 			@RequestParam(value = "emailAddr") String emailAddr) throws DoeWebException {
 		log.info("resetting the password for user " + emailAddr);
 
