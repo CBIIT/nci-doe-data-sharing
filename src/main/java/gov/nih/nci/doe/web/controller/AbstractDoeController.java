@@ -166,9 +166,9 @@ public abstract class AbstractDoeController {
 		log.error("Converting Uncaught exception to RestResponse : " + ex.getMessage(), ex);
 
 		response.setHeader("Content-Type", "application/json");
-		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		mailService.sendErrorEmail(ex, getLoggedOnUserInfo());
-		return new DoeResponse("Error occurred", "Invalid input or system error");
+		return new DoeResponse("Error occurred", "Invalid user input or malformed request");
 
 	}
 
