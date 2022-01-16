@@ -1,223 +1,307 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<meta charset="UTF-8">
+<title>Title</title>
 </head>
 <body>
-<div th:fragment="modal-dialogs">
-<div id="forgotPasswordLightbox" class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog" aria-hidden="false"
-aria-labelledby="forgotPasswordLabel">
-        <div class="modal-dialog modal-md" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <p class="modal-title" id="forgotPasswordLabel">
-                        Forgot Password</p>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                </div>
-                <div id="forgotPasswordContent" class="modal-body drilldown-content">
-                
-                   <div class="clearfix forgorPswdErrorBlock" style="display: none;">
-                    <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
-                        <div class="alert alert-danger">
-                            <h6 class="forgotPswdErrorMsg"></h6>
-                        </div>
-                    </div>
-                </div>
-                
-                 <div class="clearfix forgorPswdSuccessBlock" style="display: none;">
-                    <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
-                        <div class="alert alert-success">
-                            <h6 class="forgotPswdSuccessMsg"></h6>
-                        </div>
-                    </div>
-                </div>
-                
-                  <div class="row row-buffer">
-                    <p id="forgotPasswordLightBoxPromptText">
-                       &nbsp;&nbsp; If you have already registered, use this form to request a new password.
-                    </p>
-                  </div>
-                  <div class="row row-buffer">
-                      <div class="col-sm-3"> <label class="infoLabel" for="txtResetPswdLink">Email <span class="required">*</span></label></div>
-                      <div class="col-sm-9"> <input type="text" id="txtResetPswdLink" name="txtResetPswdLink" maxlength="50" class="form-control defaultFocus"> </div>
-                  </div>                  
-                    <div class="row row-buffer">
-                        <div class="col-sm-12"> <span class="errorMessage" id="forgotPasswordErrors"></span></div>
-                    </div>
-                  <div id="forgotPassword_DialogControls" class="row row-buffer" style="text-align: end;">
-                      <div class="col-sm-12" style="margin-bottom: 10px;">
-                         <button type="button" class="btn btn-default pull-right" data-dismiss="modal">
-                              Close
-                          </button>
-                          <button class="btn btn-primary pull-right" id="btnSubmitPswdLink">
-                              Submit
-                          </button>
-                          </div>
-                  </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    
-    <div id="updateAccessPermissionsModal" class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog" aria-hidden="false">
-        <div class="modal-dialog modal-md" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <p class="modal-title">Update Access Groups</p>
-                       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                </div>
-                <div class="clearfix updateAccessGroupsBlock" style="display: none;margin-left:10px;width:90%;">
-                    <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
-                        <div class="alert alert-success">
-                            <h6 class="updateAccessMsg"></h6>
-                        </div>
-                    </div>
-                </div> 
-                
-                <div class="clearfix errorUpdateAccessGroupsBlock" style="display: none;margin-left:10px;width:90%;">
-                    <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
-                        <div class="alert alert-danger">
-                            <h6 class="updateErrorAccessMsg"></h6>
-                        </div>
-                    </div>
-                </div> 
-                <input type="hidden" id="updateCollectionId"/>
-                <input type="hidden" id="accessGroups"/>
-                <input type="hidden" id="permissionGroups"/>
-                <input type="hidden" id="metadata_path"/>
-                 <input type="hidden" id="selectedCollection"/>
-                
-                <div class="modal-body drilldown-content">  
-                <div class="row row-buffer">
-                      <label for="selectedCollectionName">Selected collection: <span id="selectedCollectionName"></span> </label>
-                             <br><br>
-                  
-                  </div>             
-                  <div class="row row-buffer">
-                      <label for="updateAccessGroupsList">Access Groups Permissions <span id="infoTxtForAccessGroups" style="font-size: 14px;"></span></label>
-                          <select class="simple-select2" multiple="multiple" id="updateAccessGroupsList" name="updateAccessGroupsList" style="width:70%">
-                           </select> &nbsp;&nbsp; <span id="publicCheckBox"> <input type="checkbox" id="editPublicAccess" aria-label="public access" value="public access"> Public</span>
-                  </div>                    
-                  <div class="row row-buffer" style="text-align: end;">
-                      <div class="col-sm-12" style="margin-bottom: 10px;">
-                        <button type="button" class="btn btn-default pull-right" data-dismiss="modal"> Close</button>
-                          <button class="btn btn-primary pull-right" id="btnUpdateAccessGroup"> Update</button>
-                          </div>
-                  </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-<div id="updatePermissionModal" class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog" aria-hidden="false">
-        <div class="modal-dialog modal-md" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <p class="modal-title">Update Permissions</p>
-                       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                </div>
-                <div class="clearfix updatePermissionsSuccessBlock" style="display: none;margin-left:10px;width:90%;">
-                    <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
-                        <div class="alert alert-success">
-                            <h6 class="updatePermMsg"></h6>
-                        </div>
-                    </div>
-                </div>
-                
-                 
-                <input type="hidden" id="hiddenCollectionId"/>
-                <div id="updatePermissionsContent" class="modal-body drilldown-content">               
-                  <div class="row row-buffer">
-                      <label for="updateMetaDataPermissionsList">Specify who can edit the collection &nbsp; <i class="fas fa-question-circle" data-toggle="tooltip" title="Permissions to Edit Metadata and Create Subcollections"></i> : </label>
-                          <select class="simple-select2" multiple="multiple" id="updateMetaDataPermissionsList" name="updateMetaDataPermissionsList" style="width:70%">
-                           </select>
-                  </div>                    
-                  <div class="row row-buffer" style="text-align: end;">
-                      <div class="col-sm-12" style="margin-bottom: 10px;">
-                        <button type="button" class="btn btn-default pull-right" data-dismiss="modal"> Close</button>
-                          <button class="btn btn-primary pull-right" id="btnUpdatePermissions"> Update</button>
-                          </div>
-                  </div>
-                </div>
-            </div>
-        </div>
-    </div>
-  
-  
-      <div id="createAssetModal" class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog" aria-hidden="false">
-        <div class="modal-dialog modal-md" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <p class="modal-title">Select Asset Type</p>
-                       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                </div>
-                <div class="clearfix createAssetSuccessBlock" style="display: none;margin-left:10px;width:90%;">
-                    <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
-                        <div class="alert alert-success">
-                            <h6 class="createAssetMsg"></h6>
-                        </div>
-                    </div>
-                </div>
+	<div th:fragment="modal-dialogs">
+		<div id="forgotPasswordLightbox"
+			class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog"
+			aria-hidden="false" aria-labelledby="forgotPasswordLabel">
+			<div class="modal-dialog modal-md" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<p class="modal-title" id="forgotPasswordLabel">Forgot
+							Password</p>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+					</div>
+					<div id="forgotPasswordContent"
+						class="modal-body drilldown-content">
 
-                <div class="modal-body drilldown-content">               
-                  <div class="row row-buffer">
-                      <label for="createAssetCollectionType">Asset Type: </label>
-                          <select class="simple-select2" id="createAssetCollectionType"
-                           name="createAssetCollectionType" style="width:70%">
-                           <option value="Dataset">Dataset</option>
-                           <option value="Model">Model</option>
-                           </select>
-                  </div>                    
-                  <div class="row row-buffer" style="text-align: end;">
-                      <div class="col-sm-12" style="margin-bottom: 10px;">
-                        <button type="button" class="btn btn-default pull-right" data-dismiss="modal"> Close</button>
-                          <button class="btn btn-primary pull-right"  data-dismiss="modal" id="btnSelectAssetType"> Select</button>
-                          </div>
-                  </div>
-                </div>
-            </div>
-        </div>
-    </div>  
-    
-    <div id="registerFileModal" class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog" aria-hidden="false">
-        <div class="modal-dialog modal-md" role="document">
-            <div class="modal-content" style="width: 454px;border-radius: 14px;">
-                <div class="modal-header" style="border-bottom: none;margin-left: 32px;margin-top: 10px;">
-                    <p class="modal-title">Generate Predictions</p>
-                       <button type="button" class="close" data-dismiss="modal" 
-                       aria-label="Close"><span aria-hidden="true">×</span></button>
-                </div>
-                <div class="clearfix performInferencingSuccess" style="display: none;margin-left:10px;width:90%;">
-                    <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
-                        <div class="alert alert-success">
-                            <h6 class="performInferMsg"></h6>
-                        </div>
-                    </div>
-                </div>
-         
-                <div class="modal-body drilldown-content" style="margin-top: -26px;margin-left: 36px;">  
-                 <form class="form-horizontal" id="performInferForm"  method="POST">              
-                  <div class="row row-buffer" style="margin-left: -3px;">
-                  <input type="hidden" id="testModelPath" name="testModelPath"/>
-                  <input type="hidden" id="modelPath" name="modelPath"/>
-                      <label for="uploadTestInferFile" style="color: #033D6F;
-                        font-family: 'inter_regular';font-size: 13px;
-                        font-weight: 500;">Upload file to generate predictions </label>
-                          <input type ="file" style="margin-top: 14px;" id="uploadTestInferFile" name="uploadTestInferFile"/>
-                  </div>
-                  </form>                    
-                  <div class="row row-buffer" style="text-align: center;">
-                      <div class="col-sm-12" style="margin-bottom: 10px;">
-                        
-                          <button class="btn btn-primary pull-right" id="btnRegisterFile"> Generate</button>
-                          </div>
-                  </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
+						<div class="clearfix forgorPswdErrorBlock" style="display: none;">
+							<div class="col-md-12"
+								style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
+								<div class="alert alert-danger">
+									<h6 class="forgotPswdErrorMsg"></h6>
+								</div>
+							</div>
+						</div>
+
+						<div class="clearfix forgorPswdSuccessBlock"
+							style="display: none;">
+							<div class="col-md-12"
+								style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
+								<div class="alert alert-success">
+									<h6 class="forgotPswdSuccessMsg"></h6>
+								</div>
+							</div>
+						</div>
+
+						<div class="row row-buffer">
+							<p id="forgotPasswordLightBoxPromptText">&nbsp;&nbsp; If you
+								have already registered, use this form to request a new
+								password.</p>
+						</div>
+						<div class="row row-buffer">
+							<div class="col-sm-3">
+								<label class="infoLabel" for="txtResetPswdLink">Email <span
+									class="required">*</span></label>
+							</div>
+							<div class="col-sm-9">
+								<input type="text" id="txtResetPswdLink" name="txtResetPswdLink"
+									maxlength="50" class="form-control defaultFocus">
+							</div>
+						</div>
+						<div class="row row-buffer">
+							<div class="col-sm-12">
+								<span class="errorMessage" id="forgotPasswordErrors"></span>
+							</div>
+						</div>
+						<div id="forgotPassword_DialogControls" class="row row-buffer"
+							style="text-align: end;">
+							<div class="col-sm-12" style="margin-bottom: 10px;">
+								<button type="button" class="btn btn-default pull-right"
+									data-dismiss="modal">Close</button>
+								<button class="btn btn-primary pull-right"
+									id="btnSubmitPswdLink">Submit</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div id="updateAccessPermissionsModal"
+			class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog"
+			aria-hidden="false">
+			<div class="modal-dialog modal-md" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<p class="modal-title">Update Access Groups</p>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+					</div>
+					<div class="clearfix updateAccessGroupsBlock"
+						style="display: none; margin-left: 10px; width: 90%;">
+						<div class="col-md-12"
+							style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
+							<div class="alert alert-success">
+								<h6 class="updateAccessMsg"></h6>
+							</div>
+						</div>
+					</div>
+
+					<div class="clearfix errorUpdateAccessGroupsBlock"
+						style="display: none; margin-left: 10px; width: 90%;">
+						<div class="col-md-12"
+							style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
+							<div class="alert alert-danger">
+								<h6 class="updateErrorAccessMsg"></h6>
+							</div>
+						</div>
+					</div>
+					<input type="hidden" id="updateCollectionId" /> <input
+						type="hidden" id="accessGroups" /> <input type="hidden"
+						id="permissionGroups" /> <input type="hidden" id="metadata_path" />
+					<input type="hidden" id="selectedCollection" />
+
+					<div class="modal-body drilldown-content">
+						<div class="row row-buffer">
+							<label for="selectedCollectionName">Selected collection:
+								<span id="selectedCollectionName"></span>
+							</label> <br>
+							<br>
+
+						</div>
+						<div class="row row-buffer">
+							<label for="updateAccessGroupsList">Access Groups
+								Permissions <span id="infoTxtForAccessGroups"
+								style="font-size: 14px;"></span>
+							</label> <select class="simple-select2" multiple="multiple"
+								id="updateAccessGroupsList" name="updateAccessGroupsList"
+								style="width: 70%">
+							</select> &nbsp;&nbsp; <span id="publicCheckBox"> <input
+								type="checkbox" id="editPublicAccess" aria-label="public access"
+								value="public access"> Public
+							</span>
+						</div>
+						<div class="row row-buffer" style="text-align: end;">
+							<div class="col-sm-12" style="margin-bottom: 10px;">
+								<button type="button" class="btn btn-default pull-right"
+									data-dismiss="modal">Close</button>
+								<button class="btn btn-primary pull-right"
+									id="btnUpdateAccessGroup">Update</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="updatePermissionModal"
+			class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog"
+			aria-hidden="false">
+			<div class="modal-dialog modal-md" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<p class="modal-title">Update Permissions</p>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+					</div>
+					<div class="clearfix updatePermissionsSuccessBlock"
+						style="display: none; margin-left: 10px; width: 90%;">
+						<div class="col-md-12"
+							style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
+							<div class="alert alert-success">
+								<h6 class="updatePermMsg"></h6>
+							</div>
+						</div>
+					</div>
+
+
+					<input type="hidden" id="hiddenCollectionId" />
+					<div id="updatePermissionsContent"
+						class="modal-body drilldown-content">
+						<div class="row row-buffer">
+							<label for="updateMetaDataPermissionsList">Specify who
+								can edit the collection &nbsp; <i class="fas fa-question-circle"
+								data-toggle="tooltip"
+								title="Permissions to Edit Metadata and Create Subcollections"></i>
+								:
+							</label> <select class="simple-select2" multiple="multiple"
+								id="updateMetaDataPermissionsList"
+								name="updateMetaDataPermissionsList" style="width: 70%">
+							</select>
+						</div>
+						<div class="row row-buffer" style="text-align: end;">
+							<div class="col-sm-12" style="margin-bottom: 10px;">
+								<button type="button" class="btn btn-default pull-right"
+									data-dismiss="modal">Close</button>
+								<button class="btn btn-primary pull-right"
+									id="btnUpdatePermissions">Update</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div id="createAssetModal" class="modal fade bs-example-modal-lg "
+			tabindex="-1" role="dialog" aria-hidden="false">
+			<div class="modal-dialog modal-md" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<p class="modal-title">Select Asset Type</p>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+					</div>
+					<div class="clearfix createAssetSuccessBlock"
+						style="display: none; margin-left: 10px; width: 90%;">
+						<div class="col-md-12"
+							style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
+							<div class="alert alert-success">
+								<h6 class="createAssetMsg"></h6>
+							</div>
+						</div>
+					</div>
+
+					<div class="modal-body drilldown-content">
+						<div class="row row-buffer">
+							<label for="createAssetCollectionType">Asset Type: </label> <select
+								class="simple-select2" id="createAssetCollectionType"
+								name="createAssetCollectionType" style="width: 70%">
+								<option value="Dataset">Dataset</option>
+								<option value="Model">Model</option>
+							</select>
+						</div>
+						<div class="row row-buffer" style="text-align: end;">
+							<div class="col-sm-12" style="margin-bottom: 10px;">
+								<button type="button" class="btn btn-default pull-right"
+									data-dismiss="modal">Close</button>
+								<button class="btn btn-primary pull-right" data-dismiss="modal"
+									id="btnSelectAssetType">Select</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="registerFileModal" class="modal fade bs-example-modal-lg "
+			tabindex="-1" role="dialog" aria-hidden="false">
+			<div class="modal-dialog modal-md" role="document">
+				<div class="modal-content"
+					style="width: 550px; border-radius: 14px;">
+					<div class="modal-header"
+						style="border-bottom: none; margin-left: 32px; margin-top: 10px;">
+						<p class="modal-title">Generate Predictions</p>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+					</div>
+					<div class="clearfix performInferencingSuccess"
+						style="display: none; margin-left: 10px; width: 90%;">
+						<div class="col-md-12"
+							style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
+							<div class="alert alert-success">
+								<h6 class="performInferMsg"></h6>
+							</div>
+						</div>
+					</div>
+
+					<div class="modal-body drilldown-content"
+						style="margin-top: -26px; margin-left: 36px;">
+						<form class="form-horizontal" id="performInferForm" method="POST">
+							<input type="hidden" id="testModelPath" name="testModelPath" /> <input
+								type="hidden" id="modelPath" name="modelPath" />
+							<div class="form-row row row-buffer"
+								style="margin-left: -3px; margin-top: -15px;">
+								<div class="form-group">
+									<label class="radio-inline"><input type="radio"
+										name="uploadFrom" style="transform: translateY(2px);"
+										value="gdcData">&nbsp;&nbsp; Upload GDC data</label>
+								</div>
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<div class="form-group">
+									<label class="radio-inline"><input type="radio"
+										style="transform: translateY(2px);" name="uploadFrom"
+										value="inputFile">&nbsp;&nbsp; Upload Input File</label>
+								</div>
+							</div>
+							<div class="row row-buffer"
+								style="margin-left: -3px; margin-top: -15px;">
+								<label for="uploadTestInferFile"
+									style="color: #033D6F; font-family: 'inter_regular'; font-size: 13px; font-weight: 500;">Upload
+									file to generate predictions &nbsp; <span id="tooltipHtml"></span>
+								</label> <input type="file" style="margin-top: 14px;"
+									id="uploadTestInferFile" name="uploadTestInferFile" />
+							</div>
+						</form>
+						<div class="row row-buffer"
+							style="text-align: center; margin-top: 10px;">
+							<div class="col-sm-12" style="margin-bottom: 10px;">
+
+								<button class="btn btn-primary pull-right" id="btnRegisterFile">
+									Generate</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

@@ -115,6 +115,8 @@ public class PerformInferencingController extends AbstractDoeController {
 
 		String modelh5Path = request.getParameter("modelPath");
 
+		String uploadFrom = request.getParameter("uploadFrom");
+		
 		String parentPath = null;
 
 		parentPath = testModelPath.substring(0, testModelPath.lastIndexOf('/'));
@@ -128,7 +130,7 @@ public class PerformInferencingController extends AbstractDoeController {
 		try {
 			// save the inferencing task
 			inferencingTaskService.saveInferenceTask(getLoggedOnUserInfo(), taskId, parentPath, resultPath,
-					testModelPath, modelh5Path);
+					testModelPath, modelh5Path,uploadFrom);
 			// copy the test dataset file to IRODsTest mount
 			Files.copy(uploadTestInferFile.getInputStream(),
 					Paths.get(uploadPath + uploadTestInferFile.getOriginalFilename()),

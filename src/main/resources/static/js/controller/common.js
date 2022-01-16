@@ -3,7 +3,7 @@ $(document)
 				function() {
 					console.log("initialize dirty checking");
 					$('form.dirty-check').areYouSure();
-				      
+
 					// Auto-lowercase Email Username (Usernames are always
 					// stored in lowercase)
 					$('#username').blur(function() {
@@ -591,6 +591,9 @@ $(document).on('click', '#openInferModal', function() {
 	});
 
 	$("#registerFileModal").find("#testModelPath").val($("#selectedAssetPath").text());
+	var title="Upload GDC manifest or FPKM-UQ file. For More Details, refer to the guide.";
+	$("#registerFileModal").find("#tooltipHtml").html('<i class="fas fa-question-circle" title = "'+title+'" data-toggle="tooltip" data-placement="right"></i>');
+	
 	$("#registerFileModal").modal('show');
 
 });

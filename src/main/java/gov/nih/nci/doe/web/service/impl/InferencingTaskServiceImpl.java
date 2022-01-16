@@ -26,12 +26,12 @@ public class InferencingTaskServiceImpl implements InferencingTaskService {
 
 	@Override
 	public void saveInferenceTask(String userId, String taskId, String modelPath, String resultPath,
-			String testModelPath, String modelh5Path) {
+			String testModelPath, String modelh5Path, String uploadFrom) {
 
 		log.info("save inference task");
 		InferencingTask t = new InferencingTask();
 		if (StringUtils.isNotEmpty(modelPath)) {
-			String modelIdentifier = modelPath.substring(modelPath.lastIndexOf('/') + 1,modelPath.length());
+			String modelIdentifier = modelPath.substring(modelPath.lastIndexOf('/') + 1, modelPath.length());
 			t.setModelIdentifier(modelIdentifier);
 		}
 
@@ -42,6 +42,7 @@ public class InferencingTaskServiceImpl implements InferencingTaskService {
 		t.setTestDataSetPath(testModelPath);
 		t.setStartDate(new Date());
 		t.setModelh5Path(modelh5Path);
+		t.setUploadFrom(uploadFrom);
 		t.setStatus("NOTSTARTED");
 		inferencingTaskRepository.saveAndFlush(t);
 

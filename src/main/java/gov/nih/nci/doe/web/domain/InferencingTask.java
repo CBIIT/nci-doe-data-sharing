@@ -22,6 +22,7 @@ public class InferencingTask {
 	private String assetPath;
 	private String batchId;
 	private String errorMessage;
+	private String uploadFrom;
 
 	public boolean equals(Object object) {
 		if (this == object) {
@@ -130,6 +131,16 @@ public class InferencingTask {
 
 	public void setModelh5Path(String modelh5Path) {
 		this.modelh5Path = modelh5Path;
+	}
+
+	@Basic
+	@Column(name = "UPLOAD_FROM")
+	public String getUploadFrom() {
+		return uploadFrom;
+	}
+
+	public void setUploadFrom(String uploadFrom) {
+		this.uploadFrom = uploadFrom;
 	}
 
 	@Basic
