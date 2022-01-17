@@ -59,6 +59,7 @@ $(document)
 
 					$('[data-toggle="tooltip"]').tooltip();
 
+
 					$("#searchBtn").click(function(e) {
 						e.preventDefault();
 						populateSearchCriteria('simpleSearch');
@@ -374,12 +375,17 @@ $(document)
 					});
 
 					$('body').on('click',function(e) {
+						
+						$("[data-toggle=popover]").popover({html:true});
+						
 						 $('[data-toggle=popover]').each(function() {
 							 if (!$(this).is(e.target) && $(this).has(e.target).length === 0
 								   && $('.popover').has(e.target).length === 0) {
 								 (($(this).popover('hide').data('bs.popover') || {}).inState || {}).click = false;
 							 }
 						 });
+						 
+						 
 					});
 
 					$("#addMetaData").click(function(e) {
@@ -591,9 +597,14 @@ $(document).on('click', '#openInferModal', function() {
 	});
 
 	$("#registerFileModal").find("#testModelPath").val($("#selectedAssetPath").text());
-	var title="Upload GDC manifest or FPKM-UQ file. For More Details, refer to the guide.";
-	$("#registerFileModal").find("#tooltipHtml").html('<i class="fas fa-question-circle" title = "'+title+'" data-toggle="tooltip" data-placement="right"></i>');
+	var title="Upload GDC manifest or <br/> FPKM-UQ file. <br/>For More Details,<br/><a target='_blank' href='https://wiki.nci.nih.gov/display/MoDaCdoc/Inferencing+for+a+TC1+Model+-+2022-01-13'> refer to the guide.</a>";
+	$("#registerFileModal").find("#tooltipHtml").html('<i class="fas fa-question-circle infoTooltip"'+
+			'data-toggle="popover" data-content="'+title+'"></i>');
 	
+	$(".performInferencingError").hide();
+	$(".performInferMsgError").html("");
+	$("input[name=uploadFrom]").prop("checked",false);
+	$("#uploadTestInferFile").val("");
 	$("#registerFileModal").modal('show');
 
 });
@@ -601,39 +612,52 @@ $(document).on('click', '#openInferModal', function() {
 $(document).on('click', '#btnRegisterFile', function() {
 
 	var testModelPath = $("#registerFileModal").find("#testModelPath").val();
-	// $("#performInferForm").attr('testModelPath', testModelPath);
 	var form = $('#performInferForm')[0];
 	var data = new FormData(form);
+	var file = $("#uploadTestInferFile").val();
+	var uploadType = $('input[name=uploadFrom]:checked').val();
+	
+	if(!file) {
+		$(".performInferencingError").show();
+		$(".performInferMsgError").html("Upload file.")
+	}
+	
+	if(!uploadType) {
+		$(".performInferencingError").show();
+		$(".performInferMsgError").html("Choose upload data from type.")
+	}
+	
+	if (file && uploadType) {
+		$.ajax({
+			type : "POST",
+			enctype : "multipart/form-data",
+			url : "/performInferencing",
+			data : data,
+			processData : false,
+			contentType : false,
+			beforeSend : function() {
+				$("#spinner").show();
+				$("#dimmer").show();
+			},
+			success : function(msg) {
+				$("#spinner").hide();
+				$("#dimmer").hide();
+				$("#registerFileModal").modal('hide');
+				bootbox.dialog({
+					message : msg
+				});
 
-	$.ajax({
-		type : "POST",
-		enctype : "multipart/form-data",
-		url : "/performInferencing",
-		data : data,
-		processData : false,
-		contentType : false,
-		beforeSend : function() {
-			$("#spinner").show();
-			$("#dimmer").show();
-		},
-		success : function(msg) {
-			$("#spinner").hide();
-			$("#dimmer").hide();
-			$("#registerFileModal").modal('hide');
-			bootbox.dialog({
-				message : msg
-			});
-
-		},
-		error : function(e) {
-			$("#spinner").hide();
-			$("#dimmer").hide();
-			console.log('ERROR: ', e);
-			bootbox.dialog({
-				message : e
-			});
-		}
-	});
+			},
+			error : function(e) {
+				$("#spinner").hide();
+				$("#dimmer").hide();
+				console.log('ERROR: ', e);
+				bootbox.dialog({
+					message : e
+				});
+			}
+		});
+	}
 });
 
 $(document).on('click', '.clearMetadata', function() {

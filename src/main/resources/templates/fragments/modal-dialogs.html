@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <title>Title</title>
 </head>
+<style>
+.infoTooltip + .popover{
+    max-width: 250px!important;
+    width: 250px!important; 
+}
+</style>
 <body>
 	<div th:fragment="modal-dialogs">
 		<div id="forgotPasswordLightbox"
@@ -252,12 +258,13 @@
 							<span aria-hidden="true">×</span>
 						</button>
 					</div>
-					<div class="clearfix performInferencingSuccess"
-						style="display: none; margin-left: 10px; width: 90%;">
+
+					<div class="clearfix performInferencingError"
+						style="display: none;margin-left: 37px;width: 90%;margin-bottom: 10px;">
 						<div class="col-md-12"
 							style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
-							<div class="alert alert-success">
-								<h6 class="performInferMsg"></h6>
+							<div class="alert alert-danger">
+								<h6 class="performInferMsgError"></h6>
 							</div>
 						</div>
 					</div>
@@ -283,7 +290,7 @@
 							</div>
 							<div class="row row-buffer"
 								style="margin-left: -3px; margin-top: -15px;">
-								<label for="uploadTestInferFile"
+								<label
 									style="color: #033D6F; font-family: 'inter_regular'; font-size: 13px; font-weight: 500;">Upload
 									file to generate predictions &nbsp; <span id="tooltipHtml"></span>
 								</label> <input type="file" style="margin-top: 14px;"

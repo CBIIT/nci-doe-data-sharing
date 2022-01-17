@@ -1433,6 +1433,12 @@ mrs-100{width:100%}
        width: 100%;
 }
 .popover{max-width:900px!important}
+
+.infoTooltip + .popover{
+    max-width: 250px!important;
+    width: 250px!important; 
+} 
+
 table{text-align: left; font-size:14px;}
 
 .dataTables_filter, .dataTables_paginate{float:right !important; margin-bottom:10px;}   
