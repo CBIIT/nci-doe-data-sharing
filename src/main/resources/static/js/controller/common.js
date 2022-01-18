@@ -605,7 +605,7 @@ $(document).on('click', '#openInferModal', function() {
 	$(".performInferMsgError").html("");
 	$("input[name=uploadFrom]").prop("checked",false);
 	$("#uploadTestInferFile").val("");
-	$("#registerFileModal").modal('show');
+	$("#registerFileModal").modal({show: true, backdrop: 'static', keyboard: false});
 
 });
 

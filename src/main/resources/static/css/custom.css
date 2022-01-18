@@ -334,9 +334,10 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 }
 
 #btnRegisterFile {
-	height: 38px;
-    width: 154px;
+    width: 155px;
     border-radius: 14px;
+    font-family: 'inter_regular';
+    font-size: 15px;
 }
 .backToSearch,.backToStatusTab,.backToUpload {
  color: #E87B05;

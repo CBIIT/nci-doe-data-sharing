@@ -253,7 +253,7 @@
 					<div class="modal-header"
 						style="border-bottom: none; margin-left: 32px; margin-top: 10px;">
 						<p class="modal-title">Generate Predictions</p>
-						<button type="button" class="close" data-dismiss="modal"
+						<button type="button" class="close" data-dismiss="modal" style="margin-top: -30px;"
 							aria-label="Close">
 							<span aria-hidden="true">×</span>
 						</button>
@@ -277,21 +277,23 @@
 							<div class="form-row row row-buffer"
 								style="margin-left: -3px; margin-top: -15px;">
 								<div class="form-group">
-									<label class="radio-inline"><input type="radio"
+									<label style="font-size: 14px;font-family: 'inter_regular';" class="radio-inline">
+									<input type="radio"
 										name="uploadFrom" style="transform: translateY(2px);"
-										value="gdcData">&nbsp;&nbsp; Upload GDC data</label>
+										value="gdcData">&nbsp;&nbsp;Upload GDC data</label>
 								</div>
 								&nbsp;&nbsp;&nbsp;&nbsp;
 								<div class="form-group">
-									<label class="radio-inline"><input type="radio"
+									<label style="font-size: 14px;font-family: 'inter_regular';" class="radio-inline">
+									<input type="radio"
 										style="transform: translateY(2px);" name="uploadFrom"
-										value="inputFile">&nbsp;&nbsp; Upload Input File</label>
+										value="inputFile">&nbsp;&nbsp;Upload Input File</label>
 								</div>
 							</div>
 							<div class="row row-buffer"
 								style="margin-left: -3px; margin-top: -15px;">
 								<label
-									style="color: #033D6F; font-family: 'inter_regular'; font-size: 13px; font-weight: 500;">Upload
+									style="color: #033D6F; font-family: 'inter_regular'; font-size: 14px; font-weight: 500;">Upload
 									file to generate predictions &nbsp; <span id="tooltipHtml"></span>
 								</label> <input type="file" style="margin-top: 14px;"
 									id="uploadTestInferFile" name="uploadTestInferFile" />
@@ -301,7 +303,7 @@
 							style="text-align: center; margin-top: 10px;">
 							<div class="col-sm-12" style="margin-bottom: 10px;">
 
-								<button class="btn btn-primary pull-right" id="btnRegisterFile">
+								<button class="btn btn-primary" id="btnRegisterFile">
 									Generate</button>
 							</div>
 						</div>
