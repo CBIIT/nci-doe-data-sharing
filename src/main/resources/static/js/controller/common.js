@@ -596,8 +596,14 @@ $(document).on('click', '#openInferModal', function() {
 		}
 	});
 
+	var modelFile = $("#registerFileModal").find("#modelPath").val(value);
 	$("#registerFileModal").find("#testModelPath").val($("#selectedAssetPath").text());
-	var title="Upload GDC manifest or <br/> FPKM-UQ file. <br/>For More Details,<br/><a target='_blank' href='https://wiki.nci.nih.gov/display/MoDaCdoc/Inferencing+for+a+TC1+Model+-+2022-01-13'> refer to the guide.</a>";
+	if(modelFile.indexOf('mt_cnn') != -1 || modelFile.indexOf('mt-cnn') != -1) {
+		var title="Upload GDC manifest or <br/> pathalogy report. <br/>For More Details,<br/><a target='_blank' href='https://wiki.nci.nih.gov/display/MoDaCdoc/Inferencing+for+an+MT-CNN+Model+-+2022-01-13'> refer to the guide.</a>";
+	} else {
+		var title="Upload GDC manifest or <br/> FPKM-UQ file. <br/>For More Details,<br/><a target='_blank' href='https://wiki.nci.nih.gov/display/MoDaCdoc/Inferencing+for+a+TC1+Model+-+2022-01-13'> refer to the guide.</a>";
+	}
+	
 	$("#registerFileModal").find("#tooltipHtml").html('<i class="fas fa-question-circle infoTooltip"'+
 			'data-toggle="popover" data-content="'+title+'"></i>');
 	
