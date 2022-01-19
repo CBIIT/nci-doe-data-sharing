@@ -348,7 +348,8 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 #registerCollectionBtn {
     color: #fff !important;
     border-radius: 15px;
-    width: 147px;
+    /*width: 147px;*/
+    width: fit-content;
     font-size: 15px;
     font-family: 'inter_regular';
 }
