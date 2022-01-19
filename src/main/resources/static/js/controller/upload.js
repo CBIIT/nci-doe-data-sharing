@@ -590,6 +590,7 @@ function showSelect(collection,selection) {
 		
 		loadJsonData('/browse', $("#instituteList"), isEmptyOption, null, null, null, "key", "value");		
 		$("#showSelectProgramDiv").show();
+		resetOnChangeofSelectCollection("instituteList",null);
 		
 	} else if (collection == 'Study') {
 		
@@ -610,6 +611,7 @@ function showSelect(collection,selection) {
 		loadJsonData('/browse/collection', $("#studyList"), isEmptyOption, params, null, null, "key", "value");
 
 		$("#showSelectStudyDiv").show();
+		resetOnChangeofSelectCollection("studyList",null);
 	} else if (collection == 'Asset') {
 		
 		if(isEmptyOption) {
