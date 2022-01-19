@@ -658,10 +658,9 @@ function resetSelectionsForBackToUploadTab() {
 		}
 	}
 	if ($("input[name=selectAsset]").is(":visible")) {
-		if ($("#dataList").is(":visible")) {
-			$("input[name=selectAsset][value='Select Asset']").prop("checked", true);
-		} else {
-			$("input[name=selectAsset][value='Select Asset']").off().click();
+		$("input[name=selectAsset][value='Select Asset']").prop("checked", true);
+		if (!$("#dataList").is(":visible")) {
+			showSelect('Asset');
 		}
 	}
 }
