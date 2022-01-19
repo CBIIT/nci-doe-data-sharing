@@ -7,7 +7,7 @@ import gov.nih.nci.doe.web.domain.InferencingTask;
 public interface InferencingTaskService {
 
 	public void saveInferenceTask(String userId, String taskId, String modelPath, String resultPath,
-			String testModelPath, String modelh5Path, String uploadFrom);
+			String testInputPath, String modelh5Path, String uploadFrom);
 
 	public void updateInferenceTask(String taskId, String dmeTaskId);
 	

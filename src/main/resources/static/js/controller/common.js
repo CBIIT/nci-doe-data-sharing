@@ -581,8 +581,8 @@ $(document).on('click', '.sharableLink', function() {
 $(document).on('change', '#uploadTestInferFile', function() {
 	var $this = $(this);
 	var filename = $this.val().replace(/^C:\\fakepath\\/, "")
-	var value = $("#testModelPath").val() + "/" + filename;
-	$("#registerFileModal").find("#testModelPath").val(value);
+	var value = $("#testInputPath").val() + "/" + filename;
+	$("#registerFileModal").find("#testInputPath").val(value);
 });
 
 $(document).on('click', '#openInferModal', function() {
@@ -597,7 +597,7 @@ $(document).on('click', '#openInferModal', function() {
 	});
 
 	var modelFile = $("#registerFileModal").find("#modelPath").val();
-	$("#registerFileModal").find("#testModelPath").val($("#selectedAssetPath").text());
+	$("#registerFileModal").find("#testInputPath").val($("#selectedAssetPath").text());
 	if(modelFile.indexOf('mt_cnn') != -1 || modelFile.indexOf('mt-cnn') != -1) {
 		var title="Upload GDC manifest or <br/> pathology report. <br/>For more details, refer to the<br/><a target='_blank' href='https://wiki.nci.nih.gov/x/cQh2H'> user guide.</a>";
 	} else {
@@ -617,7 +617,6 @@ $(document).on('click', '#openInferModal', function() {
 
 $(document).on('click', '#btnRegisterFile', function() {
 
-	var testModelPath = $("#registerFileModal").find("#testModelPath").val();
 	var form = $('#performInferForm')[0];
 	var data = new FormData(form);
 	var file = $("#uploadTestInferFile").val();

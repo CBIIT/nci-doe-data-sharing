@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -108,18 +109,17 @@ public class PerformInferencingController extends AbstractDoeController {
 	@PostMapping
 	@ResponseBody
 	public String performInfer(@RequestParam("uploadTestInferFile") MultipartFile uploadTestInferFile,
-			@RequestParam("testModelPath") String testModelPath, HttpSession session, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+			HttpSession session, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		log.info("perform inferencing for test dataset: " + uploadTestInferFile.getOriginalFilename());
 
 		String modelh5Path = request.getParameter("modelPath");
 
 		String uploadFrom = request.getParameter("uploadFrom");
-		
-		String parentPath = null;
 
-		parentPath = testModelPath.substring(0, testModelPath.lastIndexOf('/'));
+		String testInputPath = request.getParameter("testInputPath");
+
+		String parentPath = testInputPath != null ? testInputPath.substring(0, testInputPath.lastIndexOf('/')) : null;
 
 		// create a modac task Id
 		String taskId = UUID.randomUUID().toString();
@@ -127,13 +127,20 @@ public class PerformInferencingController extends AbstractDoeController {
 		// create a file name for y_pred file and append to the asset Path
 		String resultPath = parentPath + "/y_pred_" + taskId + ".csv";
 
+		// create a unique file name for input path since the same file can be uploaded
+		// multiple times by the user and causing an issue in inferencing script to
+		// locate the file
+		String testInputName = FilenameUtils.getBaseName(testInputPath);
+		String testInputExt = FilenameUtils.getExtension(testInputPath);
+
+		String updatedTestInputName = testInputName + "_" + taskId + "." + testInputExt;
+		String updatesTestInputPath = parentPath + "/" + updatedTestInputName;
 		try {
 			// save the inferencing task
 			inferencingTaskService.saveInferenceTask(getLoggedOnUserInfo(), taskId, parentPath, resultPath,
-					testModelPath, modelh5Path,uploadFrom);
+					updatesTestInputPath, modelh5Path, uploadFrom);
 			// copy the test dataset file to IRODsTest mount
-			Files.copy(uploadTestInferFile.getInputStream(),
-					Paths.get(uploadPath + uploadTestInferFile.getOriginalFilename()),
+			Files.copy(uploadTestInferFile.getInputStream(), Paths.get(uploadPath + updatedTestInputName),
 					StandardCopyOption.REPLACE_EXISTING);
 
 			return "Perform Inferencing task Submitted. Your task Id is " + taskId;

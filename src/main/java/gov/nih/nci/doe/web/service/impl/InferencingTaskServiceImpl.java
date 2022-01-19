@@ -26,7 +26,7 @@ public class InferencingTaskServiceImpl implements InferencingTaskService {
 
 	@Override
 	public void saveInferenceTask(String userId, String taskId, String modelPath, String resultPath,
-			String testModelPath, String modelh5Path, String uploadFrom) {
+			String testInputPath, String modelh5Path, String uploadFrom) {
 
 		log.info("save inference task");
 		InferencingTask t = new InferencingTask();
@@ -39,7 +39,7 @@ public class InferencingTaskServiceImpl implements InferencingTaskService {
 		t.setTaskId(taskId);
 		t.setAssetPath(modelPath);
 		t.setResultPath(resultPath);
-		t.setTestDataSetPath(testModelPath);
+		t.setTestDataSetPath(testInputPath);
 		t.setStartDate(new Date());
 		t.setModelh5Path(modelh5Path);
 		t.setUploadFrom(uploadFrom);
