@@ -579,14 +579,23 @@ function showSelect(collection,selection) {
 	if(selection) {
 		isEmptyOption = false;
 	} else {
-		isEmptyOption =true;
+		isEmptyOption = true;
 	}
 	
 	if (collection == 'Program') {		
+		
+		if(isEmptyOption) {
+			$("#institutePath").val("");
+		}
+		
 		loadJsonData('/browse', $("#instituteList"), isEmptyOption, null, null, null, "key", "value");		
 		$("#showSelectProgramDiv").show();
 		
 	} else if (collection == 'Study') {
+		
+		if(isEmptyOption) {
+			$("#studyPath").val("");
+		}
 		
 		if(selection) {
 			seclectedValue= selection;
@@ -602,7 +611,11 @@ function showSelect(collection,selection) {
 
 		$("#showSelectStudyDiv").show();
 	} else if (collection == 'Asset') {
-				
+		
+		if(isEmptyOption) {
+			$("#datafilePath").val("");
+		}
+		
 		if(selection) {
 			seclectedValue= selection;
 		} else {
@@ -648,7 +661,7 @@ function resetSelectionsForBackToUploadTab() {
 		if ($("#dataList").is(":visible")) {
 			$("input[name=selectAsset][value='Select Asset']").prop("checked", true);
 		} else {
-			$("input[name=selectAsset][value='Select Asset']").click();
+			$("input[name=selectAsset][value='Select Asset']").off().click();
 		}
 	}
 }
