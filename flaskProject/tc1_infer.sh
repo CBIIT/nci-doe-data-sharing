@@ -6,6 +6,7 @@ echo "Starting infer script"
 echo datafilename is ${1}
 echo modelfilename is ${2}
 echo predfilename is ${3}
-source /home/ncidoesvct2/tc-1/bin/activate
-python /home/ncidoesvct2/tc1_infer.py ${1} ${2} ${3}
+echo uploadFrom is ${4}
+source /home/ncidoesvct2/tc_1/bin/activate
+python3 /home/ncidoesvct2/tc1_infer.py ${1} ${2} ${3} ${4}
 echo "Completed infer script"

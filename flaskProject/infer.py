@@ -11,6 +11,8 @@ from keras.models import load_model
 import numpy as np
 import pandas as pd
 
+from pdfconverter import convert_PDF_to_Txt
+from gdc_rnaseq_tool import run_pre_process
 
 def clearup(document):
     document = document.translate(string.punctuation)
@@ -25,7 +27,6 @@ def clearup(document):
 
 
 def vectorSingle(filename, word2_idx, vocabs):
-    print(filename)
     if os.path.isfile(filename):
         doc = open(filename, 'r', encoding="utf8").read().strip()
         doc = clearup(doc)
@@ -65,10 +66,19 @@ try:
     datafilename = sys.argv[1]
     modelfilename = sys.argv[2]
     pred_name = sys.argv[3]
+    upload_from = sys.argv[4]
+    input_file_name = '/mnt/IRODsTest/' + datafilename
 
+    # datafilename = "MANIFEST_1.txt"
+    # modelfilename = "mt_cnn_model.h5"
+    # pred_name = "final.csv"
+    # upload_from = "gdcData"
     print("data filename: " + datafilename)
     print("model file Name:" + modelfilename)
     print("fname:" + pred_name)
+
+    if not os.path.isfile(input_file_name):
+        raise Exception("Error in uploading input file.")
 
     model = load_model('/mnt/IRODsTest/' + modelfilename)
     with open('word2idx.pkl', 'rb') as f:
@@ -76,7 +86,7 @@ try:
     vocab = np.load('vocab.npy')
     vec = []
     hist_site_pred_results = []
-    input_file_name = '/mnt/IRODsTest/' + datafilename
+    file_name, file_extension = os.path.splitext(datafilename)
     if tarfile.is_tarfile(input_file_name):
         print("is tar file")
         my_tar = tarfile.open(input_file_name)
@@ -91,16 +101,42 @@ try:
             print("loop through files")
             for file in files:
                 file = file.strip("._")
-                print("call vector single method")
-                vec = vectorSingle(os.path.join(root, file), word2idx, vocab)
+                file_n, file_ext = os.path.splitext(file)
+                if file_ext == '.pdf':
+                    print("is pdf")
+                    file_txt = convert_PDF_to_Txt(os.path.join(root, file))
+                    print("call vector single method")
+                    vec = vectorSingle(file_txt, word2idx, vocab)
+                    os.remove(file_txt)
+                else:
+                    print("call vector single method")
+                    vec = vectorSingle(os.path.join(root, file), word2idx, vocab)
                 print("perform predictions")
                 pred_probs_list = model.predict(np.array(vec))
                 hist_site_pred_results += modelPredict(pred_probs_list, file)
         # remove the directory after inferencing is complete
         if os.path.exists(dir_name):
             shutil.rmtree(dir_name, ignore_errors=True)
+    elif file_extension == '.pdf':
+        print("file is a pdf")
+        input_txt_file = convert_PDF_to_Txt(input_file_name)
+        vec = vectorSingle(input_txt_file, word2idx, vocab)
+        os.remove(input_txt_file)
+        pred_probs_list = model.predict(np.array(vec))
+        hist_site_pred_results = modelPredict(pred_probs_list, datafilename)
+    elif upload_from is not None and upload_from == "gdcData" and "manifest" in datafilename.lower() and file_extension == '.txt':
+        print("manifest file")
+        Files = run_pre_process(input_file_name)
+        for f in Files:
+            input_txt_file = convert_PDF_to_Txt(f)
+            vec = vectorSingle(input_txt_file, word2idx, vocab)
+            os.remove(input_txt_file)
+            pred_probs_list = model.predict(np.array(vec))
+            hist_site_pred_results += modelPredict(pred_probs_list, datafilename)
+        shutil.rmtree("GDC-DATA", ignore_errors=True)
+
     else:
-        print("not a tar file")
+        print("not a tar file, pdf file or manifest file")
         vec = vectorSingle(input_file_name, word2idx, vocab)
         pred_probs_list = model.predict(np.array(vec))
         hist_site_pred_results = modelPredict(pred_probs_list, datafilename)
@@ -116,6 +152,7 @@ try:
     print("inference completed")
 
 except Exception as e:
+    shutil.rmtree("GDC-DATA", ignore_errors=True)
     pred_file_name = os.path.basename(pred_name)
     error_file_name = pred_file_name + "_error.txt"
     print("error file name" + error_file_name)
