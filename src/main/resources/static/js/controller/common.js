@@ -625,7 +625,7 @@ $(document).on('click', '#btnRegisterFile', function() {
 	
 	if(!file) {
 		$(".performInferencingError").show();
-		$(".performInferMsgError").html("Upload file.")
+		$(".performInferMsgError").html("Upload file to generate predictions.")
 	}
 	
 	if(!uploadType) {
