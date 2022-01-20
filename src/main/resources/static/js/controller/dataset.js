@@ -200,7 +200,7 @@ function generatePredTable(isVisible) {
 		],
 		columnDefs : [ {
 			orderable : false,
-			className : 'select-checkbox td_class_5',
+			className : 'select-checkbox td_class_15',
 			headerHtml : 'batch select',
 			blurable : true,
 			targets : 0,
@@ -210,7 +210,7 @@ function generatePredTable(isVisible) {
 			"orderable" : false
 		}, {
 			"targets" : 1,
-			className: "td_class_4"
+			className: "td_class_35"
 		},
 		{
 			"targets" : 2,
@@ -219,7 +219,7 @@ function generatePredTable(isVisible) {
 		{
 			"visible" : isVisible,
 			"targets" : -1,
-			className: "td_class_5",
+			className: "td_class_15",
 			"orderable" : false,
 		} ],
 
