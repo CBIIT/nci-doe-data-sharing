@@ -262,8 +262,9 @@ function renderInferStatus(data,type,row) {
         "><img src='images/Download.png' data-toggle='tooltip' title='Download File' th:src='@{/images/Download.png}' " +
 		"style='width:17px;' alt='download file'></a>";
 	} else if(data == 'Failed') {
+		var error_msg = row.errorMessage.replace(/["']/g, "");
 		html += data + "&nbsp;&nbsp;<img style='width:12px;' data-toggle='tooltip'" +
-				"src='images/Status.info-tooltip.png' alt='failed message' title='" + row.errorMessage + "'>";
+				"src='images/Status.info-tooltip.png' alt='failed message' title= '" + error_msg + "'>";
 	} else {
 		html += data;
 	}
