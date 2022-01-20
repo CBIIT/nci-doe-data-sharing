@@ -236,6 +236,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 
 				boolean check = new File("/mnt/IRODsTest/" + fileNameOriginal).exists();
 				boolean isErrorFile = new File("/mnt/IRODsTest/" + fileNameOriginal + "_error.txt").exists();
+
 				// if predictions file is available, create a collection folder under Asset and
 				// upload
 				// prediction under this folder
@@ -243,66 +244,84 @@ public class ManageTasksScheduler extends AbstractDoeController {
 					log.info("pred file available on mount: " + fileNameOriginal);
 					String parentPath = t.getTestDataSetPath().substring(0, t.getTestDataSetPath().lastIndexOf('/'));
 					String folderPath = parentPath + "/Predictions_" + t.getUserId();
-					HpcCollectionRegistrationDTO dto = new HpcCollectionRegistrationDTO();
-					List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
-					HpcMetadataEntry entry = new HpcMetadataEntry();
-					entry.setValue("Folder");
-					entry.setAttribute("collection_type");
-					metadataEntries.add(entry);
-
-					// add folder identifier metadata
-					HpcMetadataEntry folderIdentifierMetadata = new HpcMetadataEntry();
-					folderIdentifierMetadata.setValue("Predictions_" + t.getUserId());
-					folderIdentifierMetadata.setAttribute("folder_identifier");
-					metadataEntries.add(folderIdentifierMetadata);
-
-					dto.getMetadataEntries().addAll(metadataEntries);
-					Integer responseStatus = DoeClientUtil.updateCollection(authToken, serviceURL, dto, folderPath);
-					if (responseStatus == 200 || responseStatus == 201) {
-
-						// save folder permissions to MoDaC
-						HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL,
-								folderPath, false);
-
-						if (collections != null && collections.getCollections() != null
-								&& !CollectionUtils.isEmpty(collections.getCollections())) {
-
-							HpcCollectionDTO collection = collections.getCollections().get(0);
-
-							// save collection permissions in MoDaC DB
-
-							metaDataPermissionService.savePermissionsList(t.getUserId(), null,
-									collection.getCollection().getCollectionId(), folderPath);
+					Boolean isFolderPathExists = false;
+					try {
+						HpcCollectionListDTO collection = DoeClientUtil.getCollection(authToken, serviceURL, folderPath,
+								false, true);
+						if (collection != null && collection.getCollections() != null
+								&& CollectionUtils.isNotEmpty(collection.getCollections())) {
+							log.info("Collection already exists: " + folderPath);
+							isFolderPathExists = true;
 						}
+					} catch (DoeWebException e) {
+						log.debug("Error in get collection of type folder" + e.getMessage());
+					}
 
-						// upload both test dataset and pred file to cloudian
+					if (Boolean.FALSE.equals(isFolderPathExists)) {
 
-						log.info("upload test dataset to cloudian: " + testDataSetFileName);
-						HpcBulkDataObjectRegistrationRequestDTO registrationDTO = constructV2BulkRequest(t.getUserId(),
-								folderPath + "/" + testDataSetFileName, testDataSetFileName,
-								"input_dataset_" + t.getTaskId());
+						log.info("Collection does not exist. creating collection of type Folder" + folderPath);
+						HpcCollectionRegistrationDTO dto = new HpcCollectionRegistrationDTO();
+						List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
 
-						// call the FileUpload API to upload the test dataset file to cloudian
-						HpcBulkDataObjectRegistrationResponseDTO responseDTO = DoeClientUtil
-								.registerBulkDatafiles(authToken, registrationServiceV2URL, registrationDTO);
-						if (responseDTO != null) {
-							log.info("dme task id for uplaoding test data set" + responseDTO.getTaskId());
-						}
+						HpcMetadataEntry entry = new HpcMetadataEntry();
+						entry.setValue("Folder");
+						entry.setAttribute("collection_type");
+						metadataEntries.add(entry);
 
-						HpcBulkDataObjectRegistrationRequestDTO registrationDTO1 = constructV2BulkRequest(t.getUserId(),
-								folderPath + "/" + fileNameOriginal, fileNameOriginal, "y_pred_" + t.getTaskId());
+						// add folder identifier metadata
+						HpcMetadataEntry folderIdentifierMetadata = new HpcMetadataEntry();
+						folderIdentifierMetadata.setValue("Predictions_" + t.getUserId());
+						folderIdentifierMetadata.setAttribute("folder_identifier");
+						metadataEntries.add(folderIdentifierMetadata);
 
-						// call the FileUpload API to upload the pred file to cloudian
-						HpcBulkDataObjectRegistrationResponseDTO responseDTO1 = DoeClientUtil
-								.registerBulkDatafiles(authToken, registrationServiceV2URL, registrationDTO1);
-						if (responseDTO1 != null) {
-							String dmeTaskId = responseDTO1.getTaskId();
-							t.setTestDataSetPath(folderPath + "/" + testDataSetFileName);
-							t.setResultPath(folderPath + "/" + fileNameOriginal);
-							t.setDmeTaskId(dmeTaskId);
-							inferencingTaskRepository.saveAndFlush(t);
+						dto.getMetadataEntries().addAll(metadataEntries);
+						Integer responseStatus = DoeClientUtil.updateCollection(authToken, serviceURL, dto, folderPath);
+						if (responseStatus == 200 || responseStatus == 201) {
+							// save folder permissions to MoDaC
+							HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL,
+									folderPath, false);
+
+							if (collections != null && collections.getCollections() != null
+									&& !CollectionUtils.isEmpty(collections.getCollections())) {
+
+								HpcCollectionDTO collection = collections.getCollections().get(0);
+
+								// save collection permissions in MoDaC DB
+
+								metaDataPermissionService.savePermissionsList(t.getUserId(), null,
+										collection.getCollection().getCollectionId(), folderPath);
+							}
 						}
 					}
+
+					// upload both input dataset file and pred file to cloudian
+
+					log.info("upload test dataset to cloudian: " + testDataSetFileName);
+					HpcBulkDataObjectRegistrationRequestDTO registrationDTO = constructV2BulkRequest(t.getUserId(),
+							folderPath + "/" + testDataSetFileName, testDataSetFileName,
+							"input_dataset_" + t.getTaskId());
+
+					// call the FileUpload API to upload the test dataset file to cloudian
+					HpcBulkDataObjectRegistrationResponseDTO responseDTO = DoeClientUtil
+							.registerBulkDatafiles(authToken, registrationServiceV2URL, registrationDTO);
+					if (responseDTO != null) {
+						log.info("dme task id for uplaoding test data set" + responseDTO.getTaskId());
+					}
+
+					HpcBulkDataObjectRegistrationRequestDTO registrationDTO1 = constructV2BulkRequest(t.getUserId(),
+							folderPath + "/" + fileNameOriginal, fileNameOriginal, "y_pred_" + t.getTaskId());
+
+					// call the FileUpload API to upload the pred file to cloudian
+					HpcBulkDataObjectRegistrationResponseDTO responseDTO1 = DoeClientUtil
+							.registerBulkDatafiles(authToken, registrationServiceV2URL, registrationDTO1);
+					if (responseDTO1 != null) {
+						String dmeTaskId = responseDTO1.getTaskId();
+						t.setTestDataSetPath(folderPath + "/" + testDataSetFileName);
+						t.setResultPath(folderPath + "/" + fileNameOriginal);
+						t.setDmeTaskId(dmeTaskId);
+						inferencingTaskRepository.saveAndFlush(t);
+					}
+
 				} else if (Boolean.TRUE.equals(isErrorFile)) {
 					log.info("error file available on mount: " + fileNameOriginal + "_error.txt");
 					t.setStatus("FAILED");
