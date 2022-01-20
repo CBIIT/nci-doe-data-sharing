@@ -548,7 +548,6 @@ $(document).on('keyup', '.filterSearchBox', function() {
 	var query = $(this).val().toLowerCase();
 	$(this).parent().find('.filteritem').each(function(i, elem) {
 		var x = $(this).val().toLowerCase();
-		;
 		if (x.indexOf(query) != -1) {
 			$(this).parent().show();
 
