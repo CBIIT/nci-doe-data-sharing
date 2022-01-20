@@ -277,6 +277,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 						dto.getMetadataEntries().addAll(metadataEntries);
 						Integer responseStatus = DoeClientUtil.updateCollection(authToken, serviceURL, dto, folderPath);
 						if (responseStatus == 200 || responseStatus == 201) {
+							log.info("collection created: " + "Predictions_" + t.getUserId());
 							// save folder permissions to MoDaC
 							HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL,
 									folderPath, false);
