@@ -750,13 +750,14 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before
     position: fixed;
 }
 
-#doeMetadataFile,#uploadTestInferFile {
+#doeMetadataFile,#uploadTestInferFile,#uploadTestOutputFile {
 	color: #000000;
   font-family: 'inter_regular';
   font-size: 15px;
 }
 
-#doeMetadataFile::file-selector-button,#uploadTestInferFile::file-selector-button {
+#doeMetadataFile::file-selector-button,#uploadTestInferFile::file-selector-button,
+#uploadTestOutputFile::file-selector-button {
   margin-right:15px;
   box-sizing: border-box;
   height: 36px;

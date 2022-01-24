@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import gov.nih.nci.doe.web.domain.InferencingTask;
+import gov.nih.nci.doe.web.model.InferencingTaskModel;
 import gov.nih.nci.doe.web.repository.InferencingTaskRepository;
 import gov.nih.nci.doe.web.service.InferencingTaskService;
 
@@ -25,24 +26,25 @@ public class InferencingTaskServiceImpl implements InferencingTaskService {
 	InferencingTaskRepository inferencingTaskRepository;
 
 	@Override
-	public void saveInferenceTask(String userId, String taskId, String modelPath, String resultPath,
-			String testInputPath, String modelh5Path, String uploadFrom) {
+	public void saveInferenceTask(InferencingTaskModel inference) {
 
 		log.info("save inference task");
 		InferencingTask t = new InferencingTask();
-		if (StringUtils.isNotEmpty(modelPath)) {
-			String modelIdentifier = modelPath.substring(modelPath.lastIndexOf('/') + 1, modelPath.length());
-			t.setModelIdentifier(modelIdentifier);
+		String assetPath = inference.getAssetPath();
+		if (StringUtils.isNotEmpty(assetPath)) {
+			String assetIdentifier = assetPath.substring(assetPath.lastIndexOf('/') + 1, assetPath.length());
+			t.setModelIdentifier(assetIdentifier);
 		}
 
-		t.setUserId(userId);
-		t.setTaskId(taskId);
-		t.setAssetPath(modelPath);
-		t.setResultPath(resultPath);
-		t.setTestDataSetPath(testInputPath);
+		t.setUserId(inference.getUserId());
+		t.setTaskId(inference.getTaskId());
+		t.setAssetPath(assetPath);
+		t.setResultPath(inference.getResultPath());
+		t.setTestDataSetPath(inference.getTestInputPath());
 		t.setStartDate(new Date());
-		t.setModelh5Path(modelh5Path);
-		t.setUploadFrom(uploadFrom);
+		t.setModelh5Path(inference.getModelPath());
+		t.setUploadFrom(inference.getUploadFrom());
+		t.setActualResultsFileName(inference.getOutputResultName());
 		t.setStatus("NOTSTARTED");
 		inferencingTaskRepository.saveAndFlush(t);
 

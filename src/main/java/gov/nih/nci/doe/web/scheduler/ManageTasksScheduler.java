@@ -185,6 +185,8 @@ public class ManageTasksScheduler extends AbstractDoeController {
 					ucBuilder.queryParam("modelName", modelName);
 					ucBuilder.queryParam("resultFileName", resultFileName);
 					ucBuilder.queryParam("uploadFrom", t.getUploadFrom());
+					ucBuilder.queryParam("outputResultsName",
+							t.getActualResultsFileName() != null ? t.getActualResultsFileName() : "None");
 
 					final String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
 

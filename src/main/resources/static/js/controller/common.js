@@ -599,17 +599,23 @@ $(document).on('click', '#openInferModal', function() {
 	$("#registerFileModal").find("#testInputPath").val($("#selectedAssetPath").text());
 	if(modelFile.indexOf('mt_cnn') != -1 || modelFile.indexOf('mt-cnn') != -1) {
 		var title="Upload GDC manifest or <br/> pathology report. <br/>For more details, refer to the<br/><a target='_blank' href='https://wiki.nci.nih.gov/x/cQh2H'> user guide</a>.";
+		var outputTitle = "This is optional. Upload the expected output <br/> file to evaluate the current model. <br/>For more details, refer to the<br/><a target='_blank' href='https://wiki.nci.nih.gov/x/cQh2H'> user guide</a>.";
 	} else {
 		var title="Upload GDC manifest or <br/> FPKM-UQ file. <br/>For more details, refer to the<br/><a target='_blank' href='https://wiki.nci.nih.gov/x/bwh2H'> user guide</a>.";
+		var outputTitle = "This is optional. Upload the expected output <br/>file to evaluate the current model. <br/>For more details, refer to the<br/><a target='_blank' href='https://wiki.nci.nih.gov/x/bwh2H'> user guide</a>.";
 	}
 	
 	$("#registerFileModal").find("#tooltipHtml").html('<i class="fas fa-question-circle infoTooltip"'+
 			'data-toggle="popover" data-content="'+title+'"></i>');
 	
+	$("#registerFileModal").find("#outputTooltipHtml").html('<i class="fas fa-question-circle infoTooltip"'+
+			'data-toggle="popover" data-content="'+outputTitle+'"></i>');
+	
 	$(".performInferencingError").hide();
 	$(".performInferMsgError").html("");
 	$("input[name=uploadFrom]").prop("checked",false);
 	$("#uploadTestInferFile").val("");
+	$("uploadTestOutputFile").val("")
 	$("#registerFileModal").modal({show: true, backdrop: 'static', keyboard: false});
 
 });

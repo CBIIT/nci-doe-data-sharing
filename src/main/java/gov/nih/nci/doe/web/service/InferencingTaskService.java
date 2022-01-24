@@ -3,11 +3,11 @@ package gov.nih.nci.doe.web.service;
 import java.util.List;
 
 import gov.nih.nci.doe.web.domain.InferencingTask;
+import gov.nih.nci.doe.web.model.InferencingTaskModel;
 
 public interface InferencingTaskService {
 
-	public void saveInferenceTask(String userId, String taskId, String modelPath, String resultPath,
-			String testInputPath, String modelh5Path, String uploadFrom);
+	public void saveInferenceTask(InferencingTaskModel inference);
 
 	public void updateInferenceTask(String taskId, String dmeTaskId);
 	

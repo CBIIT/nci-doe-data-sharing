@@ -23,6 +23,7 @@ public class InferencingTask {
 	private String batchId;
 	private String errorMessage;
 	private String uploadFrom;
+	private String actualResultsFileName;
 
 	public boolean equals(Object object) {
 		if (this == object) {
@@ -161,6 +162,16 @@ public class InferencingTask {
 
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
+	}
+
+	@Basic
+	@Column(name = "ACTUAL_RESULTS_FILE_NAME")
+	public String getActualResultsFileName() {
+		return actualResultsFileName;
+	}
+
+	public void setActualResultsFileName(String actualResultsFileName) {
+		this.actualResultsFileName = actualResultsFileName;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)

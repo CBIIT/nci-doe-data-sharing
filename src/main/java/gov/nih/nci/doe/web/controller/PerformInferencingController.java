@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -38,6 +38,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.ws.rs.core.Response;
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.domain.InferencingTask;
+import gov.nih.nci.doe.web.model.InferencingTaskModel;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationStatusDTO;
 
@@ -109,16 +110,16 @@ public class PerformInferencingController extends AbstractDoeController {
 	@PostMapping
 	@ResponseBody
 	public String performInfer(@RequestParam("uploadTestInferFile") MultipartFile uploadTestInferFile,
-			HttpSession session, HttpServletRequest request, HttpServletResponse response) throws Exception {
+			@RequestParam("uploadTestOutputFile") MultipartFile uploadTestOutputFile, HttpSession session,
+			@RequestHeader HttpHeaders headers, HttpServletRequest request, @Valid InferencingTaskModel inference)
+			throws Exception {
 
 		log.info("perform inferencing for test dataset: " + uploadTestInferFile.getOriginalFilename());
+		String outputFileName = uploadTestOutputFile != null ? uploadTestOutputFile.getOriginalFilename() : null;
 
-		String modelh5Path = request.getParameter("modelPath");
+		log.info("user provided output file to evaluate model :" + outputFileName);
 
-		String uploadFrom = request.getParameter("uploadFrom");
-
-		String testInputPath = request.getParameter("testInputPath");
-
+		String testInputPath = inference.getTestInputPath();
 		String parentPath = testInputPath != null ? testInputPath.substring(0, testInputPath.lastIndexOf('/')) : null;
 
 		// create a modac task Id
@@ -134,13 +135,24 @@ public class PerformInferencingController extends AbstractDoeController {
 		String testInputExt = FilenameUtils.getExtension(testInputPath);
 
 		String updatedTestInputName = testInputName + "_" + taskId + "." + testInputExt;
-		String updatesTestInputPath = parentPath + "/" + updatedTestInputName;
+		String updatedTestInputPath = parentPath + "/" + updatedTestInputName;
+
 		try {
 			// save the inferencing task
-			inferencingTaskService.saveInferenceTask(getLoggedOnUserInfo(), taskId, parentPath, resultPath,
-					updatesTestInputPath, modelh5Path, uploadFrom);
+			inference.setTaskId(taskId);
+			inference.setResultPath(resultPath);
+			inference.setAssetPath(parentPath);
+			inference.setTestInputPath(updatedTestInputPath);
+			inference.setUserId(getLoggedOnUserInfo());
+			inference.setOutputResultName(outputFileName);
+
+			inferencingTaskService.saveInferenceTask(inference);
+
 			// copy the test dataset file to IRODsTest mount
 			Files.copy(uploadTestInferFile.getInputStream(), Paths.get(uploadPath + updatedTestInputName),
+					StandardCopyOption.REPLACE_EXISTING);
+
+			Files.copy(uploadTestOutputFile.getInputStream(), Paths.get(uploadPath + uploadTestOutputFile),
 					StandardCopyOption.REPLACE_EXISTING);
 
 			return "Perform Inferencing task Submitted. Your task Id is " + taskId;
