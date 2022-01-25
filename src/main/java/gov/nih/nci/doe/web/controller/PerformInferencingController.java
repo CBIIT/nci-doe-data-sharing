@@ -51,9 +51,6 @@ public class PerformInferencingController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
 	private String bulkRegistrationURL;
 
-	@Value("${upload.path}")
-	private String uploadPath;
-
 	@GetMapping
 	public ResponseEntity<?> getInferencingTasks(HttpSession session, @RequestHeader HttpHeaders headers,
 			HttpServletRequest request, @RequestParam(value = "userId") String userId)

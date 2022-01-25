@@ -156,6 +156,9 @@ public abstract class AbstractDoeController {
 	@Value("${google.captcha.secretkey}")
 	public String secretKey;
 
+	@Value("${upload.path}")
+	public String uploadPath;
+
 	@Autowired
 	InferencingTaskService inferencingTaskService;
 
