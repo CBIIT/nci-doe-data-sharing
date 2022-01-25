@@ -2,6 +2,8 @@ package gov.nih.nci.doe.web.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -132,6 +134,8 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm a z");
+		mapper.setDateFormat(df);
 		MappingJsonFactory factory = new MappingJsonFactory(mapper);
 		JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 
