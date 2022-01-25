@@ -14,6 +14,7 @@ import javax.validation.Valid;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -152,8 +153,11 @@ public class PerformInferencingController extends AbstractDoeController {
 			Files.copy(uploadTestInferFile.getInputStream(), Paths.get(uploadPath + updatedTestInputName),
 					StandardCopyOption.REPLACE_EXISTING);
 
-			Files.copy(uploadTestOutputFile.getInputStream(), Paths.get(uploadPath + uploadTestOutputFile),
-					StandardCopyOption.REPLACE_EXISTING);
+			if (StringUtils.isNotEmpty(outputFileName)) {
+				Files.copy(uploadTestOutputFile.getInputStream(),
+						Paths.get(uploadPath + uploadTestOutputFile.getOriginalFilename()),
+						StandardCopyOption.REPLACE_EXISTING);
+			}
 
 			return "Perform Inferencing task Submitted. Your task Id is " + taskId;
 		} catch (Exception e) {
