@@ -154,6 +154,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 
 		// get all not Started tasks to call the flask web service to perform
 		// inferencing
+		log.info("generate prediction scheduler");
 		List<InferencingTask> getAllNotStartedTasks = inferencingTaskRepository.getAllNotStartedTasks("NOTSTARTED");
 
 		String authToken = DoeClientUtil.getAuthenticationToken(writeAccessUserName, writeAccessUserPassword,
@@ -175,7 +176,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 						? resultPath.substring(resultPath.lastIndexOf('/') + 1, resultPath.length())
 						: null;
 				if (StringUtils.isNotEmpty(dataFileName) && StringUtils.isNotEmpty(modelName)
-						&& StringUtils.isNotEmpty(resultFileName)) {
+						&& StringUtils.isNotEmpty(resultFileName) && t.getBatchId() == null) {
 					// call flask API for each not started task
 					log.info("call flask web service for " + dataFileName);
 					String url = modacFlaskServer + "modac-routing";
@@ -227,6 +228,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 
 		for (InferencingTask t : getAllInProgressTasks) {
 
+			log.info("verifying inprogress task for" + t.getTestDataSetPath());
 			// get the result path and verify if the y_pred file is available in cloudian
 			String resultPath = t.getResultPath();
 			String fileNameOriginal = resultPath.substring(resultPath.lastIndexOf('/') + 1, resultPath.length());
