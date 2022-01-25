@@ -45,7 +45,7 @@ import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRespon
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationTaskDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcRegistrationSummaryDTO;
 
-@Component
+
 public class ManageTasksScheduler extends AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.download}")
@@ -72,7 +72,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
 	private String registrationServiceV2URL;
 
-	@Scheduled(cron = "${doe.scheduler.cron.auditing}")
+//	@Scheduled(cron = "${doe.scheduler.cron.auditing}")
 	public void updateAuditingService() throws DoeWebException {
 
 		String authToken = DoeClientUtil.getAuthenticationToken(writeAccessUserName, writeAccessUserPassword,
