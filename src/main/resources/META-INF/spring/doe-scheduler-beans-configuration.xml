@@ -12,11 +12,11 @@
 	<context:annotation-config />
 	
 	
-	<task:annotation-driven executor="manageTasksSchedulerExecutor" scheduler="manageTasksScheduler"/>
+<!-- 	<task:annotation-driven executor="manageTasksSchedulerExecutor" scheduler="manageTasksScheduler"/>
 	<task:executor id="manageTasksExecutor" pool-size="20"/>
 	<task:scheduler id="manageTasksScheduler" pool-size="20"/>
 	
-	<!--  Scheduled tasks -->
-	<bean id="manageTasks" class="gov.nih.nci.doe.web.scheduler.ManageTasksScheduler" init-method="init" />
+	 Scheduled tasks
+	<bean id="manageTasks" class="gov.nih.nci.doe.web.scheduler.ManageTasksScheduler" init-method="init" /> -->
 </beans>
 
