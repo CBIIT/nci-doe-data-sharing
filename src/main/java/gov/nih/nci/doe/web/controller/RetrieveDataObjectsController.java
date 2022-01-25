@@ -23,8 +23,12 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -125,8 +129,12 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 
 		log.info("process asset files and folders");
 		List<DoeDatafileSearchResultDetailed> returnResults = new ArrayList<DoeDatafileSearchResultDetailed>();
-		MappingJsonFactory factory = new MappingJsonFactory();
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		MappingJsonFactory factory = new MappingJsonFactory(mapper);
 		JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+
 		HpcCollectionListDTO dataObjects = parser.readValueAs(HpcCollectionListDTO.class);
 
 		List<HpcCollectionDTO> searchResults = dataObjects.getCollections();
@@ -169,7 +177,11 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 
 	private List<MoDaCPredictionsResults> processGeneratedPredDataObjects(Response restResponse,
 			List<String> systemAttrs) throws IOException {
-		MappingJsonFactory factory = new MappingJsonFactory();
+
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		MappingJsonFactory factory = new MappingJsonFactory(mapper);
 		JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 		HpcDataObjectListDTO dataObjects = parser.readValueAs(HpcDataObjectListDTO.class);
 		List<HpcDataObjectDTO> searchResults = dataObjects.getDataObjects();
