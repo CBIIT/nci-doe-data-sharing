@@ -1,72 +1,50 @@
-import requests
-import json
+import gzip
+import os
+import shutil
 import urllib
+import magic
 import pandas as pd
-import hashlib
-import os, fnmatch, gzip, shutil
-from pathlib import Path
 
 
-## -------------- JSON Filters constructor :
-class Filter(object):
-
-    def __init__(self):
-        self.filter = {"op": "and", "content": []}
-
-    def add_filter(self, Field, Value, Operator):
-        self.filter['content'].append({"op": Operator, "content": {"field": Field, "value": Value}})
-
-    def create_filter(self):
-        self.final_filter = json.dumps(self.filter, separators=(',', ':'))
-        return self.final_filter
-
-
-## -------------- Function for downloading files :
-def download(uuid, name, md5, ES, WF, DT, retry=0):
-    OFILE = {'data': "{ES}/{WF}/{DT}/{uuid}/{name}"}
-
+# Function for downloading files :
+def download(uuid, fileName, save_path, retry=0):
     PARAM = {
-
         # URL
         'url-data': "https://api.gdc.cancer.gov/data/{uuid}",
-
         # Persistence upon error
-        'max retry': 10,
+        'max retry': 2,
     }
     try:
-        fout = OFILE['data'].format(ES=ES, WF=WF, DT=DT, uuid=uuid, name=name)
-
-        def md5_ok():
-            with open(fout, 'rb') as f:
-                return (md5 == hashlib.md5(f.read()).hexdigest())
-
+        fileName = fileName.replace("/", '')
         print("Downloading (attempt {}): {}".format(retry, uuid))
         url = PARAM['url-data'].format(uuid=uuid)
 
         with urllib.request.urlopen(url) as response:
             data = response.read()
 
-        os.makedirs(os.path.dirname(fout), exist_ok=True)
+        completeName = os.path.join(save_path, fileName)
+        # if not os.path.exists(save_path):
+        #     os.mkdir(save_path)
 
-        with open(fout, 'wb') as f:
-            f.write(data)
+        with open(completeName, 'wb+') as file:
+            file.write(data)
 
-        if md5_ok():
-            return (uuid, retry, md5_ok())
-        else:
-            os.remove(fout)
-            raise ValueError('MD5 Sum Error on ' + uuid)
+        print("downloaded file complete")
+        return completeName
+
     except Exception as e:
         print("Error (attempt {}): {}".format(retry, e))
-        if (retry >= PARAM['max retry']):
-            raise e
-        return download(uuid, name, md5, ES, WF, DT, retry + 1)
+        if retry <= PARAM['max retry']:
+            return download(uuid, fileName, save_path, retry + 1)
+        else:
+            print("Failed to download file: " + fileName)
+            raise Exception("Failed to download file from manifest: " + fileName)
 
 
-## -------------- Function for reading manifest file :
+# Function for reading manifest file :
 def read_manifest(manifest_loc):
     uuid_list = []
-    with open(manifest_loc, 'r') as myfile:
+    with open('/mnt/IRODsTest/' + manifest_loc, 'r') as myfile:
         if myfile.readline()[0:2] != 'id':
             raise ValueError('Bad Manifest File')
         else:
@@ -76,123 +54,46 @@ def read_manifest(manifest_loc):
     return uuid_list
 
 
-## -------------- Function that unpacks gz files into another directory :
+# Function that unpacks gz files into another directory :
 def gunzip(file_path, output_path):
     with gzip.open(file_path, "rb") as f_in, open(output_path, "wb") as f_out:
         shutil.copyfileobj(f_in, f_out)
 
 
-def run_pre_process(file_name, Merged_File_Name_val):
-    File = file_name
-    Merged_File_Name_val = Merged_File_Name_val
-    hugo = True
+def run_pre_process(File, manifest_dir_save_path, output_results):
     Manifest_Loc = str(File.replace('\\', '').strip())
-
     print('Reading Manifest File from: ' + Manifest_Loc)
-
     UUIDs = read_manifest(Manifest_Loc)
+    gdc_manifest = pd.read_csv('/mnt/IRODsTest/' + Manifest_Loc, sep="\t")
+    gdc_manifest.set_index("id", inplace=True)
 
-    # 2. Get info about files in manifest
-    # -------------------------------------------------------
-    File_Filter = Filter()
-    File_Filter.add_filter("files.file_id", UUIDs, "in")
-    File_Filter.add_filter("files.analysis.workflow_type",
-                           ["HTSeq - Counts", "HTSeq - FPKM", "HTSeq - FPKM-UQ", "BCGSC miRNA Profiling"], "in")
-    File_Filter.create_filter()
+    print("UUIDs are extracted from manifest")
+    if os.path.exists(manifest_dir_save_path):
+        print("dir path exists, this happens only when a duplicate slurm job is running")
+        raise Exception("duplicate slurm job is running.")
+    os.mkdir(manifest_dir_save_path)
 
-    Fields = 'cases.samples.portions.analytes.aliquots.submitter_id,file_name,cases.samples.sample_type,file_id,md5sum,experimental_strategy,analysis.workflow_type,data_type'
-    Size = '10000'
+    Files = []
 
-    Payload = {'filters': File_Filter.create_filter(),
-               'format': 'json',
-               'fields': Fields,
-               'size': Size}
-    r = requests.post('https://api.gdc.cancer.gov/files', json=Payload)
-    data = json.loads(r.text)
-    file_list = data['data']['hits']
-
-    Dictionary = {}
-    TCGA_Barcode_Dict = {}
-    for file in file_list:
-        UUID = file['file_id']
-        Barcode = file['cases'][0]['samples'][0]['portions'][0]['analytes'][0]['aliquots'][0]['submitter_id']
-        File_Name = file['file_name']
-
-        Dictionary[UUID] = {'File Name': File_Name,
-                            'TCGA Barcode': Barcode,
-                            'MD5': file['md5sum'],
-                            'Sample Type': file['cases'][0]['samples'][0]['sample_type'],
-                            'Experimental Strategy': file['experimental_strategy'],
-                            'Workflow Type': file['analysis']['workflow_type'],
-                            'Data Type': file['data_type']}
-
-        TCGA_Barcode_Dict[File_Name] = {Barcode}
-
-    # 3. Download files
-    # -------------------------------------------------------
-
-    # Location to save files as they are downloaded
-    for key, value in Dictionary.items():
-        download(key,
-                 value['File Name'],
-                 value['MD5'],
-                 value['Experimental Strategy'],
-                 value['Workflow Type'],
-                 value['Data Type'])
-
-    # 4. Merge the RNA Seq files
-    # -------------------------------------------------------
-
-    RNASeq_WFs = ['HTSeq - Counts', 'HTSeq - FPKM-UQ', 'HTSeq - FPKM']
-
-    GZipLocs = ['RNA-Seq/' + WF for WF in RNASeq_WFs]
-
-    # Add Hugo Symbol
-    if hugo == True:
-        url = 'https://github.com/cpreid2/gdc-rnaseq-tool/raw/master/Gene_Annotation/gencode.v22.genes.txt'
-        gene_map = pd.read_csv(url, sep='\t')
-        gene_map = gene_map[['gene_id', 'gene_name']]
-        gene_map = gene_map.set_index('gene_id')
-
-    for i in range(len(RNASeq_WFs)):
-
-        print('--------------')
-        # Find all .gz files and ungzip into the folder
-        pattern = '*.gz'
-        Files = []
-
-        # Create .gz directory in subfolder
-        if os.path.exists(GZipLocs[i] + '/UnzippedFiles/'):
-            shutil.rmtree(GZipLocs[i] + '/UnzippedFiles/')
-            os.makedirs(GZipLocs[i] + '/UnzippedFiles/')
+    for i in range(len(UUIDs)):
+        u = UUIDs[i]
+        row = gdc_manifest.loc[u]
+        completeName = download(u, row['filename'], manifest_dir_save_path)
+        file_type = magic.from_file(completeName)
+        filename = os.path.basename(completeName)
+        if "gzip compressed data" in file_type:
+            print(file_type)
+            print("unzip files")
+            NewFilePath = manifest_dir_save_path + "/" + filename + "_unzippedFile"
+            gunzip(completeName, NewFilePath)  # unzip to New file path
+            Files.append(NewFilePath)
         else:
-            os.makedirs(GZipLocs[i] + '/UnzippedFiles/')
+            NewFilePath = manifest_dir_save_path + "/" + filename
+            Files.append(NewFilePath)
 
-        for root, dirs, files in os.walk(GZipLocs[i]):
-            for filename in fnmatch.filter(files, pattern):
-                OldFilePath = os.path.join(root, filename)
-                NewFilePath = os.path.join(GZipLocs[i] + '/UnzippedFiles/', filename.replace(".gz", ".tsv"))
+    print("completed download")
+    if output_results and (len(UUIDs) != len(output_results)):
+        print("length of output file is not matching the number of files in manifest")
+        raise Exception("Invalid output file.")
 
-                gunzip(OldFilePath, NewFilePath)  # unzip to New file path
-
-                Files.append(NewFilePath)  # append file to list of files
-
-        Matrix = {}
-        print(Files)
-        for file in Files:
-            p = Path(file)
-            Name = str(p.name).replace('.tsv', '')
-            Name = Name + '.gz'
-            Name = TCGA_Barcode_Dict[Name]
-            Name = str(list(Name)[0])
-            Counts_DataFrame = pd.read_csv(file, sep='\t', header=None, names=['GeneId', Name])
-            Matrix[Name] = tuple(Counts_DataFrame[Name])
-
-        # Merge Matrices to dataframes and write to files
-        if len(Matrix) > 0:
-            Merged_File_Name = 'Merged_' + RNASeq_WFs[i].replace('HTSeq - ', '') + '.tsv'
-            print('Creating merged ' + RNASeq_WFs[i] + ' File... ' + '( ' + Merged_File_Name + ' )')
-            Counts_Final_Df = pd.DataFrame(Matrix, index=tuple((Counts_DataFrame['GeneId'])))
-            if hugo == True:
-                Counts_Final_Df = gene_map.merge(Counts_Final_Df, how='outer', left_index=True, right_index=True)
-            Counts_Final_Df.to_csv(Merged_File_Name_val, sep='\t', index=True)
+    return Files

@@ -75,7 +75,10 @@ def modelPredict(vector_results, filenames, output_result):
             siteIdtoLabel[v] = k
 
     for filename, site, hist in zip(filenames, pred_probs[0], pred_probs[1]):
-        f_name = os.path.basename(filename)
+        if isinstance(filenames, list):
+            f_name = os.path.basename(filename)
+        else:
+            f_name = datafilename
         hist_site_pred.append([f_name, siteIdtoLabel[np.argmax(site)], histologyIdtoLabel[np.argmax(hist)]])
 
     if output_results:
@@ -119,7 +122,7 @@ try:
                 histologyIdtoLabelRev[k] = v
 
         header_list = ["Site", "Histology"]
-        df1 = pd.read_csv(output_file, names=header_list)
+        df1 = pd.read_csv('/mnt/IRODsTest/' + output_file, names=header_list)
         for ind in df1.index:
             site = siteIdtoLabelRev[df1['Site'][ind]]
             ex = str(float(df1['Histology'][ind])).strip()
