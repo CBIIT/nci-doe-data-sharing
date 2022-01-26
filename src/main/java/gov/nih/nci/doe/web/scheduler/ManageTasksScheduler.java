@@ -71,7 +71,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 	private String registrationServiceV2URL;
 	
 	public void init() {
-		log.info("manage scheduler called twice");
+		log.info("manage scheduler called");
 	}
 
 	@Scheduled(cron = "${doe.scheduler.cron.auditing}")
