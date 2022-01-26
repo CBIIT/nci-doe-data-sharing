@@ -45,7 +45,7 @@ import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRespon
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationTaskDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcRegistrationSummaryDTO;
 
-@Component
+//@Component
 public class ManageTasksScheduler extends AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.download}")
@@ -150,7 +150,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 		}
 	}
 
-	@Scheduled(cron = "${doe.scheduler.cron.infer}")
+    @Scheduled(cron = "${doe.scheduler.cron.infer}")
 	public void performInferencing() throws DoeWebException, MalformedURLException {
 
 		// get all not Started tasks to call the flask web service to perform
