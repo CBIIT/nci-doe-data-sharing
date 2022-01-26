@@ -12,7 +12,7 @@
 	
 
 
-  <context:annotation-config />
+<context:annotation-config />
 <bean id="manageSchedulerTasks" class="gov.nih.nci.doe.web.scheduler.ManageTasksScheduler"/>
 
 </beans>

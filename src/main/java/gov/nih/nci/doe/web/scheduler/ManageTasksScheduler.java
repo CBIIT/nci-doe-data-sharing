@@ -17,7 +17,6 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -45,7 +44,6 @@ import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRespon
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationTaskDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcRegistrationSummaryDTO;
 
-//@Component
 public class ManageTasksScheduler extends AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.download}")
@@ -150,7 +148,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 		}
 	}
 
-    @Scheduled(cron = "${doe.scheduler.cron.infer}")
+	@Scheduled(cron = "${doe.scheduler.cron.infer}")
 	public void performInferencing() throws DoeWebException, MalformedURLException {
 
 		// get all not Started tasks to call the flask web service to perform
