@@ -64,6 +64,7 @@ public class PerformInferencingController extends AbstractDoeController {
 			for (InferencingTask t : getAllInferencingTasks) {
 
 				if (t.getDmeTaskId() != null && t.getStatus() != null && !t.getStatus().equalsIgnoreCase("COMPLETED")) {
+					log.info("verify the status for : " + t.getTestDataSetPath());
 					UriComponentsBuilder ucBuilder1 = UriComponentsBuilder.fromHttpUrl(bulkRegistrationURL)
 							.path("/{dme-archive-path}");
 					final String serviceURL = ucBuilder1.buildAndExpand(t.getDmeTaskId()).encode().toUri().toURL()

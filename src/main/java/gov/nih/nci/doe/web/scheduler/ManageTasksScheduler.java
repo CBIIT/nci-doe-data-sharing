@@ -121,7 +121,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 							upload.getFailedItems().stream().forEach(x -> message.add(x.getMessage()));
 							audit.setErrorMsg(message.get(0));
 						}
-						auditingRepository.save(audit);
+						auditingRepository.saveAndFlush(audit);
 					}
 				} else if (audit.getOperation().equalsIgnoreCase("Download")) {
 					HpcUserDownloadRequest download = downloadResults.stream()
@@ -142,7 +142,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 						} else {
 							audit.setStatus("In Progress");
 						}
-						auditingRepository.save(audit);
+						auditingRepository.saveAndFlush(audit);
 					}
 				}
 
