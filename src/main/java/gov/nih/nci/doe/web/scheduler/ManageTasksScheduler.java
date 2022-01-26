@@ -69,6 +69,10 @@ public class ManageTasksScheduler extends AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
 	private String registrationServiceV2URL;
+	
+	public void init() {
+		log.info("manage scheduler called twice");
+	}
 
 	@Scheduled(cron = "${doe.scheduler.cron.auditing}")
 	public void updateAuditingService() throws DoeWebException {
