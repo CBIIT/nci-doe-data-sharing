@@ -361,7 +361,7 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
     border: none;
     background-color: #E0F0F4;
     color: #000;
-    flex: 1;
+    /* flex: 1; */
 }
 .closeButtons {
 	margin-left: -12px;

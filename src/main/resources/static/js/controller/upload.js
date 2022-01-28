@@ -485,7 +485,13 @@ function createCollectionDiv(selectTarget, folderPath) {
 	$("#createCollectionFragment").show();
 	$("#uploadSectionDiv").hide();
 	$("#uploadHeader").hide();
+	computeWidthForAssetCollectionName('parentCollectionName');
 	
+}
+
+function computeWidthForAssetCollectionName(ele) {
+	const textboxEle = document.getElementById(ele);
+	textboxEle.style.width = ((textboxEle.value.length + 1) * 10) + 'px';
 }
 
 function registerCollection() {
@@ -781,7 +787,13 @@ function openBulkDataRegistration(folderPath) {
 	$(".uploadBulkDataError").hide();
 	$(".uploadBulkDataErrorMsg").html("");
 	$("#uploadCollectionPath").val(datafilePath);
+	computeWidthForCollectionPath('uploadCollectionPath');
 	clearRegisterDataDiv();
+}
+
+function computeWidthForCollectionPath(ele) {
+	const textboxEle = document.getElementById(ele);
+	textboxEle.style.width = ((textboxEle.value.length + 1) * 7) + 'px';
 }
 
 function cancelAndReturnToUploadTab() {
