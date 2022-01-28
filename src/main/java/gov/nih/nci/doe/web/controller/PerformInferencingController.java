@@ -133,7 +133,7 @@ public class PerformInferencingController extends AbstractDoeController {
 		String testInputName = FilenameUtils.getBaseName(testInputPath);
 		String testInputExt = FilenameUtils.getExtension(testInputPath);
 
-		String updatedTestInputName = testInputName + "_" + taskId + "." + testInputExt;
+		String updatedTestInputName = testInputName.trim() + "_" + taskId + "." + testInputExt;
 		String updatedTestInputPath = parentPath + "/" + updatedTestInputName;
 
 		// create a unique file name for users expected output path since the same file
@@ -144,7 +144,7 @@ public class PerformInferencingController extends AbstractDoeController {
 			String expectedOutputName = FilenameUtils.getBaseName(outputFileName);
 			String expectedOutputExt = FilenameUtils.getExtension(outputFileName);
 
-			String updatedOutputFileName = expectedOutputName + "_" + taskId + "." + expectedOutputExt;
+			String updatedOutputFileName = expectedOutputName.trim() + "_" + taskId + "." + expectedOutputExt;
 			inference.setOutputResultName(updatedOutputFileName);
 
 			Files.copy(uploadTestOutputFile.getInputStream(), Paths.get(uploadPath + updatedOutputFileName),
