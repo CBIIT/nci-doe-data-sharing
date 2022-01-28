@@ -491,7 +491,7 @@ function createCollectionDiv(selectTarget, folderPath) {
 
 function computeWidthForAssetCollectionName(ele) {
 	const textboxEle = document.getElementById(ele);
-	textboxEle.style.width = ((textboxEle.value.length + 1) * 10) + 'px';
+	textboxEle.style.width = ((textboxEle.value.length + 5) * 10) + 'px';
 }
 
 function registerCollection() {
