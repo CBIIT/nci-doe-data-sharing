@@ -136,6 +136,21 @@ public class PerformInferencingController extends AbstractDoeController {
 		String updatedTestInputName = testInputName + "_" + taskId + "." + testInputExt;
 		String updatedTestInputPath = parentPath + "/" + updatedTestInputName;
 
+		// create a unique file name for users expected output path since the same file
+		// can be uploaded
+		// multiple times by the user and causing an issue in inferencing script to
+		// locate the file
+		if (StringUtils.isNotEmpty(outputFileName)) {
+			String expectedOutputName = FilenameUtils.getBaseName(outputFileName);
+			String expectedOutputExt = FilenameUtils.getExtension(outputFileName);
+
+			String updatedOutputFileName = expectedOutputName + "_" + taskId + "." + expectedOutputExt;
+			inference.setOutputResultName(updatedOutputFileName);
+
+			Files.copy(uploadTestOutputFile.getInputStream(), Paths.get(uploadPath + updatedOutputFileName),
+					StandardCopyOption.REPLACE_EXISTING);
+		}
+
 		try {
 			// save the inferencing task
 			inference.setTaskId(taskId);
@@ -143,19 +158,12 @@ public class PerformInferencingController extends AbstractDoeController {
 			inference.setAssetPath(parentPath);
 			inference.setTestInputPath(updatedTestInputPath);
 			inference.setUserId(getLoggedOnUserInfo());
-			inference.setOutputResultName(outputFileName);
 
 			inferencingTaskService.saveInferenceTask(inference);
 
 			// copy the test dataset file to IRODsTest mount
 			Files.copy(uploadTestInferFile.getInputStream(), Paths.get(uploadPath + updatedTestInputName),
 					StandardCopyOption.REPLACE_EXISTING);
-
-			if (StringUtils.isNotEmpty(outputFileName)) {
-				Files.copy(uploadTestOutputFile.getInputStream(),
-						Paths.get(uploadPath + uploadTestOutputFile.getOriginalFilename()),
-						StandardCopyOption.REPLACE_EXISTING);
-			}
 
 			return "Perform Inferencing task Submitted. Your task Id is " + taskId;
 		} catch (Exception e) {
