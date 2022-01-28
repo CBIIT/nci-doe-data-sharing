@@ -46,7 +46,7 @@ import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.model.MoDaCPredictionsResults;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.datamanagement.HpcCollectionListingEntry;
-import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
+import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQueryType;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
@@ -323,19 +323,16 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 
 	public ResponseEntity<?> getDataObjectsLevelFiles(HttpSession session, HttpHeaders headers, String path,
 			String type) throws DoeWebException {
+
+		log.info("get data objects files for path: " + path);
 		String authToken = (String) session.getAttribute("hpcUserToken");
-		HpcCompoundMetadataQueryDTO compoundQuery = (HpcCompoundMetadataQueryDTO) session.getAttribute("compoundQuery");
 
-		if (compoundQuery != null && compoundQuery.getCompoundQuery() != null
-				&& !CollectionUtils.isEmpty(compoundQuery.getCompoundQuery().getCompoundQueries())) {
-
-			List<HpcCompoundMetadataQuery> queries = compoundQuery.getCompoundQuery().getCompoundQueries();
-			for (HpcCompoundMetadataQuery a : queries) {
-				a.getQueries().stream().forEach(x -> x.setLevelFilter(null));
-				a.getCompoundQueries().stream()
-						.forEach(q -> q.getQueries().stream().forEach(x -> x.setLevelFilter(null)));
-			}
-		}
+		HpcCompoundMetadataQueryDTO dataObjectCompoundQuery = new HpcCompoundMetadataQueryDTO();
+		dataObjectCompoundQuery.setTotalCount(true);
+		dataObjectCompoundQuery.setCompoundQueryType(HpcCompoundMetadataQueryType.COLLECTION);
+		dataObjectCompoundQuery.setPage(1);
+		dataObjectCompoundQuery.setPageSize(5000);
+		dataObjectCompoundQuery.setDetailedResponse(true);
 
 		List<DoeDatafileSearchResultDetailed> dataResults = new ArrayList<DoeDatafileSearchResultDetailed>();
 		List<MoDaCPredictionsResults> modelAnalysisFiles = new ArrayList<MoDaCPredictionsResults>();
@@ -364,14 +361,13 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 					return null;
 				}
 
-				log.info("retrieve data objects compund query" + compoundQuery);
+				log.info("retrieve data objects compund query" + dataObjectCompoundQuery);
 				ucBuilder.pathSegment(path.substring(1, path.length()));
 				final String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
 				WebClient client = DoeClientUtil.getWebClient(requestURL);
 				client.header("Authorization", "Bearer " + authToken);
-				Response restResponse = client.invoke("POST", compoundQuery);
+				Response restResponse = client.invoke("POST", dataObjectCompoundQuery);
 				if (restResponse.getStatus() == 200) {
-					session.setAttribute("compoundQuery", compoundQuery);
 
 					modelAnalysisFiles = processGeneratedPredDataObjects(restResponse, systemAttrs);
 					return new ResponseEntity<>(modelAnalysisFiles, HttpStatus.OK);
@@ -390,7 +386,6 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 				client.header("Authorization", "Bearer " + authToken);
 				Response restResponse = client.invoke("GET", null);
 				if (restResponse.getStatus() == 200) {
-					session.setAttribute("compoundQuery", compoundQuery);
 
 					dataResults = processDataObjectResponseResults(restResponse, path, session);
 					Collections.sort(dataResults,
