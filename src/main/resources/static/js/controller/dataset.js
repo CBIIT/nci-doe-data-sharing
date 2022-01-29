@@ -164,7 +164,7 @@ function generatePredTable(isVisible) {
 
 			initializeToolTips();
 			initializePopover();
-			displayPopoverDataSet();
+			displayPopover();
 		},
 
 		"columns" : [ {
@@ -744,28 +744,12 @@ function renderBatchSelectForAssetFiles(data, type, row) {
 
 function renderInputDatasetName(data, type, row) {
 	var html = "";
-	var userMetadata = "";
-	var systemMetadata = "";
-
-	if (row.inputDatasetSystemMetadata && row.inputDatasetSystemMetadata.length > 0) {
-		systemMetadata = JSON.stringify(row.inputDatasetSystemMetadata);
-	}
-
-	if (row.inputDatasetSelfMetadata && row.inputDatasetSelfMetadata.length > 0) {
-		userMetadata = JSON.stringify(row.inputDatasetSelfMetadata);
-	}
 
 	html += "&nbsp;&nbsp;&nbsp;"
 			+ row.inputDatasetName
-			+ "&nbsp;&nbsp;<a class='cil_13_no_color button2a' "
-			+ "userMetadata = '"
-			+ userMetadata
-			+ "' file_name = '"
-			+ row.inputDatasetName
-			+ "' sys_metadata = '"
-			+ systemMetadata
-			+ "' "
-			+ "tabindex='0'"
+			+ "&nbsp;&nbsp;<a class='cil_13_no_color button2a' file_name = '" + row.inputDatasetName + "' " +
+            "tabindex='0' selected_path= '" + row.inputDatasetPath + "' " +
+            "collection_type= 'DataObject' file_name = '" + row.inputDatasetName + "' tabindex='0'"
 			+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
 			+ "data-popover-content='#a01'><img src='images/Status.info-tooltip.png' class='infoMetadata' th:src='@{/images/Status.info-tooltip.png}' data-toggle='tooltip' title='File Metadata' alt='Status info'></i></a>";
 
@@ -780,28 +764,11 @@ function renderInputDatasetName(data, type, row) {
 
 function renderPredictionsName(data, type, row) {
 	var html = "";
-	var userMetadata = "";
-	var systemMetadata = "";
-
-	if (row.predictionsSystemMetadata && row.predictionsSystemMetadata.length > 0) {
-		systemMetadata = JSON.stringify(row.predictionsSystemMetadata);
-	}
-
-	if (row.predictionsSelfMetadata && row.predictionsSelfMetadata.length > 0) {
-		userMetadata = JSON.stringify(row.predictionsSelfMetadata);
-	}
-
 	html += "&nbsp;&nbsp;&nbsp;"
 			+ row.predictionsName
-			+ "&nbsp;&nbsp;<a class='cil_13_no_color button2a' "
-			+ "userMetadata = '"
-			+ userMetadata
-			+ "' file_name = '"
-			+ row.predictionsName
-			+ "' sys_metadata = '"
-			+ systemMetadata
-			+ "' "
-			+ "tabindex='0'"
+			+ "&nbsp;&nbsp;<a class='cil_13_no_color button2a'" +
+            " selected_path= '" + row.predictionsPath + "' collection_type= 'DataObject'"
+			+ "file_name = '"+ row.predictionsName + "'tabindex='0'"
 			+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
 			+ "data-popover-content='#a01'><img src='images/Status.info-tooltip.png' " +
 					"th:src='@{/images/Status.info-tooltip.png}' data-toggle='tooltip' class='infoMetadata' title='File Metadata' alt='Status info'></a>";
@@ -1131,84 +1098,6 @@ function onClickOfBulkDownloadBtn(tableName) {
 		location.replace('/downloadTab?selectedPaths=' + selectedPaths + '&&assetIdentifier=' + assetIdentifier
 				+ '&&downloadAsyncType=datafiles&&returnToSearch=false');
 	}
-}
-
-
-function displayPopoverDataSet() {
-	$('.button2a').on('click', function() {
-		openPopOverDataSet($(this));
-	});
-	$('.button2a').on('keypress', function(e) {
-		if (e.which == 13 || e.keyCode == 13) {
-			openPopOverDataSet($(this));
-		}
-	});
-}
-
-function openPopOverDataSet($this) {
-	var pop = $this;
-	$('.button2a').not($this).popover('hide');
-	var userMetadata = $this.attr('userMetadata');
-	var sysMetadata = $this.attr('sys_metadata');
-	var userMetadataList = "";
-	var fileName = $this.attr('file_name');
-
-	if (userMetadata) {
-		userMetadataList = JSON.parse(userMetadata);
-	}
-
-	var sysMetadatalist = JSON.parse(sysMetadata);
-
-	var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"><div class=\"popover-heading\">" + "Metadata for " + fileName
-			+ "<a class=\"button closeBtn float-right\" href=\"javascript:void(0);\">"
-			+ "<i class=\"fa fa-times\"></i></a> </div><div class='popover-body'>";
-	var table = "";
-	var content = "";
-
-	if (userMetadataList) {
-
-		ind += "<p><b>User Metadata </b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>"
-				+ "<div class='divTableBody'><div class='divTableRow'>"
-				+ "<div class='divTableHead rowAttribute'>ATTRIBUTE</div>"
-				+ "<div class='divTableHead'>VALUE</div></div>";
-
-		$.each(userMetadataList, function(key, value) {
-			if (value.value.startsWith('https') || value.value.startsWith('http')) {
-				content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>"
-						+ "<div class='divTableCell'><a target='_blank' href=" + value.value + ">" + value.value
-						+ "</a></div></div>";
-			} else {
-				content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>"
-						+ "<div class='divTableCell'>" + value.value + "</div></div>";
-			}
-
-		});
-		content += "</div> </div><br/>";
-
-	}
-
-	if (sysMetadatalist) {
-		content += "<p><b>Key System Metadata </b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>"
-				+ "<div class='divTableBody'><div class='divTableRow'>"
-				+ "<div class='divTableHead rowAttribute'>ATTRIBUTE</div>"
-				+ "<div class='divTableHead'>VALUE</div></div>";
-
-		$.each(sysMetadatalist, function(key, value) {
-			content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName + "</div>"
-					+ "<div class='divTableCell'>" + value.value + "</div></div>";
-		});
-
-		content += "</div> </div>";
-
-	}
-
-	table += ind + content + "</div> </div></div> </div>";
-	$("#a01").remove();
-	pop.after(table);
-	initializePopover();	
-	pop.data('bs.popover').setContent();
-	pop.popover('show');
-
 }
 
 $.fn.dataTable.ext.type.order['file-size-pre'] = function(data) {

@@ -69,7 +69,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
 	private String registrationServiceV2URL;
-	
+
 	public void init() {
 		log.info("manage scheduler called");
 	}
@@ -363,17 +363,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 		fileSystemUploadSource.setSourceLocation(location);
 		file.setFileSystemUploadSource(fileSystemUploadSource);
 		file.setPath(path);
-		HpcMetadataEntry e = new HpcMetadataEntry();
 
-		e.setAttribute("Model_Analysis_type_name");
-		e.setValue(metadata);
-		HpcMetadataEntry e1 = new HpcMetadataEntry();
-
-		e1.setAttribute("generate_pred_username");
-		e1.setValue(userId);
-
-		file.getDataObjectMetadataEntries().add(e);
-		file.getDataObjectMetadataEntries().add(e1);
 		dto.getDataObjectRegistrationItems().add(file);
 		return dto;
 	}

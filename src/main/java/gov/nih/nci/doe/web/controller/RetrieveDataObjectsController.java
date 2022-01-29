@@ -15,7 +15,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.ResponseEntity;
@@ -46,14 +46,10 @@ import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.model.MoDaCPredictionsResults;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.datamanagement.HpcCollectionListingEntry;
-import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQueryType;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
-import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
 import java.util.Collections;
 
 /**
@@ -187,104 +183,71 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 
 	}
 
-	private List<MoDaCPredictionsResults> processGeneratedPredDataObjects(Response restResponse,
-			List<String> systemAttrs) throws IOException {
+	private List<MoDaCPredictionsResults> processGeneratedPredDataObjects(Response restResponse, String path,
+			HttpSession session) throws IOException {
+
+		List<MoDaCPredictionsResults> returnResults = new ArrayList<MoDaCPredictionsResults>();
 
 		ObjectMapper mapper = new ObjectMapper();
+		AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
+				new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()), new JacksonAnnotationIntrospector());
+		mapper.setAnnotationIntrospector(intr);
 		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm a z");
+		mapper.setDateFormat(df);
 		MappingJsonFactory factory = new MappingJsonFactory(mapper);
 		JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-		HpcDataObjectListDTO dataObjects = parser.readValueAs(HpcDataObjectListDTO.class);
-		List<HpcDataObjectDTO> searchResults = dataObjects.getDataObjects();
-		List<MoDaCPredictionsResults> returnResults = new ArrayList<MoDaCPredictionsResults>();
-		for (HpcDataObjectDTO result : searchResults) {
 
-			String user = getLoggedOnUserInfo();
-			List<HpcMetadataEntry> parentMetadaEntries = result.getMetadataEntries().getParentMetadataEntries();
-			HpcMetadataEntry folderType = parentMetadaEntries.stream()
-					.filter(e -> e.getAttribute().equals("collection_type") && e.getValue().equalsIgnoreCase("Folder"))
-					.findAny().orElse(null);
-			if (folderType != null) {
-				String folderPath = result.getDataObject().getAbsolutePath().substring(0,
-						result.getDataObject().getAbsolutePath().lastIndexOf('/'));
-				String folderName = folderPath.substring(folderPath.lastIndexOf("/") + 1);
-				if (StringUtils.isNotEmpty(folderName) && folderName.equalsIgnoreCase("Predictions_" + user)) {
+		HpcCollectionListDTO dataObjects = parser.readValueAs(HpcCollectionListDTO.class);
 
-					String modelAnanlysisTypeName = getAttributeValue("Model_Analysis_type_name",
-							result.getMetadataEntries().getSelfMetadataEntries(), "DataObject");
-					String name = result.getDataObject().getAbsolutePath()
-							.substring(result.getDataObject().getAbsolutePath().lastIndexOf('/') + 1);
+		List<HpcCollectionDTO> searchResults = dataObjects.getCollections();
 
-					if (!StringUtils.isEmpty(modelAnanlysisTypeName)) {
+		List<HpcCollectionListingEntry> dataObjectsList = searchResults.get(0).getCollection().getDataObjects();
 
-						if (modelAnanlysisTypeName.startsWith("input_dataset_")) {
-							String taskId = modelAnanlysisTypeName.substring(
-									modelAnanlysisTypeName.lastIndexOf("input_dataset_") + 14,
-									modelAnanlysisTypeName.length());
-							MoDaCPredictionsResults r = returnResults.stream()
-									.filter(e -> ("y_pred_" + taskId).equalsIgnoreCase(e.getModelAnalysisPredName()))
-									.findAny().orElse(null);
-							if (r != null) {
-								r.setInputDatasetName(name);
-								r.setInputDatasetPath(result.getDataObject().getAbsolutePath());
-								r.setModelAnalysisInputDatasetName(modelAnanlysisTypeName);
-								r.setInputDatasetSelfMetadata(
-										getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),
-												"DataObject", systemAttrs));
-								r.setInputDatasetSystemMetadata(
-										getSystemMetaData(result.getMetadataEntries().getSelfMetadataEntries(),
-												"DataObject", systemAttrs));
-							} else {
-								MoDaCPredictionsResults returnResult = new MoDaCPredictionsResults();
-								returnResult.setInputDatasetName(name);
-								returnResult.setInputDatasetPath(result.getDataObject().getAbsolutePath());
-								returnResult.setModelAnalysisInputDatasetName(modelAnanlysisTypeName);
-								returnResult.setInputDatasetSelfMetadata(
-										getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),
-												"DataObject", systemAttrs));
-								returnResult.setInputDatasetSystemMetadata(
-										getSystemMetaData(result.getMetadataEntries().getSelfMetadataEntries(),
-												"DataObject", systemAttrs));
-								returnResults.add(returnResult);
-							}
+		if (!CollectionUtils.isEmpty(dataObjectsList)) {
+			for (HpcCollectionListingEntry dataObject : dataObjectsList) {
 
-						} else if (modelAnanlysisTypeName.startsWith("y_pred_")) {
-							String taskId = modelAnanlysisTypeName.substring(
-									modelAnanlysisTypeName.lastIndexOf("y_pred_") + 7, modelAnanlysisTypeName.length());
-							MoDaCPredictionsResults r = returnResults.stream()
-									.filter(e -> ("input_dataset_" + taskId)
-											.equalsIgnoreCase(e.getModelAnalysisInputDatasetName()))
-									.findAny().orElse(null);
-							if (r != null) {
-								r.setPredictionsName(name);
-								r.setPredictionsPath(result.getDataObject().getAbsolutePath());
-								r.setModelAnalysisPredName(modelAnanlysisTypeName);
-								r.setPredictionsSelfMetadata(
-										getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),
-												"DataObject", systemAttrs));
-								r.setPredictionsSystemMetadata(
-										getSystemMetaData(result.getMetadataEntries().getSelfMetadataEntries(),
-												"DataObject", systemAttrs));
+				String name = dataObject.getPath().substring(dataObject.getPath().lastIndexOf('/') + 1);
+				String testInputName = FilenameUtils.getBaseName(name);
+				String taskId = testInputName.substring(testInputName.lastIndexOf("_") + 1, testInputName.length());
 
-							} else {
-								MoDaCPredictionsResults returnResult = new MoDaCPredictionsResults();
-								returnResult.setPredictionsName(name);
-								returnResult.setPredictionsPath(result.getDataObject().getAbsolutePath());
-								returnResult.setModelAnalysisPredName(modelAnanlysisTypeName);
-								returnResult.setPredictionsSelfMetadata(
-										getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries(),
-												"DataObject", systemAttrs));
-								returnResult.setPredictionsSystemMetadata(
-										getSystemMetaData(result.getMetadataEntries().getSelfMetadataEntries(),
-												"DataObject", systemAttrs));
-								returnResults.add(returnResult);
-							}
+				if (name.startsWith("y_pred_")) {
+					MoDaCPredictionsResults inputNameResult = returnResults.stream()
+							.filter(e -> e.getInputDatasetName() != null && e.getInputDatasetName().contains(taskId))
+							.findAny().orElse(null);
+					if (inputNameResult == null) {
+						MoDaCPredictionsResults returnResult = new MoDaCPredictionsResults();
+						returnResult.setPredictionsName(name);
+						returnResult.setPredictionsPath(dataObject.getPath());
+						returnResult.setPredCollectionId(dataObject.getId());
+						returnResults.add(returnResult);
+					} else {
+						inputNameResult.setPredictionsName(name);
+						inputNameResult.setPredictionsPath(dataObject.getPath());
+						inputNameResult.setPredCollectionId(dataObject.getId());
+						returnResults.add(inputNameResult);
+					}
 
-						}
+				} else {
+					MoDaCPredictionsResults predNameResult = returnResults.stream()
+							.filter(e -> e.getPredictionsName() != null && e.getPredictionsName().contains(taskId))
+							.findAny().orElse(null);
+					if (predNameResult == null) {
+						MoDaCPredictionsResults returnResult = new MoDaCPredictionsResults();
+						returnResult.setInputDatasetName(name);
+						returnResult.setInputDatasetPath(dataObject.getPath());
+						returnResult.setInputDatasetCollectionId(dataObject.getId());
+						returnResults.add(returnResult);
+					} else {
+						predNameResult.setInputDatasetName(name);
+						predNameResult.setInputDatasetPath(dataObject.getPath());
+						predNameResult.setInputDatasetCollectionId(dataObject.getId());
+						returnResults.add(predNameResult);
 					}
 
 				}
+
 			}
 
 		}
@@ -327,49 +290,22 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 		log.info("get data objects files for path: " + path);
 		String authToken = (String) session.getAttribute("hpcUserToken");
 
-		HpcCompoundMetadataQueryDTO dataObjectCompoundQuery = new HpcCompoundMetadataQueryDTO();
-		dataObjectCompoundQuery.setTotalCount(true);
-		dataObjectCompoundQuery.setCompoundQueryType(HpcCompoundMetadataQueryType.COLLECTION);
-		dataObjectCompoundQuery.setPage(1);
-		dataObjectCompoundQuery.setPageSize(5000);
-		dataObjectCompoundQuery.setDetailedResponse(true);
-
 		List<DoeDatafileSearchResultDetailed> dataResults = new ArrayList<DoeDatafileSearchResultDetailed>();
 		List<MoDaCPredictionsResults> modelAnalysisFiles = new ArrayList<MoDaCPredictionsResults>();
 		try {
 			if (type.equalsIgnoreCase("Prediction_Files")) {
 
-				List<String> systemAttrs = new ArrayList<>();
+				String loggedOnUserFolderPath = path + "/Predictions_" + getLoggedOnUserInfo();
+				final String requestUrl = UriComponentsBuilder.fromHttpUrl(serviceURL).path("{path}/children")
+						.buildAndExpand(loggedOnUserFolderPath).encode().toUri().toURL().toExternalForm();
 
-				HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
-
-				if (modelDTO != null) {
-					systemAttrs = modelDTO.getDataObjectSystemGeneratedMetadataAttributeNames();
-				} else {
-					modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL);
-					session.setAttribute("userDOCModel", modelDTO);
-
-					systemAttrs = modelDTO.getDataObjectSystemGeneratedMetadataAttributeNames();
-				}
-
-				systemAttrs.add("collection_type");
-				systemAttrs.add("dme_data_id");
-
-				UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(compoundDataObjectSearchServiceURL);
-
-				if (ucBuilder == null) {
-					return null;
-				}
-
-				log.info("retrieve data objects compund query" + dataObjectCompoundQuery);
-				ucBuilder.pathSegment(path.substring(1, path.length()));
-				final String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
-				WebClient client = DoeClientUtil.getWebClient(requestURL);
+				WebClient client = DoeClientUtil.getWebClient(requestUrl);
 				client.header("Authorization", "Bearer " + authToken);
-				Response restResponse = client.invoke("POST", dataObjectCompoundQuery);
+				Response restResponse = client.invoke("GET", null);
+
 				if (restResponse.getStatus() == 200) {
 
-					modelAnalysisFiles = processGeneratedPredDataObjects(restResponse, systemAttrs);
+					modelAnalysisFiles = processGeneratedPredDataObjects(restResponse, loggedOnUserFolderPath, session);
 					return new ResponseEntity<>(modelAnalysisFiles, HttpStatus.OK);
 
 				} else if (restResponse.getStatus() == 204) {

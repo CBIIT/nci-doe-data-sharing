@@ -256,16 +256,20 @@ function downloadFunction(path) {
 
 function renderInferStatus(data,type,row) {
 	var html = "";
-	if(data == 'Completed') {
-		html += data + "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLink' href='javascript:void(0);' " +
+	if(data == 'COMPLETED' || data  == 'Completed') {
+		html += "Completed<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLink' href='javascript:void(0);' " +
         "data-path=" + row.resultPath + " " +
         "><img src='images/Download.png' data-toggle='tooltip' title='Download File' th:src='@{/images/Download.png}' " +
 		"style='width:17px;' alt='download file'></a>";
-	} else if(data == 'Failed') {
+	} else if(data == 'Failed' || data == 'FAILED') {
 		var error_msg = row.errorMessage.replace(/["']/g, "");
-		html += data + "&nbsp;&nbsp;<img style='width:12px;' data-toggle='tooltip'" +
+		html += "Failed&nbsp;&nbsp;<img style='width:12px;' data-toggle='tooltip'" +
 				"src='images/Status.info-tooltip.png' alt='failed message' title= '" + error_msg + "'>";
-	} else {
+	} else if(data == 'NOTSTARTED'){
+		html += 'Not Started';
+	} else if(data == 'INPROGRESS') {
+		html += 'In Progress'
+	} else  {
 		html += data;
 	}
 	
