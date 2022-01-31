@@ -146,6 +146,7 @@ function loadUploadTab() {
 			$("#uploadHeader").hide();
 			$("#uploadDataFilesTab").show();
 			$("#uploadCollectionPath").val(uploadPath);
+			computeWidthForCollectionPath('uploadCollectionPath');
 		}
 	} 
   
