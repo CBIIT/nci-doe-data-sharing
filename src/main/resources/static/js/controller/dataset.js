@@ -131,7 +131,7 @@ function generatePredTable(isVisible) {
 				}
 				var len = $('#' + table).find('.selectIndividualCheckbox:checked').length;
 				$(".downloadModelAnalysisLink").prop("disabled", false);
-				if (len > 1) {
+				if (len >= 1) {
 					$("#downloadSelectedDataSet").prop("disabled", false);
 				} else {
 					$("#downloadSelectedDataSet").prop("disabled", true);
