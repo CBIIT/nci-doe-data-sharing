@@ -144,7 +144,13 @@ function postFailureFunction(url, params, status, error, data) {
 function returnErrorMessage(data) {
 	if(data && data.responseText) {
 	    var errorJson = JSON.parse(data.responseText);
-	    return bootbox.alert(errorJson.message);
+	    if (errorJson && errorJson.message == 'Not Authorized') {
+	    	location.replace("/loginTab");
+	    } else {
+	    	return bootbox.alert(errorJson.message);
+	    }
+	    
+	    
 	} else {
 		bootbox.alert("Unknown Error. Contact Technical Support!");
 	}

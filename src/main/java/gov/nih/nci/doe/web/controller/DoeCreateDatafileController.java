@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
@@ -56,6 +57,9 @@ public class DoeCreateDatafileController extends DoeCreateCollectionDataFileCont
 		log.info("Upload Single file from file system");
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		String user = getLoggedOnUserInfo();
+		if (StringUtils.isEmpty(user)) {
+			return "Not Authorized";
+		}
 		String checksum = request.getParameter("checksum");
 		if (checksum == null || checksum.isEmpty())
 			checksum = (String) request.getAttribute("checksum");

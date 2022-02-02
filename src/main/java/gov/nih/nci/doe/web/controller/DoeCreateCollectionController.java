@@ -218,7 +218,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 		log.info("create collection");
 		String user = getLoggedOnUserInfo();
 		if (StringUtils.isEmpty(user)) {
-			return "redirect:/loginTab";
+			return "Not Authorized";
 		}
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		String[] path = request.getParameterValues("path");

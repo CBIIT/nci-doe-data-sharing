@@ -562,6 +562,9 @@ function registerCollection() {
 				 $("#spinner").hide();
 		         $("#dimmer").hide();
 				 console.log('SUCCESS: ', msg);
+				 if(msg && msg == 'Not Authorized') {
+					 location.replace("/loginTab");
+				 }
 				 postSuccessRegisterCollection(msg,collectionType);
 				 $('body,html').animate({scrollTop: 0 }, 500);
 				 
@@ -1028,6 +1031,9 @@ function registerBulkDataFile() {
 					 success : function(msg) {
 						 $("#spinner").hide();
 				         $("#dimmer").hide();
+				         if(msg && msg == 'Not Authorized') {
+							 location.replace("/loginTab");
+						 }
 				    	 if(msg && msg.indexOf("The system has registered your file") != -1) {
 							 console.log('SUCCESS: ', msg);
 							 $('body,html').animate({scrollTop: 0 }, 500);
@@ -1094,6 +1100,9 @@ function registerBulkDataFile() {
 				 success : function(msg) {
 					 $("#spinner").hide();
 			         $("#dimmer").hide();
+			         if(msg && msg == 'Not Authorized') {
+						 location.replace("/loginTab");
+					 }
 			    	 if(msg && msg.indexOf("Your bulk data file registration request has the following task ID") != -1) {
 			    		 console.log('SUCCESS: ', msg);
 						 $('body,html').animate({scrollTop: 0 }, 500);
@@ -1111,7 +1120,10 @@ function registerBulkDataFile() {
 				error : function(e) {
 					 $("#spinner").hide();
 			         $("#dimmer").hide();
-					 console.log('ERROR: ', e);	
+					 console.log('ERROR: ', e);
+					 if(e == 'Not Authorized') {
+						 location.replace("/loginTab");
+					 }
 					 $(".uploadBulkDataError").show();
 					 $(".uploadBulkDataErrorMsg").html(e);
 				}

@@ -72,7 +72,7 @@ public class RegistrationController extends AbstractDoeController {
 
 					}
 				} else {
-					return new ResponseEntity<>("IFailed to validate captcha.", HttpStatus.OK);
+					return new ResponseEntity<>("Failed to validate captcha.", HttpStatus.OK);
 				}
 
 			}

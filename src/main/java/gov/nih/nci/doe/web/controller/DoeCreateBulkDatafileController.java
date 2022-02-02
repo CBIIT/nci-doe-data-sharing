@@ -145,7 +145,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 		log.info("bulk upload and isFormBulkUpload : " + isFormBulkUpload);
 		String user = getLoggedOnUserInfo();
 		if (StringUtils.isEmpty(user)) {
-			return "redirect:/loginTab";
+			return "Not Authorized";
 		}
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 
