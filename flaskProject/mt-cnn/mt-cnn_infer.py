@@ -15,7 +15,7 @@ from keras.models import load_model
 import numpy as np
 import pandas as pd
 
-from pdfconverter import convert_PDF_to_Txt
+from helper.pdfconverter import convert_PDF_to_Txt
 from gdc_rnaseq_tool import run_pre_process
 
 
