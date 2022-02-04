@@ -1,3 +1,5 @@
+# this python file is used to validate the manifest file and download the files
+# using gdc API
 import gzip
 import os
 import shutil
@@ -85,11 +87,14 @@ def run_pre_process(File, manifest_dir_save_path, output_results):
     Files = []
 
     for i in range(len(UUIDs)):
+        # get the row from manifest using UUID
         u = UUIDs[i]
         row = gdc_manifest.loc[u]
         completeName = download(u, row['filename'], manifest_dir_save_path)
         file_type = magic.from_file(completeName)
         filename = os.path.basename(completeName)
+        # if the file type is of type gzip compressed, unzip the files
+        # to the unique directory created
         if "gzip compressed data" in file_type:
             print(file_type)
             print("unzip files")
@@ -101,6 +106,8 @@ def run_pre_process(File, manifest_dir_save_path, output_results):
             Files.append(NewFilePath)
 
     print("completed download")
+    # if the output file is provided, validate the number of rows in manifest
+    # match the number of rows in output file
     if output_results and (len(UUIDs) != len(output_results)):
         print("length of output file is not matching the number of files in manifest")
         raise Exception("Invalid output file.")

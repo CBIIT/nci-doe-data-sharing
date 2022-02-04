@@ -55,12 +55,10 @@ def data_preprocess(isManifestFile):
         print('Creating merged file')
         Counts_Final_Df = pd.DataFrame(Matrix, index=tuple((Counts_DataFrame['GeneId'])))
         Counts_Final_Df = gene_map.merge(Counts_Final_Df, how='outer', left_index=True, right_index=True)
-        if os.path.exists(Merged_File_Name_val):
-            os.remove(Merged_File_Name_val)
         Counts_Final_Df.to_csv(Merged_File_Name_val, sep='\t', index=True)
 
     while not os.path.exists(Merged_File_Name_val):
-        print("merged file not yet created")
+        print("wait for the merged file to be created")
         time.sleep(1)
     print("merged file created")
     preprocess(Merged_File_Name_val)
@@ -81,9 +79,7 @@ def preprocess(Merged_File_Name_val):
     sfeatures1 = sfeatures.astype(np.float64).apply(np.log10)
     sfeatures1[sfeatures1 < 0] = 0
     sfeatures1.to_csv(final_preprocessed_file, sep='\t', index=False)
-    test_X = pd.read_csv(final_preprocessed_file, sep="\t")
-    test_X_np = test_X.values
-    print(test_X_np.shape)
+    # remove the merged file
     if os.path.exists(Merged_File_Name_val):
         os.remove(Merged_File_Name_val)
     run(final_preprocessed_file)
@@ -148,8 +144,10 @@ def run(data):
 
     if os.path.isfile(pred_name):
         print('file exists ' + pred_name)
-    shutil.move(pred_name, '/mnt/IRODsTest/' + pred_name)
+        # move the predictions to mount location
+        shutil.move(pred_name, '/mnt/IRODsTest/' + pred_name)
 
+    # remove the preprocessed file
     if os.path.exists(data):
         os.remove(data)
     print("inference completed")
@@ -216,6 +214,7 @@ if __name__ == '__main__':
         text_file = open(error_file_name, "wt")
         text_file.write(error_msg)
         text_file.close()
+        # place the error file on the common mount location
         shutil.move(error_file_name, '/mnt/IRODsTest/' + error_file_name)
         shutil.rmtree(manifest_dir_name, ignore_errors=True)
         print("completed error file copy to mount location")

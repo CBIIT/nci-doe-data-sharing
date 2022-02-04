@@ -1,3 +1,5 @@
+# this python file is used to validate the input file, generate predictions and map
+# the predictions using json mapper
 import json
 import os
 import pickle
@@ -15,6 +17,7 @@ from pdfconverter import convert_PDF_to_Txt
 from gdc_rnaseq_tool import run_pre_process
 
 
+# Function to clean up the document
 def clearup(document):
     document = document.translate(string.punctuation)
     document = re.sub('\(\d+.\d+\)|\d-\d|\d', '', document) \
@@ -26,7 +29,7 @@ def clearup(document):
         .replace('&gt', '').replace('&apos', '').replace('*', '').strip().lower().split()
     return document
 
-
+# Function to convert the input file to indices
 def vectorSingle(filename, word2_idx, vocabs):
     if os.path.isfile(filename):
         doc = open(filename, 'r', encoding="utf8").read().strip()
@@ -42,7 +45,7 @@ def vectorSingle(filename, word2_idx, vocabs):
         print("complete converting to indices")
         return text_idx
 
-
+# Function to calcuate the accuracy of the model
 def getAccuracy(pred_probs, output_result_final, hist_site_pred):
     site_true_count = 0
     hist_true_count = 0
@@ -57,7 +60,7 @@ def getAccuracy(pred_probs, output_result_final, hist_site_pred):
     hist_site_pred.append(["The accuracy for site is :", str(site_true_count * 100 / pred_probs[0].shape[0]) + "%"])
     hist_site_pred.append(["The accuracy for histology is :", str(hist_true_count * 100 / pred_probs[1].shape[0]) + "%"])
 
-
+# Function to generate predictions and map the predictions to an output file
 def modelPredict(vector_results, filenames, output_result):
     hist_site_pred = []
     pred_probs = model.predict(vector_results)
@@ -135,6 +138,7 @@ try:
         word2idx = pickle.load(f)
     vocab = np.load('vocab.npy')
 
+    # verify if the input is a tar file
     if tarfile.is_tarfile(input_file_name):
         print("is tar file")
         my_tar = tarfile.open(input_file_name)
@@ -199,6 +203,7 @@ try:
 
     if os.path.isfile(pred_name):
         print('file exists ' + pred_name)
+        # place the prediction file on mount location
         shutil.move(pred_name, '/mnt/IRODsTest/' + pred_name)
 
     print("inference completed")
@@ -215,5 +220,6 @@ except Exception as e:
     text_file = open(error_file_name, "wt")
     text_file.write(error_msg)
     text_file.close()
+    # place the error message file on mount location
     shutil.move(error_file_name, '/mnt/IRODsTest/' + error_file_name)
     print("completed error file copy to mount location")
