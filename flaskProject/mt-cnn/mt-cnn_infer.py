@@ -16,7 +16,8 @@ import numpy as np
 import pandas as pd
 
 from helper.pdfconverter import convert_PDF_to_Txt
-from gdc_rnaseq_tool import run_pre_process
+sys.path.append('/home/ncidoesvct2/common')
+from gdc_rnaseq_tool import run_pre_process, isValidManifestFile
 
 
 # Function to clean up the document
@@ -67,13 +68,13 @@ def modelPredict(vector_results, filenames, output_result):
     hist_site_pred = []
     pred_probs = model.predict(vector_results)
 
-    with open('histology_class_mapper.json') as json_file:
+    with open('mapper/histology_class_mapper.json') as json_file:
         histologyLabel = json.load(json_file)
         histologyIdtoLabel = {}
         for k, v in histologyLabel.items():
             histologyIdtoLabel[v] = k
 
-    with open('site_class_mapper.json') as json_file:
+    with open('mapper/site_class_mapper.json') as json_file:
         siteLabel = json.load(json_file)
         siteIdtoLabel = {}
         for k, v in siteLabel.items():
