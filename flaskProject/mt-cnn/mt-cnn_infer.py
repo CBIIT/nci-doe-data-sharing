@@ -1,5 +1,7 @@
-# this python file is used to validate the input file, generate predictions and map
-# the predictions using json mapper
+"""
+This python file is used to validate the input file, generate predictions and map
+the predictions using json mapper
+"""
 import json
 import os
 import pickle

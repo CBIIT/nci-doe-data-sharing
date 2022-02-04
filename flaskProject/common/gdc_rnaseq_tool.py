@@ -1,5 +1,8 @@
-# this python file is used to validate the manifest file and download the files
-# using gdc API
+"""
+This python file is used to validate the manifest file and download the files
+using gdc API
+"""
+
 import gzip
 import os
 import shutil

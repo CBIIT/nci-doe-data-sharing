@@ -1,5 +1,8 @@
-# this python file is used to validate the input file, generate predictions and map
-# the predictions using json mapper
+"""
+This python file is used to validate the input file, generate predictions and map
+the predictions using json mapper
+"""
+
 from __future__ import print_function
 import os
 import shutil

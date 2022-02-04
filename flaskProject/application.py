@@ -1,4 +1,7 @@
-# this file is used to call the Flask API from ModaC scheduler
+"""
+This file is used to call the Flask API from ModaC scheduler
+"""
+
 import subprocess
 
 from flask import Flask, request
