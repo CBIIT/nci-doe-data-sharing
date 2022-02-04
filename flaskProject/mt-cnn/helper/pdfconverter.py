@@ -1,4 +1,6 @@
-# this python file is used to convert pdf to txt document
+"""
+This python file is used to convert pdf to txt document
+"""
 import os
 import PyPDF2
 

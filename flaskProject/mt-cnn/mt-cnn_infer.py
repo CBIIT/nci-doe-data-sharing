@@ -115,13 +115,13 @@ try:
 
     # to calculate the accuracy, read the output file from user if given, else skip this test:
     if output_file is not None and output_file != 'None':
-        with open('site_class_mapper.json') as json_file:
+        with open('mapper/site_class_mapper.json') as json_file:
             siteLabelRev = json.load(json_file)
             siteIdtoLabelRev = {}
             for k, v in siteLabelRev.items():
                 siteIdtoLabelRev[k] = v
 
-        with open('histology_class_mapper.json') as json_file:
+        with open('mapper/histology_class_mapper.json') as json_file:
             histologyLabelRev = json.load(json_file)
             histologyIdtoLabelRev = {}
             for k, v in histologyLabelRev.items():
@@ -135,11 +135,11 @@ try:
             hist = histologyIdtoLabelRev[ex]
             output_results.append([site, hist])
 
-    model = load_model('/mnt/IRODsTest/' + modelfilename)
+    model = load_model(modelfilename)
 
-    with open('word2idx.pkl', 'rb') as f:
+    with open('mapper/word2idx.pkl', 'rb') as f:
         word2idx = pickle.load(f)
-    vocab = np.load('vocab.npy')
+    vocab = np.load('mapper/vocab.npy')
 
     # verify if the input is a tar file
     if tarfile.is_tarfile(input_file_name):
@@ -180,8 +180,9 @@ try:
         input_txt_file = convert_PDF_to_Txt(input_file_name)
         vec = vectorSingle(input_txt_file, word2idx, vocab)
         os.remove(input_txt_file)
-        hist_site_pred_results = modelPredict(vec, datafilename, output_results)
-    elif upload_from is not None and upload_from == "gdcData" and "manifest" in datafilename.lower() and file_extension == '.txt':
+        hist_site_pred_results = modelPredict(vec, datafilename, output_results)   
+    elif upload_from is not None and upload_from == "gdcData" and \
+            isValidManifestFile(input_file_name) == 'manifestFile' and file_extension == '.txt':
         print("manifest file")
         Files = run_pre_process(datafilename, manifest_dir_name, output_results)
         vec_final = []
