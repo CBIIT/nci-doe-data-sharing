@@ -25,6 +25,13 @@ $(document)
 							$(this).parent().find('.TextField-floatingLabel-qefpP').hide();
 						}
 					});
+					$("#attributeVal").keyup(function(){
+						if ($(this).val()) {
+							$("#resetBtn").show();
+						} else {
+							$("#resetBtn").hide();
+						}
+					});
 
 					$(window).scroll(function() {
 						if ($(this).scrollTop() >= 50) { // If page is
@@ -339,7 +346,7 @@ $(document)
 
 					$("#resetBtn").click(function(e) {
 						$("#attributeVal").val("");
-						//$("#searchResultsDiv").hide();
+						$("#resetBtn").hide();
 						populateSearchCriteria('simpleSearch');
 					});
 
