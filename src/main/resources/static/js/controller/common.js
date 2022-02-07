@@ -339,7 +339,8 @@ $(document)
 
 					$("#resetBtn").click(function(e) {
 						$("#attributeVal").val("");
-						$("#searchResultsDiv").hide();
+						//$("#searchResultsDiv").hide();
+						populateSearchCriteria('simpleSearch');
 					});
 
 					$(".backToSearchBtn").click(function(e) {
@@ -562,8 +563,9 @@ $(document).on('click', '#clearFilters', function() {
 		$(this).find('.filteritem').prop('checked', false);
 		$(this).find('span').css('color', '#212529');
 	});
-	$("#searchResultsDiv").hide();
 	showFirstFewFields();
+	//$("#searchResultsDiv").hide();
+	populateSearchCriteria('simpleSearch');
 });
 
 $(document).on('click', '.sharableLink', function() {
