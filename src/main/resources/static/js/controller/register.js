@@ -80,7 +80,9 @@ function callRegisterFormValidation() {
 				registerForm.response = rcres;
 				invokeAjax('/register','POST',JSON.stringify(registerForm),postRegisterFunction,postRegistrationFailure,null,'text');	
 	        } else {
-	        	alert("Please verify reCAPTCHA");
+	        	//alert("Please verify reCAPTCHA");
+	        	$(".errorBlockRegister").show();
+	    		$(".errorMsgRegister").html("Please verify reCAPTCHA");
 	        	$('#btnRegister').prop('disabled',false);
             	return false; 
 	        }

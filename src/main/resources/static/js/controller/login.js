@@ -72,7 +72,9 @@ function validateUserLogin() {
 				      }
 				    });
 			} else {
-				alert("Please verify reCAPTCHA");
+				//alert("Please verify reCAPTCHA");
+				$(".errorBlockLogin").show();
+				$(".errorMsgLogin").html("Please verify reCAPTCHA");
 				$('#loginButton').prop('disabled',false);
             	return false; 
 			}
