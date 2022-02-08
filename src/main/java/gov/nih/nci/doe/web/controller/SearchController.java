@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -134,18 +135,41 @@ public class SearchController extends AbstractDoeController {
 		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(user).getBody();
 
 		List<String> bulkAssetsList = Arrays.asList(bulkAssetsPaths.split(","));
+		List<String> predictionPathsList = Arrays.asList(predictionPaths.split(","));
 
 		for (HpcCollectionDTO result : searchResults) {
 			String absolutePath = result.getCollection().getAbsolutePath();
 			if (StringUtils.isNotEmpty(absolutePath)) {
 				String[] list = absolutePath.split("/");
 				if (list.length == 5) {
+					Boolean isShow = false;
+					Boolean showGeneratePredictions = false;
 					String dataSetPermissionRole = getPermissionRole(user, result.getCollection().getCollectionId(),
 							loggedOnUserPermissions);
+					if (CollectionUtils.isNotEmpty(predictionPathsList) && Boolean.TRUE.equals(getIsUploader())) {
+
+						showGeneratePredictions = predictionPathsList.stream()
+								.anyMatch(s -> absolutePath.equalsIgnoreCase(s));
+					}
 					if ("false".equalsIgnoreCase(search.getIsShowMyCollection())
-							|| StringUtils.isEmpty(search.getIsShowMyCollection())
-							|| ("true".equalsIgnoreCase(search.getIsShowMyCollection())
-									&& !"No Permissions".equalsIgnoreCase(dataSetPermissionRole))) {
+							&& "false".equalsIgnoreCase(search.getShowModelAnalysisResults())) {
+						isShow = true;
+					} else if ("true".equalsIgnoreCase(search.getIsShowMyCollection())
+							&& !"No Permissions".equalsIgnoreCase(dataSetPermissionRole)
+							&& ("true".equalsIgnoreCase(search.getShowModelAnalysisResults())
+									&& Boolean.TRUE.equals(showGeneratePredictions))) {
+						isShow = true;
+					} else if ("true".equalsIgnoreCase(search.getIsShowMyCollection())
+							&& !"No Permissions".equalsIgnoreCase(dataSetPermissionRole)
+							&& "false".equalsIgnoreCase(search.getShowModelAnalysisResults())) {
+						isShow = true;
+					} else if ("true".equalsIgnoreCase(search.getShowModelAnalysisResults())
+							&& Boolean.TRUE.equals(showGeneratePredictions)
+							&& "false".equalsIgnoreCase(search.getIsShowMyCollection())) {
+						isShow = true;
+					}
+
+					if (Boolean.TRUE.equals(isShow)) {
 
 						List<HpcMetadataEntry> selfMetadatEntries = result.getMetadataEntries()
 								.getSelfMetadataEntries();

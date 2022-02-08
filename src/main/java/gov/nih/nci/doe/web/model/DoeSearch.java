@@ -15,6 +15,15 @@ public class DoeSearch {
 	private boolean[] iskeyWordSearch;
 	private String searchName;
 	private String isShowMyCollection;
+	private String showModelAnalysisResults;
+
+	public String getShowModelAnalysisResults() {
+		return showModelAnalysisResults;
+	}
+
+	public void setShowModelAnalysisResults(String showModelAnalysisResults) {
+		this.showModelAnalysisResults = showModelAnalysisResults;
+	}
 
 	public String getIsShowMyCollection() {
 		return isShowMyCollection;

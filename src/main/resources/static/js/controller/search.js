@@ -23,6 +23,10 @@ $(document).ready(function () {
 		 var search = $("#searchQuery").val();
 		 var list= JSON.parse(search);
 		 var isShowMyCollection = list.isShowMyCollection;
+		 var showModelAnalysisResults = list.showModelAnalysisResults;
+		 if(showModelAnalysisResults) {
+			 $("#showModelAnalysisResults").val(showModelAnalysisResults);
+		 }
 		 if(isShowMyCollection) {
 			 $("#returnToSearchMyCollection").val(isShowMyCollection);
 		 }
@@ -141,6 +145,8 @@ function populateSearchCriteria(searchType) {
 		search_criteria_json.iskeyWordSearch = iskeyWordSearch.join();
 		search_criteria_json.operator = operators.join();
 		var myCollection = $("#returnToSearchMyCollection").val();
+		var showModelAnalysisResults = $("#showModelAnalysisResults").val();
+		search_criteria_json.showModelAnalysisResults = showModelAnalysisResults;
 		search_criteria_json.isShowMyCollection = myCollection;
 		refreshDataTable();
 }
@@ -156,16 +162,28 @@ function refreshDataTable() {
         t.ajax.reload(null, true);
        
     }
-    if(isVisible && !$("#myCollections").is(':visible')) {
+    if(isVisible && !$("#myCollections").is(':visible') && !$("#modelAnalysis").is(':visible')) {
     	var myCollection = $("#returnToSearchMyCollection").val();
+    	var modelAnalysis = $("#showModelAnalysisResults").val();
     	if(myCollection && myCollection == "true") {
     		 $("div.toolbar").prepend('<div style="float: left;">'+
-              	   '<label><input type="checkbox" checked="true" id="myCollections" style="transform: translateY(1.5px);">'+
+              	   '<label>&nbsp;&nbsp;<input type="checkbox" checked="true" id="myCollections" style="transform: translateY(1.5px);">'+
              	   '&nbsp;&nbsp;Display Collections I Can Edit</label></div>');
     	} else {
+    		$("div.toolbar").prepend('<div style="float: left;">'+
+               	   '<label>&nbsp;&nbsp;<input type="checkbox" id="myCollections" style="transform: translateY(1.5px);">'+
+              	   '&nbsp;&nbsp;Display Collections I Can Edit</label></div>');
+    	} 
+    	
+    	if(modelAnalysis && modelAnalysis == "true") {
+    		$("div.toolbar").prepend('<div style="float: left;">'+
+             	   '<label><input type="checkbox" checked="true" id="modelAnalysis" style="transform: translateY(1.5px);">'+
+            	   '&nbsp;&nbsp;Models available for analysis</label></div>');
+    	} else {
+    		 
     		 $("div.toolbar").prepend('<div style="float: left;">'+
-              	   '<label><input type="checkbox" id="myCollections" style="transform: translateY(1.5px);">'+
-             	   '&nbsp;&nbsp;Display Collections I Can Edit</label></div>');
+                	   '<label><input type="checkbox" id="modelAnalysis" style="transform: translateY(1.5px);">'+
+               	   '&nbsp;&nbsp;Models available for analysis</label></div>');
     	}
     	
     }
@@ -192,6 +210,7 @@ function dataTableInit(isVisible) {
                d.iskeyWordSearch = search_criteria_json.iskeyWordSearch;
                d.operator = search_criteria_json.operator;
                d.isShowMyCollection = search_criteria_json.isShowMyCollection;
+               d.showModelAnalysisResults = search_criteria_json.showModelAnalysisResults;
             },
             "dataSrc": function (data) {
                 return data;
@@ -229,6 +248,17 @@ function dataTableInit(isVisible) {
 				} else {
 					$(this).prop('checked', false);
 					$("#returnToSearchMyCollection").val("false");
+				}
+				populateSearchCriteria('displayAllResults');
+			});
+						
+			$("#modelAnalysis").on('change', function() {
+				if ($(this).is(':checked')) {
+					$(this).prop('checked', true);
+					$("#showModelAnalysisResults").val("true");
+				} else {
+					$(this).prop('checked', false);
+					$("#showModelAnalysisResults").val("false");
 				}
 				populateSearchCriteria('displayAllResults');
 			});
