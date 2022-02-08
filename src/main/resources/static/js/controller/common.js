@@ -414,11 +414,6 @@ $(document)
 						registerBulkAssets();
 					});
 
-					$("#doeDataFile").change(function(e) {
-						appendFileName($(this));
-
-					});
-
 					$("#driveAuthlink").click(
 							function(e) {
 								var params = {

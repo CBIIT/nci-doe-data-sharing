@@ -319,9 +319,27 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 	font-size:15px;
 	line-height: 17px;
 }
-#updateMetaData,#addMetaData,#addNewMetaDataForSingleDataFile,#btnRegisterFile,
-#registerBulkDataFileBtn,#registerCollectionBtn,#updatePermissions,#addUserMetadataForBulkAssets {
+#updateMetaData,#addMetaData,#addNewMetaDataForSingleDataFile,
+#updatePermissions,#addUserMetadataForBulkAssets {
 	background-color: #E87B05!important;
+	font-family: 'inter_regular';
+}
+
+#btnRegisterFile {
+	background-color: #E87B05!important;
+    width: 155px;
+    border-radius: 14px;
+    font-family: 'inter_regular';
+    font-size: 15px;
+}
+
+#registerCollectionBtn {
+	background-color: #E87B05!important;
+    color: #fff !important;
+    border-radius: 15px;
+    width: fit-content;
+    font-size: 15px;
+    font-family: 'inter_regular';
 }
 
 #cancelRegisterBtn {
@@ -333,26 +351,14 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
     font-family: 'inter_regular';
 }
 
-#btnRegisterFile {
-    width: 155px;
-    border-radius: 14px;
-    font-family: 'inter_regular';
-    font-size: 15px;
-}
+
 .backToSearch,.backToStatusTab,.backToUpload {
  color: #E87B05;
  font-family: 'inter_regular';
  font-size: 16px;
  font-weight: 900;
 }
-#registerCollectionBtn {
-    color: #fff !important;
-    border-radius: 15px;
-    /*width: 147px;*/
-    width: fit-content;
-    font-size: 15px;
-    font-family: 'inter_regular';
-}
+
 
 .parentCollectionName {
 	/*width: 130%;*/
@@ -750,14 +756,14 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before
     position: fixed;
 }
 
-#doeMetadataFile,#uploadTestInferFile,#uploadTestOutputFile {
+#doeMetadataFile,#uploadTestInferFile,#uploadTestOutputFile,#doeDataFile {
 	color: #000000;
   font-family: 'inter_regular';
   font-size: 15px;
 }
 
 #doeMetadataFile::file-selector-button,#uploadTestInferFile::file-selector-button,
-#uploadTestOutputFile::file-selector-button {
+#uploadTestOutputFile::file-selector-button,#doeDataFile::file-selector-button {
   margin-right:15px;
   box-sizing: border-box;
   height: 36px;

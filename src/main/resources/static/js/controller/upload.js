@@ -7,15 +7,15 @@ $(document).ready(function () {
 		selector : '[data-toggle="tooltip"]'
 	});
 	
+	$("#doeDataFile").change(function(e) {
+		appendFileName($(this));
+		$("#registerBulkDataFileBtn").prop("disabled", false);
+	});
+	
 	$("#registerBulkDataFileBtn").click(function(e) {
 		registerBulkDataFile();
 	});
 	
-	$("#addBulkDataFiles").click(function(e) {
-		$("#uploadDataFilesTab").show();
-		openBulkDataRegistration();
-	});
-
 	$("#primaryGlobusButton").click(function(e) {
 
 		var d = {};
@@ -51,6 +51,7 @@ $(document).ready(function () {
 		$("#uploadSectionDiv").hide();
 		$("#uploadHeader").hide();
 		$("#uploadDataFilesTab").show();
+		$("#registerBulkDataFileBtn").prop("disabled",true);
 		openBulkDataRegistration(folderPath);
 	});
 
@@ -59,6 +60,7 @@ $(document).ready(function () {
 		$("#uploadSectionDiv").hide();
 		$("#uploadHeader").hide();
 		$("#uploadDataFilesTab").show();
+		$("#registerBulkDataFileBtn").prop("disabled",true);
 		openBulkDataRegistration();
 	});
 	
@@ -111,6 +113,7 @@ function loadUploadTab() {
 			if (bulkUploadCollection) {
 				$("#addAsets").click();
 				$("input[name=selectAsset][value='Register Asset']").click();
+				$("#registerBulkAssets").prop("disabled",false);
 
 			}
 			if (data) {
@@ -128,6 +131,7 @@ function loadUploadTab() {
 				$("#bulkDataFilePathCollection").val(uploadPath);
 				$(".registerBulkDataFileSuccess").hide();
 				$(".registerBulkDataFile").html("");
+				$("#registerBulkDataFileBtn").prop("disabled",false);
 				var uploadAsyncType = $("#uploadAsyncType").val();
 				if(uploadAsyncType && uploadAsyncType == 'drive') {
 					$("#datafileTypeDriveUpload").prop("checked", true);
@@ -879,6 +883,34 @@ function registerBulkAssets() {
     var isValidated  = true;
     var usermetaDataEntered = true;
     var isFormBulkUpload;
+    
+    
+    $('table#assetBulkMetadataTable input[type="text"]').each(function(){
+		var name = $(this).val();
+		var ismandatory = $(this).attr('is_mandatory');
+	    if(!name && ismandatory && ismandatory != "false" ){
+	    	isValidated = false;
+	    	usermetaDataEntered = false;
+         }
+	});
+	
+	$("table#assetBulkMetadataTable").find("textarea").each(function(){
+		var ismandatory = $(this).attr('is_mandatory');
+        if(!$(this).val() && ismandatory && ismandatory != "false" ){
+        	isValidated = false;
+	    	usermetaDataEntered = false;
+        }          
+    });
+	 
+	$("table#assetBulkMetadataTable").find(".simple-select2").each(function(){
+		var ismandatory = $(this).attr('is_mandatory');
+		var name = $(this).val();
+		if(ismandatory && ismandatory != "false" && name && name == 'Select') {
+			isValidated = false;
+	    	usermetaDataEntered = false;
+	    }
+	});
+	
     if(!$("#assetGlobusEndpointId").length || !$("#assetGlobusEndpointPath").length) {
     	isValidated =false;
     	bootbox.dialog({ 
@@ -909,39 +941,12 @@ function registerBulkAssets() {
     	bootbox.dialog({ 
     	    message: 'Upload CSV Metadata file.'
     	});
-    }
-
-	$('table#assetBulkMetadataTable input[type="text"]').each(function(){
-		var name = $(this).val();
-		var ismandatory = $(this).attr('is_mandatory');
-	    if(!name && ismandatory && ismandatory != "false" ){
-	    	isValidated = false;
-	    	usermetaDataEntered = false;
-         }
-	});
-	
-	$("table#assetBulkMetadataTable").find("textarea").each(function(){
-		var ismandatory = $(this).attr('is_mandatory');
-        if(!$(this).val() && ismandatory && ismandatory != "false" ){
-        	isValidated = false;
-	    	usermetaDataEntered = false;
-        }          
-    });
-	 
-	$("table#assetBulkMetadataTable").find(".simple-select2").each(function(){
-		var ismandatory = $(this).attr('is_mandatory');
-		var name = $(this).val();
-		if(ismandatory && ismandatory != "false" && name && name == 'Select') {
-			isValidated = false;
-	    	usermetaDataEntered = false;
-	    }
-	});
-  
-	if(!usermetaDataEntered) {
+    } else if(!usermetaDataEntered) {
 		bootbox.dialog({ 
     	    message: 'Enter values for all required metadata.'
     	});
 	}
+    
    if(isValidated)  {
 	   if($("input[name='assetUploadType']:checked").val() == 'No') {
 		   isFormBulkUpload = true;
@@ -1148,7 +1153,9 @@ function displayDataFileSection(value) {
 	
 	if(value == 'singleData') {
 		    $("#singleFileDataUploadSection").show();
-		    $("#bulkFileUploadSection").hide();						
+		    $("#bulkFileUploadSection").hide();	
+		    $("#doeDataFile").val("");
+		    $("#registerBulkDataFileBtn").prop("disabled",true);
 		
 	} else if(value == 'globus'){
 		    $("#singleFileDataUploadSection").hide();
@@ -1158,6 +1165,10 @@ function displayDataFileSection(value) {
 			$("#fileNamesDiv").show();
 			$("#folderNamesDiv").show();
 			$("#displayDriveUploadDiv").hide();
+			$("#registerBulkDataFileBtn").prop("disabled",true);
+			$("#fileNamesDiv").html("");
+			$("#folderNamesDiv").html("");
+			$("#globusEndPointInformation").html("");
 	} else if(value == 's3'){
 			$("#singleFileDataUploadSection").hide();
 			$("#bulkFileUploadSection").show();	
@@ -1166,6 +1177,8 @@ function displayDataFileSection(value) {
 			$("#fileNamesDiv").hide();
 			$("#folderNamesDiv").hide();
 			$("#displayDriveUploadDiv").hide();
+			$("#registerBulkDataFileBtn").prop("disabled",false);
+			
 		} else if(value == 'drive'){
 			$("#singleFileDataUploadSection").hide();
 			$("#bulkFileUploadSection").show();	
@@ -1174,6 +1187,11 @@ function displayDataFileSection(value) {
 			$("#fileNamesDiv").hide();
 			$("#folderNamesDiv").hide();
 			$("#displayDriveUploadDiv").show();
+			$("#driveDiv").hide();
+			$("#driveAuthorisedMsg").hide();
+			$("#fileNamesDiv").html("");
+			$("#folderNamesDiv").html("");
+			$("#registerBulkDataFileBtn").prop("disabled",true);
 		}
 	
 }
