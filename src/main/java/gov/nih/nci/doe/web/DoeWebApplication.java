@@ -28,7 +28,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableCaching
 @EnableScheduling
-//@ImportResource("META-INF/spring/doe-scheduler-beans-configuration.xml")
 @ImportResource(locations = {"classpath:META-INF/spring/doe-scheduler-beans-configuration.xml"})
 public class DoeWebApplication extends SpringBootServletInitializer{
 

@@ -183,7 +183,7 @@ public abstract class AbstractDoeController {
 		if (ex.getStatusCode() != null) {
 			response.setStatus(ex.getStatusCode());
 		} else {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
 		mailService.sendErrorEmail(ex, getLoggedOnUserInfo());
 		response.setHeader("Content-Type", "application/json");
