@@ -1,6 +1,9 @@
 """
 This python file is used to convert pdf to txt document
+Written By Mounica Ganta
+Data: 10/01/2022
 """
+
 import os
 import PyPDF2
 

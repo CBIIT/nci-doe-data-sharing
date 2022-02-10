@@ -1,0 +1,4 @@
+All the mapper classes are taken from https://github.com/CBIIT/NCI-DOE-Collab-Pilot3-Multitask-Convolutional-Neural-Network/tree/master/data/mapper
+-histology_class_mapper.json,site_class_mapper.json: Dictionaries to map site and histology to an integer set.
+-word2id.pkl: Dictionary mapping every word in the corpus to a specific index
+-vocab.npy: A numpy array of size #of_words * embedding_size(300) which mapps every word index to a corresponding ebedded vector using the word embedding model that has been trained by the data handler script

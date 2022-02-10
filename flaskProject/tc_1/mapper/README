@@ -1,0 +1,3 @@
+The mapper classes used are as follows:
+-genecode.txt: https://github.com/cpreid2/gdc-rnaseq-tool/raw/master/Gene_Annotation/gencode.v22.genes.txt, This file is used to merge matrices
+-type_18_class_labels: https://modac.cancer.gov/assetDetails?dme_data_id=NCI-DME-MS01-6996872, map tumor type to an integer

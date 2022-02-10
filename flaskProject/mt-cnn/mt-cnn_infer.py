@@ -1,6 +1,7 @@
 """
-This python file is used to validate the input file, generate predictions and map
+Code to validate the input file, generate predictions and map
 the predictions using json mapper
+Date:10/01/2022
 """
 import json
 import os
@@ -17,10 +18,11 @@ import pandas as pd
 
 from helper.pdfconverter import convert_PDF_to_Txt
 sys.path.append('/home/ncidoesvct2/common')
-from gdc_rnaseq_tool import run_pre_process, isValidManifestFile
+from download_gdc_data import run_pre_process, isValidManifestFile
 
 
 # Function to clean up the document
+# This is taken from https://github.com/CBIIT/NCI-DOE-Collab-Pilot3-Multitask-Convolutional-Neural-Network
 def clearup(document):
     document = document.translate(string.punctuation)
     document = re.sub('\(\d+.\d+\)|\d-\d|\d', '', document) \
@@ -33,6 +35,7 @@ def clearup(document):
     return document
 
 # Function to convert the input file to indices
+# This is taken from https://github.com/CBIIT/NCI-DOE-Collab-Pilot3-Multitask-Convolutional-Neural-Network
 def vectorSingle(filename, word2_idx, vocabs):
     if os.path.isfile(filename):
         doc = open(filename, 'r', encoding="utf8").read().strip()

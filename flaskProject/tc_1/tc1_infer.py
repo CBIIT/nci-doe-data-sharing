@@ -1,6 +1,7 @@
 """
-This python file is used to validate the input file, generate predictions and map
+Code to validate the input file, generate predictions and map
 the predictions using json mapper
+Date: 10/01/2022
 """
 
 from __future__ import print_function
@@ -14,7 +15,7 @@ import numpy as np
 import pandas as pd
 
 sys.path.append('/home/ncidoesvct2/common')
-from gdc_rnaseq_tool import run_pre_process, isValidManifestFile
+from download_gdc_data import run_pre_process, isValidManifestFile
 
 try:
     import configparser
@@ -24,7 +25,8 @@ except ImportError:
 from keras.models import Sequential, Model, model_from_json, model_from_yaml
 
 
-# Function to format input file and prepare for data preprocessing:
+# Function to format input file and prepare for data preprocessing,
+# These input file formatting steps are taken from https://github.com/cpreid2/gdc-rnaseq-tool
 def data_preprocess(isManifestFile):
     print("preprocess manifest file")
     Merged_File_Name_val = datafilename + '_merged_file.tsv'
@@ -67,7 +69,8 @@ def data_preprocess(isManifestFile):
     preprocess(Merged_File_Name_val)
 
 
-# Function to preprocess data:
+# Function to preprocess data
+# The data preprocessing steps are taken from https://github.com/CBIIT/NCI-DOE-Collab-Pilot1-Tumor_Classifier-hardening/blob/master/TC1-dataprep.ipynb
 def preprocess(Merged_File_Name_val):
     shutil.rmtree(manifest_dir_name, ignore_errors=True)
     final_preprocessed_file = datafilename + '_final_preprocess.tsv'
@@ -88,7 +91,8 @@ def preprocess(Merged_File_Name_val):
     run(final_preprocessed_file)
 
 
-# Function to generate predictions and map them to a tumor type:
+# Function to generate predictions and map them to a tumor type
+# The model loading steps are taken from https://github.com/CBIIT/NCI-DOE-Collab-Pilot1-Tumor-Classifier/tree/master/Pilot1/TC1
 def run(data):
     # load json and model
     trained_model_json = "tc1.model.json"

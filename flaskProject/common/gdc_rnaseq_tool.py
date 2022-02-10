@@ -1,6 +1,7 @@
 """
-This python file is used to validate the manifest file and download the files
-using gdc API
+Code to validate the manifest file provided by the user and download the files in manifest using gdc API
+Written by Mounica Ganta
+Date: 07/02/2022
 """
 
 import gzip
@@ -14,9 +15,7 @@ import pandas as pd
 # Function for downloading files :
 def download(uuid, fileName, save_path, retry=0):
     PARAM = {
-        # URL
         'url-data': "https://api.gdc.cancer.gov/data/{uuid}",
-        # Persistence upon error
         'max retry': 2,
     }
     try:
