@@ -855,12 +855,6 @@ public abstract class AbstractDoeController {
 					model.addAttribute("returnToSearch", true);
 				}
 
-				if (StringUtils.isNotEmpty(predictionPaths) && Boolean.TRUE.equals(getIsUploader())) {
-					List<String> predictionPathsList = Arrays.asList(predictionPaths.split(","));
-					Boolean showGeneratePredictions = predictionPathsList.stream()
-							.anyMatch(s -> collection.getCollection().getCollectionName().equalsIgnoreCase(s));
-					model.addAttribute("showGeneratePredictions", showGeneratePredictions);
-				}
 				model.addAttribute("assetType", assetType);
 				model.addAttribute("dme_Data_Id", dme_Data_Id);
 				model.addAttribute("asset_Identifier", asset_Identifier);
@@ -873,25 +867,34 @@ public abstract class AbstractDoeController {
 				model.addAttribute("assetPermission", assetPermission);
 				model.addAttribute("assetLink", webServerName + "/assetDetails?dme_data_id=" + dme_Data_Id);
 
-				// verify if prediction folder exists, else hide the generate predictions sub
-				// tab
-				try {
-					String folderPath = collection.getCollection().getCollectionName() + "/Predictions_" + user;
-					HpcCollectionListDTO folderCollections = DoeClientUtil.getCollection(authToken, serviceURL,
-							folderPath, false);
+				if (StringUtils.isNotEmpty(predictionPaths) && Boolean.TRUE.equals(getIsUploader())) {
+					List<String> predictionPathsList = Arrays.asList(predictionPaths.split(","));
+					Boolean showGeneratePredictions = predictionPathsList.stream()
+							.anyMatch(s -> collection.getCollection().getCollectionName().equalsIgnoreCase(s));
+					model.addAttribute("showGeneratePredictions", showGeneratePredictions);
 
-					if (folderCollections != null) {
-						String folderPermissions = getPermissionRole(user,
-								folderCollections.getCollections().get(0).getCollection().getCollectionId(),
-								loggedOnUserPermissions);
-						if ("Owner".equalsIgnoreCase(folderPermissions)) {
-							model.addAttribute("showGeneratePredTab", true);
+					// verify if prediction folder exists, else hide the generate predictions sub
+					// tab
+					if (Boolean.TRUE.equals(showGeneratePredictions)) {
+						try {
+							String folderPath = collection.getCollection().getCollectionName() + "/Predictions_" + user;
+							HpcCollectionListDTO folderCollections = DoeClientUtil.getCollection(authToken, serviceURL,
+									folderPath, false);
+
+							if (folderCollections != null) {
+								String folderPermissions = getPermissionRole(user,
+										folderCollections.getCollections().get(0).getCollection().getCollectionId(),
+										loggedOnUserPermissions);
+								if ("Owner".equalsIgnoreCase(folderPermissions)) {
+									model.addAttribute("showGeneratePredTab", true);
+								}
+
+							}
+						} catch (Exception e) {
+							// collection does not exist
+							log.error("folder collection does not exist for Asset: " + asset_Identifier);
 						}
-
 					}
-				} catch (Exception e) {
-					// collection does not exist
-					log.error("folder collection does not exist for Asset: " + asset_Identifier);
 				}
 
 			} else {
