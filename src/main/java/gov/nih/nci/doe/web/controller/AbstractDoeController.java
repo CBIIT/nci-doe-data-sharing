@@ -202,6 +202,19 @@ public abstract class AbstractDoeController {
 		return null;
 	}
 
+	@ModelAttribute("isAdmin")
+	public Boolean getIsAdmin() {
+		String emailAddr = getLoggedOnUserInfo();
+		if (!StringUtils.isEmpty(emailAddr)) {
+			DoeUsersModel user = authenticateService.getUserInfo(emailAddr);
+			if (user != null && Boolean.TRUE.equals(user.getIsAdmin())) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	@ModelAttribute("downtimeMessage")
 	public String getDowntimeMessage() {
 

@@ -73,14 +73,26 @@ public class TaskManagerCotroller extends AbstractDoeController {
 
 	@GetMapping
 	public ResponseEntity<?> getStatus(HttpSession session, @RequestHeader HttpHeaders headers,
-			HttpServletRequest request, @RequestParam(value = "userId") String userId) throws DoeWebException {
+			HttpServletRequest request, @RequestParam(value = "showAll", required = false) String showAll)
+			throws DoeWebException {
 
 		log.info("get all tasks by user Id");
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		String readToken = (String) session.getAttribute("hpcUserToken");
 		try {
+
+			String userId = getLoggedOnUserInfo();
+			if (StringUtils.isEmpty(userId)) {
+				return new ResponseEntity<>("loginTab", HttpStatus.OK);
+			}
 			List<TaskManager> results = new ArrayList<TaskManager>();
-			results = taskManagerService.getAllByUserId(userId);
+
+			if (Boolean.TRUE.equals(getIsAdmin()) && "true".equalsIgnoreCase(showAll)) {
+				results = taskManagerService.getAlltasks();
+			} else {
+				results = taskManagerService.getAllByUserId(userId);
+			}
+
 			List<String> taskIds = LambdaUtils.map(results, TaskManager::getTaskId);
 
 			String serviceURL = queryServiceURL + "?page=" + 1 + "&totalCount=true";
@@ -135,8 +147,8 @@ public class TaskManagerCotroller extends AbstractDoeController {
 				}
 
 				if (StringUtils.isNotEmpty(task.getDataSetName()) && StringUtils.isNotEmpty(t.getTaskName())) {
-					task.setTaskName("<a href=" + webServerName + "/assetDetails?assetIdentifier=" + task.getDataSetName()
-							+ ">" + t.getTaskName() + "</a>");
+					task.setTaskName("<a href=" + webServerName + "/assetDetails?assetIdentifier="
+							+ task.getDataSetName() + ">" + t.getTaskName() + "</a>");
 				} else {
 					task.setTaskName(t.getTaskName());
 				}
@@ -202,8 +214,8 @@ public class TaskManagerCotroller extends AbstractDoeController {
 
 				if (StringUtils.isNotEmpty(task.getDataSetName()) && t != null
 						&& StringUtils.isNotEmpty(t.getTaskName())) {
-					task.setTaskName("<a href=" + webServerName + "/assetDetails?assetIdentifier=" + task.getDataSetName()
-							+ ">" + t.getTaskName() + "</a>");
+					task.setTaskName("<a href=" + webServerName + "/assetDetails?assetIdentifier="
+							+ task.getDataSetName() + ">" + t.getTaskName() + "</a>");
 				} else {
 					task.setTaskName(t != null ? t.getTaskName() : "");
 				}

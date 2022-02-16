@@ -51,4 +51,9 @@ public class TaskManagerServiceImpl implements TaskManagerService {
 		return taskManagerRepository.getTaskDetails(userId, name);
 	}
 
+	@Override
+	public List<TaskManager> getAlltasks() {
+		log.info("get all Tasks");
+		return taskManagerRepository.getAllTasks();
+	}
 }

@@ -24,6 +24,7 @@ public class DoeUsers {
 	private String uuid;
 	private Date createdDate;
 	private Date lastChangedDate;
+	private Boolean isAdmin;
 
 	@Transient
 	private List<String> progNamesList;
@@ -168,6 +169,17 @@ public class DoeUsers {
 
 	public void setIsWrite(Boolean isWrite) {
 		this.isWrite = isWrite;
+	}
+
+	@Basic
+	@Column(name = "IS_ADMIN", nullable = true, length = 1)
+	@Type(type = "yes_no")
+	public Boolean getIsAdmin() {
+		return isAdmin;
+	}
+
+	public void setIsAdmin(Boolean isAdmin) {
+		this.isAdmin = isAdmin;
 	}
 
 	@Basic
