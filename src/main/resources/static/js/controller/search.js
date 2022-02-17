@@ -37,6 +37,7 @@ $(document).ready(function () {
 				 var attrval = attrVal[i];
 				 var newAttrVal = attrval.replaceAll('%', '');
 				 $("#attributeVal").val(newAttrVal);
+				 $("#resetBtn").show();
 			 } else {
 				 var attrName = list.attrName[i];
 				 var attrVal = attrVal[i];

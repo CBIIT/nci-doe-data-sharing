@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -135,22 +134,36 @@ public class SearchController extends AbstractDoeController {
 		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(user).getBody();
 
 		List<String> bulkAssetsList = Arrays.asList(bulkAssetsPaths.split(","));
-		List<String> predictionPathsList = Arrays.asList(predictionPaths.split(","));
 
 		for (HpcCollectionDTO result : searchResults) {
+
 			String absolutePath = result.getCollection().getAbsolutePath();
+
 			if (StringUtils.isNotEmpty(absolutePath)) {
+
 				String[] list = absolutePath.split("/");
+				// if the list.length is 5, the collection is an Asset.
+				// this validation is done since only assets are display on search results
 				if (list.length == 5) {
-					Boolean isShow = false;
-					Boolean showGeneratePredictions = false;
+
 					String dataSetPermissionRole = getPermissionRole(user, result.getCollection().getCollectionId(),
 							loggedOnUserPermissions);
-					if (CollectionUtils.isNotEmpty(predictionPathsList) && Boolean.TRUE.equals(getIsUploader())) {
+					List<HpcMetadataEntry> selfMetadatEntries = result.getMetadataEntries().getSelfMetadataEntries();
+					String assetType = getAttributeValue("asset_type", selfMetadatEntries, "Asset");
+					// criteria to filter the assets available for predictions and to show
+					// collections available for edit when the checkbox is
+					// clicked from search
 
-						showGeneratePredictions = predictionPathsList.stream()
-								.anyMatch(s -> absolutePath.equalsIgnoreCase(s));
+					Boolean isShow = false;
+					Boolean showGeneratePredictions = false;
+
+					Boolean isModelExists = StringUtils.isNotEmpty(user) && "Model".equalsIgnoreCase(assetType)
+							&& modelInfoService.isModelExistsForInferencing(result.getCollection().getCollectionName());
+					if (Boolean.TRUE.equals(getIsUploader()) && Boolean.TRUE.equals(isModelExists)) {
+
+						showGeneratePredictions = true;
 					}
+
 					if ("false".equalsIgnoreCase(search.getIsShowMyCollection())
 							&& "false".equalsIgnoreCase(search.getShowModelAnalysisResults())) {
 						isShow = true;
@@ -171,8 +184,6 @@ public class SearchController extends AbstractDoeController {
 
 					if (Boolean.TRUE.equals(isShow)) {
 
-						List<HpcMetadataEntry> selfMetadatEntries = result.getMetadataEntries()
-								.getSelfMetadataEntries();
 						DoeSearchResult returnResult = new DoeSearchResult();
 
 						String studyPath = result.getCollection().getCollectionParentName();
@@ -208,7 +219,7 @@ public class SearchController extends AbstractDoeController {
 								result.getMetadataEntries().getParentMetadataEntries(), "Study"));
 						returnResult.setDataSetdmeDataId(webServerName + "/searchTab?dme_data_id="
 								+ getAttributeValue("dme_data_id", selfMetadatEntries, "Asset"));
-						returnResult.setAssetType(getAttributeValue("asset_type", selfMetadatEntries, "Asset"));
+						returnResult.setAssetType(assetType);
 						returnResult.setDmeDataId(getAttributeValue("dme_data_id", selfMetadatEntries, "Asset"));
 						returnResults.add(returnResult);
 					}
