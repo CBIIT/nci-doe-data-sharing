@@ -142,7 +142,7 @@ def run(data):
         categorical = np.reshape(categorical, output_shape)
         score_json = loaded_model_json.evaluate(np.array(X_test), np.array(categorical), verbose=0)
         print("accuracy is: %.2f%%" % (score_json[1] * 100))
-        final_pred.append(["The score of the model is: ", str(score_json[0])])
+        final_pred.append(["The score (loss) of the model is: ", str(score_json[0])])
         final_pred.append(["The accuracy of the model is: ", str(score_json[1] * 100) + "%"])
 
     headerList = ['Filename', 'Tumor Type']
