@@ -23,14 +23,6 @@ $(document).ready(function () {
 
 	});
 });
-
-$('#loginTab').on('hide.bs.tab hidden.bs.tab', function(e) {
-        clearMessages();
-    });
-
- function clearMessages() {
-//clear all messages
- }
  
 function validateUserLogin() {
 	
@@ -56,23 +48,8 @@ function validateUserLogin() {
 			$('#loginButton').prop('disabled',true);
 			var rcres = grecaptcha.getResponse(0);
 			if(rcres.length){
-				 var data = $('#userlogin').serialize();
-				   $.ajax({
-				      data: data,
-				      type: 'POST',
-				      url: '/login',
-				      success: function (data, status) {
-				    	  $('#loginButton').prop('disabled',false);
-				    	  postLoginFunction(data,status);
-				      },
-				      error: function (data, status, error) {
-				    	  $('#loginButton').prop('disabled',false);
-				          handleAjaxError('/login', null, status, error, data);
-				          loginFailureFunction(data,status);
-				      }
-				    });
+				 form.submit();
 			} else {
-				//alert("Please verify reCAPTCHA");
 				$(".errorBlockLogin").show();
 				$(".errorMsgLogin").html("Please verify reCAPTCHA");
 				$('#loginButton').prop('disabled',false);
@@ -81,56 +58,4 @@ function validateUserLogin() {
 			 
 		}
 	});		
-}
-
-function postLoginFunction(data,status) {
-	$(".successBlockLogin").hide();
-	if("loginFailure" == data) {
-		
-		$(".errorBlockLogin").show();
-		$(".errorMsgLogin").html("Enter valid credentials.");
-		
-	} else if("inValidEmail" == data) {
-		
-		$(".errorBlockLogin").show();
-		$(".errorMsgLogin").html("Enter an email address.");
-		
-	} else if("inValidPassword" == data) {
-		
-		$(".errorBlockLogin").show();
-		$(".errorMsgLogin").html("Enter a password.");
-		
-	} else if("loginlocked" == data) {
-		
-		$(".errorBlockLogin").show();
-		$(".errorMsgLogin").html("Maximum login attempts exceeded. Request a password via " +
-				"<a style='text-decoration: underline;color: #fff;'href='javascript:void(0);' " +
-				"data-toggle='modal' data-target='#forgotPasswordLightbox'>forgot password</a>.");
-		
-	} else if("loginInactivated" == data) {
-		$(".errorBlockLogin").show();
-		$(".errorMsgLogin").html("Check your email inbox for an activation link.");
-		
-	} else if("InvalidCaptcha" == data) {
-		$(".errorBlockLogin").show();
-		$(".errorMsgLogin").html("Invalid Captcha.");
-		
-	} else {
-		location.replace("/");
-	}
-	
-}
-
-function loginFailureFunction(data, status) {
-	$(".successBlockLogin").hide();
-	$(".errorBlockLogin").show();
-	if (data && data.responseText) {
-		var errorJson = JSON.parse(data.responseText);
-
-		$(".errorMsgLogin").html(errorJson.message);
-
-	} else {
-		$(".errorMsgLogin").html("Unknown Error. Contact Technical Support!");
-	}
-
 }

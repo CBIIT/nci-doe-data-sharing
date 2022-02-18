@@ -23,7 +23,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import org.springframework.security.authentication.BadCredentialsException;
 import gov.nih.nci.doe.web.DoeWebException;
+import gov.nih.nci.doe.web.LoginAuthenticationSuccessHandler;
 import gov.nih.nci.doe.web.domain.InferencingTask;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
@@ -137,7 +139,9 @@ public class HomeController extends AbstractDoeController {
 
 	@GetMapping(value = "/loginTab")
 	public String getLoginTab(Model model, @RequestParam(value = "token", required = false) String token,
-			@RequestParam(value = "email", required = false) String email) throws DoeWebException {
+			@RequestParam(value = "email", required = false) String email,
+			@RequestParam(value = "error", required = false) String error, HttpServletRequest request)
+			throws DoeWebException {
 
 		try {
 			if (StringUtils.isNotEmpty(token) && StringUtils.isNotEmpty(email)) {
@@ -146,6 +150,22 @@ public class HomeController extends AbstractDoeController {
 					model.addAttribute("successMsg", "Thank you for registering. You may now log in.");
 				}
 			}
+
+			if (null != error) {
+				Exception message = (Exception) request.getSession().getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
+				if (StringUtils.isNotEmpty(error)) {
+					model.addAttribute("error", error);
+				} else if (message == null) {
+					model.addAttribute("error", "Unknown Error. Contact Technical Support!");
+				} else if (message.getClass().isAssignableFrom(BadCredentialsException.class)) {
+					model.addAttribute("error", message.getMessage());
+				}
+			}
+
+			String referer = request.getHeader("referer");
+			request.getSession().setAttribute(LoginAuthenticationSuccessHandler.REDIRECT_URL_SESSION_ATTRIBUTE_NAME,
+					referer);
+
 		} catch (Exception e) {
 			throw new DoeWebException("Failed to send registration email" + e.getMessage());
 		}

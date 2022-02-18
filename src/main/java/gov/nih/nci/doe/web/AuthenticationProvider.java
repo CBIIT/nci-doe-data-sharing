@@ -28,7 +28,7 @@ public class AuthenticationProvider implements org.springframework.security.auth
 		final String username = authentication.getName().trim().toLowerCase();
 		final String password = authentication.getCredentials().toString();
 
-		String error = "loginFailure";
+		String error = "Enter valid credentials.";
 		try {
 			LoginStatusCode status = authService.authenticateExternalUser(username, password);
 			if (status == LoginStatusCode.LOGIN_SUCCESS) {
@@ -39,13 +39,16 @@ public class AuthenticationProvider implements org.springframework.security.auth
 				authorities.add(new SimpleGrantedAuthority("PUBLIC_USER"));
 				return new UsernamePasswordAuthenticationToken(username, storedP, authorities);
 			} else if (status == LoginStatusCode.LOGIN_INVALID_EMAIL) {
-				error = "inValidEmail";
+				error = "Enter an email address.";
 			} else if (status == LoginStatusCode.LOGIN_INVALID_PASSWORD) {
-				error = "inValidPassword";
+				error = "Enter a valid password.";
 			} else if (status == LoginStatusCode.LOGIN_LOCKED) {
-				error = "loginlocked";
+				error = "Maximum login attempts exceeded. Request a password via "
+						+ "<a style='text-decoration: underline;color: #fff;' href='javascript:void(0);'"
+						+ "data-toggle='modal' data-target='#forgotPasswordLightbox'>forgot password</a>";
+
 			} else if (status == LoginStatusCode.LOGIN_INACTIVATED) {
-				error = "loginInactivated";
+				error = "Check your email inbox for an activation link.";
 			}
 		} catch (Exception ex) {
 			log.error(ex.getMessage());
