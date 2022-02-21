@@ -1246,6 +1246,9 @@ function functionDelete($this,collectionType) {
 						 $("#spinner").hide();
 				         $("#dimmer").hide();
 						 console.log('SUCCESS: ', msg);
+						 if(msg && msg == 'Not Authorized') {
+							 location.replace("/loginTab");
+						 }
 						 postSuccessDeleteCollection(msg,collectionType);
 						 
 					 },

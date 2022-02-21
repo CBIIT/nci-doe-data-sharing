@@ -41,7 +41,7 @@ public class DeleteCollectionController extends AbstractDoeController {
 		String userInfo = getLoggedOnUserInfo();
 
 		if (authToken == null || StringUtils.isEmpty(userInfo)) {
-			return "Invalid token. Login again.";
+			return "Not Authorized";
 		}
 
 		if (collPath == null) {
