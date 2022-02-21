@@ -32,13 +32,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
-		// ignore csrf protection on spring security login and logout to get pass the
-		// forbidden error
-		String[] publicUrls = new String[] { "/login", "/logOut" };
-
 		http.authorizeRequests().antMatchers("/register").permitAll().and().formLogin().failureUrl("/loginTab?error")
-				.successHandler(successHandler).loginPage("/login").permitAll().and().csrf()
-				.ignoringAntMatchers(publicUrls);
+				.successHandler(successHandler).loginPage("/login").permitAll().and().csrf().disable();
 
 	}
 
