@@ -1041,7 +1041,9 @@ $('#dataSetTable tbody').on('click', '.deleteDataFileBtn', function() {
 						$("#spinner").hide();
 						$("#dimmer").hide();
 						console.log('SUCCESS: ', msg);
-						if (msg != "SUCCESS") {
+						if(msg && msg == 'Not Authorized') {
+							 location.replace("/loginTab");
+						} else if (msg != "SUCCESS") {
 							return bootbox.alert(msg);
 						} else {
 							refreshTaskDatatable('dataSetTable');
