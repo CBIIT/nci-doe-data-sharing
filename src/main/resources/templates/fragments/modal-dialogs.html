@@ -245,7 +245,7 @@
 			</div>
 		</div>
 
-		<div id="registerFileModal" class="modal fade bs-example-modal-lg "
+		<div id="performInferencingModel" class="modal fade bs-example-modal-lg "
 			tabindex="-1" role="dialog" aria-hidden="false">
 			<div class="modal-dialog modal-md" role="document">
 				<div class="modal-content"
@@ -272,9 +272,9 @@
 					<div class="modal-body drilldown-content"
 						style="margin-top: -26px; margin-left: 36px;">
 						<form class="form-horizontal" id="performInferForm" method="POST">
-							<input type="hidden" id="testInputPath" name="testInputPath" /> <input
-								type="hidden" id="modelPath" name="modelPath" />
-							<div class="form-row row row-buffer"
+							<input type="hidden" id="testInputPath" name="testInputPath" /> 
+							<input type="hidden" id="modelPath" name="modelPath" />
+							<div class="form-row row row-buffer" id="displayDataTypeDiv"
 								style="margin-left: -3px; margin-top: -15px;">
 								<div class="form-group">
 									<label style="font-size: 14px;font-family: 'inter_regular';" class="radio-inline">
@@ -292,7 +292,7 @@
 							</div>
 							<div class="row row-buffer"
 								style="margin-left: -3px; margin-top: -15px;">
-								<label
+								<label id="labelForInputType"
 									style="color: #033D6F; font-family: 'inter_regular'; font-size: 14px; font-weight: 500;">Upload
 									file to generate predictions.&nbsp; <span id="tooltipHtml"></span>
 								</label> <input type="file" style="margin-top: 14px;"
@@ -313,7 +313,7 @@
 							style="text-align: center; margin-top: 10px;">
 							<div class="col-sm-12" style="margin-bottom: 10px;">
 
-								<button class="btn btn-primary" id="btnRegisterFile">
+								<button class="btn btn-primary" id="performInferencing">
 									Submit</button>
 							</div>
 						</div>

@@ -162,6 +162,10 @@ public class HomeController extends AbstractDoeController {
 				}
 			}
 
+			// use the referer from request header to get the previous url.
+			// the referer will be empty when the url is copied to the browser and the app
+			// is redirected to login page
+
 			String referer = request.getHeader("referer");
 			request.getSession().setAttribute(LoginAuthenticationSuccessHandler.REDIRECT_URL_SESSION_ATTRIBUTE_NAME,
 					referer);

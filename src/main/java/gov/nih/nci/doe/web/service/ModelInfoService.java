@@ -1,7 +1,9 @@
 package gov.nih.nci.doe.web.service;
 
+import gov.nih.nci.doe.web.domain.ModelInfo;
+
 public interface ModelInfoService {
 
-	public Boolean isModelExistsForInferencing(String modelPath);
+	public ModelInfo getModelInfo(String modelPath);
 
 }

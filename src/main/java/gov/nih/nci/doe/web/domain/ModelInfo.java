@@ -18,8 +18,8 @@ public class ModelInfo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private Integer id;
-	private String modelPath;
-	private Boolean isReferencedDataset;
+	private String assetPath;
+	private Boolean isExternalDatasetSupported;
 
 	public ModelInfo() {
 
@@ -42,12 +42,12 @@ public class ModelInfo implements Serializable {
 			return false;
 		}
 
-		if (isReferencedDataset != null ? !isReferencedDataset.equals(that.isReferencedDataset)
-				: that.isReferencedDataset != null) {
+		if (isExternalDatasetSupported != null ? !isExternalDatasetSupported.equals(that.isExternalDatasetSupported)
+				: that.isExternalDatasetSupported != null) {
 			return false;
 		}
 
-		return modelPath != null ? modelPath.equals(that.modelPath) : that.modelPath == null;
+		return assetPath != null ? assetPath.equals(that.assetPath) : that.assetPath == null;
 
 	}
 
@@ -63,24 +63,24 @@ public class ModelInfo implements Serializable {
 	}
 
 	@Basic
-	@Column(name = "MODEL_PATH")
-	public String getModelPath() {
-		return modelPath;
+	@Column(name = "ASSET_PATH")
+	public String getAssetPath() {
+		return assetPath;
 	}
 
-	public void setModelPath(String modelPath) {
-		this.modelPath = modelPath;
+	public void setAssetPath(String assetPath) {
+		this.assetPath = assetPath;
 	}
 
 	@Basic
-	@Column(name = "IS_REFERENCED_DATASET", nullable = true, length = 1)
+	@Column(name = "IS_EXTERNAL_DATASET_SUPPORTED", nullable = true, length = 1)
 	@Type(type = "yes_no")
-	public Boolean getIsReferencedDataset() {
-		return isReferencedDataset;
+	public Boolean getIsExternalDatasetSupported() {
+		return isExternalDatasetSupported;
 	}
 
-	public void setIsReferencedDataset(Boolean isReferencedDataset) {
-		this.isReferencedDataset = isReferencedDataset;
+	public void setIsExternalDatasetSupported(Boolean isExternalDatasetSupported) {
+		this.isExternalDatasetSupported = isExternalDatasetSupported;
 	}
 
 }

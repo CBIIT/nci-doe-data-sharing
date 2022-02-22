@@ -7,6 +7,6 @@ import gov.nih.nci.doe.web.domain.ModelInfo;
 
 public interface ModelInfoRpository extends JpaRepository<ModelInfo, String> {
 
-	@Query("select a from ModelInfo a where a.modelPath =?1")
+	@Query("select a from ModelInfo a where a.assetPath =?1")
 	ModelInfo getModelInfoByModelPath(String modelPath);
 }

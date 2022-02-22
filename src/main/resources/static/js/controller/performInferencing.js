@@ -8,7 +8,7 @@ $(document).on('change', '#uploadTestInferFile', function() {
 	var $this = $(this);
 	var filename = $this.val().replace(/^C:\\fakepath\\/, "")
 	var value = $("#testInputPath").val() + "/" + filename;
-	$("#registerFileModal").find("#testInputPath").val(value);
+	$("#performInferencingModel").find("#testInputPath").val(value);
 });
 
 $(document).on('click', '#openInferModal', function() {
@@ -17,13 +17,23 @@ $(document).on('click', '#openInferModal', function() {
 		if (len > 0) {
 			var value = $(this).find('td:first input[type=checkbox]').attr('id');
 			if (value && value.indexOf('.h5') != -1) {
-				$("#registerFileModal").find("#modelPath").val(value);
+				$("#performInferencingModel").find("#modelPath").val(value);
 			}
 		}
 	});
 
-	var modelFile = $("#registerFileModal").find("#modelPath").val();
-	$("#registerFileModal").find("#testInputPath").val($("#selectedAssetPath").text());
+	var isExternalDataSetSupported = $("#isExternalDataSetSupported").val();
+	if(isExternalDataSetSupported && isExternalDataSetSupported == "true") {
+		$("#performInferencingModel").find("#displayDataTypeDiv").show();
+		$("#performInferencingModel").find("#labelForInputType").html("Upload file to generate predictions.&nbsp; <span id='tooltipHtml'></span>");
+	} else {
+		$("#performInferencingModel").find("#displayDataTypeDiv").hide();
+		$("#performInferencingModel").find("#labelForInputType").html("Upload GDC file to generate predictions.&nbsp; <span id='tooltipHtml'></span>");
+	}
+	
+	
+	var modelFile = $("#performInferencingModel").find("#modelPath").val();
+	$("#performInferencingModel").find("#testInputPath").val($("#selectedAssetPath").text());
 	if(modelFile.indexOf('mt_cnn') != -1 || modelFile.indexOf('mt-cnn') != -1) {
 		var title="Upload GDC manifest or <br/> pathology report. <br/>For more details, refer to the<br/><a target='_blank' href='https://wiki.nci.nih.gov/x/cQh2H'> user guide</a>.";
 		var outputTitle = "This is optional. Upload file to <br/>evaluate the model. <br/>For more details, refer to the<br/><a target='_blank' href='https://wiki.nci.nih.gov/x/cQh2H'> user guide</a>.";
@@ -32,10 +42,10 @@ $(document).on('click', '#openInferModal', function() {
 		var outputTitle = "This is optional. Upload file to <br/>evaluate the model. <br/>For more details, refer to the<br/><a target='_blank' href='https://wiki.nci.nih.gov/x/bwh2H'> user guide</a>.";
 	}
 	
-	$("#registerFileModal").find("#tooltipHtml").html('<i class="fas fa-question-circle infoTooltip"'+
+	$("#performInferencingModel").find("#tooltipHtml").html('<i class="fas fa-question-circle infoTooltip"'+
 			'data-toggle="popover" data-content="'+title+'"></i>');
 	
-	$("#registerFileModal").find("#outputTooltipHtml").html('<i class="fas fa-question-circle infoTooltip"'+
+	$("#performInferencingModel").find("#outputTooltipHtml").html('<i class="fas fa-question-circle infoTooltip"'+
 			'data-toggle="popover" data-content="'+outputTitle+'"></i>');
 	
 	$(".performInferencingError").hide();
@@ -43,11 +53,11 @@ $(document).on('click', '#openInferModal', function() {
 	$("input[name=uploadFrom]").prop("checked",false);
 	$("#uploadTestInferFile").val("");
 	$("#uploadTestOutputFile").val("")
-	$("#registerFileModal").modal({show: true, backdrop: 'static', keyboard: false});
+	$("#performInferencingModel").modal({show: true, backdrop: 'static', keyboard: false});
 
 });
 
-$(document).on('click', '#btnRegisterFile', function() {
+$(document).on('click', '#performInferencing', function() {
 
 	var form = $('#performInferForm')[0];
 	var data = new FormData(form);
@@ -79,7 +89,7 @@ $(document).on('click', '#btnRegisterFile', function() {
 			success : function(msg) {
 				$("#spinner").hide();
 				$("#dimmer").hide();
-				$("#registerFileModal").modal('hide');
+				$("#performInferencingModel").modal('hide');
 				bootbox.dialog({
 					message : msg
 				});

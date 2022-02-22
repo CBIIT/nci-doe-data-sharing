@@ -18,14 +18,11 @@ public class ModelInfoServiceImpl implements ModelInfoService {
 	ModelInfoRpository modelInfoRepository;
 
 	@Override
-	public Boolean isModelExistsForInferencing(String modelPath) {
-		log.info("verify if model is avaiable for inferencing: " + modelPath);
+	public ModelInfo getModelInfo(String modelPath) {
+		log.info("get model Info for : " + modelPath);
 		ModelInfo info = modelInfoRepository.getModelInfoByModelPath(modelPath);
 
-		if (info != null) {
-			return true;
-		}
-
-		return false;
+		return info;
 	}
+
 }

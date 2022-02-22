@@ -30,6 +30,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import gov.nih.nci.doe.web.DoeWebException;
+import gov.nih.nci.doe.web.domain.ModelInfo;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.DoeSearchResult;
 import gov.nih.nci.doe.web.model.KeyValueBean;
@@ -157,9 +158,10 @@ public class SearchController extends AbstractDoeController {
 					Boolean isShow = false;
 					Boolean showGeneratePredictions = false;
 
-					Boolean isModelExists = StringUtils.isNotEmpty(user) && "Model".equalsIgnoreCase(assetType)
-							&& modelInfoService.isModelExistsForInferencing(result.getCollection().getCollectionName());
-					if (Boolean.TRUE.equals(getIsUploader()) && Boolean.TRUE.equals(isModelExists)) {
+					ModelInfo modelInfo = modelInfoService.getModelInfo(result.getCollection().getCollectionName());
+
+					if (Boolean.TRUE.equals(getIsUploader()) && "Model".equalsIgnoreCase(assetType) && modelInfo != null
+							&& Boolean.TRUE.equals(modelInfo.getIsExternalDatasetSupported())) {
 
 						showGeneratePredictions = true;
 					}

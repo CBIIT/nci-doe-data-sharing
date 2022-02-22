@@ -44,6 +44,7 @@ import com.fasterxml.jackson.databind.MappingJsonFactory;
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.domain.LookUp;
 import gov.nih.nci.doe.web.domain.MetaDataPermissions;
+import gov.nih.nci.doe.web.domain.ModelInfo;
 import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeResponse;
 import gov.nih.nci.doe.web.model.DoeSearch;
@@ -881,12 +882,12 @@ public abstract class AbstractDoeController {
 				model.addAttribute("assetPermission", assetPermission);
 				model.addAttribute("assetLink", webServerName + "/assetDetails?dme_data_id=" + dme_Data_Id);
 
-				Boolean isModelExists = modelInfoService
-						.isModelExistsForInferencing(collection.getCollection().getCollectionName());
-				if (Boolean.TRUE.equals(getIsUploader()) && Boolean.TRUE.equals(isModelExists)) {
+				ModelInfo modelInfo = modelInfoService.getModelInfo(collection.getCollection().getCollectionName());
+				if (Boolean.TRUE.equals(getIsUploader()) && modelInfo != null) {
 
 					// show generate predictions button
-					model.addAttribute("showGeneratePredictions", isModelExists);
+					model.addAttribute("showGeneratePredictions", true);
+					model.addAttribute("isExternalDataSetSupported", modelInfo.getIsExternalDatasetSupported());
 
 					// verify if prediction folder exists, else hide the generate predictions sub
 					// tab
