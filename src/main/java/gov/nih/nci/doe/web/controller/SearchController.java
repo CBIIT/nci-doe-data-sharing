@@ -160,8 +160,8 @@ public class SearchController extends AbstractDoeController {
 
 					ModelInfo modelInfo = modelInfoService.getModelInfo(result.getCollection().getCollectionName());
 
-					if (Boolean.TRUE.equals(getIsUploader()) && "Model".equalsIgnoreCase(assetType) && modelInfo != null
-							&& Boolean.TRUE.equals(modelInfo.getIsExternalDatasetSupported())) {
+					if (Boolean.TRUE.equals(getIsUploader()) && "Model".equalsIgnoreCase(assetType)
+							&& modelInfo != null) {
 
 						showGeneratePredictions = true;
 					}

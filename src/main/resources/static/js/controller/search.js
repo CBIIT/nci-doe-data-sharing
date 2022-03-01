@@ -174,7 +174,7 @@ function refreshDataTable() {
     	} else {
     		 
     		 $("div.toolbar").prepend('<div style="float: left;">'+
-                	   '<label>&nbsp;&nbsp;<input type="checkbox" id="modelAnalysis" style="transform: translateY(1.5px);">'+
+                	   '<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id="modelAnalysis" style="transform: translateY(1.5px);">'+
                	   '&nbsp;&nbsp;Models available for analysis</label></div>');
     	}
     	
