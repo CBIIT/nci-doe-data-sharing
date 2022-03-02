@@ -73,6 +73,7 @@ function populateSelection(fileId) {
 				$("#fileNamesDiv").append(fileHtml);
 				$("#fileNamesDiv").show();
 			}
+			$("#registerBulkDataFileBtn").prop("disabled",false);
 			constructPath(resp.id, "", resp.id);
 		});
 	});

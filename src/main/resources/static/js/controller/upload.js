@@ -131,7 +131,11 @@ function loadUploadTab() {
 				$("#bulkDataFilePathCollection").val(uploadPath);
 				$(".registerBulkDataFileSuccess").hide();
 				$(".registerBulkDataFile").html("");
-				$("#registerBulkDataFileBtn").prop("disabled",false);
+				if($("#fileNamesDiv").is(":visible") || $("#folderNamesDiv").is(":visible")) {
+					$("#registerBulkDataFileBtn").prop("disabled",false);
+				} else {
+					$("#registerBulkDataFileBtn").prop("disabled",true);
+				}
 				var uploadAsyncType = $("#uploadAsyncType").val();
 				if(uploadAsyncType && uploadAsyncType == 'drive') {
 					$("#datafileTypeDriveUpload").prop("checked", true);
