@@ -170,22 +170,22 @@ function refreshDataTable() {
     	if(modelAnalysis && modelAnalysis == "true") {
     		$("div.toolbar").prepend('<div style="float: left;">'+
              	   '<label>&nbsp;&nbsp;<input type="checkbox" checked="true" id="modelAnalysis" style="transform: translateY(1.5px);">'+
-            	   '&nbsp;&nbsp;Models available for analysis</label></div>');
+            	   '&nbsp;&nbsp;Models Available For Analysis</label></div>');
     	} else {
     		 
     		 $("div.toolbar").prepend('<div style="float: left;">'+
                 	   '<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id="modelAnalysis" style="transform: translateY(1.5px);">'+
-               	   '&nbsp;&nbsp;Models available for analysis</label></div>');
+               	   '&nbsp;&nbsp;Models Available For Analysis</label></div>');
     	}
     	
     	if(myCollection && myCollection == "true") {
     		 $("div.toolbar").prepend('<div style="float: left;">'+
               	   '<label><input type="checkbox" checked="true" id="myCollections" style="transform: translateY(1.5px);">'+
-             	   '&nbsp;&nbsp;Display Collections I Can Edit</label></div>');
+             	   '&nbsp;&nbsp;Collections I Can Edit</label></div>');
     	} else {
     		$("div.toolbar").prepend('<div style="float: left;">'+
                	   '<label><input type="checkbox" id="myCollections" style="transform: translateY(1.5px);">'+
-              	   '&nbsp;&nbsp;Display Collections I Can Edit</label></div>');
+              	   '&nbsp;&nbsp;Collections I Can Edit</label></div>');
     	} 
     	
     	
