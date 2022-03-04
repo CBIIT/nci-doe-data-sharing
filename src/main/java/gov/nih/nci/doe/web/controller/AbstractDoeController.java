@@ -862,6 +862,15 @@ public abstract class AbstractDoeController {
 
 				String assetType = getAttributeValue("asset_type",
 						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
+				
+				String isReferenceDataset = getAttributeValue("is_reference_dataset",
+						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
+				
+				String resultFileName = getAttributeValue("results_file_name",
+						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
+				
+				String applicableModelName  = getAttributeValue("applicable_model_name",
+						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
 
 				List<KeyValueBean> selfMetadata = getUserMetadata(
 						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset", systemAttrs);
@@ -878,6 +887,10 @@ public abstract class AbstractDoeController {
 				model.addAttribute("assetMetadata", selfMetadata);
 				model.addAttribute("studyName", studyName);
 				model.addAttribute("progName", progName);
+				model.addAttribute("isReferenceDataset", isReferenceDataset);
+				model.addAttribute("resultFileName", resultFileName);
+				model.addAttribute("applicableModelName", applicableModelName);
+				
 				model.addAttribute("assetPath", collection.getCollection().getCollectionName());
 				model.addAttribute("assetPermission", assetPermission);
 				model.addAttribute("assetLink", webServerName + "/assetDetails?dme_data_id=" + dme_Data_Id);

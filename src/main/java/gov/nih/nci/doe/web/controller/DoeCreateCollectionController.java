@@ -156,9 +156,9 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 	public ResponseEntity<List<DoeMetadataAttrEntry>> getCollectionAttributes(
 			@RequestParam(value = "selectedPath", required = false) String selectedPath,
 			@RequestParam(value = "collectionType") String collectionType,
-			@RequestParam(required = false) String controllerValue, @RequestParam(required = false) Boolean refresh,
-			@RequestParam(required = false) String controllerAttribute, HttpSession session, HttpServletRequest request,
-			HttpServletResponse response) {
+			@RequestParam(required = false) String[] controllerValue, @RequestParam(required = false) Boolean refresh,
+			@RequestParam(required = false) String[] controllerAttribute, HttpSession session,
+			HttpServletRequest request, HttpServletResponse response) {
 
 		log.info("get collection attributes" + selectedPath + " ,collectionType:  " + collectionType
 				+ ", controllerValue:" + controllerValue + ", refresh:" + refresh);

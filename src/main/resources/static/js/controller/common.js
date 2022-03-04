@@ -490,6 +490,112 @@ $(document)
 
 				});
 
+
+function onChangeForMetadata(isValid, table,selectId) {
+	if(isValid == true) {
+		var value = selectId.value;
+		var metadataAttr = selectId.id;
+		var tableId  = table.id;
+		var controllerAttributeList = [];
+		var controllerValueList = [];
+		
+		controllerAttributeList.push(metadataAttr);
+		controllerAttributeList.push("asset_type");
+		controllerValueList.push(value);
+		controllerValueList.push("Dataset");
+		if(value != 'Select') {
+			var params= {collectionType:'Asset',controllerValue:controllerValueList.join(),refresh:false,controllerAttribute:controllerAttributeList.join()};
+			
+			$.ajax({
+				"url": "/addCollection",
+				"type": "GET",
+				data: params,
+				beforeSend: function() {
+					$("#spinner").show();
+					$("#dimmer").show();
+				},
+				success: function(msg) {
+				   $("#spinner").hide();
+				   $("#dimmer").hide();
+				   postSuccessOnChangeIsReferenceDataset(msg,tableId);
+				},
+				error: function(e) {
+					console.log('ERROR: ', e);
+					$("#spinner").hide();
+					$("#dimmer").hide();								
+				}
+			})
+		}
+	}
+	
+}
+function postSuccessOnChangeIsReferenceDataset(data, tableId) {
+
+	var displayNames = [];
+	var found = false;
+	
+		$("#"+tableId+ " tbody tr").each(function() {
+			var displayName = $(this).find('td').eq(0).text().trim();
+			displayNames.push(displayName);
+			var x = data.filter(function(x){ return x.displayName == displayName });
+			if(x.length == 0) {
+				$(this).remove();
+			}
+		});
+		
+	  var newElements = data.filter(x => !displayNames.includes(x.displayName));
+		
+	  if(newElements.length != 0) {
+		  $.each(newElements, function(key, value) {
+			  
+			if(value.validValues != null && value.attrName !='asset_type') {
+				   
+				if(tableId == 'assetBulkMetadataTable') {
+					var width = 'width:99%;';
+				} else {
+					var width = 'width:70%;';
+				}
+		    	$("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+	        	'data-placement="right" title="'+value.description+'"></i></td><td>'+
+	        	'<select class="simple-select2" is_mandatory="'+value.mandatory+'" style="' + width +'" id="'+value.attrName+'" name="zAttrStr_'+value.attrName+'" value="'+value.attrValue+'"></select></td></tr>');
+		    	
+		    	  var $select = $("#"+value.attrName);
+		    	  if(value.attrValue && value.attrValue != 'None'){
+		    	 	$select.append($('<option></option>').attr('value', value.attrValue).text(value.attrValue));
+		    	  } else {
+		    	    $select.append($('<option></option>').attr('value', 'Select').text('Select'));
+		    	  }
+		    	  	    	  
+		    	  for (var i = 0; i < value.validValues.length; i++) {
+		    		   $select.append($('<option></option>').attr('value', value.validValues[i].key).text(value.validValues[i].value));
+	              }
+	               
+		    	  $select.select2().trigger('change');
+		    	
+		   } else if(value.attrName.indexOf("access_group") == -1) {
+					   			   
+			    var placeholder = value.mandatory == true ? 'Required' : "";
+			    
+				   if(tableId == 'assetBulkMetadataTable' && value.attrName != 'asset_name' && value.attrName !='asset_type' &&
+					        value.attrName !='asset_identifier') {
+					   $("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+					        	'data-placement="right" title="'+value.description+'"></i></td><td>'+
+					        	'<input type="text" is_mandatory="'+value.mandatory+'" class="bulkAssetTextbox" placeholder="'+placeholder+'" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
+					        	'></td></tr>');
+					} else if(tableId != 'assetBulkMetadataTable') {
+						$("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+					        	'data-placement="right" title="'+value.description+'"></i></td><td>'+
+					        	'<input type="text" is_mandatory="'+value.mandatory+'" placeholder="'+placeholder+'" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
+					        	'style="width:70%;"></td></tr>');
+					}
+				    
+			   }
+		   
+		 });
+	   }
+	
+}
+
 $(document).on('change','.checkboxMultipleDwnlodPaths', function() {
 	var selectedPaths = [];
 	$(".checkboxMultipleDwnlodPaths").each(function(e){

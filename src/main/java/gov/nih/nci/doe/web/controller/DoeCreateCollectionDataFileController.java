@@ -448,9 +448,14 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 	}
 
 	protected List<DoeMetadataAttrEntry> populateFormAttributes(HttpServletRequest request, HttpSession session,
-			String basePath, String collectionType, String controllerAttribute, String controllerValue, boolean refresh,
-			List<DoeMetadataAttrEntry> cachedEntries) throws DoeWebException {
+			String basePath, String collectionType, String[] controllerAttribute, String[] controllerValue,
+			boolean refresh, List<DoeMetadataAttrEntry> cachedEntries) throws DoeWebException {
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
+
+		List<String> controllerAttrList = controllerAttribute == null ? new ArrayList<String>()
+				: Arrays.asList(controllerAttribute);
+		List<String> controllerValuesList = controllerValue == null ? new ArrayList<String>()
+				: Arrays.asList(controllerValue);
 
 		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
 		if (modelDTO == null) {
@@ -475,68 +480,75 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		List<String> attributeNames = new ArrayList<String>();
 		log.info("base path rules for collection type:" + collectionType + " are: " + filteredRules);
 
-		if (filteredRules != null && !filteredRules.isEmpty()) {
-			for (HpcMetadataValidationRule rule : filteredRules) {
+		/*
+		 * If the rule has controller value/attribute exists, filter the rules by
+		 * controllerAttribute/controllerAttribute
+		 * 
+		 */
+
+		List<HpcMetadataValidationRule> filteredControllerRules = rules.stream()
+				.filter(e -> e.getCollectionTypes().contains(collectionType)
+						&& (e.getControllerAttribute() == null
+								|| controllerAttrList.contains(e.getControllerAttribute()))
+						&& (e.getControllerValue() == null || controllerValuesList.contains(e.getControllerValue())))
+				.collect(Collectors.toList());
+
+		if (filteredControllerRules != null && !filteredControllerRules.isEmpty()) {
+			for (HpcMetadataValidationRule rule : filteredControllerRules) {
 				if (!rule.getAttribute().equalsIgnoreCase("collection_type")) {
 					log.info("get HpcMetadataValidationRule:" + rule);
-					Boolean isValid = true;
-					Boolean isConditonalMetaData = false;
 
-					/*
-					 * If the rule has controller value/attribute exists, filter the metadata by
-					 * controllerAttribute/controllerAttribute
-					 * 
-					 */
-					if (StringUtils.isNotEmpty(rule.getControllerAttribute())
-							&& StringUtils.isNotEmpty(controllerAttribute) && StringUtils.isNotEmpty(controllerValue)) {
+					// find out if this rule is a controller attribute for any other rule
+					HpcMetadataValidationRule isControllerForOtherAttr = filteredRules.stream()
+							.filter(e -> rule.getAttribute().equalsIgnoreCase(e.getControllerAttribute())).findAny()
+							.orElse(null);
 
-						if (rule.getControllerAttribute().equalsIgnoreCase(controllerAttribute)
-								&& rule.getControllerValue().equalsIgnoreCase(controllerValue)) {
-
-							isConditonalMetaData = true;
-						} else {
-							isValid = false;
-						}
-
+					DoeMetadataAttrEntry entry = new DoeMetadataAttrEntry();
+					entry.setAttrName(rule.getAttribute());
+					if (isControllerForOtherAttr != null) {
+						entry.setControllerAttribute(Boolean.TRUE);
+					} else {
+						entry.setControllerAttribute(Boolean.FALSE);
 					}
-					if (Boolean.TRUE.equals(isValid)) {
-						DoeMetadataAttrEntry entry = new DoeMetadataAttrEntry();
-						entry.setAttrName(rule.getAttribute());
-						attributeNames.add(rule.getAttribute());
-						entry.setAttrValue(getFormAttributeValue(request, "zAttrStr_" + rule.getAttribute(),
-								cachedEntries, "zAttrStr_"));
-						if (entry.getAttrValue() == null) {
-							if (refresh)
-								entry.setAttrValue(getCollectionAttrValue(collectionDTO, rule.getAttribute()));
-							else
-								entry.setAttrValue(rule.getDefaultValue());
-						}
-						if (rule.getValidValues() != null && !rule.getValidValues().isEmpty()) {
-							List<String> validValues = new ArrayList<String>();
-							for (String value : rule.getValidValues())
-								validValues.add(value);
-							entry.setValidValues(validValues);
-						}
-						entry.setDescription(rule.getDescription());
-
-						if (StringUtils.isNotEmpty(rule.getDefaultValue())) {
-							entry.setMandatory(Boolean.FALSE);
-						} else if (Boolean.TRUE.equals(isConditonalMetaData)) {
-							entry.setMandatory(Boolean.TRUE);
-						} else {
-							entry.setMandatory(rule.getMandatory());
-						}
-						LookUp val = lookUpService.getLookUpByLevelAndName(collectionType, rule.getAttribute());
-						if (val != null) {
-							entry.setDisplayName(val.getDisplayName());
-							entry.setIsEditable(val.getIsEditable());
-							entry.setDisplayOrder(val.getDisplayOrder());
-						} else {
-							entry.setDisplayName(rule.getAttribute());
-							entry.setIsEditable(true);
-						}
-						metadataEntries.add(entry);
+					attributeNames.add(rule.getAttribute());
+					entry.setAttrValue(getFormAttributeValue(request, "zAttrStr_" + rule.getAttribute(), cachedEntries,
+							"zAttrStr_"));
+					if (entry.getAttrValue() == null) {
+						if (refresh)
+							entry.setAttrValue(getCollectionAttrValue(collectionDTO, rule.getAttribute()));
+						else
+							entry.setAttrValue(rule.getDefaultValue());
 					}
+					if (rule.getValidValues() != null && !rule.getValidValues().isEmpty()) {
+						List<KeyValueBean> validValues = new ArrayList<KeyValueBean>();
+						rule.getValidValues().stream().forEach(e -> validValues.add(new KeyValueBean(e, e)));
+						entry.setValidValues(validValues);
+					}
+
+					if (rule.getAttribute().equalsIgnoreCase("applicable_model_name")) {
+						List<KeyValueBean> validValues = modelInfoService.getAllModelInfoPaths();
+						entry.setValidValues(validValues);
+					}
+					entry.setDescription(rule.getDescription());
+
+					if (StringUtils.isNotEmpty(rule.getDefaultValue())) {
+						entry.setMandatory(Boolean.FALSE);
+					} else if (StringUtils.isNotEmpty(rule.getControllerAttribute())) {
+						entry.setMandatory(Boolean.TRUE);
+					} else {
+						entry.setMandatory(rule.getMandatory());
+					}
+					LookUp val = lookUpService.getLookUpByLevelAndName(collectionType, rule.getAttribute());
+					if (val != null) {
+						entry.setDisplayName(val.getDisplayName());
+						entry.setIsEditable(val.getIsEditable());
+						entry.setDisplayOrder(val.getDisplayOrder());
+					} else {
+						entry.setDisplayName(rule.getAttribute());
+						entry.setIsEditable(true);
+					}
+					metadataEntries.add(entry);
+
 				}
 			}
 		}

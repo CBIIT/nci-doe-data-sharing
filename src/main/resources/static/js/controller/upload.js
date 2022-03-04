@@ -54,7 +54,6 @@ $(document).ready(function () {
 		$("#registerBulkDataFileBtn").prop("disabled",true);
 		openBulkDataRegistration(folderPath);
 	});
-
 	
 	$("#addBulkDataFiles").click(function(e) {
 		$("#uploadSectionDiv").hide();
@@ -90,6 +89,7 @@ $(document).ready(function () {
 
 	});
 });
+
 
 function loadUploadTab() {	 
 	 
@@ -136,8 +136,9 @@ function loadUploadTab() {
 				} else {
 					$("#registerBulkDataFileBtn").prop("disabled",true);
 				}
+				
 				var uploadAsyncType = $("#uploadAsyncType").val();
-				if(uploadAsyncType && uploadAsyncType == 'drive') {
+				if(uploadAsyncType && uploadAsyncType == 'drive') {					
 					$("#datafileTypeDriveUpload").prop("checked", true);
 					$("#displayGlobusUploadDiv").hide();
 					$("#displayDriveUploadDiv").show();
@@ -326,6 +327,9 @@ function constructNewCollectionMetaDataSet(data,status) {
 	var parentAccessgrp = $("#parentAccessGroup").val();
 	var assetType = $("#assetType").val();
 	$.each(data, function(key, value) {	
+		
+		var controllerAttribute =  value.controllerAttribute;
+		 
 		if(value.attrName  =='access_group') {
 			
 			if(!parentAccessgrp || (parentAccessgrp && parentAccessgrp == "public")) {	
@@ -350,10 +354,9 @@ function constructNewCollectionMetaDataSet(data,status) {
        		'style="width:70%;"><input type="hidden" name="zAttrStr_'+value.attrName+'" value ="'+ assetType +'"/> </td></tr>');
 	   
 	   } else if(value.validValues != null){
-		   
-	    	$("#newMetaDataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
-        	'data-placement="right" title="'+value.description+'"></i></td><td>'+
-        	'<select class="simple-select2" is_mandatory="'+value.mandatory+'" style="width:70%;" id="'+value.attrName+'" name="zAttrStr_'+value.attrName+'" value="'+value.attrValue+'"></select></td></tr>');
+	    	$("#newMetaDataTable tbody").append("<tr><td>" +  value.displayName + "&nbsp;&nbsp;<i class='fas fa-question-circle' data-toggle='tooltip'"+
+        	"data-placement='right' title='"+value.description+"'></i></td><td>"+
+        	"<select class='simple-select2' is_mandatory='"+value.mandatory+"' onChange='onChangeForMetadata("+value.controllerAttribute+",newMetaDataTable, "+value.attrName+");' style='width:70%;' id='"+value.attrName+"' name='zAttrStr_"+value.attrName+"' value='"+value.attrValue+"'></select></td></tr>");
 	    	
 	    	  var $select = $("#"+value.attrName);
 	    	  if(value.attrValue){
@@ -363,7 +366,7 @@ function constructNewCollectionMetaDataSet(data,status) {
 	    	  }
 	    	  	    	  
 	    	  for (var i = 0; i < value.validValues.length; i++) {
-	    		   $select.append($('<option></option>').attr('value', value.validValues[i]).text(value.validValues[i]));
+	    		   $select.append($('<option></option>').attr('value', value.validValues[i].key).text(value.validValues[i].value));
               }
                
 	    	  $select.select2().trigger('change');
@@ -374,10 +377,7 @@ function constructNewCollectionMetaDataSet(data,status) {
         	'<input type="text" is_mandatory="'+value.mandatory+'" placeholder="Required" aria-label="value of meta data" value="'+value.attrValue+'" name="zAttrStr_'+value.attrName+'"' +
         	'style="width:70%;"></td></tr>');
 	   } else {
-		   var placeholderValue ="";
-		     if(value.mandatory && value.mandatory == true) {
-		    	 placeholderValue = "Required";
-		     }
+		     var placeholderValue = value.mandatory == true ? 'Required' : "";
 		     if(value.attrName.indexOf("description") != -1) {
 		    	 $("#newMetaDataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
 		    	        	'data-placement="right" title="'+value.description+'"></i></td><td>'+
@@ -833,16 +833,14 @@ function constructAssetTypeBulkDiv(data,status) {
 	
 	$.each(data, function(key, value) {	
 		
-		var placeholderValue = "";
-	     if(value.mandatory && value.mandatory == true) {
-	    	 placeholderValue = "Required";
-	     }
-
+		var placeholderValue = value.mandatory == true ? 'Required' : "";
+	     
 	    if(value.validValues != null && value.attrName !='asset_type'){
 		   
 	    	$("#assetBulkMetadataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
         	'data-placement="right" title="'+value.description+'"></i></td><td>'+
-        	'<select class="simple-select2" is_mandatory="'+value.mandatory+'" style="width:99%;" id="'+value.attrName+'" name="zAttrStr_'+value.attrName+'" value="'+value.attrValue+'"></select></td></tr>');
+        	'<select class="simple-select2" is_mandatory="'+value.mandatory+'" style="width:99%;" onChange="onChangeForMetadata('+value.controllerAttribute+',assetBulkMetadataTable, '+value.attrName+');"'+
+        	'id="'+value.attrName+'" name="zAttrStr_'+value.attrName+'" value="'+value.attrValue+'"></select></td></tr>');
 	    	
 	    	  var $select = $("#"+value.attrName);
 	    	  if(value.attrValue){
@@ -852,7 +850,7 @@ function constructAssetTypeBulkDiv(data,status) {
 	    	  }
 	    	  	    	  
 	    	  for (var i = 0; i < value.validValues.length; i++) {
-	    		   $select.append($('<option></option>').attr('value', value.validValues[i]).text(value.validValues[i]));
+	    		   $select.append($('<option></option>').attr('value', value.validValues[i].key).text(value.validValues[i].value));
               }
                
 	    	  $select.select2().trigger('change');

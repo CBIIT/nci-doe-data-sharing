@@ -43,7 +43,7 @@ public class InferencingTaskServiceImpl implements InferencingTaskService {
 		t.setTestDataSetPath(inference.getTestInputPath());
 		t.setStartDate(new Date());
 		t.setModelh5Path(inference.getModelPath());
-		t.setUploadFrom(inference.getUploadFrom());
+		t.setUploadFrom(inference.getUploadFrom() != null ? inference.getUploadFrom() : "gdcData");
 		t.setActualResultsFileName(inference.getOutputResultName());
 		t.setStatus("NOTSTARTED");
 		inferencingTaskRepository.saveAndFlush(t);

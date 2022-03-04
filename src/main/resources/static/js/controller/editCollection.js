@@ -44,14 +44,10 @@ function constructEditCollectionMetadata(data,status) {
 			 if(!attrValModified) {
 				 attrValModified = "";
 			 }
-			 var placeholderValue ="";
-		     if(value.mandatory && value.mandatory == true) {
-		    	 placeholderValue = "Required";
-		     }
-		     var isMandatory ="";
-		     if(value.mandatory) {
-		    	 isMandatory = value.mandatory;
-		     }
+
+			 var placeholderValue = value.mandatory == true ? 'Required' : "";
+		     
+		     var isMandatory = value.mandatory
 		     
 		     if(value.attrName.indexOf("description") != -1) {
 		    	 $("#userMetaData tbody").append("<tr><td>" + value.displayName + "&nbsp;&nbsp;<i class='fas fa-question-circle'" +
@@ -87,16 +83,24 @@ function constructEditCollectionMetadata(data,status) {
 			 $("#userMetaData tbody").append("<tr><td>" + value.displayName+ "&nbsp;&nbsp;<i class='fas fa-question-circle'" +
 			                                 " data-toggle='tooltip' " +
 			                                 "data-placement='right' title=\"" +value.description + "\"></i></td><td>" +
-			                                 "<select id='"+value.attrName+"' " +
+			                                 "<select id='"+value.attrName+"' is_mandatory='"+value.mandatory+"' onChange='onChangeForMetadata("+value.controllerAttribute+",userMetaData, "+value.attrName+");'" +
 			                                 "class='simple-select2' style='width:70%;' name='zAttrStr_"+value.attrName+"' " +
 			                                 "value=\"" + attrVal+ "\"></select></td></tr>");
 
-			 var $select = $("#"+value.attrName);	    	  
+			 var $select = $("#"+value.attrName);
+			 if(attrValModified == null) {
+			    $select.append($('<option></option>').attr('value', 'Select').text('Select'));
+			 }
 	    	 for (var i = 0; i < value.validValues.length; i++) {
-	    		   $select.append($('<option></option>').attr('value', value.validValues[i]).text(value.validValues[i]));
+	    		   $select.append($('<option></option>').attr('value', value.validValues[i].key).text(value.validValues[i].value));
              }            
-	    	$select.select2().trigger('change');
-	    	$select.val(attrValModified).trigger('change');
+	    	
+	    	if(attrValModified != null) {
+	    		$select.select2().val(attrValModified).trigger('change');
+	    	} else {
+	    		$select.select2().trigger('change');
+	    	}
+	    	
 			
 		}
 	});
@@ -279,11 +283,20 @@ function updateMetaDataCollection() {
 	        }          
 	    });
 		
+		$("form#collectionForm .simple-select2").each(function(){
+			var ismandatory = $(this).attr('is_mandatory');
+			var name = $(this).val();
+			if(ismandatory && ismandatory != "false" && name && name == 'Select') {
+				validate = false;
+		    }
+		});
+		
 		if(!validate) {
 			$(".editCollectionSuccess").hide();
 			 $(".editCollectionMsg").html("");
 			$(".editCollectionError").show();
 			$(".editCollectionErrorMsg").html("Enter values for all required metadata.");
+			$('body,html').animate({scrollTop: 0 }, 500);
 		} else {
 		$.ajax({
 			type : "POST",

@@ -223,6 +223,7 @@ public class SearchController extends AbstractDoeController {
 								+ getAttributeValue("dme_data_id", selfMetadatEntries, "Asset"));
 						returnResult.setAssetType(assetType);
 						returnResult.setDmeDataId(getAttributeValue("dme_data_id", selfMetadatEntries, "Asset"));
+						returnResult.setIsReferenceDataset(getAttributeValue("is_reference_dataset", selfMetadatEntries, "Asset"));
 						returnResults.add(returnResult);
 					}
 				}
