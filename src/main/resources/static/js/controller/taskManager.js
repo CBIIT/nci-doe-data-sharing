@@ -350,7 +350,7 @@ function retryUpload(taskId,taskName) {
 		 success : function(msg) {
 			 $("#spinner").hide();
 	         $("#dimmer").hide();
-	         refreshTaskManagerDataTable();		 
+	         refreshTaskDatatable('manageTasksTable');		 
 		 },
 		error : function(e) {
 			$("#spinner").hide();
@@ -373,7 +373,7 @@ function retryDownload(taskId,taskName,taskType) {
 		 success : function(msg) {
 			 $("#spinner").hide();
 	         $("#dimmer").hide();
-	         refreshTaskManagerDataTable();		 
+	         refreshTaskDatatable('manageTasksTable');		 
 		 },
 		error : function(e) {
 			$("#spinner").hide();

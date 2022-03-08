@@ -25,11 +25,7 @@ import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.doe.web.util.LambdaUtils;
 import gov.nih.nci.hpc.domain.datatransfer.HpcDataTransferType;
-import gov.nih.nci.hpc.domain.datatransfer.HpcDownloadResult;
-import gov.nih.nci.hpc.domain.datatransfer.HpcDownloadTaskType;
 import gov.nih.nci.hpc.domain.datatransfer.HpcUserDownloadRequest;
-import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDownloadStatusDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadStatusDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDownloadSummaryDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationStatusDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationTaskDTO;
@@ -168,7 +164,32 @@ public class TaskManagerCotroller extends AbstractDoeController {
 				} else if (download.getResult() != null && download.getResult().value().equals("COMPLETED")) {
 					task.setTransferStatus("&nbsp&nbsp;Completed");
 				} else {
-					retryDownLoadFunc(session, download, task, t);
+					Boolean retry = false;
+					if (download.getDestinationType() != null
+							&& download.getDestinationType().equals(HpcDataTransferType.GLOBUS)) {
+						retry = true;
+					}
+
+					List<String> message = new ArrayList<String>();
+					download.getItems().stream().forEach(x -> message.add(x.getMessage()));
+
+					if (Boolean.TRUE.equals(retry)) {
+
+						task.setTransferStatus(
+								"&nbsp&nbsp;Failed&nbsp;&nbsp;<img style='width:12px;' data-toggle='tooltip' title='"
+										+ String.join(",", message)
+										+ "' src='images/Status.info-tooltip.png' alt='failed message'></i>"
+										+ "<strong><a style='border: none;background-color: #F39530; height: 23px;width: 37px;border-radius: 11px;float: right;margin-right: 10px;' class='btn btn-link btn-sm' aria-label='Retry download' href='#' "
+										+ "onclick='retryDownload(\"" + download.getTaskId() + "\" ,\""
+										+ t.getTaskName() + "\", \"" + download.getType().name() + "\")'>"
+										+ "<img style='height: 13px;width: 13px;margin-top: -14px;' data-toggle='tooltip' title='Retry Download' src='images/Status.refresh_icon-01.png' th:src='@{/images/Status.refresh_icon-01.png}' alt='Status refresh'></a></strong>");
+
+					} else {
+						task.setTransferStatus(
+								"&nbsp&nbsp;Failed&nbsp;&nbsp;<img style='width:12px;' data-toggle='tooltip'"
+										+ "src='images/Status.info-tooltip.png' alt='failed message' title='"
+										+ String.join(",", message) + "'></i>");
+					}
 				}
 
 				taskResults.add(task);
@@ -274,74 +295,6 @@ public class TaskManagerCotroller extends AbstractDoeController {
 					+ " src='images/Status.info-tooltip.png' alt='failed message' title='" + String.join(",", message)
 					+ "'></i>");
 		}
-	}
-
-	private void retryDownLoadFunc(HttpSession session, HpcUserDownloadRequest download, TaskManagerDto dto,
-			TaskManager task) throws DoeWebException {
-
-		String taskType = download.getType().name();
-		String authToken = (String) session.getAttribute("writeAccessUserToken");
-		String queryUrl = null;
-		Boolean retry = true;
-		List<String> message = new ArrayList<String>();
-		download.getItems().stream().forEach(x -> message.add(x.getMessage()));
-
-		if (taskType.equalsIgnoreCase(HpcDownloadTaskType.COLLECTION.name())
-				|| taskType.equalsIgnoreCase(HpcDownloadTaskType.DATA_OBJECT_LIST.name())
-				|| taskType.equalsIgnoreCase(HpcDownloadTaskType.COLLECTION_LIST.name())) {
-
-			if (taskType.equalsIgnoreCase(HpcDownloadTaskType.COLLECTION.name()))
-				queryUrl = collectionDownloadServiceURL + "/" + task.getTaskId();
-			else
-				queryUrl = queryServiceURL + "/" + task.getTaskId();
-			HpcCollectionDownloadStatusDTO downloadTask = DoeClientUtil.getDataObjectsDownloadTask(authToken, queryUrl);
-
-			if (CollectionUtils.isEmpty(message)) {
-				message.add(downloadTask.getMessage());
-			}
-
-			if (downloadTask != null
-					&& (!CollectionUtils.isEmpty(downloadTask.getFailedItems())
-							|| !CollectionUtils.isEmpty(downloadTask.getCanceledItems()))
-					&& downloadTask.getDestinationType() != null
-					&& (downloadTask.getDestinationType().equals(HpcDataTransferType.S_3)
-							|| downloadTask.getDestinationType().equals(HpcDataTransferType.GOOGLE_DRIVE))) {
-				retry = false;
-			}
-		} else if (taskType.equals(HpcDownloadTaskType.DATA_OBJECT.name())) {
-
-			queryUrl = dataObjectDownloadServiceURL + "/" + task.getTaskId();
-			HpcDataObjectDownloadStatusDTO downloadTask = DoeClientUtil.getDataObjectDownloadTask(authToken, queryUrl);
-			if (CollectionUtils.isEmpty(message)) {
-				message.add(downloadTask.getMessage());
-			}
-			if (downloadTask.getResult() != null && !downloadTask.getResult().equals(HpcDownloadResult.COMPLETED)) {
-				if (downloadTask.getDestinationType() != null
-						&& downloadTask.getDestinationType().equals(HpcDataTransferType.S_3)
-						|| downloadTask.getDestinationType().equals(HpcDataTransferType.GOOGLE_DRIVE)) {
-					retry = false;
-				}
-			} else {
-				retry = false;
-			}
-		}
-
-		if (Boolean.TRUE.equals(retry)) {
-
-			dto.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<img style='width:12px;' data-toggle='tooltip'"
-					+ "src='images/Status.info-tooltip.png' alt='failed message' title='" + String.join(",", message)
-					+ "'></i>"
-					+ "<strong><a style='border: none;background-color: #F39530; height: 23px;width: 37px;border-radius: 11px;float: right;margin-right: 10px;' class='btn btn-link btn-sm' aria-label='Retry download' href='#' "
-					+ "onclick='retryDownload(\"" + download.getTaskId() + "\" ,\"" + task.getTaskName() + "\", \""
-					+ download.getType().name() + "\")'>"
-					+ "<img style='height: 13px;width: 13px;margin-top: -14px;' data-toggle='tooltip' title='Retry Download' src='images/Status.refresh_icon-01.png' th:src='@{/images/Status.refresh_icon-01.png}' alt='Status refresh'></a></strong>");
-
-		} else {
-			dto.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<img style='width:12px;' data-toggle='tooltip'"
-					+ "src='images/Status.info-tooltip.png' alt='failed message' title='" + String.join(",", message)
-					+ "'></i>");
-		}
-
 	}
 
 }

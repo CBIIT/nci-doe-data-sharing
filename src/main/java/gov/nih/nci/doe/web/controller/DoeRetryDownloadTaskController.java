@@ -102,11 +102,11 @@ public class DoeRetryDownloadTaskController extends AbstractDoeController {
 				try {
 					HpcBulkDataObjectDownloadResponseDTO downloadDTO = DoeClientUtil.downloadFiles(authToken,
 							downloadServiceURL2, dto);
-					if (downloadDTO != null) {
-						if (loggedOnUser != null) {
-							taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", taskType, taskName,
-									getLoggedOnUserInfo());
-						}
+					if (downloadDTO != null && loggedOnUser != null) {
+
+						taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", taskType, taskName,
+								getLoggedOnUserInfo());
+
 						result.setMessage("Download request successful. Task ID: " + downloadDTO.getTaskId());
 					}
 
@@ -117,24 +117,22 @@ public class DoeRetryDownloadTaskController extends AbstractDoeController {
 				return result.getMessage();
 
 			} else if (taskType.equalsIgnoreCase(HpcDownloadTaskType.DATA_OBJECT.name())) {
-				String queryServiceURL = dataObjectDownloadServiceURL + "/" + taskId;
+				String queryServiceURL = dataObjectDownloadServiceURL + "?taskId=" + taskId;
 				HpcDataObjectDownloadStatusDTO downloadTask = DoeClientUtil.getDataObjectDownloadTask(authToken,
 						queryServiceURL);
-				String serviceURL = dataObjectServiceURL + downloadTask.getPath() + "/download";
-				if (downloadTask.getResult() != null && downloadTask.getResult().value().equals("COMPLETED")) {
-					HpcDownloadRequestDTO downloadDTO = new HpcDownloadRequestDTO();
-					HpcGlobusDownloadDestination destination = new HpcGlobusDownloadDestination();
-					HpcFileLocation location = downloadTask.getDestinationLocation();
-					destination.setDestinationLocation(location);
-					downloadDTO.setGlobusDownloadDestination(destination);
-					AjaxResponseBody responseBody = DoeClientUtil.downloadDataFile(authToken, serviceURL, downloadDTO,
-							HpcDownloadTaskType.DATA_OBJECT.name());
-					if (loggedOnUser != null) {
-						taskManagerService.saveTransfer(responseBody.getMessage(), "Download", taskType, taskName,
-								getLoggedOnUserInfo());
-					}
-					return responseBody.getMessage();
+
+				HpcDownloadRequestDTO downloadDTO = new HpcDownloadRequestDTO();
+				HpcGlobusDownloadDestination destination = new HpcGlobusDownloadDestination();
+				HpcFileLocation location = downloadTask.getDestinationLocation();
+				destination.setDestinationLocation(location);
+				downloadDTO.setGlobusDownloadDestination(destination);
+				AjaxResponseBody responseBody = DoeClientUtil.downloadDataFile(authToken, serviceURL, downloadDTO,
+						HpcDownloadTaskType.DATA_OBJECT.name());
+				if (loggedOnUser != null) {
+					taskManagerService.saveTransfer(responseBody.getMessage(), "Download", taskType, taskName,
+							getLoggedOnUserInfo());
 				}
+				return responseBody.getMessage();
 
 			}
 		} catch (Exception e) {
