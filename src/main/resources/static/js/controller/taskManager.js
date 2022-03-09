@@ -350,6 +350,7 @@ function retryUpload(taskId,taskName) {
 		 success : function(msg) {
 			 $("#spinner").hide();
 	         $("#dimmer").hide();
+	         bootbox.alert(msg);
 	         refreshTaskDatatable('manageTasksTable');		 
 		 },
 		error : function(e) {
@@ -373,6 +374,7 @@ function retryDownload(taskId,taskName,taskType) {
 		 success : function(msg) {
 			 $("#spinner").hide();
 	         $("#dimmer").hide();
+	         bootbox.alert(msg);
 	         refreshTaskDatatable('manageTasksTable');		 
 		 },
 		error : function(e) {
