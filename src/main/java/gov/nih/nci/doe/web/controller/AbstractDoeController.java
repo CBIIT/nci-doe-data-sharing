@@ -60,6 +60,7 @@ import gov.nih.nci.doe.web.service.LookUpService;
 import gov.nih.nci.doe.web.service.MailService;
 import gov.nih.nci.doe.web.service.MetaDataPermissionsService;
 import gov.nih.nci.doe.web.service.ModelInfoService;
+import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQueryOperator;
@@ -163,6 +164,9 @@ public abstract class AbstractDoeController {
 
 	@Autowired
 	ModelInfoService modelInfoService;
+
+	@Autowired
+	TaskManagerService taskManagerService;
 
 	protected Logger log = LoggerFactory.getLogger(this.getClass());
 

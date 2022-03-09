@@ -7,7 +7,7 @@ import gov.nih.nci.doe.web.model.KeyValueBean;
 
 public interface ModelInfoService {
 
-	public ModelInfo getModelInfo(String modelPath);
+	public ModelInfo getModelInfo(String assetPath);
 
 	public List<KeyValueBean> getAllModelInfoPaths();
 

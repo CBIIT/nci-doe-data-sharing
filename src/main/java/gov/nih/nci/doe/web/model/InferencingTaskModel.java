@@ -10,6 +10,15 @@ public class InferencingTaskModel {
 	private String modelPath;
 	private String uploadFrom;
 	private String outputResultName;
+	private String applicableModelNames;
+
+	public String getApplicableModelNames() {
+		return applicableModelNames;
+	}
+
+	public void setApplicableModelNames(String applicableModelNames) {
+		this.applicableModelNames = applicableModelNames;
+	}
 
 	public String getTaskId() {
 		return taskId;

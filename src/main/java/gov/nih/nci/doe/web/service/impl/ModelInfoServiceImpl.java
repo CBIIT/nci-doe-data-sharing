@@ -23,9 +23,9 @@ public class ModelInfoServiceImpl implements ModelInfoService {
 	ModelInfoRpository modelInfoRepository;
 
 	@Override
-	public ModelInfo getModelInfo(String modelPath) {
-		log.info("get model Info for : " + modelPath);
-		ModelInfo info = modelInfoRepository.getModelInfoByModelPath(modelPath);
+	public ModelInfo getModelInfo(String assetPath) {
+		log.info("get model Info for : " + assetPath);
+		ModelInfo info = modelInfoRepository.getModelInfoByModelPath(assetPath);
 
 		return info;
 	}

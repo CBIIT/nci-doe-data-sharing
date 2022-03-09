@@ -4,7 +4,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpHeaders;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.domain.TaskManager;
 import gov.nih.nci.doe.web.model.TaskManagerDto;
-import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.doe.web.util.LambdaUtils;
 import gov.nih.nci.hpc.domain.datatransfer.HpcDataTransferType;
@@ -49,9 +47,6 @@ import javax.servlet.http.HttpServletRequest;
 @EnableAutoConfiguration
 @RequestMapping("/tasks")
 public class TaskManagerCotroller extends AbstractDoeController {
-
-	@Autowired
-	TaskManagerService taskManagerService;
 
 	@Value("${gov.nih.nci.hpc.server.collection.download}")
 	private String collectionDownloadServiceURL;
@@ -176,9 +171,9 @@ public class TaskManagerCotroller extends AbstractDoeController {
 					if (Boolean.TRUE.equals(retry)) {
 
 						task.setTransferStatus(
-								"&nbsp&nbsp;Failed&nbsp;&nbsp;<img style='width:12px;' data-toggle='tooltip' title='"
+								"&nbsp&nbsp;Failed&nbsp;&nbsp;<img style='width:12px;' data-toggle='tooltip' title=\""
 										+ String.join(",", message)
-										+ "' src='images/Status.info-tooltip.png' alt='failed message'></i>"
+										+ "\" src='images/Status.info-tooltip.png' alt='failed message'></i>"
 										+ "<strong><a style='border: none;background-color: #F39530; height: 23px;width: 37px;border-radius: 11px;float: right;margin-right: 10px;' class='btn btn-link btn-sm' aria-label='Retry download' href='#' "
 										+ "onclick='retryDownload(\"" + download.getTaskId() + "\" ,\""
 										+ t.getTaskName() + "\", \"" + download.getType().name() + "\")'>"
@@ -187,8 +182,8 @@ public class TaskManagerCotroller extends AbstractDoeController {
 					} else {
 						task.setTransferStatus(
 								"&nbsp&nbsp;Failed&nbsp;&nbsp;<img style='width:12px;' data-toggle='tooltip'"
-										+ "src='images/Status.info-tooltip.png' alt='failed message' title='"
-										+ String.join(",", message) + "'></i>");
+										+ "src='images/Status.info-tooltip.png' alt='failed message' title=\""
+										+ String.join(",", message) + "\"></i>");
 					}
 				}
 
