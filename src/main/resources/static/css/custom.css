@@ -193,6 +193,10 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+#tooltipHtml,#outputTooltipHtml {
+	cursor: pointer;
+    color: #033D6F;
+}
 .divTableHeading {
     background-color: #EEE;
     display: table-header-group;
