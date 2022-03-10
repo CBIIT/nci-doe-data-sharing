@@ -110,8 +110,7 @@ public class PerformInferencingController extends AbstractDoeController {
 			throws Exception {
 
 		log.info("perform model analysis for reference dataset");
-		
-		String uploadPath = "/Users/gantam2/Desktop/";
+
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		String taskId = UUID.randomUUID().toString();
 		String applicableModelNames = inference.getApplicableModelNames();
