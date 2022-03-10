@@ -537,11 +537,20 @@ function registerCollection() {
     });
 	 
 	$("table#newMetaDataTable .simple-select2").each(function(){
+		var isMultiSelect  = $(this).prop('multiple');
 		var ismandatory = $(this).attr('is_mandatory');
 		var name = $(this).val();
-		if(ismandatory && ismandatory != "false" && name && name == 'Select') {
+		
+		if(isMultiSelect) {
+			name = $(this).select2("val");
+		}
+		
+		if(!isMultiSelect && ismandatory && ismandatory != "false" && name && name == 'Select') {
 	       usermetaDataEntered = false;
+	    } else if (isMultiSelect && ismandatory && ismandatory != "false" && name.length == 0) {
+	    	usermetaDataEntered = false;
 	    }
+		
 	});
 	
 	if(!usermetaDataEntered) {
@@ -906,9 +915,16 @@ function registerBulkAssets() {
 	 
 	$("table#assetBulkMetadataTable").find(".simple-select2").each(function(){
 		var ismandatory = $(this).attr('is_mandatory');
+		var isMultiSelect  = $(this).prop('multiple');
 		var name = $(this).val();
-		if(ismandatory && ismandatory != "false" && name && name == 'Select') {
+		if(isMultiSelect) {
+			name = $(this).select2("val");
+		}
+		if(!isMultiSelect && ismandatory && ismandatory != "false" && name && name == 'Select') {
 			isValidated = false;
+	    	usermetaDataEntered = false;
+	    } else if (isMultiSelect && ismandatory && ismandatory != "false" && name.length == 0) {
+	    	isValidated = false;
 	    	usermetaDataEntered = false;
 	    }
 	});

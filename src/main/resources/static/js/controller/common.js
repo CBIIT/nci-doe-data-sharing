@@ -555,17 +555,33 @@ function postSuccessOnChangeIsReferenceDataset(data, tableId) {
 				} else {
 					var width = 'width:70%;';
 				}
-		    	$("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
-	        	'data-placement="right" title="'+value.description+'"></i></td><td>'+
-	        	'<select class="simple-select2" is_mandatory="'+value.mandatory+'" style="' + width +'" id="'+value.attrName+'" name="zAttrStr_'+value.attrName+'" value="'+value.attrValue+'"></select></td></tr>');
-		    	
-		    	  var $select = $("#"+value.attrName);
+				
+				if(value.attrName  == 'applicable_model_name') {
+					   
+				$("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+			       'data-placement="right" title="'+value.description+'"></i></td><td>'+
+			       '<select class="simple-select2" multiple="multiple" placeholder="Required" is_mandatory="'+value.mandatory+'" id="'+value.attrName+'" name="zAttrStr_'+value.attrName+'" ' +
+			       'style="' + width +'""></select></td></tr>');
+				   
+				  var $select = $("#"+value.attrName);
+				   
+		    	  if(value.attrValue && value.attrValue != 'None'){
+		    	 	$select.append($('<option></option>').attr('value', value.attrValue).text(value.attrValue));
+		    	  } 
+				   
+				} else {
+					$("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+				    'data-placement="right" title="'+value.description+'"></i></td><td>'+
+				    '<select class="simple-select2" is_mandatory="'+value.mandatory+'" style="' + width +'" id="'+value.attrName+'" name="zAttrStr_'+value.attrName+'" value="'+value.attrValue+'"></select></td></tr>');
+					
+				  var $select = $("#"+value.attrName);
 		    	  if(value.attrValue && value.attrValue != 'None'){
 		    	 	$select.append($('<option></option>').attr('value', value.attrValue).text(value.attrValue));
 		    	  } else {
 		    	    $select.append($('<option></option>').attr('value', 'Select').text('Select'));
 		    	  }
-		    	  	    	  
+				} 
+	    	  
 		    	  for (var i = 0; i < value.validValues.length; i++) {
 		    		   $select.append($('<option></option>').attr('value', value.validValues[i].key).text(value.validValues[i].value));
 	              }
