@@ -220,7 +220,6 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 						inputNameResult.setPredictionsName(name);
 						inputNameResult.setPredictionsPath(dataObject.getPath());
 						inputNameResult.setPredCollectionId(dataObject.getId());
-						returnResults.add(inputNameResult);
 					}
 
 				} else {
@@ -237,7 +236,6 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 						predNameResult.setInputDatasetName(name);
 						predNameResult.setInputDatasetPath(dataObject.getPath());
 						predNameResult.setInputDatasetCollectionId(dataObject.getId());
-						returnResults.add(predNameResult);
 					}
 
 				}
