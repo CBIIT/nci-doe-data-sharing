@@ -8,9 +8,10 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -39,8 +40,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.ws.rs.core.Response;
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.domain.InferencingTask;
+import gov.nih.nci.doe.web.domain.ModelInfo;
 import gov.nih.nci.doe.web.model.InferencingTaskModel;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
+import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationStatusDTO;
 
 @Controller
@@ -50,6 +53,9 @@ public class PerformInferencingController extends AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
 	private String bulkRegistrationURL;
+
+	@Value("${gov.nih.nci.hpc.server.dataObject}")
+	private String dataObjectServiceURL;
 
 	@GetMapping
 	public ResponseEntity<?> getInferencingTasks(HttpSession session, @RequestHeader HttpHeaders headers,
@@ -95,6 +101,104 @@ public class PerformInferencingController extends AbstractDoeController {
 
 		}
 		return new ResponseEntity<>(getAllInferencingTasks, headers, HttpStatus.OK);
+	}
+
+	@PostMapping(value = "/performModelAnalysis")
+	@ResponseBody
+	public String performModelAnalysis(HttpSession session, @RequestHeader HttpHeaders headers,
+			HttpServletRequest request, HttpServletResponse response, @Valid InferencingTaskModel inference)
+			throws Exception {
+
+		log.info("perform model analysis for reference dataset");
+		
+		String uploadPath = "/Users/gantam2/Desktop/";
+		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		String taskId = UUID.randomUUID().toString();
+		String applicableModelNames = inference.getApplicableModelNames();
+		ModelInfo modelInfo = modelInfoService.getModelInfo(applicableModelNames);
+
+		// create a file name for y_pred file and append to the asset Path
+		String resultPath = inference.getAssetPath() + "/y_pred_" + taskId + ".csv";
+
+		// create a unique file name for input path since the same file can be uploaded
+		// multiple times by the user and causing an issue in inferencing script to
+		// locate the file
+		String testInputName = FilenameUtils.getBaseName(inference.getTestInputPath());
+		String testInputExt = FilenameUtils.getExtension(inference.getTestInputPath());
+
+		String updatedTestInputName = testInputName.trim() + "_" + taskId + "." + testInputExt;
+		String updatedTestInputPath = inference.getAssetPath() + "/" + updatedTestInputName;
+
+		try {
+			// create a unique file name for users expected output path since the same file
+			// can be uploaded
+			// multiple times by the user and causing an issue in inferencing script to
+			// locate the file
+			if (StringUtils.isNotEmpty(inference.getOutputResultName())) {
+				String expectedOutputName = FilenameUtils.getBaseName(inference.getOutputResultName());
+				String expectedOutputExt = FilenameUtils.getExtension(inference.getOutputResultName());
+
+				String updatedOutputFileName = expectedOutputName.trim() + "_" + taskId + "." + expectedOutputExt;
+
+				// copy the results file to mount location
+
+				Response restResponseModelFile = DoeClientUtil.getPreSignedUrl(authToken, dataObjectServiceURL,
+						inference.getOutputResultName());
+
+				log.info("rest response:" + restResponseModelFile.getStatus());
+				if (restResponseModelFile.getStatus() == 200) {
+					MappingJsonFactory factory = new MappingJsonFactory();
+					JsonParser parser = factory.createParser((InputStream) restResponseModelFile.getEntity());
+					HpcDataObjectDownloadResponseDTO dataObject = parser
+							.readValueAs(HpcDataObjectDownloadResponseDTO.class);
+
+					WebClient client = DoeClientUtil.getWebClient(dataObject.getDownloadRequestURL());
+					Response restResponseForModelFileCopy = client.invoke("GET", null);
+
+					Files.copy((InputStream) restResponseForModelFileCopy.getEntity(),
+							Paths.get(uploadPath + updatedOutputFileName), StandardCopyOption.REPLACE_EXISTING);
+
+					inference.setOutputResultName(updatedOutputFileName);
+
+				}
+
+			}
+
+			if (StringUtils.isNotEmpty(inference.getTestInputPath())) {
+				// copy the reference dataset to mount location
+				Response restResponse = DoeClientUtil.getPreSignedUrl(authToken, dataObjectServiceURL,
+						inference.getTestInputPath());
+
+				log.info("rest response:" + restResponse.getStatus());
+				if (restResponse.getStatus() == 200) {
+					MappingJsonFactory factory = new MappingJsonFactory();
+					JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+					HpcDataObjectDownloadResponseDTO dataObject = parser
+							.readValueAs(HpcDataObjectDownloadResponseDTO.class);
+
+					WebClient client = DoeClientUtil.getWebClient(dataObject.getDownloadRequestURL());
+					Response restResponse1 = client.invoke("GET", null);
+
+					Files.copy((InputStream) restResponse1.getEntity(), Paths.get(uploadPath + updatedTestInputName),
+							StandardCopyOption.REPLACE_EXISTING);
+
+				}
+			}
+
+			// save the inferencing task
+			inference.setTaskId(taskId);
+			inference.setModelPath(modelInfo.getModelPath());
+			inference.setUserId(getLoggedOnUserInfo());
+			inference.setResultPath(resultPath);
+			inference.setTestInputPath(updatedTestInputPath);
+			inferencingTaskService.saveInferenceTask(inference);
+
+			return "Perform model analysis task submitted. Your task id is " + taskId;
+		} catch (Exception e) {
+			log.error("Exception in performing model analysis: " + e);
+			throw new DoeWebException("Exception in performing model analysis: " + e);
+		}
+
 	}
 
 	@PostMapping
@@ -156,7 +260,7 @@ public class PerformInferencingController extends AbstractDoeController {
 			Files.copy(uploadTestInferFile.getInputStream(), Paths.get(uploadPath + updatedTestInputName),
 					StandardCopyOption.REPLACE_EXISTING);
 
-			return "Perform Inferencing task Submitted. Your task Id is " + taskId;
+			return "Perform inferencing task submitted. Your task id is " + taskId;
 		} catch (Exception e) {
 			log.error("Exception in uploading inferencing file: " + e);
 			throw new DoeWebException("Exception in uploading inferencing file: " + e);

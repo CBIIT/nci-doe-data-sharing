@@ -318,6 +318,60 @@
 				</div>
 			</div>
 		</div>
+
+		<div id="performModelAnalysisModal"
+			class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog"
+			aria-hidden="false">
+			<div class="modal-dialog modal-md" role="document">
+				<div class="modal-content"
+					style="width: 550px; border-radius: 14px;">
+					<div class="modal-header"
+						style="border-bottom: none; margin-left: 32px; margin-top: 10px;">
+						<p class="modal-title">Perform Model Analysis</p>
+						<button type="button" class="close" data-dismiss="modal"
+							style="margin-top: -30px;" aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+					</div>
+
+					<div class="clearfix performModelAnalysisError"
+						style="display: none; margin-left: 37px; width: 90%; margin-bottom: 10px;">
+						<div class="col-md-12"
+							style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
+							<div class="alert alert-danger">
+								<h6 class="performAnalysisMsgError"></h6>
+							</div>
+						</div>
+					</div>
+
+					<div class="modal-body drilldown-content"
+						style="margin-top: -43px; margin-left: 49px;">
+						<form class="form-horizontal" id="performModelAnalysisForm" style="font-family: 'inter_regular';"
+							method="POST">
+							<input type="hidden" id="testInputPath" name="testInputPath" />
+							<input type="hidden" id="outputResultFilePath" name="outputResultFilePath" />
+							
+							<div class="row row-buffer">
+								<label for="selectApplicableModelName">Applicable Model
+									Name:&nbsp;&nbsp; <select class="simple-select2"
+									id="selectApplicableModelName" name="selectApplicableModelName"
+									style="width: 60%">
+								</select>
+								</label>
+							</div>
+						</form>
+						<div class="row row-buffer"
+							style="text-align: right; margin-top: 10px;margin-right: -6px;">
+							<div class="col-sm-12" style="margin-bottom: 10px;">
+								<button class="btn btn-primary" id="performModelAnalysisBtn">
+									Submit</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
 	</div>
 </body>
 </html>
