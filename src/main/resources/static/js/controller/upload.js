@@ -356,19 +356,19 @@ function constructNewCollectionMetaDataSet(data,status) {
 	   } else if(value.validValues != null){
 	    	$("#newMetaDataTable tbody").append("<tr><td>" +  value.displayName + "&nbsp;&nbsp;<i class='fas fa-question-circle' data-toggle='tooltip'"+
         	"data-placement='right' title='"+value.description+"'></i></td><td>"+
-        	"<select class='simple-select2' is_mandatory='"+value.mandatory+"' onChange='onChangeForMetadata("+value.controllerAttribute+",newMetaDataTable, "+value.attrName+");' style='width:70%;' id='"+value.attrName+"' name='zAttrStr_"+value.attrName+"' value='"+value.attrValue+"'></select></td></tr>");
+        	"<select class='simple-select2' is_mandatory='"+value.mandatory+"' onChange='onChangeForMetadata(registerCollectionForm,"+value.controllerAttribute+",newMetaDataTable, "+value.attrName+");' style='width:70%;' id='"+value.attrName+"' name='zAttrStr_"+value.attrName+"' value='"+value.attrValue+"'></select></td></tr>");
 	    	
 	    	  var $select = $("#"+value.attrName);
+	    	  
 	    	  if(value.attrValue){
 	    	 	$select.append($('<option></option>').attr('value', value.attrValue).text(value.attrValue));
 	    	  } else {
 	    	    $select.append($('<option></option>').attr('value', 'Select').text('Select'));
-	    	  }
-	    	  	    	  
+	    	  }	    	  
 	    	  for (var i = 0; i < value.validValues.length; i++) {
 	    		   $select.append($('<option></option>').attr('value', value.validValues[i].key).text(value.validValues[i].value));
               }
-               
+	    	  
 	    	  $select.select2().trigger('change');
 	    	
 	   } else if(value.attrValue){		    
@@ -389,12 +389,8 @@ function constructNewCollectionMetaDataSet(data,status) {
 		    	        	'<input type="text" is_mandatory="'+value.mandatory+'" placeholder="'+placeholderValue+'" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
 		    	        	'style="width:70%;"></td></tr>'); 
 		     }
-			
 		}      
-		
 	});	
-
-	
 }
 
 function addNewMetaDataCollection(tableName) {
@@ -848,7 +844,7 @@ function constructAssetTypeBulkDiv(data,status) {
 		   
 	    	$("#assetBulkMetadataTable tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
         	'data-placement="right" title="'+value.description+'"></i></td><td>'+
-        	'<select class="simple-select2" is_mandatory="'+value.mandatory+'" style="width:99%;" onChange="onChangeForMetadata('+value.controllerAttribute+',assetBulkMetadataTable, '+value.attrName+');"'+
+        	'<select class="simple-select2" is_mandatory="'+value.mandatory+'" style="width:99%;" onChange="onChangeForMetadata(registerBulkAssetForm,'+value.controllerAttribute+',assetBulkMetadataTable, '+value.attrName+');"'+
         	'id="'+value.attrName+'" name="zAttrStr_'+value.attrName+'" value="'+value.attrValue+'"></select></td></tr>');
 	    	
 	    	  var $select = $("#"+value.attrName);

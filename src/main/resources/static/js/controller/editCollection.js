@@ -92,7 +92,7 @@ function constructEditCollectionMetadata(data,status) {
 				 $("#userMetaData tbody").append("<tr><td>" + value.displayName+ "&nbsp;&nbsp;<i class='fas fa-question-circle'" +
                  " data-toggle='tooltip' " +
                  "data-placement='right' title=\"" +value.description + "\"></i></td><td>" +
-                 "<select id='"+value.attrName+"' is_mandatory='"+value.mandatory+"' onChange='onChangeForMetadata("+value.controllerAttribute+",userMetaData, "+value.attrName+");'" +
+                 "<select id='"+value.attrName+"' is_mandatory='"+value.mandatory+"' onChange='onChangeForMetadata(collectionForm, " + value.controllerAttribute + ",userMetaData, "+value.attrName+");'" +
                  "class='simple-select2' style='width:70%;' name='zAttrStr_"+value.attrName+"' " +
                  "value=\"" + attrVal+ "\"></select></td></tr>");
 			}

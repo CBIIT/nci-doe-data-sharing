@@ -125,6 +125,7 @@ $(document).on(
 		'#performModelAnalysis',
 		function() {
 
+			$("#performModelAnalysisModal").find("#selectApplicableModelName").html("");
 			var resultName = $("#resultFileName").val();
 			var applicableModelNames = $("#applicableModelName").val();
 			var outputResultFilePath;
