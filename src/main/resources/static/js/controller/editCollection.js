@@ -282,14 +282,14 @@ function updateMetaDataCollection() {
 		var data = $('#collectionForm').serialize();
 		$('form#collectionForm input[type="text"]').each(function(){
 			var ismandatory = $(this).attr('is_mandatory');
-	        if(!$(this).val() && ismandatory && ismandatory != "false" ){
+	        if(!$(this).val() && ismandatory == "true" ){
 	        		validate = false;
 	        }          
 	    });
 		
 		$("textarea").each(function(){
 			var ismandatory = $(this).attr('is_mandatory');
-	        if(!$(this).val() && ismandatory && ismandatory != "false" ){
+	        if(!$(this).val() && ismandatory == "true" ){
 	        		validate = false;
 	        }          
 	    });
@@ -304,9 +304,9 @@ function updateMetaDataCollection() {
 				name = $(this).select2("val");
 			}
 			
-			if(!isMultiSelect && ismandatory && ismandatory != "false" && name && name == 'Select') {
+			if(!isMultiSelect && ismandatory == "true" && name && name == 'Select') {
 				validate = false;
-		    } else if (isMultiSelect && ismandatory && ismandatory != "false" && name.length == 0) {
+		    } else if (isMultiSelect && ismandatory == "true" && name.length == 0) {
 		    	validate = false;
 		    }
 		});
