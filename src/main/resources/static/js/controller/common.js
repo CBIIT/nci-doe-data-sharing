@@ -491,6 +491,7 @@ $(document)
 				});
 
 
+/* function on change of reference dataset value */
 function onChangeForMetadata(form,isValid, table,selectId) {
 	if(isValid == true) {
 		var value = selectId.value;
@@ -548,7 +549,8 @@ function postSuccessOnChangeIsReferenceDataset(form,data, tableId) {
 		});
 		
 	  var newElements = data.filter(x => !displayNames.includes(x.displayName));
-		
+	
+	  /* new elements added from new conditional attribute */
 	  if(newElements.length != 0) {
 		  $.each(newElements, function(key, value) {
 			  
@@ -693,7 +695,6 @@ $(document).on('click', '#clearFilters', function() {
 		$(this).find('span').css('color', '#212529');
 	});
 	showFirstFewFields();
-	//$("#searchResultsDiv").hide();
 	populateSearchCriteria('simpleSearch');
 });
 
