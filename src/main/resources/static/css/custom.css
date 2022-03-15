@@ -1700,7 +1700,15 @@ footer
 footer{background:#fff; font-size:14px;}
 .list-inline .list-inline-item a{color:#fff;}
 .list-inline .list-inline-item a:hover{color:#00467f;}
-    
+
+#disclosureLink {
+	color:#fff;
+}
+   
+#disclosureLink:hover {
+	color:#00467f;
+} 
+   
 @media (min-width: 992px){
 .modal-lg {
 max-width: 95%;
