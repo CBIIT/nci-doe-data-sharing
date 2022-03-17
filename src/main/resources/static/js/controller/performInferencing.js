@@ -32,11 +32,11 @@ $(document)
 					if (isExternalDataSetSupported && isExternalDataSetSupported == "true") {
 						$("#performInferencingModel").find("#displayDataTypeDiv").show();
 						$("#performInferencingModel").find("#labelForInputType").html(
-								"Upload file to generate predictions.&nbsp; <span id='tooltipHtml'></span>");
+								"Upload file to generate predictions.&nbsp;<span id='tooltipHtml'></span>");
 					} else {
 						$("#performInferencingModel").find("#displayDataTypeDiv").hide();
 						$("#performInferencingModel").find("#labelForInputType").html(
-								"Upload GDC file to generate predictions.&nbsp; <span id='tooltipHtml'></span>");
+								"Upload GDC file to generate predictions.&nbsp;<span id='tooltipHtml'></span>");
 					}
 
 					var modelFile = $("#performInferencingModel").find("#modelPath").val();
