@@ -76,18 +76,21 @@ $(document).on('click', '#performInferencing', function() {
 	var data = new FormData(form);
 	var file = $("#uploadTestInferFile").val();
 	var uploadType = $('input[name=uploadFrom]:checked').val();
+	var validate = true;
 
 	if (!file) {
 		$(".performInferencingError").show();
-		$(".performInferMsgError").html("Upload file to generate predictions.")
+		$(".performInferMsgError").html("Upload file to generate predictions.");
+		validate = false;
 	}
 
-	if (!uploadType) {
+	if ($("input[name=uploadFrom]").is(":visible") && !uploadType) {
 		$(".performInferencingError").show();
-		$(".performInferMsgError").html("Choose upload data from type.")
+		$(".performInferMsgError").html("Choose upload data from type.");
+		validate = false;
 	}
 
-	if (file && uploadType) {
+	if (validate) {
 		$.ajax({
 			type : "POST",
 			enctype : "multipart/form-data",
