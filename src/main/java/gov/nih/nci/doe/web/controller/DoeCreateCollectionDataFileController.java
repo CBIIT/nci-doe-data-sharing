@@ -647,7 +647,8 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				String attrName = paramName.substring("zAttrStr_".length());
 				String[] attrValue = request.getParameterValues(paramName);
 				entry.setAttribute(attrName);
-				if ("zAttrStr_access_group".equalsIgnoreCase(paramName)) {
+//				if ("zAttrStr_access_group".equalsIgnoreCase(paramName)) {
+				if (attrValue != null && attrValue.length > 1) {
 					entry.setValue(String.join(",", attrValue));
 				} else {
 					entry.setValue(attrValue[0].trim());
@@ -657,11 +658,16 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				}
 
 				attrEntry.setAttrName(attrName);
-				if ("zAttrStr_access_group".equalsIgnoreCase(paramName)) {
+				if (attrValue != null && attrValue.length > 1) {
 					attrEntry.setAttrValue(String.join(",", attrValue));
 				} else {
 					attrEntry.setAttrValue(attrValue[0].trim());
 				}
+//				if ("zAttrStr_access_group".equalsIgnoreCase(paramName)) {
+//					attrEntry.setAttrValue(String.join(",", attrValue));
+//				} else {
+//					attrEntry.setAttrValue(attrValue[0].trim());
+//				}
 				attrEntry.setSystemAttr(false);
 				if (StringUtils.isNotEmpty(entry.getValue())) {
 					selfMetadataEntries.add(attrEntry);

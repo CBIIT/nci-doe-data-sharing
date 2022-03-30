@@ -38,7 +38,6 @@ public class DoeCollectionController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	private String serviceURL;
 
-
 	/**
 	 * Update collection
 	 *
@@ -111,7 +110,14 @@ public class DoeCollectionController extends AbstractDoeController {
 				String attrName = paramName.substring("zAttrStr_".length());
 				String[] attrValue = request.getParameterValues(paramName);
 				entry.setAttribute(attrName);
-				entry.setValue(attrValue[0].trim());
+
+				if (attrValue != null && attrValue.length > 1) {
+					entry.setValue(String.join(",", attrValue));
+				} else {
+					entry.setValue(attrValue[0].trim());
+				}
+
+//				entry.setValue(attrValue[0].trim());
 
 				metadataEntries.add(entry);
 			} else if (paramName.startsWith("_addAttrName")) {
