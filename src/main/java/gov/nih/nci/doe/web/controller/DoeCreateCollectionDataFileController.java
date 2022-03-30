@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -647,9 +648,10 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				String attrName = paramName.substring("zAttrStr_".length());
 				String[] attrValue = request.getParameterValues(paramName);
 				entry.setAttribute(attrName);
-//				if ("zAttrStr_access_group".equalsIgnoreCase(paramName)) {
 				if (attrValue != null && attrValue.length > 1) {
-					entry.setValue(String.join(",", attrValue));
+					String combinedAttrVal = Stream.of(attrValue).filter(s -> s != null && !s.isEmpty())
+							.collect(Collectors.joining(","));
+					entry.setValue(combinedAttrVal);
 				} else {
 					entry.setValue(attrValue[0].trim());
 				}
@@ -659,15 +661,14 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 
 				attrEntry.setAttrName(attrName);
 				if (attrValue != null && attrValue.length > 1) {
-					attrEntry.setAttrValue(String.join(",", attrValue));
+
+					String combinedAttrVal = Stream.of(attrValue).filter(s -> s != null && !s.isEmpty())
+							.collect(Collectors.joining(","));
+					attrEntry.setAttrValue(combinedAttrVal);
+
 				} else {
 					attrEntry.setAttrValue(attrValue[0].trim());
 				}
-//				if ("zAttrStr_access_group".equalsIgnoreCase(paramName)) {
-//					attrEntry.setAttrValue(String.join(",", attrValue));
-//				} else {
-//					attrEntry.setAttrValue(attrValue[0].trim());
-//				}
 				attrEntry.setSystemAttr(false);
 				if (StringUtils.isNotEmpty(entry.getValue())) {
 					selfMetadataEntries.add(attrEntry);

@@ -132,9 +132,9 @@ function constructEditCollectionMetadata(data, status) {
 								$select.append($('<option></option>').attr('value', value.validValues[i].key).text(
 										value.validValues[i].value));
 							}
-
+							var attrValModifiedList = attrValModified.split(',');
 							if (attrValModified != null) {
-								$select.select2().val(attrValModified).trigger('change');
+								$select.select2().val(attrValModifiedList).trigger('change');
 							} else {
 								$select.select2().trigger('change');
 							}

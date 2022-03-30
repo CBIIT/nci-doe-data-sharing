@@ -1,6 +1,8 @@
 package gov.nih.nci.doe.web.controller;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -112,12 +114,13 @@ public class DoeCollectionController extends AbstractDoeController {
 				entry.setAttribute(attrName);
 
 				if (attrValue != null && attrValue.length > 1) {
-					entry.setValue(String.join(",", attrValue));
+
+					String combinedAttrVal = Stream.of(attrValue).filter(s -> s != null && !s.isEmpty())
+							.collect(Collectors.joining(","));
+					entry.setValue(combinedAttrVal);
 				} else {
 					entry.setValue(attrValue[0].trim());
 				}
-
-//				entry.setValue(attrValue[0].trim());
 
 				metadataEntries.add(entry);
 			} else if (paramName.startsWith("_addAttrName")) {

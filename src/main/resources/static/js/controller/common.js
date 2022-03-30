@@ -589,7 +589,8 @@ function postSuccessOnChangeIsReferenceDataset(form,data, tableId) {
 	              }
 	               
 		    	  if(value.attrValue != null) {
-			    		$select.select2().val(value.attrValue).trigger('change');
+			            var attrValModifiedList = value.attrValue.split(',');
+			    		$select.select2().val(attrValModifiedList).trigger('change');
 			    	} else {
 			    		$select.select2().trigger('change');
 			    	}
