@@ -220,6 +220,13 @@ input:checked + .slider:before {
     font-size: 14px;
     font-style: italic;
 }
+.generatePredHr {
+	box-sizing: border-box;
+  height: 1px;
+  width: 569px;
+  border: 0.75px solid #818181;
+  background-color: #818181;
+}
 
 .optionalLabelInfo {
 	font-family: 'inter_regular';
