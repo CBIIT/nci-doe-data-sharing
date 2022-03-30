@@ -245,7 +245,7 @@
 				<div class="modal-content"
 					style="width: 550px; border-radius: 14px;">
 					<div class="modal-header"
-						style="border-bottom: none; margin-left: 32px; margin-top: 10px;">
+						style="border-bottom: none; margin-left: 29px; margin-top: 10px;">
 						<p class="modal-title">Generate Predictions</p>
 						<button type="button" class="close" data-dismiss="modal"
 							style="margin-top: -30px;" aria-label="Close">
@@ -254,7 +254,7 @@
 					</div>
 
 					<div class="clearfix performInferencingError"
-						style="display: none; margin-left: 37px; width: 90%; margin-bottom: 10px;">
+						style="display: none; text-align: center; margin-bottom: 10px;">
 						<div class="col-md-12"
 							style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
 							<div class="alert alert-danger">
@@ -264,12 +264,12 @@
 					</div>
 
 					<div class="modal-body drilldown-content"
-						style="margin-top: -26px; margin-left: 36px;">
+						style="margin-top: -26px; margin-left: 0px;margin-right: 0px;overflow: hidden;padding: 0px;">
 						<form class="form-horizontal" id="performInferForm" method="POST">
 							<input type="hidden" id="testInputPath" name="testInputPath" />
 							<input type="hidden" id="modelPath" name="modelPath" />
 							<div class="form-row row row-buffer" id="displayDataTypeDiv"
-								style="margin-left: -3px; margin-top: -15px;">
+								style="margin-left: 47px; margin-top: 6px;">
 								<div class="form-group">
 									<label style="font-size: 14px; font-family: 'inter_regular';"
 										class="radio-inline"> <input type="radio"
@@ -286,8 +286,9 @@
 									</label>
 								</div>
 							</div>
+							<hr class="loginHr">
 							<div class="row row-buffer"
-								style="margin-left: -3px; margin-top: -15px;">
+								style="margin-left: 50px; margin-top: -23px;">
 								<label id="labelForInputType"
 									style="font-family: 'inter_regular'; font-size: 14px; font-weight: 500;">Upload
 									file to generate predictions.&nbsp;<span id="tooltipHtml"></span>
@@ -296,10 +297,12 @@
 							</div>
 
 							<div class="row row-buffer"
-								style="margin-left: -3px; margin-top: -15px;">
-								<label
-									style="font-family: 'inter_regular'; font-size: 14px; font-weight: 500;">
-									Optionally upload file to evaluate the model.&nbsp;<span
+								style="margin-left: 0px;margin-top: 10px;
+                                box-sizing: border-box;background-color: #F1F1F1;
+                                padding-left: 51px;padding-bottom: 20px;">
+								<label class="optionalLabel">OPTIONAL</label>
+								<label class="optionalLabelInfo">
+									 Upload file to evaluate the model.&nbsp;<span
 									id="outputTooltipHtml"></span>
 								</label> <input type="file" style="margin-top: 14px;"
 									id="uploadTestOutputFile" name="uploadTestOutputFile" />
@@ -307,7 +310,7 @@
 
 						</form>
 						<div class="row row-buffer"
-							style="text-align: center; margin-top: 10px;">
+							style="text-align: center; margin-top: 10px;padding-bottom: 10px;">
 							<div class="col-sm-12" style="margin-bottom: 10px;">
 
 								<button class="btn btn-primary" id="performInferencing">

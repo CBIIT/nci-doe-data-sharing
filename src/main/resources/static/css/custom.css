@@ -214,6 +214,21 @@ input:checked + .slider:before {
     font-size: 16px;
 }
 
+.optionalLabel {
+	color: #8E8E8E;
+    font-family: 'inter_regular';
+    font-size: 14px;
+    font-style: italic;
+}
+
+.optionalLabelInfo {
+	font-family: 'inter_regular';
+    font-size: 14px;
+    color: #000000;
+    line-height: 16px;
+    font-style: italic;
+    font-weight: 500;
+}
 #manageTasksTable_length,#inferencingTable_length {
    float: right;
    color: #000000;
