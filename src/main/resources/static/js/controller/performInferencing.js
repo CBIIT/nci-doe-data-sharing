@@ -32,7 +32,7 @@ $(document)
 					if (isExternalDataSetSupported && isExternalDataSetSupported == "true") {
 						$("#performInferencingModel").find("#displayDataTypeDiv").show();
 						$("#performInferencingModel").find("#labelForInputType").html(
-								"Upload file to generate predictions.&nbsp;<span id='tooltipHtml'></span>");
+								"Upload input file to generate predictions.&nbsp;<span id='tooltipHtml'></span>");
 					} else {
 						$("#performInferencingModel").find("#displayDataTypeDiv").hide();
 						$("#performInferencingModel").find("#labelForInputType").html(
@@ -80,7 +80,7 @@ $(document).on('click', '#performInferencing', function() {
 
 	if (!file) {
 		$(".performInferencingError").show();
-		$(".performInferMsgError").html("Upload file to generate predictions.");
+		$(".performInferMsgError").html("Upload input file to generate predictions.");
 		validate = false;
 	}
 
