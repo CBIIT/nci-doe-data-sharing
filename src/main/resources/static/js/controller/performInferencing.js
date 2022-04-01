@@ -42,11 +42,11 @@ $(document)
 					var modelFile = $("#performInferencingModel").find("#modelPath").val();
 					$("#performInferencingModel").find("#testInputPath").val($("#selectedAssetPath").text());
 					if (modelFile.indexOf('mt_cnn') != -1 || modelFile.indexOf('mt-cnn') != -1) {
-						var title = "Upload GDC manifest or <br/> pathology report. <br/>For more details, refer to the<br/><a target='_blank' href='https://wiki.nci.nih.gov/x/cQh2H'> user guide</a>.";
-						var outputTitle = "This is optional. Upload file to <br/>evaluate the model. <br/>For more details, refer to the<br/><a target='_blank' href='https://wiki.nci.nih.gov/x/cQh2H'> user guide</a>.";
+						var title = "Upload a GDC manifest file<br/> (TXT) or a pathology report<br/> (TXT or PDF). For more<br/> details, refer to the <a target='_blank' href='https://wiki.nci.nih.gov/x/cQh2H'> user guide</a>.";
+						var outputTitle = "This is optional. Upload CSV<br/> outcome file to evaluate<br/> the model. For more details,<br/> refer to the <a target='_blank' href='https://wiki.nci.nih.gov/x/cQh2H'> user guide</a>.";
 					} else {
-						var title = "Upload GDC manifest or <br/> FPKM-UQ file. <br/>For more details, refer to the<br/><a target='_blank' href='https://wiki.nci.nih.gov/x/bwh2H'> user guide</a>.";
-						var outputTitle = "This is optional. Upload file to <br/>evaluate the model. <br/>For more details, refer to the<br/><a target='_blank' href='https://wiki.nci.nih.gov/x/bwh2H'> user guide</a>.";
+						var title = "Upload GDC manifest file<br/> (such as TXT) or an FPKM-UQ<br/> file (TXT or CSV). For more<br/> details, refer to the <a target='_blank' href='https://wiki.nci.nih.gov/x/bwh2H'> user guide</a>.";
+						var outputTitle = "This is optional. Upload CSV<br/> outcome file to evaluate<br/> the model. For more details,<br/> refer to the <a target='_blank' href='https://wiki.nci.nih.gov/x/bwh2H'> user guide</a>.";
 					}
 
 					$("#performInferencingModel").find("#tooltipHtml").html(
