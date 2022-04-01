@@ -139,7 +139,7 @@ $(document).on(
 				if (len > 0) {
 					var resultVal = $(this).find('td').eq(1).text().trim().toLowerCase();
 					var value = $(this).find('td:first input[type=checkbox]').attr('id');
-					if (resultVal && resultVal.indexOf(resultName.toLowerCase()) != -1) {
+					if (resultVal && resultName && resultVal.indexOf(resultName.toLowerCase()) != -1) {
 						isResultFileNameFound = true;
 						outputResultFilePath = value;
 					} else {
