@@ -870,7 +870,7 @@ public abstract class AbstractDoeController {
 				String isReferenceDataset = getAttributeValue("is_reference_dataset",
 						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
 
-				String resultFileName = getAttributeValue("results_file_name",
+				String resultFileName = getAttributeValue("outcome_file_name",
 						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
 
 				String applicableModelName = getAttributeValue("applicable_model_name",
