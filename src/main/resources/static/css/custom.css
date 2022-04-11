@@ -131,6 +131,72 @@
     color: #F8F6F6;
     margin-bottom: 14px !important;
 }
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 42px;
+  height: 27px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 25px;
+  width: 23px;
+  left: 1px;
+  bottom: 1px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(18px);
+  -ms-transform: translateX(18px);
+  transform: translateX(18px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+#tooltipHtml,#outputTooltipHtml {
+	cursor: pointer;
+    color: #033D6F;
+}
 .divTableHeading {
     background-color: #EEE;
     display: table-header-group;
@@ -139,8 +205,37 @@
     background-color: #00467f;
     color: #fff;
 }
+#displayAllDiv {
+	float: right;
+	margin-bottom: 10px;
+	margin-right: -27px;
+	color: #000000;
+    font-family: 'latoregular';
+    font-size: 16px;
+}
 
+.optionalLabel {
+	color: #8E8E8E;
+    font-family: 'inter_regular';
+    font-size: 14px;
+    font-style: italic;
+}
+.generatePredHr {
+	box-sizing: border-box;
+  height: 1px;
+  width: 569px;
+  border: 0.75px solid #818181;
+  background-color: #818181;
+}
 
+.optionalLabelInfo {
+	font-family: 'inter_regular';
+    font-size: 14px;
+    color: #000000;
+    line-height: 16px;
+    font-style: italic;
+    font-weight: 500;
+}
 #manageTasksTable_length,#inferencingTable_length {
    float: right;
    color: #000000;
@@ -301,7 +396,7 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
     margin-top: -8px;
 }
 
-#downloadSelectedDataSet,#downloadSelectedMetadata,#downloadSelected,#openInferModal{
+#downloadSelectedDataSet,#downloadSelectedMetadata,#downloadSelected,#openInferModal,#performModelAnalysis{
 	background-color: #E87B05!important;
 	margin-top: 0px;
     border-radius: 13px;
@@ -319,9 +414,27 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 	font-size:15px;
 	line-height: 17px;
 }
-#updateMetaData,#addMetaData,#addNewMetaDataForSingleDataFile,#btnRegisterFile,
-#registerBulkDataFileBtn,#registerCollectionBtn,#updatePermissions,#addUserMetadataForBulkAssets {
+#updateMetaData,#addMetaData,#addNewMetaDataForSingleDataFile,
+#updatePermissions,#addUserMetadataForBulkAssets {
 	background-color: #E87B05!important;
+	font-family: 'inter_regular';
+}
+
+#performInferencing,#performModelAnalysisBtn {
+	background-color: #E87B05!important;
+    width: 155px;
+    border-radius: 14px;
+    font-family: 'inter_regular';
+    font-size: 15px;
+}
+
+#registerCollectionBtn {
+	background-color: #E87B05!important;
+    color: #fff !important;
+    border-radius: 15px;
+    width: fit-content;
+    font-size: 15px;
+    font-family: 'inter_regular';
 }
 
 #cancelRegisterBtn {
@@ -333,26 +446,14 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
     font-family: 'inter_regular';
 }
 
-#btnRegisterFile {
-    width: 155px;
-    border-radius: 14px;
-    font-family: 'inter_regular';
-    font-size: 15px;
-}
+
 .backToSearch,.backToStatusTab,.backToUpload {
  color: #E87B05;
  font-family: 'inter_regular';
  font-size: 16px;
  font-weight: 900;
 }
-#registerCollectionBtn {
-    color: #fff !important;
-    border-radius: 15px;
-    /*width: 147px;*/
-    width: fit-content;
-    font-size: 15px;
-    font-family: 'inter_regular';
-}
+
 
 .parentCollectionName {
 	/*width: 130%;*/
@@ -750,14 +851,14 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before
     position: fixed;
 }
 
-#doeMetadataFile,#uploadTestInferFile,#uploadTestOutputFile {
+#doeMetadataFile,#uploadTestInferFile,#uploadTestOutputFile,#doeDataFile {
 	color: #000000;
   font-family: 'inter_regular';
   font-size: 15px;
 }
 
 #doeMetadataFile::file-selector-button,#uploadTestInferFile::file-selector-button,
-#uploadTestOutputFile::file-selector-button {
+#uploadTestOutputFile::file-selector-button,#doeDataFile::file-selector-button {
   margin-right:15px;
   box-sizing: border-box;
   height: 36px;
@@ -1102,9 +1203,21 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 	 background-color: transparent !important;
 	    color: #E87B05!important;
 }
+.select2-container--bootstrap4 .select2-results__option--highlighted[aria-selected] {
+	background-color: transparent !important;
+	    color: #E87B05!important;
+}
 
 .select2-container--default .select2-results>.select2-results__options {
 	    background-color: #E4E1E1 !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b  {
+	border-color: #E87B05 transparent transparent transparent !important;
+}
+
+.select2-container--bootstrap4 .select2-selection--single .select2-selection__arrow b {
+	border-color: #E87B05 transparent transparent transparent !important;
 }
 .select2-container *:focus {
         outline: none;
@@ -1369,7 +1482,10 @@ select.form-control:not([size]):not([multiple]){height:35px;}
 .select2-container--bootstrap4 .select2-selection__clear{margin-right:-15px}
 .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__rendered{padding:0px;}
 .select2-container .select2-selection--single .select2-selection__rendered{
-	font-size:14px;padding-bottom: 3px;color:#fff;background-color: #E87B05;
+	font-size:14px;padding-bottom: 3px;
+	/* color:#fff;background-color: #E87B05; */
+		color: #000;
+	background-color: transparent;
 	}
 .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice{ 
     margin: 0px 5px;
@@ -1398,9 +1514,7 @@ padding: 6px;
     display: none;
 }
 
-.select2-container--default .select2-selection--single .select2-selection__arrow b  {
-	border-color: #fff transparent transparent transparent !important;
-}
+
 .select2-container--bootstrap4.select2-container--focus .select2-selection{border-color: #a94442;}
 /*.select2-container .select2-search--inline{float:none;}*/
 .has-error .select2-selection {
@@ -1621,7 +1735,15 @@ footer
 footer{background:#fff; font-size:14px;}
 .list-inline .list-inline-item a{color:#fff;}
 .list-inline .list-inline-item a:hover{color:#00467f;}
-    
+
+#disclosureLink {
+	color:#fff;
+}
+   
+#disclosureLink:hover {
+	color:#00467f;
+} 
+   
 @media (min-width: 992px){
 .modal-lg {
 max-width: 95%;

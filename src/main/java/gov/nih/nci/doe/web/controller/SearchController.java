@@ -30,6 +30,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import gov.nih.nci.doe.web.DoeWebException;
+import gov.nih.nci.doe.web.domain.ModelInfo;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.DoeSearchResult;
 import gov.nih.nci.doe.web.model.KeyValueBean;
@@ -136,19 +137,55 @@ public class SearchController extends AbstractDoeController {
 		List<String> bulkAssetsList = Arrays.asList(bulkAssetsPaths.split(","));
 
 		for (HpcCollectionDTO result : searchResults) {
+
 			String absolutePath = result.getCollection().getAbsolutePath();
+
 			if (StringUtils.isNotEmpty(absolutePath)) {
+
 				String[] list = absolutePath.split("/");
+				// if the list.length is 5, the collection is an Asset.
+				// this validation is done since only assets are display on search results
 				if (list.length == 5) {
+
 					String dataSetPermissionRole = getPermissionRole(user, result.getCollection().getCollectionId(),
 							loggedOnUserPermissions);
-					if ("false".equalsIgnoreCase(search.getIsShowMyCollection())
-							|| StringUtils.isEmpty(search.getIsShowMyCollection())
-							|| ("true".equalsIgnoreCase(search.getIsShowMyCollection())
-									&& !"No Permissions".equalsIgnoreCase(dataSetPermissionRole))) {
+					List<HpcMetadataEntry> selfMetadatEntries = result.getMetadataEntries().getSelfMetadataEntries();
+					String assetType = getAttributeValue("asset_type", selfMetadatEntries, "Asset");
+					// criteria to filter the assets available for predictions and to show
+					// collections available for edit when the checkbox is
+					// clicked from search
 
-						List<HpcMetadataEntry> selfMetadatEntries = result.getMetadataEntries()
-								.getSelfMetadataEntries();
+					Boolean isShow = false;
+					Boolean showGeneratePredictions = false;
+
+					ModelInfo modelInfo = modelInfoService.getModelInfo(result.getCollection().getCollectionName());
+
+					if (Boolean.TRUE.equals(getIsUploader()) && "Model".equalsIgnoreCase(assetType)
+							&& modelInfo != null) {
+
+						showGeneratePredictions = true;
+					}
+
+					if ("false".equalsIgnoreCase(search.getIsShowMyCollection())
+							&& "false".equalsIgnoreCase(search.getShowModelAnalysisResults())) {
+						isShow = true;
+					} else if ("true".equalsIgnoreCase(search.getIsShowMyCollection())
+							&& !"No Permissions".equalsIgnoreCase(dataSetPermissionRole)
+							&& ("true".equalsIgnoreCase(search.getShowModelAnalysisResults())
+									&& Boolean.TRUE.equals(showGeneratePredictions))) {
+						isShow = true;
+					} else if ("true".equalsIgnoreCase(search.getIsShowMyCollection())
+							&& !"No Permissions".equalsIgnoreCase(dataSetPermissionRole)
+							&& "false".equalsIgnoreCase(search.getShowModelAnalysisResults())) {
+						isShow = true;
+					} else if ("true".equalsIgnoreCase(search.getShowModelAnalysisResults())
+							&& Boolean.TRUE.equals(showGeneratePredictions)
+							&& "false".equalsIgnoreCase(search.getIsShowMyCollection())) {
+						isShow = true;
+					}
+
+					if (Boolean.TRUE.equals(isShow)) {
+
 						DoeSearchResult returnResult = new DoeSearchResult();
 
 						String studyPath = result.getCollection().getCollectionParentName();
@@ -184,8 +221,9 @@ public class SearchController extends AbstractDoeController {
 								result.getMetadataEntries().getParentMetadataEntries(), "Study"));
 						returnResult.setDataSetdmeDataId(webServerName + "/searchTab?dme_data_id="
 								+ getAttributeValue("dme_data_id", selfMetadatEntries, "Asset"));
-						returnResult.setAssetType(getAttributeValue("asset_type", selfMetadatEntries, "Asset"));
+						returnResult.setAssetType(assetType);
 						returnResult.setDmeDataId(getAttributeValue("dme_data_id", selfMetadatEntries, "Asset"));
+						returnResult.setIsReferenceDataset(getAttributeValue("is_reference_dataset", selfMetadatEntries, "Asset"));
 						returnResults.add(returnResult);
 					}
 				}

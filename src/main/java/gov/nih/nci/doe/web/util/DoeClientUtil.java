@@ -1,5 +1,6 @@
 package gov.nih.nci.doe.web.util;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -21,6 +22,7 @@ import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectDownloadResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationStatusDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDownloadResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDownloadStatusDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
@@ -30,6 +32,7 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadStatusDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectRegistrationRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDocDataManagementRulesDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcDownloadRetryRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcRegistrationSummaryDTO;
 import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
@@ -1021,6 +1024,111 @@ public class DoeClientUtil {
 			}
 		}
 		session.setAttribute("basePaths", basePaths);
+	}
+
+	public static HpcCollectionDownloadResponseDTO retryCollectionDownloadTask(String token, String retryUrl)
+			throws DoeWebException, IOException {
+		try {
+			WebClient client = DoeClientUtil.getWebClient(retryUrl);
+			client.header("Authorization", "Bearer " + token);
+
+			HpcDownloadRetryRequestDTO requestDTO = new HpcDownloadRetryRequestDTO();
+			requestDTO.setDestinationOverwrite(true);
+
+			Response restResponse = client.invoke("POST", requestDTO);
+
+			if (restResponse.getStatus() == 200) {
+				ObjectMapper mapper = new ObjectMapper();
+				AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
+						new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
+						new JacksonAnnotationIntrospector());
+				mapper.setAnnotationIntrospector(intr);
+				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+				MappingJsonFactory factory = new MappingJsonFactory(mapper);
+				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+				return parser.readValueAs(HpcCollectionDownloadResponseDTO.class);
+
+			} else {
+				String errorMessage = getErrorMessage(restResponse);
+				throw new DoeWebException(errorMessage, restResponse.getStatus());
+
+			}
+
+		} catch (DoeWebException e) {
+			throw new DoeWebException(e.getMessage());
+		}
+
+	}
+
+	public static HpcBulkDataObjectDownloadResponseDTO retryBulkDataObjectDownloadTask(String token, String retryUrl)
+			throws DoeWebException, IOException {
+		try {
+			WebClient client = DoeClientUtil.getWebClient(retryUrl);
+			client.header("Authorization", "Bearer " + token);
+
+			HpcDownloadRetryRequestDTO requestDTO = new HpcDownloadRetryRequestDTO();
+			requestDTO.setDestinationOverwrite(true);
+
+			Response restResponse = client.invoke("POST", requestDTO);
+
+			if (restResponse.getStatus() == 200) {
+				ObjectMapper mapper = new ObjectMapper();
+				AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
+						new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
+						new JacksonAnnotationIntrospector());
+				mapper.setAnnotationIntrospector(intr);
+				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+				MappingJsonFactory factory = new MappingJsonFactory(mapper);
+				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+				return parser.readValueAs(HpcBulkDataObjectDownloadResponseDTO.class);
+
+			} else {
+
+				String errorMessage = getErrorMessage(restResponse);
+				throw new DoeWebException(errorMessage, restResponse.getStatus());
+
+			}
+
+		} catch (DoeWebException e) {
+			throw new DoeWebException(e.getMessage());
+		}
+
+	}
+
+	public static HpcDataObjectDownloadResponseDTO retryDataObjectDownloadTask(String token, String retryUrl)
+			throws DoeWebException, JsonParseException, IOException {
+		try {
+
+			WebClient client = DoeClientUtil.getWebClient(retryUrl);
+			client.header("Authorization", "Bearer " + token);
+
+			HpcDownloadRetryRequestDTO requestDTO = new HpcDownloadRetryRequestDTO();
+			requestDTO.setDestinationOverwrite(true);
+
+			Response restResponse = client.invoke("POST", requestDTO);
+
+			if (restResponse.getStatus() == 200) {
+				ObjectMapper mapper = new ObjectMapper();
+				AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
+						new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
+						new JacksonAnnotationIntrospector());
+				mapper.setAnnotationIntrospector(intr);
+				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+				MappingJsonFactory factory = new MappingJsonFactory(mapper);
+				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+				return parser.readValueAs(HpcDataObjectDownloadResponseDTO.class);
+
+			} else {
+				String errorMessage = getErrorMessage(restResponse);
+				throw new DoeWebException(errorMessage, restResponse.getStatus());
+			}
+
+		} catch (DoeWebException e) {
+			throw new DoeWebException(e.getMessage());
+		}
 	}
 
 	private static Properties appProperties;

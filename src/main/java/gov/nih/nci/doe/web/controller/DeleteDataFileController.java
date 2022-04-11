@@ -33,6 +33,12 @@ public class DeleteDataFileController extends AbstractDoeController {
 			@RequestHeader HttpHeaders headers) throws DoeWebException {
 
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		String userInfo = getLoggedOnUserInfo();
+		
+		if (authToken == null || StringUtils.isEmpty(userInfo)) {
+			return "Not Authorized";
+		}
+
 		if (deletepath == null) {
 			return "Invalid Data object path!";
 		}
@@ -41,7 +47,7 @@ public class DeleteDataFileController extends AbstractDoeController {
 
 			// store the auditing info
 			AuditingModel audit = new AuditingModel();
-			audit.setName(getLoggedOnUserInfo());
+			audit.setName(userInfo);
 			audit.setOperation("delete data file");
 			audit.setStartTime(new Date());
 			audit.setPath(deletepath);

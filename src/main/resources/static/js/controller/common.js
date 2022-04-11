@@ -25,6 +25,13 @@ $(document)
 							$(this).parent().find('.TextField-floatingLabel-qefpP').hide();
 						}
 					});
+					$("#attributeVal").keyup(function(){
+						if ($(this).val()) {
+							$("#resetBtn").show();
+						} else {
+							$("#resetBtn").hide();
+						}
+					});
 
 					$(window).scroll(function() {
 						if ($(this).scrollTop() >= 50) { // If page is
@@ -339,7 +346,8 @@ $(document)
 
 					$("#resetBtn").click(function(e) {
 						$("#attributeVal").val("");
-						$("#searchResultsDiv").hide();
+						$("#resetBtn").hide();
+						populateSearchCriteria('simpleSearch');
 					});
 
 					$(".backToSearchBtn").click(function(e) {
@@ -404,11 +412,6 @@ $(document)
 
 					$("#registerBulkAssets").click(function(e) {
 						registerBulkAssets();
-					});
-
-					$("#doeDataFile").change(function(e) {
-						appendFileName($(this));
-
 					});
 
 					$("#driveAuthlink").click(
@@ -487,6 +490,136 @@ $(document)
 
 				});
 
+
+/* function on change of reference dataset value */
+function onChangeForMetadata(form,isValid, table,selectId) {
+	if(isValid == true) {
+		var value = selectId.value;
+		var metadataAttr = selectId.id;
+		var tableId  = table.id;
+		var controllerAttributeList = [];
+		var controllerValueList = [];
+		var path = $("#path").val();
+		
+		controllerAttributeList.push(metadataAttr);
+		controllerAttributeList.push("asset_type");
+		controllerValueList.push(value);
+		controllerValueList.push("Dataset");
+		if(value != 'Select') {
+			var params= {selectedPath:path , collectionType:'Asset',controllerValue:controllerValueList.join(),refresh:false,controllerAttribute:controllerAttributeList.join()};
+			
+			$.ajax({
+				"url": "/addCollection",
+				"type": "GET",
+				data: params,
+				beforeSend: function() {
+					$("#spinner").show();
+					$("#dimmer").show();
+				},
+				success: function(msg) {
+				   $("#spinner").hide();
+				   $("#dimmer").hide();
+				   postSuccessOnChangeIsReferenceDataset(form,msg,tableId);
+				},
+				error: function(e) {
+					console.log('ERROR: ', e);
+					$("#spinner").hide();
+					$("#dimmer").hide();								
+				}
+			})
+		}
+	}
+	
+}
+function postSuccessOnChangeIsReferenceDataset(form,data, tableId) {
+
+	var displayNames = [];
+	var found = false;
+	
+		$("#"+tableId+ " tbody tr").each(function() {
+			var displayName = $(this).find('td').eq(0).text().trim();
+			displayNames.push(displayName);
+			var x = data.filter(function(x){ return x.displayName == displayName });
+			if(x.length == 0) {
+				/* the removed attributes value should be set to empty */
+				var removedMetadataName = $(this).find('td').eq(1).children().attr('name');
+				$('<input>').attr({type: 'hidden',name: removedMetadataName,value:""}).appendTo(form);
+				$(this).remove();
+			}
+		});
+		
+	  var newElements = data.filter(x => !displayNames.includes(x.displayName));
+	
+	  /* new elements added from new conditional attribute */
+	  if(newElements.length != 0) {
+		  $.each(newElements, function(key, value) {
+			  
+			if(value.validValues != null && value.attrName !='asset_type') {
+				   
+				if(tableId == 'assetBulkMetadataTable') {
+					var width = 'width:99%;';
+				} else {
+					var width = 'width:70%;';
+				}
+				
+				if(value.attrName  == 'applicable_model_name') {
+					   
+				$("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+			       'data-placement="right" title="'+value.description+'"></i></td><td>'+
+			       '<select class="simple-select2" multiple="multiple" placeholder="Required" is_mandatory="'+value.mandatory+'" id="'+value.attrName+'" name="zAttrStr_'+value.attrName+'" ' +
+			       'style="' + width +'""></select></td></tr>');
+				   
+				  var $select = $("#"+value.attrName);
+				   
+				} else {
+					$("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+				    'data-placement="right" title="'+value.description+'"></i></td><td>'+
+				    '<select class="simple-select2" is_mandatory="'+value.mandatory+'" style="' + width +'" id="'+value.attrName+'" name="zAttrStr_'+value.attrName+'" value="'+value.attrValue+'"></select></td></tr>');
+					
+				  var $select = $("#"+value.attrName);
+		    	  if(value.attrValue && value.attrValue != 'None'){
+		    	 	$select.append($('<option></option>').attr('value', value.attrValue).text(value.attrValue));
+		    	  } else {
+		    	    $select.append($('<option></option>').attr('value', 'Select').text('Select'));
+		    	  }
+				} 
+	    	  
+		    	  for (var i = 0; i < value.validValues.length; i++) {
+		    		   $select.append($('<option></option>').attr('value', value.validValues[i].key).text(value.validValues[i].value));
+	              }
+	               
+		    	  if(value.attrValue != null) {
+			            var attrValModifiedList = value.attrValue.split(',');
+			    		$select.select2().val(attrValModifiedList).trigger('change');
+			    	} else {
+			    		$select.select2().trigger('change');
+			    	}
+  	
+		   } else if(value.attrName.indexOf("access_group") == -1) {
+					   			   
+			    var placeholder = value.mandatory == true ? 'Required' : "";
+			    var attrVal = value.attrValue != null ? value.attrValue : "";
+			    
+				   if(tableId == 'assetBulkMetadataTable' && value.attrName != 'asset_name' && value.attrName !='asset_type' &&
+					        value.attrName !='asset_identifier') {
+					   $("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+					        	'data-placement="right" title="'+value.description+'"></i></td><td>'+
+					        	'<input type="text" is_mandatory="'+value.mandatory+'"  value = "' + attrVal + '" class="bulkAssetTextbox" placeholder="'+placeholder+'" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
+					        	'></td></tr>');
+					} else if(tableId != 'assetBulkMetadataTable') {
+						$("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
+					        	'data-placement="right" title="'+value.description+'"></i></td><td>'+
+					        	'<input type="text" is_mandatory="'+value.mandatory+'" value = "' + attrVal + '" placeholder="'+placeholder+'" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
+					        	'style="width:70%;"></td></tr>');
+					}
+				    
+			   }
+		   
+		 });
+	   }
+	
+}
+
 $(document).on('change','.checkboxMultipleDwnlodPaths', function() {
 	var selectedPaths = [];
 	$(".checkboxMultipleDwnlodPaths").each(function(e){
@@ -562,8 +695,8 @@ $(document).on('click', '#clearFilters', function() {
 		$(this).find('.filteritem').prop('checked', false);
 		$(this).find('span').css('color', '#212529');
 	});
-	$("#searchResultsDiv").hide();
 	showFirstFewFields();
+	populateSearchCriteria('simpleSearch');
 });
 
 $(document).on('click', '.sharableLink', function() {

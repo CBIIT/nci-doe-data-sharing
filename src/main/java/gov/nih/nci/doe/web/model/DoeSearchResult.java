@@ -20,6 +20,15 @@ public class DoeSearchResult {
 	private String assetType;
 	private String dmeDataId;
 	private Boolean isBulkAsset;
+	private String isReferenceDataset;
+
+	public String getIsReferenceDataset() {
+		return isReferenceDataset;
+	}
+
+	public void setIsReferenceDataset(String isReferenceDataset) {
+		this.isReferenceDataset = isReferenceDataset;
+	}
 
 	public Boolean getIsBulkAsset() {
 		return isBulkAsset;

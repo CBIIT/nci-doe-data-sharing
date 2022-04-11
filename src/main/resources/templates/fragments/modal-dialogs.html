@@ -4,12 +4,6 @@
 <meta charset="UTF-8">
 <title>Title</title>
 </head>
-<!-- <style>
-.infoTooltip + .popover{
-    max-width: 250px!important;
-    width: 250px!important; 
-}
-</style> -->
 <body>
 	<div th:fragment="modal-dialogs">
 		<div id="forgotPasswordLightbox"
@@ -119,14 +113,13 @@
 					<input type="hidden" id="selectedCollection" />
 
 					<div class="modal-body drilldown-content">
-						<div class="row row-buffer">
+						<div class="row row-buffer" style="padding-top: 0px;">
 							<label for="selectedCollectionName">Selected collection:
 								<span id="selectedCollectionName"></span>
-							</label> <br>
-							<br>
+							</label> <br> <br>
 
 						</div>
-						<div class="row row-buffer">
+						<div class="row row-buffer" style="padding-top: 0px;">
 							<label for="updateAccessGroupsList">Access Groups
 								Permissions <span id="infoTxtForAccessGroups"
 								style="font-size: 14px;"></span>
@@ -245,22 +238,23 @@
 			</div>
 		</div>
 
-		<div id="registerFileModal" class="modal fade bs-example-modal-lg "
-			tabindex="-1" role="dialog" aria-hidden="false">
+		<div id="performInferencingModel"
+			class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog"
+			aria-hidden="false">
 			<div class="modal-dialog modal-md" role="document">
 				<div class="modal-content"
 					style="width: 550px; border-radius: 14px;">
 					<div class="modal-header"
-						style="border-bottom: none; margin-left: 32px; margin-top: 10px;">
+						style="border-bottom: none; margin-left: 29px; margin-top: 10px;">
 						<p class="modal-title">Generate Predictions</p>
-						<button type="button" class="close" data-dismiss="modal" style="margin-top: -30px;"
-							aria-label="Close">
+						<button type="button" class="close" data-dismiss="modal"
+							style="margin-top: -30px;" aria-label="Close">
 							<span aria-hidden="true">×</span>
 						</button>
 					</div>
 
 					<div class="clearfix performInferencingError"
-						style="display: none;margin-left: 37px;width: 90%;margin-bottom: 10px;">
+						style="display: none; text-align: center; margin-bottom: 10px;">
 						<div class="col-md-12"
 							style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
 							<div class="alert alert-danger">
@@ -270,50 +264,56 @@
 					</div>
 
 					<div class="modal-body drilldown-content"
-						style="margin-top: -26px; margin-left: 36px;">
+						style="margin-top: -26px; margin-left: 0px;margin-right: 0px;overflow: hidden;padding: 0px;">
 						<form class="form-horizontal" id="performInferForm" method="POST">
-							<input type="hidden" id="testInputPath" name="testInputPath" /> <input
-								type="hidden" id="modelPath" name="modelPath" />
-							<div class="form-row row row-buffer"
-								style="margin-left: -3px; margin-top: -15px;">
+							<input type="hidden" id="testInputPath" name="testInputPath" />
+							<input type="hidden" id="modelPath" name="modelPath" />
+							<div class="form-row row row-buffer" id="displayDataTypeDiv"
+								style="margin-left: 47px; margin-top: 6px;margin-bottom:-5px;">
 								<div class="form-group">
-									<label style="font-size: 14px;font-family: 'inter_regular';" class="radio-inline">
-									<input type="radio"
+									<label style="font-size: 14px; font-family: 'inter_regular';"
+										class="radio-inline"> <input type="radio"
 										name="uploadFrom" style="transform: translateY(2px);"
-										value="gdcData">&nbsp;&nbsp;Upload GDC Data</label>
+										value="gdcData">&nbsp;&nbsp;Upload GDC Data
+									</label>
 								</div>
 								&nbsp;&nbsp;&nbsp;&nbsp;
 								<div class="form-group">
-									<label style="font-size: 14px;font-family: 'inter_regular';" class="radio-inline">
-									<input type="radio"
+									<label style="font-size: 14px; font-family: 'inter_regular';"
+										class="radio-inline"> <input type="radio"
 										style="transform: translateY(2px);" name="uploadFrom"
-										value="inputFile">&nbsp;&nbsp;Upload Input File</label>
+										value="inputFile">&nbsp;&nbsp;Upload Input File
+									</label>
 								</div>
 							</div>
+							<hr class="generatePredHr">
 							<div class="row row-buffer"
-								style="margin-left: -3px; margin-top: -15px;">
-								<label
-									style="color: #033D6F; font-family: 'inter_regular'; font-size: 14px; font-weight: 500;">Upload
-									file to generate predictions.&nbsp; <span id="tooltipHtml"></span>
+								style="margin-left: 50px; margin-top: -23px;">
+								<label id="labelForInputType"
+									style="font-family: 'inter_regular'; font-size: 14px; font-weight: 500;">Upload
+									input file to generate predictions.&nbsp;<span id="tooltipHtml"></span>
 								</label> <input type="file" style="margin-top: 14px;"
 									id="uploadTestInferFile" name="uploadTestInferFile" />
 							</div>
-							
+
 							<div class="row row-buffer"
-								style="margin-left: -3px; margin-top: -15px;">
-								<label
-									style="color: #033D6F; font-family: 'inter_regular'; font-size: 14px; font-weight: 500;">
-									Optionally upload file to evaluate the model.&nbsp; <span id="outputTooltipHtml"></span>
+								style="margin-left: 0px;margin-top: 10px;
+                                box-sizing: border-box;background-color: #F1F1F1;
+                                padding-left: 51px;padding-bottom: 20px;">
+								<label class="optionalLabel">OPTIONAL</label>
+								<label class="optionalLabelInfo">
+									 Upload outcome file to evaluate the model.&nbsp;<span
+									id="outputTooltipHtml"></span>
 								</label> <input type="file" style="margin-top: 14px;"
 									id="uploadTestOutputFile" name="uploadTestOutputFile" />
 							</div>
-							
+
 						</form>
 						<div class="row row-buffer"
-							style="text-align: center; margin-top: 10px;">
+							style="text-align: center; margin-top: 10px;padding-bottom: 10px;">
 							<div class="col-sm-12" style="margin-bottom: 10px;">
 
-								<button class="btn btn-primary" id="btnRegisterFile">
+								<button class="btn btn-primary" id="performInferencing">
 									Submit</button>
 							</div>
 						</div>
@@ -321,6 +321,59 @@
 				</div>
 			</div>
 		</div>
+
+		<div id="performModelAnalysisModal"
+			class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog"
+			aria-hidden="false">
+			<div class="modal-dialog modal-md" role="document">
+				<div class="modal-content"
+					style="width: 550px; border-radius: 14px;">
+					<div class="modal-header"
+						style="border-bottom: none; margin-left: 32px; margin-top: 10px;">
+						<p class="modal-title">Perform Model Analysis</p>
+						<button type="button" class="close" data-dismiss="modal"
+							style="margin-top: -30px;" aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+					</div>
+
+					<div class="clearfix performModelAnalysisError"
+						style="display: none; margin-left: 37px; width: 90%; margin-bottom: 10px;">
+						<div class="col-md-12"
+							style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
+							<div class="alert alert-danger">
+								<h6 class="performAnalysisMsgError"></h6>
+							</div>
+						</div>
+					</div>
+
+					<div class="modal-body drilldown-content"
+						style="margin-top: -43px; margin-left: 49px;">
+						<form class="form-horizontal" id="performModelAnalysisForm" style="font-family: 'inter_regular';"
+							method="POST">
+							<input type="hidden" id="testInputPath" name="testInputPath" />
+							<input type="hidden" id="outputResultFilePath" name="outputResultFilePath" />
+							
+							<div class="row row-buffer">
+								<label for="selectApplicableModelName">Applicable Model:&nbsp;&nbsp; <select class="simple-select2"
+									id="selectApplicableModelName" name="selectApplicableModelName"
+									style="width: 60%">
+								</select>
+								</label>
+							</div>
+						</form>
+						<div class="row row-buffer"
+							style="text-align: center; margin-top: 10px;margin-right: -6px;">
+							<div class="col-sm-12" style="margin-bottom: 10px;">
+								<button class="btn btn-primary" id="performModelAnalysisBtn">
+									Submit</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
 	</div>
 </body>
 </html>

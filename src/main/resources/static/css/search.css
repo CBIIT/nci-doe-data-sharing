@@ -1,6 +1,3 @@
-.select2-container .select2-selection--single{
-	background-color: #E87B05;
-}
 [class^='select2'] {
   border-radius: 10px !important;
 }

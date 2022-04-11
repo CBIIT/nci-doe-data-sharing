@@ -209,7 +209,7 @@
 
 							<div class="form-group col-lg-12 col-md-12"
 								id="displayDriveUploadDiv" style="display: none;">
-								<div th:if="${authorized != null}" class="alert-success"
+								<div th:if="${authorized != null}" id="driveAuthorisedMsg" class="alert-success"
 									style="margin-left: 13px">
 									<i class="fa fa-check">&nbsp;</i>Access Token successfully
 									generated
@@ -287,7 +287,7 @@
 		</div>
 		<div class="form-group col-lg-8 col-md-8" id="registerFileBtnsDiv"
 			style="text-align: center; display: none; margin-top: 35px; margin-bottom: 15px; padding: 5px; margin-left: 65px;">
-			<input type="button" value="Upload" class="btn btn-primary"
+			<input type="button" value="Upload" disabled="true" class="btn"
 				id="registerBulkDataFileBtn">
 		</div>
 	</div>

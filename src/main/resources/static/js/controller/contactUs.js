@@ -65,7 +65,9 @@ function callContactUsFormValidation() {
 						invokeAjax('/contactUs', 'POST', JSON.stringify(contactusForm), postContactUsFunction,
 								postContactUsFailure, null, 'text');
 					} else {
-						alert("Please verify reCAPTCHA");
+						//alert("Please verify reCAPTCHA");
+						$(".errorBlock").show();
+						$(".errorMsg").html("Please verify reCAPTCHA");
 						$('#btnSubmitEmail').prop('disabled', false);
 						return false;
 					}

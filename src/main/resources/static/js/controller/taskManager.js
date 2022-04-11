@@ -23,6 +23,17 @@ $(document).ready(function () {
 	
 });
 
+$("#showAll").on('change', function() {
+	if ($(this).is(':checked')) {
+		$("#showAll").val("true");
+	} else {
+		$("#showAll").val("false");
+	}
+	$('#manageTasksTable').dataTable().fnDestroy();
+	$("#transferTaskStatus").click();
+});
+
+
 function refreshTaskDatatable(table) {
     console.log("refresh datatable");
     if (!$.fn.DataTable.isDataTable('#'+table)) {
@@ -39,6 +50,12 @@ function refreshTaskDatatable(table) {
         console.log(t);
         t.ajax.reload(null, false);
     }
+    
+    if(isAdmin == true && table == 'manageTasksTable') {
+    	$("#displayAllDiv").show();
+	} else {
+		$("#displayAllDiv").hide();
+	}
 }
 
 
@@ -147,6 +164,7 @@ function dataTableInitInferenceTaskManager() {
 }
 
 function dataTableInitTaskManager() {
+	var isVisible = $("#showAll").val() == "true" ? true: false;
     $('#manageTasksTable').DataTable({
         "paging": true,
         "order": [[2, 'desc']],
@@ -156,7 +174,7 @@ function dataTableInitTaskManager() {
         "ajax": {
             "url": "/tasks",
             "type": "GET",
-            "data": {userId:loggedOnUserInfo},
+            "data": {showAll:isVisible},
             "dataSrc": function (data) {
                 return data;
             },
@@ -213,7 +231,12 @@ function dataTableInitTaskManager() {
         },
         responsivePriority: 5
         },
-
+        
+        {"data": "userId", "render": function (data, type, row) {
+            return renderUserId(data, type, row);
+        },
+        responsivePriority: 7
+        },
         {"data": "taskType", "defaultContent": "",responsivePriority: 6},
         {"data": "transferStatus", "defaultContent": "",responsivePriority: 2},
         ],
@@ -223,8 +246,8 @@ function dataTableInitTaskManager() {
             {className: "td_class_2", "targets": [1]},
             {className: "td_class_2", "targets": [2]},
             {className: "td_class_2", "targets": [3]},
-            {className: "td_class_2", "targets": [4]},
             {className: "td_class_2", "targets": [5]},
+            {className: "td_class_2", "targets": [4],"visible" : isVisible},            
             {className: "td_class_5", "targets": [-1]},
             {type: "date", "targets": [2,3]}
         ],
@@ -247,6 +270,10 @@ function dataTableInitTaskManager() {
     });
 }
 
+
+function renderUserId(data, type, row) {
+	return row.userId;
+}
 
 function downloadFunction(path) {
 	var fileName = path.substring(path.lastIndexOf("/") + 1 ,path.length);
@@ -323,7 +350,8 @@ function retryUpload(taskId,taskName) {
 		 success : function(msg) {
 			 $("#spinner").hide();
 	         $("#dimmer").hide();
-	         refreshTaskManagerDataTable();		 
+	         bootbox.alert(msg);
+	         refreshTaskDatatable('manageTasksTable');		 
 		 },
 		error : function(e) {
 			$("#spinner").hide();
@@ -346,7 +374,8 @@ function retryDownload(taskId,taskName,taskType) {
 		 success : function(msg) {
 			 $("#spinner").hide();
 	         $("#dimmer").hide();
-	         refreshTaskManagerDataTable();		 
+	         bootbox.alert(msg);
+	         refreshTaskDatatable('manageTasksTable');		 
 		 },
 		error : function(e) {
 			$("#spinner").hide();

@@ -8,6 +8,15 @@ public class DoeUsersModel {
 	private String institution;
 	private Boolean isWrite;
 	private String programName;
+	private Boolean isAdmin;
+
+	public Boolean getIsAdmin() {
+		return isAdmin;
+	}
+
+	public void setIsAdmin(Boolean isAdmin) {
+		this.isAdmin = isAdmin;
+	}
 
 	public String getFirstName() {
 		return firstName;

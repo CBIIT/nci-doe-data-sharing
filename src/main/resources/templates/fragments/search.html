@@ -13,14 +13,15 @@
                                 <input type="hidden" th:value="${doi}" id="doi"/>
                                  <input type="hidden" th:value="${searchQuery}" id="searchQuery"/>
                                  <input type="hidden" th:value="${returnToSearch}" id="returnToSearch"/>
-                                 <input type="hidden" id="returnToSearchMyCollection"/>
+                                 <input type="hidden" id="returnToSearchMyCollection" value="false"/>
+                                 <input type="hidden" id="showModelAnalysisResults" value="false"/>
                                  <input type="text" placeholder="Search MoDaC" style="
                                    margin-top:10px;border: 2px solid #E87B05;
                                   border-radius: 15px;height: 42px;font-size: 13px;
                                   font-weight: 550;padding-left: 20px;" id="attributeVal" class="form-control">
                                 
                                  <span id="resetBtn" data-toggle="tooltip" title="Reset" 
-                                  style="position: absolute;
+                                  style="position: absolute;display:none;
                                   top: 17px;right: 66px;
                                   height: -7px;"><img src="/images/cancel-X-grey.svg" style="width:11px;"/></span>
                             

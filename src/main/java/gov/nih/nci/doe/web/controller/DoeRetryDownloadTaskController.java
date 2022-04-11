@@ -3,7 +3,8 @@ package gov.nih.nci.doe.web.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.StringUtils;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
@@ -12,28 +13,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import gov.nih.nci.doe.web.model.AjaxResponseBody;
-import gov.nih.nci.doe.web.model.Views;
-import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
-import gov.nih.nci.hpc.domain.datatransfer.HpcCollectionDownloadTaskItem;
 import gov.nih.nci.hpc.domain.datatransfer.HpcDownloadTaskType;
-import gov.nih.nci.hpc.domain.datatransfer.HpcFileLocation;
-import gov.nih.nci.hpc.domain.datatransfer.HpcGlobusDownloadDestination;
+
 import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectDownloadResponseDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDownloadStatusDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadStatusDTO;
-import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectDownloadRequestDTO;
-import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDownloadResponseDTO;
+
+import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadResponseDTO;
 
 @Controller
 @EnableAutoConfiguration
 @RequestMapping("/downloadtask")
 public class DoeRetryDownloadTaskController extends AbstractDoeController {
-
-	@Value("${gov.nih.nci.hpc.server.bulkregistration}")
-	private String registrationServiceURL;
 
 	@Value("${gov.nih.nci.hpc.server.download}")
 	private String dataObjectsDownloadServiceURL;
@@ -44,104 +36,85 @@ public class DoeRetryDownloadTaskController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.dataObject.download}")
 	private String dataObjectDownloadServiceURL;
 
-	@Value("${gov.nih.nci.hpc.server.v2.dataObject}")
-	private String dataObjectServiceURL;
-
-	@Value("${gov.nih.nci.hpc.server.v2.download}")
-	private String downloadServiceURL2;
-
-	@Autowired
-	TaskManagerService taskManagerService;
-
-	@JsonView(Views.Public.class)
 	@PostMapping
 	@ResponseBody
 	public String retryDownload(@RequestParam String taskName, @RequestParam String taskId,
 			@RequestParam String taskType, HttpSession session, HttpServletRequest request) {
+
+		log.info("retry download for task id" + taskId + " and task name: " + taskName + " and task type: " + taskType);
 		AjaxResponseBody result = new AjaxResponseBody();
 		try {
 			String authToken = null;
 			String loggedOnUser = getLoggedOnUserInfo();
 			authToken = (String) session.getAttribute("hpcUserToken");
 
-			if (authToken == null) {
-				result.setMessage("Invalid user session, expired. Login again.");
-				return result.getMessage();
+			if (StringUtils.isEmpty(loggedOnUser) || StringUtils.isEmpty(authToken)) {
+				return "redirect:/loginTab";
 			}
-			HpcBulkDataObjectDownloadRequestDTO dto = new HpcBulkDataObjectDownloadRequestDTO();
-			if (taskType.equalsIgnoreCase(HpcDownloadTaskType.COLLECTION.name())
-					|| taskType.equalsIgnoreCase(HpcDownloadTaskType.DATA_OBJECT_LIST.name())
-					|| taskType.equalsIgnoreCase(HpcDownloadTaskType.COLLECTION_LIST.name())) {
 
-				String queryServiceURL = null;
-				if (taskType.equalsIgnoreCase(HpcDownloadTaskType.COLLECTION.name()))
-					queryServiceURL = collectionDownloadServiceURL + "/" + taskId;
-				else
-					queryServiceURL = dataObjectsDownloadServiceURL + "/" + taskId;
+			if (taskType.equals(HpcDownloadTaskType.DATA_OBJECT_LIST.name())
+					|| taskType.equals(HpcDownloadTaskType.COLLECTION_LIST.name())) {
 
-				HpcCollectionDownloadStatusDTO downloadTask = DoeClientUtil.getDataObjectsDownloadTask(authToken,
-						queryServiceURL);
-				if (downloadTask.getFailedItems() != null && !downloadTask.getFailedItems().isEmpty()) {
-					for (HpcCollectionDownloadTaskItem item : downloadTask.getFailedItems())
-						dto.getDataObjectPaths().add(item.getPath());
-					HpcGlobusDownloadDestination globusDownloadDestination = new HpcGlobusDownloadDestination();
-					HpcFileLocation location = downloadTask.getDestinationLocation();
-					globusDownloadDestination.setDestinationLocation(location);
-					globusDownloadDestination.setDestinationOverwrite(true);
-					dto.setGlobusDownloadDestination(globusDownloadDestination);
-				}
-				if (downloadTask.getCanceledItems() != null && !downloadTask.getCanceledItems().isEmpty()) {
-					for (HpcCollectionDownloadTaskItem item : downloadTask.getCanceledItems())
-						dto.getDataObjectPaths().add(item.getPath());
-					HpcGlobusDownloadDestination globusDownloadDestination = new HpcGlobusDownloadDestination();
-					HpcFileLocation location = downloadTask.getDestinationLocation();
-					globusDownloadDestination.setDestinationLocation(location);
-					globusDownloadDestination.setDestinationOverwrite(true);
-					dto.setGlobusDownloadDestination(globusDownloadDestination);
-				}
+				String queryServiceURL = dataObjectsDownloadServiceURL + "/" + taskId + "/retry";
+
 				try {
-					HpcBulkDataObjectDownloadResponseDTO downloadDTO = DoeClientUtil.downloadFiles(authToken,
-							downloadServiceURL2, dto);
+					HpcBulkDataObjectDownloadResponseDTO downloadDTO = DoeClientUtil
+							.retryBulkDataObjectDownloadTask(authToken, queryServiceURL);
 					if (downloadDTO != null) {
-						if (loggedOnUser != null) {
-							taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", taskType, taskName,
-									getLoggedOnUserInfo());
-						}
-						result.setMessage("Download request successful. Task ID: " + downloadDTO.getTaskId());
+						log.info("the task id after retry is: " + downloadDTO.getTaskId());
+						taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", taskType, taskName,
+								getLoggedOnUserInfo());
+						result.setMessage(
+								"Retry bulk download request successful. Task Id: " + downloadDTO.getTaskId());
+					}
+				} catch (Exception e) {
+					log.error("Download request is not successful: " + e);
+					result.setMessage("Retry bulk download request is not successful: " + e.getMessage());
+				}
+
+			} else if (taskType.equals(HpcDownloadTaskType.COLLECTION.name())) {
+				String queryServiceURL = collectionDownloadServiceURL + "/" + taskId + "/retry";
+
+				try {
+					HpcCollectionDownloadResponseDTO downloadDTO = DoeClientUtil.retryCollectionDownloadTask(authToken,
+							queryServiceURL);
+					if (downloadDTO != null) {
+						log.info("the task id after retry is: " + downloadDTO.getTaskId());
+						taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", taskType, taskName,
+								getLoggedOnUserInfo());
+						result.setMessage("Retry request successful. Task Id: " + downloadDTO.getTaskId());
 					}
 
 				} catch (Exception e) {
 					log.error("Download request is not successful: " + e);
-					result.setMessage("Download request is not successful: " + e.getMessage());
+					result.setMessage(e.getMessage());
 				}
-				return result.getMessage();
+			} else if (taskType.equals(HpcDownloadTaskType.DATA_OBJECT.name())) {
+				String serviceURL = dataObjectDownloadServiceURL + "/" + taskId + "/retry";
 
-			} else if (taskType.equalsIgnoreCase(HpcDownloadTaskType.DATA_OBJECT.name())) {
-				String queryServiceURL = dataObjectDownloadServiceURL + "/" + taskId;
-				HpcDataObjectDownloadStatusDTO downloadTask = DoeClientUtil.getDataObjectDownloadTask(authToken,
-						queryServiceURL);
-				String serviceURL = dataObjectServiceURL + downloadTask.getPath() + "/download";
-				if (downloadTask.getResult() != null && downloadTask.getResult().value().equals("COMPLETED")) {
-					HpcDownloadRequestDTO downloadDTO = new HpcDownloadRequestDTO();
-					HpcGlobusDownloadDestination destination = new HpcGlobusDownloadDestination();
-					HpcFileLocation location = downloadTask.getDestinationLocation();
-					destination.setDestinationLocation(location);
-					downloadDTO.setGlobusDownloadDestination(destination);
-					AjaxResponseBody responseBody = DoeClientUtil.downloadDataFile(authToken, serviceURL, downloadDTO,
-							HpcDownloadTaskType.DATA_OBJECT.name());
-					if (loggedOnUser != null) {
-						taskManagerService.saveTransfer(responseBody.getMessage(), "Download", taskType, taskName,
+				try {
+					HpcDataObjectDownloadResponseDTO downloadDTO = DoeClientUtil.retryDataObjectDownloadTask(authToken,
+							serviceURL);
+					if (downloadDTO != null) {
+
+						log.info("the task id after retry is: " + downloadDTO.getTaskId());
+						taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", taskType, taskName,
 								getLoggedOnUserInfo());
-					}
-					return responseBody.getMessage();
-				}
+						result.setMessage("Retry request successful. Task Id: " + downloadDTO.getTaskId());
 
+					}
+				} catch (Exception e) {
+					log.error("Download request is not successful: " + e);
+					result.setMessage(e.getMessage());
+				}
 			}
+
 		} catch (Exception e) {
 			log.error("Download request is not successful: " + e);
 			result.setMessage("Download request is not successful: " + e.getMessage());
-			return result.getMessage();
+
 		}
-		return null;
+		log.info("the return result message for the user is : " + result.getMessage());
+		return result.getMessage();
 	}
 }

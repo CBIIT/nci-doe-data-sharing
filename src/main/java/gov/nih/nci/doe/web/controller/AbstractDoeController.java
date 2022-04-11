@@ -44,6 +44,7 @@ import com.fasterxml.jackson.databind.MappingJsonFactory;
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.domain.LookUp;
 import gov.nih.nci.doe.web.domain.MetaDataPermissions;
+import gov.nih.nci.doe.web.domain.ModelInfo;
 import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeResponse;
 import gov.nih.nci.doe.web.model.DoeSearch;
@@ -58,6 +59,8 @@ import gov.nih.nci.doe.web.service.InferencingTaskService;
 import gov.nih.nci.doe.web.service.LookUpService;
 import gov.nih.nci.doe.web.service.MailService;
 import gov.nih.nci.doe.web.service.MetaDataPermissionsService;
+import gov.nih.nci.doe.web.service.ModelInfoService;
+import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQueryOperator;
@@ -147,9 +150,6 @@ public abstract class AbstractDoeController {
 	@Value("${asset.bulk.collections}")
 	public String bulkAssetsPaths;
 
-	@Value("${predictions.display.assets}")
-	public String predictionPaths;
-
 	@Value("${google.captcha.sitekey}")
 	public String siteKey;
 
@@ -161,6 +161,12 @@ public abstract class AbstractDoeController {
 
 	@Autowired
 	InferencingTaskService inferencingTaskService;
+
+	@Autowired
+	ModelInfoService modelInfoService;
+
+	@Autowired
+	TaskManagerService taskManagerService;
 
 	protected Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -183,7 +189,7 @@ public abstract class AbstractDoeController {
 		if (ex.getStatusCode() != null) {
 			response.setStatus(ex.getStatusCode());
 		} else {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
 		mailService.sendErrorEmail(ex, getLoggedOnUserInfo());
 		response.setHeader("Content-Type", "application/json");
@@ -200,6 +206,19 @@ public abstract class AbstractDoeController {
 			return auth.getName().trim();
 		}
 		return null;
+	}
+
+	@ModelAttribute("isAdmin")
+	public Boolean getIsAdmin() {
+		String emailAddr = getLoggedOnUserInfo();
+		if (!StringUtils.isEmpty(emailAddr)) {
+			DoeUsersModel user = authenticateService.getUserInfo(emailAddr);
+			if (user != null && Boolean.TRUE.equals(user.getIsAdmin())) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	@ModelAttribute("downtimeMessage")
@@ -848,6 +867,15 @@ public abstract class AbstractDoeController {
 				String assetType = getAttributeValue("asset_type",
 						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
 
+				String isReferenceDataset = getAttributeValue("is_reference_dataset",
+						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
+
+				String resultFileName = getAttributeValue("outcome_file_name",
+						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
+
+				String applicableModelName = getAttributeValue("applicable_model_name",
+						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
+
 				List<KeyValueBean> selfMetadata = getUserMetadata(
 						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset", systemAttrs);
 
@@ -855,12 +883,6 @@ public abstract class AbstractDoeController {
 					model.addAttribute("returnToSearch", true);
 				}
 
-				if (StringUtils.isNotEmpty(predictionPaths) && Boolean.TRUE.equals(getIsUploader())) {
-					List<String> predictionPathsList = Arrays.asList(predictionPaths.split(","));
-					Boolean showGeneratePredictions = predictionPathsList.stream()
-							.anyMatch(s -> collection.getCollection().getCollectionName().equalsIgnoreCase(s));
-					model.addAttribute("showGeneratePredictions", showGeneratePredictions);
-				}
 				model.addAttribute("assetType", assetType);
 				model.addAttribute("dme_Data_Id", dme_Data_Id);
 				model.addAttribute("asset_Identifier", asset_Identifier);
@@ -869,29 +891,45 @@ public abstract class AbstractDoeController {
 				model.addAttribute("assetMetadata", selfMetadata);
 				model.addAttribute("studyName", studyName);
 				model.addAttribute("progName", progName);
+				model.addAttribute("isReferenceDataset", isReferenceDataset);
+				model.addAttribute("resultFileName", resultFileName);
+				model.addAttribute("applicableModelName", applicableModelName);
+
 				model.addAttribute("assetPath", collection.getCollection().getCollectionName());
 				model.addAttribute("assetPermission", assetPermission);
 				model.addAttribute("assetLink", webServerName + "/assetDetails?dme_data_id=" + dme_Data_Id);
 
-				// verify if prediction folder exists, else hide the generate predictions sub
-				// tab
-				try {
-					String folderPath = collection.getCollection().getCollectionName() + "/Predictions_" + user;
-					HpcCollectionListDTO folderCollections = DoeClientUtil.getCollection(authToken, serviceURL,
-							folderPath, false);
+				ModelInfo modelInfo = modelInfoService.getModelInfo(collection.getCollection().getCollectionName());
+				if (Boolean.TRUE.equals(getIsUploader())
+						&& (modelInfo != null || "Yes".equalsIgnoreCase(isReferenceDataset))) {
 
-					if (folderCollections != null) {
-						String folderPermissions = getPermissionRole(user,
-								folderCollections.getCollections().get(0).getCollection().getCollectionId(),
-								loggedOnUserPermissions);
-						if ("Owner".equalsIgnoreCase(folderPermissions)) {
-							model.addAttribute("showGeneratePredTab", true);
+					// show generate predictions button
+					model.addAttribute("showGeneratePredictions", modelInfo != null ? true : false);
+					model.addAttribute("isExternalDataSetSupported",
+							modelInfo != null ? modelInfo.getIsExternalDatasetSupported() : false);
+
+					// verify if prediction folder exists, else hide the generate predictions sub
+					// tab
+
+					try {
+						String folderPath = collection.getCollection().getCollectionName() + "/Predictions_" + user;
+						HpcCollectionListDTO folderCollections = DoeClientUtil.getCollection(authToken, serviceURL,
+								folderPath, false);
+
+						if (folderCollections != null) {
+							String folderPermissions = getPermissionRole(user,
+									folderCollections.getCollections().get(0).getCollection().getCollectionId(),
+									loggedOnUserPermissions);
+							if ("Owner".equalsIgnoreCase(folderPermissions)) {
+								model.addAttribute("showGeneratePredTab", true);
+							}
+
 						}
-
+					} catch (Exception e) {
+						// collection does not exist
+						log.error("folder collection does not exist for Asset: " + asset_Identifier);
 					}
-				} catch (Exception e) {
-					// collection does not exist
-					log.error("folder collection does not exist for Asset: " + asset_Identifier);
+
 				}
 
 			} else {

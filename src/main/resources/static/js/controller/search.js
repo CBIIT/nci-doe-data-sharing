@@ -23,6 +23,10 @@ $(document).ready(function () {
 		 var search = $("#searchQuery").val();
 		 var list= JSON.parse(search);
 		 var isShowMyCollection = list.isShowMyCollection;
+		 var showModelAnalysisResults = list.showModelAnalysisResults;
+		 if(showModelAnalysisResults) {
+			 $("#showModelAnalysisResults").val(showModelAnalysisResults);
+		 }
 		 if(isShowMyCollection) {
 			 $("#returnToSearchMyCollection").val(isShowMyCollection);
 		 }
@@ -33,6 +37,7 @@ $(document).ready(function () {
 				 var attrval = attrVal[i];
 				 var newAttrVal = attrval.replaceAll('%', '');
 				 $("#attributeVal").val(newAttrVal);
+				 $("#resetBtn").show();
 			 } else {
 				 var attrName = list.attrName[i];
 				 var attrVal = attrVal[i];
@@ -141,6 +146,8 @@ function populateSearchCriteria(searchType) {
 		search_criteria_json.iskeyWordSearch = iskeyWordSearch.join();
 		search_criteria_json.operator = operators.join();
 		var myCollection = $("#returnToSearchMyCollection").val();
+		var showModelAnalysisResults = $("#showModelAnalysisResults").val();
+		search_criteria_json.showModelAnalysisResults = showModelAnalysisResults;
 		search_criteria_json.isShowMyCollection = myCollection;
 		refreshDataTable();
 }
@@ -156,17 +163,32 @@ function refreshDataTable() {
         t.ajax.reload(null, true);
        
     }
-    if(isVisible && !$("#myCollections").is(':visible')) {
+    if(isVisible && !$("#myCollections").is(':visible') && !$("#modelAnalysis").is(':visible')) {
     	var myCollection = $("#returnToSearchMyCollection").val();
+    	var modelAnalysis = $("#showModelAnalysisResults").val();
+    	
+    	if(modelAnalysis && modelAnalysis == "true") {
+    		$("div.toolbar").prepend('<div style="float: left;">'+
+             	   '<label>&nbsp;&nbsp;<input type="checkbox" checked="true" id="modelAnalysis" style="transform: translateY(1.5px);">'+
+            	   '&nbsp;&nbsp;Models Available For Analysis</label></div>');
+    	} else {
+    		 
+    		 $("div.toolbar").prepend('<div style="float: left;">'+
+                	   '<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id="modelAnalysis" style="transform: translateY(1.5px);">'+
+               	   '&nbsp;&nbsp;Models Available For Analysis</label></div>');
+    	}
+    	
     	if(myCollection && myCollection == "true") {
     		 $("div.toolbar").prepend('<div style="float: left;">'+
               	   '<label><input type="checkbox" checked="true" id="myCollections" style="transform: translateY(1.5px);">'+
-             	   '&nbsp;&nbsp;Display Collections I Can Edit</label></div>');
+             	   '&nbsp;&nbsp;Collections I Can Edit</label></div>');
     	} else {
-    		 $("div.toolbar").prepend('<div style="float: left;">'+
-              	   '<label><input type="checkbox" id="myCollections" style="transform: translateY(1.5px);">'+
-             	   '&nbsp;&nbsp;Display Collections I Can Edit</label></div>');
-    	}
+    		$("div.toolbar").prepend('<div style="float: left;">'+
+               	   '<label><input type="checkbox" id="myCollections" style="transform: translateY(1.5px);">'+
+              	   '&nbsp;&nbsp;Collections I Can Edit</label></div>');
+    	} 
+    	
+    	
     	
     }
    
@@ -192,6 +214,7 @@ function dataTableInit(isVisible) {
                d.iskeyWordSearch = search_criteria_json.iskeyWordSearch;
                d.operator = search_criteria_json.operator;
                d.isShowMyCollection = search_criteria_json.isShowMyCollection;
+               d.showModelAnalysisResults = search_criteria_json.showModelAnalysisResults;
             },
             "dataSrc": function (data) {
                 return data;
@@ -232,6 +255,17 @@ function dataTableInit(isVisible) {
 				}
 				populateSearchCriteria('displayAllResults');
 			});
+						
+			$("#modelAnalysis").on('change', function() {
+				if ($(this).is(':checked')) {
+					$(this).prop('checked', true);
+					$("#showModelAnalysisResults").val("true");
+				} else {
+					$(this).prop('checked', false);
+					$("#showModelAnalysisResults").val("false");
+				}
+				populateSearchCriteria('displayAllResults');
+			});
        	 
         	$("#searchResultTable thead").remove();
         	if(isVisible) {
@@ -257,6 +291,7 @@ function dataTableInit(isVisible) {
         	   var fileName = $(this).attr('data-fileName');
         	   var selectedCollection = $(this).attr('selectedCollection');
         	   var assetType =  $(this).attr('asset_type');
+        	   var isReferenceDataset = $(this).attr('is_reference_dataset');
 
    				$("#userMetaData tbody").html("");
    				$("#path").val(metaDataPath);
@@ -273,8 +308,15 @@ function dataTableInit(isVisible) {
    				} else {
    					$("#updatePermissions").hide();
    				}
-     			 
-   				var params1= {selectedPath:metaDataPath,collectionType:selectedCollection,controllerValue:assetType,refresh:false,controllerAttribute:'asset_type'};
+   				var controllerAttributeList = [];
+   				var controllerValueList = [];
+   				
+   				controllerAttributeList.push("is_reference_dataset");
+   				controllerAttributeList.push("asset_type");
+   				controllerValueList.push(isReferenceDataset);
+   				controllerValueList.push(assetType);
+   				
+   				var params1= {selectedPath:metaDataPath,collectionType:selectedCollection,controllerValue:controllerValueList.join(),refresh:false,controllerAttribute:controllerAttributeList.join()};
    				invokeAjax('/addCollection','GET',params1,constructEditCollectionMetadata,null,null,null);
         	   
            });
@@ -410,7 +452,7 @@ function renderDataSetName(data, type, row){
 		}
 		
 		if(row.dataSetPermissionRole && row.dataSetPermissionRole != 'No Permissions') {
-			editDataSetHtml = "<span class='editCollectionMetadata' asset_type = "+ row.assetType+" selectedCollection = 'Asset' " +
+			editDataSetHtml = "<span class='editCollectionMetadata' asset_type = " + row.assetType + " is_reference_dataset = " + row.isReferenceDataset + " selectedCollection = 'Asset' " +
 					          "data-fileName = '" + row.dataSetName + "' collectionId  = '" + row.dataSetCollectionId + "' " +
 			                  "permissions_role = '" + row.dataSetPermissionRole + "'" +
 			                  " metadata_path  = '" + row.dataSetPath+ "'>" +

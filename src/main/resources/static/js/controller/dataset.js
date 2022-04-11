@@ -370,7 +370,7 @@ function dataTableInitDataSet(isVisible) {
 		{
 			"data" : "download",
 			"render" : function(data, type, row) {
-				return renderDownload(data, type, row);
+				return renderActions(data, type, row);
 			},
 			responsivePriority : 3
 		},
@@ -681,7 +681,7 @@ $('#dataSetTable tbody').on('click','a.detail-control',function() {
 								}
 
 								if (accessgroups && accessgroups.indexOf("public") == -1 && permissions
-									&& permissions == 'Owner') {
+									&& permissions == 'Owner' && value.isFolder == false) {
 
 									nestedEditPermissionsHtml += "<span style='border: transparent;' data-filePath = '"
 										+ value.path
@@ -689,6 +689,15 @@ $('#dataSetTable tbody').on('click','a.detail-control',function() {
 										+ "<img src='images/Delete.png' data-toggle='tooltip' title='Delete File' th:src='@{/images/Delete.png}' "
 										+ "style='width:15px;' alt='Delete File'></span>";
 								}
+								
+								if(value.isFolder && value.isFolder == true) {
+									nestedEditPermissionsHtml += "<span style='border: transparent;' coll_path = '"
+										+ value.path
+										+ "' coll_name='"+ value.name +"' class='btn btn-link btn-sm deleteCollectionBtn'>"
+										+ "<img src='images/Delete.png' data-toggle='tooltip' title='Delete Collection' th:src='@{/images/Delete.png}' "
+										+ "style='width:15px;' alt='Delete Collection'></span>";
+								}
+								
 								if(loggedOnUserInfo) {
 									tableHtml +=
 										"<tr><td style='background-color: #d3d3d347 !important;width: 15%;'>"+selectHtml+"</td>"
@@ -839,7 +848,7 @@ function renderFileSize(data, type, row) {
 
 }
 
-function renderDownload(data, type, row) {
+function renderActions(data, type, row) {
 
 	var downdloadFileName = null;
 	var path = row.path;
@@ -872,7 +881,7 @@ function renderDownload(data, type, row) {
 					+ downdloadFileName
 					+ "' >"
 					+ "<img src='images/Edit-FileMetadata.png' data-toggle='tooltip' title='Edit File Metadata' th:src='@{/images/Edit-FileMetadata.png}' "
-					+ "style='width:17px;' alt='edit collection'></span>";
+					+ "style='width:17px;' alt='edit file metadata'></span>";
 		}
 
 	}
@@ -918,6 +927,13 @@ function renderDownload(data, type, row) {
 				+ "' class='btn btn-link btn-sm deleteDataFileBtn'>"
 				+ "<img src='images/Delete.png' data-toggle='tooltip' title='Delete File' th:src='@{/images/Delete.png}' "
 				+ "style='width:15px;' alt='Delete File'></span>";
+	} 
+	if(row.isFolder == true) {
+		html += "<span style='border: transparent;' coll_path = '"
+			+ path
+			+ "' coll_name='"+ row.name +"' class='btn btn-link btn-sm deleteCollectionBtn'>"
+			+ "<img src='images/Delete.png' data-toggle='tooltip' title='Delete Collection' th:src='@{/images/Delete.png}' "
+			+ "style='width:15px;' alt='Delete Collection'></span>";
 	}
 
 	return html;
@@ -938,6 +954,59 @@ function renderGeneratePredDownload(data, type, row) {
 
 	return html;
 }
+
+
+
+$('#dataSetTable tbody').on('click', '.deleteCollectionBtn', function() {
+	var path = $(this).attr('coll_path');
+	var name = $(this).attr('coll_name');
+	   bootbox.confirm({
+		    message: "Are you sure you want to delete " + name + "?",
+		    buttons: {
+		        confirm: {
+		            label: 'Yes',
+		            className: 'btn-success'
+		        },
+		        cancel: {
+		            label: 'No',
+		            className: 'btn-danger'
+		        }
+		    },
+		    callback: function (result) {
+		    	if(result == true) {
+		           var params = {collPath:path};
+		       	$.ajax({
+					 type : "POST",
+				     url : "/deleteCollection",
+				     contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+				     dataType: 'text',
+					 data : params,
+					 beforeSend: function () {
+				    	   $("#spinner").show();
+				           $("#dimmer").show();
+				       },
+					 success : function(msg) {
+						 $("#spinner").hide();
+				         $("#dimmer").hide();
+						 console.log('SUCCESS: ', msg);
+						 if (msg != "SUCCESS") {
+								return bootbox.alert(msg);
+							} else {
+								refreshTaskDatatable('dataSetTable');
+							}
+						 
+					 },
+					error : function(e) {
+						 $("#spinner").hide();
+				         $("#dimmer").hide();
+				         console.log('ERROR: ', e);
+				         returnErrorMessage(e);
+					}
+				});
+		    	}   
+		    }
+		});
+});
 
 $('#dataSetTable tbody').on('click', '.deleteDataFileBtn', function() {
 	var path = $(this).attr('data-filePath');
@@ -972,7 +1041,9 @@ $('#dataSetTable tbody').on('click', '.deleteDataFileBtn', function() {
 						$("#spinner").hide();
 						$("#dimmer").hide();
 						console.log('SUCCESS: ', msg);
-						if (msg != "SUCCESS") {
+						if(msg && msg == 'Not Authorized') {
+							 location.replace("/loginTab");
+						} else if (msg != "SUCCESS") {
 							return bootbox.alert(msg);
 						} else {
 							refreshTaskDatatable('dataSetTable');

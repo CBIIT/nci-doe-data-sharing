@@ -7,13 +7,14 @@ public class DoeMetadataAttrEntry {
 	private String attrValue;
 	private String attrUnit;
 	private boolean systemAttr;
-	private List<String> validValues = null;
+	private List<KeyValueBean> validValues = null;
 	private String defaultValue = null;
 	private String description;
 	private Boolean mandatory;
 	private String displayName;
 	private Boolean isEditable;
 	private Integer displayOrder;
+	private Boolean controllerAttribute;
 
 	public Integer getDisplayOrder() {
 		return displayOrder;
@@ -47,11 +48,11 @@ public class DoeMetadataAttrEntry {
 		this.mandatory = mandatory;
 	}
 
-	public List<String> getValidValues() {
+	public List<KeyValueBean> getValidValues() {
 		return validValues;
 	}
 
-	public void setValidValues(List<String> validValues) {
+	public void setValidValues(List<KeyValueBean> validValues) {
 		this.validValues = validValues;
 	}
 
@@ -101,6 +102,14 @@ public class DoeMetadataAttrEntry {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Boolean getControllerAttribute() {
+		return controllerAttribute;
+	}
+
+	public void setControllerAttribute(Boolean controllerAttribute) {
+		this.controllerAttribute = controllerAttribute;
 	}
 
 }

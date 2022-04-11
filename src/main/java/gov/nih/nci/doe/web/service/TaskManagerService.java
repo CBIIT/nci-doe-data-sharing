@@ -11,6 +11,8 @@ public interface TaskManagerService {
     
     public List<TaskManager> getAllByUserId(String userId);
     
+    public List<TaskManager> getAlltasks();
+    
     public List<TaskManager> getTaskDetails(String userId, String name);
 
 }
