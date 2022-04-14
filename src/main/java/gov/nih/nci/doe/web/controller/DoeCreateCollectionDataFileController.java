@@ -539,6 +539,10 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 					} else {
 						entry.setMandatory(rule.getMandatory());
 					}
+
+					if (StringUtils.isNotEmpty(rule.getDefaultValue())) {
+						entry.setDefaultValue(rule.getDefaultValue());
+					}
 					LookUp val = lookUpService.getLookUpByLevelAndName(collectionType, rule.getAttribute());
 					if (val != null) {
 						entry.setDisplayName(val.getDisplayName());

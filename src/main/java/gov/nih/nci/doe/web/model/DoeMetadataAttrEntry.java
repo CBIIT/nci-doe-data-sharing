@@ -8,7 +8,7 @@ public class DoeMetadataAttrEntry {
 	private String attrUnit;
 	private boolean systemAttr;
 	private List<KeyValueBean> validValues = null;
-	private String defaultValue = null;
+	private String defaultValue;
 	private String description;
 	private Boolean mandatory;
 	private String displayName;
