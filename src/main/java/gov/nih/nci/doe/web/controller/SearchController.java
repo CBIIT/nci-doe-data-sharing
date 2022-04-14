@@ -151,36 +151,14 @@ public class SearchController extends AbstractDoeController {
 							loggedOnUserPermissions);
 					List<HpcMetadataEntry> selfMetadatEntries = result.getMetadataEntries().getSelfMetadataEntries();
 					String assetType = getAttributeValue("asset_type", selfMetadatEntries, "Asset");
-					// criteria to filter the assets available for predictions and to show
-					// collections available for edit when the checkbox is
-					// clicked from search
+
+					// criteria to filter the assets available for predictions
 
 					Boolean isShow = false;
-					Boolean showGeneratePredictions = false;
-
-					ModelInfo modelInfo = modelInfoService.getModelInfo(result.getCollection().getCollectionName());
-
-					if (Boolean.TRUE.equals(getIsUploader()) && "Model".equalsIgnoreCase(assetType)
-							&& modelInfo != null) {
-
-						showGeneratePredictions = true;
-					}
 
 					if ("false".equalsIgnoreCase(search.getIsShowMyCollection())
-							&& "false".equalsIgnoreCase(search.getShowModelAnalysisResults())) {
-						isShow = true;
-					} else if ("true".equalsIgnoreCase(search.getIsShowMyCollection())
-							&& !"No Permissions".equalsIgnoreCase(dataSetPermissionRole)
-							&& ("true".equalsIgnoreCase(search.getShowModelAnalysisResults())
-									&& Boolean.TRUE.equals(showGeneratePredictions))) {
-						isShow = true;
-					} else if ("true".equalsIgnoreCase(search.getIsShowMyCollection())
-							&& !"No Permissions".equalsIgnoreCase(dataSetPermissionRole)
-							&& "false".equalsIgnoreCase(search.getShowModelAnalysisResults())) {
-						isShow = true;
-					} else if ("true".equalsIgnoreCase(search.getShowModelAnalysisResults())
-							&& Boolean.TRUE.equals(showGeneratePredictions)
-							&& "false".equalsIgnoreCase(search.getIsShowMyCollection())) {
+							|| ("true".equalsIgnoreCase(search.getIsShowMyCollection())
+									&& !"No Permissions".equalsIgnoreCase(dataSetPermissionRole))) {
 						isShow = true;
 					}
 
@@ -223,7 +201,8 @@ public class SearchController extends AbstractDoeController {
 								+ getAttributeValue("dme_data_id", selfMetadatEntries, "Asset"));
 						returnResult.setAssetType(assetType);
 						returnResult.setDmeDataId(getAttributeValue("dme_data_id", selfMetadatEntries, "Asset"));
-						returnResult.setIsReferenceDataset(getAttributeValue("is_reference_dataset", selfMetadatEntries, "Asset"));
+						returnResult.setIsReferenceDataset(
+								getAttributeValue("is_reference_dataset", selfMetadatEntries, "Asset"));
 						returnResults.add(returnResult);
 					}
 				}
