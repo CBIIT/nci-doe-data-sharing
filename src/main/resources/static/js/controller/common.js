@@ -864,7 +864,8 @@ function filterPrev($this, attributeTypeName) {
 	d.operator = operators.join();
 	d.searchName = attributeName;
 	if (attributeTypeName == 'Asset Type' || attributeName == 'Asset Type' || 
-		attributeName == 'Asset Name' || attributeName == 'Is Reference Dataset' || attributeName == 'Model Deployed') {
+		attributeName == 'Asset Name' || attributeName == 'Is Reference Dataset' ||
+		attributeName == 'Is Model Deployed') {
 		url = '/getFilterList';
 	} else {
 		url = '/getFilterList?retrieveParent=true';
