@@ -1213,16 +1213,18 @@ function onClickOfModelAnlysisBulkDownloadBtn($this) {
 	if ($this) {
 		selectedPaths.push($this.attr('dataset_path'));
 		selectedPaths.push($this.attr('pred_path'));
-		if($this.attr('outcome_path')) {
-			selectedPaths.push($this.attr('outcome_path'));
+		var outcomePath = $this.attr('outcome_path');
+		if(outcomePath && outcomePath != "null") {
+			selectedPaths.push(outcomePath);
 		}
 		
 	} else {
 		$("#generatePredTable tbody input[type=checkbox]:checked").each(function() {
 			selectedPaths.push($(this).attr('dataset_path'));
 			selectedPaths.push($(this).attr('pred_path'));
-			if($(this).attr('outcome_path')) {
-				selectedPaths.push($(this).attr('outcome_path'));
+			var outcomePath = $(this).attr('outcome_path');
+			if(outcomePath && outcomePath != "null") {
+				selectedPaths.push(outcomePath);
 			}
 			
 		});
