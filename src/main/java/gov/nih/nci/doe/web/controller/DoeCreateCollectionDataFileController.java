@@ -527,7 +527,11 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 					}
 
 					if (rule.getAttribute().equalsIgnoreCase("applicable_model_name")) {
-						List<KeyValueBean> validValues = modelInfoService.getAllModelInfoPaths();
+
+						/*
+						 * get this info from dme search api
+						 */
+						List<KeyValueBean> validValues = getAllApplicableModelPaths(session);
 						entry.setValidValues(validValues);
 					}
 					entry.setDescription(rule.getDescription());
