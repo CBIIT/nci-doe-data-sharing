@@ -73,4 +73,34 @@ public class InferencingTaskServiceImpl implements InferencingTaskService {
 
 	}
 
+	@Override
+	public InferencingTask getInferenceByUserIdAndPredName(String userId, String resultPath) {
+		log.info("get inference for user: " + userId + " and pred path: " + resultPath);
+		return inferencingTaskRepository.getInferenceByUserIdAndPredName(userId, resultPath);
+
+	}
+
+	@Override
+	public InferencingTask getInferenceByUserIdAndOutcomeName(String userId, String outcomeName) {
+		log.info("get inference for user: " + userId + " and outcomeName: " + outcomeName);
+		return inferencingTaskRepository.getInferenceByUserIdAndOutcomeName(userId, outcomeName);
+	}
+
+	@Override
+	public InferencingTask getInferenceByUserIdAndInputName(String userId, String inputFileName) {
+		log.info("get inference for user: " + userId + " and input path: " + inputFileName);
+		return inferencingTaskRepository.getInferenceByUserIdAndInputName(userId, inputFileName);
+	}
+
+	@Override
+	public Boolean checkifFileExistsForUser(String user, String modelPath) {
+		log.info("get inference for user : " + user + " and model path: " + modelPath);
+		InferencingTask inference = inferencingTaskRepository.getInferenceByUserIdAndModelPath(user, modelPath);
+		if (inference != null) {
+			return true;
+		}
+
+		return false;
+	}
+
 }

@@ -13,7 +13,6 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +38,7 @@ import org.springframework.http.HttpStatus;
 
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.constants.SystemAttributesList;
+import gov.nih.nci.doe.web.domain.InferencingTask;
 import gov.nih.nci.doe.web.model.DoeDatafileSearchResultDetailed;
 import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.model.MoDaCPredictionsResults;
@@ -198,44 +198,75 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 		List<HpcCollectionDTO> searchResults = dataObjects.getCollections();
 
 		List<HpcCollectionListingEntry> dataObjectsList = searchResults.get(0).getCollection().getDataObjects();
+		String userId = getLoggedOnUserInfo();
 
 		if (!CollectionUtils.isEmpty(dataObjectsList)) {
 			for (HpcCollectionListingEntry dataObject : dataObjectsList) {
 
 				String name = dataObject.getPath().substring(dataObject.getPath().lastIndexOf('/') + 1);
-				String testInputName = FilenameUtils.getBaseName(name);
-				String taskId = testInputName.substring(testInputName.lastIndexOf("_") + 1, testInputName.length());
 
 				if (name.startsWith("y_pred_")) {
-					MoDaCPredictionsResults inputNameResult = returnResults.stream()
-							.filter(e -> e.getInputDatasetName() != null && e.getInputDatasetName().contains(taskId))
+					InferencingTask task = inferencingTaskService.getInferenceByUserIdAndPredName(userId,
+							dataObject.getPath());
+					MoDaCPredictionsResults predNameResult = returnResults.stream().filter(
+							e -> e.getPredictionsName() != null && e.getPredictionsName().equalsIgnoreCase(name))
 							.findAny().orElse(null);
-					if (inputNameResult == null) {
+
+					if (predNameResult == null && task != null) {
 						MoDaCPredictionsResults returnResult = new MoDaCPredictionsResults();
+						String inputDatasetName = task.getTestDataSetPath()
+								.substring(task.getTestDataSetPath().lastIndexOf('/') + 1);
 						returnResult.setPredictionsName(name);
 						returnResult.setPredictionsPath(dataObject.getPath());
-						returnResult.setPredCollectionId(dataObject.getId());
+						returnResult.setInputDatasetPath(task.getTestDataSetPath());
+						returnResult.setInputDatasetName(inputDatasetName);
+						returnResult.setTaskCompletedDate(task.getCompletedDate());
+						returnResult.setOutcomeFileName(task.getActualResultsFileName());
+						returnResult.setOutcomeFilePath(task.getOutcomeFilePath());
+						returnResult.setTaskId(task.getTaskId());
 						returnResults.add(returnResult);
-					} else {
-						inputNameResult.setPredictionsName(name);
-						inputNameResult.setPredictionsPath(dataObject.getPath());
-						inputNameResult.setPredCollectionId(dataObject.getId());
 					}
 
 				} else {
-					MoDaCPredictionsResults predNameResult = returnResults.stream()
-							.filter(e -> e.getPredictionsName() != null && e.getPredictionsName().contains(taskId))
+
+					InferencingTask taskByInputName = inferencingTaskService.getInferenceByUserIdAndInputName(userId,
+							dataObject.getPath());
+					MoDaCPredictionsResults inputNameResult = returnResults.stream().filter(
+							e -> e.getInputDatasetName() != null && e.getInputDatasetName().equalsIgnoreCase(name))
 							.findAny().orElse(null);
-					if (predNameResult == null) {
+					if (taskByInputName != null && inputNameResult == null) {
 						MoDaCPredictionsResults returnResult = new MoDaCPredictionsResults();
-						returnResult.setInputDatasetName(name);
+						String predName = taskByInputName.getResultPath()
+								.substring(taskByInputName.getResultPath().lastIndexOf('/') + 1);
 						returnResult.setInputDatasetPath(dataObject.getPath());
-						returnResult.setInputDatasetCollectionId(dataObject.getId());
+						returnResult.setInputDatasetName(name);
+						returnResult.setPredictionsName(predName);
+						returnResult.setPredictionsPath(taskByInputName.getResultPath());
+						returnResult.setTaskCompletedDate(taskByInputName.getCompletedDate());
+						returnResult.setOutcomeFileName(taskByInputName.getActualResultsFileName());
+						returnResult.setOutcomeFilePath(taskByInputName.getOutcomeFilePath());
+						returnResult.setTaskId(taskByInputName.getTaskId());
 						returnResults.add(returnResult);
 					} else {
-						predNameResult.setInputDatasetName(name);
-						predNameResult.setInputDatasetPath(dataObject.getPath());
-						predNameResult.setInputDatasetCollectionId(dataObject.getId());
+						InferencingTask task = inferencingTaskService.getInferenceByUserIdAndOutcomeName(userId, name);
+						MoDaCPredictionsResults outcomeNameResult = returnResults.stream().filter(
+								e -> e.getOutcomeFileName() != null && e.getOutcomeFileName().equalsIgnoreCase(name))
+								.findAny().orElse(null);
+						if (task != null && outcomeNameResult == null) {
+							MoDaCPredictionsResults returnResult = new MoDaCPredictionsResults();
+							String inputDatasetName = task.getTestDataSetPath()
+									.substring(task.getTestDataSetPath().lastIndexOf('/') + 1);
+							String predName = task.getResultPath().substring(task.getResultPath().lastIndexOf('/') + 1);
+							returnResult.setPredictionsName(predName);
+							returnResult.setPredictionsPath(task.getResultPath());
+							returnResult.setInputDatasetPath(task.getTestDataSetPath());
+							returnResult.setInputDatasetName(inputDatasetName);
+							returnResult.setTaskCompletedDate(task.getCompletedDate());
+							returnResult.setOutcomeFileName(name);
+							returnResult.setOutcomeFilePath(dataObject.getPath());
+							returnResult.setTaskId(task.getTaskId());
+							returnResults.add(returnResult);
+						}
 					}
 
 				}
@@ -288,6 +319,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 			if (type.equalsIgnoreCase("Prediction_Files")) {
 
 				String loggedOnUserFolderPath = path + "/Predictions_" + getLoggedOnUserInfo();
+
 				final String requestUrl = UriComponentsBuilder.fromHttpUrl(serviceURL).path("{path}/children")
 						.buildAndExpand(loggedOnUserFolderPath).encode().toUri().toURL().toExternalForm();
 

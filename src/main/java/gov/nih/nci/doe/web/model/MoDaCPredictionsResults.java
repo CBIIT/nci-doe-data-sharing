@@ -1,28 +1,18 @@
 package gov.nih.nci.doe.web.model;
 
+import java.util.Date;
+
 public class MoDaCPredictionsResults {
 	private String inputDatasetPath;
 	private String predictionsPath;
 	private String inputDatasetName;
 	private String predictionsName;
-	private Integer predCollectionId;
-	private Integer inputDatasetCollectionId;
 
-	public Integer getPredCollectionId() {
-		return predCollectionId;
-	}
+	private String outcomeFileName;
+	private String outcomeFilePath;
 
-	public void setPredCollectionId(Integer predCollectionId) {
-		this.predCollectionId = predCollectionId;
-	}
-
-	public Integer getInputDatasetCollectionId() {
-		return inputDatasetCollectionId;
-	}
-
-	public void setInputDatasetCollectionId(Integer inputDatasetCollectionId) {
-		this.inputDatasetCollectionId = inputDatasetCollectionId;
-	}
+	private String taskId;
+	private Date taskCompletedDate;
 
 	public String getInputDatasetPath() {
 		return inputDatasetPath;
@@ -54,6 +44,38 @@ public class MoDaCPredictionsResults {
 
 	public void setPredictionsName(String predictionsName) {
 		this.predictionsName = predictionsName;
+	}
+
+	public String getOutcomeFileName() {
+		return outcomeFileName;
+	}
+
+	public void setOutcomeFileName(String outcomeFileName) {
+		this.outcomeFileName = outcomeFileName;
+	}
+
+	public String getOutcomeFilePath() {
+		return outcomeFilePath;
+	}
+
+	public void setOutcomeFilePath(String outcomeFilePath) {
+		this.outcomeFilePath = outcomeFilePath;
+	}
+
+	public String getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
+	}
+
+	public Date getTaskCompletedDate() {
+		return taskCompletedDate;
+	}
+
+	public void setTaskCompletedDate(Date taskCompletedDate) {
+		this.taskCompletedDate = taskCompletedDate;
 	}
 
 }

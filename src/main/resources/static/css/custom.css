@@ -12,7 +12,7 @@
   background: #A7A7A7; 
 }
 
-.fivepercent {width:5%;}
+.fivepercent {width:5% !important;}
 .tenpercent {width:10%;}
 .fifteenpercent {width:15%;}
 .twentpercent {width:20%;}
@@ -1002,6 +1002,9 @@ background-color: #DDDDDD;
 height: 50px;
 }
 
+.td_class_5_percent {
+	width:5% !important;
+}
 .td_class_1 {
 	width:10% !important;
 }

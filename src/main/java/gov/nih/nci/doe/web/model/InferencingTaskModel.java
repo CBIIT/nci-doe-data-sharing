@@ -11,6 +11,8 @@ public class InferencingTaskModel {
 	private String uploadFrom;
 	private String outputResultName;
 	private String applicableModelNames;
+	private String outcomeFilePath;
+	private Boolean isReferenceAsset;
 
 	public String getApplicableModelNames() {
 		return applicableModelNames;
@@ -82,6 +84,22 @@ public class InferencingTaskModel {
 
 	public void setOutputResultName(String outputResultName) {
 		this.outputResultName = outputResultName;
+	}
+
+	public String getOutcomeFilePath() {
+		return outcomeFilePath;
+	}
+
+	public void setOutcomeFilePath(String outcomeFilePath) {
+		this.outcomeFilePath = outcomeFilePath;
+	}
+
+	public Boolean getIsReferenceAsset() {
+		return isReferenceAsset;
+	}
+
+	public void setIsReferenceAsset(Boolean isReferenceAsset) {
+		this.isReferenceAsset = isReferenceAsset;
 	}
 
 }
