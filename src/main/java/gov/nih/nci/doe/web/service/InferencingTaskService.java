@@ -21,5 +21,5 @@ public interface InferencingTaskService {
 
 	public InferencingTask getInferenceByUserIdAndInputName(String userId, String inputFileName);
 	
-	public Boolean checkifFileExistsForUser(String user, String modelPath);
+	public Boolean checkifFileExistsForUser(String user, String modelPath, String inputFileName);
 }

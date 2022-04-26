@@ -31,5 +31,5 @@ public interface InferencingTaskRepository extends JpaRepository<InferencingTask
 	InferencingTask getInferenceByUserIdAndOutcomeName(String userId, String outcomeName);
 	
 	@Query("select a from InferencingTask a where a.userId =?1 and a.assetPath = ?2 and a.status IS NOT NULL and a.status !='FAILED'")
-	InferencingTask getInferenceByUserIdAndModelPath(String userId, String assetPath);
+	List<InferencingTask> getInferenceByUserIdAndModelPath(String userId, String assetPath);
 }

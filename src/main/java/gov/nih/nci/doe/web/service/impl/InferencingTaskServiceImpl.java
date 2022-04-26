@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,14 +94,20 @@ public class InferencingTaskServiceImpl implements InferencingTaskService {
 	}
 
 	@Override
-	public Boolean checkifFileExistsForUser(String user, String modelPath) {
-		log.info("get inference for user : " + user + " and model path: " + modelPath);
-		InferencingTask inference = inferencingTaskRepository.getInferenceByUserIdAndModelPath(user, modelPath);
-		if (inference != null) {
-			return true;
+	public Boolean checkifFileExistsForUser(String user, String modelPath, String inputFileName) {
+		log.info("get inference for user : " + user + " and model path: " + modelPath + " and input file: "
+				+ inputFileName);
+		List<InferencingTask> inferenceList = inferencingTaskRepository.getInferenceByUserIdAndModelPath(user,
+				modelPath);
+		Boolean isFileExists = false;
+		if (CollectionUtils.isNotEmpty(inferenceList)) {
+
+			isFileExists = inferenceList.stream().anyMatch(g -> g.getTestDataSetPath()
+					.substring(g.getTestDataSetPath().lastIndexOf('/') + 1).equals(inputFileName));
+
 		}
 
-		return false;
+		return isFileExists;
 	}
 
 }

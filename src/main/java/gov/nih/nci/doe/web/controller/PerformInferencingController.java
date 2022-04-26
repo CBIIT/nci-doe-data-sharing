@@ -214,7 +214,7 @@ public class PerformInferencingController extends AbstractDoeController {
 
 		// check if the file name is already used for inferencing for the same user and
 		// same model path and is not in failed status
-		if (Boolean.TRUE.equals(inferencingTaskService.checkifFileExistsForUser(user, parentPath))) {
+		if (Boolean.TRUE.equals(inferencingTaskService.checkifFileExistsForUser(user, parentPath,testInputName))) {
 			return "Input file name already exists";
 		}
 
