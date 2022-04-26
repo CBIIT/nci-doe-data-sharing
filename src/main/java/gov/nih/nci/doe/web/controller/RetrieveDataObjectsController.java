@@ -229,7 +229,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 
 				} else {
 
-					InferencingTask taskByInputName = inferencingTaskService.getInferenceByUserIdAndInputName(userId,
+					InferencingTask taskByInputName = inferencingTaskService.getInferenceByUserIdAndInputName(userId,path,
 							dataObject.getPath());
 					MoDaCPredictionsResults inputNameResult = returnResults.stream().filter(
 							e -> e.getInputDatasetName() != null && e.getInputDatasetName().equalsIgnoreCase(name))
@@ -248,7 +248,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 						returnResult.setTaskId(taskByInputName.getTaskId());
 						returnResults.add(returnResult);
 					} else {
-						InferencingTask task = inferencingTaskService.getInferenceByUserIdAndOutcomeName(userId, name);
+						InferencingTask task = inferencingTaskService.getInferenceByUserIdAndOutcomeName(userId, path,name);
 						MoDaCPredictionsResults outcomeNameResult = returnResults.stream().filter(
 								e -> e.getOutcomeFileName() != null && e.getOutcomeFileName().equalsIgnoreCase(name))
 								.findAny().orElse(null);

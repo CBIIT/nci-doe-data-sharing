@@ -24,12 +24,12 @@ public interface InferencingTaskRepository extends JpaRepository<InferencingTask
 	@Query("select a from InferencingTask a where a.userId =?1 and a.resultPath = ?2")
 	InferencingTask getInferenceByUserIdAndPredName(String userId, String predictionsPath);
 
-	@Query("select a from InferencingTask a where a.userId =?1 and a.testDataSetPath = ?2")
-	InferencingTask getInferenceByUserIdAndInputName(String userId, String inputPath);
+	@Query("select a from InferencingTask a where a.userId =?1 and a.assetPath = ?2 and a.testDataSetPath = ?3 and a.status IS NOT NULL and a.status !='FAILED'")
+	InferencingTask getInferenceByUserIdAndInputName(String userId, String assetPath, String inputPath);
 
-	@Query("select a from InferencingTask a where a.userId =?1 and a.actualResultsFileName = ?2")
-	InferencingTask getInferenceByUserIdAndOutcomeName(String userId, String outcomeName);
-	
+	@Query("select a from InferencingTask a where a.userId =?1 and a.assetPath = ?2 and a.actualResultsFileName = ?3 and a.status IS NOT NULL and a.status !='FAILED'")
+	InferencingTask getInferenceByUserIdAndOutcomeName(String userId, String assetPath, String outcomeName);
+
 	@Query("select a from InferencingTask a where a.userId =?1 and a.assetPath = ?2 and a.status IS NOT NULL and a.status !='FAILED'")
 	List<InferencingTask> getInferenceByUserIdAndModelPath(String userId, String assetPath);
 }

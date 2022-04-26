@@ -84,15 +84,15 @@ public class InferencingTaskServiceImpl implements InferencingTaskService {
 	}
 
 	@Override
-	public InferencingTask getInferenceByUserIdAndOutcomeName(String userId, String outcomeName) {
+	public InferencingTask getInferenceByUserIdAndOutcomeName(String userId, String assetPath, String outcomeName) {
 		log.info("get inference for user: " + userId + " and outcomeName: " + outcomeName);
-		return inferencingTaskRepository.getInferenceByUserIdAndOutcomeName(userId, outcomeName);
+		return inferencingTaskRepository.getInferenceByUserIdAndOutcomeName(userId, assetPath, outcomeName);
 	}
 
 	@Override
-	public InferencingTask getInferenceByUserIdAndInputName(String userId, String inputFileName) {
+	public InferencingTask getInferenceByUserIdAndInputName(String userId, String assetPath, String inputFileName) {
 		log.info("get inference for user: " + userId + " and input path: " + inputFileName);
-		return inferencingTaskRepository.getInferenceByUserIdAndInputName(userId, inputFileName);
+		return inferencingTaskRepository.getInferenceByUserIdAndInputName(userId, assetPath, inputFileName);
 	}
 
 	@Override
