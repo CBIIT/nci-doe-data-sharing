@@ -121,16 +121,16 @@ public class PerformInferencingController extends AbstractDoeController {
 
 		String testInputName = inference.getTestInputPath()
 				.substring(inference.getTestInputPath().lastIndexOf('/') + 1);
-		String outcomeFileName = inference.getOutputResultName()
-				.substring(inference.getOutputResultName().lastIndexOf('/') + 1);
+		String outcomeFileName = inference.getOutcomeFilePath()
+				.substring(inference.getOutcomeFilePath().lastIndexOf('/') + 1);
 
 		try {
 
-			if (StringUtils.isNotEmpty(inference.getOutputResultName())) {
+			if (StringUtils.isNotEmpty(outcomeFileName)) {
 
 				// copy the results file to mount location
 				Response restResponseModelFile = DoeClientUtil.getPreSignedUrl(authToken, dataObjectServiceURL,
-						inference.getOutputResultName());
+						inference.getOutcomeFilePath());
 
 				log.info("rest response:" + restResponseModelFile.getStatus());
 				if (restResponseModelFile.getStatus() == 200) {
@@ -145,8 +145,7 @@ public class PerformInferencingController extends AbstractDoeController {
 					Files.copy((InputStream) restResponseForModelFileCopy.getEntity(),
 							Paths.get(uploadPath + outcomeFileName), StandardCopyOption.REPLACE_EXISTING);
 
-					inference.setOutputResultName(outcomeFileName);
-					inference.setOutcomeFilePath(inference.getOutputResultName());
+					inference.setOutcomeFileName(outcomeFileName);
 
 				}
 
@@ -221,7 +220,7 @@ public class PerformInferencingController extends AbstractDoeController {
 
 		if (StringUtils.isNotEmpty(outputFileName)) {
 
-			inference.setOutputResultName(outputFileName);
+			inference.setOutcomeFileName(outputFileName);
 			Files.copy(uploadTestOutputFile.getInputStream(), Paths.get(uploadPath + outputFileName),
 					StandardCopyOption.REPLACE_EXISTING);
 		}
