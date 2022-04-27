@@ -121,6 +121,8 @@ public class PerformInferencingController extends AbstractDoeController {
 
 		String testInputName = inference.getTestInputPath()
 				.substring(inference.getTestInputPath().lastIndexOf('/') + 1);
+		String outcomeFileName = inference.getOutputResultName()
+				.substring(inference.getOutputResultName().lastIndexOf('/') + 1);
 
 		try {
 
@@ -141,11 +143,10 @@ public class PerformInferencingController extends AbstractDoeController {
 					Response restResponseForModelFileCopy = client.invoke("GET", null);
 
 					Files.copy((InputStream) restResponseForModelFileCopy.getEntity(),
-							Paths.get(uploadPath + inference.getOutputResultName()),
-							StandardCopyOption.REPLACE_EXISTING);
+							Paths.get(uploadPath + outcomeFileName), StandardCopyOption.REPLACE_EXISTING);
 
-					inference.setOutputResultName(inference.getOutputResultName());
-					inference.setOutcomeFilePath(inference.getAssetPath() + "/" + inference.getOutputResultName());
+					inference.setOutputResultName(outcomeFileName);
+					inference.setOutcomeFilePath(inference.getOutputResultName());
 
 				}
 
@@ -214,7 +215,7 @@ public class PerformInferencingController extends AbstractDoeController {
 
 		// check if the file name is already used for inferencing for the same user and
 		// same model path and is not in failed status
-		if (Boolean.TRUE.equals(inferencingTaskService.checkifFileExistsForUser(user, parentPath,testInputName))) {
+		if (Boolean.TRUE.equals(inferencingTaskService.checkifFileExistsForUser(user, parentPath, testInputName))) {
 			return "Input file name already exists";
 		}
 
