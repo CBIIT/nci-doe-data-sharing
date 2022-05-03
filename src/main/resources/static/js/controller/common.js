@@ -99,6 +99,11 @@ $(document)
 					var downloadType = $("#downloadType").val();
 					var downloadFileName = $("#downloadFileName").val();
 					var asyncSearchType = $("#asyncSearchType").val();
+					var googleDriveIsAuthorized = $("#googleDriveIsAuthorized").val();
+					
+					if(googleDriveIsAuthorized) {
+						$("#download-btn").prop("disabled",false);
+					}
 
 					if (selectedPathsString && downloadType
 							&& (downloadType == 'collection' || downloadType == 'collectionfiles')) {

@@ -562,21 +562,25 @@ function display(value) {
 		$("#SyncDiv").hide();
 		$("#s3Div").hide();
 		$("#driveDiv").hide();
+		$("#download-btn").prop("disabled",false);
 	} else if (value == "sync") {
 		$("#SyncDiv").show();
 		$("#AsyncDiv").hide();
 		$("#s3Div").hide();
 		$("#driveDiv").hide();
+		$("#download-btn").prop("disabled",false);
 	} else if (value == "drive") {
 		$("#SyncDiv").hide();
 		$("#AsyncDiv").hide();
 		$("#s3Div").hide();
 		$("#driveDiv").show();
+		$("#download-btn").prop("disabled",true);
 	} else {
 		$("#SyncDiv").hide();
 		$("#AsyncDiv").hide();
 		$("#s3Div").show();
 		$("#driveDiv").hide();
+		$("#download-btn").prop("disabled",false);
 	}
 }
 
