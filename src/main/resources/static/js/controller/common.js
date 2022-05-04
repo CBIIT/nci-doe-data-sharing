@@ -866,12 +866,10 @@ function filterPrev($this, attributeTypeName) {
 	d.rowId = rowIds.join();
 	d.operator = operators.join();
 	d.searchName = attributeName;
-	if (attributeTypeName == 'Asset Type' || attributeName == 'Asset Type' || 
-		attributeName == 'Asset Name' || attributeName == 'Is Reference Dataset' ||
-		attributeName == 'Is Model Deployed') {
-		url = '/getFilterList';
-	} else {
+	if(attributeName == 'Program Name' || attributeName == 'Study Name') {
 		url = '/getFilterList?retrieveParent=true';
+	} else  {
+		url = '/getFilterList';
 	}
 
 	$.ajax({
