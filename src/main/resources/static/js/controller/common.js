@@ -728,19 +728,21 @@ $(document).on('change', '.filteritem', function() {
 	}
 	var attrName = $(this).parent().parent().attr('id');
 
+	populateSearchCriteria('simpleSearch');
+	
 	// based on child selection, search at parent level and check the
 	// parent checkbox
-	$(this).closest('.filterComponentDiv').prev().find('.attributeLabel').each(function(e) {
+	$(this).closest('.filterComponentDiv').prevAll().find('.attributeLabel').each(function(e) {
 		filterPrev($(this), attrName);
 	});
 
 	// always filter the metadata on the children level
 	// do not remove parent based on child selection
-	$(this).closest('.filterComponentDiv').next().find('.attributeLabel').each(function(e) {
+	$(this).closest('.filterComponentDiv').nextAll().find('.attributeLabel').each(function(e) {
 		filterNext($(this), attrName);
 	});
 
-	populateSearchCriteria('simpleSearch');
+	
 });
 
 $(document).on('click', '.showMore', function() {
@@ -794,7 +796,7 @@ function filterNext($this, attributeTypeName) {
 	$.ajax({
 		url : '/getFilterList',
 		type : 'GET',
-		async : false,
+//		async : false,
 		contentType : 'application/json',
 		dataType : 'text',
 		data : d,
@@ -830,11 +832,12 @@ function filterNext($this, attributeTypeName) {
 			console.log("===> error: ", error);
 			console.log("===> data: ", data);
 		}
-	}).done(function(e) {
-		$this.closest('.filterComponentDiv').next().find('.attributeLabel').each(function(e) {
-			filterNext($(this));
-		});
-	});
+});
+		//.done(function(e) {
+//		$this.closest('.filterComponentDiv').next().find('.attributeLabel').each(function(e) {
+//			filterNext($(this));
+//		});
+//	});
 }
 
 function filterPrev($this, attributeTypeName) {
@@ -880,7 +883,7 @@ function filterPrev($this, attributeTypeName) {
 	$.ajax({
 		url : url,
 		type : 'GET',
-		async : false,
+//		async : false,
 		contentType : 'application/json',
 		dataType : 'text',
 		data : d,
@@ -919,11 +922,12 @@ function filterPrev($this, attributeTypeName) {
 			console.log("===> error: ", error);
 			console.log("===> data: ", data);
 		}
-	}).done(function(e) {
-		$this.closest('.filterComponentDiv').prev().find('.attributeLabel').each(function(e) {
-			filterPrev($(this));
-		});
-	});
+	})
+//	.done(function(e) {
+//		$this.closest('.filterComponentDiv').prev().find('.attributeLabel').each(function(e) {
+//			filterPrev($(this));
+//		});
+//	});
 }
 
 function showFirstFewFields($this, oper) {
