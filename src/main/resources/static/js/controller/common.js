@@ -796,7 +796,6 @@ function filterNext($this, attributeTypeName) {
 	$.ajax({
 		url : '/getFilterList',
 		type : 'GET',
-//		async : false,
 		contentType : 'application/json',
 		dataType : 'text',
 		data : d,
@@ -833,11 +832,6 @@ function filterNext($this, attributeTypeName) {
 			console.log("===> data: ", data);
 		}
 });
-		//.done(function(e) {
-//		$this.closest('.filterComponentDiv').next().find('.attributeLabel').each(function(e) {
-//			filterNext($(this));
-//		});
-//	});
 }
 
 function filterPrev($this, attributeTypeName) {
@@ -883,7 +877,6 @@ function filterPrev($this, attributeTypeName) {
 	$.ajax({
 		url : url,
 		type : 'GET',
-//		async : false,
 		contentType : 'application/json',
 		dataType : 'text',
 		data : d,
@@ -922,12 +915,7 @@ function filterPrev($this, attributeTypeName) {
 			console.log("===> error: ", error);
 			console.log("===> data: ", data);
 		}
-	})
-//	.done(function(e) {
-//		$this.closest('.filterComponentDiv').prev().find('.attributeLabel').each(function(e) {
-//			filterPrev($(this));
-//		});
-//	});
+	});
 }
 
 function showFirstFewFields($this, oper) {
