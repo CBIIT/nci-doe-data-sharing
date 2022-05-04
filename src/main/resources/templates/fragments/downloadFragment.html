@@ -48,7 +48,7 @@ style="font-size:13px;">
 					<input type="hidden" name="transferType" id="transferType"/>
 					<input type="hidden" name="source" id="source"/>
 					<input type="hidden" name="source" id="accessToken"/>
-					<input type="hidden" id="googleDriveIsAuthorized" value ="${authorized}"/>
+					<input type="hidden" id="googleDriveIsAuthorized" th:value ="${authorized}"/>
 					   <form class="form-horizontal" id="downloadSyncForm" method="POST">
 					 <input type="hidden" name="destinationPath" id="destinationPathId"/>
 					 <input type="hidden" class="form-control" name="downloadFileName" id="downloadFileName" th:value="${fileName}"/>
