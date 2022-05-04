@@ -574,7 +574,13 @@ function display(value) {
 		$("#AsyncDiv").hide();
 		$("#s3Div").hide();
 		$("#driveDiv").show();
-		$("#download-btn").prop("disabled",true);
+		var googleDriveIsAuthorized = $("#googleDriveIsAuthorized").val();		
+		if(googleDriveIsAuthorized) {
+			$("#download-btn").prop("disabled",false);
+		} else {
+			$("#download-btn").prop("disabled",true);
+		}
+		
 	} else {
 		$("#SyncDiv").hide();
 		$("#AsyncDiv").hide();
