@@ -1115,9 +1115,17 @@ public abstract class AbstractDoeController {
 				List<HpcCollectionDTO> results = collections.getCollections();
 
 				results.stream().forEach((g -> {
+
 					String modelPath = g.getCollection().getAbsolutePath();
-					String modelIdentifier = modelPath.substring(modelPath.lastIndexOf('/') + 1);
-					modelPaths.add(new KeyValueBean(modelPath, modelIdentifier));
+					String[] list = modelPath.split("/");
+					// if the list.length is 5, the collection is an Asset.
+					// this validation is done since only asset of type models are listed as
+					// applicable models
+					if (list.length == 5) {
+						String modelIdentifier = modelPath.substring(modelPath.lastIndexOf('/') + 1);
+						modelPaths.add(new KeyValueBean(modelPath, modelIdentifier));
+					}
+
 				}));
 
 			}
