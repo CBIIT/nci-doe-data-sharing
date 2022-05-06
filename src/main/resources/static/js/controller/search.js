@@ -563,12 +563,14 @@ function display(value) {
 		$("#s3Div").hide();
 		$("#driveDiv").hide();
 		$("#download-btn").prop("disabled",false);
+		$("#download-btn").css('cursor','pointer');
 	} else if (value == "sync") {
 		$("#SyncDiv").show();
 		$("#AsyncDiv").hide();
 		$("#s3Div").hide();
 		$("#driveDiv").hide();
 		$("#download-btn").prop("disabled",false);
+		$("#download-btn").css('cursor','pointer');
 	} else if (value == "drive") {
 		$("#SyncDiv").hide();
 		$("#AsyncDiv").hide();
@@ -577,8 +579,10 @@ function display(value) {
 		var googleDriveIsAuthorized = $("#googleDriveIsAuthorized").val();		
 		if(googleDriveIsAuthorized) {
 			$("#download-btn").prop("disabled",false);
+			$("#download-btn").css('cursor','pointer');
 		} else {
 			$("#download-btn").prop("disabled",true);
+			$("#download-btn").css('cursor','default');
 		}
 		
 	} else {
@@ -587,6 +591,7 @@ function display(value) {
 		$("#s3Div").show();
 		$("#driveDiv").hide();
 		$("#download-btn").prop("disabled",false);
+		$("#download-btn").css('cursor','pointer');
 	}
 }
 
