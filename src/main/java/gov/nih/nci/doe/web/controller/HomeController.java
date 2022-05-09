@@ -162,13 +162,17 @@ public class HomeController extends AbstractDoeController {
 				}
 			}
 
-			// use the referer from request header to get the previous url.
-			// the referer will be empty when the url is copied to the browser and the app
-			// is redirected to login page
+			if (error == null) {
+				// use the referer from request header to get the previous url.
+				// the referer will be empty when the url is copied to the browser and the app
+				// is redirected to login page. Also, do not use referer tag when there is an
+				// error message on
+				// login tab
 
-			String referer = request.getHeader("referer");
-			request.getSession().setAttribute(LoginAuthenticationSuccessHandler.REDIRECT_URL_SESSION_ATTRIBUTE_NAME,
-					referer);
+				String referer = request.getHeader("referer");
+				request.getSession().setAttribute(LoginAuthenticationSuccessHandler.REDIRECT_URL_SESSION_ATTRIBUTE_NAME,
+						referer);
+			}
 
 		} catch (Exception e) {
 			throw new DoeWebException("Failed to send registration email" + e.getMessage());

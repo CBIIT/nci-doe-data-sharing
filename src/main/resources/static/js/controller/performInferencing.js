@@ -184,7 +184,7 @@ $(document).on('click', '#performModelAnalysisBtn', function() {
 
 	var inference = {};
 	inference.applicableModelNames = applicableModelName;
-	inference.outputResultName = resultName;
+	inference.outcomeFilePath = resultName;
 	inference.uploadFrom = "gdcData";
 	inference.assetPath = $("#assetPath").val();
 	inference.testInputPath = testInputPath;

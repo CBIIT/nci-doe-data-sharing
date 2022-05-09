@@ -98,7 +98,7 @@ $(document)
 					var selectedPathsString = $("#selectedPathsString").val();
 					var downloadType = $("#downloadType").val();
 					var downloadFileName = $("#downloadFileName").val();
-					var asyncSearchType = $("#asyncSearchType").val();
+					var asyncSearchType = $("#asyncSearchType").val();	
 
 					if (selectedPathsString && downloadType
 							&& (downloadType == 'collection' || downloadType == 'collectionfiles')) {
@@ -188,6 +188,11 @@ $(document)
 										if (!searchType) {
 											$('.downloadErrorMsg').html("Select a download destination.");
 											$("#message").show();
+										} else if($('input:checkbox.checkboxMultipleDwnlodPaths').is(':visible') && 
+												$('input:checkbox.checkboxMultipleDwnlodPaths:checked').length == 0){
+											/* multiple checkbox download and validate if either one is checked */
+											$('.downloadErrorMsg').html("Select atleast one path.");
+											$("#message").show();
 										} else if (searchType == 's3' || searchType == 'async' || searchType == 'drive'
 												|| selectedFiles) {
 											d.bucketName = $("#downloadBucketName").val();
@@ -226,6 +231,7 @@ $(document)
 													}
 												});
 											}
+											
 
 											if (!validate) {
 												$('.downloadErrorMsg').html("Enter the destination information.");
@@ -722,19 +728,21 @@ $(document).on('change', '.filteritem', function() {
 	}
 	var attrName = $(this).parent().parent().attr('id');
 
+	populateSearchCriteria('simpleSearch');
+	
 	// based on child selection, search at parent level and check the
 	// parent checkbox
-	$(this).closest('.filterComponentDiv').prev().find('.attributeLabel').each(function(e) {
+	$(this).closest('.filterComponentDiv').prevAll().find('.attributeLabel').each(function(e) {
 		filterPrev($(this), attrName);
 	});
 
 	// always filter the metadata on the children level
 	// do not remove parent based on child selection
-	$(this).closest('.filterComponentDiv').next().find('.attributeLabel').each(function(e) {
+	$(this).closest('.filterComponentDiv').nextAll().find('.attributeLabel').each(function(e) {
 		filterNext($(this), attrName);
 	});
 
-	populateSearchCriteria('simpleSearch');
+	
 });
 
 $(document).on('click', '.showMore', function() {
@@ -788,7 +796,6 @@ function filterNext($this, attributeTypeName) {
 	$.ajax({
 		url : '/getFilterList',
 		type : 'GET',
-		async : false,
 		contentType : 'application/json',
 		dataType : 'text',
 		data : d,
@@ -824,11 +831,7 @@ function filterNext($this, attributeTypeName) {
 			console.log("===> error: ", error);
 			console.log("===> data: ", data);
 		}
-	}).done(function(e) {
-		$this.closest('.filterComponentDiv').next().find('.attributeLabel').each(function(e) {
-			filterNext($(this));
-		});
-	});
+});
 }
 
 function filterPrev($this, attributeTypeName) {
@@ -863,16 +866,15 @@ function filterPrev($this, attributeTypeName) {
 	d.rowId = rowIds.join();
 	d.operator = operators.join();
 	d.searchName = attributeName;
-	if (attributeTypeName == 'Asset Type') {
-		url = '/getFilterList';
-	} else {
+	if(attributeName == 'Program Name' || attributeName == 'Study Name') {
 		url = '/getFilterList?retrieveParent=true';
+	} else  {
+		url = '/getFilterList';
 	}
 
 	$.ajax({
 		url : url,
 		type : 'GET',
-		async : false,
 		contentType : 'application/json',
 		dataType : 'text',
 		data : d,
@@ -911,10 +913,6 @@ function filterPrev($this, attributeTypeName) {
 			console.log("===> error: ", error);
 			console.log("===> data: ", data);
 		}
-	}).done(function(e) {
-		$this.closest('.filterComponentDiv').prev().find('.attributeLabel').each(function(e) {
-			filterPrev($(this));
-		});
 	});
 }
 

@@ -1075,4 +1075,65 @@ public abstract class AbstractDoeController {
 		return sortedList;
 	}
 
+	public List<KeyValueBean> getAllApplicableModelPaths(HttpSession session) throws DoeWebException {
+		/*
+		 * get all model paths with is_model_deployed metadata attr true
+		 */
+		List<KeyValueBean> modelPaths = new ArrayList<KeyValueBean>();
+
+		log.info("get all models with model deployed true");
+		String authToken = (String) session.getAttribute("hpcUserToken");
+		DoeSearch search = new DoeSearch();
+		String[] attrNames = { "collection_type", "asset_type", "is_model_deployed" };
+		String[] attrValues = { "Asset", "Model", "Yes" };
+		String[] levelValues = { "Asset", "Asset", "Asset" };
+		boolean[] isExcludeParentMetadata = { false, false, false };
+		String[] rowIds = { "1", "2", "3" };
+		String[] operators = { "EQUAL", "EQUAL", "EQUAL" };
+		boolean[] iskeyWordSearch = { true, false };
+
+		search.setAttrName(attrNames);
+		search.setAttrValue(attrValues);
+		search.setLevel(levelValues);
+		search.setIsExcludeParentMetadata(isExcludeParentMetadata);
+		search.setRowId(rowIds);
+		search.setOperator(operators);
+		search.setIskeyWordSearch(iskeyWordSearch);
+
+		HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search, "Asset");
+		compoundQuery.setDetailedResponse(true);
+		log.info("search compund query" + compoundQuery);
+		try {
+			Response restResponse = DoeClientUtil.getCollectionSearchQuery(authToken,
+					compoundCollectionSearchServiceURL, compoundQuery);
+
+			if (restResponse.getStatus() == 200) {
+
+				MappingJsonFactory factory = new MappingJsonFactory();
+				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+				HpcCollectionListDTO collections = parser.readValueAs(HpcCollectionListDTO.class);
+				List<HpcCollectionDTO> results = collections.getCollections();
+
+				results.stream().forEach((g -> {
+
+					String modelPath = g.getCollection().getAbsolutePath();
+					String[] list = modelPath.split("/");
+					// if the list.length is 5, the collection is an Asset.
+					// this validation is done since only asset of type models are listed as
+					// applicable models
+					if (list.length == 5) {
+						String modelIdentifier = modelPath.substring(modelPath.lastIndexOf('/') + 1);
+						modelPaths.add(new KeyValueBean(modelPath, modelIdentifier));
+					}
+
+				}));
+
+			}
+			return modelPaths;
+		} catch (Exception e) {
+			log.error("Failed to get model paths");
+			throw new DoeWebException(e);
+		}
+
+	}
 }

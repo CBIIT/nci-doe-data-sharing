@@ -527,7 +527,11 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 					}
 
 					if (rule.getAttribute().equalsIgnoreCase("applicable_model_name")) {
-						List<KeyValueBean> validValues = modelInfoService.getAllModelInfoPaths();
+
+						/*
+						 * get this info from dme search api
+						 */
+						List<KeyValueBean> validValues = getAllApplicableModelPaths(session);
 						entry.setValidValues(validValues);
 					}
 					entry.setDescription(rule.getDescription());
@@ -538,6 +542,10 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 						entry.setMandatory(Boolean.TRUE);
 					} else {
 						entry.setMandatory(rule.getMandatory());
+					}
+
+					if (StringUtils.isNotEmpty(rule.getDefaultValue())) {
+						entry.setDefaultValue(rule.getDefaultValue());
 					}
 					LookUp val = lookUpService.getLookUpByLevelAndName(collectionType, rule.getAttribute());
 					if (val != null) {

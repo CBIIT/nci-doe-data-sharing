@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Type;
+
 @Entity
 @Table(name = "INFERENCING_TASK_T")
 public class InferencingTask {
@@ -24,6 +26,8 @@ public class InferencingTask {
 	private String errorMessage;
 	private String uploadFrom;
 	private String actualResultsFileName;
+	private String outcomeFilePath;
+	private Boolean isReferenceAsset;
 
 	public boolean equals(Object object) {
 		if (this == object) {
@@ -222,6 +226,27 @@ public class InferencingTask {
 
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
+	}
+
+	@Basic
+	@Column(name = "OUTCOME_FILE_PATH")
+	public String getOutcomeFilePath() {
+		return outcomeFilePath;
+	}
+
+	public void setOutcomeFilePath(String outcomeFilePath) {
+		this.outcomeFilePath = outcomeFilePath;
+	}
+
+	@Basic
+	@Column(name = "IS_REFERENCE_DATASET", nullable = true, length = 1)
+	@Type(type = "yes_no")
+	public Boolean getIsReferenceAsset() {
+		return isReferenceAsset;
+	}
+
+	public void setIsReferenceAsset(Boolean isReferenceAsset) {
+		this.isReferenceAsset = isReferenceAsset;
 	}
 
 	@Override

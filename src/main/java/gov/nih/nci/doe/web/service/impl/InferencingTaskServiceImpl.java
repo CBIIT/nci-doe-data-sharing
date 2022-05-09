@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,8 +45,10 @@ public class InferencingTaskServiceImpl implements InferencingTaskService {
 		t.setStartDate(new Date());
 		t.setModelh5Path(inference.getModelPath());
 		t.setUploadFrom(inference.getUploadFrom() != null ? inference.getUploadFrom() : "gdcData");
-		t.setActualResultsFileName(inference.getOutputResultName());
+		t.setActualResultsFileName(inference.getOutcomeFileName());
 		t.setStatus("NOTSTARTED");
+		t.setIsReferenceAsset(inference.getIsReferenceAsset());
+		t.setOutcomeFilePath(inference.getOutcomeFilePath());
 		inferencingTaskRepository.saveAndFlush(t);
 
 	}
@@ -71,6 +74,42 @@ public class InferencingTaskServiceImpl implements InferencingTaskService {
 		log.info("save task " + t.getTaskId());
 		inferencingTaskRepository.saveAndFlush(t);
 
+	}
+
+	@Override
+	public InferencingTask getInferenceByUserIdAndPredName(String userId, String resultPath) {
+		log.info("get inference for user: " + userId + " and pred path: " + resultPath);
+		return inferencingTaskRepository.getInferenceByUserIdAndPredName(userId, resultPath);
+
+	}
+
+	@Override
+	public InferencingTask getInferenceByUserIdAndOutcomeName(String userId, String assetPath, String outcomeName) {
+		log.info("get inference for user: " + userId + " and outcomeName: " + outcomeName);
+		return inferencingTaskRepository.getInferenceByUserIdAndOutcomeName(userId, assetPath, outcomeName);
+	}
+
+	@Override
+	public InferencingTask getInferenceByUserIdAndInputName(String userId, String assetPath, String inputFileName) {
+		log.info("get inference for user: " + userId + " and input path: " + inputFileName);
+		return inferencingTaskRepository.getInferenceByUserIdAndInputName(userId, assetPath, inputFileName);
+	}
+
+	@Override
+	public Boolean checkifFileExistsForUser(String user, String modelPath, String inputFileName) {
+		log.info("get inference for user : " + user + " and model path: " + modelPath + " and input file: "
+				+ inputFileName);
+		List<InferencingTask> inferenceList = inferencingTaskRepository.getInferenceByUserIdAndModelPath(user,
+				modelPath);
+		Boolean isFileExists = false;
+		if (CollectionUtils.isNotEmpty(inferenceList)) {
+
+			isFileExists = inferenceList.stream().anyMatch(g -> g.getTestDataSetPath()
+					.substring(g.getTestDataSetPath().lastIndexOf('/') + 1).equals(inputFileName));
+
+		}
+
+		return isFileExists;
 	}
 
 }

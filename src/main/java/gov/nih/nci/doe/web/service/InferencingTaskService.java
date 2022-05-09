@@ -10,7 +10,16 @@ public interface InferencingTaskService {
 	public void saveInferenceTask(InferencingTaskModel inference);
 
 	public void updateInferenceTask(String taskId, String dmeTaskId);
-	
+
 	public List<InferencingTask> getAllTaskByUserId(String userId);
+
 	public void save(InferencingTask t);
+
+	public InferencingTask getInferenceByUserIdAndPredName(String userId, String resultPath);
+
+	public InferencingTask getInferenceByUserIdAndOutcomeName(String userId, String assetPath, String outcomeName);
+
+	public InferencingTask getInferenceByUserIdAndInputName(String userId, String assetPath, String inputFileName);
+
+	public Boolean checkifFileExistsForUser(String user, String modelPath, String inputFileName);
 }

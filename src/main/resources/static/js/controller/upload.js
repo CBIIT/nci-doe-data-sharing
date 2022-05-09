@@ -435,15 +435,19 @@ function constructNewCollectionMetaDataSet(data, status) {
 							if (value.attrValue) {
 								$select.append($('<option></option>').attr('value', value.attrValue).text(
 										value.attrValue));
-							} else {
+							} else if(!value.defaultValue) {
 								$select.append($('<option></option>').attr('value', 'Select').text('Select'));
 							}
 							for (var i = 0; i < value.validValues.length; i++) {
 								$select.append($('<option></option>').attr('value', value.validValues[i].key).text(
 										value.validValues[i].value));
 							}
-
-							$select.select2().trigger('change');
+							if(value.defaultValue) {
+								$select.select2().val(value.defaultValue).trigger('change');
+							} else {
+								$select.select2().trigger('change');
+							}
+							
 
 						} else if (value.attrValue) {
 							$("#newMetaDataTable tbody").append(
@@ -1007,7 +1011,7 @@ function constructAssetTypeBulkDiv(data, status) {
 							if (value.attrValue) {
 								$select.append($('<option></option>').attr('value', value.attrValue).text(
 										value.attrValue));
-							} else {
+							} else if(!value.defaultValue){
 								$select.append($('<option></option>').attr('value', 'Select').text('Select'));
 							}
 
@@ -1016,7 +1020,13 @@ function constructAssetTypeBulkDiv(data, status) {
 										value.validValues[i].value));
 							}
 
-							$select.select2().trigger('change');
+							if(value.defaultValue) {
+								$select.select2().val(value.defaultValue).trigger('change');
+							} else {
+								$select.select2().trigger('change');
+							}
+							
+						
 
 						} else if (value.attrName && value.attrName != 'asset_name' && value.attrName != 'asset_type'
 								&& value.attrName != 'asset_identifier' && value.attrName != 'access_group') {

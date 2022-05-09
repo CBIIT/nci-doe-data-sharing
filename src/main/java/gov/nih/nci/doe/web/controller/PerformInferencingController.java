@@ -14,7 +14,6 @@ import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.beans.factory.annotation.Value;
@@ -114,35 +113,24 @@ public class PerformInferencingController extends AbstractDoeController {
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		String taskId = UUID.randomUUID().toString();
 		String applicableModelNames = inference.getApplicableModelNames();
-		ModelInfo modelInfo = modelInfoService.getModelInfo(applicableModelNames);
 
-		// create a file name for y_pred file and append to the asset Path
+		// get the model info based on selected applicable model name
+		ModelInfo modelInfo = modelInfoService.getModelInfo(applicableModelNames);
+		// create a file name for y_pred file
 		String resultPath = inference.getAssetPath() + "/y_pred_" + taskId + ".csv";
 
-		// create a unique file name for input path since the same file can be uploaded
-		// multiple times by the user and causing an issue in inferencing script to
-		// locate the file
-		String testInputName = FilenameUtils.getBaseName(inference.getTestInputPath());
-		String testInputExt = FilenameUtils.getExtension(inference.getTestInputPath());
-
-		String updatedTestInputName = testInputName.trim() + "_" + taskId + "." + testInputExt;
-		String updatedTestInputPath = inference.getAssetPath() + "/" + updatedTestInputName;
+		String testInputName = inference.getTestInputPath()
+				.substring(inference.getTestInputPath().lastIndexOf('/') + 1);
+		String outcomeFileName = inference.getOutcomeFilePath()
+				.substring(inference.getOutcomeFilePath().lastIndexOf('/') + 1);
 
 		try {
-			// create a unique file name for users expected output path since the same file
-			// can be uploaded
-			// multiple times by the user and causing an issue in inferencing script to
-			// locate the file
-			if (StringUtils.isNotEmpty(inference.getOutputResultName())) {
-				String expectedOutputName = FilenameUtils.getBaseName(inference.getOutputResultName());
-				String expectedOutputExt = FilenameUtils.getExtension(inference.getOutputResultName());
 
-				String updatedOutputFileName = expectedOutputName.trim() + "_" + taskId + "." + expectedOutputExt;
+			if (StringUtils.isNotEmpty(outcomeFileName)) {
 
 				// copy the results file to mount location
-
 				Response restResponseModelFile = DoeClientUtil.getPreSignedUrl(authToken, dataObjectServiceURL,
-						inference.getOutputResultName());
+						inference.getOutcomeFilePath());
 
 				log.info("rest response:" + restResponseModelFile.getStatus());
 				if (restResponseModelFile.getStatus() == 200) {
@@ -155,9 +143,9 @@ public class PerformInferencingController extends AbstractDoeController {
 					Response restResponseForModelFileCopy = client.invoke("GET", null);
 
 					Files.copy((InputStream) restResponseForModelFileCopy.getEntity(),
-							Paths.get(uploadPath + updatedOutputFileName), StandardCopyOption.REPLACE_EXISTING);
+							Paths.get(uploadPath + outcomeFileName), StandardCopyOption.REPLACE_EXISTING);
 
-					inference.setOutputResultName(updatedOutputFileName);
+					inference.setOutcomeFileName(outcomeFileName);
 
 				}
 
@@ -178,18 +166,19 @@ public class PerformInferencingController extends AbstractDoeController {
 					WebClient client = DoeClientUtil.getWebClient(dataObject.getDownloadRequestURL());
 					Response restResponse1 = client.invoke("GET", null);
 
-					Files.copy((InputStream) restResponse1.getEntity(), Paths.get(uploadPath + updatedTestInputName),
+					Files.copy((InputStream) restResponse1.getEntity(), Paths.get(uploadPath + testInputName),
 							StandardCopyOption.REPLACE_EXISTING);
 
 				}
 			}
 
 			// save the inferencing task
+			inference.setIsReferenceAsset(Boolean.TRUE);
 			inference.setTaskId(taskId);
 			inference.setModelPath(modelInfo.getModelPath());
 			inference.setUserId(getLoggedOnUserInfo());
 			inference.setResultPath(resultPath);
-			inference.setTestInputPath(updatedTestInputPath);
+			inference.setTestInputPath(inference.getTestInputPath());
 			inferencingTaskService.saveInferenceTask(inference);
 
 			return "Perform model analysis task submitted. Your task id is " + taskId;
@@ -214,49 +203,41 @@ public class PerformInferencingController extends AbstractDoeController {
 
 		String testInputPath = inference.getTestInputPath();
 		String parentPath = testInputPath != null ? testInputPath.substring(0, testInputPath.lastIndexOf('/')) : null;
-
+		String user = getLoggedOnUserInfo();
 		// create a modac task Id
 		String taskId = UUID.randomUUID().toString();
 
 		// create a file name for y_pred file and append to the asset Path
 		String resultPath = parentPath + "/y_pred_" + taskId + ".csv";
 
-		// create a unique file name for input path since the same file can be uploaded
-		// multiple times by the user and causing an issue in inferencing script to
-		// locate the file
-		String testInputName = FilenameUtils.getBaseName(testInputPath);
-		String testInputExt = FilenameUtils.getExtension(testInputPath);
+		String testInputName = testInputPath.substring(testInputPath.lastIndexOf('/') + 1);
 
-		String updatedTestInputName = testInputName.trim() + "_" + taskId + "." + testInputExt;
-		String updatedTestInputPath = parentPath + "/" + updatedTestInputName;
+		// check if the file name is already used for inferencing for the same user and
+		// same model path and is not in failed status
+		if (Boolean.TRUE.equals(inferencingTaskService.checkifFileExistsForUser(user, parentPath, testInputName))) {
+			return "Input file name already exists";
+		}
 
-		// create a unique file name for users expected output path since the same file
-		// can be uploaded
-		// multiple times by the user and causing an issue in inferencing script to
-		// locate the file
 		if (StringUtils.isNotEmpty(outputFileName)) {
-			String expectedOutputName = FilenameUtils.getBaseName(outputFileName);
-			String expectedOutputExt = FilenameUtils.getExtension(outputFileName);
 
-			String updatedOutputFileName = expectedOutputName.trim() + "_" + taskId + "." + expectedOutputExt;
-			inference.setOutputResultName(updatedOutputFileName);
-
-			Files.copy(uploadTestOutputFile.getInputStream(), Paths.get(uploadPath + updatedOutputFileName),
+			inference.setOutcomeFileName(outputFileName);
+			Files.copy(uploadTestOutputFile.getInputStream(), Paths.get(uploadPath + outputFileName),
 					StandardCopyOption.REPLACE_EXISTING);
 		}
 
 		try {
 			// save the inferencing task
+			inference.setIsReferenceAsset(Boolean.FALSE);
 			inference.setTaskId(taskId);
 			inference.setResultPath(resultPath);
 			inference.setAssetPath(parentPath);
-			inference.setTestInputPath(updatedTestInputPath);
-			inference.setUserId(getLoggedOnUserInfo());
+			inference.setTestInputPath(testInputPath);
+			inference.setUserId(user);
 
 			inferencingTaskService.saveInferenceTask(inference);
 
 			// copy the test dataset file to IRODsTest mount
-			Files.copy(uploadTestInferFile.getInputStream(), Paths.get(uploadPath + updatedTestInputName),
+			Files.copy(uploadTestInferFile.getInputStream(), Paths.get(uploadPath + testInputName),
 					StandardCopyOption.REPLACE_EXISTING);
 
 			return "Perform inferencing task submitted. Your task id is " + taskId;

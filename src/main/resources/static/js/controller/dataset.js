@@ -1,4 +1,5 @@
 $(document).ready(function() {
+	$.fn.dataTable.moment("MM/DD/YYYY HH:mm:ss");
 	refreshTaskDatatable('dataSetTable');
 
 	$("#assetFilesTab").click(function() {
@@ -190,19 +191,39 @@ function generatePredTable(isVisible) {
 			},
 			responsivePriority : 2
 		},
+		
+		{
+			"data" : "outcomeFileName",
+			"render" : function(data, type, row) {
+				return renderOutcomeName(data, type, row);
+			},
+			responsivePriority : 3
+		},
 
+		{"data": "taskId", "render": function (data, type, row) {
+            return rendertaskId(data, type, row);
+        },
+        responsivePriority: 1
+        },
+        
+		{"data": "taskCompletedDate", "render": function (data, type, row) {
+            return renderTaskCompletedDate(data, type, row);
+        },
+        responsivePriority: 5
+        },
+        
 		{
 			"data" : "download",
 			"render" : function(data, type, row) {
 				return renderGeneratePredDownload(data, type, row);
 			},
-			responsivePriority : 3
+			responsivePriority : 4
 		},
 
 		],
 		columnDefs : [ {
 			orderable : false,
-			className : 'select-checkbox td_class_15',
+			className : 'select-checkbox td_class_5_percent',
 			headerHtml : 'batch select',
 			blurable : true,
 			targets : 0,
@@ -212,18 +233,32 @@ function generatePredTable(isVisible) {
 			"orderable" : false
 		}, {
 			"targets" : 1,
-			className: "td_class_35"
+			className: "td_class_5"
 		},
 		{
 			"targets" : 2,
-			className: "td_class_35"
+			className: "td_class_5"
+		},
+		{
+			"targets" : 3,
+			className: "td_class_5"
+		},
+		{
+			"targets" : 4,
+			className: "td_class_15"
+		},
+		{
+			"targets" : 5,
+			className: "td_class_15"
 		},
 		{
 			"visible" : isVisible,
 			"targets" : -1,
-			className: "td_class_15",
+			className: "td_class_5_percent",
 			"orderable" : false,
-		} ],
+		},
+		{type: "date", "targets": [-2]}
+		],
 
 		"dom" : '<"top"lip>rt<"bottom"ip>',
 		"pagingType" : "simple",
@@ -579,7 +614,8 @@ $('#dataSetTable tbody').on('click','a.detail-control',function() {
 								var tableId = 'table_' + name;
 								var accessgroups = $("#assetAccessGrp").val();
 								var permissions = $("#assetPermission").val();
-								var tableHtml = "<div class='subFoldersDiv' style='width:200px;'><table style='width:"+tableWidth+"px;'class='table display" +
+								var tableHtml = "<div class='subFoldersDiv' style='width:200px;'><table style='width:"+tableWidth+"px;'" +
+										"class='table display" +
 									" dt-responsive wrap subAssetsDataSetTable' id='" + tableId + "'role='grid'>" +
 									"<tbody>";
 									
@@ -604,7 +640,8 @@ $('#dataSetTable tbody').on('click','a.detail-control',function() {
 									fileSize = value.fileSize;
 								}	
 								if (value.isFolder == true) {
-								  iconHtml += "<a class='detail-control detail-control-sub-folder' style='margin-left:"+leftCss+"px;' data-name = '"+name+"/"+value.name+"'>"
+								  iconHtml += "<a class='detail-control detail-control-sub-folder' style='margin-left:"+leftCss+"px;' " +
+								  		"data-name = '"+name+"/"+value.name+"'>"
 								           +"<i class='expand far fa-folder'></i></a>"+value.name+"";
 								  metadataInfoTitle = "Folder Metadata";
 								  copyPathTitle = "Copy Folder Path";
@@ -731,9 +768,23 @@ $('#dataSetTable tbody').on('click','a.detail-control',function() {
 					}
 });
 
+function rendertaskId(data, type, row) {
+	
+	return row.taskId ;
+}
+
+function renderTaskCompletedDate(data, type, row) {
+	if(data) {
+		return moment(data).format("MM/DD/YYYY HH:mm:ss");
+	}
+	return "";
+	
+}
+
+
 function renderBatchSelect(data, type, row) {
 	var selectHtml = "<input type='checkbox' id='" + row.inputDatasetPath + "' dataset_path = '" + row.inputDatasetPath
-			+ "' " + "pred_path ='" + row.predictionsPath + "' class='dt-checkboxes selectIndividualCheckbox'"
+			+ "' " + "pred_path ='" + row.predictionsPath + "' outcome_path = '" + row.outcomeFilePath + "' class='dt-checkboxes selectIndividualCheckbox'"
 			+ " aria-label='select'/>";
 
 	return selectHtml;
@@ -760,15 +811,46 @@ function renderInputDatasetName(data, type, row) {
             "tabindex='0' selected_path= '" + row.inputDatasetPath + "' " +
             "collection_type= 'DataObject' file_name = '" + row.inputDatasetName + "' tabindex='0'"
 			+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
-			+ "data-popover-content='#a01'><img src='images/Status.info-tooltip.png' class='infoMetadata' th:src='@{/images/Status.info-tooltip.png}' data-toggle='tooltip' title='File Metadata' alt='Status info'></i></a>";
+			+ "data-popover-content='#a01'><img src='images/Status.info-tooltip.png' class='infoMetadata'" +
+		    " th:src='@{/images/Status.info-tooltip.png}' data-toggle='tooltip' title='File Metadata' alt='Status info'></i></a>";
 
-	html += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
+	html += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;' " +
+			"class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
 			+ "title='Copy File Path' data-clipboard-text='"
 			+ row.inputDatasetPath
 			+ "'>"
 			+ "<img src='images/Copy-FilePath.png' th:src='@{/images/Copy-FilePath.png}' "
 			+ "style='width:17px;' alt='copy file path'></button>";
 	return html;
+}
+
+
+function renderOutcomeName(data, type, row) {
+
+	var html = "";
+	
+	if(row.outcomeFileName) {
+		html += "&nbsp;&nbsp;&nbsp;"
+			+ row.outcomeFileName
+			+ "&nbsp;&nbsp;<a class='cil_13_no_color button2a'" +
+            " selected_path= '" + row.outcomeFilePath + "' collection_type= 'DataObject'"
+			+ "file_name = '"+ row.outcomeFileName + "'tabindex='0'"
+			+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
+			+ "data-popover-content='#a01'><img src='images/Status.info-tooltip.png' " +
+			"th:src='@{/images/Status.info-tooltip.png}' data-toggle='tooltip' class='infoMetadata'" +
+			" title='File Metadata' alt='Status info'></a>";
+
+	html += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;' " +
+			"class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
+			+ "title='Copy File Path' data-clipboard-text='"
+			+ row.outcomeFilePath
+			+ "'>"
+			+ "<img src='images/Copy-FilePath.png' th:src='@{/images/Copy-FilePath.png}' "
+			+ "style='width:17px;' alt='copy file path'></button>";
+	}
+
+	return html;
+	
 }
 
 function renderPredictionsName(data, type, row) {
@@ -780,9 +862,11 @@ function renderPredictionsName(data, type, row) {
 			+ "file_name = '"+ row.predictionsName + "'tabindex='0'"
 			+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
 			+ "data-popover-content='#a01'><img src='images/Status.info-tooltip.png' " +
-					"th:src='@{/images/Status.info-tooltip.png}' data-toggle='tooltip' class='infoMetadata' title='File Metadata' alt='Status info'></a>";
+			"th:src='@{/images/Status.info-tooltip.png}' data-toggle='tooltip' class='infoMetadata' " +
+			"title='File Metadata' alt='Status info'></a>";
 
-	html += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
+	html += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;' " +
+			"class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
 			+ "title='Copy File Path' data-clipboard-text='"
 			+ row.predictionsPath
 			+ "'>"
@@ -812,7 +896,8 @@ function renderDataSetPath(data, type, row) {
 		metadatatitle ="Folder Metadata";
 		collection_type = "Folder";
 		html+= "<a class='detail-control' data-name = '"+row.name+"'" +
-				"style='float:left;margin-right:"+marginRightCss+"px;margin-left:"+marginLeftCss+"px;'><i class='expand far fa-folder'></i></a>";
+				"style='float:left;margin-right:"+marginRightCss+"px;margin-left:"+marginLeftCss+"px;'>" +
+				"<i class='expand far fa-folder'></i></a>";
 	} else {
 		title = "Copy File Path";
 		metadatatitle = "File Metadata";
@@ -821,7 +906,8 @@ function renderDataSetPath(data, type, row) {
 
 	html += row.name+"&nbsp;&nbsp;";
 
-	html += "<button type='button' style='border: transparent;margin-top: -6px;' class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
+	html += "<button type='button' style='border: transparent;margin-top: -6px;' class='btn btn-link btn-sm share_path_copy' " +
+			"data-toggle='tooltip' data-placement='top' "
 			+ "title='"
 			+ title
 			+ "' data-clipboard-text='"
@@ -830,7 +916,8 @@ function renderDataSetPath(data, type, row) {
 			+ "<img src='images/Copy-FilePath.png' th:src='@{/images/Copy-FilePath.png}' "
 			+ "style='width:17px;' alt='copy file path'></button>";
 	
-	html += "<a class='cil_13_no_color button2a' selected_path='"+row.path+"' collection_type= " + collection_type + " file_name = '" + row.name +"'"
+	html += "<a class='cil_13_no_color button2a' selected_path='"+row.path+"' collection_type= " + collection_type + " " +
+			"file_name = '" + row.name +"'"
 			+ "tabindex='0'"
 			+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
 			+ "data-popover-content='#a01'><img src='images/Status.info-tooltip.png'" +
@@ -871,7 +958,8 @@ function renderActions(data, type, row) {
 					+ "' data-fileName = '"
 					+ downdloadFileName
 					+ "' >"
-					+ "<img src='images/Edit-FileMetadata.png' data-toggle='tooltip' title='Edit Folder Metadata' th:src='@{/images/Edit-FileMetadata.png}' "
+					+ "<img src='images/Edit-FileMetadata.png' data-toggle='tooltip' title='Edit Folder Metadata' " +
+							"th:src='@{/images/Edit-FileMetadata.png}' "
 					+ "style='width:17px;' alt='edit collection'></span>";
 		} else {
 			html += "<span style='border: transparent;' class='btn btn-link btn-sm editDataFileCollectionMetadata'  metadata_path  = '"
@@ -880,7 +968,8 @@ function renderActions(data, type, row) {
 					+ "data-fileName = '"
 					+ downdloadFileName
 					+ "' >"
-					+ "<img src='images/Edit-FileMetadata.png' data-toggle='tooltip' title='Edit File Metadata' th:src='@{/images/Edit-FileMetadata.png}' "
+					+ "<img src='images/Edit-FileMetadata.png' data-toggle='tooltip' title='Edit File Metadata'" +
+							" th:src='@{/images/Edit-FileMetadata.png}' "
 					+ "style='width:17px;' alt='edit file metadata'></span>";
 		}
 
@@ -897,7 +986,8 @@ function renderActions(data, type, row) {
 				+ "' th:src='@{/images/Download-Metadata.png}' "
 				+ "style='width:17px;' alt='Download File Metadata'></a>";
 		
-		html += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLink' href='javascript:void(0);' "
+		html += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLink' " +
+				"href='javascript:void(0);' "
 			+ "data-fileName = "
 			+ downdloadFileName
 			+ " data-path="
@@ -908,7 +998,8 @@ function renderActions(data, type, row) {
 			+ "' th:src='@{/images/Download.png}' " + "style='width:17px;' alt='download file'></a>";
 	} else {
 		downloadFileTitle = "Download Folder";
-		html += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLinkFolder' href='javascript:void(0);' "
+		html += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLinkFolder' " +
+				"href='javascript:void(0);' "
 			+ "data-fileName = "
 			+ downdloadFileName
 			+ " data-path="
@@ -943,13 +1034,14 @@ function renderActions(data, type, row) {
 function renderGeneratePredDownload(data, type, row) {
 
 	var html = "";
-	html += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadModelAnalysisLink' href='javascript:void(0);' "
+	html += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadModelAnalysisLink' " +
+			"href='javascript:void(0);' "
 			+ "dataset_path = '"
 			+ row.inputDatasetPath
 			+ "' pred_path ='"
 			+ row.predictionsPath
 			+ "'"
-			+ "><img src='images/Download.png' data-toggle='tooltip' title='Download Model Analysis Files' th:src='@{/images/Download.png}' "
+			+ " outcome_path = '" + row.outcomeFilePath + "'><img src='images/Download.png' data-toggle='tooltip' title='Download Model Analysis Files' th:src='@{/images/Download.png}' "
 			+ "style='width:17px;' alt='download file'></a>";
 
 	return html;
@@ -1121,10 +1213,20 @@ function onClickOfModelAnlysisBulkDownloadBtn($this) {
 	if ($this) {
 		selectedPaths.push($this.attr('dataset_path'));
 		selectedPaths.push($this.attr('pred_path'));
+		var outcomePath = $this.attr('outcome_path');
+		if(outcomePath && outcomePath != "null") {
+			selectedPaths.push(outcomePath);
+		}
+		
 	} else {
 		$("#generatePredTable tbody input[type=checkbox]:checked").each(function() {
 			selectedPaths.push($(this).attr('dataset_path'));
 			selectedPaths.push($(this).attr('pred_path'));
+			var outcomePath = $(this).attr('outcome_path');
+			if(outcomePath && outcomePath != "null") {
+				selectedPaths.push(outcomePath);
+			}
+			
 		});
 	}
 

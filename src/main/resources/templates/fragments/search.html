@@ -55,18 +55,19 @@
                                  font-size: 19px;" class="attributeLabel">
                               <label class="attrName" th:text="${list.key}" style="color: #fff;margin-bottom: 5px;
                               margin-top: -8px;margin-left: 9px;font-weight:400;
-                                     	font-size: 17px;width: 65%;font-family: 'latoregular';"></label>
-                                     	<img src="images/AccordionDown.svg" class="dataTargetCollapse"
-                                     	th:src="@{/images/AccordionDown.svg}" style="width:11px;float: left;
-                                         margin-top: 12px;margin-left: 12px;"/>
-                                         <img src="images/Search.svg" class="searchCheckBoxlist"
-                                     	th:src="@{/images/Search.svg}" style="width:18px;font-size: 15px;float: right;margin-right: 12px;
-                                          margin-top: 8px;"/>
-                                         
-                                         </p>
-                               <input type="text" class="filterSearchBox" placeholder="Search..." style="width: 96%;border-radius: 4px;
-                               border: 2px solid #A7A7A7;
-                                font-size: 14px;height: 2.1rem;padding: 6px 12px;margin-bottom: 15px;display:none;">
+                                     	font-size: 17px;width: 65%;font-family: 'latoregular';"></label> 
+                                <img src="images/AccordionDown.svg" class="dataTargetCollapse"
+								th:src="@{/images/AccordionDown.svg}"
+								style="width: 11px; float: left; margin-top: 12px; margin-left: 12px;" />
+								
+								<img th:if="${list.key != 'Asset Type' && list.key != 'Is Reference Dataset' && 
+								 list.key != 'Is Model Deployed'}" src="images/Search.svg" class="searchCheckBoxlist"
+								th:src="@{/images/Search.svg}"
+								style="width: 18px; font-size: 15px; float: right; margin-right: 12px; margin-top: 8px;" />
+						     </p>
+						     
+                               <input type="text" th:if="${list.key != 'Asset Type' && list.key != 'Is Reference Dataset' &&
+                                list.key != 'Is Model Deployed'}" class="filterSearchBox" placeholder="Search...">
                                 
                                 <div th:if="${list.key == 'Asset Type'}" class="dataDivCollapse"
                                style="margin-top:-10px;height: 68px;;margin-left: -5px;font-size: 14px;font-family: 'latoregular';">
@@ -78,8 +79,10 @@
                                      </div>
                                </div>          
                                <div th:if="${list.key != 'Asset Type'}" class="dataDivCollapse"
-                               style="padding-top:5px;margin-top:-10px;max-height: 256px;overflow: auto;font-size: 14px;margin-bottom: 10px;margin-left: -5px;font-family: 'latoregular';">
-                                  <div class="form-group col-lg-12 col-md-12 filterGroupDiv" th:id="${list.key}" th:each="attr: ${list.value}">
+                               style="padding-top:5px;margin-top:-10px;max-height: 256px;overflow: auto;font-size: 14px;
+                               margin-bottom: 10px;margin-left: -5px;font-family: 'latoregular';">
+                                  <div class="form-group col-lg-12 col-md-12 filterGroupDiv" th:id="${list.key}" 
+                                  th:each="attr: ${list.value}">
                                     
                                     <input type="hidden" th:value="${attrStat.index}"/>
                                     <input type="hidden" class="filterSize" th:value="${attrStat.size}"/>

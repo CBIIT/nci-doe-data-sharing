@@ -9,8 +9,10 @@ public class InferencingTaskModel {
 	private String testInputPath;
 	private String modelPath;
 	private String uploadFrom;
-	private String outputResultName;
+	private String outcomeFileName;
 	private String applicableModelNames;
+	private String outcomeFilePath;
+	private Boolean isReferenceAsset;
 
 	public String getApplicableModelNames() {
 		return applicableModelNames;
@@ -76,12 +78,28 @@ public class InferencingTaskModel {
 		this.uploadFrom = uploadFrom;
 	}
 
-	public String getOutputResultName() {
-		return outputResultName;
+	public String getOutcomeFileName() {
+		return outcomeFileName;
 	}
 
-	public void setOutputResultName(String outputResultName) {
-		this.outputResultName = outputResultName;
+	public void setOutcomeFileName(String outcomeFileName) {
+		this.outcomeFileName = outcomeFileName;
+	}
+
+	public String getOutcomeFilePath() {
+		return outcomeFilePath;
+	}
+
+	public void setOutcomeFilePath(String outcomeFilePath) {
+		this.outcomeFilePath = outcomeFilePath;
+	}
+
+	public Boolean getIsReferenceAsset() {
+		return isReferenceAsset;
+	}
+
+	public void setIsReferenceAsset(Boolean isReferenceAsset) {
+		this.isReferenceAsset = isReferenceAsset;
 	}
 
 }

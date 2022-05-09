@@ -12,7 +12,7 @@
   background: #A7A7A7; 
 }
 
-.fivepercent {width:5%;}
+.fivepercent {width:5% !important;}
 .tenpercent {width:10%;}
 .fifteenpercent {width:15%;}
 .twentpercent {width:20%;}
@@ -1002,6 +1002,9 @@ background-color: #DDDDDD;
 height: 50px;
 }
 
+.td_class_5_percent {
+	width:5% !important;
+}
 .td_class_1 {
 	width:10% !important;
 }
@@ -1463,6 +1466,21 @@ margin-top: 5px;
     font-size: 15px;
     letter-spacing: 0.5px;
 }
+
+.filterSearchBox {
+	width: 96%;
+    border-radius: 4px;
+    border: 2px solid #A7A7A7;
+    font-size: 14px;
+    height: 2.1rem;
+    padding: 6px 12px;
+    margin-bottom: 15px;display:none;
+    margin-left: 6px;
+}
+.showMorefields{
+	width: fit-content;
+}
+
 
 .help-inline{font-size:12px;}
 .form-control{font-size: 14px;}  
