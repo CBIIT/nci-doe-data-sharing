@@ -1438,13 +1438,27 @@ padding-right: 10px;
 
 div.dataDivCollapse :not(:first-child) {
     margin-top:-9px;
+    margin-bottom: 0px;
 }
-/*div.dataDivCollapse :first-child {
-    margin-top:5px;
-}*/
+div.dataDivCollapse :first-child {
+    margin-bottom: 0px;
+}
 
-div.dataDivCollapse :last-child {padding-bottom: 5px;}
+div.dataDivCollapse :last-child {padding-bottom: 6px;}
 
+.filterSearchBox {
+	width: 96%;
+    border-radius: 4px;
+    border: 2px solid #A7A7A7;
+    font-size: 14px;
+    height: 2.1rem;
+    padding: 6px 12px;
+    margin-bottom: 15px;display:none;
+    margin-left: 6px;
+}
+label.showMorefields{
+	width: fit-content;
+}
 .btn-danger {
     color: #fff!important;
     background-color: #dc3545!important;
@@ -1466,21 +1480,6 @@ margin-top: 5px;
     font-size: 15px;
     letter-spacing: 0.5px;
 }
-
-.filterSearchBox {
-	width: 96%;
-    border-radius: 4px;
-    border: 2px solid #A7A7A7;
-    font-size: 14px;
-    height: 2.1rem;
-    padding: 6px 12px;
-    margin-bottom: 15px;display:none;
-    margin-left: 6px;
-}
-.showMorefields{
-	width: fit-content;
-}
-
 
 .help-inline{font-size:12px;}
 .form-control{font-size: 14px;}  

@@ -870,6 +870,9 @@ public abstract class AbstractDoeController {
 				String isReferenceDataset = getAttributeValue("is_reference_dataset",
 						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
 
+				String isModelDeployed = getAttributeValue("is_model_deployed",
+						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
+
 				String resultFileName = getAttributeValue("outcome_file_name",
 						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
 
@@ -901,10 +904,12 @@ public abstract class AbstractDoeController {
 
 				ModelInfo modelInfo = modelInfoService.getModelInfo(collection.getCollection().getCollectionName());
 				if (Boolean.TRUE.equals(getIsUploader())
-						&& (modelInfo != null || "Yes".equalsIgnoreCase(isReferenceDataset))) {
+						&& ((isModelDeployed != null && isModelDeployed.equalsIgnoreCase("Yes"))
+								|| "Yes".equalsIgnoreCase(isReferenceDataset))) {
 
 					// show generate predictions button
-					model.addAttribute("showGeneratePredictions", modelInfo != null ? true : false);
+					model.addAttribute("showGeneratePredictions",
+							isModelDeployed != null && isModelDeployed.equalsIgnoreCase("Yes") ? true : false);
 					model.addAttribute("isExternalDataSetSupported",
 							modelInfo != null ? modelInfo.getIsExternalDatasetSupported() : false);
 

@@ -149,7 +149,7 @@ $(document).on(
 			});
 
 			if (!isResultFileNameFound) {
-				bootbox.alert("Result file not found.");
+				bootbox.alert("Outcome file not found.");
 			} else {
 
 				$("#performModelAnalysisModal").find("#testInputPath").val(testInputPath);

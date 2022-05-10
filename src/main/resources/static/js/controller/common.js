@@ -686,12 +686,14 @@ $(document).on('keyup', '.filterSearchBox', function() {
 	$(this).parent().find('.filteritem').each(function(i, elem) {
 		var x = $(this).val().toLowerCase();
 		if (x.indexOf(query) != -1) {
-			$(this).parent().show();
+			$(this).parent().parent().show();
 
 		} else {
-			$(this).parent().hide();
+			$(this).parent().parent().hide();
 		}
 	});
+	
+	showFirstFewFields($(this).parent(),'searchFilter');
 });
 
 $(document).on('click', '#clearFilters', function() {
@@ -934,6 +936,15 @@ function showFirstFewFields($this, oper) {
 						$(this).find('.showMorefields').show();
 					}
 				});
+				$this.find(".showMore").text(modifiedSize + " More ..");
+			} else {
+				$this.find('.css-17rpx5x').hide();				
+			}
+		} else if( oper =='searchFilter') {
+			var len = $this.find('.filterGroupDiv:visible').length;
+			if (len > 4) {
+				var modifiedSize = len - 4;
+				$this.find('.css-17rpx5x').show();
 				$this.find(".showMore").text(modifiedSize + " More ..");
 			} else {
 				$this.find('.css-17rpx5x').hide();				
