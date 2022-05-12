@@ -52,7 +52,7 @@ function refreshTaskDatatable(table) {
 		t.ajax.reload(null, false);
 	}
 	if(isVisible && !$("#filterSearchBox").is(':visible')) {
-    	$("div.toolbar").append('<div style="float: right;margin-top: -10px;margin-bottom: 10px;">'+
+    	$("div.datasetToolbar").append('<div style="float: right;margin-top: -10px;margin-bottom: 10px;">'+
         '<label>Filter: <input type="textbox" id="filterSearchBox"/></label></div>');
 	}
 }
@@ -440,7 +440,7 @@ function dataTableInitDataSet(isVisible) {
 			className: "td_class_7"
 		} ],
 
-		"dom" : '<"toolbar top"lip>rt<"bottom"ip>',
+		"dom" : '<"datasetToolbar top"lip>rt<"bottom"ip>',
 		"pagingType" : "simple",
 
 		"lengthMenu" : [ [ 10, 25, 50, 100 ], [ 10, 25, 50, 100 ] ],
