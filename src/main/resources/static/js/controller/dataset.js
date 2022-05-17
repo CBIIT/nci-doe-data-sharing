@@ -1043,6 +1043,15 @@ function renderGeneratePredDownload(data, type, row) {
 			+ "'"
 			+ " outcome_path = '" + row.outcomeFilePath + "'><img src='images/Download.png' data-toggle='tooltip' title='Download Model Analysis Files' th:src='@{/images/Download.png}' "
 			+ "style='width:17px;' alt='download file'></a>";
+	
+	// add capability to delete the predictions set
+	
+	html += "<span style='border: transparent;' dataset_path = '" + row.inputDatasetPath + "' pred_path ='" + row.predictionsPath + "'"
+			+ " outcome_path = '" + row.outcomeFilePath + "'"
+		    + "class='btn btn-link btn-sm deletePredBtn'>"
+		    + "<img src='images/Delete.png' data-toggle='tooltip' title='Delete Predictions' th:src='@{/images/Delete.png}' "
+		    + "style='width:15px;' alt='Delete Predictions'></span>";
+	
 
 	return html;
 }
@@ -1098,6 +1107,70 @@ $('#dataSetTable tbody').on('click', '.deleteCollectionBtn', function() {
 		    	}   
 		    }
 		});
+});
+
+$('#generatePredTable tbody').on('click', '.deletePredBtn', function() {
+	
+	var inputDataFilePath = $(this).attr('dataset_path');
+	var predPath = $(this).attr('pred_path');
+	var outcomePath = $(this).attr('outcome_path');
+	var paths = [];
+	paths.push(inputDataFilePath);
+	paths.push(predPath);
+	if(outcomePath && outcomePath != "null") {
+		paths.push(outcomePath);
+	}
+	
+	bootbox.confirm({
+		message : "This will delete your input dataset file, prediction file, and outcome file. Are you sure?",
+		buttons : {
+			confirm : {
+				label : 'Yes',
+				className : 'btn-success'
+			},
+			cancel : {
+				label : 'No',
+				className : 'btn-danger'
+			}
+		},
+		callback : function(result) {
+			if (result == true) {
+				var params = {
+					deletepath : paths.join()
+				};
+				$.ajax({
+					type : "POST",
+					url : "/delete/datafile",
+					contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
+					dataType : 'text',
+					data : params,
+					beforeSend : function() {
+						$("#spinner").show();
+						$("#dimmer").show();
+					},
+					success : function(msg) {
+						$("#spinner").hide();
+						$("#dimmer").hide();
+						console.log('SUCCESS: ', msg);
+						if(msg && msg == 'Not Authorized') {
+							 location.replace("/loginTab");
+						} else if (msg != "SUCCESS") {
+							return bootbox.alert(msg);
+						} else {
+							refreshTaskDatatable('generatePredTable');
+						}
+
+					},
+					error : function(e) {
+						$("#spinner").hide();
+						$("#dimmer").hide();
+						console.log('ERROR: ', e);
+						returnErrorMessage(e);
+					}
+				});
+			}
+		}
+	});
 });
 
 $('#dataSetTable tbody').on('click', '.deleteDataFileBtn', function() {
