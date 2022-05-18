@@ -678,15 +678,24 @@ ol#dataListing > li:before {
     color: #fff;
 }
 
-#footer_subDiv{
-	height: 43px;
-    width: 343px;
-    color: #FFFFFF;
-    font-family: inter_regular;
-    font-size: 15px;
-    letter-spacing: 1px;
-    line-height: 12px;
-    font-weight: lighter;
+.subTitle{
+	font-family: ralewayregular;
+	height: 12px;
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 300;
+  text-align: left;
+  letter-spacing: 1px;
+}
+
+.subTitleSubText{
+  height: 12px;
+  color: #FFFFFF;
+  font-family: ralewayregular;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  letter-spacing: 1px;
 }
 
 button.share-link-copy-button,button.share-assetLink-copy-button {
@@ -1760,6 +1769,22 @@ footer{background:#fff; font-size:14px;}
 .footerLinks:hover {
 	color:#00467f;
 } 
+#nci-wordart-first-line{
+	height: 17px;
+  width: 295px;
+  color: #FFFFFF;
+  font-family: MontserratRegular;
+  font-size: 22px;
+  font-weight: 600;
+}
+#nci-wordart-sec-line{
+	height: 11px;
+  width: 262px;
+  color: #FFFFFF;
+  font-family: MontserratRegular;
+  font-size: 14px;
+  font-weight: 600;
+}
    
 @media (min-width: 992px){
 .modal-lg {

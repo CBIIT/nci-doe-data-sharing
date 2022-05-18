@@ -31,6 +31,15 @@ FONTS, FONT AWESOME, FONT SOURCE SANS PRO
 }
 
 @font-face {
+    font-family: 'MontserratRegular';
+    src: url('../webfonts/Montserrat-Regular.woff') format('woff2'),
+         url('../webfonts/Montserrat-Regular.woff2') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
     font-family: 'nunito_sansbold';
     src: url('../webfonts/nunitosans-bold-webfont.woff2') format('woff2'),
          url('../webfonts/nunitosans-bold-webfont.woff') format('woff');
