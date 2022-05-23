@@ -45,9 +45,6 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
 
 	private String stripXSS(String value) {
 		if (value != null) {
-
-			// Avoid null characters
-			value = value.replaceAll("", "");
 			// Avoid anything between script tags
 			Pattern scriptPattern = Pattern.compile("<script>(.*?)</script>", Pattern.CASE_INSENSITIVE);
 			value = scriptPattern.matcher(value).replaceAll("");
@@ -102,8 +99,6 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
 					Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
 			value = scriptPattern.matcher(value).replaceAll("");
 
-			value = value.replace("&", "&#38;").replace("<", "&#60;").replace(">", "&#62;").replace("\"", "&#34;")
-					.replace("'", "&#39;");
 			value = StringEscapeUtils.escapeHtml(value);
 		}
 		return value;

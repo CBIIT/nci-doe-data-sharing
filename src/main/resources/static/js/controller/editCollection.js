@@ -168,7 +168,7 @@ function addCollectionMetaDataRows() {
 
 function editPermissionsOpenModal() {
 	$("#updatePermissionModal").find(".updatePermMsg").html("");
-	$("#updatePermissionModal").find(".updatePermissionsSuccessBlock").hide()
+	$("#updatePermissionModal").find(".updatePermissionsSuccessBlock").hide();
 	$("#updatePermissionModal").modal('show');
 	loadJsonData('/metaDataPermissionsList', $("#updatePermissionModal").find("#updateMetaDataPermissionsList"), false,
 			null, postSuccessEditPermissions, null, "key", "value");
