@@ -152,6 +152,10 @@ function returnErrorMessage(data) {
 	    
 	    
 	} else {
-		bootbox.alert("Unknown Error. Contact Technical Support!");
+		bootbox.alert("Unknown error. Contact <a class='modacSupportLink' href='/contactUs'>MoDaC Support</a>.");
 	}
+}
+
+function postFailureDeleteCollectionFunction(url, params, status, error, data) {
+	returnErrorMessage(data);
 }

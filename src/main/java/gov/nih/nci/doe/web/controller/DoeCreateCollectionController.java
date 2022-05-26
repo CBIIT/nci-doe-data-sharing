@@ -51,11 +51,6 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementRulesDTO;
 @RequestMapping("/addCollection")
 public class DoeCreateCollectionController extends DoeCreateCollectionDataFileController {
 
-	@Value("${gov.nih.nci.hpc.server.collection}")
-	private String serviceURL;
-	@Value("${dme.archive.naming.forbidden.chararacters}")
-	private String forbiddenCharacters;
-
 	@GetMapping(value = "/collectionTypes", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<KeyValueBean>> populateCollectionTypes(HttpSession session,
 			@RequestParam(value = "parent") String parent, Model model) throws DoeWebException {
@@ -165,7 +160,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 		List<DoeMetadataAttrEntry> metadataEntries = new ArrayList<DoeMetadataAttrEntry>();
 		List<DoeMetadataAttrEntry> cachedEntries = new ArrayList<DoeMetadataAttrEntry>();
 		try {
-			if (selectedPath != null) {
+			if (StringUtils.isNotEmpty(selectedPath)) {
 				log.info("selected path");
 				if (refresh == null) {
 					refresh = true;

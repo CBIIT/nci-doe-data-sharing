@@ -726,6 +726,14 @@ img.infoMetadata{
 	width:12px;
 	margin-top:-5px;
 }
+a:hover {
+	cursor:pointer;
+}
+.modacSupportLink {
+	color: #fff;
+    text-decoration: underline;
+}
+
 
 li.nav-item > .dropdown-menu > a:hover {
     background-color: transparent !important;
@@ -1488,6 +1496,10 @@ margin-top: 5px;
     font-family: 'inter_regular';
     font-size: 15px;
     letter-spacing: 0.5px;
+}
+
+.bootbox-body {
+    overflow-wrap: break-word;
 }
 
 .help-inline{font-size:12px;}

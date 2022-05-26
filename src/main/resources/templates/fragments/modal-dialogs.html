@@ -195,6 +195,59 @@
 		</div>
 
 
+		<div id="editPredictionAccessModal"
+			class="modal fade bs-example-modal-lg " tabindex="-1" role="dialog"
+			aria-hidden="false">
+			<div class="modal-dialog modal-md" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<p class="modal-title">Edit Prediction Access</p>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+					</div>
+					<div class="clearfix updatePredAccessSuccessBlock"
+						style="display: none; margin-left: 10px; width: 90%;">
+						<div class="col-md-12"
+							style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
+							<div class="alert alert-success">
+								<h6 class="updatePredGrpMsg"></h6>
+							</div>
+						</div>
+					</div>
+
+
+					<input type="hidden" id="predCollectionId" /> <input type="hidden"
+						id="predCollectionPath" /> <input type="hidden"
+						id="predAccessGroups" /> <input type="hidden"
+						id="isPublic" />
+					<div class="modal-body drilldown-content">
+						<div class="row row-buffer" style="margin-top: -16px;">
+							<label for="updatePredictionAccessGrpList"
+								style="padding-bottom: 10px;">Prediction Access Groups:
+							</label> <select class="simple-select2" multiple="multiple"
+								id="updatePredictionAccessGrpList"
+								name="updatePredictionAccessGrpList" style="width: 70%">
+							</select>&nbsp;&nbsp; <span id="isPublicAccessForPredictionSpan"> <input
+								type="checkbox" id="isPublicAccessForPrediction"
+								aria-label="public access" value="public access"> Public
+							</span>
+						</div>
+						<div class="row row-buffer" style="text-align: end;">
+							<div class="col-sm-12" style="margin-bottom: 10px;">
+								<button type="button" class="btn btn-default pull-right"
+									data-dismiss="modal">Close</button>
+								<button class="btn btn-primary pull-right"
+									id="btnPredictionAccessGrp">Update</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
 		<div id="createAssetModal" class="modal fade bs-example-modal-lg "
 			tabindex="-1" role="dialog" aria-hidden="false">
 			<div class="modal-dialog modal-md" role="document">
@@ -264,12 +317,12 @@
 					</div>
 
 					<div class="modal-body drilldown-content"
-						style="margin-top: -26px; margin-left: 0px;margin-right: 0px;overflow: hidden;padding: 0px;">
+						style="margin-top: -26px; margin-left: 0px; margin-right: 0px; overflow: hidden; padding: 0px;">
 						<form class="form-horizontal" id="performInferForm" method="POST">
 							<input type="hidden" id="testInputPath" name="testInputPath" />
 							<input type="hidden" id="modelPath" name="modelPath" />
 							<div class="form-row row row-buffer" id="displayDataTypeDiv"
-								style="margin-left: 47px; margin-top: 6px;margin-bottom:-5px;">
+								style="margin-left: 47px; margin-top: 6px; margin-bottom: -5px;">
 								<div class="form-group">
 									<label style="font-size: 14px; font-family: 'inter_regular';"
 										class="radio-inline"> <input type="radio"
@@ -297,20 +350,17 @@
 							</div>
 
 							<div class="row row-buffer"
-								style="margin-left: 0px;margin-top: 10px;
-                                box-sizing: border-box;background-color: #F1F1F1;
-                                padding-left: 51px;padding-bottom: 20px;">
-								<label class="optionalLabel">OPTIONAL</label>
-								<label class="optionalLabelInfo">
-									 Upload outcome file to evaluate the model.&nbsp;<span
-									id="outputTooltipHtml"></span>
+								style="margin-left: 0px; margin-top: 10px; box-sizing: border-box; background-color: #F1F1F1; padding-left: 51px; padding-bottom: 20px;">
+								<label class="optionalLabel">OPTIONAL</label> <label
+									class="optionalLabelInfo"> Upload outcome file to
+									evaluate the model.&nbsp;<span id="outputTooltipHtml"></span>
 								</label> <input type="file" style="margin-top: 14px;"
 									id="uploadTestOutputFile" name="uploadTestOutputFile" />
 							</div>
 
 						</form>
 						<div class="row row-buffer"
-							style="text-align: center; margin-top: 10px;padding-bottom: 10px;">
+							style="text-align: center; margin-top: 10px; padding-bottom: 10px;">
 							<div class="col-sm-12" style="margin-bottom: 10px;">
 
 								<button class="btn btn-primary" id="performInferencing">
@@ -349,13 +399,15 @@
 
 					<div class="modal-body drilldown-content"
 						style="margin-top: -43px; margin-left: 49px;">
-						<form class="form-horizontal" id="performModelAnalysisForm" style="font-family: 'inter_regular';"
-							method="POST">
+						<form class="form-horizontal" id="performModelAnalysisForm"
+							style="font-family: 'inter_regular';" method="POST">
 							<input type="hidden" id="testInputPath" name="testInputPath" />
-							<input type="hidden" id="outputResultFilePath" name="outputResultFilePath" />
-							
+							<input type="hidden" id="outputResultFilePath"
+								name="outputResultFilePath" />
+
 							<div class="row row-buffer">
-								<label for="selectApplicableModelName">Applicable Model:&nbsp;&nbsp; <select class="simple-select2"
+								<label for="selectApplicableModelName">Applicable
+									Model:&nbsp;&nbsp; <select class="simple-select2"
 									id="selectApplicableModelName" name="selectApplicableModelName"
 									style="width: 60%">
 								</select>
@@ -363,7 +415,7 @@
 							</div>
 						</form>
 						<div class="row row-buffer"
-							style="text-align: center; margin-top: 10px;margin-right: -6px;">
+							style="text-align: center; margin-top: 10px; margin-right: -6px;">
 							<div class="col-sm-12" style="margin-bottom: 10px;">
 								<button class="btn btn-primary" id="performModelAnalysisBtn">
 									Submit</button>

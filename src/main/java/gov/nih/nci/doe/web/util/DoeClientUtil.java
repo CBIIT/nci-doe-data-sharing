@@ -37,7 +37,6 @@ import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcRegistrationSummaryDTO;
 import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDownloadSummaryDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcMetadataAttributesListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcUserPermsForCollectionsDTO;
 import gov.nih.nci.hpc.dto.error.HpcExceptionDTO;
 import gov.nih.nci.hpc.dto.security.HpcAuthenticationResponseDTO;
@@ -957,32 +956,6 @@ public class DoeClientUtil {
 			throw new DoeWebException("Failed to get data objects download tasks details due to: " + e.getMessage());
 		} catch (IOException e) {
 			throw new DoeWebException("Failed to get data objects download tasks details due to: " + e.getMessage());
-		}
-	}
-
-	public static HpcMetadataAttributesListDTO getMetadataAttrNames(String token, String hpcMetadataAttrsURL)
-			throws DoeWebException {
-
-		String url = hpcMetadataAttrsURL;
-
-		WebClient client = DoeClientUtil.getWebClient(url);
-		client.header("Authorization", "Bearer " + token);
-
-		Response restResponse = client.get();
-
-		if (restResponse == null || restResponse.getStatus() != 200)
-			return null;
-		MappingJsonFactory factory = new MappingJsonFactory();
-		JsonParser parser;
-		try {
-			parser = factory.createParser((InputStream) restResponse.getEntity());
-		} catch (IllegalStateException | IOException e) {
-			throw new DoeWebException("Failed to get Metadata attributes: due to: " + e.getMessage());
-		}
-		try {
-			return parser.readValueAs(HpcMetadataAttributesListDTO.class);
-		} catch (Exception e) {
-			throw new DoeWebException("Failed to get Metadata attributes: due to: " + e.getMessage());
 		}
 	}
 

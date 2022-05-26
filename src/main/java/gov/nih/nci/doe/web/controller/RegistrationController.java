@@ -4,7 +4,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,9 +33,6 @@ import javax.servlet.http.HttpServletRequest;
 @EnableAutoConfiguration
 @RequestMapping("/register")
 public class RegistrationController extends AbstractDoeController {
-
-	@Value("${gov.nih.nci.hpc.server.register}")
-	private String registerUrl;
 
 	@PostMapping
 	public ResponseEntity<?> register(HttpSession session, @RequestHeader HttpHeaders headers,

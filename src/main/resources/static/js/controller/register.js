@@ -168,7 +168,7 @@ function validateForgotPassword () {
 }
 
 function postForgotPasswordFailure(url, params, status, error, data) {
-	bootbox.alert("Unknown Error. Contact Technical Support!");
+	bootbox.alert("Unknown error. Contact <a class='modacSupportLink' href='/contactUs'>MoDaC Support</a>.");
 }
 
 function postForgotPassword(data,status) {

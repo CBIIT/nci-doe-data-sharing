@@ -11,7 +11,6 @@ import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 
 import org.apache.cxf.jaxrs.client.WebClient;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -53,11 +52,6 @@ import io.micrometer.core.instrument.util.StringUtils;
 @EnableAutoConfiguration
 @RequestMapping("/search")
 public class SearchController extends AbstractDoeController {
-
-	@Value("${gov.nih.nci.hpc.server.collection}")
-	private String collectionServiceURL;
-	@Value("${gov.nih.nci.hpc.server.metadataattributes}")
-	private String hpcMetadataAttrsURL;
 
 	@GetMapping
 	public ResponseEntity<?> search(HttpSession session, @RequestHeader HttpHeaders headers, HttpServletRequest request,
