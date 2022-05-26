@@ -1,6 +1,7 @@
 package gov.nih.nci.doe.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -46,5 +47,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public Pbkdf2PasswordEncoder passwordEncoder() {
 		return new Pbkdf2PasswordEncoder();
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Bean
+	public FilterRegistrationBean xssPreventFilter() {
+		FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+
+		registrationBean.setFilter(new XSSFilter());
+		registrationBean.addUrlPatterns("/*");
+
+		return registrationBean;
 	}
 }

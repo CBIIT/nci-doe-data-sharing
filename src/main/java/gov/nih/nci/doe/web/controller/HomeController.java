@@ -156,7 +156,7 @@ public class HomeController extends AbstractDoeController {
 				if (StringUtils.isNotEmpty(error)) {
 					model.addAttribute("error", error);
 				} else if (message == null) {
-					model.addAttribute("error", "Unknown Error. Contact Technical Support!");
+					model.addAttribute("error", "Unknown error. Contact <a class='modacSupportLink' href='/contactUs'>MoDaC Support</a>.");
 				} else if (message.getClass().isAssignableFrom(BadCredentialsException.class)) {
 					model.addAttribute("error", message.getMessage());
 				}
