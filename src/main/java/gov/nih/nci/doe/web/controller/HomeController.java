@@ -153,10 +153,15 @@ public class HomeController extends AbstractDoeController {
 
 			if (null != error) {
 				Exception message = (Exception) request.getSession().getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
-				if (StringUtils.isNotEmpty(error)) {
+				if (StringUtils.isNotEmpty(error) && StringUtils.isAlphanumericSpace(error)) {
+					/*
+					 * The only use case when the error is not empty is during google captcha
+					 * verification failed on login authentication success handler.
+					 */
 					model.addAttribute("error", error);
 				} else if (message == null) {
-					model.addAttribute("error", "Unknown error. Contact <a class='modacSupportLink' href='/contactUs'>MoDaC Support</a>.");
+					model.addAttribute("error",
+							"Unknown error. Contact <a class='modacSupportLink' href='/contactUs'>MoDaC Support</a>.");
 				} else if (message.getClass().isAssignableFrom(BadCredentialsException.class)) {
 					model.addAttribute("error", message.getMessage());
 				}
