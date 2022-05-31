@@ -19,7 +19,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -100,25 +99,6 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 
 		model.addAttribute("basePathSelected", basePath);
 		return "upload";
-	}
-
-	@ResponseBody
-	@GetMapping(value = "/canEdit", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Boolean isEditpermissions(@RequestParam(value = "selectedPath") String selectedPath, HttpSession session,
-			HttpServletRequest request, HttpServletResponse response) throws DoeWebException {
-
-		log.info("edit permissions for path: " + selectedPath);
-		String user = getLoggedOnUserInfo();
-		if (StringUtils.isEmpty(user)) {
-			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
-		}
-		String authToken = (String) session.getAttribute("writeAccessUserToken");
-		if (StringUtils.isNotEmpty(selectedPath)) {
-			HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, collectionServiceURL,
-					selectedPath, true);
-			return verifyCollectionPermissions(selectedPath, parentCollectionDto);
-		}
-		return false;
 	}
 
 	/**

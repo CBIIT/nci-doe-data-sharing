@@ -259,8 +259,6 @@ function dataTableInit(isVisible) {
         	   var collectionId = $(this).attr('collectionId');
         	   var fileName = $(this).attr('data-fileName');
         	   var selectedCollection = $(this).attr('selectedCollection');
-        	   var assetType =  $(this).attr('asset_type');
-        	   var isReferenceDataset = $(this).attr('is_reference_dataset');
 
    				$("#userMetaData tbody").html("");
    				$("#path").val(metaDataPath);
@@ -277,15 +275,8 @@ function dataTableInit(isVisible) {
    				} else {
    					$("#updatePermissions").hide();
    				}
-   				var controllerAttributeList = [];
-   				var controllerValueList = [];
-   				
-   				controllerAttributeList.push("is_reference_dataset");
-   				controllerAttributeList.push("asset_type");
-   				controllerValueList.push(isReferenceDataset);
-   				controllerValueList.push(assetType);
-   				
-   				var params1= {selectedPath:metaDataPath,collectionType:selectedCollection,controllerValue:controllerValueList.join(),refresh:false,controllerAttribute:controllerAttributeList.join()};
+			
+   				var params1= {selectedPath:metaDataPath,collectionType:selectedCollection,refresh:false};
    				invokeAjax('/addCollection','GET',params1,constructEditCollectionMetadata,null,null,null);
         	   
            });
@@ -421,7 +412,7 @@ function renderDataSetName(data, type, row){
 		}
 		
 		if(row.dataSetPermissionRole && row.dataSetPermissionRole != 'No Permissions') {
-			editDataSetHtml = "<span class='editCollectionMetadata' asset_type = " + row.assetType + " is_reference_dataset = " + row.isReferenceDataset + " selectedCollection = 'Asset' " +
+			editDataSetHtml = "<span class='editCollectionMetadata' selectedCollection = 'Asset' " +
 					          "data-fileName = '" + row.dataSetName + "' collectionId  = '" + row.dataSetCollectionId + "' " +
 			                  "permissions_role = '" + row.dataSetPermissionRole + "'" +
 			                  " metadata_path  = '" + row.dataSetPath+ "'>" +

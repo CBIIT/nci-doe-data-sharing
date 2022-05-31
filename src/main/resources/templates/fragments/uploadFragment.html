@@ -22,8 +22,8 @@
 				<input type="hidden" th:value="${basePathSelected}" id="basePath" />
 				<input type="hidden" th:value="${datafilePath}" id="datafilePath" />
 				<input type="hidden" th:value="${institutePath}" id="institutePath" />
-				<input type="hidden" th:value="${uploadPath}" id="uploadPath" />
-				<input type="hidden" th:value="${studyPath}" id="studyPath" /> <input
+				<input type="hidden" th:value="${uploadPath}" id="uploadPath" /> <input
+					type="hidden" th:value="${studyPath}" id="studyPath" /> <input
 					type="hidden" id="uploadAsyncType" th:value="${uploadAsyncType}" />
 				<input type="hidden" id="assetPermissions" /> <input type="hidden"
 					th:value="${bulkUploadCollection}" id="bulkUploadCollection" /> <input
@@ -38,8 +38,7 @@
 								style="margin-left: 70px;">
 								<div class="pull-left" style="margin-left: 15px">
 									<label class="uploadLabels radio-inline"><input
-										type="radio" name="selectProgram"
-										class="registeRadioButtons"
+										type="radio" name="selectProgram" class="registeRadioButtons"
 										onclick="createCollectionDiv('basePath')"
 										value="Register Program">&nbsp;&nbsp; Register Program</label>
 								</div>
@@ -68,7 +67,14 @@
 											src="images/Uploads.delete.png"
 											th:src="@{/images/Uploads.delete.png}" class="uploadslogo"
 											alt="delete"> Delete Program
+										</a> &nbsp;&nbsp; <a href="#" style="display: none;"
+											class="addDeleteUploadLabels" id="editProgram"
+											onclick="functionEditCollection('instituteList','Program')"> <img
+											src="images/Search_EditMetaData.svg"
+											th:src="@{/images/Search_EditMetaData.svg}"
+											class="uploadslogo" alt="delete"> Edit Program
 										</a>
+
 									</div>
 								</div>
 							</div>
@@ -82,8 +88,7 @@
 								style="margin-left: 70px;">
 								<div class="pull-left" style="margin-left: 15px">
 									<label class="uploadLabels radio-inline"><input
-										type="radio" name="selectStudy"
-										class="registeRadioButtons"
+										type="radio" name="selectStudy" class="registeRadioButtons"
 										onclick="createCollectionDiv('instituteList')"
 										value="Register Study">&nbsp;&nbsp; Register Study</label>
 								</div>
@@ -112,7 +117,13 @@
 											src="images/Uploads.delete.png"
 											th:src="@{/images/Uploads.delete.png}" class="uploadslogo"
 											alt="delete"> Delete Study
-										</a>&nbsp;&nbsp;
+										</a>&nbsp;&nbsp; <a href="#" style="display: none;"
+											class="addDeleteUploadLabels" id="editStudy"
+											onclick="functionEditCollection('studyList','Study')"> <img
+											src="images/Search_EditMetaData.svg"
+											th:src="@{/images/Search_EditMetaData.svg}"
+											class="uploadslogo" alt="delete"> Edit Study
+										</a>
 
 									</div>
 								</div>
@@ -175,6 +186,12 @@
 											src="images/Uploads.delete.png"
 											th:src="@{/images/Uploads.delete.png}" class="uploadslogo"
 											alt="delete"> Delete Asset
+										</a> &nbsp;&nbsp;<a href="#" style="display: none;"
+											class="addDeleteUploadLabels" id="editAsset"
+											onclick="functionEditCollection('dataList','Asset')"> <img
+											src="images/Search_EditMetaData.svg"
+											th:src="@{/images/Search_EditMetaData.svg}"
+											class="uploadslogo" alt="delete"> Edit Asset
 										</a>
 									</div>
 								</div>
@@ -318,7 +335,7 @@
 												</div>
 											</div>
 											<div class="form-row col-md-12 col-sm-12" id="uploadCsvFile"
-												style="display: none; margin-left: 7px;margin-bottom: 10px;">
+												style="display: none; margin-left: 7px; margin-bottom: 10px;">
 												<label> <input type="file" name="doeMetadataFile"
 													id="doeMetadataFile"
 													accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
@@ -367,8 +384,8 @@
 											</div>
 											<div class="form-group col-lg-8 col-md-8"
 												style="margin-top: -4px; margin-bottom: 0px; margin-left: 0px;">
-												<input type="button" value="Upload" class="btn" disabled="true"
-													id="registerBulkAssets">
+												<input type="button" value="Upload" class="btn"
+													disabled="true" id="registerBulkAssets">
 											</div>
 										</div>
 									</div>
@@ -383,24 +400,23 @@
 							id="uploadAndRegisterFiles" style="display: none;">
 
 							<div class="form-group col-lg-5 col-md-5"
-								style="margin-top: 10px;padding-left:88px;">
+								style="margin-top: 10px; padding-left: 88px;">
 
 								<a href="#" id="addBulkDataFiles" class="addDeleteUploadLabels"
-									data-toggle="tooltip"> <i class="fas fa-upload"></i>&nbsp;&nbsp; Upload
-									Files to Asset
+									data-toggle="tooltip"> <i class="fas fa-upload"></i>&nbsp;&nbsp;
+									Upload Files to Asset
 								</a>
 							</div>
 
 							<div class="form-group col-lg-5 col-md-5"
 								style="margin-top: 10px;">
 								<a href="javascript:void(0)" id="registerFolder"
-									data-toggle="tooltip"
-									class="addDeleteUploadLabels"
+									data-toggle="tooltip" class="addDeleteUploadLabels"
 									onclick="createCollectionDiv('dataList')"><img
 									src="images/Uploads.add.png"
 									th:src="@{/images/Uploads.add.png}" class="uploadslogo"
-									alt="register">&nbsp;&nbsp;&nbsp; Register Asset Subcollection
-								</a>
+									alt="register">&nbsp;&nbsp;&nbsp; Register Asset
+									Subcollection </a>
 							</div>
 						</div>
 
@@ -424,6 +440,10 @@
 				</div>
 			</div>
 		</div>
+
+		<div
+			th:replace="fragments/editCollectionFragment :: editCollectionFragment"></div>
+
 		<div th:replace="fragments/uploadDataFiles :: uploadDataFiles">Upload
 			files</div>
 		<div

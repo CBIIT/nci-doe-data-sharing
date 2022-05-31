@@ -1,94 +1,173 @@
-$(document).ready(function() {
-	$("#landing-tab").removeClass('active');
-	$("#upload-tab").addClass('active');
-	loadUploadTab();
+$(document).ready(
+		function() {
+			$("#landing-tab").removeClass('active');
+			$("#upload-tab").addClass('active');
+			loadUploadTab();
 
-	$('body').tooltip({
-		selector : '[data-toggle="tooltip"]'
-	});
+			$('body').tooltip({
+				selector : '[data-toggle="tooltip"]'
+			});
 
-	$("#doeDataFile").change(function(e) {
-		appendFileName($(this));
-		$("#registerBulkDataFileBtn").prop("disabled", false);
-	});
+			$("#doeDataFile").change(function(e) {
+				appendFileName($(this));
+				$("#registerBulkDataFileBtn").prop("disabled", false);
+			});
 
-	$("#registerBulkDataFileBtn").click(function(e) {
-		registerBulkDataFile();
-	});
+			$("#registerBulkDataFileBtn").click(function(e) {
+				registerBulkDataFile();
+			});
 
-	$("#primaryGlobusButton").click(function(e) {
+			$("#primaryGlobusButton").click(function(e) {
 
-		var d = {};
-		d.institutionPath = $("#instituteList").val();
-		d.studyPath = $("#studyList").val();
-		d.dataSetPath = $("#dataList").val();
-		d.uploadPath = $("#bulkDataFilePathCollection").val();
+				var d = {};
+				d.institutionPath = $("#instituteList").val();
+				d.studyPath = $("#studyList").val();
+				d.dataSetPath = $("#dataList").val();
+				d.uploadPath = $("#bulkDataFilePathCollection").val();
 
-		invokeAjax('/upload', 'GET', d, postUploadGlobusFunction, postFailureFunction, null, 'text');
-	});
+				invokeAjax('/upload', 'GET', d, postUploadGlobusFunction, postFailureFunction, null, 'text');
+			});
 
-	$("#driveUploadAuthlink").click(function(e) {
-		var d = {};
-		d.institutionPath = $("#instituteList").val();
-		d.studyPath = $("#studyList").val();
-		d.dataSetPath = $("#dataList").val();
-		d.uploadPath = $("#bulkDataFilePathCollection").val();
-		d.action = "Drive";
-		invokeAjax('/upload', 'GET', d, postUploadGlobusFunction, postFailureFunction, null, 'text');
-	});
+			$("#driveUploadAuthlink").click(function(e) {
+				var d = {};
+				d.institutionPath = $("#instituteList").val();
+				d.studyPath = $("#studyList").val();
+				d.dataSetPath = $("#dataList").val();
+				d.uploadPath = $("#bulkDataFilePathCollection").val();
+				d.action = "Drive";
+				invokeAjax('/upload', 'GET', d, postUploadGlobusFunction, postFailureFunction, null, 'text');
+			});
 
-	$("#assetSelectionGlobusButton").click(function(e) {
-		var d = {};
-		d.institutionPath = $("#instituteList").val();
-		d.studyPath = $("#studyList").val();
-		d.uploadType = "assetBulkUpload";
+			$("#assetSelectionGlobusButton").click(function(e) {
+				var d = {};
+				d.institutionPath = $("#instituteList").val();
+				d.studyPath = $("#studyList").val();
+				d.uploadType = "assetBulkUpload";
 
-		invokeAjax('/upload', 'GET', d, postUploadGlobusFunction, postFailureFunction, null, 'text');
-	});
+				invokeAjax('/upload', 'GET', d, postUploadGlobusFunction, postFailureFunction, null, 'text');
+			});
 
-	$(document).on('click', '.uploadDataSet', function() {
-		var folderPath = $(this).parent().find('a').attr('data-name');
-		$("#uploadSectionDiv").hide();
-		$("#uploadHeader").hide();
-		$("#uploadDataFilesTab").show();
-		$("#registerBulkDataFileBtn").prop("disabled", true);
-		openBulkDataRegistration(folderPath);
-	});
+			$(document).on('click', '.uploadDataSet', function() {
+				var folderPath = $(this).parent().find('a').attr('data-name');
+				$("#uploadSectionDiv").hide();
+				$("#uploadHeader").hide();
+				$("#uploadDataFilesTab").show();
+				$("#registerBulkDataFileBtn").prop("disabled", true);
+				openBulkDataRegistration(folderPath);
+			});
 
-	$("#addBulkDataFiles").click(function(e) {
-		$("#uploadSectionDiv").hide();
-		$("#uploadHeader").hide();
-		$("#uploadDataFilesTab").show();
-		$("#registerBulkDataFileBtn").prop("disabled", true);
-		openBulkDataRegistration();
-	});
+			$("#addBulkDataFiles").click(function(e) {
+				$("#uploadSectionDiv").hide();
+				$("#uploadHeader").hide();
+				$("#uploadDataFilesTab").show();
+				$("#registerBulkDataFileBtn").prop("disabled", true);
+				openBulkDataRegistration();
+			});
 
-	$(".backToUploadTab").click(function(e) {
-		$("#createCollectionFragment").hide();
-		$("#uploadSectionDiv").show();
-		$("#uploadHeader").show();
-		$("#uploadDataFilesTab").hide();
-		resetSelectionsForBackToUploadTab();
-	});
+			$(".backToUploadTab").click(function(e) {
+				$("#createCollectionFragment").hide();
+				$("#uploadSectionDiv").show();
+				$("#uploadHeader").show();
+				$("#uploadDataFilesTab").hide();
+				$("#editCollectionFragment").hide();
+				resetSelectionsForBackToUploadTab();
+			});
 
-	$("#btnSelectAssetType").click(function(e) {
-		var assetType = $("#createAssetModal").find("#createAssetCollectionType option:selected").val();
-		$("#assetType").val(assetType);
-		$("#createCollectionFragment").show();
-		$("#uploadSectionDiv").hide();
-		$("#uploadHeader").hide();
-		createCollectionDiv('studyList');
-	});
+			$("#btnSelectAssetType").click(function(e) {
+				var assetType = $("#createAssetModal").find("#createAssetCollectionType option:selected").val();
+				$("#assetType").val(assetType);
+				$("#createCollectionFragment").show();
+				$("#uploadSectionDiv").hide();
+				$("#uploadHeader").hide();
+				createCollectionDiv('studyList');
+			});
 
-	$(document).on('change', '#publicAccess', function() {
-		if ($(this).is(":checked")) {
-			$("#accessGroupSelect").next(".select2-container").hide();
-		} else {
-			$("#accessGroupSelect").next(".select2-container").show();
-		}
+			$(document).on('change', '#publicAccess', function() {
+				if ($(this).is(":checked")) {
+					$("#accessGroupSelect").next(".select2-container").hide();
+				} else {
+					$("#accessGroupSelect").next(".select2-container").show();
+				}
 
-	});
-});
+			});
+			
+			
+			
+			$(document).on(
+					'click',
+					'.editFolderMetadata',
+					function() {
+						
+						var selectedPath = $(this).attr('metadata_path');
+						var collectionId = $(this).attr('collectionId');
+						var collectionType = "Folder";
+						
+						$("#editCollectionFragment").show();
+						$("#uploadSectionDiv").hide();
+						$("#uploadHeader").hide();
+						$(".backToUploadTab").show();
+						$(".backToSearchBtn").hide();
+
+						$("#userMetaData tbody").html("");
+						$("#path").val(selectedPath);
+						$(".editCollectionSuccess").hide();
+						$(".editCollectionMsg").html("");
+						$(".editCollectionError").hide();
+						$(".editCollectionErrorMsg").html("");
+						$("#collectionId").val(collectionId);
+						$("#isDataObject").val(false);
+//						$("#editUserMetadataFileName").html(collectionName);
+						var params = {
+							selectedPath : selectedPath,
+							collectionType : collectionType,
+							refresh : false
+						};
+						invokeAjax('/addCollection', 'GET', params, constructEditCollectionMetadata, null, null, null);
+		     });
+
+			/*
+			 * This function is to delete collection of type Folders and sub
+			 * folders
+			 */
+			$(document).on(
+					'click',
+					'.deleteFolderCollectionBtn',
+					function() {
+						var path = $(this).attr('coll_path');
+						var name = $(this).attr('coll_name');
+						bootbox.confirm({
+							message : "Are you sure you want to delete " + name + "?",
+							buttons : {
+								confirm : {
+									label : 'Yes',
+									className : 'btn-success'
+								},
+								cancel : {
+									label : 'No',
+									className : 'btn-danger'
+								}
+							},
+							callback : function(result) {
+								if (result == true) {
+									var params = {
+										collPath : path
+									};
+									invokeAjax('/deleteCollection', 'POST', params,
+											postSuccessDeleteCollectionFunction, postFailureDeleteCollectionFunction,
+											'application/x-www-form-urlencoded; charset=UTF-8', 'text');
+								}
+							}
+						});
+					});
+		});
+
+function postSuccessDeleteCollectionFunction(data, status) {
+	if (data != "SUCCESS") {
+		return bootbox.alert(data);
+	} else {
+		constructAssetFileAndFoldersDiv($("#dataList").val());
+	}
+}
 
 function loadUploadTab() {
 
@@ -103,11 +182,13 @@ function loadUploadTab() {
 		showSelect('Program', 'true');
 		$("#studyListDiv").show();
 		$("#deleteProgram").show();
+		$("#editProgram").show();
 		if (stu) {
 			$("input[name=selectStudy][value='Select Study']").prop("checked", true);
 			showSelect('Study', ins);
 			$("#dataSetListDiv").show();
 			$("#deleteStudy").show();
+			$("#editStudy").show();
 			$("#addAsets").show();
 			if (bulkUploadCollection) {
 				$("#addAsets").click();
@@ -121,6 +202,7 @@ function loadUploadTab() {
 				}
 				$("input[name=selectAsset][value='Select Asset']").prop("checked", true);
 				$("#deleteDataSet").show();
+				$("#editAsset").show();
 				constructAssetFileAndFoldersDiv(data);
 				$("#uploadAndRegisterFiles").show();
 				$("#uploadDataFilesTab").show();
@@ -214,10 +296,11 @@ function postSuccessCanEdit(data) {
 
 function constructAssetFileAndFoldersDiv(assetPath) {
 	$.ajax({
-		"url" : "/addbulk/canEdit",
+		"url" : "/collection/canEdit",
 		"type" : "GET",
 		data : {
-			selectedPath : assetPath
+			selectedPath : assetPath,
+			verifyAtAssetLevel : true
 		},
 		beforeSend : function() {
 			$("#spinner").show();
@@ -265,11 +348,26 @@ function contructDataListDiv(data, status) {
 										+ ' &nbsp;&nbsp;'
 										+ '<a href="#" class="uploadDataSet" title="Upload Files to Asset Subcollection" style="font-size: 15px;color: #F39530;"><i class="fas fa-upload">'
 										+ '</i></a> &nbsp;&nbsp;<a href="#" title="Register Subcollection" onclick="createCollectionDiv(\''
-										+ datalist
-										+ '\',\''
+										+ datalist + '\',\'' + value.name + '\')" class="addDeleteUploadLabels">'
+										+ '<img src="/images/Uploads.add.png" class="uploadslogo" alt="register"></a>';
+
+								html += "&nbsp;&nbsp;<span style='border: transparent;' class='btn btn-link btn-sm editFolderMetadata'  metadata_path  = '"
+										+ value.path
+										+ "'"
+										+ "collectionId = '"
+										+ value.collectionId
+										+ "'>"
+										+ "<img src='images/Edit-FileMetadata.png' data-toggle='tooltip' title='Edit Folder Metadata' th:src='@{/images/Edit-FileMetadata.png}' "
+										+ "style='width:16px;' alt='edit collection'></span>";
+
+								html += "<span style='border: transparent;' coll_path = '"
+										+ value.path
+										+ "' coll_name='"
 										+ value.name
-										+ '\')" class="addDeleteUploadLabels">'
-										+ '<img src="/images/Uploads.add.png" class="uploadslogo" alt="register"></a></li>';
+										+ "' class='btn btn-link btn-sm deleteFolderCollectionBtn'>"
+										+ "<img src='images/Delete.png' data-toggle='tooltip' title='Delete Collection' th:src='@{/images/Delete.png}' "
+										+ "style='width:12px;' alt='Delete Collection'></span></li>";
+
 							} else {
 								html += '<li><a class="detail-control" data-name = ' + value.name + '>'
 										+ '<i class="expand far fa-folder"></i></a>&nbsp;' + value.name
@@ -328,7 +426,23 @@ $('#dataListing')
 																			+ value.name
 																			+ ' &nbsp;&nbsp;'
 																			+ '<a href="#" class="uploadDataSet"  title="Upload Files to Asset Subcollection" style="font-size: 15px;color: #F39530;">'
-																			+ '<i class="fas fa-upload"></i></a></li>';
+																			+ '<i class="fas fa-upload"></i></a>';
+																	html += "&nbsp;&nbsp;<span style='border: transparent;' class='btn btn-link btn-sm editFolderMetadata'  metadata_path  = '"
+																			+ value.path
+																			+ "'"
+																			+ "collectionId = '"
+																			+ value.collectionId
+																			+ "'>"
+																			+ "<img src='images/Edit-FileMetadata.png' data-toggle='tooltip' title='Edit Folder Metadata' th:src='@{/images/Edit-FileMetadata.png}' "
+																			+ "style='width:16px;' alt='edit collection'></span>";
+
+																	html += "<span style='border: transparent;' coll_path = '"
+																			+ value.path
+																			+ "' coll_name='"
+																			+ value.name
+																			+ "' class='btn btn-link btn-sm deleteFolderCollectionBtn'>"
+																			+ "<img src='images/Delete.png' data-toggle='tooltip' title='Delete Collection' th:src='@{/images/Delete.png}' "
+																			+ "style='width:12px;' alt='Delete Collection'></span></li>";
 																} else {
 																	html += '<li><a class="detail-control" data-name = '
 																			+ name
@@ -435,19 +549,18 @@ function constructNewCollectionMetaDataSet(data, status) {
 							if (value.attrValue) {
 								$select.append($('<option></option>').attr('value', value.attrValue).text(
 										value.attrValue));
-							} else if(!value.defaultValue) {
+							} else if (!value.defaultValue) {
 								$select.append($('<option></option>').attr('value', 'Select').text('Select'));
 							}
 							for (var i = 0; i < value.validValues.length; i++) {
 								$select.append($('<option></option>').attr('value', value.validValues[i].key).text(
 										value.validValues[i].value));
 							}
-							if(value.defaultValue) {
+							if (value.defaultValue) {
 								$select.select2().val(value.defaultValue).trigger('change');
 							} else {
 								$select.select2().trigger('change');
 							}
-							
 
 						} else if (value.attrValue) {
 							$("#newMetaDataTable tbody").append(
@@ -565,13 +678,13 @@ function retrieveCollectionList(data, status) {
 	var collectionPath = $("#collectionPath").val();
 
 	if (collectionType && collectionPath) {
-		var params1 = {
+		var params = {
 			selectedPath : collectionPath,
 			collectionType : collectionType,
 			controllerValue : assetType,
 			controllerAttribute : 'asset_type'
 		};
-		invokeAjax('/addCollection', 'GET', params1, constructNewCollectionMetaDataSet, null, null, null);
+		invokeAjax('/addCollection', 'GET', params, constructNewCollectionMetaDataSet, null, null, null);
 	}
 }
 
@@ -826,7 +939,9 @@ function resetOnChangeofSelectCollection(selectTarget, selectedValue) {
 		if (selectedValue && selectedValue != 'ANY') {
 			$("#studyListDiv").show();
 			$("#deleteStudy").hide();
+			$("#editStudy").hide();
 			$("#deleteProgram").show();
+			$("#editProgram").show();
 			$("#dataSetListDiv").hide();
 			$("#dataListDiv").hide();
 			$("#showSelectStudyDiv").hide();
@@ -836,6 +951,7 @@ function resetOnChangeofSelectCollection(selectTarget, selectedValue) {
 			$("#dataSetListDiv").hide();
 			$("#dataListDiv").hide();
 			$("#deleteProgram").hide();
+			$("#editProgram").hide();
 		}
 	} else if (selectTarget == 'studyList') {
 		$("#uploadAndRegisterFiles").hide();
@@ -844,8 +960,10 @@ function resetOnChangeofSelectCollection(selectTarget, selectedValue) {
 			$("#studyListDiv").show();
 			$("#dataSetListDiv").show();
 			$("#deleteStudy").show();
+			$("#editStudy").show();
 			$("#addAsets").show();
 			$("#deleteDataSet").hide();
+			$("#editAsset").hide();
 			$("#showSelectAssetDiv").hide();
 			$("#showSubAssetSelectionDiv").hide();
 			$("input[name=selectAsset]").prop("checked", false);
@@ -855,6 +973,7 @@ function resetOnChangeofSelectCollection(selectTarget, selectedValue) {
 			$("#studyListDiv").show();
 			$("#dataSetListDiv").hide();
 			$("#deleteStudy").hide();
+			$("#editStudy").hide();
 			$("#addAsets").hide();
 		}
 	} else if (selectTarget == 'dataList') {
@@ -863,11 +982,13 @@ function resetOnChangeofSelectCollection(selectTarget, selectedValue) {
 			$("#uploadAndRegisterFiles").show();
 			constructAssetFileAndFoldersDiv(selectedValue);
 			$("#deleteDataSet").show();
+			$("#editAsset").show();
 
 		} else {
 			$("#dataListDiv").hide();
 			$("#uploadAndRegisterFiles").hide();
 			$("#deleteDataSet").hide();
+			$("#editAsset").hide();
 		}
 	}
 }
@@ -961,7 +1082,6 @@ function retrieveAssetTypeDiv(data) {
 		var params1 = {
 			collectionType : 'Asset',
 			controllerValue : data.value,
-			refresh : false,
 			controllerAttribute : 'asset_type'
 		};
 		invokeAjax('/addCollection', 'GET', params1, constructAssetTypeBulkDiv, null, null, null);
@@ -1011,7 +1131,7 @@ function constructAssetTypeBulkDiv(data, status) {
 							if (value.attrValue) {
 								$select.append($('<option></option>').attr('value', value.attrValue).text(
 										value.attrValue));
-							} else if(!value.defaultValue){
+							} else if (!value.defaultValue) {
 								$select.append($('<option></option>').attr('value', 'Select').text('Select'));
 							}
 
@@ -1020,13 +1140,11 @@ function constructAssetTypeBulkDiv(data, status) {
 										value.validValues[i].value));
 							}
 
-							if(value.defaultValue) {
+							if (value.defaultValue) {
 								$select.select2().val(value.defaultValue).trigger('change');
 							} else {
 								$select.select2().trigger('change');
 							}
-							
-						
 
 						} else if (value.attrName && value.attrName != 'asset_name' && value.attrName != 'asset_type'
 								&& value.attrName != 'asset_identifier' && value.attrName != 'access_group') {
@@ -1410,6 +1528,58 @@ function displayAssetTpeSelection(data) {
 	}
 }
 
+function functionEditCollection($this, collectionType) {
+	var selectedValue = $("#" + $this + " option:selected").text();
+	var textvalue = $("#" + $this + " option:selected").val();
+	if (textvalue && textvalue != "ANY") {
+		var params = {
+			selectedPath : textvalue,
+			collectionType : collectionType
+		};
+		invokeAjax('/collection/canEdit', 'GET', params, postSuccessEditCollectionMetadata, null, null, null);
+	}
+}
+
+function postSuccessEditCollectionMetadata(data, status) {
+	if (data && data.permissionRole == 'No Permissions') {
+		bootbox.alert("No Permissions to edit this collection");
+
+	} else {
+		$("#editCollectionFragment").show();
+		$("#uploadSectionDiv").hide();
+		$("#uploadHeader").hide();
+		$(".backToUploadTab").show();
+		$(".backToSearchBtn").hide();
+
+		$("#userMetaData tbody").html("");
+		$("#path").val(data.collectionPath);
+		$(".editCollectionSuccess").hide();
+		$(".editCollectionMsg").html("");
+		$(".editCollectionError").hide();
+		$(".editCollectionErrorMsg").html("");
+		$("#collectionId").val(data.collectionId);
+		$("#isDataObject").val(false);
+		$("#editUserMetadataFileName").html(data.collectionName);
+
+		if (data && data.permissionRole == 'Owner') {
+			$("#updatePermissions").show();
+		} else {
+			$("#updatePermissions").hide();
+		}
+
+		var params1 = {
+			selectedPath : data.collectionPath,
+			collectionType : data.collectionType,
+			refresh : false
+		};
+		invokeAjax('/addCollection', 'GET', params1, constructEditCollectionMetadata, null, null, null);
+	}
+
+}
+
+/*
+ * This function is to delete collections of type Program, Study and Asset
+ */
 function functionDelete($this, collectionType) {
 	var selectedValue = $("#" + $this + " option:selected").text();
 	var textvalue = $("#" + $this + " option:selected").val();

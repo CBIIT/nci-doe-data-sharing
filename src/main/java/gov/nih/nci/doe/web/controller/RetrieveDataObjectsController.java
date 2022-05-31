@@ -39,10 +39,13 @@ import org.springframework.http.HttpStatus;
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.constants.SystemAttributesList;
 import gov.nih.nci.doe.web.domain.InferencingTask;
+import gov.nih.nci.doe.web.domain.PredictionAccess;
 import gov.nih.nci.doe.web.model.DoeDatafileSearchResultDetailed;
+import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.model.MoDaCPredictionsResults;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
+import gov.nih.nci.doe.web.util.LambdaUtils;
 import gov.nih.nci.hpc.domain.datamanagement.HpcCollectionListingEntry;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
@@ -163,7 +166,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 		if (!CollectionUtils.isEmpty(subCollections)) {
 			for (HpcCollectionListingEntry collection : subCollections) {
 				String name = collection.getPath().substring(collection.getPath().lastIndexOf('/') + 1);
-				if (!name.startsWith("Predictions_")) {
+				if (!name.startsWith("Prediction_") && !name.startsWith("Predictions_")) {
 					DoeDatafileSearchResultDetailed returnResult = new DoeDatafileSearchResultDetailed();
 					returnResult.setPath(collection.getPath());
 					returnResult.setName(name);
@@ -179,96 +182,75 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 
 	}
 
-	private List<MoDaCPredictionsResults> processGeneratedPredDataObjects(Response restResponse, String path,
-			HttpSession session) throws IOException {
+	@SuppressWarnings("unchecked")
+	private List<MoDaCPredictionsResults> processGeneratedPredDataObjects() throws IOException {
 
 		List<MoDaCPredictionsResults> returnResults = new ArrayList<MoDaCPredictionsResults>();
 
-		ObjectMapper mapper = new ObjectMapper();
-		AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
-				new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()), new JacksonAnnotationIntrospector());
-		mapper.setAnnotationIntrospector(intr);
-		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		MappingJsonFactory factory = new MappingJsonFactory(mapper);
-		JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-
-		HpcCollectionListDTO dataObjects = parser.readValueAs(HpcCollectionListDTO.class);
-
-		List<HpcCollectionDTO> searchResults = dataObjects.getCollections();
-
-		List<HpcCollectionListingEntry> dataObjectsList = searchResults.get(0).getCollection().getDataObjects();
 		String userId = getLoggedOnUserInfo();
+		List<String> loggedOnUserPermList = new ArrayList<String>();
+		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(userId).getBody();
+		loggedOnUserPermissions.stream().forEach(e -> loggedOnUserPermList.add(e.getKey()));
+		List<String> grpsList = LambdaUtils.map(loggedOnUserPermissions, KeyValueBean::getKey);
 
-		if (!CollectionUtils.isEmpty(dataObjectsList)) {
-			for (HpcCollectionListingEntry dataObject : dataObjectsList) {
+		List<PredictionAccess> predictionResults = predictionAccessService.getAllPredictionsForUser(userId, grpsList);
+		if (!CollectionUtils.isEmpty(predictionResults)) {
+			for (PredictionAccess collection : predictionResults) {
 
-				String name = dataObject.getPath().substring(dataObject.getPath().lastIndexOf('/') + 1);
+				String predictionIdentifier = collection.getCollectionPath()
+						.substring(collection.getCollectionPath().lastIndexOf('/') + 1);
 
-				if (name.startsWith("y_pred_")) {
-					InferencingTask task = inferencingTaskService.getInferenceByUserIdAndPredName(userId,
-							dataObject.getPath());
-					MoDaCPredictionsResults predNameResult = returnResults.stream().filter(
-							e -> e.getPredictionsName() != null && e.getPredictionsName().equalsIgnoreCase(name))
+				List<PredictionAccess> predictionAccessList = predictionAccessService
+						.getPredictionAccessByCollectionPath(collection.getCollectionPath());
+				if (CollectionUtils.isNotEmpty(predictionAccessList)) {
+					List<String> predGrpAccessList = new ArrayList<String>();
+
+					PredictionAccess owner = predictionAccessList.stream()
+							.filter(e -> e.getUser() != null && userId.equalsIgnoreCase(e.getUser().getEmailAddrr()))
 							.findAny().orElse(null);
 
-					if (predNameResult == null && task != null) {
-						MoDaCPredictionsResults returnResult = new MoDaCPredictionsResults();
-						String inputDatasetName = task.getTestDataSetPath()
-								.substring(task.getTestDataSetPath().lastIndexOf('/') + 1);
-						returnResult.setPredictionsName(name);
-						returnResult.setPredictionsPath(dataObject.getPath());
-						returnResult.setInputDatasetPath(task.getTestDataSetPath());
-						returnResult.setInputDatasetName(inputDatasetName);
-						returnResult.setTaskCompletedDate(task.getCompletedDate());
-						returnResult.setOutcomeFileName(task.getActualResultsFileName());
-						returnResult.setOutcomeFilePath(task.getOutcomeFilePath());
-						returnResult.setTaskId(task.getTaskId());
-						returnResults.add(returnResult);
-					}
+					predictionAccessList.stream().filter(
+							e -> e.getGroup() != null && loggedOnUserPermList.contains(e.getGroup().getGroupName()))
+							.forEach(e -> predGrpAccessList.add(e.getGroup().getGroupName()));
 
-				} else {
+					PredictionAccess publicAccess = predictionAccessList.stream()
+							.filter(e -> e.getUser() != null && Boolean.TRUE.equals(e.getIsPublic())).findAny()
+							.orElse(null);
 
-					InferencingTask taskByInputName = inferencingTaskService.getInferenceByUserIdAndInputName(userId,path,
-							dataObject.getPath());
-					MoDaCPredictionsResults inputNameResult = returnResults.stream().filter(
-							e -> e.getInputDatasetName() != null && e.getInputDatasetName().equalsIgnoreCase(name))
-							.findAny().orElse(null);
-					if (taskByInputName != null && inputNameResult == null) {
-						MoDaCPredictionsResults returnResult = new MoDaCPredictionsResults();
-						String predName = taskByInputName.getResultPath()
-								.substring(taskByInputName.getResultPath().lastIndexOf('/') + 1);
-						returnResult.setInputDatasetPath(dataObject.getPath());
-						returnResult.setInputDatasetName(name);
-						returnResult.setPredictionsName(predName);
-						returnResult.setPredictionsPath(taskByInputName.getResultPath());
-						returnResult.setTaskCompletedDate(taskByInputName.getCompletedDate());
-						returnResult.setOutcomeFileName(taskByInputName.getActualResultsFileName());
-						returnResult.setOutcomeFilePath(taskByInputName.getOutcomeFilePath());
-						returnResult.setTaskId(taskByInputName.getTaskId());
-						returnResults.add(returnResult);
-					} else {
-						InferencingTask task = inferencingTaskService.getInferenceByUserIdAndOutcomeName(userId, path,name);
-						MoDaCPredictionsResults outcomeNameResult = returnResults.stream().filter(
-								e -> e.getOutcomeFileName() != null && e.getOutcomeFileName().equalsIgnoreCase(name))
-								.findAny().orElse(null);
-						if (task != null && outcomeNameResult == null) {
-							MoDaCPredictionsResults returnResult = new MoDaCPredictionsResults();
-							String inputDatasetName = task.getTestDataSetPath()
-									.substring(task.getTestDataSetPath().lastIndexOf('/') + 1);
-							String predName = task.getResultPath().substring(task.getResultPath().lastIndexOf('/') + 1);
-							returnResult.setPredictionsName(predName);
-							returnResult.setPredictionsPath(task.getResultPath());
-							returnResult.setInputDatasetPath(task.getTestDataSetPath());
-							returnResult.setInputDatasetName(inputDatasetName);
-							returnResult.setTaskCompletedDate(task.getCompletedDate());
-							returnResult.setOutcomeFileName(name);
-							returnResult.setOutcomeFilePath(dataObject.getPath());
-							returnResult.setTaskId(task.getTaskId());
-							returnResults.add(returnResult);
+					if (owner != null || CollectionUtils.isNotEmpty(predGrpAccessList) || publicAccess != null) {
+						MoDaCPredictionsResults predictionResult = new MoDaCPredictionsResults();
+						String taskId = predictionIdentifier.substring(predictionIdentifier.lastIndexOf('_') + 1);
+						InferencingTask inferencetask = inferencingTaskService.getInferenceByTaskId(taskId);
+						if (owner != null) {
+							predictionResult.setPredictionFolderPath(collection.getCollectionPath());
+							predictionResult.setIsOwner(Boolean.TRUE);
+							predictionResult.setPredCollId(collection.getCollectionId());
+							predictionResult.setPredAccessGrps(
+									CollectionUtils.isNotEmpty(predGrpAccessList) ? String.join(",", predGrpAccessList)
+											: null);
+							predictionResult.setIsPublic(owner.getIsPublic());
+						} else {
+							// logged on user has group access to this prediction
+							PredictionAccess ownerInfo = predictionAccessList.stream().filter(e -> e.getUser() != null)
+									.findAny().orElse(null);
+							DoeUsersModel user = authService.getUserInfo(ownerInfo.getUser().getEmailAddrr());
+							predictionResult.setIsOwner(Boolean.FALSE);
+							predictionResult.setFullName(user.getFirstName() + " " + user.getLastName());
+
 						}
-					}
+						predictionResult.setInputDatasetPath(inferencetask.getTestDataSetPath());
+						predictionResult.setInputDatasetName(inferencetask.getTestDataSetPath()
+								.substring(inferencetask.getTestDataSetPath().lastIndexOf('/') + 1));
+						predictionResult.setOutcomeFileName(inferencetask.getActualResultsFileName());
+						predictionResult.setOutcomeFilePath(inferencetask.getOutcomeFilePath());
+						predictionResult.setTaskId(taskId);
+						predictionResult.setTaskCompletedDate(inferencetask.getCompletedDate());
+						predictionResult.setPredictionsPath(inferencetask.getResultPath());
+						predictionResult.setPredictionsName(inferencetask.getResultPath()
+								.substring(inferencetask.getResultPath().lastIndexOf('/') + 1));
 
+						returnResults.add(predictionResult);
+					}
 				}
 
 			}
@@ -316,35 +298,21 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 		List<DoeDatafileSearchResultDetailed> dataResults = new ArrayList<DoeDatafileSearchResultDetailed>();
 		List<MoDaCPredictionsResults> modelAnalysisFiles = new ArrayList<MoDaCPredictionsResults>();
 		try {
+
 			if (type.equalsIgnoreCase("Prediction_Files")) {
 
-				String loggedOnUserFolderPath = path + "/Predictions_" + getLoggedOnUserInfo();
-
-				final String requestUrl = UriComponentsBuilder.fromHttpUrl(serviceURL).path("{path}/children")
-						.buildAndExpand(loggedOnUserFolderPath).encode().toUri().toURL().toExternalForm();
-
-				WebClient client = DoeClientUtil.getWebClient(requestUrl);
-				client.header("Authorization", "Bearer " + authToken);
-				Response restResponse = client.invoke("GET", null);
-
-				if (restResponse.getStatus() == 200) {
-
-					modelAnalysisFiles = processGeneratedPredDataObjects(restResponse, loggedOnUserFolderPath, session);
-					return new ResponseEntity<>(modelAnalysisFiles, HttpStatus.OK);
-
-				} else if (restResponse.getStatus() == 204) {
-
-					return new ResponseEntity<>(modelAnalysisFiles, HttpStatus.OK);
-
-				}
+				modelAnalysisFiles = processGeneratedPredDataObjects();
+				return new ResponseEntity<>(modelAnalysisFiles, HttpStatus.OK);
 
 			} else {
+
 				final String requestUrl = UriComponentsBuilder.fromHttpUrl(serviceURL).path("{path}/children")
 						.buildAndExpand(path).encode().toUri().toURL().toExternalForm();
 
 				WebClient client = DoeClientUtil.getWebClient(requestUrl);
 				client.header("Authorization", "Bearer " + authToken);
 				Response restResponse = client.invoke("GET", null);
+
 				if (restResponse.getStatus() == 200) {
 
 					dataResults = processDataObjectResponseResults(restResponse, path, session);

@@ -12,10 +12,12 @@ public interface MetaDataPermissionsService {
 
 	public List<MetaDataPermissions> getAllMetaDataPermissionsByCollectionId(Integer collectionId);
 
+	public List<MetaDataPermissions> getAllMetaDataPermissionsByCollectionPath(String collectionPath);
+
 	public List<MetaDataPermissions> getAllGroupMetaDataPermissionsByCollectionId(Integer collectionId);
 
 	public MetaDataPermissions getMetaDataPermissionsOwnerByCollectionId(Integer collectionId);
-	
+
 	public void deleteAllPermissionsByCollectionId(String user, Integer collectionId);
 
 }

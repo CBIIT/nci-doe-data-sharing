@@ -253,7 +253,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 				if (Boolean.TRUE.equals(check)) {
 					log.info("pred file available on mount: " + predFileName);
 					String parentPath = t.getTestDataSetPath().substring(0, t.getTestDataSetPath().lastIndexOf('/'));
-					String folderPath = parentPath + "/Predictions_" + t.getUserId();
+					String folderPath = parentPath + "/Prediction_" + t.getTaskId();
 
 					Boolean isFolderPathExists = false;
 
@@ -276,20 +276,20 @@ public class ManageTasksScheduler extends AbstractDoeController {
 						List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
 
 						HpcMetadataEntry entry = new HpcMetadataEntry();
-						entry.setValue("Folder");
+						entry.setValue("Prediction");
 						entry.setAttribute("collection_type");
 						metadataEntries.add(entry);
 
 						// add folder identifier metadata
 						HpcMetadataEntry folderIdentifierMetadata = new HpcMetadataEntry();
-						folderIdentifierMetadata.setValue("Predictions_" + t.getUserId());
-						folderIdentifierMetadata.setAttribute("folder_identifier");
+						folderIdentifierMetadata.setValue("Prediction_" + t.getTaskId());
+						folderIdentifierMetadata.setAttribute("prediction_identifier");
 						metadataEntries.add(folderIdentifierMetadata);
 
 						dto.getMetadataEntries().addAll(metadataEntries);
 						Integer responseStatus = DoeClientUtil.updateCollection(authToken, serviceURL, dto, folderPath);
 						if (responseStatus == 200 || responseStatus == 201) {
-							log.info("collection created: " + "Predictions_" + t.getUserId());
+							log.info("collection created: " + "Prediction_" + t.getTaskId());
 							// save folder permissions to MoDaC
 							HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL,
 									folderPath, false);
@@ -299,9 +299,9 @@ public class ManageTasksScheduler extends AbstractDoeController {
 
 								HpcCollectionDTO collection = collections.getCollections().get(0);
 
-								// save collection permissions in MoDaC DB
+								// save collection prediction permissions in MoDaC DB
 
-								metaDataPermissionService.savePermissionsList(t.getUserId(), null,
+								predictionAccessService.savePredictionAccess(t.getUserId(), null,
 										collection.getCollection().getCollectionId(), folderPath);
 							}
 						}

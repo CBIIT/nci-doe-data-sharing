@@ -112,4 +112,10 @@ public class InferencingTaskServiceImpl implements InferencingTaskService {
 		return isFileExists;
 	}
 
+	@Override
+	public InferencingTask getInferenceByTaskId(String taskId) {
+		log.info("get inference by task Id: " + taskId);
+		return inferencingTaskRepository.getInferenceTask(taskId);
+	}
+
 }

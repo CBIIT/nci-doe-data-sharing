@@ -9,7 +9,6 @@ import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -19,7 +18,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.ui.Model;
 
@@ -51,11 +49,6 @@ import gov.nih.nci.hpc.domain.datatransfer.HpcPatternType;
 @EnableAutoConfiguration
 public abstract class DoeCreateCollectionDataFileController extends AbstractDoeController {
 
-	@Value("${gov.nih.nci.hpc.server.collection}")
-	private String serviceURL;
-	@Value("${gov.nih.nci.hpc.server.collection.acl.user}")
-	private String collectionAclURL;
-
 	protected void clearSessionAttrs(HttpSession session) {
 		session.removeAttribute("datafilePath");
 		session.removeAttribute("collection_type");
@@ -75,32 +68,6 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		session.removeAttribute("folderIds");
 		session.removeAttribute("accessToken");
 		session.removeAttribute("authorized");
-	}
-
-	@SuppressWarnings("unchecked")
-	protected void populateBasePaths(HttpServletRequest request, HttpSession session, String path)
-			throws DoeWebException {
-		log.info("populate base paths for " + path);
-		String authToken = (String) session.getAttribute("hpcUserToken");
-		Set<String> basePaths = (Set<String>) session.getAttribute("basePaths");
-		String userId = (String) session.getAttribute("hpcUserId");
-		if (basePaths == null || basePaths.isEmpty()) {
-			HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
-			if (modelDTO == null) {
-				modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL);
-				session.setAttribute("userDOCModel", modelDTO);
-			}
-			DoeClientUtil.populateBasePaths(session, modelDTO, authToken, userId, collectionAclURL);
-			basePaths = (Set<String>) session.getAttribute("basePaths");
-		}
-
-		String selectedBasePath = DoeClientUtil.getBasePath(request);
-		if (selectedBasePath == null)
-			selectedBasePath = (String) session.getAttribute("basePathSelected");
-		else
-			session.setAttribute("basePathSelected", selectedBasePath);
-
-		setCollectionPath(request, path);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -450,7 +417,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 
 	protected List<DoeMetadataAttrEntry> populateFormAttributes(HttpServletRequest request, HttpSession session,
 			String basePath, String collectionType, String[] controllerAttribute, String[] controllerValue,
-			boolean refresh, List<DoeMetadataAttrEntry> cachedEntries) throws DoeWebException {
+			Boolean refresh, List<DoeMetadataAttrEntry> cachedEntries) throws DoeWebException {
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 
 		List<String> controllerAttrList = controllerAttribute == null ? new ArrayList<String>()
@@ -476,11 +443,26 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		List<HpcMetadataValidationRule> filteredRules = rules.stream()
 				.filter(e -> e.getCollectionTypes().contains(collectionType)).collect(Collectors.toList());
 
-		HpcCollectionDTO collectionDTO = (HpcCollectionDTO) session.getAttribute("parentCollection");
 		List<DoeMetadataAttrEntry> metadataEntries = new ArrayList<DoeMetadataAttrEntry>();
 		List<String> attributeNames = new ArrayList<String>();
 		log.info("base path rules for collection type:" + collectionType + " are: " + filteredRules);
 
+		if (CollectionUtils.isEmpty(controllerValuesList) && CollectionUtils.isEmpty(controllerAttrList)
+				&& Boolean.FALSE.equals(refresh) && CollectionUtils.isNotEmpty(cachedEntries)) {
+			List<HpcMetadataValidationRule> controllerAttrRules = rules.stream().filter(
+					e -> e.getCollectionTypes().contains(collectionType) && (e.getControllerAttribute() != null))
+					.collect(Collectors.toList());
+			if (CollectionUtils.isNotEmpty(controllerAttrRules)) {
+				List<String> controllerAttrNames = LambdaUtils.map(controllerAttrRules,
+						HpcMetadataValidationRule::getControllerAttribute);
+				cachedEntries.stream().forEach(e -> {
+					if (controllerAttrNames.contains(e.getAttrName())) {
+						controllerAttrList.add(e.getAttrName());
+						controllerValuesList.add(e.getAttrValue());
+					}
+				});
+			}
+		}
 		/*
 		 * If the rule has controller value/attribute exists, filter the rules by
 		 * controllerAttribute/controllerAttribute
@@ -515,10 +497,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 					entry.setAttrValue(getFormAttributeValue(request, "zAttrStr_" + rule.getAttribute(), cachedEntries,
 							"zAttrStr_"));
 					if (entry.getAttrValue() == null) {
-						if (refresh)
-							entry.setAttrValue(getCollectionAttrValue(collectionDTO, rule.getAttribute()));
-						else
-							entry.setAttrValue(rule.getDefaultValue());
+						entry.setAttrValue(rule.getDefaultValue());
 					}
 					if (rule.getValidValues() != null && !rule.getValidValues().isEmpty()) {
 						List<KeyValueBean> validValues = new ArrayList<KeyValueBean>();
@@ -562,7 +541,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			}
 		}
 		// Handle custom attributes. If refresh, ignore them
-		if (!refresh) {
+		if (Boolean.FALSE.equals(refresh)) {
 			// add cached entries which are not included in rules
 			List<String> attrNames = LambdaUtils.map(cachedEntries, DoeMetadataAttrEntry::getAttrName);
 			List<String> ruleAttrNames = LambdaUtils.map(filteredRules, HpcMetadataValidationRule::getAttribute);
@@ -596,19 +575,19 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 
 	}
 
-	private String getCollectionAttrValue(HpcCollectionDTO collectionDTO, String attrName) {
-
-		log.info("get collection attribute value for: " + attrName);
-		if (collectionDTO == null || collectionDTO.getMetadataEntries() == null
-				|| collectionDTO.getMetadataEntries().getSelfMetadataEntries() == null)
-			return null;
-
-		for (HpcMetadataEntry entry : collectionDTO.getMetadataEntries().getSelfMetadataEntries()) {
-			if (entry.getAttribute().equals(attrName))
-				return entry.getValue();
-		}
-		return null;
-	}
+//	private String getCollectionAttrValue(HpcCollectionDTO collectionDTO, String attrName) {
+//
+//		log.info("get collection attribute value for: " + attrName);
+//		if (collectionDTO == null || collectionDTO.getMetadataEntries() == null
+//				|| collectionDTO.getMetadataEntries().getSelfMetadataEntries() == null)
+//			return null;
+//
+//		for (HpcMetadataEntry entry : collectionDTO.getMetadataEntries().getSelfMetadataEntries()) {
+//			if (entry.getAttribute().equals(attrName))
+//				return entry.getValue();
+//		}
+//		return null;
+//	}
 
 	private String getFormAttributeValue(HttpServletRequest request, String attributeName,
 			List<DoeMetadataAttrEntry> cachedEntries, String prefix) {
@@ -624,22 +603,6 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			}
 		}
 		return null;
-	}
-
-	protected void setCollectionPath(HttpServletRequest request, String parentPath) {
-		String path = request.getParameter("path");
-		if (path != null && !path.isEmpty()) {
-			return;
-		}
-
-		if (parentPath == null || parentPath.isEmpty()) {
-			String[] basePathValues = request.getParameterValues("basePath");
-			String basePath = null;
-			if (basePathValues == null || basePathValues.length == 0)
-				basePath = (String) request.getAttribute("basePath");
-			else
-				basePath = basePathValues[0];
-		}
 	}
 
 	protected HpcCollectionRegistrationDTO constructRequest(HttpServletRequest request,

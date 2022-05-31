@@ -190,7 +190,10 @@ $(document)
 											$("#message").show();
 										} else if($('input:checkbox.checkboxMultipleDwnlodPaths').is(':visible') && 
 												$('input:checkbox.checkboxMultipleDwnlodPaths:checked').length == 0){
-											/* multiple checkbox download and validate if either one is checked */
+											/*
+											 * multiple checkbox download and
+											 * validate if either one is checked
+											 */
 											$('.downloadErrorMsg').html("Select atleast one path.");
 											$("#message").show();
 										} else if (searchType == 's3' || searchType == 'async' || searchType == 'drive'

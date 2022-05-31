@@ -45,6 +45,7 @@ import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.domain.LookUp;
 import gov.nih.nci.doe.web.domain.MetaDataPermissions;
 import gov.nih.nci.doe.web.domain.ModelInfo;
+import gov.nih.nci.doe.web.domain.PredictionAccess;
 import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeResponse;
 import gov.nih.nci.doe.web.model.DoeSearch;
@@ -60,8 +61,10 @@ import gov.nih.nci.doe.web.service.LookUpService;
 import gov.nih.nci.doe.web.service.MailService;
 import gov.nih.nci.doe.web.service.MetaDataPermissionsService;
 import gov.nih.nci.doe.web.service.ModelInfoService;
+import gov.nih.nci.doe.web.service.PredictionAccessService;
 import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
+import gov.nih.nci.doe.web.util.LambdaUtils;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQueryOperator;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQueryType;
@@ -167,6 +170,9 @@ public abstract class AbstractDoeController {
 
 	@Autowired
 	TaskManagerService taskManagerService;
+
+	@Autowired
+	public PredictionAccessService predictionAccessService;
 
 	protected Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -347,6 +353,30 @@ public abstract class AbstractDoeController {
 		return "No Permissions";
 	}
 
+	public String getPermissionRoleByCollectionPath(String user, String collectionPath,
+			List<KeyValueBean> loggedOnUserPermissions) {
+		log.info("get permission role for user :" + user + " collectionPath: " + collectionPath);
+		if (!StringUtils.isEmpty(user)) {
+			List<String> loggedOnUserPermList = new ArrayList<String>();
+			loggedOnUserPermissions.stream().forEach(e -> loggedOnUserPermList.add(e.getKey()));
+
+			if (!CollectionUtils.isEmpty(loggedOnUserPermList)) {
+				List<MetaDataPermissions> permissionList = metaDataPermissionService
+						.getAllMetaDataPermissionsByCollectionPath(collectionPath);
+				Boolean isOwner = permissionList.stream()
+						.anyMatch(o -> (o.getUser() != null && user.equalsIgnoreCase(o.getUser().getEmailAddrr())));
+				Boolean isGroupUser = permissionList.stream().anyMatch(
+						o -> (o.getGroup() != null && loggedOnUserPermList.contains(o.getGroup().getGroupName())));
+				if (Boolean.TRUE.equals(isOwner)) {
+					return "Owner";
+				} else if (Boolean.TRUE.equals(isGroupUser)) {
+					return "Group User";
+				}
+			}
+		}
+		return "No Permissions";
+	}
+
 	public void downloadToUrl(String urlStr, String fileName, HttpServletResponse response) throws DoeWebException {
 		log.info("download to Url for urlStr: " + urlStr + " for fileName: " + fileName);
 		try {
@@ -460,6 +490,36 @@ public abstract class AbstractDoeController {
 		}
 
 		return new ResponseEntity<>(keyValueBeanResults, null, HttpStatus.OK);
+	}
+
+	public String updatePredictionAccess(String path, String collectionId, String[] selectedPredictionAccess,
+			String isPublic) throws DoeWebException {
+
+		log.info("get prediction access list for path: " + path + " for user: " + getLoggedOnUserInfo());
+
+		try {
+
+			List<String> newPredictionAccessList = selectedPredictionAccess == null ? new ArrayList<String>()
+					: Arrays.asList(selectedPredictionAccess);
+
+			List<String> existingPredictionAccessList = predictionAccessService
+					.getAllPredictionAccessGroupsByCollectionPath(path);
+
+			// get the added and deleted groups
+			List<String> deletedgroups = existingPredictionAccessList.stream()
+					.filter(e -> !newPredictionAccessList.contains(e)).filter(value -> value != null)
+					.collect(Collectors.toList());
+
+			List<String> addedGroups = newPredictionAccessList.stream()
+					.filter(e -> !existingPredictionAccessList.contains(e)).collect(Collectors.toList());
+
+			predictionAccessService.updatePredictionAccess(path, Integer.valueOf(collectionId), addedGroups,
+					deletedgroups, StringUtils.isNotEmpty(isPublic) ? Boolean.valueOf(isPublic) : null);
+
+			return "SUCCESS";
+		} catch (Exception e) {
+			throw new DoeWebException("Failed to save prediction access " + e.getMessage());
+		}
 	}
 
 	public String saveMetaDataPermissionsList(String collectionId, String path, String[] selectedPermissions)
@@ -913,26 +973,16 @@ public abstract class AbstractDoeController {
 					model.addAttribute("isExternalDataSetSupported",
 							modelInfo != null ? modelInfo.getIsExternalDatasetSupported() : false);
 
-					// verify if prediction folder exists, else hide the generate predictions sub
-					// tab
+					// check if there are any predictions avaiable for logged on user
 
-					try {
-						String folderPath = collection.getCollection().getCollectionName() + "/Predictions_" + user;
-						HpcCollectionListDTO folderCollections = DoeClientUtil.getCollection(authToken, serviceURL,
-								folderPath, false);
+					List<String> grpsList = LambdaUtils.map(loggedOnUserPermissions, KeyValueBean::getKey);
+					List<PredictionAccess> predictionResults = predictionAccessService.getAllPredictionsForUser(user,
+							grpsList);
 
-						if (folderCollections != null) {
-							String folderPermissions = getPermissionRole(user,
-									folderCollections.getCollections().get(0).getCollection().getCollectionId(),
-									loggedOnUserPermissions);
-							if ("Owner".equalsIgnoreCase(folderPermissions)) {
-								model.addAttribute("showGeneratePredTab", true);
-							}
+					if (CollectionUtils.isNotEmpty(predictionResults)) {
 
-						}
-					} catch (Exception e) {
-						// collection does not exist
-						log.error("folder collection does not exist for Asset: " + asset_Identifier);
+						model.addAttribute("showGeneratePredTab", true);
+
 					}
 
 				}

@@ -171,10 +171,10 @@ function editPermissionsOpenModal() {
 	$("#updatePermissionModal").find(".updatePermissionsSuccessBlock").hide();
 	$("#updatePermissionModal").modal('show');
 	loadJsonData('/metaDataPermissionsList', $("#updatePermissionModal").find("#updateMetaDataPermissionsList"), false,
-			null, postSuccessEditPermissions, null, "key", "value");
+			null, postSuccessOpenEditPermissionsModal, null, "key", "value");
 }
 
-function postSuccessEditPermissions(data, status) {
+function postSuccessOpenEditPermissionsModal(data, status) {
 	var params = {
 		collectionId : $("#collectionId").val()
 	};
@@ -255,7 +255,6 @@ function editAccessPermissions(collectionId, metadata_path, msg, selectedCollect
 function postSuccessAccessPermissions(data, status) {
 	var accessGrp = $("#updateAccessPermissionsModal").find("#accessGroups").val();
 	var accessGrpList = accessGrp.split(",");
-	// $("#updateAccessPermissionsModal").find("#editPublicAccess").prop("disabled",false);
 	$("#updateAccessPermissionsModal").find("#publicCheckBox").show();
 	$("#updateAccessPermissionsModal").find("#infoTxtForAccessGroups").html("");
 
@@ -337,7 +336,7 @@ function updateMetaDataCollection() {
 		}
 	});
 
-	$("textarea").each(function() {
+	$("textarea:visible").each(function() {
 		var ismandatory = $(this).attr('is_mandatory');
 		if (!$(this).val() && ismandatory == "true") {
 			validate = false;

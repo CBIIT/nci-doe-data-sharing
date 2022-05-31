@@ -11,6 +11,9 @@ public interface MetaDataPermissionsRepository extends JpaRepository<MetaDataPer
 	@Query("select a from MetaDataPermissions a where a.collectionId =?1")
 	List<MetaDataPermissions> getAllMetaDataPermissionsByCollectionId(Integer collectionId);
 
+	@Query("select a from MetaDataPermissions a where a.collectionPath =?1")
+	List<MetaDataPermissions> getAllMetaDataPermissionsByCollectionPath(String collectionPath);
+
 	@Query("select a from MetaDataPermissions a where a.collectionId =?1 and a.group IS NOT NULL")
 	List<MetaDataPermissions> getAllGroupMetaDataPermissionsByCollectionId(Integer collectionId);
 
