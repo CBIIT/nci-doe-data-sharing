@@ -13,7 +13,6 @@ import javax.validation.Valid;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -253,7 +252,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 
 		HpcCollectionRegistrationDTO registrationDTO = null;
 
-		registrationDTO = constructRequest(request, doeCollection);
+		registrationDTO = constructRequest(request, doeCollection, Boolean.FALSE);
 		log.info("collection registrationDto: " + registrationDTO);
 
 		// Validate Collection path

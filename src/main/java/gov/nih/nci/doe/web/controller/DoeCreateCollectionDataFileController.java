@@ -43,6 +43,7 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementRulesDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationRequestDTO;
 import gov.nih.nci.hpc.domain.datatransfer.HpcGoogleScanDirectory;
 import gov.nih.nci.hpc.domain.datatransfer.HpcPatternType;
 
@@ -352,39 +353,6 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		return dto;
 	}
 
-	protected List<HpcMetadataEntry> getMetadataEntries(HttpServletRequest request, HttpSession session, String path)
-			throws DoeWebException {
-		Enumeration<String> params = request.getParameterNames();
-		List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
-
-		while (params.hasMoreElements()) {
-			String paramName = params.nextElement();
-			if (paramName.startsWith("zAttrStr_")) {
-				HpcMetadataEntry entry = new HpcMetadataEntry();
-				String attrName = paramName.substring("zAttrStr_".length());
-				String[] attrValue = request.getParameterValues(paramName);
-				entry.setAttribute(attrName);
-				entry.setValue(attrValue[0]);
-				metadataEntries.add(entry);
-			} else if (paramName.startsWith("_addAttrName")) {
-				HpcMetadataEntry entry = new HpcMetadataEntry();
-				String attrId = paramName.substring("_addAttrName".length());
-				String[] attrName = request.getParameterValues(paramName);
-				String[] attrValue = request.getParameterValues("_addAttrValue" + attrId);
-				if (attrName.length > 0 && !attrName[0].isEmpty())
-					entry.setAttribute(attrName[0]);
-				else
-					throw new DoeWebException("Invalid metadata attribute name. Empty value is not valid!");
-				if (attrValue.length > 0 && !attrValue[0].isEmpty())
-					entry.setValue(attrValue[0]);
-				else
-					throw new DoeWebException("Invalid metadata attribute value. Empty value is not valid!");
-				metadataEntries.add(entry);
-			}
-		}
-		return metadataEntries;
-	}
-
 	protected List<String> getCollectionTypes(List<HpcMetadataValidationRule> rules) {
 
 		log.info("get collection Types: " + rules);
@@ -575,20 +543,6 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 
 	}
 
-//	private String getCollectionAttrValue(HpcCollectionDTO collectionDTO, String attrName) {
-//
-//		log.info("get collection attribute value for: " + attrName);
-//		if (collectionDTO == null || collectionDTO.getMetadataEntries() == null
-//				|| collectionDTO.getMetadataEntries().getSelfMetadataEntries() == null)
-//			return null;
-//
-//		for (HpcMetadataEntry entry : collectionDTO.getMetadataEntries().getSelfMetadataEntries()) {
-//			if (entry.getAttribute().equals(attrName))
-//				return entry.getValue();
-//		}
-//		return null;
-//	}
-
 	private String getFormAttributeValue(HttpServletRequest request, String attributeName,
 			List<DoeMetadataAttrEntry> cachedEntries, String prefix) {
 		String[] attrValue = request.getParameterValues(attributeName);
@@ -605,8 +559,43 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		return null;
 	}
 
+	protected HpcDataObjectRegistrationRequestDTO constructDataRequest(HttpServletRequest request)
+			throws DoeWebException {
+		Enumeration<String> params = request.getParameterNames();
+		HpcDataObjectRegistrationRequestDTO dto = new HpcDataObjectRegistrationRequestDTO();
+		List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
+
+		while (params.hasMoreElements()) {
+			String paramName = params.nextElement();
+			if (paramName.startsWith("zAttrStr_")) {
+				HpcMetadataEntry entry = new HpcMetadataEntry();
+				String attrName = paramName.substring("zAttrStr_".length());
+				String[] attrValue = request.getParameterValues(paramName);
+				entry.setAttribute(attrName);
+				entry.setValue(attrValue[0]);
+				metadataEntries.add(entry);
+			} else if (paramName.startsWith("_addAttrName")) {
+				HpcMetadataEntry entry = new HpcMetadataEntry();
+				String attrId = paramName.substring("_addAttrName".length());
+				String[] attrName = request.getParameterValues(paramName);
+				String[] attrValue = request.getParameterValues("_addAttrValue" + attrId);
+				if (attrName.length > 0 && !attrName[0].isEmpty())
+					entry.setAttribute(attrName[0]);
+				else
+					throw new DoeWebException("Invalid metadata attribute name. Empty value is not valid!");
+				if (attrValue.length > 0 && !attrValue[0].isEmpty())
+					entry.setValue(attrValue[0]);
+				else
+					throw new DoeWebException("Invalid metadata attribute value. Empty value is not valid!");
+				metadataEntries.add(entry);
+			}
+		}
+		dto.getMetadataEntries().addAll(metadataEntries);
+		return dto;
+	}
+
 	protected HpcCollectionRegistrationDTO constructRequest(HttpServletRequest request,
-			DoeCollectionModel doeCollection) throws DoeWebException {
+			DoeCollectionModel doeCollection, Boolean isEditCollection) throws DoeWebException {
 		Enumeration<String> params = request.getParameterNames();
 		HpcCollectionRegistrationDTO dto = new HpcCollectionRegistrationDTO();
 		List<HpcMetadataEntry> metadataEntries = new ArrayList<>();
@@ -626,7 +615,10 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				} else {
 					entry.setValue(attrValue[0].trim());
 				}
-				if (StringUtils.isNotEmpty(entry.getValue())) {
+
+				if (Boolean.TRUE.equals(isEditCollection)) {
+					metadataEntries.add(entry);
+				} else if (Boolean.FALSE.equals(isEditCollection) && StringUtils.isNotEmpty(entry.getValue())) {
 					metadataEntries.add(entry);
 				}
 
@@ -663,13 +655,15 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				attrEntry.setAttrValue(attrValue[0].trim());
 				attrEntry.setSystemAttr(false);
 				selfMetadataEntries.add(attrEntry);
-			} else if (paramName.startsWith("path")) {
+			} else if (paramName.startsWith("path") && doeCollection != null) {
 				String[] path = request.getParameterValues(paramName);
 				doeCollection.setPath(path[0]);
 			}
 		}
-		if (doeCollection != null)
+		if (doeCollection != null) {
 			doeCollection.setSelfMetadataEntries(selfMetadataEntries);
+		}
+
 		dto.getMetadataEntries().addAll(metadataEntries);
 		return dto;
 	}

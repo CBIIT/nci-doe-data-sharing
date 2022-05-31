@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeDatafileModel;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
@@ -85,7 +84,7 @@ public class DoeCreateDatafileController extends DoeCreateCollectionDataFileCont
 				}
 			}
 
-			HpcDataObjectRegistrationRequestDTO registrationDTO = constructSyncRequest(request, session, path);
+			HpcDataObjectRegistrationRequestDTO registrationDTO = constructDataRequest(request);
 
 			registrationDTO.setChecksum(checksum);
 			Response restResponse = DoeClientUtil.registerDatafile(authToken, doeDataFile, dataObjectAsyncServiceURL,
@@ -110,14 +109,6 @@ public class DoeCreateDatafileController extends DoeCreateCollectionDataFileCont
 			return e.getMessage();
 		}
 
-	}
-
-	private HpcDataObjectRegistrationRequestDTO constructSyncRequest(HttpServletRequest request, HttpSession session,
-			String path) throws DoeWebException {
-
-		HpcDataObjectRegistrationRequestDTO dto = new HpcDataObjectRegistrationRequestDTO();
-		dto.getMetadataEntries().addAll(getMetadataEntries(request, session, path));
-		return dto;
 	}
 
 }
