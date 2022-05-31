@@ -846,6 +846,11 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before
     display: table-row-group;
 }
 
+.modacSupportLink {
+	color: #fff;
+	text-decoration: underline;
+}
+
 /* required */ 
 #bgCanvas {
     position: fixed;
