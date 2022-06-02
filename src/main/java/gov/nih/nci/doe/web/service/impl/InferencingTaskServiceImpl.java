@@ -118,4 +118,11 @@ public class InferencingTaskServiceImpl implements InferencingTaskService {
 		return inferencingTaskRepository.getInferenceTask(taskId);
 	}
 
+	@Override
+	public void deleteInferenceByTaskId(String taskId) {
+		log.info("delete inference by task Id: " + taskId);
+		InferencingTask task = inferencingTaskRepository.getInferenceTask(taskId);
+		inferencingTaskRepository.delete(task);
+	}
+
 }

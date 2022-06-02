@@ -24,4 +24,6 @@ public interface InferencingTaskService {
 	public Boolean checkifFileExistsForUser(String user, String modelPath, String inputFileName);
 	
 	public InferencingTask getInferenceByTaskId(String taskId);
+	
+	public void deleteInferenceByTaskId(String taskId);
 }

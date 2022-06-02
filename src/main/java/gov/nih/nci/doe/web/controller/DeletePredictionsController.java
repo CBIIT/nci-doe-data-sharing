@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,11 +15,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.AuditingModel;
+import gov.nih.nci.doe.web.model.DeletePredictionsModel;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 
 @Controller
@@ -27,12 +28,11 @@ import gov.nih.nci.doe.web.util.DoeClientUtil;
 public class DeletePredictionsController extends AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.dataObject}")
-	private String serviceURL;
+	private String dataObjectUrl;
 
 	@PostMapping
 	@ResponseBody
-	public String deletePredictions(@RequestParam(value = "deletepath") String deletepaths,
-			@RequestParam(value = "predCollectionPath") String predCollectionPath, HttpSession session,
+	public String deletePredictions(@Valid DeletePredictionsModel deletePredModel, HttpSession session,
 			@RequestHeader HttpHeaders headers) throws DoeWebException {
 
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
@@ -42,13 +42,10 @@ public class DeletePredictionsController extends AbstractDoeController {
 			return "Not Authorized";
 		}
 
-		if (deletepaths == null) {
-			return "Invalid Data object path!";
-		}
-		if (StringUtils.isNotEmpty(deletepaths)) {
-			List<String> pathsList = Arrays.asList(deletepaths.split(","));
+		if (StringUtils.isNotEmpty(deletePredModel.getDeletepaths())) {
+			List<String> pathsList = Arrays.asList(deletePredModel.getDeletepaths().split(","));
 			for (String path : pathsList) {
-				String deleted = DoeClientUtil.deleteDatafile(authToken, serviceURL, path);
+				String deleted = DoeClientUtil.deleteDatafile(authToken, dataObjectUrl, path);
 				if (StringUtils.isNotEmpty(deleted) && deleted.equalsIgnoreCase("true")) {
 
 					// store the auditing info
@@ -64,19 +61,28 @@ public class DeletePredictionsController extends AbstractDoeController {
 				}
 			}
 
-			String deleted = DoeClientUtil.deleteCollection(authToken, serviceURL, predCollectionPath);
+			String deleted = DoeClientUtil.deleteCollection(authToken, serviceURL,
+					deletePredModel.getPredCollectionPath());
 			if (StringUtils.isNotEmpty(deleted) && deleted.equalsIgnoreCase("SUCCESS")) {
 
 				// delete from collection permission table
-				predictionAccessService.deleteAllPermissionsByCollectionPath(getLoggedOnUserInfo(), predCollectionPath);
+				predictionAccessService.deleteAllPermissionsByCollectionPath(getLoggedOnUserInfo(),
+						deletePredModel.getPredCollectionPath());
 
 				// store the auditing info
 				AuditingModel audit = new AuditingModel();
 				audit.setName(getLoggedOnUserInfo());
 				audit.setOperation("delete collection");
 				audit.setStartTime(new Date());
-				audit.setPath(predCollectionPath);
+				audit.setPath(deletePredModel.getPredCollectionPath());
 				auditingService.saveAuditInfo(audit);
+
+				// delete from inference table
+
+				if (StringUtils.isNoneEmpty(deletePredModel.getTaskId())) {
+					inferencingTaskService.deleteInferenceByTaskId(deletePredModel.getTaskId());
+				}
+
 			} else {
 				return "Failed to delete prediction " + deleted;
 			}

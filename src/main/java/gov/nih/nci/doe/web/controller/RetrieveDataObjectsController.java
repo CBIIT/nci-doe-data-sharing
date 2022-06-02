@@ -221,35 +221,37 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 						MoDaCPredictionsResults predictionResult = new MoDaCPredictionsResults();
 						String taskId = predictionIdentifier.substring(predictionIdentifier.lastIndexOf('_') + 1);
 						InferencingTask inferencetask = inferencingTaskService.getInferenceByTaskId(taskId);
-						if (owner != null) {
-							predictionResult.setPredictionFolderPath(collection.getCollectionPath());
-							predictionResult.setIsOwner(Boolean.TRUE);
-							predictionResult.setPredCollId(collection.getCollectionId());
-							predictionResult.setPredAccessGrps(
-									CollectionUtils.isNotEmpty(predGrpAccessList) ? String.join(",", predGrpAccessList)
-											: null);
-							predictionResult.setIsPublic(owner.getIsPublic());
-						} else {
-							// logged on user has group access to this prediction
-							PredictionAccess ownerInfo = predictionAccessList.stream().filter(e -> e.getUser() != null)
-									.findAny().orElse(null);
-							DoeUsersModel user = authService.getUserInfo(ownerInfo.getUser().getEmailAddrr());
-							predictionResult.setIsOwner(Boolean.FALSE);
-							predictionResult.setFullName(user.getFirstName() + " " + user.getLastName());
+						if (inferencetask != null) {
+							if (owner != null) {
+								predictionResult.setPredictionFolderPath(collection.getCollectionPath());
+								predictionResult.setIsOwner(Boolean.TRUE);
+								predictionResult.setPredCollId(collection.getCollectionId());
+								predictionResult.setPredAccessGrps(CollectionUtils.isNotEmpty(predGrpAccessList)
+										? String.join(",", predGrpAccessList)
+										: null);
+								predictionResult.setIsPublic(owner.getIsPublic());
+							} else {
+								// logged on user has group access to this prediction
+								PredictionAccess ownerInfo = predictionAccessList.stream()
+										.filter(e -> e.getUser() != null).findAny().orElse(null);
+								DoeUsersModel user = authService.getUserInfo(ownerInfo.getUser().getEmailAddrr());
+								predictionResult.setIsOwner(Boolean.FALSE);
+								predictionResult.setFullName(user.getFirstName() + " " + user.getLastName());
 
+							}
+							predictionResult.setInputDatasetPath(inferencetask.getTestDataSetPath());
+							predictionResult.setInputDatasetName(inferencetask.getTestDataSetPath()
+									.substring(inferencetask.getTestDataSetPath().lastIndexOf('/') + 1));
+							predictionResult.setOutcomeFileName(inferencetask.getActualResultsFileName());
+							predictionResult.setOutcomeFilePath(inferencetask.getOutcomeFilePath());
+							predictionResult.setTaskId(taskId);
+							predictionResult.setTaskCompletedDate(inferencetask.getCompletedDate());
+							predictionResult.setPredictionsPath(inferencetask.getResultPath());
+							predictionResult.setPredictionsName(inferencetask.getResultPath()
+									.substring(inferencetask.getResultPath().lastIndexOf('/') + 1));
+
+							returnResults.add(predictionResult);
 						}
-						predictionResult.setInputDatasetPath(inferencetask.getTestDataSetPath());
-						predictionResult.setInputDatasetName(inferencetask.getTestDataSetPath()
-								.substring(inferencetask.getTestDataSetPath().lastIndexOf('/') + 1));
-						predictionResult.setOutcomeFileName(inferencetask.getActualResultsFileName());
-						predictionResult.setOutcomeFilePath(inferencetask.getOutcomeFilePath());
-						predictionResult.setTaskId(taskId);
-						predictionResult.setTaskCompletedDate(inferencetask.getCompletedDate());
-						predictionResult.setPredictionsPath(inferencetask.getResultPath());
-						predictionResult.setPredictionsName(inferencetask.getResultPath()
-								.substring(inferencetask.getResultPath().lastIndexOf('/') + 1));
-
-						returnResults.add(predictionResult);
 					}
 				}
 
