@@ -116,7 +116,6 @@ $(document).ready(
 						$(".editCollectionErrorMsg").html("");
 						$("#collectionId").val(collectionId);
 						$("#isDataObject").val(false);
-//						$("#editUserMetadataFileName").html(collectionName);
 						var params = {
 							selectedPath : selectedPath,
 							collectionType : collectionType,

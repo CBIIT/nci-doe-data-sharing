@@ -42,7 +42,6 @@ public class DoeBrowseController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	private String collectionURL;
 
-
 	// The logger instance.
 	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
@@ -131,13 +130,11 @@ public class DoeBrowseController extends AbstractDoeController {
 				DoeBrowserEntry browserEntry = (DoeBrowserEntry) session.getAttribute("browserEntry");
 				if (browserEntry == null) {
 					browserEntry = new DoeBrowserEntry();
-					browserEntry.setCollection(true);
+
 					browserEntry.setFullPath(path);
-					browserEntry.setId(path);
+
 					browserEntry.setName(path);
 					browserEntry = getTreeNodes(path, browserEntry, authToken, false, true, false);
-					if (request.getParameter("base") == null)
-						browserEntry = addPathEntries(path, browserEntry);
 					browserEntry = trimPath(browserEntry, browserEntry.getName());
 					session.setAttribute("browserEntry", browserEntry);
 				}
@@ -156,30 +153,6 @@ public class DoeBrowseController extends AbstractDoeController {
 		}
 
 		return new ResponseEntity<>(results, HttpStatus.NO_CONTENT);
-	}
-
-	private DoeBrowserEntry addPathEntries(String path, DoeBrowserEntry browserEntry) {
-		if (path.indexOf("/") != -1) {
-			String[] paths = path.split("/");
-			for (int i = paths.length - 2; i >= 0; i--) {
-				if (paths[i].isEmpty())
-					continue;
-				browserEntry = addPathEntry(path, paths[i], browserEntry);
-			}
-		}
-		return browserEntry;
-	}
-
-	private DoeBrowserEntry addPathEntry(String fullPath, String path, DoeBrowserEntry childEntry) {
-		DoeBrowserEntry entry = new DoeBrowserEntry();
-		String entryPath = fullPath.substring(0, (fullPath.indexOf('/' + path) + ('/' + path).length()));
-		entry.setCollection(true);
-		entry.setId(entryPath);
-		entry.setFullPath(entryPath);
-		entry.setPopulated(true);
-		entry.setName(path);
-		entry.getChildren().add(childEntry);
-		return entry;
 	}
 
 	private DoeBrowserEntry getSelectedEntry(String path, DoeBrowserEntry browserEntry) {
@@ -206,17 +179,6 @@ public class DoeBrowseController extends AbstractDoeController {
 		return null;
 	}
 
-	/**
-	 * Get child Tree nodes for selected tree node and merge it with cached nodes
-	 *
-	 * @param path
-	 * @param browserEntry
-	 * @param authToken
-	 * @param model
-	 * @param getChildren
-	 * @param refresh
-	 * @return
-	 */
 	private DoeBrowserEntry getTreeNodes(String path, DoeBrowserEntry browserEntry, String authToken,
 			boolean getChildren, boolean partial, boolean refresh) throws DoeWebException {
 
@@ -246,7 +208,6 @@ public class DoeBrowseController extends AbstractDoeController {
 
 			if (collection.getAbsolutePath() != null) {
 				selectedEntry.setFullPath(collection.getAbsolutePath());
-				selectedEntry.setId(collection.getAbsolutePath());
 				selectedEntry.setName(collection.getCollectionName());
 			}
 
@@ -255,12 +216,9 @@ public class DoeBrowseController extends AbstractDoeController {
 			// request has been made
 			selectedEntry.setPopulated(true);
 
-			selectedEntry.setCollection(true);
 			for (HpcCollectionListingEntry listEntry : collection.getSubCollections()) {
 				DoeBrowserEntry listChildEntry = new DoeBrowserEntry();
-				listChildEntry.setCollection(true);
 				listChildEntry.setFullPath(listEntry.getPath());
-				listChildEntry.setId(listEntry.getPath());
 				listChildEntry.setName(listEntry.getPath());
 				listChildEntry.setPopulated(false);
 				if (getChildren)
@@ -273,21 +231,10 @@ public class DoeBrowseController extends AbstractDoeController {
 				}
 				selectedEntry.getChildren().add(listChildEntry);
 			}
-			for (HpcCollectionListingEntry listEntry : collection.getDataObjects()) {
-				selectedEntry.setCollection(true);
-				DoeBrowserEntry listChildEntry = new DoeBrowserEntry();
-				listChildEntry.setCollection(false);
-				listChildEntry.setFullPath(listEntry.getPath());
-				listChildEntry.setId(listEntry.getPath());
-				listChildEntry.setName(listEntry.getPath());
-				listChildEntry.setPopulated(true);
-				selectedEntry.getChildren().add(listChildEntry);
-			}
+
 			if (selectedEntry.getChildren() == null || selectedEntry.getChildren().isEmpty()) {
 				DoeBrowserEntry listChildEntry = new DoeBrowserEntry();
-				listChildEntry.setCollection(false);
 				listChildEntry.setFullPath(" ");
-				listChildEntry.setId(" ");
 				listChildEntry.setName(" ");
 				listChildEntry.setPopulated(true);
 				selectedEntry.getChildren().add(listChildEntry);
