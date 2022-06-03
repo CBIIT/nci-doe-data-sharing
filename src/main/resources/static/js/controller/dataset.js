@@ -1263,50 +1263,52 @@ function postSuccessDeleteCollectionFunction(data, status) {
 	}
 }
 
-$('#generatePredTable tbody').on(
-		'click',
-		'.deletePredBtn',
-		function() {
+$('#generatePredTable tbody')
+		.on(
+				'click',
+				'.deletePredBtn',
+				function() {
 
-			var inputDataFilePath = $(this).attr('dataset_path');
-			var predPath = $(this).attr('pred_path');
-			var outcomePath = $(this).attr('outcome_path');
-			var predCollectionPath = $(this).attr('pred_collPath');
-			var taskId = $(this).attr('task_id');
-			var paths = [];
-			paths.push(inputDataFilePath);
-			paths.push(predPath);
-			if (outcomePath && outcomePath != "null") {
-				paths.push(outcomePath);
-			}
-
-			var deletePredModel = {};
-			deletePredModel.deletepaths = paths;
-			deletePredModel.taskId = taskId;
-			deletePredModel.predCollectionPath = predCollectionPath;
-
-			bootbox.confirm({
-				message : "This will delete your input dataset file, prediction file, and outcome file. Are you sure?",
-				buttons : {
-					confirm : {
-						label : 'Yes',
-						className : 'btn-success'
-					},
-					cancel : {
-						label : 'No',
-						className : 'btn-danger'
+					var inputDataFilePath = $(this).attr('dataset_path');
+					var predPath = $(this).attr('pred_path');
+					var outcomePath = $(this).attr('outcome_path');
+					var predCollectionPath = $(this).attr('pred_collPath');
+					var taskId = $(this).attr('task_id');
+					var paths = [];
+					paths.push(inputDataFilePath);
+					paths.push(predPath);
+					if (outcomePath && outcomePath != "null") {
+						paths.push(outcomePath);
 					}
-				},
-				callback : function(result) {
-					if (result == true) {
 
-						invokeAjax('/deletePredictions', 'POST', JSON.stringify(deletePredModel),
-								postSuccessDeletePredictionFunction, postFailureDeleteCollectionFunction,
-								'application/x-www-form-urlencoded; charset=UTF-8', 'text');
-					}
-				}
-			});
-		});
+					var deletePredModel = {};
+					deletePredModel.deletepaths = paths.join();
+					deletePredModel.taskId = taskId;
+					deletePredModel.predCollectionPath = predCollectionPath;
+
+					bootbox
+							.confirm({
+								message : "This will delete your input dataset file, prediction file, and outcome file. Are you sure?",
+								buttons : {
+									confirm : {
+										label : 'Yes',
+										className : 'btn-success'
+									},
+									cancel : {
+										label : 'No',
+										className : 'btn-danger'
+									}
+								},
+								callback : function(result) {
+									if (result == true) {
+
+										invokeAjax('/deletePredictions', 'POST', JSON.stringify(deletePredModel),
+												postSuccessDeletePredictionFunction,
+												postFailureDeleteCollectionFunction, null, 'text');
+									}
+								}
+							});
+				});
 
 function postSuccessDeletePredictionFunction(data, status) {
 	if (data && data == 'Not Authorized') {

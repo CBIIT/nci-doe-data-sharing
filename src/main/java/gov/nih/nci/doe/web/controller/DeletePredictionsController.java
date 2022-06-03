@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +12,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,7 +32,7 @@ public class DeletePredictionsController extends AbstractDoeController {
 
 	@PostMapping
 	@ResponseBody
-	public String deletePredictions(@Valid DeletePredictionsModel deletePredModel, HttpSession session,
+	public String deletePredictions(@RequestBody DeletePredictionsModel deletePredModel, HttpSession session,
 			@RequestHeader HttpHeaders headers) throws DoeWebException {
 
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
