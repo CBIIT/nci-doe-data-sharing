@@ -1134,10 +1134,8 @@ public abstract class AbstractDoeController {
 		/*
 		 * get all model paths with is_model_deployed metadata attr true
 		 */
-		List<KeyValueBean> modelPaths = new ArrayList<KeyValueBean>();
 
 		log.info("get all models with model deployed true");
-		String authToken = (String) session.getAttribute("hpcUserToken");
 		DoeSearch search = new DoeSearch();
 		String[] attrNames = { "collection_type", "asset_type", "is_model_deployed" };
 		String[] attrValues = { "Asset", "Model", "Yes" };
@@ -1155,9 +1153,18 @@ public abstract class AbstractDoeController {
 		search.setOperator(operators);
 		search.setIskeyWordSearch(iskeyWordSearch);
 
+		return getPathsForSearch(search, session);
+
+	}
+
+	public List<KeyValueBean> getPathsForSearch(DoeSearch search, HttpSession session) throws DoeWebException {
+		log.info("get paths by filtering from the required search criteria");
+
 		HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search, "Asset");
 		compoundQuery.setDetailedResponse(true);
 		log.info("search compund query" + compoundQuery);
+		String authToken = (String) session.getAttribute("hpcUserToken");
+		List<KeyValueBean> datasetList = new ArrayList<KeyValueBean>();
 		try {
 			Response restResponse = DoeClientUtil.getCollectionSearchQuery(authToken,
 					compoundCollectionSearchServiceURL, compoundQuery);
@@ -1178,15 +1185,15 @@ public abstract class AbstractDoeController {
 					// applicable models
 					if (list.length == 5) {
 						String modelIdentifier = modelPath.substring(modelPath.lastIndexOf('/') + 1);
-						modelPaths.add(new KeyValueBean(modelPath, modelIdentifier));
+						datasetList.add(new KeyValueBean(modelPath, modelIdentifier));
 					}
 
 				}));
 
 			}
-			return modelPaths;
+			return datasetList;
 		} catch (Exception e) {
-			log.error("Failed to get model paths");
+			log.error("Failed to get model/reference dataset paths");
 			throw new DoeWebException(e);
 		}
 
