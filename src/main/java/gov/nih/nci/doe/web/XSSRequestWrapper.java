@@ -3,8 +3,6 @@ package gov.nih.nci.doe.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-import org.apache.commons.lang.StringEscapeUtils;
-
 import java.util.regex.Pattern;
 
 public class XSSRequestWrapper extends HttpServletRequestWrapper {
@@ -99,7 +97,7 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
 					Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
 			value = scriptPattern.matcher(value).replaceAll("");
 
-			value = StringEscapeUtils.escapeHtml(value);
+//			value = StringEscapeUtils.escapeHtml(value);
 		}
 		return value;
 

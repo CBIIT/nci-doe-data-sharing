@@ -13,6 +13,15 @@ public class InferencingTaskModel {
 	private String applicableModelNames;
 	private String outcomeFilePath;
 	private Boolean isReferenceAsset;
+	private String referenceDatasetList;
+
+	public String getReferenceDatasetList() {
+		return referenceDatasetList;
+	}
+
+	public void setReferenceDatasetList(String referenceDatasetList) {
+		this.referenceDatasetList = referenceDatasetList;
+	}
 
 	public String getApplicableModelNames() {
 		return applicableModelNames;

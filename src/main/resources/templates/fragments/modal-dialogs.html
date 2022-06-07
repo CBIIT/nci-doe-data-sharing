@@ -220,8 +220,7 @@
 
 					<input type="hidden" id="predCollectionId" /> <input type="hidden"
 						id="predCollectionPath" /> <input type="hidden"
-						id="predAccessGroups" /> <input type="hidden"
-						id="isPublic" />
+						id="predAccessGroups" /> <input type="hidden" id="isPublic" />
 					<div class="modal-body drilldown-content">
 						<div class="row row-buffer" style="margin-top: -16px;">
 							<label for="updatePredictionAccessGrpList"
@@ -326,21 +325,43 @@
 								<div class="form-group">
 									<label style="font-size: 14px; font-family: 'inter_regular';"
 										class="radio-inline"> <input type="radio"
+										onchange="displayPredictionSelectionDiv('GDC_Data')"
 										name="uploadFrom" style="transform: translateY(2px);"
 										value="gdcData">&nbsp;&nbsp;Upload GDC Data
 									</label>
 								</div>
 								&nbsp;&nbsp;&nbsp;&nbsp;
-								<div class="form-group">
+								<div class="form-group" id="displayExternalDataDiv">
 									<label style="font-size: 14px; font-family: 'inter_regular';"
 										class="radio-inline"> <input type="radio"
+										onchange="displayPredictionSelectionDiv('InputFile')"
 										style="transform: translateY(2px);" name="uploadFrom"
 										value="inputFile">&nbsp;&nbsp;Upload Input File
 									</label>
 								</div>
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<div class="form-group" id="displayReferenceDatasetDiv">
+									<label style="font-size: 14px; font-family: 'inter_regular';"
+										class="radio-inline"> <input type="radio"
+										style="transform: translateY(2px);" name="uploadFrom"
+										onchange="displayPredictionSelectionDiv('ReferenceDataset')"
+										value="referenceDataset">&nbsp;&nbsp;Select From Existing
+										Reference Datasets
+									</label>
+								</div>
 							</div>
 							<hr class="generatePredHr">
-							<div class="row row-buffer"
+
+							<div class="row row-buffer referenceDatasetSelectionDiv"
+								style="margin-left: 50px; margin-top: -23px; display: none">
+								<label for="referenceDatasetList" style="margin-bottom: 10px;">Reference
+									Datasets: </label> <select class="simple-select2" multiple="multiple"
+									id="referenceDatasetList" name="referenceDatasetList"
+									style="width: 70%">
+								</select>
+							</div>
+
+							<div class="row row-buffer userInputDiv"
 								style="margin-left: 50px; margin-top: -23px;">
 								<label id="labelForInputType"
 									style="font-family: 'inter_regular'; font-size: 14px; font-weight: 500;">Upload
@@ -349,7 +370,7 @@
 									id="uploadTestInferFile" name="uploadTestInferFile" />
 							</div>
 
-							<div class="row row-buffer"
+							<div class="row row-buffer userInputDiv"
 								style="margin-left: 0px; margin-top: 10px; box-sizing: border-box; background-color: #F1F1F1; padding-left: 51px; padding-bottom: 20px;">
 								<label class="optionalLabel">OPTIONAL</label> <label
 									class="optionalLabelInfo"> Upload outcome file to
