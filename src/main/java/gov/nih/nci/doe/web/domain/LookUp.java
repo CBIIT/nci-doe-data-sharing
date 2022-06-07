@@ -29,8 +29,8 @@ public class LookUp implements Serializable {
 	private Date createdDate;
 	private Integer displayOrder;
 	private String searchCriteriaDisplay;
-	private String searchResultsDisplay;
 	private Boolean isEditable;
+	private Boolean isVisible;
 
 	public LookUp() {
 
@@ -129,13 +129,15 @@ public class LookUp implements Serializable {
 		this.isEditable = isEditable;
 	}
 
-	@Column(name = "search_results_display", nullable = true, length = 1)
-	public String getSearchResultsDisplay() {
-		return searchResultsDisplay;
+	@Basic
+	@Column(name = "IS_VISIBLE", nullable = true, length = 1)
+	@Type(type = "yes_no")
+	public Boolean getIsVisible() {
+		return isVisible;
 	}
 
-	public void setSearchResultsDisplay(String searchResultsDisplay) {
-		this.searchResultsDisplay = searchResultsDisplay;
+	public void setIsVisible(Boolean isVisible) {
+		this.isVisible = isVisible;
 	}
 
 }

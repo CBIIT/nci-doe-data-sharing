@@ -341,8 +341,9 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 
 		DoeDatafileSearchResultDetailed returnResult = new DoeDatafileSearchResultDetailed();
 
-		returnResult.setSelfMetadata(getUserMetadata(
-				result.getMetadataEntries().getSelfMetadataEntries().getUserMetadataEntries(), null, systemAttrs));
+		returnResult.setSelfMetadata(
+				getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries().getUserMetadataEntries(), null,
+						systemAttrs, null));
 		returnResult.setSystemMetadata(getSystemMetaData(
 				result.getMetadataEntries().getSelfMetadataEntries().getSystemMetadataEntries(), null, systemAttrs));
 

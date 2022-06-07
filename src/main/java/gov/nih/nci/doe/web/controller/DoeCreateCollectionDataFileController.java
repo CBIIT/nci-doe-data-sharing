@@ -499,6 +499,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 						entry.setDisplayName(val.getDisplayName());
 						entry.setIsEditable(val.getIsEditable());
 						entry.setDisplayOrder(val.getDisplayOrder());
+						entry.setIsVisible(val.getIsVisible());
 					} else {
 						entry.setDisplayName(rule.getAttribute());
 						entry.setIsEditable(true);
@@ -523,6 +524,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 						x.setDisplayName(lookUpVal.getDisplayName());
 						x.setIsEditable(lookUpVal.getIsEditable());
 						x.setDisplayOrder(lookUpVal.getDisplayOrder());
+						x.setIsVisible(lookUpVal.getIsVisible());
 					} else {
 						x.setDisplayName(x.getAttrName());
 						x.setIsEditable(true);
@@ -620,6 +622,36 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 					metadataEntries.add(entry);
 				} else if (Boolean.FALSE.equals(isEditCollection) && StringUtils.isNotEmpty(entry.getValue())) {
 					metadataEntries.add(entry);
+
+				}
+
+				// when creating/editing collection of type reference dataset with applicable
+				// models,
+				// add/update the hidden metadata applicable_model_name_display
+
+				if (StringUtils.isNotEmpty(attrName) && attrName.equalsIgnoreCase("applicable_model_name")) {
+
+					HpcMetadataEntry hiddenMetadataForApplicableModels = new HpcMetadataEntry();
+					hiddenMetadataForApplicableModels.setAttribute("applicable_model_name_display");
+					DoeMetadataAttrEntry hiddenAttrEntryForApplicableModels = new DoeMetadataAttrEntry();
+					hiddenAttrEntryForApplicableModels.setAttrName("applicable_model_name_display");
+
+					List<String> attrNamesDisplay = new ArrayList<String>();
+
+					Stream.of(attrValue).forEach(e -> {
+						if (e != null && !e.isEmpty()) {
+							String identifier = e.substring(e.lastIndexOf('/') + 1);
+							attrNamesDisplay.add(identifier);
+						}
+					});
+					if (CollectionUtils.isNotEmpty(attrNamesDisplay)) {
+						hiddenMetadataForApplicableModels.setValue(String.join(",", attrNamesDisplay));
+						hiddenAttrEntryForApplicableModels.setAttrValue(String.join(",", attrNamesDisplay));
+					}
+
+					metadataEntries.add(hiddenMetadataForApplicableModels);
+					hiddenAttrEntryForApplicableModels.setSystemAttr(false);
+					selfMetadataEntries.add(hiddenAttrEntryForApplicableModels);
 				}
 
 				attrEntry.setAttrName(attrName);

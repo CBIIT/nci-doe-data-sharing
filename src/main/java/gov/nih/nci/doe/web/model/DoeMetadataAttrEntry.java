@@ -15,6 +15,7 @@ public class DoeMetadataAttrEntry {
 	private Boolean isEditable;
 	private Integer displayOrder;
 	private Boolean controllerAttribute;
+	private Boolean isVisible;
 
 	public Integer getDisplayOrder() {
 		return displayOrder;
@@ -110,6 +111,14 @@ public class DoeMetadataAttrEntry {
 
 	public void setControllerAttribute(Boolean controllerAttribute) {
 		this.controllerAttribute = controllerAttribute;
+	}
+
+	public Boolean getIsVisible() {
+		return isVisible;
+	}
+
+	public void setIsVisible(Boolean isVisible) {
+		this.isVisible = isVisible;
 	}
 
 }

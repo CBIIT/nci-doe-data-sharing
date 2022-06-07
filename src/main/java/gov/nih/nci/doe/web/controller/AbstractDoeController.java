@@ -278,7 +278,8 @@ public abstract class AbstractDoeController {
 		return false;
 	}
 
-	public List<KeyValueBean> getUserMetadata(List<HpcMetadataEntry> list, String levelName, List<String> systemAttrs) {
+	public List<KeyValueBean> getUserMetadata(List<HpcMetadataEntry> list, String levelName, List<String> systemAttrs,
+			Boolean isVisible) {
 
 		log.info("get user metadata for level: " + levelName);
 		List<KeyValueBean> entryList = new ArrayList<KeyValueBean>();
@@ -293,13 +294,20 @@ public abstract class AbstractDoeController {
 				String updatedString = entry.getValue().replaceAll("[\"']", "");
 				if (lookUpVal != null) {
 
-					k = new KeyValueBean(entry.getAttribute(), lookUpVal.getDisplayName(), updatedString,
-							lookUpVal.getDisplayOrder());
+					// if isVisible parameter is not null, filter look up values matching isVisible
+
+					if ((lookUpVal.getIsVisible() == null)
+							|| isVisible != null && lookUpVal.getIsVisible().equals(isVisible)) {
+						k = new KeyValueBean(entry.getAttribute(), lookUpVal.getDisplayName(), updatedString,
+								lookUpVal.getDisplayOrder());
+						entryList.add(k);
+					}
+
 				} else {
 					k = new KeyValueBean(entry.getAttribute(), entry.getAttribute(), updatedString);
+					entryList.add(k);
 				}
 
-				entryList.add(k);
 			}
 
 		}
@@ -939,8 +947,9 @@ public abstract class AbstractDoeController {
 				String applicableModelName = getAttributeValue("applicable_model_name",
 						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
 
+				// display all self metadata with is_visible not false in Look up table
 				List<KeyValueBean> selfMetadata = getUserMetadata(
-						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset", systemAttrs);
+						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset", systemAttrs, Boolean.TRUE);
 
 				if (StringUtils.isNotEmpty(returnToSearch)) {
 					model.addAttribute("returnToSearch", true);

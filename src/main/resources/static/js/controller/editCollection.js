@@ -32,7 +32,7 @@ function constructEditCollectionMetadata(data, status) {
 						if (attrVal) {
 							attrValModified = attrVal.replace(/"/g, "");
 						}
-						if (value.isEditable == false && value.attrName.indexOf("access_group") == -1) {
+						if (value.isEditable == false && value.isVisible != true && value.attrName.indexOf("access_group") == -1) {
 							$("#userMetaData tbody").append(
 									"<tr><td>" + value.displayName + "&nbsp;&nbsp;<i class='fas fa-question-circle'"
 											+ "data-toggle='tooltip' " + "data-placement='right' title=\""
@@ -41,7 +41,7 @@ function constructEditCollectionMetadata(data, status) {
 											+ "name='zAttrStr_" + value.attrName + "' style='width:70%;' value=\""
 											+ attrValModified + "\"></td></tr>");
 
-						} else if (value.validValues == null && value.attrName.indexOf("access_group") == -1) {
+						} else if (value.validValues == null && value.isVisible != true && value.attrName.indexOf("access_group") == -1) {
 
 							if (!attrValModified) {
 								attrValModified = "";

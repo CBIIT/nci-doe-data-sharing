@@ -563,7 +563,7 @@ function postSuccessOnChangeIsReferenceDataset(form,data, tableId) {
 	  if(newElements.length != 0) {
 		  $.each(newElements, function(key, value) {
 			  
-			if(value.validValues != null && value.attrName !='asset_type') {
+			if(value.isVisible != true && value.validValues != null && value.attrName !='asset_type') {
 				   
 				if(tableId == 'assetBulkMetadataTable') {
 					var width = 'width:99%;';
@@ -604,7 +604,7 @@ function postSuccessOnChangeIsReferenceDataset(form,data, tableId) {
 			    		$select.select2().trigger('change');
 			    	}
   	
-		   } else if(value.attrName.indexOf("access_group") == -1) {
+		   } else if(value.isVisible != true && value.attrName.indexOf("access_group") == -1) {
 					   			   
 			    var placeholder = value.mandatory == true ? 'Required' : "";
 			    var attrVal = value.attrValue != null ? value.attrValue : "";
