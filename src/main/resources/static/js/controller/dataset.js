@@ -1278,7 +1278,7 @@ $('#generatePredTable tbody')
 					var taskId = $(this).attr('task_id');
 					var isReferenceDataset = $(this).attr('is_reference_dataset');
 					var paths = [];
-					if (!isReferenceDataset) {
+					if (isReferenceDataset && isReferenceDataset == "false") {
 						paths.push(inputDataFilePath);
 						if (outcomePath && outcomePath != "null") {
 							paths.push(outcomePath);
