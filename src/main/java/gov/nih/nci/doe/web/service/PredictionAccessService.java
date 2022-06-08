@@ -15,7 +15,8 @@ public interface PredictionAccessService {
 
 	public List<PredictionAccess> getPredictionAccessByCollectionPath(String collectionPath);
 
-	public List<PredictionAccess> getAllPredictionsForUser(String userId, List<String> grpsList);
-	
+	public List<PredictionAccess> getAllPredictionsForUserByAssetPath(String userId, List<String> grpsList,
+			String assetPath);
+
 	public void deleteAllPermissionsByCollectionPath(String user, String collectionPath);
 }

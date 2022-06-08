@@ -17,6 +17,7 @@ public class MoDaCPredictionsResults {
 	private Integer predCollId;
 	private String predAccessGrps;
 	private Boolean isPublic;
+	private Boolean isReferenceDataset;
 
 	public String getPredAccessGrps() {
 		return predAccessGrps;
@@ -128,6 +129,14 @@ public class MoDaCPredictionsResults {
 
 	public void setIsPublic(Boolean isPublic) {
 		this.isPublic = isPublic;
+	}
+
+	public Boolean getIsReferenceDataset() {
+		return isReferenceDataset;
+	}
+
+	public void setIsReferenceDataset(Boolean isReferenceDataset) {
+		this.isReferenceDataset = isReferenceDataset;
 	}
 
 }

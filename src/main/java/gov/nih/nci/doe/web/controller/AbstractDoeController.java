@@ -985,8 +985,8 @@ public abstract class AbstractDoeController {
 					// check if there are any predictions avaiable for logged on user
 
 					List<String> grpsList = LambdaUtils.map(loggedOnUserPermissions, KeyValueBean::getKey);
-					List<PredictionAccess> predictionResults = predictionAccessService.getAllPredictionsForUser(user,
-							grpsList);
+					List<PredictionAccess> predictionResults = predictionAccessService.getAllPredictionsForUserByAssetPath(user,
+							grpsList,collection.getCollection().getCollectionName());
 
 					if (CollectionUtils.isNotEmpty(predictionResults)) {
 

@@ -1206,7 +1206,9 @@ function renderGeneratePredActions(data, type, row) {
 				+ "'pred_collPath = '"
 				+ row.predictionFolderPath
 				+ "' "
-				+ "outcome_path = '"
+				+ "is_reference_dataset = '"
+				+ row.isReferenceDataset
+				+ "' outcome_path = '"
 				+ row.outcomeFilePath
 				+ "'"
 				+ " task_id = '"
@@ -1274,13 +1276,16 @@ $('#generatePredTable tbody')
 					var outcomePath = $(this).attr('outcome_path');
 					var predCollectionPath = $(this).attr('pred_collPath');
 					var taskId = $(this).attr('task_id');
+					var isReferenceDataset = $(this).attr('is_reference_dataset');
 					var paths = [];
-					paths.push(inputDataFilePath);
-					paths.push(predPath);
-					if (outcomePath && outcomePath != "null") {
-						paths.push(outcomePath);
+					if (!isReferenceDataset) {
+						paths.push(inputDataFilePath);
+						if (outcomePath && outcomePath != "null") {
+							paths.push(outcomePath);
+						}
 					}
 
+					paths.push(predPath);
 					var deletePredModel = {};
 					deletePredModel.deletepaths = paths.join();
 					deletePredModel.taskId = taskId;

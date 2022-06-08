@@ -183,7 +183,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<MoDaCPredictionsResults> processGeneratedPredDataObjects() throws IOException {
+	private List<MoDaCPredictionsResults> processGeneratedPredDataObjects(String path) throws IOException {
 
 		List<MoDaCPredictionsResults> returnResults = new ArrayList<MoDaCPredictionsResults>();
 
@@ -193,7 +193,8 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 		loggedOnUserPermissions.stream().forEach(e -> loggedOnUserPermList.add(e.getKey()));
 		List<String> grpsList = LambdaUtils.map(loggedOnUserPermissions, KeyValueBean::getKey);
 
-		List<PredictionAccess> predictionResults = predictionAccessService.getAllPredictionsForUser(userId, grpsList);
+		List<PredictionAccess> predictionResults = predictionAccessService.getAllPredictionsForUserByAssetPath(userId,
+				grpsList, path);
 		if (!CollectionUtils.isEmpty(predictionResults)) {
 			for (PredictionAccess collection : predictionResults) {
 
@@ -249,6 +250,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 							predictionResult.setPredictionsPath(inferencetask.getResultPath());
 							predictionResult.setPredictionsName(inferencetask.getResultPath()
 									.substring(inferencetask.getResultPath().lastIndexOf('/') + 1));
+							predictionResult.setIsReferenceDataset(inferencetask.getIsReferenceAsset());
 
 							returnResults.add(predictionResult);
 						}
@@ -303,7 +305,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 
 			if (type.equalsIgnoreCase("Prediction_Files")) {
 
-				modelAnalysisFiles = processGeneratedPredDataObjects();
+				modelAnalysisFiles = processGeneratedPredDataObjects(path);
 				return new ResponseEntity<>(modelAnalysisFiles, HttpStatus.OK);
 
 			} else {

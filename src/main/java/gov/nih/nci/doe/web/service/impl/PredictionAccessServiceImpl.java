@@ -132,10 +132,13 @@ public class PredictionAccessServiceImpl implements PredictionAccessService {
 	}
 
 	@Override
-	public List<PredictionAccess> getAllPredictionsForUser(String userId, List<String> grpsList) {
+	public List<PredictionAccess> getAllPredictionsForUserByAssetPath(String userId, List<String> grpsList,
+			String assetPath) {
 		log.info("verify if user has access to any predictions for :  " + userId);
 
 		List<PredictionAccess> predictionResults = new ArrayList<PredictionAccess>();
+
+		List<PredictionAccess> predictionResultsForAsset = new ArrayList<PredictionAccess>();
 		// get all owner predictions
 		List<PredictionAccess> userList = predictionAccessRepository.checkIsPredictionsByUserId(userId);
 		// get all group access predictions
@@ -147,7 +150,20 @@ public class PredictionAccessServiceImpl implements PredictionAccessService {
 		predictionResults.addAll(groupsList);
 		predictionResults.addAll(userList);
 
-		return predictionResults;
+		predictionResults.stream().forEach((e -> {
+
+			String predictionsPath = e.getCollectionPath();
+
+			String path = predictionsPath.substring(0, predictionsPath.lastIndexOf('/'));
+			if (path.equalsIgnoreCase(assetPath)) {
+				predictionResultsForAsset.add(e);
+			}
+
+		}));
+
+		// filter predictions for the given asset Path
+
+		return predictionResultsForAsset;
 
 	}
 
