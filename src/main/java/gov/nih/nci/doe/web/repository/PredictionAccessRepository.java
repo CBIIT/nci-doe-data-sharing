@@ -24,8 +24,8 @@ public interface PredictionAccessRepository extends JpaRepository<PredictionAcce
 	@Query("select p from PredictionAccess p where p.user.emailAddrr =?1")
 	List<PredictionAccess> checkIsPredictionsByUserId(String userId);
 
-	@Query("select p from PredictionAccess p where p.group.groupName in ?1")
-	List<PredictionAccess> checkIsPredictionsByGroups(List<String> grpsList);
+	@Query("select p from PredictionAccess p where p.group.groupName in ?1 and p.collectionId NOT in ?2")
+	List<PredictionAccess> checkIsPredictionsByGroups(List<String> grpsList, List<Integer> collectionIds);
 
 	@Query("select p from PredictionAccess p where p.isPublic = 'Y' and p.user.emailAddrr !=?1")
 	List<PredictionAccess> getAllPublicPredictionsForUser(String userId);

@@ -11,6 +11,7 @@ import gov.nih.nci.doe.web.repository.DoeUserRepository;
 import gov.nih.nci.doe.web.repository.GroupRepository;
 import gov.nih.nci.doe.web.repository.PredictionAccessRepository;
 import gov.nih.nci.doe.web.service.PredictionAccessService;
+import gov.nih.nci.doe.web.util.LambdaUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -141,8 +142,11 @@ public class PredictionAccessServiceImpl implements PredictionAccessService {
 		List<PredictionAccess> predictionResultsForAsset = new ArrayList<PredictionAccess>();
 		// get all owner predictions
 		List<PredictionAccess> userList = predictionAccessRepository.checkIsPredictionsByUserId(userId);
-		// get all group access predictions
-		List<PredictionAccess> groupsList = predictionAccessRepository.checkIsPredictionsByGroups(grpsList);
+
+		List<Integer> collectionIds = LambdaUtils.map(userList, PredictionAccess::getCollectionId);
+		
+		// get all group access predictions  which are not under logged on user list
+		List<PredictionAccess> groupsList = predictionAccessRepository.checkIsPredictionsByGroups(grpsList, collectionIds);
 		// get all public predictions
 		List<PredictionAccess> publicAccessList = predictionAccessRepository.getAllPublicPredictionsForUser(userId);
 
