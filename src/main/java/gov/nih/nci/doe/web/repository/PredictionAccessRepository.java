@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import gov.nih.nci.doe.web.domain.PredictionAccess;
 
@@ -24,8 +25,12 @@ public interface PredictionAccessRepository extends JpaRepository<PredictionAcce
 	@Query("select p from PredictionAccess p where p.user.emailAddrr =?1")
 	List<PredictionAccess> checkIsPredictionsByUserId(String userId);
 
-	@Query("select p from PredictionAccess p where p.group.groupName in ?1 and p.collectionId NOT in ?2")
-	List<PredictionAccess> checkIsPredictionsByGroups(List<String> grpsList, List<Integer> collectionIds);
+	@Query("select p from PredictionAccess p where p.group.groupName IN (:grpsList) and p.collectionId NOT IN (:collectionIds)")
+	List<PredictionAccess> checkIsPredictionsByGroupsAndCollections(@Param("grpsList") List<String> grpsList,
+			@Param("collectionIds") List<Integer> collectionIds);
+
+	@Query("select p from PredictionAccess p where p.group.groupName IN ?1")
+	List<PredictionAccess> checkIsPredictionsByGroups(List<String> grpsList);
 
 	@Query("select p from PredictionAccess p where p.isPublic = 'Y' and p.user.emailAddrr !=?1")
 	List<PredictionAccess> getAllPublicPredictionsForUser(String userId);

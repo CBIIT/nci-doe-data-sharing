@@ -144,9 +144,14 @@ public class PredictionAccessServiceImpl implements PredictionAccessService {
 		List<PredictionAccess> userList = predictionAccessRepository.checkIsPredictionsByUserId(userId);
 
 		List<Integer> collectionIds = LambdaUtils.map(userList, PredictionAccess::getCollectionId);
-		
-		// get all group access predictions  which are not under logged on user list
-		List<PredictionAccess> groupsList = predictionAccessRepository.checkIsPredictionsByGroups(grpsList, collectionIds);
+		List<PredictionAccess> groupsList;
+		// get all group access predictions which are not under logged on user list
+		if (CollectionUtils.isNotEmpty(collectionIds)) {
+			groupsList = predictionAccessRepository.checkIsPredictionsByGroupsAndCollections(grpsList, collectionIds);
+		} else {
+			groupsList = predictionAccessRepository.checkIsPredictionsByGroups(grpsList);
+		}
+
 		// get all public predictions
 		List<PredictionAccess> publicAccessList = predictionAccessRepository.getAllPublicPredictionsForUser(userId);
 
