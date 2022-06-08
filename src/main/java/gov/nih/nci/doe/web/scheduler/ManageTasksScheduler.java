@@ -252,7 +252,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 				// prediction under this folder
 				if (Boolean.TRUE.equals(check)) {
 					log.info("pred file available on mount: " + predFileName);
-					String parentPath = t.getTestDataSetPath().substring(0, t.getTestDataSetPath().lastIndexOf('/'));
+					String parentPath = t.getAssetPath();
 					String folderPath = parentPath + "/Prediction_" + t.getTaskId();
 
 					Boolean isFolderPathExists = false;
