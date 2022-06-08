@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
@@ -40,7 +41,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.ws.rs.core.Response;
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.domain.InferencingTask;
-import gov.nih.nci.doe.web.domain.ModelInfo;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.InferencingTaskModel;
 import gov.nih.nci.doe.web.model.KeyValueBean;
@@ -133,8 +133,25 @@ public class PerformInferencingController extends AbstractDoeController {
 		String taskId = UUID.randomUUID().toString();
 		String applicableModelNames = inference.getApplicableModelNames();
 
-		// get the model info based on selected applicable model name
-		ModelInfo modelInfo = modelInfoService.getModelInfo(applicableModelNames);
+		// get the h5 model path for the applicable model name selected
+
+		// get the files under each reference dataset
+
+		String authToken = (String) session.getAttribute("hpcUserToken");
+
+		HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, applicableModelNames,
+				true);
+		HpcCollectionDTO result = collectionDto.getCollections().get(0);
+
+		List<HpcCollectionListingEntry> dataObjectsList = result.getCollection().getDataObjects();
+		Optional<HpcCollectionListingEntry> entry = dataObjectsList.stream()
+				.filter(e -> e != null && e.getPath().contains(".h5")).findFirst();
+		if (entry != null) {
+
+			inference.setModelPath(entry.get().getPath());
+
+		}
+
 		// create a file name for y_pred file
 		String resultPath = inference.getAssetPath() + "/y_pred_" + taskId + ".csv";
 
@@ -166,7 +183,6 @@ public class PerformInferencingController extends AbstractDoeController {
 			// save the inferencing task
 			inference.setIsReferenceAsset(Boolean.TRUE);
 			inference.setTaskId(taskId);
-			inference.setModelPath(modelInfo.getModelPath());
 			inference.setUserId(getLoggedOnUserInfo());
 			inference.setResultPath(resultPath);
 			inference.setTestInputPath(inference.getTestInputPath());
@@ -237,7 +253,7 @@ public class PerformInferencingController extends AbstractDoeController {
 							}
 
 							try {
-								uploadFileToMount(session, path, name);
+								uploadFileToMount(session, name, path);
 							} catch (Exception e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
