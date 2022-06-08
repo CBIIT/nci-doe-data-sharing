@@ -266,7 +266,7 @@ public class PerformInferencingController extends AbstractDoeController {
 						inferenceDataset.setUserId(user);
 						inferenceDataset.setModelPath(inference.getModelPath());
 						inferenceDataset.setUploadFrom(inference.getUploadFrom());
-						inferencingTaskService.saveInferenceTask(inference);
+						inferencingTaskService.saveInferenceTask(inferenceDataset);
 					}
 
 				}
