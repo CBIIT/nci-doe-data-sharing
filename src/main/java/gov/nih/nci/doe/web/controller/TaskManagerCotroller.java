@@ -3,6 +3,7 @@ package gov.nih.nci.doe.web.controller;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -177,10 +178,14 @@ public class TaskManagerCotroller extends AbstractDoeController {
 						message.add(download.getResult() != null ? download.getResult().value() : null);
 					}
 
+					String filteredMessage = CollectionUtils.isNotEmpty(message)
+							? StringEscapeUtils.escapeHtml(String.join(",", message))
+							: "";
+
 					if (Boolean.TRUE.equals(retry)) {
 
-						task.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<span class='button4a' error_msg = '"
-								+ String.join(",", message) + "' data-container='body' data-toggle='popover'"
+						task.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<span class='button4a' error_msg = \""
+								+ filteredMessage + "\" data-container='body' data-toggle='popover'"
 								+ "data-placement='right' data-trigger='click' data-popover-content='#a02'><img style='width:12px;' src='images/Status.info-tooltip.png' alt='failed message'></span>"
 								+ "<strong><a style='border: none;background-color: #F39530; height: 23px;width: 37px;border-radius: 11px;float: right;margin-right: 10px;' class='btn btn-link btn-sm' aria-label='Retry download' href='#' "
 								+ "onclick='retryDownload(\"" + download.getTaskId() + "\" ,\"" + t.getTaskName()
@@ -188,8 +193,8 @@ public class TaskManagerCotroller extends AbstractDoeController {
 								+ "<img style='height: 13px;width: 13px;margin-top: -14px;' data-toggle='tooltip' title='Retry Download' src='images/Status.refresh_icon-01.png' th:src='@{/images/Status.refresh_icon-01.png}' alt='Status refresh'></a></strong>");
 
 					} else {
-						task.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<span class='button4a' error_msg = '"
-								+ String.join(",", message) + "' data-container='body' data-toggle='popover'"
+						task.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<span class='button4a' error_msg = \""
+								+ filteredMessage + "\" data-container='body' data-toggle='popover'"
 								+ "data-placement='right' data-trigger='click' data-popover-content='#a02'><img style='width:12px;'"
 								+ "src='images/Status.info-tooltip.png'></span>");
 					}
@@ -288,20 +293,25 @@ public class TaskManagerCotroller extends AbstractDoeController {
 			if (CollectionUtils.isEmpty(message)) {
 				message.add(uploadTask.getTask().getMessage());
 			}
+
 		}
+
+		String filteredMessage = CollectionUtils.isNotEmpty(message)
+				? StringEscapeUtils.escapeHtml(String.join(",", message))
+				: "";
 
 		if (Boolean.TRUE.equals(retry)) {
 
-			t.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<span class='button4a' error_msg = '"
-					+ String.join(",", message) + "' data-container='body' data-toggle='popover'"
+			t.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<span class='button4a' error_msg = '" + filteredMessage
+					+ "' data-container='body' data-toggle='popover'"
 					+ "data-placement='right' data-trigger='click' data-popover-content='#a02'><img style='width:12px;'"
 					+ "src='images/Status.info-tooltip.png' alt='failed message'></span>"
 					+ "<strong><a style='border: none;background-color: #F39530;height: 23px;width: 37px;border-radius: 11px;float: right;margin-right: 10px;' class='btn btn-link btn-sm' aria-label='Retry Upload' href='#'"
 					+ "onclick='retryUpload(\"" + upload.getTaskId() + "\" ,\"" + task.getTaskName() + "\")'>"
 					+ "<img style='height: 13px;width: 13px;margin-top: -14px;' data-toggle='tooltip' title='Retry Upload' src='images/Status.refresh_icon-01.png' th:src='@{/images/Status.refresh_icon-01.png}' alt='Status refresh'></a></strong>");
 		} else {
-			t.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<span class='button4a' error_msg = '"
-					+ String.join(",", message) + "' data-container='body' data-toggle='popover'"
+			t.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<span class='button4a' error_msg = '" + filteredMessage
+					+ "' data-container='body' data-toggle='popover'"
 					+ "data-placement='right' data-trigger='click' data-popover-content='#a02'><img style='width:12px;'"
 					+ " src='images/Status.info-tooltip.png' alt='failed message'></span>");
 		}
