@@ -166,7 +166,16 @@ public class TaskManagerCotroller extends AbstractDoeController {
 					}
 
 					List<String> message = new ArrayList<String>();
-					download.getItems().stream().forEach(x -> message.add(x.getMessage()));
+
+					download.getItems().stream().forEach(x -> {
+						if (x.getMessage() != null && !message.contains(x.getMessage())) {
+							message.add(x.getMessage());
+						}
+					});
+
+					if (CollectionUtils.isEmpty(message)) {
+						message.add(download.getResult() != null ? download.getResult().value() : null);
+					}
 
 					if (Boolean.TRUE.equals(retry)) {
 
@@ -253,7 +262,12 @@ public class TaskManagerCotroller extends AbstractDoeController {
 
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		List<String> message = new ArrayList<String>();
-		upload.getFailedItems().stream().forEach(x -> message.add(x.getMessage()));
+
+		upload.getFailedItems().stream().forEach(x -> {
+			if (x.getMessage() != null && !message.contains(x.getMessage())) {
+				message.add(x.getMessage());
+			}
+		});
 
 		HpcBulkDataObjectRegistrationStatusDTO uploadTask = DoeClientUtil.getDataObjectRegistrationTask(authToken,
 				registrationServiceUrl, upload.getTaskId());
