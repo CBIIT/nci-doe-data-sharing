@@ -549,7 +549,13 @@ function postSuccessOnChangeIsReferenceDataset(form,data, tableId) {
 			var displayName = $(this).find('td').eq(0).text().trim();
 			displayNames.push(displayName);
 			var x = data.filter(function(x){ return x.displayName == displayName });
-			if(x.length == 0) {
+			
+			/*
+			 * for asset bulk creation, do not remove the metadata Asset group
+			 * Identifier
+			 */
+			
+			if(x.length == 0 && displayName !='Asset Group Identifier') {
 				/* the removed attributes value should be set to empty */
 				var removedMetadataName = $(this).find('td').eq(1).children().attr('name');
 				$('<input>').attr({type: 'hidden',name: removedMetadataName,value:""}).appendTo(form);
