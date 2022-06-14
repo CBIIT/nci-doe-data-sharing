@@ -44,43 +44,49 @@ $(document)
 					});
 
 					var modelFile = $("#performInferencingModel").find("#modelPath").val();
-					$("#performInferencingModel").find("#testInputPath").val($("#selectedAssetPath").text());
 
-					if (modelFile.indexOf('mt_cnn') != -1 || modelFile.indexOf('mt-cnn') != -1) {
-						var title = "Upload a GDC manifest file<br/> (TXT) or a pathology report<br/> (TXT or PDF). For more<br/> details, refer to the <a target='_blank' href='https://wiki.nci.nih.gov/x/cQh2H'> user guide</a>.";
-						var outputTitle = "This is optional. Upload CSV<br/> outcome file to evaluate<br/> the model. For more details,<br/> refer to the <a target='_blank' href='https://wiki.nci.nih.gov/x/cQh2H'> user guide</a>.";
+					if (!modelFile) {
+						bootbox.alert("Model file not found.");
 					} else {
-						var title = "Upload GDC manifest file<br/> (such as TXT) or an FPKM-UQ<br/> file (TXT or CSV). For more<br/> details, refer to the <a target='_blank' href='https://wiki.nci.nih.gov/x/bwh2H'> user guide</a>.";
-						var outputTitle = "This is optional. Upload CSV<br/> outcome file to evaluate<br/> the model. For more details,<br/> refer to the <a target='_blank' href='https://wiki.nci.nih.gov/x/bwh2H'> user guide</a>.";
+						$("#performInferencingModel").find("#testInputPath").val($("#selectedAssetPath").text());
+
+						if (modelFile.indexOf('mt_cnn') != -1 || modelFile.indexOf('mt-cnn') != -1) {
+							var title = "Upload a GDC manifest file<br/> (TXT) or a pathology report<br/> (TXT or PDF). For more<br/> details, refer to the <a target='_blank' href='https://wiki.nci.nih.gov/x/cQh2H'> user guide</a>.";
+							var outputTitle = "This is optional. Upload CSV<br/> outcome file to evaluate<br/> the model. For more details,<br/> refer to the <a target='_blank' href='https://wiki.nci.nih.gov/x/cQh2H'> user guide</a>.";
+						} else {
+							var title = "Upload GDC manifest file<br/> (such as TXT) or an FPKM-UQ<br/> file (TXT or CSV). For more<br/> details, refer to the <a target='_blank' href='https://wiki.nci.nih.gov/x/bwh2H'> user guide</a>.";
+							var outputTitle = "This is optional. Upload CSV<br/> outcome file to evaluate<br/> the model. For more details,<br/> refer to the <a target='_blank' href='https://wiki.nci.nih.gov/x/bwh2H'> user guide</a>.";
+						}
+
+						var params = {
+							assetPath : $("#selectedAssetPath").text()
+						};
+						invokeAjax('/performInferencing/getReferenceDatasets', 'GET', params,
+								getReferenceDataSetSuccessFunction, null, null, null);
+
+						$("#performInferencingModel").find("#tooltipHtml").html(
+								'<i class="fas fa-question-circle infoTooltip"'
+										+ 'data-toggle="popover" data-content="' + title + '"></i>');
+
+						$("#performInferencingModel").find("#outputTooltipHtml").html(
+								'<i class="fas fa-question-circle infoTooltip"'
+										+ 'data-toggle="popover" data-content="' + outputTitle + '"></i>');
+
+						$(".performInferencingError").hide();
+						$(".performInferMsgError").html("");
+						$("input[name=uploadFrom]").prop("checked", false);
+						$("#uploadTestInferFile").val("");
+						$("#uploadTestOutputFile").val("");
+						$(".userInputDiv").show();
+						$(".referenceDatasetSelectionDiv").hide();
+
+						$("#performInferencingModel").modal({
+							show : true,
+							backdrop : 'static',
+							keyboard : false
+						});
+
 					}
-
-					var params = {
-						assetPath : $("#selectedAssetPath").text()
-					};
-					invokeAjax('/performInferencing/getReferenceDatasets', 'GET', params,
-							getReferenceDataSetSuccessFunction, null, null, null);
-
-					$("#performInferencingModel").find("#tooltipHtml").html(
-							'<i class="fas fa-question-circle infoTooltip"' + 'data-toggle="popover" data-content="'
-									+ title + '"></i>');
-
-					$("#performInferencingModel").find("#outputTooltipHtml").html(
-							'<i class="fas fa-question-circle infoTooltip"' + 'data-toggle="popover" data-content="'
-									+ outputTitle + '"></i>');
-
-					$(".performInferencingError").hide();
-					$(".performInferMsgError").html("");
-					$("input[name=uploadFrom]").prop("checked", false);
-					$("#uploadTestInferFile").val("");
-					$("#uploadTestOutputFile").val("");
-					$(".userInputDiv").show();
-					$(".referenceDatasetSelectionDiv").hide();
-
-					$("#performInferencingModel").modal({
-						show : true,
-						backdrop : 'static',
-						keyboard : false
-					});
 
 				});
 
@@ -92,19 +98,19 @@ function getReferenceDataSetSuccessFunction(data, status) {
 	var refDataSetLength = data.length;
 	var isExternalDataSetSupported = $("#isExternalDataSetSupported").val();
 	if (isExternalDataSetSupported && isExternalDataSetSupported == "true") {
-		
+
 		$("#performInferencingModel").find("#labelForInputType").html(
 				"Upload input file to generate predictions.&nbsp;<span id='tooltipHtml'></span>");
-		
+
 		$("#performInferencingModel").find("#displayDataTypeDiv").show();
 		$("#performInferencingModel").find("#displayExternalDataDiv").show();
-		
+
 		if (refDataSetLength == 0) {
 			$("#performInferencingModel").find("#displayReferenceDatasetDiv").hide();
 		} else {
 			$("#performInferencingModel").find("#displayReferenceDatasetDiv").show();
 		}
-		
+
 	} else {
 		if (refDataSetLength == 0) {
 			/*
@@ -222,6 +228,8 @@ $(document).on(
 
 			if (!isResultFileNameFound) {
 				bootbox.alert("Outcome file not found.");
+			} else if (!testInputPath) {
+				bootbox.alert("Reference dataset file not found.");
 			} else {
 
 				$("#performModelAnalysisModal").find("#testInputPath").val(testInputPath);

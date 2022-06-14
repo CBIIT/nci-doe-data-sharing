@@ -150,6 +150,8 @@ public class PerformInferencingController extends AbstractDoeController {
 
 			inference.setModelPath(entry.get().getPath());
 
+		} else {
+			return "Cannot find any trained model in the applicable model name selected.";
 		}
 
 		// create a file name for y_pred file
@@ -259,6 +261,10 @@ public class PerformInferencingController extends AbstractDoeController {
 								e1.printStackTrace();
 							}
 						});
+
+						if (StringUtils.isEmpty(inferenceDataset.getTestInputPath())) {
+							return "Reference dataset file not found for : " + referenceDatasetPath;
+						}
 						inferenceDataset.setResultPath(resultPath);
 						inferenceDataset.setIsReferenceAsset(Boolean.FALSE);
 						inferenceDataset.setAssetPath(testInputPath);
