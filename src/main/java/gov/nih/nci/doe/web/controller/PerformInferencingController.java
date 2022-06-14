@@ -146,7 +146,7 @@ public class PerformInferencingController extends AbstractDoeController {
 		List<HpcCollectionListingEntry> dataObjectsList = result.getCollection().getDataObjects();
 		Optional<HpcCollectionListingEntry> entry = dataObjectsList.stream()
 				.filter(e -> e != null && e.getPath().contains(".h5")).findFirst();
-		if (entry != null) {
+		if (entry != null && entry.isPresent()) {
 
 			inference.setModelPath(entry.get().getPath());
 
