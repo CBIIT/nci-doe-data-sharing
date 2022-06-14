@@ -20,8 +20,6 @@ public class ModelInfo implements Serializable {
 	private Integer id;
 	private String assetPath;
 	private Boolean isExternalDatasetSupported;
-	private String assetIdentifier;
-	private String modelPath;
 
 	public ModelInfo() {
 
@@ -84,27 +82,5 @@ public class ModelInfo implements Serializable {
 	public void setIsExternalDatasetSupported(Boolean isExternalDatasetSupported) {
 		this.isExternalDatasetSupported = isExternalDatasetSupported;
 	}
-
-	@Basic
-	@Column(name = "ASSET_IDENTIFIER")
-	public String getAssetIdentifier() {
-		return assetIdentifier;
-	}
-
-	public void setAssetIdentifier(String assetIdentifier) {
-		this.assetIdentifier = assetIdentifier;
-	}
-
-	@Basic
-	@Column(name = "MODEL_PATH")
-	public String getModelPath() {
-		return modelPath;
-	}
-
-	public void setModelPath(String modelPath) {
-		this.modelPath = modelPath;
-	}
-	
-	
 
 }
