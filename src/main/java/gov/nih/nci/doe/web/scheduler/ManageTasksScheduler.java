@@ -380,7 +380,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 		gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO file = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO();
 		HpcUploadSource fileSystemUploadSource = new HpcUploadSource();
 		HpcFileLocation location = new HpcFileLocation();
-		location.setFileContainerId("at-s-is2s:/ifs/projects/IRODsTest/archive");
+		location.setFileContainerId("fssrgd-qmlo03p.ncifcrf.gov:/modac-ds");
 		location.setFileId(uploadPath + fileName);
 		fileSystemUploadSource.setSourceLocation(location);
 		file.setFileSystemUploadSource(fileSystemUploadSource);
