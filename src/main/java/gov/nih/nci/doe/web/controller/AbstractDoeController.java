@@ -944,7 +944,7 @@ public abstract class AbstractDoeController {
 				String resultFileName = getAttributeValue("outcome_file_name",
 						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
 
-				String applicableModelName = getAttributeValue("applicable_model_name",
+				String applicableModelName = getAttributeValue("applicable_model_paths",
 						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
 
 				// display all self metadata with is_visible not false in Look up table

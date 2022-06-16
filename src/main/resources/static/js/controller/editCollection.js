@@ -92,7 +92,7 @@ function constructEditCollectionMetadata(data, status) {
 
 						} else if (value.validValues != null) {
 
-							if (value.attrName == 'applicable_model_name') {
+							if (value.attrName == 'applicable_model_paths') {
 
 								$("#userMetaData tbody")
 										.append(

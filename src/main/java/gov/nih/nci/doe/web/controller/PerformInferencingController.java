@@ -341,7 +341,7 @@ public class PerformInferencingController extends AbstractDoeController {
 
 		log.info("get all reference datasets with applicable model name metadata as: " + assetPath);
 		DoeSearch search = new DoeSearch();
-		String[] attrNames = { "collection_type", "asset_type", "is_reference_dataset", "applicable_model_name" };
+		String[] attrNames = { "collection_type", "asset_type", "is_reference_dataset", "applicable_model_paths" };
 		String[] attrValues = { "Asset", "Dataset", "Yes", "%" + assetPath + "%" };
 		String[] levelValues = { "Asset", "Asset", "Asset", "Asset" };
 		boolean[] isExcludeParentMetadata = { false, false, false, false };

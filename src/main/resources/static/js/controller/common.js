@@ -577,7 +577,7 @@ function postSuccessOnChangeIsReferenceDataset(form,data, tableId) {
 					var width = 'width:70%;';
 				}
 				
-				if(value.attrName  == 'applicable_model_name') {
+				if(value.attrName  == 'applicable_model_paths') {
 					   
 				$("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
 			       'data-placement="right" title="'+value.description+'"></i></td><td>'+

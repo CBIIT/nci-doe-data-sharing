@@ -473,7 +473,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 						entry.setValidValues(validValues);
 					}
 
-					if (rule.getAttribute().equalsIgnoreCase("applicable_model_name")) {
+					if (rule.getAttribute().equalsIgnoreCase("applicable_model_paths")) {
 
 						/*
 						 * get this info from dme search api
@@ -629,12 +629,12 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				// models,
 				// add/update the hidden metadata applicable_model_name_display
 
-				if (StringUtils.isNotEmpty(attrName) && attrName.equalsIgnoreCase("applicable_model_name")) {
+				if (StringUtils.isNotEmpty(attrName) && attrName.equalsIgnoreCase("applicable_model_paths")) {
 
 					HpcMetadataEntry hiddenMetadataForApplicableModels = new HpcMetadataEntry();
-					hiddenMetadataForApplicableModels.setAttribute("applicable_model_name_display");
+					hiddenMetadataForApplicableModels.setAttribute("applicable_model_identifiers");
 					DoeMetadataAttrEntry hiddenAttrEntryForApplicableModels = new DoeMetadataAttrEntry();
-					hiddenAttrEntryForApplicableModels.setAttrName("applicable_model_name_display");
+					hiddenAttrEntryForApplicableModels.setAttrName("applicable_model_identifiers");
 
 					List<String> attrNamesDisplay = new ArrayList<String>();
 
