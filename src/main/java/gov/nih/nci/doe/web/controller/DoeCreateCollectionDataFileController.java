@@ -645,8 +645,8 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 						}
 					});
 					if (CollectionUtils.isNotEmpty(attrNamesDisplay)) {
-						hiddenMetadataForApplicableModels.setValue(String.join(",", attrNamesDisplay));
-						hiddenAttrEntryForApplicableModels.setAttrValue(String.join(",", attrNamesDisplay));
+						hiddenMetadataForApplicableModels.setValue(String.join(", ", attrNamesDisplay));
+						hiddenAttrEntryForApplicableModels.setAttrValue(String.join(", ", attrNamesDisplay));
 					}
 
 					metadataEntries.add(hiddenMetadataForApplicableModels);
