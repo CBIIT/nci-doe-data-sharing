@@ -64,6 +64,16 @@ $(document)
 						invokeAjax('/performInferencing/getReferenceDatasets', 'GET', params,
 								getReferenceDataSetSuccessFunction, null, null, null);
 
+						var isExternalDataSetSupported = $("#isExternalDataSetSupported").val();
+						if (isExternalDataSetSupported && isExternalDataSetSupported == "true") {
+
+							$("#performInferencingModel").find("#labelForInputType").html(
+									"Upload input file to generate predictions.&nbsp;<span id='tooltipHtml'></span>");
+						} else {
+							$("#performInferencingModel").find("#labelForInputType").html(
+									"Upload GDC file to generate predictions.&nbsp;<span id='tooltipHtml'></span>");
+						}
+
 						$("#performInferencingModel").find("#tooltipHtml").html(
 								'<i class="fas fa-question-circle infoTooltip"'
 										+ 'data-toggle="popover" data-content="' + title + '"></i>');
@@ -99,9 +109,6 @@ function getReferenceDataSetSuccessFunction(data, status) {
 	var isExternalDataSetSupported = $("#isExternalDataSetSupported").val();
 	if (isExternalDataSetSupported && isExternalDataSetSupported == "true") {
 
-		$("#performInferencingModel").find("#labelForInputType").html(
-				"Upload input file to generate predictions.&nbsp;<span id='tooltipHtml'></span>");
-
 		$("#performInferencingModel").find("#displayDataTypeDiv").show();
 		$("#performInferencingModel").find("#displayExternalDataDiv").show();
 
@@ -128,8 +135,6 @@ function getReferenceDataSetSuccessFunction(data, status) {
 			$("#performInferencingModel").find("#displayReferenceDatasetDiv").show();
 		}
 
-		$("#performInferencingModel").find("#labelForInputType").html(
-				"Upload GDC file to generate predictions.&nbsp;<span id='tooltipHtml'></span>");
 	}
 
 	for (var i = 0; i < data.length; i++) {
