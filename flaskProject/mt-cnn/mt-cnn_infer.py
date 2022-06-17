@@ -16,6 +16,10 @@ from keras.models import load_model
 import numpy as np
 import pandas as pd
 
+from sklearn.metrics import precision_score
+from sklearn.metrics import f1_score
+from sklearn.metrics import recall_score
+
 from helper.pdfconverter import convert_PDF_to_Txt
 sys.path.append('/home/ncidoesvct2/common')
 from download_gdc_data import run_pre_process, isValidManifestFile
@@ -55,16 +59,43 @@ def vectorSingle(filename, word2_idx, vocabs):
 def getAccuracy(pred_probs, output_result_final, hist_site_pred):
     site_true_count = 0
     hist_true_count = 0
+    site_pred = []
+    hist_pred = []
+    site_pred_actual = []
+    hist_pred_actual = []
+    for ele in output_result_final:
+        site_pred_actual.append(ele[0])
+        hist_pred_actual.append(ele[1])
     for kk in range(len(pred_probs[0])):
+        site_pred.append(np.argmax(pred_probs[0][kk]))
         if np.argmax(pred_probs[0][kk]) == output_result_final[kk][0]:
             site_true_count += 1
     for j in range(len(pred_probs[1])):
+        hist_pred.append(np.argmax(pred_probs[1][j]))
         if np.argmax(pred_probs[1][j]) == output_result_final[j][1]:
             hist_true_count += 1
     print(site_true_count * 100 / pred_probs[0].shape[0])
     print(hist_true_count * 100 / pred_probs[1].shape[0])
+    print(precision_score(np.array(site_pred_actual), np.array(site_pred), average="macro", zero_division=1))
+    print(recall_score(np.array(site_pred_actual), np.array(site_pred), average="macro", zero_division=1))
+    print(f1_score(np.array(site_pred_actual), np.array(site_pred), average="macro", zero_division=1))
+
     hist_site_pred.append(["The accuracy for site is :", str(site_true_count * 100 / pred_probs[0].shape[0]) + "%"])
+    hist_site_pred.append(["The precision for site is :", precision_score(np.array(site_pred_actual), np.array(site_pred), average="macro", zero_division=1)])
+    hist_site_pred.append(["The recall for site is :", recall_score(np.array(site_pred_actual), np.array(site_pred), average="macro", zero_division=1)])
+    hist_site_pred.append(["The f1 score for site is :", f1_score(np.array(site_pred_actual), np.array(site_pred), average="macro", zero_division=1)])
+    
+    print(precision_score(np.array(hist_pred_actual), np.array(hist_pred), average="macro", zero_division=1))
+    print(recall_score(np.array(hist_pred_actual), np.array(hist_pred), average="macro", zero_division=1))
+    print(f1_score(np.array(hist_pred_actual), np.array(hist_pred), average="macro", zero_division=1))
+
     hist_site_pred.append(["The accuracy for histology is :", str(hist_true_count * 100 / pred_probs[1].shape[0]) + "%"])
+    hist_site_pred.append(["The precision for histology is :", precision_score(np.array(hist_pred_actual), np.array(hist_pred), average="macro", zero_division=1)])
+    hist_site_pred.append(["The recall for histology is :", recall_score(np.array(hist_pred_actual), np.array(hist_pred), average="macro", zero_division=1)])
+    hist_site_pred.append(["The f1 score for histology is :", f1_score(np.array(hist_pred_actual), np.array(hist_pred), average="macro", zero_division=1)])
+    #print(precision_score(np.array(site_pred_actual), np.array(site_pred), average="macro", zero_division=1))
+    #print(recall_score(np.array(site_pred_actual), np.array(site_pred), average="macro", zero_division=1))
+    #print(f1_score(np.array(site_pred_actual), np.array(site_pred), average="macro", zero_division=1))
 
 # Function to generate predictions and map the predictions to an output file
 def modelPredict(vector_results, filenames, output_result):
@@ -100,7 +131,7 @@ try:
     modelfilename = sys.argv[2]
     pred_name = sys.argv[3]
     upload_from = sys.argv[4]
-    input_file_name = '/mnt/IRODsTest/' + datafilename
+    input_file_name = '/mnt/MoDaC/' + datafilename
     output_file = sys.argv[5]
     output_results = []
 
@@ -131,7 +162,7 @@ try:
                 histologyIdtoLabelRev[k] = v
 
         header_list = ["Site", "Histology"]
-        df1 = pd.read_csv('/mnt/IRODsTest/' + output_file, names=header_list)
+        df1 = pd.read_csv('/mnt/MoDaC/' + output_file, names=header_list)
         for ind in df1.index:
             site = siteIdtoLabelRev[df1['Site'][ind]]
             ex = str(float(df1['Histology'][ind])).strip()
@@ -211,7 +242,7 @@ try:
     if os.path.isfile(pred_name):
         print('file exists ' + pred_name)
         # place the prediction file on mount location
-        shutil.move(pred_name, '/mnt/IRODsTest/' + pred_name)
+        shutil.move(pred_name, '/mnt/MoDaC/' + pred_name)
 
     print("inference completed")
 
@@ -228,5 +259,5 @@ except Exception as e:
     text_file.write(error_msg)
     text_file.close()
     # place the error message file on mount location
-    shutil.move(error_file_name, '/mnt/IRODsTest/' + error_file_name)
+    shutil.move(error_file_name, '/mnt/MoDaC/' + error_file_name)
     print("completed error file copy to mount location")

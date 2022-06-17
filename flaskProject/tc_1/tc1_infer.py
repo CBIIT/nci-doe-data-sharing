@@ -23,7 +23,9 @@ except ImportError:
     import ConfigParser as configparser
 
 from keras.models import Sequential, Model, model_from_json, model_from_yaml
-
+from sklearn.metrics import precision_score
+from sklearn.metrics import f1_score
+from sklearn.metrics import recall_score
 
 # Function to format input file and prepare for data preprocessing,
 # These input file formatting steps are taken from https://github.com/cpreid2/gdc-rnaseq-tool
@@ -118,9 +120,11 @@ def run(data):
     print(pred.shape)
 
     final_pred = []
+    final_pred_arg_max = []
     for idx, p in enumerate(pred):
         val = np.argmax(p)
         if val in hm:
+            final_pred_arg_max.append(val)
             final_pred.append([FileNames[idx], hm[val]])
         else:
             final_pred.append([FileNames[idx], "No Predictions found"])
@@ -144,6 +148,9 @@ def run(data):
         print("accuracy is: %.2f%%" % (score_json[1] * 100))
         final_pred.append(["The score (loss) of the model is: ", str(score_json[0])])
         final_pred.append(["The accuracy of the model is: ", str(score_json[1] * 100) + "%"])
+        final_pred.append(["The precision score of the model is: ", precision_score(np.array(output_results), np.array(final_pred_arg_max), average="macro", zero_division=0)])
+        final_pred.append(["The recall score of the model is: ", recall_score(np.array(output_results), np.array(final_pred_arg_max), average="macro", zero_division=0)])
+        final_pred.append(["The f1 score of the model is: ", f1_score(np.array(output_results), np.array(final_pred_arg_max), average="macro", zero_division=0)])
 
     headerList = ['Filename', 'Tumor Type']
     dataframe = pd.DataFrame(final_pred)
@@ -152,7 +159,7 @@ def run(data):
     if os.path.isfile(pred_name):
         print('file exists ' + pred_name)
         # move the predictions to mount location
-        shutil.move(pred_name, '/mnt/IRODsTest/' + pred_name)
+        shutil.move(pred_name, '/mnt/MoDaC/' + pred_name)
 
     # remove the preprocessed file
     if os.path.exists(data):
@@ -170,7 +177,7 @@ if __name__ == '__main__':
         print("data filename: " + datafilename)
         print("fname:" + pred_name)
         print("input_type: " + input_type)
-        input_file = '/mnt/IRODsTest/' + datafilename
+        input_file = '/mnt/MoDaC/' + datafilename
         file_name, file_extension = os.path.splitext(datafilename)
         manifest_dir_name = 'GDC-DATA_' + file_name.replace(" ", "")
 
@@ -192,7 +199,7 @@ if __name__ == '__main__':
         if output_file is not None and output_file != 'None':
             print("output file is not empty: " + output_file)
             header_list = ["Name"]
-            df1 = pd.read_csv('/mnt/IRODsTest/' + output_file, names=header_list)
+            df1 = pd.read_csv('/mnt/MoDaC/' + output_file, names=header_list)
             for ind in df1.index:
                 if df1['Name'][ind] in hm_rev:
                     output_results.append(hm_rev[df1['Name'][ind]])
@@ -222,6 +229,6 @@ if __name__ == '__main__':
         text_file.write(error_msg)
         text_file.close()
         # place the error file on the common mount location
-        shutil.move(error_file_name, '/mnt/IRODsTest/' + error_file_name)
+        shutil.move(error_file_name, '/mnt/MoDaC/' + error_file_name)
         shutil.rmtree(manifest_dir_name, ignore_errors=True)
         print("completed error file copy to mount location")
