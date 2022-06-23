@@ -7,16 +7,22 @@ $(document).ready(function() {
 });
 
 function displayPredictionSelectionDiv(type) {
-	if (type == 'GDC_Data' || type == 'InputFile') {
+	if (type.value == 'Select') {
+		$(".userInputDiv").hide();
+		$(".referenceDatasetSelectionDiv").hide();
+		$("#performInferencingModel").find("#performInferencing").hide();
+	} else if (type.value == 'gdcData' || type.value == 'inputFile') {
 		$("#performInferencingModel").find("#referenceDatasetList").val("").trigger('change');
 		$(".userInputDiv").show();
 		$(".referenceDatasetSelectionDiv").hide();
-	} else if (type == 'ReferenceDataset') {
+		$("#performInferencingModel").find("#performInferencing").show();
+	} else if (type.value == 'referenceDataset') {
 		$("#performInferencingModel").find("#uploadTestInferFile").val("");
 		$("#performInferencingModel").find("#uploadTestOutputFile").val("");
 		$("#performInferencingModel").find("#testInputPath").val($("#selectedAssetPath").text());
 		$(".referenceDatasetSelectionDiv").show();
 		$(".userInputDiv").hide();
+		$("#performInferencingModel").find("#performInferencing").show();
 	}
 
 }
@@ -84,10 +90,10 @@ $(document)
 
 						$(".performInferencingError").hide();
 						$(".performInferMsgError").html("");
-						$("input[name=uploadFrom]").prop("checked", false);
+						$("#performInferencingModel").find("#uploadFrom").html("");
 						$("#uploadTestInferFile").val("");
 						$("#uploadTestOutputFile").val("");
-						$(".userInputDiv").show();
+						$(".userInputDiv").hide();
 						$(".referenceDatasetSelectionDiv").hide();
 
 						$("#performInferencingModel").modal({
@@ -105,34 +111,38 @@ function getReferenceDataSetSuccessFunction(data, status) {
 	$("#performInferencingModel").find("#referenceDatasetList").html("");
 	var $select = $("#performInferencingModel").find("#referenceDatasetList");
 
+	var $selectUpload = $("#performInferencingModel").find("#uploadFrom");
+
 	var refDataSetLength = data.length;
 	var isExternalDataSetSupported = $("#isExternalDataSetSupported").val();
 	if (isExternalDataSetSupported && isExternalDataSetSupported == "true") {
 
-		$("#performInferencingModel").find("#displayDataTypeDiv").show();
-		$("#performInferencingModel").find("#displayExternalDataDiv").show();
-
-		if (refDataSetLength == 0) {
-			$("#performInferencingModel").find("#displayReferenceDatasetDiv").hide();
-		} else {
-			$("#performInferencingModel").find("#displayReferenceDatasetDiv").show();
+		$selectUpload.append("<option value='Select'>Select Upload Option</option>");
+		$selectUpload.append("<option value='gdcData'>Upload GDC Data</option>");
+		$selectUpload.append("<option value='inputFile'>Upload Input File</option>");
+		if (refDataSetLength != 0) {
+			$selectUpload.append("<option value='referenceDataset'>Select from MoDaC Reference Datasets</option>");
 		}
 
 	} else {
 		if (refDataSetLength == 0) {
 			/*
 			 * external dataset is not supported and no reference datasets to
-			 * display
+			 * display, so hide the select
 			 */
 			$("#performInferencingModel").find("#displayDataTypeDiv").hide();
+			$("#performInferencingModel").find("#userInputDiv").show();
+			$("#performInferencingModel").find("#performInferencing").show();
+
 		} else {
 			/*
 			 * external dataset is not supported but there are reference
 			 * datasets to display
 			 */
-			$("#performInferencingModel").find("#displayDataTypeDiv").show();
-			$("#performInferencingModel").find("#displayExternalDataDiv").hide();
-			$("#performInferencingModel").find("#displayReferenceDatasetDiv").show();
+			$selectUpload.append("<option value='Select'>Select Upload Option</option>");
+			$selectUpload.append("<option value='gdcData'>Upload GDC Data</option>");
+			$selectUpload.append("<option value='referenceDataset'>Select from MoDaC Reference Datasets</option>");
+
 		}
 
 	}
@@ -140,6 +150,9 @@ function getReferenceDataSetSuccessFunction(data, status) {
 	for (var i = 0; i < data.length; i++) {
 		$select.append($('<option></option>').attr('value', data[i].key).text(data[i].value));
 	}
+	$select.select2({
+	    placeholder: "Click to add"
+	});
 }
 
 $(document).on(
@@ -150,23 +163,17 @@ $(document).on(
 			var form = $('#performInferForm')[0];
 			var data = new FormData(form);
 			var file = $("#uploadTestInferFile").val();
-			var uploadType = $('input[name=uploadFrom]:checked').val();
+			var uploadType = $("#performInferencingModel").find("#uploadFrom").val();
 			var validate = true;
 			var referenceDatasetList = $("#performInferencingModel").find("#referenceDatasetList").val();
 
-			if ($("input[name=uploadFrom]").is(":visible") && !uploadType) {
-				$(".performInferencingError").show();
-				$(".performInferMsgError").html("Choose upload data from type.");
-				validate = false;
-			}
-
-			if ($("input[name=uploadFrom]").is(":visible") && uploadType
-					&& (uploadType == 'gdcData' || uploadType == 'inputFile') && !file) {
+			if ($("#uploadFrom").is(":visible") && uploadType && (uploadType == 'gdcData' || uploadType == 'inputFile')
+					&& !file) {
 				$(".performInferencingError").show();
 				$(".performInferMsgError").html("Upload input file to generate predictions.");
 				validate = false;
 			}
-			if ($("input[name=uploadFrom]").is(":visible") && uploadType && uploadType == 'referenceDataset'
+			if ($("#uploadFrom").is(":visible") && uploadType && uploadType == 'referenceDataset'
 					&& referenceDatasetList.length == 0) {
 				$(".performInferencingError").show();
 				$(".performInferMsgError").html("Select reference datasets.");

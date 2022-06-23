@@ -415,7 +415,7 @@ table#searchResultTable tr.even td{background-color: #FBFBFB!important;}
 	line-height: 17px;
 }
 #updateMetaData,#addMetaData,#addNewMetaDataForSingleDataFile,
-#updatePermissions,#addUserMetadataForBulkAssets {
+#updatePermissions,#addUserMetadataForBulkAssets,#btnUpdateAccessGroup,#btnUpdatePermissions{
 	background-color: #E87B05!important;
 	font-family: 'inter_regular';
 }
@@ -1525,6 +1525,10 @@ select.form-control:not([size]):not([multiple]){height:35px;}
 		color: #000;
 	background-color: transparent;
 	}
+input.select2-search__field {
+	min-width: fit-content;
+	margin-left: 13px;
+}
 .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice{ 
     margin: 0px 5px;
     background: #e9ecef;
@@ -1552,6 +1556,9 @@ padding: 6px;
     display: none;
 }
 
+span.select2-selection.select2-selection--multiple {
+    border: 2px solid #E87B05 !important;
+}
 
 .select2-container--bootstrap4.select2-container--focus .select2-selection{border-color: #a94442;}
 /*.select2-container .select2-search--inline{float:none;}*/
@@ -1641,7 +1648,7 @@ h2.modal-title{font-size:1.5rem;}
 h3.table-title{font-size:1rem;}
 
 .modal-title  {
-	font-size:20px;
+	font-size:21px;
 	font-weight:500;
 	font-family: latoregular;
 	    color: #1C3D5D;
