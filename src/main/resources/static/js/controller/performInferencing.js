@@ -95,6 +95,7 @@ $(document)
 						$("#uploadTestOutputFile").val("");
 						$(".userInputDiv").hide();
 						$(".referenceDatasetSelectionDiv").hide();
+						$("#performInferencingModel").find("#performInferencing").hide();
 
 						$("#performInferencingModel").modal({
 							show : true,
@@ -167,6 +168,12 @@ $(document).on(
 			var validate = true;
 			var referenceDatasetList = $("#performInferencingModel").find("#referenceDatasetList").val();
 
+			if ($("#uploadFrom").is(":visible") && uploadType && uploadType == 'Select') {
+				$(".performInferencingError").show();
+				$(".performInferMsgError").html("Select Upload Option.");
+				validate = false;
+			}
+			
 			if ($("#uploadFrom").is(":visible") && uploadType && (uploadType == 'gdcData' || uploadType == 'inputFile')
 					&& !file) {
 				$(".performInferencingError").show();
