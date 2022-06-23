@@ -1541,7 +1541,7 @@ function functionEditCollection($this, collectionType) {
 
 function postSuccessEditCollectionMetadata(data, status) {
 	if (data && data.permissionRole == 'No Permissions') {
-		bootbox.alert("No Permissions to edit this collection");
+		bootbox.alert("No permissions to edit this collection");
 
 	} else {
 		$("#editCollectionFragment").show();
