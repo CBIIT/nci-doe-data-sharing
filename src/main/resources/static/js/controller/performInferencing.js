@@ -132,7 +132,7 @@ function getReferenceDataSetSuccessFunction(data, status) {
 			 * display, so hide the select
 			 */
 			$("#performInferencingModel").find("#displayDataTypeDiv").hide();
-			$("#performInferencingModel").find("#userInputDiv").show();
+			$("#performInferencingModel").find(".userInputDiv").show();
 			$("#performInferencingModel").find("#performInferencing").show();
 
 		} else {
