@@ -174,6 +174,12 @@ $(document).on(
 				validate = false;
 			}
 			
+			if ($("#uploadFrom").not(":visible") && !file) {
+				$(".performInferencingError").show();
+				$(".performInferMsgError").html("Upload input file to generate predictions.");
+				validate = false;
+			}
+			
 			if ($("#uploadFrom").is(":visible") && uploadType && (uploadType == 'gdcData' || uploadType == 'inputFile')
 					&& !file) {
 				$(".performInferencingError").show();
