@@ -174,7 +174,7 @@ $(document).on(
 				validate = false;
 			}
 			
-			if ($("#uploadFrom").not(":visible") && !file) {
+			if ($("#uploadFrom").is(":hidden") && !file) {
 				$(".performInferencingError").show();
 				$(".performInferMsgError").html("Upload input file to generate predictions.");
 				validate = false;
