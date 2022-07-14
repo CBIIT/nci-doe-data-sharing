@@ -130,8 +130,7 @@ public class PerformInferencingController extends AbstractDoeController {
 
 		log.info("perform model analysis for reference dataset");
 
-		String taskId = UUID.randomUUID().toString();
-		String applicableModelNames = inference.getApplicableModelNames();
+		String applicableModelNamesList = inference.getApplicableModelNamesList();
 
 		// get the h5 model path for the applicable model name selected
 
@@ -139,62 +138,69 @@ public class PerformInferencingController extends AbstractDoeController {
 
 		String authToken = (String) session.getAttribute("hpcUserToken");
 
-		HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, applicableModelNames,
-				true);
-		HpcCollectionDTO result = collectionDto.getCollections().get(0);
+		if (StringUtils.isNotEmpty(applicableModelNamesList)) {
 
-		List<HpcCollectionListingEntry> dataObjectsList = result.getCollection().getDataObjects();
-		Optional<HpcCollectionListingEntry> entry = dataObjectsList.stream()
-				.filter(e -> e != null && e.getPath().contains(".h5")).findFirst();
-		if (entry != null && entry.isPresent()) {
+			List<String> applicableModelNames = Arrays.asList(applicableModelNamesList.split(","));
+			for (String applicableModelName : applicableModelNames) {
+				try {
+					String taskId = UUID.randomUUID().toString();
+					HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
+							applicableModelName, true);
+					HpcCollectionDTO result = collectionDto.getCollections().get(0);
 
-			inference.setModelPath(entry.get().getPath());
+					List<HpcCollectionListingEntry> dataObjectsList = result.getCollection().getDataObjects();
+					Optional<HpcCollectionListingEntry> entry = dataObjectsList.stream()
+							.filter(e -> e != null && e.getPath().contains(".h5")).findFirst();
+					if (entry != null && entry.isPresent()) {
 
-		} else {
-			return "Cannot find any trained model in the applicable model name selected.";
-		}
+						inference.setModelPath(entry.get().getPath());
 
-		// create a file name for y_pred file
-		String resultPath = inference.getAssetPath() + "/y_pred_" + taskId + ".csv";
+					} else {
+						return "Cannot find any trained model in the applicable model name." + applicableModelName;
+					}
 
-		String testInputName = inference.getTestInputPath()
-				.substring(inference.getTestInputPath().lastIndexOf('/') + 1);
-		String outcomeFileName = inference.getOutcomeFilePath()
-				.substring(inference.getOutcomeFilePath().lastIndexOf('/') + 1);
+					// create a file name for y_pred file
+					String resultPath = inference.getAssetPath() + "/y_pred_" + taskId + ".csv";
 
-		try {
+					String testInputName = inference.getTestInputPath()
+							.substring(inference.getTestInputPath().lastIndexOf('/') + 1);
+					String outcomeFileName = inference.getOutcomeFilePath()
+							.substring(inference.getOutcomeFilePath().lastIndexOf('/') + 1);
 
-			if (StringUtils.isNotEmpty(outcomeFileName)) {
+					if (StringUtils.isNotEmpty(outcomeFileName)) {
 
-				String status = uploadFileToMount(session, outcomeFileName, inference.getOutcomeFilePath());
-				if ("SUCCESS".equalsIgnoreCase(status)) {
+						String status = uploadFileToMount(session, outcomeFileName, inference.getOutcomeFilePath());
+						if ("SUCCESS".equalsIgnoreCase(status)) {
 
-					inference.setOutcomeFileName(outcomeFileName);
+							inference.setOutcomeFileName(outcomeFileName);
 
+						}
+
+					}
+
+					if (StringUtils.isNotEmpty(inference.getTestInputPath())) {
+						// copy the reference dataset to mount location
+
+						uploadFileToMount(session, testInputName, inference.getTestInputPath());
+
+					}
+
+					// save the inferencing task
+					inference.setIsReferenceAsset(Boolean.TRUE);
+					inference.setTaskId(taskId);
+					inference.setUserId(getLoggedOnUserInfo());
+					inference.setResultPath(resultPath);
+					inference.setTestInputPath(inference.getTestInputPath());
+					inferencingTaskService.saveInferenceTask(inference);
+				} catch (Exception e) {
+					log.error("Exception in performing model analysis: " + e);
+					throw new DoeWebException("Exception in performing model analysis: " + e);
 				}
-
 			}
-
-			if (StringUtils.isNotEmpty(inference.getTestInputPath())) {
-				// copy the reference dataset to mount location
-
-				uploadFileToMount(session, testInputName, inference.getTestInputPath());
-
-			}
-
-			// save the inferencing task
-			inference.setIsReferenceAsset(Boolean.TRUE);
-			inference.setTaskId(taskId);
-			inference.setUserId(getLoggedOnUserInfo());
-			inference.setResultPath(resultPath);
-			inference.setTestInputPath(inference.getTestInputPath());
-			inferencingTaskService.saveInferenceTask(inference);
-
-			return "Perform model analysis task submitted. Your task id is " + taskId;
-		} catch (Exception e) {
-			log.error("Exception in performing model analysis: " + e);
-			throw new DoeWebException("Exception in performing model analysis: " + e);
+			return "Perform model analysis task submitted";
 		}
+
+		return "Exception in performing model analysis";
 
 	}
 

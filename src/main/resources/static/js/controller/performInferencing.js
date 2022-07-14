@@ -152,7 +152,7 @@ function getReferenceDataSetSuccessFunction(data, status) {
 		$select.append($('<option></option>').attr('value', data[i].key).text(data[i].value));
 	}
 	$select.select2({
-	    placeholder: "Click to add"
+		placeholder : "Click to add"
 	});
 }
 
@@ -173,13 +173,13 @@ $(document).on(
 				$(".performInferMsgError").html("Select Upload Option.");
 				validate = false;
 			}
-			
+
 			if ($("#uploadFrom").is(":hidden") && !file) {
 				$(".performInferencingError").show();
 				$(".performInferMsgError").html("Upload input file to generate predictions.");
 				validate = false;
 			}
-			
+
 			if ($("#uploadFrom").is(":visible") && uploadType && (uploadType == 'gdcData' || uploadType == 'inputFile')
 					&& !file) {
 				$(".performInferencingError").show();
@@ -288,13 +288,13 @@ $(document).on('click', '#performModelAnalysisBtn', function() {
 	var testInputPath = $("#performModelAnalysisModal").find("#testInputPath").val();
 
 	var inference = {};
-	inference.applicableModelNames = applicableModelName;
+	inference.applicableModelNamesList = applicableModelName;
 	inference.outcomeFilePath = resultName;
 	inference.uploadFrom = "gdcData";
 	inference.assetPath = $("#assetPath").val();
 	inference.testInputPath = testInputPath;
 
-	if (applicableModelName && applicableModelName == 'Select') {
+	if (applicableModelName.length == 0 || (applicableModelName && applicableModelName == 'Select')) {
 
 		$(".performModelAnalysisError").show();
 		$(".performAnalysisMsgError").html("Select applicable model name.");

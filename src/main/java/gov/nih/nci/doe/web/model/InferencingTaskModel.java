@@ -10,7 +10,7 @@ public class InferencingTaskModel {
 	private String modelPath;
 	private String uploadFrom;
 	private String outcomeFileName;
-	private String applicableModelNames;
+	private String applicableModelNamesList;
 	private String outcomeFilePath;
 	private Boolean isReferenceAsset;
 	private String referenceDatasetList;
@@ -23,12 +23,12 @@ public class InferencingTaskModel {
 		this.referenceDatasetList = referenceDatasetList;
 	}
 
-	public String getApplicableModelNames() {
-		return applicableModelNames;
+	public String getApplicableModelNamesList() {
+		return applicableModelNamesList;
 	}
 
-	public void setApplicableModelNames(String applicableModelNames) {
-		this.applicableModelNames = applicableModelNames;
+	public void setApplicableModelNamesList(String applicableModelNamesList) {
+		this.applicableModelNamesList = applicableModelNamesList;
 	}
 
 	public String getTaskId() {
