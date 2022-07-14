@@ -613,7 +613,7 @@ $('#dataSetTable tbody').on('click', '.editDataFileCollectionMetadata', function
 		success : function(msg) {
 			$("#spinner").hide();
 			$("#dimmer").hide();
-			constructCollectionMetData(msg, metaDataPath, true, fileName);
+			constructDataFileMetaData(msg, metaDataPath, true, fileName);
 		},
 		error : function(e) {
 			console.log('ERROR: ', e);
