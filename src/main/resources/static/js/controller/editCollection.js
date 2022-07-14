@@ -1,4 +1,4 @@
-function constructDataFileMetaData(metadata, metaDataPath, isDataObject, fileName) {
+function constructCollectionMetData(metadata, metaDataPath, isDataObject, fileName) {
 	$("#userMetaData tbody").html("");
 	$("#path").val(metaDataPath);
 	$(".editCollectionSuccess").hide();
@@ -10,11 +10,12 @@ function constructDataFileMetaData(metadata, metaDataPath, isDataObject, fileNam
 	var data = metadata;
 	$.each(data, function(key, value) {
 		var attrVal = value.value;
+		var attrValModified = attrVal.replace(/"/g, "");
 
 		$("#userMetaData tbody").append(
 				"<tr><td>" + value.displayName + "</td><td><input type='text' "
 						+ "aria-label='value of meta data' name='zAttrStr_" + value.key + "'" + " style='width:70%;' "
-						+ "value=\"" + attrVal + "\">" + "&nbsp;&nbsp;<input class='pull-right clearMetadata'"
+						+ "value=\"" + attrValModified + "\">" + "&nbsp;&nbsp;<input class='pull-right clearMetadata'"
 						+ "type='button' value='X'></td></tr>");
 
 	});
@@ -27,22 +28,23 @@ function constructEditCollectionMetadata(data, status) {
 					data,
 					function(key, value) {
 						var attrVal = value.attrValue;
-
-						if (value.isEditable == false && value.isVisible != true
-								&& value.attrName.indexOf("access_group") == -1) {
+						var attrValModified;
+						if (attrVal) {
+							attrValModified = attrVal.replace(/"/g, "");
+						}
+						if (value.isEditable == false && value.isVisible != true && value.attrName.indexOf("access_group") == -1) {
 							$("#userMetaData tbody").append(
 									"<tr><td>" + value.displayName + "&nbsp;&nbsp;<i class='fas fa-question-circle'"
 											+ "data-toggle='tooltip' " + "data-placement='right' title=\""
 											+ value.description + "\"></i></td><td><input "
 											+ "type='text' disabled='true' " + "aria-label='value of meta data' "
 											+ "name='zAttrStr_" + value.attrName + "' style='width:70%;' value=\""
-											+ attrVal + "\"></td></tr>");
+											+ attrValModified + "\"></td></tr>");
 
-						} else if (value.validValues == null && value.isVisible != true
-								&& value.attrName.indexOf("access_group") == -1) {
+						} else if (value.validValues == null && value.isVisible != true && value.attrName.indexOf("access_group") == -1) {
 
-							if (!attrVal) {
-								attrVal = "";
+							if (!attrValModified) {
+								attrValModified = "";
 							}
 
 							var placeholderValue = value.mandatory == true ? 'Required' : "";
@@ -57,7 +59,7 @@ function constructEditCollectionMetadata(data, status) {
 												+ value.description + "\">" + "</i></td><td><textarea rows='5'"
 												+ "placeholder='" + placeholderValue + "' is_mandatory='" + isMandatory
 												+ "' " + "aria-label='value of meta data' name='zAttrStr_"
-												+ value.attrName + "' " + "style='width:70%;'>" + attrVal
+												+ value.attrName + "' " + "style='width:70%;'>" + attrValModified
 												+ "</textarea></td></tr>");
 							} else {
 								if (!isMandatory) {
@@ -69,7 +71,8 @@ function constructEditCollectionMetadata(data, status) {
 													+ "placeholder='" + placeholderValue + "' is_mandatory='"
 													+ isMandatory + "' "
 													+ "aria-label='value of meta data' name='zAttrStr_"
-													+ value.attrName + "' style='width:70%;'" + "value=\"" + attrVal
+													+ value.attrName + "' style='width:70%;'" + "value=\""
+													+ attrValModified
 													+ "\">&nbsp;&nbsp;<input class='pull-right clearMetadata'"
 													+ "type='button' value='X'></td></tr>");
 
@@ -82,8 +85,8 @@ function constructEditCollectionMetadata(data, status) {
 													+ "placeholder='" + placeholderValue + "' is_mandatory='"
 													+ isMandatory + "' "
 													+ "aria-label='value of meta data' name='zAttrStr_"
-													+ value.attrName + "' style='width:70%;'" + "value=\"" + attrVal
-													+ "\"></td></tr>");
+													+ value.attrName + "' style='width:70%;'" + "value=\""
+													+ attrValModified + "\"></td></tr>");
 								}
 							}
 
@@ -121,7 +124,7 @@ function constructEditCollectionMetadata(data, status) {
 
 							var $select = $("#" + value.attrName);
 
-							if (attrVal == null) {
+							if (attrValModified == null) {
 								$select.append($('<option></option>').attr('value', 'Select').text('Select'));
 							}
 
@@ -129,9 +132,9 @@ function constructEditCollectionMetadata(data, status) {
 								$select.append($('<option></option>').attr('value', value.validValues[i].key).text(
 										value.validValues[i].value));
 							}
-
-							if (attrVal != null) {
-								var attrValModifiedList = attrVal.split(',');
+							
+							if (attrValModified != null) {
+								var attrValModifiedList = attrValModified.split(',');
 								$select.select2().val(attrValModifiedList).trigger('change');
 							} else {
 								$select.select2().trigger('change');

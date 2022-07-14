@@ -22,7 +22,6 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.slf4j.Logger;
@@ -292,9 +291,7 @@ public abstract class AbstractDoeController {
 				KeyValueBean k = null;
 				// this is a temporary fix to escape json.stringify error with single and double
 				// quotes
-//				String updatedString = entry.getValue().replaceAll("[\"']", "");
-
-				String updatedString = StringEscapeUtils.escapeHtml(entry.getValue());
+				String updatedString = entry.getValue().replaceAll("[\"']", "");
 				if (lookUpVal != null) {
 
 					// if isVisible parameter is not null, filter look up values matching isVisible
@@ -335,9 +332,7 @@ public abstract class AbstractDoeController {
 		if (entry != null) {
 			// this is a temporary fix to escape json.stringify error with single and double
 			// quotes
-//			return entry.getValue().replaceAll("[\"']", "");
-
-			return StringEscapeUtils.escapeHtml(entry.getValue());
+			return entry.getValue().replaceAll("[\"']", "");
 		}
 		return null;
 	}
@@ -460,13 +455,9 @@ public abstract class AbstractDoeController {
 							String attrName = lookUpService.getDisplayName(levelName, entry.getAttribute());
 							KeyValueBean k = null;
 							if (!StringUtils.isEmpty(attrName)) {
-								k = new KeyValueBean(StringEscapeUtils.escapeHtml(entry.getAttribute()),
-										attrName,
-										StringEscapeUtils.escapeHtml(entry.getValue()));
+								k = new KeyValueBean(entry.getAttribute(), attrName, entry.getValue());
 							} else {
-								k = new KeyValueBean(StringEscapeUtils.escapeHtml(entry.getAttribute()),
-										StringEscapeUtils.escapeHtml(entry.getAttribute()),
-										StringEscapeUtils.escapeHtml(entry.getValue()));
+								k = new KeyValueBean(entry.getAttribute(), entry.getAttribute(), entry.getValue());
 							}
 
 							entryList.add(k);
@@ -994,9 +985,8 @@ public abstract class AbstractDoeController {
 					// check if there are any predictions avaiable for logged on user
 
 					List<String> grpsList = LambdaUtils.map(loggedOnUserPermissions, KeyValueBean::getKey);
-					List<PredictionAccess> predictionResults = predictionAccessService
-							.getAllPredictionsForUserByAssetPath(user, grpsList,
-									collection.getCollection().getCollectionName());
+					List<PredictionAccess> predictionResults = predictionAccessService.getAllPredictionsForUserByAssetPath(user,
+							grpsList,collection.getCollection().getCollectionName());
 
 					if (CollectionUtils.isNotEmpty(predictionResults)) {
 
