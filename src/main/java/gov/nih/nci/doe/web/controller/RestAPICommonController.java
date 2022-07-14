@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.apache.commons.io.IOUtils;
 
 import io.jsonwebtoken.Jwts;
@@ -26,6 +27,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
 
 import gov.nih.nci.doe.web.DoeWebException;
+import gov.nih.nci.doe.web.domain.InferencingTask;
+import gov.nih.nci.doe.web.domain.ModelStatus;
+import gov.nih.nci.doe.web.domain.ReferenceDataset;
 import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.model.KeyValueBean;
@@ -45,6 +49,7 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationResponseDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationStatusDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO;
@@ -69,6 +74,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -1056,6 +1062,137 @@ public class RestAPICommonController extends AbstractDoeController {
 			}
 		}
 
+		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
+
+	}
+
+	/**
+	 * 
+	 * @param headers
+	 * @param session
+	 * @param response
+	 * @param request
+	 * @return
+	 * @throws DoeWebException
+	 * @throws IOException
+	 */
+	@GetMapping(value = "/model/status/**")
+	public ResponseEntity<?> getStatusByTaskId(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
+			HttpServletResponse response, HttpServletRequest request) throws DoeWebException, IOException {
+
+		log.info("get status:");
+		log.info("Headers: {}", headers);
+		String taskId = request.getRequestURI().split(request.getContextPath() + "/status/")[1];
+		log.info("taskId: " + taskId);
+
+		try {
+			if (StringUtils.isNotEmpty(taskId)) {
+				ModelStatus responseDTO = new ModelStatus();
+				InferencingTask task = inferencingTaskService.getInferenceByTaskId(taskId);
+				responseDTO.setInputDataSetPath(task.getTestDataSetPath());
+				responseDTO.setStartDate(task.getStartDate());
+				if (task != null) {
+					if ("NOTSTARTED".equalsIgnoreCase(task.getStatus())) {
+						responseDTO.setStatus("Not Started");
+					} else if ("INPROGRESS".equalsIgnoreCase(task.getStatus())) {
+						responseDTO.setStatus("In Progress");
+						if (task.getDmeTaskId() != null) {
+							String authToken = (String) session.getAttribute("hpcUserToken");
+							log.info("authToken: " + authToken);
+							UriComponentsBuilder ucBuilder1 = UriComponentsBuilder.fromHttpUrl(bulkRegistrationURL)
+									.path("/{dme-archive-path}");
+							final String serviceURL = ucBuilder1.buildAndExpand(task.getDmeTaskId()).encode().toUri()
+									.toURL().toExternalForm();
+
+							WebClient client = DoeClientUtil.getWebClient(serviceURL);
+							client.header("Authorization", "Bearer " + authToken);
+							Response restResponse = client.invoke("GET", null);
+
+							// if the file is available, call the flask web service
+							if (restResponse.getStatus() == 200) {
+								ObjectMapper mapper = new ObjectMapper();
+								MappingJsonFactory factory = new MappingJsonFactory(mapper);
+								JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+								HpcBulkDataObjectRegistrationStatusDTO dto = parser
+										.readValueAs(HpcBulkDataObjectRegistrationStatusDTO.class);
+								if (dto != null) {
+									if (dto.getTask().getCompleted() != null) {
+										task.setStatus("COMPLETED");
+										task.setCompletedDate(dto.getTask().getCompleted().getTime());
+										inferencingTaskService.save(task);
+
+										responseDTO.setStatus("Completed");
+										responseDTO.setCompletedDate(dto.getTask().getCompleted().getTime());
+										responseDTO.setResultPath(task.getResultPath());
+									}
+								}
+							}
+						}
+
+					} else if ("COMPLETED".equalsIgnoreCase(task.getStatus())) {
+						responseDTO.setStatus("Completed");
+						responseDTO.setCompletedDate(task.getCompletedDate());
+						responseDTO.setResultPath(task.getResultPath());
+					} else if ("FAILURE".equalsIgnoreCase(task.getStatus())) {
+						responseDTO.setStatus("Failed");
+						responseDTO.setFailureMsg(task.getErrorMessage());
+					}
+
+					ObjectMapper mapper = new ObjectMapper();
+					mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+					mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+					return new ResponseEntity<>(mapper.writeValueAsString(responseDTO), HttpStatus.OK);
+				}
+			}
+		} catch (Exception e) {
+			log.error("Error in get status by task Id" + e.getMessage());
+		}
+
+		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
+
+	}
+
+	@PostMapping(value = "/model/referencedataset")
+	public ResponseEntity<?> performModelEvaluationForReferenceDatasets(@RequestHeader HttpHeaders headers,
+			@ApiIgnore HttpSession session, HttpServletResponse response, HttpServletRequest request,
+			@RequestBody @Valid ReferenceDataset referenceDataset) throws DoeWebException {
+
+		log.info("get status:");
+		log.info("Headers: {}", headers);
+		String doeLogin = (String) session.getAttribute("doeLogin");
+		log.info("doeLogin: " + doeLogin);
+		if (StringUtils.isNotEmpty(doeLogin)) {
+
+			// return task Id
+
+		}
+
+		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
+
+	}
+
+	@PostMapping(value = "/model/datasets/**")
+	public ResponseEntity<?> performModelEvaluationForDatasets(@RequestHeader HttpHeaders headers,
+			@ApiIgnore HttpSession session, HttpServletResponse response, HttpServletRequest request,
+			@RequestParam(required = false) Boolean isManifestFile, @RequestBody @Valid MultipartFile inputDataset,
+			@RequestBody(required = false) @Valid MultipartFile outcomeFile) throws DoeWebException {
+
+		log.info("get status:");
+		log.info("Headers: {}", headers);
+		String doeLogin = (String) session.getAttribute("doeLogin");
+		log.info("doeLogin: " + doeLogin);
+		String assetPath = request.getRequestURI().split(request.getContextPath() + "/model/datasets/")[1];
+		log.info("assetPath: " + assetPath);
+		log.info("isManifestFile" + isManifestFile);
+
+		if (isManifestFile == null) {
+			isManifestFile = Boolean.TRUE;
+		}
+
+		if (StringUtils.isNotEmpty(doeLogin)) {
+
+			// return task Id
+		}
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
 
 	}
