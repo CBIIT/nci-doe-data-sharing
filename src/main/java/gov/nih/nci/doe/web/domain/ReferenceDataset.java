@@ -4,24 +4,24 @@ import java.util.List;
 
 public class ReferenceDataset {
 
-	private List<Path> assetPath;
+	private List<Path> modelPaths;
 
-	private List<Path> referenceDatasetPath;
+	private List<Path> referenceDatasetPaths;
 
-	public List<Path> getAssetPath() {
-		return assetPath;
+	public List<Path> getModelPaths() {
+		return modelPaths;
 	}
 
-	public void setAssetPath(List<Path> assetPath) {
-		this.assetPath = assetPath;
+	public void setModelPaths(List<Path> modelPaths) {
+		this.modelPaths = modelPaths;
 	}
 
-	public List<Path> getReferenceDatasetPath() {
-		return referenceDatasetPath;
+	public List<Path> getReferenceDatasetPaths() {
+		return referenceDatasetPaths;
 	}
 
-	public void setReferenceDatasetPath(List<Path> referenceDatasetPath) {
-		this.referenceDatasetPath = referenceDatasetPath;
+	public void setReferenceDatasetPaths(List<Path> referenceDatasetPaths) {
+		this.referenceDatasetPaths = referenceDatasetPaths;
 	}
 
 	public class Path {

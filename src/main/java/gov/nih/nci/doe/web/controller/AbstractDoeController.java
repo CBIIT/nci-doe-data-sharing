@@ -14,7 +14,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -22,6 +26,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
+import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.slf4j.Logger;
@@ -50,6 +55,7 @@ import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeResponse;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
+import gov.nih.nci.doe.web.model.InferencingTaskModel;
 import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.model.PermissionsModel;
 import gov.nih.nci.doe.web.service.AccessGroupsService;
@@ -65,6 +71,7 @@ import gov.nih.nci.doe.web.service.PredictionAccessService;
 import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.doe.web.util.LambdaUtils;
+import gov.nih.nci.hpc.domain.datamanagement.HpcCollectionListingEntry;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQueryOperator;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQueryType;
@@ -79,6 +86,7 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectDTO;
 import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadResponseDTO;
 
 public abstract class AbstractDoeController {
 
@@ -93,6 +101,9 @@ public abstract class AbstractDoeController {
 
 	@Value("${doe.search.results.pageSize}")
 	private int pageSize;
+
+	@Value("${gov.nih.nci.hpc.server.dataObject}")
+	private String preSigneddataObjectServiceURL;
 
 	@Autowired
 	public AuthenticateService authenticateService;
@@ -985,8 +996,9 @@ public abstract class AbstractDoeController {
 					// check if there are any predictions avaiable for logged on user
 
 					List<String> grpsList = LambdaUtils.map(loggedOnUserPermissions, KeyValueBean::getKey);
-					List<PredictionAccess> predictionResults = predictionAccessService.getAllPredictionsForUserByAssetPath(user,
-							grpsList,collection.getCollection().getCollectionName());
+					List<PredictionAccess> predictionResults = predictionAccessService
+							.getAllPredictionsForUserByAssetPath(user, grpsList,
+									collection.getCollection().getCollectionName());
 
 					if (CollectionUtils.isNotEmpty(predictionResults)) {
 
@@ -1206,5 +1218,142 @@ public abstract class AbstractDoeController {
 			throw new DoeWebException(e);
 		}
 
+	}
+
+	public String uploadFileToMount(HttpSession session, String fileName, String filePath)
+			throws DoeWebException, IOException {
+
+		log.info("Upload file to mount location" + fileName);
+		String authToken = (String) session.getAttribute("writeAccessUserToken");
+
+		if (StringUtils.isNotEmpty(fileName)) {
+
+			// copy the results file to mount location
+			Response restResponseModelFile = DoeClientUtil.getPreSignedUrl(authToken, preSigneddataObjectServiceURL,
+					filePath);
+
+			log.info("rest response:" + restResponseModelFile.getStatus());
+			if (restResponseModelFile.getStatus() == 200) {
+				MappingJsonFactory factory = new MappingJsonFactory();
+				JsonParser parser = factory.createParser((InputStream) restResponseModelFile.getEntity());
+				HpcDataObjectDownloadResponseDTO dataObject = parser
+						.readValueAs(HpcDataObjectDownloadResponseDTO.class);
+
+				WebClient client = DoeClientUtil.getWebClient(dataObject.getDownloadRequestURL());
+				Response restResponseForModelFileCopy = client.invoke("GET", null);
+
+				Files.copy((InputStream) restResponseForModelFileCopy.getEntity(), Paths.get(uploadPath + fileName),
+						StandardCopyOption.REPLACE_EXISTING);
+				return "SUCCESS";
+
+			}
+
+		}
+
+		return "FAILURE";
+	}
+
+	public String performGeneratePredictions(InferencingTaskModel inference, String referenceDataset,
+			HttpSession session, String authToken, String testInputPath) throws DoeWebException, IOException {
+
+		// get the files under each reference dataset
+		String taskId = UUID.randomUUID().toString();
+		inference.setTaskId(taskId);
+
+		// create a file name for y_pred file and append to the asset Path
+		String resultPath = testInputPath + "/y_pred_" + taskId + ".csv";
+
+		HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, referenceDataset, true);
+		HpcCollectionDTO result = collectionDto.getCollections().get(0);
+		String resultFileName = getAttributeValue("outcome_file_name",
+				result.getMetadataEntries().getSelfMetadataEntries(), null);
+		if (StringUtils.isEmpty(resultFileName)) {
+
+			throw new DoeWebException("Outcome file not found in reference dataset",
+					HttpServletResponse.SC_BAD_REQUEST);
+		} else {
+			List<HpcCollectionListingEntry> dataObjectsList = result.getCollection().getDataObjects();
+			dataObjectsList.stream().forEach(e -> {
+				String path = e.getPath();
+				String name = path.substring(path.lastIndexOf('/') + 1);
+				/*
+				 * check for outcome file name and input dataset paths and upload to mount
+				 */
+				if (StringUtils.isNotEmpty(name) && name.contains(resultFileName)) {
+					inference.setOutcomeFileName(name);
+					inference.setOutcomeFilePath(path);
+
+				} else {
+					inference.setTestInputPath(path);
+				}
+
+				try {
+					uploadFileToMount(session, name, path);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			});
+
+			if (StringUtils.isEmpty(inference.getTestInputPath())) {
+
+				throw new DoeWebException("Reference dataset file not found for : " + referenceDataset,
+						HttpServletResponse.SC_BAD_REQUEST);
+			}
+			inference.setResultPath(resultPath);
+		}
+
+		return taskId;
+	}
+
+	public String performModelEvaluation(InferencingTaskModel inference, String applicableModelName,
+			HttpSession session, String authToken) throws DoeWebException, IOException {
+
+		String taskId = UUID.randomUUID().toString();
+		inference.setTaskId(taskId);
+		HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, applicableModelName,
+				true);
+		HpcCollectionDTO result = collectionDto.getCollections().get(0);
+
+		List<HpcCollectionListingEntry> dataObjectsList = result.getCollection().getDataObjects();
+		Optional<HpcCollectionListingEntry> entry = dataObjectsList.stream()
+				.filter(e -> e != null && e.getPath().contains(".h5")).findFirst();
+		if (entry != null && entry.isPresent()) {
+
+			inference.setModelPath(entry.get().getPath());
+
+		} else {
+
+			throw new DoeWebException(
+					"Cannot find any trained model in the applicable model name." + applicableModelName,
+					HttpServletResponse.SC_BAD_REQUEST);
+		}
+
+		// create a file name for y_pred file
+		String resultPath = inference.getAssetPath() + "/y_pred_" + taskId + ".csv";
+		inference.setResultPath(resultPath);
+		String testInputName = inference.getTestInputPath()
+				.substring(inference.getTestInputPath().lastIndexOf('/') + 1);
+		String outcomeFileName = inference.getOutcomeFilePath()
+				.substring(inference.getOutcomeFilePath().lastIndexOf('/') + 1);
+
+		if (StringUtils.isNotEmpty(outcomeFileName)) {
+
+			String status = uploadFileToMount(session, outcomeFileName, inference.getOutcomeFilePath());
+			if ("SUCCESS".equalsIgnoreCase(status)) {
+
+				inference.setOutcomeFileName(outcomeFileName);
+
+			}
+
+		}
+
+		if (StringUtils.isNotEmpty(inference.getTestInputPath())) {
+			// copy the reference dataset to mount location
+
+			uploadFileToMount(session, testInputName, inference.getTestInputPath());
+
+		}
+		return taskId;
 	}
 }

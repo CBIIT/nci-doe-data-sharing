@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.apache.commons.io.IOUtils;
 
 import io.jsonwebtoken.Jwts;
@@ -26,11 +27,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
 
 import gov.nih.nci.doe.web.DoeWebException;
+import gov.nih.nci.doe.web.domain.InferencingTask;
+import gov.nih.nci.doe.web.domain.ModelStatus;
+import gov.nih.nci.doe.web.domain.ReferenceDataset;
+import gov.nih.nci.doe.web.domain.ReferenceDataset.Path;
 import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
+import gov.nih.nci.doe.web.model.InferencingTaskModel;
 import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
+import gov.nih.nci.hpc.domain.datamanagement.HpcCollectionListingEntry;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQueryOperator;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
@@ -45,6 +52,7 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationResponseDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationStatusDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO;
@@ -53,6 +61,9 @@ import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -60,6 +71,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -69,6 +82,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -1060,6 +1074,263 @@ public class RestAPICommonController extends AbstractDoeController {
 
 	}
 
+	/**
+	 * 
+	 * @param headers
+	 * @param session
+	 * @param response
+	 * @param request
+	 * @return
+	 * @throws DoeWebException
+	 * @throws IOException
+	 */
+	@GetMapping(value = "/model/status/**")
+	public ResponseEntity<?> getStatusByTaskId(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
+			HttpServletResponse response, HttpServletRequest request) throws DoeWebException, IOException {
+
+		log.info("get status:");
+		log.info("Headers: {}", headers);
+		String taskId = request.getRequestURI().split(request.getContextPath() + "/status/")[1];
+		log.info("taskId: " + taskId);
+
+		try {
+			if (StringUtils.isNotEmpty(taskId)) {
+				ModelStatus responseDTO = new ModelStatus();
+				InferencingTask task = inferencingTaskService.getInferenceByTaskId(taskId);
+				responseDTO.setInputDataSetPath(task.getTestDataSetPath());
+				responseDTO.setStartDate(task.getStartDate());
+				if (task != null) {
+					if ("NOTSTARTED".equalsIgnoreCase(task.getStatus())) {
+						responseDTO.setStatus("Not Started");
+					} else if ("INPROGRESS".equalsIgnoreCase(task.getStatus())) {
+						responseDTO.setStatus("In Progress");
+						if (task.getDmeTaskId() != null) {
+							String authToken = (String) session.getAttribute("hpcUserToken");
+							log.info("authToken: " + authToken);
+							UriComponentsBuilder ucBuilder1 = UriComponentsBuilder.fromHttpUrl(bulkRegistrationURL)
+									.path("/{dme-archive-path}");
+							final String serviceURL = ucBuilder1.buildAndExpand(task.getDmeTaskId()).encode().toUri()
+									.toURL().toExternalForm();
+
+							WebClient client = DoeClientUtil.getWebClient(serviceURL);
+							client.header("Authorization", "Bearer " + authToken);
+							Response restResponse = client.invoke("GET", null);
+
+							// if the file is available, call the flask web service
+							if (restResponse.getStatus() == 200) {
+								ObjectMapper mapper = new ObjectMapper();
+								MappingJsonFactory factory = new MappingJsonFactory(mapper);
+								JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+								HpcBulkDataObjectRegistrationStatusDTO dto = parser
+										.readValueAs(HpcBulkDataObjectRegistrationStatusDTO.class);
+								if (dto != null) {
+									if (dto.getTask().getCompleted() != null) {
+										task.setStatus("COMPLETED");
+										task.setCompletedDate(dto.getTask().getCompleted().getTime());
+										inferencingTaskService.save(task);
+
+										responseDTO.setStatus("Completed");
+										responseDTO.setCompletedDate(dto.getTask().getCompleted().getTime());
+										responseDTO.setResultPath(task.getResultPath());
+									}
+								}
+							}
+						}
+
+					} else if ("COMPLETED".equalsIgnoreCase(task.getStatus())) {
+						responseDTO.setStatus("Completed");
+						responseDTO.setCompletedDate(task.getCompletedDate());
+						responseDTO.setResultPath(task.getResultPath());
+					} else if ("FAILURE".equalsIgnoreCase(task.getStatus())) {
+						responseDTO.setStatus("Failed");
+						responseDTO.setFailureMsg(task.getErrorMessage());
+					}
+
+					ObjectMapper mapper = new ObjectMapper();
+					mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+					mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+					return new ResponseEntity<>(mapper.writeValueAsString(responseDTO), HttpStatus.OK);
+				}
+			}
+		} catch (Exception e) {
+			log.error("Error in get status by task Id" + e.getMessage());
+		}
+
+		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
+
+	}
+
+	@PostMapping(value = "/model/referencedataset")
+	public ResponseEntity<?> performModelEvaluationForReferenceDatasets(@RequestHeader HttpHeaders headers,
+			@ApiIgnore HttpSession session, HttpServletResponse response, HttpServletRequest request,
+			@RequestBody @Valid ReferenceDataset referenceDataset) throws DoeWebException, IOException {
+
+		log.info("get status:");
+		log.info("Headers: {}", headers);
+		String doeLogin = (String) session.getAttribute("doeLogin");
+		log.info("doeLogin: " + doeLogin);
+		String authToken = (String) session.getAttribute("hpcUserToken");
+
+		if (StringUtils.isNotEmpty(doeLogin) && CollectionUtils.isNotEmpty(referenceDataset.getModelPaths())
+				&& CollectionUtils.isNotEmpty(referenceDataset.getReferenceDatasetPaths())) {
+			List<Path> modelPaths = referenceDataset.getModelPaths();
+			List<Path> referenceDatasetPaths = referenceDataset.getReferenceDatasetPaths();
+			if (modelPaths.size() > 1 && referenceDatasetPaths.size() > 1) {
+				throw new DoeWebException("Invalid Request", HttpServletResponse.SC_BAD_REQUEST);
+			} else if (modelPaths.size() == 1 && referenceDatasetPaths.size() > 0) {
+				// perform generate predictions using a model and one or more reference datasets
+
+				String testInputPath = modelPaths.get(0).getPath();
+				String modelh5Path = null;
+				List<String> taskIdList = new ArrayList<String>();
+				// get the model path from the asset
+				HpcCollectionListDTO assetDto = DoeClientUtil.getCollection(authToken, serviceURL, testInputPath, true);
+				HpcCollectionDTO assetResult = assetDto.getCollections().get(0);
+
+				List<HpcCollectionListingEntry> assetList = assetResult.getCollection().getDataObjects();
+				Optional<HpcCollectionListingEntry> entry = assetList.stream()
+						.filter(e -> e != null && e.getPath().contains(".h5")).findFirst();
+				if (entry != null && entry.isPresent()) {
+					modelh5Path = entry.get().getPath();
+
+				}
+
+				for (Path referenceDatasetPath : referenceDatasetPaths) {
+					// create a modac task Id
+
+					InferencingTaskModel inferenceDataset = new InferencingTaskModel();
+
+					String taskId = performGeneratePredictions(inferenceDataset, referenceDatasetPath.getPath(),
+							session, authToken, testInputPath);
+
+					inferenceDataset.setIsReferenceAsset(Boolean.FALSE);
+					inferenceDataset.setAssetPath(testInputPath);
+					inferenceDataset.setUserId(doeLogin);
+					inferenceDataset.setModelPath(modelh5Path);
+					inferenceDataset.setUploadFrom("referenceDataset");
+					inferencingTaskService.saveInferenceTask(inferenceDataset);
+					taskIdList.add(taskId);
+				}
+
+				return new ResponseEntity<>(
+						"Perform inferencing task submitted. Your task id(s): " + String.join(",", taskIdList),
+						HttpStatus.OK);
+
+			} else if (referenceDatasetPaths.size() == 1 && modelPaths.size() > 1) {
+				// perform model evaluation on a reference dataset against multiple models
+				List<String> taskIdList = new ArrayList<String>();
+				for (Path applicableModelName : modelPaths) {
+					try {
+						InferencingTaskModel inference = new InferencingTaskModel();
+						String taskId = performModelEvaluation(inference, applicableModelName.getPath(), session,
+								authToken);
+						// save the inferencing task
+						inference.setIsReferenceAsset(Boolean.TRUE);
+						inference.setUserId(getLoggedOnUserInfo());
+						inference.setTestInputPath(inference.getTestInputPath());
+						inferencingTaskService.saveInferenceTask(inference);
+						taskIdList.add(taskId);
+					} catch (Exception e) {
+						log.error("Exception in performing model analysis: " + e);
+						throw new DoeWebException("Exception in performing model analysis: " + e);
+					}
+				}
+				return new ResponseEntity<>(
+						"Perform inferencing task submitted. Your task id(s): " + String.join(",", taskIdList),
+						HttpStatus.OK);
+			}
+
+		}
+
+		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
+
+	}
+
+	@PostMapping(value = "/model/datasets/**")
+	public ResponseEntity<?> performModelEvaluationForDatasets(@RequestHeader HttpHeaders headers,
+			@ApiIgnore HttpSession session, HttpServletResponse response, HttpServletRequest request,
+			@RequestParam(required = false) Boolean isManifestFile, @RequestBody @Valid MultipartFile inputDataset,
+			@RequestBody(required = false) @Valid MultipartFile outcomeFile) throws DoeWebException, IOException {
+
+		log.info("get status:");
+		log.info("Headers: {}", headers);
+		String doeLogin = (String) session.getAttribute("doeLogin");
+		log.info("doeLogin: " + doeLogin);
+		String assetPath = request.getRequestURI().split(request.getContextPath() + "/model/datasets/")[1];
+		log.info("assetPath: " + assetPath);
+		log.info("isManifestFile" + isManifestFile);
+		String authToken = (String) session.getAttribute("hpcUserToken");
+		log.info("authToken: " + authToken);
+
+		if (authToken == null) {
+			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
+		}
+
+		if (isManifestFile == null) {
+			isManifestFile = Boolean.TRUE;
+		}
+
+		if (StringUtils.isNotEmpty(doeLogin) && Boolean.TRUE.equals(isUploader(doeLogin))
+				&& StringUtils.isNotEmpty(assetPath)) {
+
+			InferencingTaskModel inference = new InferencingTaskModel();
+			// get the model path from the asset
+			HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, assetPath, true);
+			HpcCollectionDTO result = collectionDto.getCollections().get(0);
+
+			List<HpcCollectionListingEntry> dataObjectsList = result.getCollection().getDataObjects();
+			Optional<HpcCollectionListingEntry> entry = dataObjectsList.stream()
+					.filter(e -> e != null && e.getPath().contains(".h5")).findFirst();
+			if (entry != null && entry.isPresent()) {
+
+				inference.setModelPath(entry.get().getPath());
+
+			} else {
+				throw new DoeWebException("No trained model file found in the asset provided.",
+						HttpServletResponse.SC_BAD_REQUEST);
+			}
+
+			// create a modac task Id
+			String taskId = UUID.randomUUID().toString();
+
+			// create a file name for y_pred file and append to the asset Path
+			String resultPath = assetPath + "/y_pred_" + taskId + ".csv";
+
+			// check if the file name is already used for inferencing for the same user and
+			// same model path and is not in failed status
+			if (Boolean.TRUE.equals(inferencingTaskService.checkifFileExistsForUser(doeLogin, assetPath,
+					inputDataset.getOriginalFilename()))) {
+				throw new DoeWebException("Input file name already exists", HttpServletResponse.SC_BAD_REQUEST);
+			}
+
+			if (outcomeFile != null) {
+
+				inference.setOutcomeFileName(outcomeFile.getOriginalFilename());
+				Files.copy(outcomeFile.getInputStream(), Paths.get(uploadPath + outcomeFile.getOriginalFilename()),
+						StandardCopyOption.REPLACE_EXISTING);
+			}
+
+			// save the inferencing task
+			inference.setIsReferenceAsset(Boolean.FALSE);
+			inference.setUploadFrom(Boolean.TRUE.equals(isManifestFile) ? "gdcData" : "inputFile");
+			inference.setTaskId(taskId);
+			inference.setResultPath(resultPath);
+			inference.setAssetPath(assetPath);
+			inference.setTestInputPath(assetPath + "/" + inputDataset.getOriginalFilename());
+			inference.setUserId(doeLogin);
+
+			inferencingTaskService.saveInferenceTask(inference);
+
+			// copy the test dataset file to IRODsTest mount
+			Files.copy(inputDataset.getInputStream(), Paths.get(uploadPath + inputDataset.getOriginalFilename()),
+					StandardCopyOption.REPLACE_EXISTING);
+
+			return new ResponseEntity<>("Perform inferencing task submitted. Your task id is " + taskId, HttpStatus.OK);
+		}
+		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
+
+	}
+
 	@SuppressWarnings("unchecked")
 	private Boolean hasCollectionPermissions(String loggedOnUser, String parentPath,
 			HpcCollectionListDTO parentCollectionDto) {
@@ -1175,4 +1446,5 @@ public class RestAPICommonController extends AbstractDoeController {
 		query2.getCompoundQueries().add(query);
 		return query2;
 	}
+
 }

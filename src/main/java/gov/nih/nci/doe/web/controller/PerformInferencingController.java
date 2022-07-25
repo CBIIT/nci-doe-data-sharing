@@ -364,35 +364,4 @@ public class PerformInferencingController extends AbstractDoeController {
 
 	}
 
-	private String uploadFileToMount(HttpSession session, String fileName, String filePath)
-			throws DoeWebException, IOException {
-
-		log.info("Upload file to mount location" + fileName);
-		String authToken = (String) session.getAttribute("writeAccessUserToken");
-
-		if (StringUtils.isNotEmpty(fileName)) {
-
-			// copy the results file to mount location
-			Response restResponseModelFile = DoeClientUtil.getPreSignedUrl(authToken, dataObjectServiceURL, filePath);
-
-			log.info("rest response:" + restResponseModelFile.getStatus());
-			if (restResponseModelFile.getStatus() == 200) {
-				MappingJsonFactory factory = new MappingJsonFactory();
-				JsonParser parser = factory.createParser((InputStream) restResponseModelFile.getEntity());
-				HpcDataObjectDownloadResponseDTO dataObject = parser
-						.readValueAs(HpcDataObjectDownloadResponseDTO.class);
-
-				WebClient client = DoeClientUtil.getWebClient(dataObject.getDownloadRequestURL());
-				Response restResponseForModelFileCopy = client.invoke("GET", null);
-
-				Files.copy((InputStream) restResponseForModelFileCopy.getEntity(), Paths.get(uploadPath + fileName),
-						StandardCopyOption.REPLACE_EXISTING);
-				return "SUCCESS";
-
-			}
-
-		}
-
-		return "FAILURE";
-	}
 }
