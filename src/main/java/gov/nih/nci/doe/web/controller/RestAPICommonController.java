@@ -1084,13 +1084,15 @@ public class RestAPICommonController extends AbstractDoeController {
 	 * @throws DoeWebException
 	 * @throws IOException
 	 */
-	@GetMapping(value = "/model/status/**")
+
+	@GetMapping(value = "/model/status/**", produces = { MediaType.APPLICATION_JSON_VALUE,
+			MediaType.APPLICATION_OCTET_STREAM_VALUE })
 	public ResponseEntity<?> getStatusByTaskId(@RequestHeader HttpHeaders headers, @ApiIgnore HttpSession session,
-			HttpServletResponse response, HttpServletRequest request) throws DoeWebException, IOException {
+			HttpServletResponse response, HttpServletRequest request) throws DoeWebException, JsonProcessingException {
 
 		log.info("get status:");
 		log.info("Headers: {}", headers);
-		String taskId = request.getRequestURI().split(request.getContextPath() + "/status/")[1];
+		String taskId = request.getRequestURI().split(request.getContextPath() + "/model/status/")[1];
 		log.info("taskId: " + taskId);
 
 		try {

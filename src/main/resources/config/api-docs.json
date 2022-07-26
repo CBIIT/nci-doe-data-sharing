@@ -35,6 +35,127 @@
         }
       }
     },
+    "/api/model/referencedatasets": {
+      "post": {
+        "description": "This service allows you to perform model evaluation. \n1. **CURL COMMAND**\n  ```\n  curl -k -H Content-Type: application/json -d @<referencedataset.json> -X POST https://modac.cancer.gov/api/model/referencedatasets -u <Your Email Id>\n  ```\n2.  **referencedataset.json Example**\n  ```\n     {\n        \"models\": [{\n           \"assetPath\" : [\n           {\n           \"path\": \"/DOE_TEST_Archive/JDACS4C_Testing/Testing_JDACS4C_Pilot_2/test_model_new\"\n           }\n           ],\n           \"referenceDatasetPaths\": [\n           {\n            \"path\": \"/DOE_TEST_Archive/JDACS4C_Testing/Testing_JDACS4C_Pilot_2/test_reference\"\n          },\n          {\n            \"path\": \"/DOE_TEST_Archive/JDACS4C_Testing/Testing_JDACS4C_Pilot_2/test_reference_10\"\n          }\n        ]\n      }\n    }\n\n  ```\n3. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k -H Content-Type: application/json -d @referencedataset.json -X POST https://modac.cancer.gov/api/model/referencedatasets -u emailid@nih.gov",
+        "tags": [
+          "Model Analysis"
+        ],
+        "summary": "Perform model evaluation on reference datasets",
+        "operationId": "evaluationUsingPost",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "referenceDataset",
+            "description": "referenceDataset",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ReferenceDatasetDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "```\nPerform inferencing task submitted. Your task id(s) are: e0cb1f97-cf7b-413-8b11-0166d601f5b2,e0cb1f97-cf7b-413-8b11-0166d601345\n```"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/model/datasets/{path}": {
+      "post": {
+        "description": "This service allows you to perform model evaluation on manifest files and user provided datasets.\n\nQuery param\nisManifestFile - Is set to true, the API treats the uploaded dataset as a manifest file, else it is a user provided datset. This is an optional parameter and the default is 'true'.\n\n1. **CURL COMMAND**\n  ```\n  curl -k -F inpudataset=@<data file path> -F outcomeFile=@<data file path> -X POST https://modac.cancer.gov/api/model/datasets/{path}?isManifestFile=true -u <Your Email Id>\n  ```\n2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k -X POST -F inpudataset=@pathalogy_report.pdf -F outcomeFile=@mt_cnn_outcome.txt https://modac.cancer.gov/api/model/datasets/mt-cnn?isManifestFile=true -u emailid@nih.gov\n",
+        "tags": [
+          "Model Analysis"
+        ],
+        "summary": "Perform model evaluation on datasets",
+        "operationId": "evaluationOfDatasetsUsingPost",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "path",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": ".*",
+            "description": ""
+          },
+          {
+            "name": "isManifestFile",
+            "in": "query",
+            "description": "isManifestFile",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "```\nPerform inferencing task submitted. Your task id is: e0cb1f97-cf7b-413-8b11-0166d601f5b2\n```"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/model/status/{taskId}": {
+      "get": {
+        "description": "This service allows you to get status of a task Id. **CURL COMMAND**\n  ```\n  curl -k 'https://modac.cancer.gov/api/model/status/{taskId}' -D header.txt -o output.json -u <Your Email Id>\n  ```\n\n  2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k 'https://modac.cancer.gov/api/model/status/123 -D header.txt -o output.json -u myemailid@nih.gov\n  ```\n",
+        "summary": "Get task information.",
+        "tags": [
+          "Model Analysis"
+        ],
+        "operationId": "statusByTaskId",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": ".*",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/ModelStatus"
+            },
+            "description": "HTTP/1.1 200 OK\n**Output**:\n\n    {\n  
+              \"status\":\"Completed\",\n\"startDate\":1656010433000,\n\"completedDate\":1656010955000,\n\"resultPath\":\"/DOE_TEST_Archive/JDACS4C_Testing/Testing_JDACS4C_Pilot_2/test_model_new/Prediction_e0cb1f97-cf7b-413e-8b11-0166d601f5b2/y_pred_e0cb1f97-cf7b-413e-8b11-0166d601f5b2.csv\",\n\"inputDataSetPath\":\"/DOE_TEST_Archive/JDACS4C_Testing/Testing_JDACS4C_Pilot_2/test_model_new/Prediction_e0cb1f97-cf7b-413e-8b11-0166d601f5b2/TCGA-24-2297.12b02227-4050-4d02-bdb8-939d348a4c19.txt\"\n}"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Authentication Failure: \n\nHTTP/1.1 401 Unauthorized Content-Type: application/json\n\n\nJSON:\n\n{ \"errorType\": \"REQUEST_AUTHENTICATION_FAILED\",\n\n\"message\": \"Access Denied: LDAP authentication failed\",\n\n\"stackTrace\": \"…\" } "
+          }
+        }
+      }
+    },
     "/api/collection/{path}": {
       "get": {
         "description": "This service allows you to get information about a specific collection including all of its hierarchical metadata. Use the *path* parameter to specify the path to the collection of interest. In the output, the collection and *selfMetadataEntries* elements provide information about the collection you specified, while the *parentMetadataEntries* element provides information about the collection that contains the collection you specified. If you set the *list* parameter to 'true', the subCollections element lists the child collections of this collection and the dataObjects element lists the data objects of this collection. The list parameter is optional and its default is 'false'. \n\n**Query Param**\n*list* – If set to 'true', the API will list the child collections and data objects of this collection. The *subCollections* element lists the child collections and the *dataObjects* element lists the data objects. This is an optional parameter and default is 'false'.\n\n1. **CURL COMMAND**\n  ```\n  curl -k 'https://modac.cancer.gov/api/collection/{path}' -D header.txt -o output.json -u <Your Email Id>\n  ```\n\n  2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k 'https://modac.cancer.gov/api/collection/NCI_DOE_Archive/Program_3_1_21/Study_3_1_21/Asset_3_1_21?list=true -D header.txt -o output.json -u myemailid@nih.gov\n  ```\n",
@@ -517,6 +638,46 @@
     }
   },
   "definitions": {
+    "ReferenceDatasetDto": {
+      "type": "object",
+      "properties": {
+        "modelPaths" : {
+          "type": "array",
+          "items":{
+            "type": "string"
+          }
+        },
+        "referenceDatasetPaths" :{
+          "type": "array",
+          "items":{
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ModelStatus": {
+      "type": "object",
+      "properties" : {
+        "status" : {
+          "type": "string"
+        },
+        "startDate" : {
+          "type": "number"
+        },
+        "completedDate" : {
+          "type": "number"
+        },
+        "resultPath" : {
+          "type": "string"
+        },
+        "failureMsg" : {
+          "type": "string"
+        },
+        "inputDataSetPath" : {
+          "type": "string"
+        }
+      }
+    },
     "HpcBulkDataObjectDownloadRequestDTO": {
       "type": "object",
       "properties": {
