@@ -75,7 +75,7 @@
     },
     "/api/model/datasets/{path}": {
       "post": {
-        "description": "This service allows you to perform model evaluation on manifest files and user provided datasets.\n\nQuery param\nisManifestFile - Is set to true, the API treats the uploaded dataset as a manifest file, else it is a user provided datset. This is an optional parameter and the default is 'true'.\n\n1. **CURL COMMAND**\n  ```\n  curl -k -F inputDataset=@<data file path> -F outcomeFile=@<data file path> -X POST https://modac.cancer.gov/api/model/datasets/{path}?isManifestFile=true -u <Your Email Id>\n  ```\n2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k -X POST -F inputDataset=@pathalogy_report.pdf -F outcomeFile=@mt_cnn_outcome.txt https://modac.cancer.gov/api/model/datasets/mt-cnn?isManifestFile=true -u emailid@nih.gov\n",
+        "description": "This service allows you to perform model evaluation on manifest files and user provided datasets. \n\n**Query Param**\n*isManifestFile*  - Is set to true, the API treats the uploaded dataset as a manifest file, else it is a user provided datset. This is an optional parameter and the default is 'true'.\n\n1. **CURL COMMAND**\n  ```\n  curl -k -F inputDataset=@<data file path> -F outcomeFile=@<data file path> -X POST https://modac.cancer.gov/api/model/datasets/{path}?isManifestFile=true -u <Your Email Id>\n  ```\n2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k -X POST -F inputDataset=@pathalogy_report.pdf -F outcomeFile=@mt_cnn_outcome.txt https://modac.cancer.gov/api/model/datasets/mt-cnn?isManifestFile=true -u emailid@nih.gov\n",
         "tags": [
           "Model Analysis"
         ],
@@ -140,12 +140,12 @@
           }
         ],
         "responses": {
-          "200": {
+        "200": {
+            "description": "HTTP/1.1 200",
             "schema": {
               "$ref": "#/definitions/ModelStatus"
             },
-            "description": "HTTP/1.1 200 OK\n**Output**:\n\n    {\n  
-              \"status\":\"Completed\",\n\"startDate\":1656010433000,\n\"completedDate\":1656010955000,\n\"resultPath\":\"/DOE_TEST_Archive/JDACS4C_Testing/Testing_JDACS4C_Pilot_2/test_model_new/Prediction_e0cb1f97-cf7b-413e-8b11-0166d601f5b2/y_pred_e0cb1f97-cf7b-413e-8b11-0166d601f5b2.csv\",\n\"inputDataSetPath\":\"/DOE_TEST_Archive/JDACS4C_Testing/Testing_JDACS4C_Pilot_2/test_model_new/Prediction_e0cb1f97-cf7b-413e-8b11-0166d601f5b2/TCGA-24-2297.12b02227-4050-4d02-bdb8-939d348a4c19.txt\"\n}"
+            "headers": {}
           },
           "400": {
             "description": "Bad Request"
