@@ -119,8 +119,8 @@
     },
     "/api/model/status/{taskId}": {
       "get": {
-        "description": "This service allows you to get status of a task Id. **CURL COMMAND**\n  ```\n  curl -k 'https://modac.cancer.gov/api/model/status/{taskId}' -D header.txt -o output.json -u <Your Email Id>\n  ```\n\n  2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k 'https://modac.cancer.gov/api/model/status/123 -D header.txt -o output.json -u myemailid@nih.gov\n  ```\n",
-        "summary": "Get task information.",
+        "description": "This service allows you to get status of a prediction task Id. **CURL COMMAND**\n  ```\n  curl -k 'https://modac.cancer.gov/api/model/status/{taskId}' -D header.txt -o output.json -u <Your Email Id>\n  ```\n\n  2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k 'https://modac.cancer.gov/api/model/status/123 -D header.txt -o output.json -u myemailid@nih.gov\n  ```\n",
+        "summary": "Get prediction task information.",
         "tags": [
           "Model Analysis"
         ],
