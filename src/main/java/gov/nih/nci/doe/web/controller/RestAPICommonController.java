@@ -1173,8 +1173,10 @@ public class RestAPICommonController extends AbstractDoeController {
 		log.info("doeLogin: " + doeLogin);
 		String authToken = (String) session.getAttribute("hpcUserToken");
 
-		if (StringUtils.isNotEmpty(doeLogin) && CollectionUtils.isNotEmpty(referenceDataset.getModelPaths())
+		if (StringUtils.isNotEmpty(doeLogin) && Boolean.TRUE.equals(isUploader(doeLogin))
+				&& CollectionUtils.isNotEmpty(referenceDataset.getModelPaths())
 				&& CollectionUtils.isNotEmpty(referenceDataset.getReferenceDatasetPaths())) {
+			
 			List<Path> modelPaths = referenceDataset.getModelPaths();
 			List<Path> referenceDatasetPaths = referenceDataset.getReferenceDatasetPaths();
 			if (modelPaths.size() > 1 && referenceDatasetPaths.size() > 1) {
@@ -1327,7 +1329,8 @@ public class RestAPICommonController extends AbstractDoeController {
 			Files.copy(inputDataset.getInputStream(), Paths.get(uploadPath + inputDataset.getOriginalFilename()),
 					StandardCopyOption.REPLACE_EXISTING);
 
-			return new ResponseEntity<>("Perform inferencing task submitted. Your task id is: " + taskId, HttpStatus.OK);
+			return new ResponseEntity<>("Perform inferencing task submitted. Your task id is: " + taskId,
+					HttpStatus.OK);
 		}
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
 
