@@ -627,7 +627,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 
 				// when creating/editing collection of type reference dataset with applicable
 				// models,
-				// add/update the hidden metadata applicable_model_name_display
+				// add/update the hidden metadata applicable_model_identifiers
 
 				if (StringUtils.isNotEmpty(attrName) && attrName.equalsIgnoreCase("applicable_model_paths")) {
 
