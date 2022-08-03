@@ -80,7 +80,7 @@ public class PerformInferencingController extends AbstractDoeController {
 			HttpServletRequest request, @RequestParam(value = "userId") String userId)
 			throws DoeWebException, JsonParseException, IOException {
 
-		log.info("get all inferencing Tasks for user: " + userId);
+		log.info("get all evaluation tasks for user: " + userId);
 		List<InferencingTask> getAllInferencingTasks = inferencingTaskService.getAllTaskByUserId(userId);
 		if (CollectionUtils.isNotEmpty(getAllInferencingTasks)) {
 
@@ -192,14 +192,14 @@ public class PerformInferencingController extends AbstractDoeController {
 					inference.setTestInputPath(inference.getTestInputPath());
 					inferencingTaskService.saveInferenceTask(inference);
 				} catch (Exception e) {
-					log.error("Exception in performing model analysis: " + e);
-					throw new DoeWebException("Exception in performing model analysis: " + e);
+					log.error("Exception in evaluating task: " + e);
+					throw new DoeWebException("Exception in evaluating task: " + e);
 				}
 			}
-			return "Perform model analysis task submitted";
+			return "Evaluate task(s) submitted.";
 		}
 
-		return "Exception in performing model analysis";
+		return "Exception in evaluating task";
 
 	}
 
@@ -210,7 +210,7 @@ public class PerformInferencingController extends AbstractDoeController {
 			@RequestHeader HttpHeaders headers, HttpServletRequest request, @Valid InferencingTaskModel inference)
 			throws Exception, IOException {
 
-		log.info("perform inferencing for test dataset: " + uploadTestInferFile.getOriginalFilename());
+		log.info("perform evaluation for test dataset: " + uploadTestInferFile.getOriginalFilename());
 		String outputFileName = uploadTestOutputFile != null ? uploadTestOutputFile.getOriginalFilename() : null;
 
 		log.info("user provided output file to evaluate model :" + outputFileName);
@@ -282,7 +282,7 @@ public class PerformInferencingController extends AbstractDoeController {
 
 				}
 
-				return "Perform inferencing task submitted.";
+				return "Evaluate task(s) submitted.";
 			} else {
 
 				/*
@@ -300,7 +300,7 @@ public class PerformInferencingController extends AbstractDoeController {
 
 				String testInputName = testInputPath.substring(testInputPath.lastIndexOf('/') + 1);
 
-				// check if the file name is already used for inferencing for the same user and
+				// check if the file name is already used for evaluation for the same user and
 				// same model path and is not in failed status
 				if (Boolean.TRUE
 						.equals(inferencingTaskService.checkifFileExistsForUser(user, parentPath, testInputName))) {
@@ -328,12 +328,12 @@ public class PerformInferencingController extends AbstractDoeController {
 				Files.copy(uploadTestInferFile.getInputStream(), Paths.get(uploadPath + testInputName),
 						StandardCopyOption.REPLACE_EXISTING);
 
-				return "Perform inferencing task submitted. Your task id is " + taskId;
+				return "Evaluate task submitted. Your task id is " + taskId;
 			}
 
 		} catch (Exception e) {
-			log.error("Exception in performing inferencing: " + e);
-			throw new DoeWebException("Exception in performing inferencing:" + e);
+			log.error("Exception in evaluating task: " + e);
+			throw new DoeWebException("Exception in evaluating task:" + e);
 		}
 	}
 

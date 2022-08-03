@@ -1099,7 +1099,7 @@ public class RestAPICommonController extends AbstractDoeController {
 			if (StringUtils.isNotEmpty(taskId)) {
 				ModelStatus responseDTO = new ModelStatus();
 				InferencingTask task = inferencingTaskService.getInferenceByTaskId(taskId);
-				responseDTO.setInputDataSetPath(task.getTestDataSetPath());
+				responseDTO.setInputFile(task.getTestDataSetPath());
 				responseDTO.setStartDate(task.getStartDate());
 				if (task != null) {
 					if ("NOTSTARTED".equalsIgnoreCase(task.getStatus())) {
@@ -1176,7 +1176,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		if (StringUtils.isNotEmpty(doeLogin) && Boolean.TRUE.equals(isUploader(doeLogin))
 				&& CollectionUtils.isNotEmpty(referenceDataset.getModelPaths())
 				&& CollectionUtils.isNotEmpty(referenceDataset.getReferenceDatasetPaths())) {
-			
+
 			List<Path> modelPaths = referenceDataset.getModelPaths();
 			List<Path> referenceDatasetPaths = referenceDataset.getReferenceDatasetPaths();
 			if (modelPaths.size() > 1 && referenceDatasetPaths.size() > 1) {
@@ -1199,6 +1199,10 @@ public class RestAPICommonController extends AbstractDoeController {
 
 				}
 
+				if (StringUtils.isEmpty(modelh5Path)) {
+
+					throw new DoeWebException("Cannot find any trained model", HttpServletResponse.SC_BAD_REQUEST);
+				}
 				for (Path referenceDatasetPath : referenceDatasetPaths) {
 					// create a modac task Id
 
@@ -1207,11 +1211,8 @@ public class RestAPICommonController extends AbstractDoeController {
 					String taskId = performGeneratePredictions(inferenceDataset, referenceDatasetPath.getPath(),
 							session, authToken, testInputPath);
 
-					inferenceDataset.setIsReferenceAsset(Boolean.FALSE);
-					inferenceDataset.setAssetPath(testInputPath);
 					inferenceDataset.setUserId(doeLogin);
 					inferenceDataset.setModelPath(modelh5Path);
-					inferenceDataset.setUploadFrom("referenceDataset");
 					inferencingTaskService.saveInferenceTask(inferenceDataset);
 					taskIdList.add(taskId);
 				}
@@ -1223,15 +1224,47 @@ public class RestAPICommonController extends AbstractDoeController {
 			} else if (referenceDatasetPaths.size() == 1 && modelPaths.size() > 1) {
 				// perform model evaluation on a reference dataset against multiple models
 				List<String> taskIdList = new ArrayList<String>();
+				HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
+						referenceDatasetPaths.get(0).getPath(), true);
+				HpcCollectionDTO result = collectionDto.getCollections().get(0);
+				List<HpcCollectionListingEntry> dataObjectsList = result.getCollection().getDataObjects();
+				String resultFileName = getAttributeValue("outcome_file_name",
+						result.getMetadataEntries().getSelfMetadataEntries(), null);
+
+				if (StringUtils.isEmpty(resultFileName)) {
+
+					throw new DoeWebException("Outcome file not found in reference dataset",
+							HttpServletResponse.SC_BAD_REQUEST);
+				}
+
 				for (Path applicableModelName : modelPaths) {
 					try {
 						InferencingTaskModel inference = new InferencingTaskModel();
-						String taskId = performModelEvaluation(inference, applicableModelName.getPath(), session,
-								authToken);
+						inference.setAssetPath(referenceDatasetPaths.get(0).getPath());
+						dataObjectsList.stream().forEach(e -> {
+							String path = e.getPath();
+							String name = path.substring(path.lastIndexOf('/') + 1);
+							/*
+							 * check for outcome file name and input dataset paths and upload to mount
+							 */
+							if (StringUtils.isNotEmpty(name) && name.contains(resultFileName)) {
+								inference.setOutcomeFileName(name);
+								inference.setOutcomeFilePath(path);
+
+							} else {
+								inference.setTestInputPath(path);
+							}
+						});
+
+						if (StringUtils.isEmpty(inference.getTestInputPath())) {
+
+							throw new DoeWebException("Reference dataset file not found for : " + referenceDataset,
+									HttpServletResponse.SC_BAD_REQUEST);
+						}
+						String taskId = performModelEvaluation(inference, referenceDatasetPaths.get(0).getPath(),
+								applicableModelName.getPath(), session, authToken);
 						// save the inferencing task
-						inference.setIsReferenceAsset(Boolean.TRUE);
-						inference.setUserId(getLoggedOnUserInfo());
-						inference.setTestInputPath(inference.getTestInputPath());
+
 						inferencingTaskService.saveInferenceTask(inference);
 						taskIdList.add(taskId);
 					} catch (Exception e) {

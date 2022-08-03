@@ -8,7 +8,7 @@ public class ModelStatus {
 	private Date completedDate;
 	private String resultPath;
 	private String failureMsg;
-	private String inputDataSetPath;
+	private String inputFile;
 
 	public String getStatus() {
 		return status;
@@ -50,12 +50,12 @@ public class ModelStatus {
 		this.failureMsg = failureMsg;
 	}
 
-	public String getInputDataSetPath() {
-		return inputDataSetPath;
+	public String getInputFile() {
+		return inputFile;
 	}
 
-	public void setInputDataSetPath(String inputDataSetPath) {
-		this.inputDataSetPath = inputDataSetPath;
+	public void setInputFile(String inputFile) {
+		this.inputFile = inputFile;
 	}
 
 }

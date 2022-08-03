@@ -35,13 +35,13 @@
         }
       }
     },
-    "/api/model/referencedatasets": {
+    "/api/models/evaluate": {
       "post": {
-        "description": "This service allows you to perform model evaluation on reference datasets. \n1. **CURL COMMAND**\n  ```\n  curl -k -H Content-Type: application/json -d @<referencedataset.json> -X POST https://modac.cancer.gov/api/model/referencedatasets -u <Your Email Id>\n  ```\n2.  **referencedataset.json Example**\n  ```\n     {\n        \"models\": [{\n           \"assetPath\" : [\n           {\n           \"path\": \"/DOE_TEST_Archive/JDACS4C_Testing/Testing_JDACS4C_Pilot_2/test_model_new\"\n           }\n           ],\n           \"referenceDatasetPaths\": [\n           {\n            \"path\": \"/DOE_TEST_Archive/JDACS4C_Testing/Testing_JDACS4C_Pilot_2/test_reference\"\n          },\n          {\n            \"path\": \"/DOE_TEST_Archive/JDACS4C_Testing/Testing_JDACS4C_Pilot_2/test_reference_10\"\n          }\n        ]\n      }\n    }\n\n  ```\n3. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k -H Content-Type: application/json -d @referencedataset.json -X POST https://modac.cancer.gov/api/model/referencedatasets -u emailid@nih.gov",
+        "description": "This service allows you to evaluate one or more models using referencing datasets if you have a MoDaC user account with upload permission. The input json is validated and the entire transaction gets cancelled if there are any errors. \n1. **CURL COMMAND**\n  ```\n  curl -k -H Content-Type: application/json -d @<input.json> -X POST https://modac.cancer.gov/api/models/evaluate -u <Your Email Id>\n  ```\n2.  **input.json Example**\n  ```\n     {\n        \"models\": [{\n           \"modelPaths\" : [\n           {\n           \"path\": \"/DOE_TEST_Archive/JDACS4C_Testing/Testing_JDACS4C_Pilot_2/test_model_new\"\n           }\n           ],\n           \"referenceDatasetPaths\": [\n           {\n            \"path\": \"/DOE_TEST_Archive/JDACS4C_Testing/Testing_JDACS4C_Pilot_2/test_reference\"\n          },\n          {\n            \"path\": \"/DOE_TEST_Archive/JDACS4C_Testing/Testing_JDACS4C_Pilot_2/test_reference_10\"\n          }\n        ]\n      }\n    }\n\n  ```\n3. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k -H Content-Type: application/json -d @input.json -X POST https://modac.cancer.gov/api/model/referencedatasets -u emailid@nih.gov",
         "tags": [
-          "Model Analysis"
+          "Evaluate Models"
         ],
-        "summary": "Perform model evaluation on reference datasets",
+        "summary": "Perform model evaluation using referencing datasets",
         "operationId": "evaluationUsingPost",
         "produces": [
           "*/*"
@@ -49,17 +49,17 @@
         "parameters": [
           {
             "in": "body",
-            "name": "referenceDataset",
-            "description": "referenceDataset",
+            "name": "Dataset",
+            "description": "Dataset",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/ReferenceDatasetDto"
+              "$ref": "#/definitions/DatasetDto"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "```\nPerform inferencing task submitted. Your task id(s) are: e0cb1f97-cf7b-413-8b11-0166d601f5b2,e0cb1f97-cf7b-413-8b11-0166d601345\n```"
+            "description": "```\nEvaluate task(s) submitted. Your task id(s) are: e0cb1f97-cf7b-413-8b11-0166d601f5b2,e0cb1f97-cf7b-413-8b11-0166d601345\n```"
           },
           "401": {
             "description": "Unauthorized"
@@ -73,13 +73,13 @@
         }
       }
     },
-    "/api/model/datasets/{path}": {
+    "/api/model/evaluate/{path}": {
       "post": {
-        "description": "This service allows you to perform model evaluation on manifest files and user provided datasets. \n\n**Query Param**\n*isManifestFile*  - Is set to true, the API treats the uploaded dataset as a manifest file, else it is a user provided datset. This is an optional parameter and the default is 'true'.\n\n1. **CURL COMMAND**\n  ```\n  curl -k -F inputDataset=@<data file path> -F outcomeFile=@<data file path> -X POST https://modac.cancer.gov/api/model/datasets/{path}?isManifestFile=true -u <Your Email Id>\n  ```\n2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k -X POST -F inputDataset=@pathalogy_report.pdf -F outcomeFile=@mt_cnn_outcome.txt https://modac.cancer.gov/api/model/datasets/mt-cnn?isManifestFile=true -u emailid@nih.gov\n",
+        "description": "This service allows you to evaluate a model using input dataset or a manifest file if you have a MoDaC user account with upload permission.. \n\n**Query Param**\n*isManifestFile*  - Is set to false, the API treats the uploaded file as a user provided datset, else it is a manifest file. This is an optional parameter and the default is 'false'.\n\n1. **CURL COMMAND**\n  ```\n  curl -k -F inputFile=@<data file path> -F outcomeFile=@<data file path> -X POST https://modac.cancer.gov/api/model/evaluate/{path}?isManifestFile=false -u <Your Email Id>\n  ```\n2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k -F inputFile=@pathalogy_report.pdf -F outcomeFile=@mt_cnn_outcome.txt -X POST https://modac.cancer.gov/api/model/evaluate/mt-cnn?isManifestFile=false -u emailid@nih.gov\n",
         "tags": [
-          "Model Analysis"
+          "Evaluate Models"
         ],
-        "summary": "Perform model evaluation on datasets",
+        "summary": "Perform model evaluation using input file",
         "operationId": "evaluationOfDatasetsUsingPost",
         "produces": [
           "*/*"
@@ -103,7 +103,7 @@
         ],
         "responses": {
           "200": {
-            "description": "```\nPerform inferencing task submitted. Your task id is: e0cb1f97-cf7b-413-8b11-0166d601f5b2\n```"
+            "description": "```\nEvaluate task submitted. Your task id is: e0cb1f97-cf7b-413-8b11-0166d601f5b2\n```"
           },
           "401": {
             "description": "Unauthorized"
@@ -117,12 +117,12 @@
         }
       }
     },
-    "/api/model/status/{taskId}": {
+    "/api/model/evaluate/{taskId}": {
       "get": {
-        "description": "This service allows you to get status of a prediction task Id. **CURL COMMAND**\n  ```\n  curl -k 'https://modac.cancer.gov/api/model/status/{taskId}' -D header.txt -o output.json -u <Your Email Id>\n  ```\n\n  2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k 'https://modac.cancer.gov/api/model/status/123 -D header.txt -o output.json -u myemailid@nih.gov\n  ```\n",
+        "description": "This service allows you to get status of a prediction task Id. **CURL COMMAND**\n  ```\n  curl -k 'https://modac.cancer.gov/api/model/evaluate/{taskId}' -D header.txt -o output.json -u <Your Email Id>\n  ```\n\n  2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k 'https://modac.cancer.gov/api/model/evaluate/123 -D header.txt -o output.json -u myemailid@nih.gov\n  ```\n",
         "summary": "Get prediction task information.",
         "tags": [
-          "Model Analysis"
+          "Evaluate Models"
         ],
         "operationId": "statusByTaskId",
         "deprecated": false,
@@ -638,7 +638,7 @@
     }
   },
   "definitions": {
-    "ReferenceDatasetDto": {
+    "DatasetDto": {
       "type": "object",
       "properties": {
         "modelPaths" : {
@@ -673,7 +673,7 @@
         "failureMsg" : {
           "type": "string"
         },
-        "inputDataSetPath" : {
+        "inputFile" : {
           "type": "string"
         }
       }
