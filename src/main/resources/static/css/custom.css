@@ -1668,9 +1668,9 @@ label {
 	color: #397ded;
 }
 
-div.dataDivCollapse :not (:first-child ) {
-	margin-top: -9px;
-	margin-bottom: 0px;
+div.dataDivCollapse :not(:first-child) {
+    margin-top: -9px;
+    margin-bottom: 0px;
 }
 
 div.dataDivCollapse :first-child {
