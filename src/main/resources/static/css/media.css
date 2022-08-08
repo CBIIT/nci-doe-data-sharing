@@ -1,0 +1,114 @@
+@media(max-width:990px)and(min-width:768px){
+    .appName{
+        white-space: nowrap;
+        font-size:16px;
+        
+    }
+}    
+
+@media(max-width:1200px) and (min-width: 992px){
+     .topNav-item{display:none;}
+     #changeUserMenu.dropdown-menu {
+    margin-left: -250px;
+}
+}
+@media(max-width:990px)   {
+    .appName{   
+        white-space: nowrap;
+        margin-top:40px;
+    }
+   #changeUserMenu.dropdown-menu,#userGuideMenu.dropdown-menu, #helpMenu.dropdown-menu{ 
+        width: 350px;
+        float: right; margin-left: 0px; 
+    }
+} 
+@media (max-width: 550px){
+    .nav-bar .nabar-toggler
+     #changeUserMenu.dropdown-menu {
+    margin-left: -50px!important;
+         
+}
+    .logoImg{width:250px}
+    .appnameWrapper{margin-top: 20px;margin-left:0px;z-index:-1;}
+    .appName{justify-content: left;margin-left:-50px;}
+}
+
+@media (min-width: 768px){
+    .appName{
+        font-size: 18px;
+        /*margin-left: 24px;*/
+        padding-top: 9px;
+        z-index:999;
+        margin-top: 10px;
+        margin-bottom:10px;
+        text-shadow:2px 2px #333;
+        /*text-transform: uppercase;*/
+        white-space: nowrap;
+    }
+	
+    .navbar .navbar-brand{
+        margin-top:0px;
+    }
+}
+
+@media (max-width: 380px){
+   #topNav{
+    width: 100%;
+    display: inline-block;
+    margin-top: -57px;
+    }  
+    #changeUserMenu.dropdown-menu {   width: 350px;
+        float: right; margin-left: 0px; }
+}
+
+@media (min-width: 992px){
+.modal-lg {
+max-width: 95%;
+}
+}
+
+@media (max-width: 990px){
+	
+.td_class_7 {width: 30%!important;word-break: break-word;}
+.td_class_9 {
+	width: 70%!important;
+	word-break: break-word;
+}
+#searchResultsDiv {
+	margin-top: 7px!important;
+	margin-left: -13px;
+}
+}
+
+@media (min-width: 992px) and (max-width:1082px){
+.td_class_7 {width: 10%!important;word-break: break-word;}
+.td_class_9 {
+	width: 40%!important;
+	word-break: break-word;
+}
+}
+
+@media (min-width: 1082px) and (max-width:1230px){
+.td_class_7 {width: 20%!important;word-break: break-word;}
+.td_class_9 {
+	width: 65%!important;
+	word-break: break-word;
+}
+}
+
+@media (min-width: 1230px) and (max-width:1371px){
+.td_class_7 {width: 20%!important;word-break: break-word;}
+.td_class_9 {
+	width: 80%!important;
+	word-break: break-word;
+}
+}
+
+@media (min-width: 1371px){
+.td_class_7 {width: 40%!important;word-break: break-word;}
+.td_class_9 {
+	width: 60%!important;
+	word-break: break-word;
+}
+}
+
