@@ -86,12 +86,9 @@ public class PerformInferencingController extends AbstractDoeController {
 
 			String authToken = (String) session.getAttribute("writeAccessUserToken");
 			for (InferencingTask t : getAllInferencingTasks) {
-				if (t.getStatus() != null && t.getStatus().equalsIgnoreCase("COMPLETED")) {
-					t.setAssetIdentifer("<a href=" + webServerName + "/assetDetails?assetIdentifier="
-							+ t.getModelIdentifier() + ">" + t.getModelIdentifier() + "</a>");
-				} else {
-					t.setAssetIdentifer(t.getModelIdentifier());
-				}
+
+				t.setAssetIdentifer("<a href=" + webServerName + "/assetDetails?assetIdentifier="
+						+ t.getModelIdentifier() + ">" + t.getModelIdentifier() + "</a>");
 
 				if (t.getDmeTaskId() != null && t.getStatus() != null && !t.getStatus().equalsIgnoreCase("COMPLETED")) {
 					log.info("verify the status for : " + t.getTestDataSetPath());
@@ -113,9 +110,6 @@ public class PerformInferencingController extends AbstractDoeController {
 								.readValueAs(HpcBulkDataObjectRegistrationStatusDTO.class);
 						if (dto != null) {
 							if (dto.getTask().getCompleted() != null) {
-								t.setAssetIdentifer("<a href=" + webServerName + "/assetDetails?assetIdentifier="
-										+ t.getModelIdentifier() + ">" + t.getModelIdentifier() + "</a>");
-								t.setStatus("COMPLETED");
 								t.setCompletedDate(dto.getTask().getCompleted().getTime());
 								inferencingTaskService.save(t);
 							}
