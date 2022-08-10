@@ -117,7 +117,7 @@ function dataTableInitInferenceTaskManager() {
 			},
 			responsivePriority : 1
 		}, {
-			"data" : "modelIdentifier",
+			"data" : "assetIdentifer",
 			"defaultContent" : "",
 			responsivePriority : 2
 		}, {

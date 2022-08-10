@@ -29,6 +29,9 @@ public class InferencingTask {
 	private String outcomeFilePath;
 	private Boolean isReferenceAsset;
 
+	@Transient
+	private String assetIdentifer;
+
 	public boolean equals(Object object) {
 		if (this == object) {
 			return true;
@@ -247,6 +250,16 @@ public class InferencingTask {
 
 	public void setIsReferenceAsset(Boolean isReferenceAsset) {
 		this.isReferenceAsset = isReferenceAsset;
+	}
+
+	@Transient
+	public String getAssetIdentifer() {
+		return assetIdentifer;
+	}
+
+	@Transient
+	public void setAssetIdentifer(String assetIdentifer) {
+		this.assetIdentifer = assetIdentifer;
 	}
 
 	@Override
