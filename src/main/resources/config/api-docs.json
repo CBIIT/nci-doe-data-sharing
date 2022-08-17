@@ -35,6 +35,162 @@
         }
       }
     },
+    "/api/v2/registration/{taskId}": {
+      "get": {
+        "description": "This service allows you to get status of a registration task Id. **CURL COMMAND**\n  ```\n  curl -k 'https://modac.cancer.gov/api/v2/registration/{taskId}' -D header.txt -o output.json -u <Your Email Id>\n  ```\n\n  2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k 'https://modac.cancer.gov/api/v2/registration/123 -D header.txt -o output.json -u myemailid@nih.gov\n  ```\n",
+        "summary": "Get registration task information.",
+        "tags": [
+          "Task Status"
+        ],
+        "operationId": "registrationStatusByTaskId",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": ".*",
+            "description": ""
+          }
+        ],
+        "responses": {
+        "200": {
+            "description": "HTTP/1.1 200",
+            "schema": {
+              "$ref": "#/definitions/HpcBulkDataObjectRegistrationStatusDTO"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Authentication Failure: \n\nHTTP/1.1 401 Unauthorized Content-Type: application/json\n\n\nJSON:\n\n{ \"errorType\": \"REQUEST_AUTHENTICATION_FAILED\",\n\n\"message\": \"Access Denied: LDAP authentication failed\",\n\n\"stackTrace\": \"…\" } "
+          }
+        }
+      }
+    },
+    "/api/collection/download/{taskId}": {
+      "get": {
+        "description": "This service allows you to get status of a collection download task Id. **CURL COMMAND**\n  ```\n  curl -k 'https://modac.cancer.gov/api/collection/download/{taskId}' -D header.txt -o output.json -u <Your Email Id>\n  ```\n\n  2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k 'https://modac.cancer.gov/api/collection/download/123 -D header.txt -o output.json -u myemailid@nih.gov\n  ```\n",
+        "summary": "Get collection download task information.",
+        "tags": [
+          "Task Status"
+        ],
+        "operationId": "collectionDownloadStatusByTaskId",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": ".*",
+            "description": ""
+          }
+        ],
+        "responses": {
+        "200": {
+            "description": "HTTP/1.1 200",
+            "schema": {
+              "$ref": "#/definitions/HpcCollectionDownloadStatusDTO"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Authentication Failure: \n\nHTTP/1.1 401 Unauthorized Content-Type: application/json\n\n\nJSON:\n\n{ \"errorType\": \"REQUEST_AUTHENTICATION_FAILED\",\n\n\"message\": \"Access Denied: LDAP authentication failed\",\n\n\"stackTrace\": \"…\" } "
+          }
+        }
+      }
+    },
+    "/api/dataObject/download/{taskId}": {
+      "get": {
+        "description": "This service allows you to get status of a dataObject download task Id. **CURL COMMAND**\n  ```\n  curl -k 'https://modac.cancer.gov/api/dataObject/download/{taskId}' -D header.txt -o output.json -u <Your Email Id>\n  ```\n\n  2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k 'https://modac.cancer.gov/api/dataObject/download/123 -D header.txt -o output.json -u myemailid@nih.gov\n  ```\n",
+        "summary": "Get dataObject download task information.",
+        "tags": [
+          "Task Status"
+        ],
+        "operationId": "dataObjectDownloadStatusByTaskId",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": ".*",
+            "description": ""
+          }
+        ],
+        "responses": {
+        "200": {
+            "description": "HTTP/1.1 200",
+            "schema": {
+              "$ref": "#/definitions/HpcDataObjectDownloadStatusDTO"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Authentication Failure: \n\nHTTP/1.1 401 Unauthorized Content-Type: application/json\n\n\nJSON:\n\n{ \"errorType\": \"REQUEST_AUTHENTICATION_FAILED\",\n\n\"message\": \"Access Denied: LDAP authentication failed\",\n\n\"stackTrace\": \"…\" } "
+          }
+        }
+      }
+    },
+    "/api/download/{taskId}": {
+      "get": {
+        "description": "This service allows you to get status of a dataObjects or collections download task Id. **CURL COMMAND**\n  ```\n  curl -k 'https://modac.cancer.gov/api/download/{taskId}' -D header.txt -o output.json -u <Your Email Id>\n  ```\n\n  2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k 'https://modac.cancer.gov/api/download/123 -D header.txt -o output.json -u myemailid@nih.gov\n  ```\n",
+        "summary": "Get dataObjects or collections download task information.",
+        "tags": [
+          "Task Status"
+        ],
+        "operationId": "dataObjectsOrCollectionsDownloadStatusByTaskId",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": ".*",
+            "description": ""
+          }
+        ],
+        "responses": {
+        "200": {
+            "description": "HTTP/1.1 200",
+            "schema": {
+              "$ref": "#/definitions/HpcCollectionDownloadStatusDTO"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Authentication Failure: \n\nHTTP/1.1 401 Unauthorized Content-Type: application/json\n\n\nJSON:\n\n{ \"errorType\": \"REQUEST_AUTHENTICATION_FAILED\",\n\n\"message\": \"Access Denied: LDAP authentication failed\",\n\n\"stackTrace\": \"…\" } "
+          }
+        }
+      }
+    },
     "/api/models/evaluate": {
       "post": {
         "description": "This service allows you to evaluate one or more models using referencing datasets if you have a MoDaC user account with upload permission. The input json is validated and the entire transaction gets cancelled if there are any errors. \n1. **CURL COMMAND**\n  ```\n  curl -k -H Content-Type: application/json -d @<input.json> -X POST https://modac.cancer.gov/api/models/evaluate -u <Your Email Id>\n  ```\n2.  **input.json Example**\n  ```\n     {\n        \"models\": [{\n           \"modelPaths\" : [\n           {\n           \"path\": \"/DOE_TEST_Archive/JDACS4C_Testing/Testing_JDACS4C_Pilot_2/test_model_new\"\n           }\n           ],\n           \"referenceDatasetPaths\": [\n           {\n            \"path\": \"/DOE_TEST_Archive/JDACS4C_Testing/Testing_JDACS4C_Pilot_2/test_reference\"\n          },\n          {\n            \"path\": \"/DOE_TEST_Archive/JDACS4C_Testing/Testing_JDACS4C_Pilot_2/test_reference_10\"\n          }\n        ]\n      }\n    }\n\n  ```\n3. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k -H Content-Type: application/json -d @input.json -X POST https://modac.cancer.gov/api/model/referencedatasets -u emailid@nih.gov",
@@ -638,6 +794,22 @@
     }
   },
   "definitions": {
+    "HpcCollectionDownloadStatusDTO": {
+      "type": "object",
+      "properties": {
+        "inProgress" : {
+          "type": "boolean"
+        }
+      }
+    },
+    "HpcDataObjectDownloadStatusDTO" : {
+      "type": "object",
+      "properties": {
+        "inProgress" : {
+          "type": "boolean"
+        }
+      }
+    },
     "DatasetDto": {
       "type": "object",
       "properties": {
@@ -652,6 +824,14 @@
           "items":{
             "type": "string"
           }
+        }
+      }
+    },
+    "HpcBulkDataObjectRegistrationStatusDTO" : {
+      "type": "object",
+      "properties": {
+        "inProgress" : {
+          "type": "boolean"
         }
       }
     },

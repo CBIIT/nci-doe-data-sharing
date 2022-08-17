@@ -8,10 +8,13 @@ import com.fasterxml.classmate.TypeResolver;
 import gov.nih.nci.doe.web.domain.ModelStatus;
 import gov.nih.nci.doe.web.domain.ReferenceDataset;
 import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectDownloadResponseDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectRegistrationStatusDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDownloadResponseDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDownloadStatusDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadResponseDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadStatusDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectDTO;
@@ -43,7 +46,11 @@ public class SwaggerConfig {
 				.additionalModels(typeResolver.resolve(HpcBulkDataObjectRegistrationResponseDTO.class))
 				.additionalModels(typeResolver.resolve(HpcDataObjectDTO.class))
 				.additionalModels(typeResolver.resolve(ReferenceDataset.class))
-				.additionalModels(typeResolver.resolve(ModelStatus.class));
+				.additionalModels(typeResolver.resolve(ModelStatus.class))
+				.additionalModels(typeResolver.resolve(HpcBulkDataObjectRegistrationStatusDTO.class))
+				.additionalModels(typeResolver.resolve(HpcCollectionDownloadStatusDTO.class))
+				.additionalModels(typeResolver.resolve(HpcDataObjectDownloadStatusDTO.class));
+
 	}
 
 	private ApiInfo apiInfo() {

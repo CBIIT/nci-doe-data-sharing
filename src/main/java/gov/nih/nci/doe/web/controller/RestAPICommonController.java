@@ -1074,6 +1074,136 @@ public class RestAPICommonController extends AbstractDoeController {
 
 	}
 
+	@GetMapping(value = "/v2/registration/**", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<?> getDataObjectsRegistrationStatus(@RequestHeader HttpHeaders headers,
+			@ApiIgnore HttpSession session, HttpServletResponse response, HttpServletRequest request)
+			throws DoeWebException {
+
+		log.info("get status:");
+		log.info("Headers: {}", headers);
+		String taskId = request.getRequestURI().split(request.getContextPath() + "/v2/registration/")[1];
+		log.info("taskId: " + taskId);
+		String doeLogin = (String) session.getAttribute("doeLogin");
+		log.info("doeLogin: " + doeLogin);
+		String authToken = (String) session.getAttribute("hpcUserToken");
+
+		if (authToken == null) {
+			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
+		}
+
+		try {
+			if (StringUtils.isNotEmpty(taskId) && StringUtils.isNotEmpty(doeLogin)) {
+				UriComponentsBuilder ucBuilder1 = UriComponentsBuilder.fromHttpUrl(bulkRegistrationURL)
+						.path("/{dme-archive-path}");
+				final String serviceURL = ucBuilder1.buildAndExpand(taskId).encode().toUri().toURL().toExternalForm();
+
+				WebClient client = DoeClientUtil.getWebClient(serviceURL);
+				client.header("Authorization", "Bearer " + authToken);
+				Response restResponse = client.invoke("GET", null);
+
+				// if the file is available, call the flask web service
+				if (restResponse.getStatus() == 200) {
+					ObjectMapper mapper = new ObjectMapper();
+					mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+					mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+					MappingJsonFactory factory = new MappingJsonFactory(mapper);
+					JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+					HpcBulkDataObjectRegistrationStatusDTO dto = parser
+							.readValueAs(HpcBulkDataObjectRegistrationStatusDTO.class);
+
+					return new ResponseEntity<>(mapper.writeValueAsString(dto), HttpStatus.OK);
+				}
+			}
+		} catch (Exception e) {
+			log.error("Error in get data object registration status: " + e.getMessage());
+		}
+		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
+	}
+
+	@GetMapping(value = "/collection/download/**", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<?> getCollectionDownloadStatus(@RequestHeader HttpHeaders headers,
+			@ApiIgnore HttpSession session, HttpServletResponse response, HttpServletRequest request)
+			throws DoeWebException {
+
+		log.info("get status:");
+		log.info("Headers: {}", headers);
+		String taskId = request.getRequestURI().split(request.getContextPath() + "/v2/registration/")[1];
+		log.info("taskId: " + taskId);
+		String doeLogin = (String) session.getAttribute("doeLogin");
+		log.info("doeLogin: " + doeLogin);
+		String authToken = (String) session.getAttribute("hpcUserToken");
+
+		if (authToken == null) {
+			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
+		}
+
+		try {
+			if (StringUtils.isNotEmpty(taskId) && StringUtils.isNotEmpty(doeLogin)) {
+
+			}
+		} catch (Exception e) {
+			log.error("Error in get collection download status: " + e.getMessage());
+		}
+		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
+
+	}
+
+	@GetMapping(value = "/dataObject/download/**", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<?> getDataObjectDownloadStatus(@RequestHeader HttpHeaders headers,
+			@ApiIgnore HttpSession session, HttpServletResponse response, HttpServletRequest request)
+			throws DoeWebException {
+
+		log.info("get status:");
+		log.info("Headers: {}", headers);
+		String taskId = request.getRequestURI().split(request.getContextPath() + "/v2/registration/")[1];
+		log.info("taskId: " + taskId);
+		String doeLogin = (String) session.getAttribute("doeLogin");
+		log.info("doeLogin: " + doeLogin);
+		String authToken = (String) session.getAttribute("hpcUserToken");
+
+		if (authToken == null) {
+			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
+		}
+
+		try {
+			if (StringUtils.isNotEmpty(taskId) && StringUtils.isNotEmpty(doeLogin)) {
+
+			}
+		} catch (Exception e) {
+			log.error("Error in get dataObject download status: " + e.getMessage());
+		}
+		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
+
+	}
+
+	@GetMapping(value = "/download/**", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<?> getDataObjectsOrCollectionsDownloadStatus(@RequestHeader HttpHeaders headers,
+			@ApiIgnore HttpSession session, HttpServletResponse response, HttpServletRequest request)
+			throws DoeWebException {
+
+		log.info("get status:");
+		log.info("Headers: {}", headers);
+		String taskId = request.getRequestURI().split(request.getContextPath() + "/v2/registration/")[1];
+		log.info("taskId: " + taskId);
+		String doeLogin = (String) session.getAttribute("doeLogin");
+		log.info("doeLogin: " + doeLogin);
+		String authToken = (String) session.getAttribute("hpcUserToken");
+
+		if (authToken == null) {
+			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
+		}
+
+		try {
+			if (StringUtils.isNotEmpty(taskId) && StringUtils.isNotEmpty(doeLogin)) {
+
+			}
+		} catch (Exception e) {
+			log.error("Error in get getDataObjects or collections download status: " + e.getMessage());
+		}
+		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
+
+	}
+
 	/**
 	 * 
 	 * @param headers
