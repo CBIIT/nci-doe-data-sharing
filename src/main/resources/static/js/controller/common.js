@@ -716,16 +716,6 @@ $(document).on('click', '#clearFilters', function() {
 	populateSearchCriteria('simpleSearch');
 });
 
-$(document).on('click', '.sharableLink', function() {
-	if ($(this).parent().find('.sharableLinkDiv:visible').length == 0) {
-		$(this).parent().find('.sharableLinkDiv').show();
-	} else {
-		$(this).parent().find('.sharableLinkDiv').hide();
-	}
-
-});
-
-
 $(document).on('click', '.clearMetadata', function() {
 	$(this).parent().find("input[type='text']").val("");
 });

@@ -826,6 +826,7 @@ ol#dataListing>li:before {
 button.share-link-copy-button, button.share-assetLink-copy-button {
 	border: none;
 	background-color: #fff;
+	color: #f39530 !important;
 }
 
 button.share-link-copy-button>img, button.share-assetLink-copy-button>img
