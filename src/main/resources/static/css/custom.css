@@ -1130,6 +1130,28 @@ a.detail-control {
 	/* height: 65px;*/
 	max-width: 86%;
 }
+.landingSearchDiv {
+	height: 111px;
+	width: 778px; 
+	border: 1px solid #000000;
+	background-color: #195DB2;
+	text-align: center;
+	margin-top: -50px;
+	max-width: 86%;
+	border: none;
+}
+#attributeVallanding{
+	margin-top: 30px;
+    border-radius: 24px;
+    font-size: 13px;
+    font-weight: 550;
+    padding-left: 31px;
+    height: 45px;
+    width: 810px;
+    border: 2.51px solid #397DED;
+    background-color: #FFFFFF;
+    margin-left: 66px;
+}
 
 div.container.main {
 	width: 100% !important;
@@ -1441,10 +1463,19 @@ a {
 }
 
 #attributeVal::placeholder {
-	color: #010101;
 	font-family: latoregular;
-	font-size: 16px;
+	font-size: 22px;
 	transform: translateY(0px);
+    color: #E87B05;
+
+}
+
+#attributeVallanding::placeholder {
+	font-family: latoregular;
+	font-size: 22px;
+	transform: translateY(0px);
+    color: #E87B05;
+
 }
 
 input#includeCriteria:focus {

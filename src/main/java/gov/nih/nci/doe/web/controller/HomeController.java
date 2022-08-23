@@ -97,7 +97,8 @@ public class HomeController extends AbstractDoeController {
 	public String getSearchTab(Model model, HttpSession session, HttpServletRequest request,
 			@RequestParam(value = "dme_data_id", required = false) String dmeDataId,
 			@RequestParam(value = "doi", required = false) String doi,
-			@RequestParam(value = "returnToSearch", required = false) String returnToSearch) throws DoeWebException {
+			@RequestParam(value = "returnToSearch", required = false) String returnToSearch,
+			@RequestParam(value = "keyWord", required = false) String keyWord) throws DoeWebException {
 
 		log.info("Search tab");
 		if (StringUtils.isNotEmpty(dmeDataId)) {
@@ -115,7 +116,10 @@ public class HomeController extends AbstractDoeController {
 			model.addAttribute("returnToSearch", "true");
 		}
 
-		constructSearchCriteriaList(session, model);
+		if(StringUtils.isNotEmpty(keyWord)) {
+			model.addAttribute("keyWord", keyWord);
+		}
+		constructSearchCriteriaList(session, model, keyWord);
 
 		return "searchTab";
 	}

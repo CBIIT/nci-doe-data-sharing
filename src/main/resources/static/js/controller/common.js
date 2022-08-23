@@ -25,11 +25,11 @@ $(document)
 							$(this).parent().find('.TextField-floatingLabel-qefpP').hide();
 						}
 					});
-					$("#attributeVal").keyup(function(){
+					$(".keywordSearch").keyup(function(){
 						if ($(this).val()) {
-							$("#resetBtn").show();
+							$(".resetBtnSpan").show();
 						} else {
-							$("#resetBtn").hide();
+							$(".resetBtnSpan").hide();
 						}
 					});
 
@@ -72,6 +72,10 @@ $(document)
 						populateSearchCriteria('simpleSearch');
 					});
 
+					$("#landingSearch").click(function(e) {
+						location.replace('/searchTab?keyWord='+$("#attributeVallanding").val());
+					});
+					
 					$("#downloadSelected").click(
 							function(e) {
 								var selectedPaths = [];
@@ -316,6 +320,10 @@ $(document)
 					$("#btnforgotPassword").click(function(e) {
 						validateForgotPassword();
 					});
+					
+					$("#navigateToaboutTab").click(function(e){
+						location.replace('/aboutTab');
+					});
 
 					$("#forgotPswdLink").click(function(e) {
 						$("#forgotPasswordLightbox").find(".forgotPswdErrorMsg").html("");
@@ -357,6 +365,11 @@ $(document)
 						$("#attributeVal").val("");
 						$("#resetBtn").hide();
 						populateSearchCriteria('simpleSearch');
+					});
+					
+					$("#resetBtnLanding").click(function(e) {
+						$("#attributeVallanding").val("");
+						$("#resetBtnLanding").hide();
 					});
 
 					$(".backToSearchBtn").click(function(e) {

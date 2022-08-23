@@ -54,6 +54,11 @@ $(document).ready(function () {
 		 populateSearchCriteria(null);
 	 }
 	 
+	 if($("#keyWord").val()) {
+		 $("#attributeVal").val($("#keyWord").val());
+		 $("#resetBtn").show();
+	 }
+	 
 	 showFirstFewFields();
 	 
 	 $(document).keypress(function(event){	
