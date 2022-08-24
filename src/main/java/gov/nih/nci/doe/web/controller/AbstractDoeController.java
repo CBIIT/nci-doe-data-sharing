@@ -2,6 +2,9 @@ package gov.nih.nci.doe.web.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,20 +16,18 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.slf4j.Logger;
@@ -84,9 +85,9 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectDTO;
 import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadResponseDTO;
 
 public abstract class AbstractDoeController {
 
@@ -96,14 +97,14 @@ public abstract class AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.v2.dataObject}")
 	public String dataObjectAsyncServiceURL;
 
+	@Value("${gov.nih.nci.hpc.server.dataObject}")
+	private String preSigneddataObjectServiceURL;
+
 	@Value("${gov.nih.nci.hpc.server.search.dataobject.compound}")
 	public String compoundDataObjectSearchServiceURL;
 
 	@Value("${doe.search.results.pageSize}")
 	private int pageSize;
-
-	@Value("${gov.nih.nci.hpc.server.dataObject}")
-	private String preSigneddataObjectServiceURL;
 
 	@Autowired
 	public AuthenticateService authenticateService;
@@ -303,12 +304,17 @@ public abstract class AbstractDoeController {
 				// this is a temporary fix to escape json.stringify error with single and double
 				// quotes
 				String updatedString = entry.getValue().replaceAll("[\"']", "");
+
 				if (lookUpVal != null) {
 
 					// if isVisible parameter is not null, filter look up values matching isVisible
 
 					if ((lookUpVal.getIsVisible() == null)
 							|| isVisible != null && lookUpVal.getIsVisible().equals(isVisible)) {
+						if (entry.getAttribute().equalsIgnoreCase("collection_size")) {
+							updatedString = addHumanReadableSize(Long.valueOf(entry.getValue()));
+						}
+
 						k = new KeyValueBean(entry.getAttribute(), lookUpVal.getDisplayName(), updatedString,
 								lookUpVal.getDisplayOrder());
 						entryList.add(k);
@@ -330,6 +336,14 @@ public abstract class AbstractDoeController {
 		return entryList;
 	}
 
+	public String addHumanReadableSize(Long value) {
+		if (value != null) {
+			return FileUtils.byteCountToDisplaySize(value);
+		}
+
+		return null;
+	}
+
 	public String getAttributeValue(String attrName, List<HpcMetadataEntry> list, String levelName) {
 		log.info("get attribute value for attributeName: " + attrName + " and level name: " + levelName);
 
@@ -344,6 +358,7 @@ public abstract class AbstractDoeController {
 			// this is a temporary fix to escape json.stringify error with single and double
 			// quotes
 			return entry.getValue().replaceAll("[\"']", "");
+
 		}
 		return null;
 	}
@@ -1022,7 +1037,7 @@ public abstract class AbstractDoeController {
 
 	}
 
-	public void constructSearchCriteriaList(HttpSession session, Model model) throws DoeWebException {
+	public void constructSearchCriteriaList(HttpSession session, Model model, String keyWord) throws DoeWebException {
 		Map<String, List<String>> browseList = new LinkedHashMap<String, List<String>>();
 		List<LookUp> results = lookUpService.getAllDisplayNames();
 
@@ -1038,10 +1053,21 @@ public abstract class AbstractDoeController {
 			String[] rowIds = { "1" };
 			String[] operators = { "EQUAL" };
 			boolean[] isExcludeParentMetadata = { true };
+			boolean[] iskeyWordSearch = { false };
+
+			if (StringUtils.isNotEmpty(keyWord)) {
+				attrNames[attrNames.length + 1] = "ANY";
+				attrValues[attrValues.length + 1] = '%' + keyWord.trim() + '%';
+				levelValues[levelValues.length + 1] = "ANY";
+				isExcludeParentMetadata[isExcludeParentMetadata.length + 1] = false;
+				rowIds[rowIds.length + 1] = String.valueOf(rowIds.length + 1);
+				operators[operators.length + 1] = "LIKE";
+				iskeyWordSearch[iskeyWordSearch.length + 1] = true;
+			}
+
 			search.setLevel(levelValues);
 			search.setAttrName(attrNames);
 			search.setAttrValue(attrValues);
-
 			search.setRowId(rowIds);
 			search.setOperator(operators);
 			search.setIsExcludeParentMetadata(isExcludeParentMetadata);
@@ -1267,6 +1293,14 @@ public abstract class AbstractDoeController {
 		HpcCollectionDTO result = collectionDto.getCollections().get(0);
 		String resultFileName = getAttributeValue("outcome_file_name",
 				result.getMetadataEntries().getSelfMetadataEntries(), null);
+		String applicableModelNamesList = getAttributeValue("applicable_model_paths",
+				result.getMetadataEntries().getSelfMetadataEntries(), null);
+		List<String> applicableModelNames = Arrays.asList(applicableModelNamesList.split(","));
+		Boolean modelExists = applicableModelNames.stream().anyMatch(e -> e.equalsIgnoreCase(testInputPath));
+
+		if (Boolean.FALSE.equals(modelExists)) {
+			throw new DoeWebException("Invalid reference dataset path(s)", HttpServletResponse.SC_BAD_REQUEST);
+		}
 		if (StringUtils.isEmpty(resultFileName)) {
 
 			throw new DoeWebException("Outcome file not found in reference dataset",
@@ -1301,16 +1335,20 @@ public abstract class AbstractDoeController {
 						HttpServletResponse.SC_BAD_REQUEST);
 			}
 			inference.setResultPath(resultPath);
+			inference.setIsReferenceAsset(Boolean.FALSE);
+			inference.setAssetPath(testInputPath);
+			inference.setUploadFrom("referenceDataset");
+
 		}
 
 		return taskId;
 	}
 
-	public String performModelEvaluation(InferencingTaskModel inference, String applicableModelName,
-			HttpSession session, String authToken) throws DoeWebException, IOException {
+	public String performModelEvaluation(InferencingTaskModel inference, String referenceDatasetPath,
+			String applicableModelName, HttpSession session, String authToken) throws DoeWebException, IOException {
 
 		String taskId = UUID.randomUUID().toString();
-		inference.setTaskId(taskId);
+
 		HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, applicableModelName,
 				true);
 		HpcCollectionDTO result = collectionDto.getCollections().get(0);
@@ -1330,7 +1368,7 @@ public abstract class AbstractDoeController {
 		}
 
 		// create a file name for y_pred file
-		String resultPath = inference.getAssetPath() + "/y_pred_" + taskId + ".csv";
+		String resultPath = referenceDatasetPath + "/y_pred_" + taskId + ".csv";
 		inference.setResultPath(resultPath);
 		String testInputName = inference.getTestInputPath()
 				.substring(inference.getTestInputPath().lastIndexOf('/') + 1);
@@ -1343,9 +1381,7 @@ public abstract class AbstractDoeController {
 			if ("SUCCESS".equalsIgnoreCase(status)) {
 
 				inference.setOutcomeFileName(outcomeFileName);
-
 			}
-
 		}
 
 		if (StringUtils.isNotEmpty(inference.getTestInputPath())) {
@@ -1354,6 +1390,10 @@ public abstract class AbstractDoeController {
 			uploadFileToMount(session, testInputName, inference.getTestInputPath());
 
 		}
+		inference.setTaskId(taskId);
+		inference.setIsReferenceAsset(Boolean.TRUE);
+		inference.setUserId(getLoggedOnUserInfo());
 		return taskId;
 	}
+
 }

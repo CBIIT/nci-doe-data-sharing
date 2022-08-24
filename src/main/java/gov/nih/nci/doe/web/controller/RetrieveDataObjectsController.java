@@ -12,7 +12,6 @@ import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.io.FileUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.ResponseEntity;
@@ -262,14 +261,6 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 		}
 		return returnResults;
 
-	}
-
-	private String addHumanReadableSize(Long value) {
-		if (value != null) {
-			return FileUtils.byteCountToDisplaySize(value);
-		}
-
-		return null;
 	}
 
 	public List<KeyValueBean> getSystemMetaData(List<HpcMetadataEntry> list, String levelName,
