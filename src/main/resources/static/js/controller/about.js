@@ -1,4 +1,5 @@
 $(document).ready(function () {
-	$("#landing-tab").removeClass('active');
-	$("#about-tab").addClass('active');
+	$(".landing-tab").removeClass('active');
+	$(".aboutTabNav").addClass('active');
+	$(".aboutMobileTabNav").addClass('active');
 });

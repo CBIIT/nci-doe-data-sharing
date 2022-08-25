@@ -1,6 +1,6 @@
 $(document).ready(
 		function() {
-			$("#landing-tab").removeClass('active');
+			$(".landing-tab").removeClass('active');
 			$("#upload-tab").addClass('active');
 			loadUploadTab();
 

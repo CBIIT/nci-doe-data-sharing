@@ -1,11 +1,11 @@
 $(document).ready(function () {
-	$("#landing-tab").removeClass('active');
-	$("#search-tab").addClass('active');
+	$(".landing-tab").removeClass('active');
+	$(".search-tab").addClass('active');
 	if($(".backToStatusTabLink").is(':visible')) {
-		$("#search-tab").removeClass('active');
+		$(".search-tab").removeClass('active');
 		$("#manageTasks-tab").addClass('active');
 	} else {
-		$("#search-tab").addClass('active');
+		$(".search-tab").addClass('active');
 		$("#manageTasks-tab").removeClass('active');
 	}
 	

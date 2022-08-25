@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	$.fn.dataTable.moment("MM/DD/YYYY HH:mm:ss");
-	$("#landing-tab").removeClass('active');
-	$("#search-tab").removeClass('active');
+	$(".landing-tab").removeClass('active');
+	$(".search-tab").removeClass('active');
 	$("#manageTasks-tab").addClass('active');
 	refreshTaskDatatable('manageTasksTable');
 

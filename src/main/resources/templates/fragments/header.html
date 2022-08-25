@@ -42,13 +42,13 @@
             <div id="subNav" class="card-header" style="height:50px;">
         <ul class="nav nav-tabs card-header-tabs" id="subTab" role="tablist" style="margin-right: -37px;">
             <li class="nav-item" role="tab">
-                <a class="nav-link active" id="landing-tab" th:href="@{/}"role="tab"><u>Home</u></a>
+                <a class="nav-link active landing-tab" th:href="@{/}"role="tab"><u>Home</u></a>
             </li>
             
             
                 
             <li class="nav-item" role="tab">
-                <a class="nav-link" id="search-tab" th:href="@{/searchTab}" role="tab"><u>Search</u></a>
+                <a class="nav-link search-tab"  th:href="@{/searchTab}" role="tab"><u>Search</u></a>
             </li>
            
            <li class="nav-item" role="tab" th:if="${loggedOnUser != null && isUploader eq true}">
@@ -61,7 +61,7 @@
             
             
              <li class="nav-item dropdown" role="tab">
-                    <a class="nav-link dropdown-toggle" id="contact-tab" href="#" role="button" aria-label="Help"
+                    <a class="nav-link dropdown-toggle aboutTabNav" href="#" role="button" aria-label="Help"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                        <u>About</u>
                     </a>
