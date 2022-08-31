@@ -1037,7 +1037,7 @@ public abstract class AbstractDoeController {
 
 	}
 
-	public void constructSearchCriteriaList(HttpSession session, Model model, String keyWord) throws DoeWebException {
+	public void constructSearchCriteriaList(HttpSession session, Model model) throws DoeWebException {
 		Map<String, List<String>> browseList = new LinkedHashMap<String, List<String>>();
 		List<LookUp> results = lookUpService.getAllDisplayNames();
 
@@ -1053,18 +1053,6 @@ public abstract class AbstractDoeController {
 			String[] rowIds = { "1" };
 			String[] operators = { "EQUAL" };
 			boolean[] isExcludeParentMetadata = { true };
-			boolean[] iskeyWordSearch = { false };
-
-			if (StringUtils.isNotEmpty(keyWord)) {
-				attrNames[attrNames.length + 1] = "ANY";
-				attrValues[attrValues.length + 1] = '%' + keyWord.trim() + '%';
-				levelValues[levelValues.length + 1] = "ANY";
-				isExcludeParentMetadata[isExcludeParentMetadata.length + 1] = false;
-				rowIds[rowIds.length + 1] = String.valueOf(rowIds.length + 1);
-				operators[operators.length + 1] = "LIKE";
-				iskeyWordSearch[iskeyWordSearch.length + 1] = true;
-			}
-
 			search.setLevel(levelValues);
 			search.setAttrName(attrNames);
 			search.setAttrValue(attrValues);

@@ -116,10 +116,10 @@ public class HomeController extends AbstractDoeController {
 			model.addAttribute("returnToSearch", "true");
 		}
 
-		if(StringUtils.isNotEmpty(keyWord)) {
+		if (StringUtils.isNotEmpty(keyWord)) {
 			model.addAttribute("keyWord", keyWord);
 		}
-		constructSearchCriteriaList(session, model, keyWord);
+		constructSearchCriteriaList(session, model);
 
 		return "searchTab";
 	}

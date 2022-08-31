@@ -50,14 +50,15 @@ $(document).ready(function () {
 			 }
 		 }
 		 populateSearchCriteria(null);
+	 } else if($("#keyWord").val()) {
+		 $("#attributeVal").val($("#keyWord").val());
+		 $("#resetBtn").show();
+		 populateSearchCriteria(null);
 	 } else {
 		 populateSearchCriteria(null);
 	 }
 	 
-	 if($("#keyWord").val()) {
-		 $("#attributeVal").val($("#keyWord").val());
-		 $("#resetBtn").show();
-	 }
+	 
 	 
 	 showFirstFewFields();
 	 
