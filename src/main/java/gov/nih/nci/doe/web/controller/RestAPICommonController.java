@@ -17,7 +17,6 @@ import org.apache.commons.io.IOUtils;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -47,9 +46,11 @@ import gov.nih.nci.hpc.domain.metadata.HpcMetadataQueryOperator;
 import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectDownloadResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDownloadResponseDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDownloadStatusDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadResponseDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectDownloadStatusDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataObjectListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationStatusDTO;
@@ -115,6 +116,9 @@ public class RestAPICommonController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
 	private String bulkRegistrationURL;
 
+	@Value("${gov.nih.nci.hpc.server.download}")
+	private String queryServiceURL;
+
 	@Autowired
 	TaskManagerService taskManagerService;
 
@@ -137,7 +141,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 */
 	@PostMapping(value = "/dataObject/**/generateDownloadRequestURL")
 	public ResponseEntity<?> generateDownloadRequestURL(@RequestHeader HttpHeaders headers, HttpServletRequest request,
-			 HttpSession session, HttpServletResponse response) throws DoeWebException, IOException {
+			HttpSession session, HttpServletResponse response) throws DoeWebException, IOException {
 
 		log.info("generateDownloadRequestURL");
 
@@ -212,7 +216,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 */
 	@PostMapping(value = "/v2/download")
 	public ResponseEntity<?> downloadDataObjectsOrCollections(@RequestHeader HttpHeaders headers,
-			HttpServletRequest request,  HttpSession session, HttpServletResponse response,
+			HttpServletRequest request, HttpSession session, HttpServletResponse response,
 			@RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectDownloadRequestDTO downloadRequest)
 			throws DoeWebException {
 
@@ -267,7 +271,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 */
 	@PostMapping(value = "/v2/collection/**/download")
 	public ResponseEntity<?> collectionDownload(@RequestHeader HttpHeaders headers, HttpServletRequest request,
-			 HttpSession session, HttpServletResponse response,
+			HttpSession session, HttpServletResponse response,
 			@RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO downloadRequest)
 			throws DoeWebException {
 
@@ -341,7 +345,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 */
 	@PostMapping(value = "/dataObject/**/syncDownload")
 	public ResponseEntity<?> synchronousDownload(@RequestHeader HttpHeaders headers, HttpServletRequest request,
-			 HttpSession session, HttpServletResponse response) throws DoeWebException, IOException {
+			HttpSession session, HttpServletResponse response) throws DoeWebException, IOException {
 
 		log.info("download async:");
 		// getting path param from request URI.
@@ -410,8 +414,8 @@ public class RestAPICommonController extends AbstractDoeController {
 	 * @throws Exception
 	 */
 	@PostMapping(value = "/v2/dataObject/**/download")
-	public ResponseEntity<?> syncAndasynchronousDownload(@RequestHeader HttpHeaders headers,
-			 HttpSession session, HttpServletResponse response, HttpServletRequest request,
+	public ResponseEntity<?> syncAndasynchronousDownload(@RequestHeader HttpHeaders headers, HttpSession session,
+			HttpServletResponse response, HttpServletRequest request,
 			@RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO downloadRequest)
 			throws DoeWebException, IOException {
 
@@ -511,7 +515,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 */
 	@GetMapping(value = "/v2/dataObject/**", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_OCTET_STREAM_VALUE })
-	public ResponseEntity<?> getDataObject(@RequestHeader HttpHeaders headers,  HttpSession session,
+	public ResponseEntity<?> getDataObject(@RequestHeader HttpHeaders headers, HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
 			@RequestParam(required = false) Boolean includeAcl) throws DoeWebException, JsonProcessingException {
 
@@ -569,7 +573,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 */
 	@GetMapping(value = "/collection/**", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_OCTET_STREAM_VALUE })
-	public ResponseEntity<?> getCollection(@RequestHeader HttpHeaders headers,  HttpSession session,
+	public ResponseEntity<?> getCollection(@RequestHeader HttpHeaders headers, HttpSession session,
 			HttpServletResponse response, HttpServletRequest request, @RequestParam(required = false) Boolean list,
 			@RequestParam(required = false) Boolean includeAcl) throws DoeWebException, JsonProcessingException {
 
@@ -617,7 +621,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 * @param collectionRegistration
 	 */
 	@PutMapping(value = "/collection/**")
-	public Integer registerCollection(@RequestHeader HttpHeaders headers,  HttpSession session,
+	public Integer registerCollection(@RequestHeader HttpHeaders headers, HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
 			@RequestBody @Valid HpcCollectionRegistrationDTO collectionRegistration) throws DoeWebException {
 
@@ -709,7 +713,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 * 
 	 */
 	@PutMapping(value = "/v2/dataObject/**")
-	public Integer registerDataObject(@RequestHeader HttpHeaders headers,  HttpSession session,
+	public Integer registerDataObject(@RequestHeader HttpHeaders headers, HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
 			@RequestPart("dataObjectRegistration") @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationRequestDTO dataObjectRegistration,
 			@RequestBody(required = false) @Valid MultipartFile dataObject) throws DoeWebException {
@@ -765,7 +769,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	}
 
 	@PutMapping(value = "/v2/registration")
-	public ResponseEntity<?> bulkRegistration(@RequestHeader HttpHeaders headers,  HttpSession session,
+	public ResponseEntity<?> bulkRegistration(@RequestHeader HttpHeaders headers, HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
 			@RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO bulkDataObjectRegistrationRequest)
 			throws DoeWebException, JsonProcessingException {
@@ -938,7 +942,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	@PostMapping(value = "/collection/query", consumes = { MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE,
 					MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<?> queryCollections(@RequestHeader HttpHeaders headers,  HttpSession session,
+	public ResponseEntity<?> queryCollections(@RequestHeader HttpHeaders headers, HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
 			@RequestBody @Valid HpcCompoundMetadataQueryDTO compoundMetadataQuery) throws DoeWebException, IOException {
 
@@ -991,7 +995,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	@PostMapping(value = "/dataObject/query", consumes = { MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE,
 					MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<?> queryDataObjects(@RequestHeader HttpHeaders headers,  HttpSession session,
+	public ResponseEntity<?> queryDataObjects(@RequestHeader HttpHeaders headers, HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
 			@RequestParam(required = false) Boolean returnParent,
 			@RequestBody @Valid HpcCompoundMetadataQueryDTO compoundMetadataQuery) throws DoeWebException, IOException {
@@ -1046,7 +1050,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	 */
 
 	@GetMapping(value = "/authenticate")
-	public ResponseEntity<?> authenticate(@RequestHeader HttpHeaders headers,  HttpSession session,
+	public ResponseEntity<?> authenticate(@RequestHeader HttpHeaders headers, HttpSession session,
 			HttpServletResponse response, HttpServletRequest request) throws DoeWebException {
 
 		log.info("create modac authentication token");
@@ -1075,9 +1079,8 @@ public class RestAPICommonController extends AbstractDoeController {
 	}
 
 	@GetMapping(value = "/v2/registration/**", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<?> getDataObjectsRegistrationStatus(@RequestHeader HttpHeaders headers,
-			 HttpSession session, HttpServletResponse response, HttpServletRequest request)
-			throws DoeWebException {
+	public ResponseEntity<?> getDataObjectsRegistrationStatus(@RequestHeader HttpHeaders headers, HttpSession session,
+			HttpServletResponse response, HttpServletRequest request) throws DoeWebException {
 
 		log.info("get status:");
 		log.info("Headers: {}", headers);
@@ -1121,13 +1124,12 @@ public class RestAPICommonController extends AbstractDoeController {
 	}
 
 	@GetMapping(value = "/collection/download/**", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<?> getCollectionDownloadStatus(@RequestHeader HttpHeaders headers,
-			 HttpSession session, HttpServletResponse response, HttpServletRequest request)
-			throws DoeWebException {
+	public ResponseEntity<?> getCollectionDownloadStatus(@RequestHeader HttpHeaders headers, HttpSession session,
+			HttpServletResponse response, HttpServletRequest request) throws DoeWebException {
 
 		log.info("get status:");
 		log.info("Headers: {}", headers);
-		String taskId = request.getRequestURI().split(request.getContextPath() + "/v2/registration/")[1];
+		String taskId = request.getRequestURI().split(request.getContextPath() + "/collection/download/")[1];
 		log.info("taskId: " + taskId);
 		String doeLogin = (String) session.getAttribute("doeLogin");
 		log.info("doeLogin: " + doeLogin);
@@ -1140,6 +1142,25 @@ public class RestAPICommonController extends AbstractDoeController {
 		try {
 			if (StringUtils.isNotEmpty(taskId) && StringUtils.isNotEmpty(doeLogin)) {
 
+				UriComponentsBuilder ucBuilder1 = UriComponentsBuilder.fromHttpUrl(serviceURL)
+						.path("/download/{dme-archive-path}");
+				final String serviceURL = ucBuilder1.buildAndExpand(taskId).encode().toUri().toURL().toExternalForm();
+
+				WebClient client = DoeClientUtil.getWebClient(serviceURL);
+				client.header("Authorization", "Bearer " + authToken);
+				Response restResponse = client.invoke("GET", null);
+
+				// if the file is available, call the flask web service
+				if (restResponse.getStatus() == 200) {
+					ObjectMapper mapper = new ObjectMapper();
+					mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+					mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+					MappingJsonFactory factory = new MappingJsonFactory(mapper);
+					JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+					HpcCollectionDownloadStatusDTO dto = parser.readValueAs(HpcCollectionDownloadStatusDTO.class);
+
+					return new ResponseEntity<>(mapper.writeValueAsString(dto), HttpStatus.OK);
+				}
 			}
 		} catch (Exception e) {
 			log.error("Error in get collection download status: " + e.getMessage());
@@ -1149,13 +1170,12 @@ public class RestAPICommonController extends AbstractDoeController {
 	}
 
 	@GetMapping(value = "/dataObject/download/**", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<?> getDataObjectDownloadStatus(@RequestHeader HttpHeaders headers,
-			 HttpSession session, HttpServletResponse response, HttpServletRequest request)
-			throws DoeWebException {
+	public ResponseEntity<?> getDataObjectDownloadStatus(@RequestHeader HttpHeaders headers, HttpSession session,
+			HttpServletResponse response, HttpServletRequest request) throws DoeWebException {
 
 		log.info("get status:");
 		log.info("Headers: {}", headers);
-		String taskId = request.getRequestURI().split(request.getContextPath() + "/v2/registration/")[1];
+		String taskId = request.getRequestURI().split(request.getContextPath() + "/dataObject/download/")[1];
 		log.info("taskId: " + taskId);
 		String doeLogin = (String) session.getAttribute("doeLogin");
 		log.info("doeLogin: " + doeLogin);
@@ -1167,7 +1187,25 @@ public class RestAPICommonController extends AbstractDoeController {
 
 		try {
 			if (StringUtils.isNotEmpty(taskId) && StringUtils.isNotEmpty(doeLogin)) {
+				UriComponentsBuilder ucBuilder1 = UriComponentsBuilder.fromHttpUrl(dataObjectServiceURL)
+						.path("/download/{dme-archive-path}");
+				final String serviceURL = ucBuilder1.buildAndExpand(taskId).encode().toUri().toURL().toExternalForm();
 
+				WebClient client = DoeClientUtil.getWebClient(serviceURL);
+				client.header("Authorization", "Bearer " + authToken);
+				Response restResponse = client.invoke("GET", null);
+
+				// if the file is available, call the flask web service
+				if (restResponse.getStatus() == 200) {
+					ObjectMapper mapper = new ObjectMapper();
+					mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+					mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+					MappingJsonFactory factory = new MappingJsonFactory(mapper);
+					JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+					HpcDataObjectDownloadStatusDTO dto = parser.readValueAs(HpcDataObjectDownloadStatusDTO.class);
+
+					return new ResponseEntity<>(mapper.writeValueAsString(dto), HttpStatus.OK);
+				}
 			}
 		} catch (Exception e) {
 			log.error("Error in get dataObject download status: " + e.getMessage());
@@ -1178,12 +1216,11 @@ public class RestAPICommonController extends AbstractDoeController {
 
 	@GetMapping(value = "/download/**", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<?> getDataObjectsOrCollectionsDownloadStatus(@RequestHeader HttpHeaders headers,
-			 HttpSession session, HttpServletResponse response, HttpServletRequest request)
-			throws DoeWebException {
+			HttpSession session, HttpServletResponse response, HttpServletRequest request) throws DoeWebException {
 
 		log.info("get status:");
 		log.info("Headers: {}", headers);
-		String taskId = request.getRequestURI().split(request.getContextPath() + "/v2/registration/")[1];
+		String taskId = request.getRequestURI().split(request.getContextPath() + "/download/")[1];
 		log.info("taskId: " + taskId);
 		String doeLogin = (String) session.getAttribute("doeLogin");
 		log.info("doeLogin: " + doeLogin);
@@ -1195,7 +1232,25 @@ public class RestAPICommonController extends AbstractDoeController {
 
 		try {
 			if (StringUtils.isNotEmpty(taskId) && StringUtils.isNotEmpty(doeLogin)) {
+				UriComponentsBuilder ucBuilder1 = UriComponentsBuilder.fromHttpUrl(queryServiceURL)
+						.path("/{dme-archive-path}");
+				final String serviceURL = ucBuilder1.buildAndExpand(taskId).encode().toUri().toURL().toExternalForm();
 
+				WebClient client = DoeClientUtil.getWebClient(serviceURL);
+				client.header("Authorization", "Bearer " + authToken);
+				Response restResponse = client.invoke("GET", null);
+
+				// if the file is available, call the flask web service
+				if (restResponse.getStatus() == 200) {
+					ObjectMapper mapper = new ObjectMapper();
+					mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+					mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+					MappingJsonFactory factory = new MappingJsonFactory(mapper);
+					JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+					HpcCollectionDownloadStatusDTO dto = parser.readValueAs(HpcCollectionDownloadStatusDTO.class);
+
+					return new ResponseEntity<>(mapper.writeValueAsString(dto), HttpStatus.OK);
+				}
 			}
 		} catch (Exception e) {
 			log.error("Error in get getDataObjects or collections download status: " + e.getMessage());
@@ -1217,7 +1272,7 @@ public class RestAPICommonController extends AbstractDoeController {
 
 	@GetMapping(value = "/model/status/**", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_OCTET_STREAM_VALUE })
-	public ResponseEntity<?> getStatusByTaskId(@RequestHeader HttpHeaders headers,  HttpSession session,
+	public ResponseEntity<?> getStatusByTaskId(@RequestHeader HttpHeaders headers, HttpSession session,
 			HttpServletResponse response, HttpServletRequest request) throws DoeWebException, JsonProcessingException {
 
 		log.info("get status:");
@@ -1294,7 +1349,7 @@ public class RestAPICommonController extends AbstractDoeController {
 
 	@PostMapping(value = "/model/referencedataset")
 	public ResponseEntity<?> performModelEvaluationForReferenceDatasets(@RequestHeader HttpHeaders headers,
-			 HttpSession session, HttpServletResponse response, HttpServletRequest request,
+			HttpSession session, HttpServletResponse response, HttpServletRequest request,
 			@RequestBody @Valid ReferenceDataset referenceDataset) throws DoeWebException, IOException {
 
 		log.info("get status:");
@@ -1414,8 +1469,8 @@ public class RestAPICommonController extends AbstractDoeController {
 	}
 
 	@PostMapping(value = "/model/datasets/**")
-	public ResponseEntity<?> performModelEvaluationForDatasets(@RequestHeader HttpHeaders headers,
-			 HttpSession session, HttpServletResponse response, HttpServletRequest request,
+	public ResponseEntity<?> performModelEvaluationForDatasets(@RequestHeader HttpHeaders headers, HttpSession session,
+			HttpServletResponse response, HttpServletRequest request,
 			@RequestParam(required = false) Boolean isManifestFile, @RequestBody @Valid MultipartFile inputDataset,
 			@RequestBody(required = false) @Valid MultipartFile outcomeFile) throws DoeWebException, IOException {
 
