@@ -4,6 +4,14 @@ $(document)
 					console.log("initialize dirty checking");
 					$('form.dirty-check').areYouSure();
 
+					 $(document).keypress(function(event){	
+							var keycode = (event.keyCode ? event.keyCode : event.which);
+							if(keycode == '13'){
+								if($("#landingSearch").is(':visible')) {					
+									 $("#landingSearch").click();
+								}				 
+							}
+						});
 					// Auto-lowercase Email Username (Usernames are always
 					// stored in lowercase)
 					$('#username').blur(function() {
