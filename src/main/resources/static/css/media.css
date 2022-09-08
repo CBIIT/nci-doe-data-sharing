@@ -110,6 +110,9 @@
 }
 
 @media ( min-width : 991px) {
+	#attributeVallanding::placeholder {
+		font-size: 22px;
+	}
 	.dpehyt {
 		list-style: none;
 		margin-bottom: 0px;
@@ -128,41 +131,71 @@
 	}
 }
 
-@media ( max-width : 990px) {
-	
-	.resetBtnSpan{
-	    position: relative;
-	top: 2.5rem;
-    right: 6rem;
-	}
+@media ( max-width : 460px) {
 	#attributeVallanding {
-		
 		border-radius: 24px;
 		font-size: 13px;
 		font-weight: 550;
-		
+		height: 45px;
+		width: 13rem;
+		border: 2.51px solid #397DED;
+		background-color: #FFFFFF;
+		margin-left: 0rem;
+	}
+	#landingSearch {
+		position: relative;
+		top: 2.5rem;
+		right: 4.5rem; width : 105px; font-size : 13px;
+		height: 29px;
+		background-color: #E87B05;
+		border-radius: 15px;
+		text-align: center;
+		width: 105px;
+		font-size: 13px;
+	}
+	#landingSearch img {
+		width: 49px !important;
+	}
+}
+
+@media ( min-width : 461px) and ( max-width : 990px) {
+	#attributeVallanding {
+		border-radius: 24px;
+		font-size: 13px;
+		font-weight: 550;
 		height: 45px;
 		width: 150%;
 		border: 2.51px solid #397DED;
 		background-color: #FFFFFF;
 		margin-left: 0rem;
 	}
-	.landingSearchDiv{
-	position: relative;
-    display: flex;
-    margin-top: -5px;
-    background-color: transparent;
-	}
 	#landingSearch {
 		position: relative;
-    top: 2.5rem;
-    right: 5rem;
-    height: 29px;
-    width: 91px;
-    font-size: 14px;
-    background-color: #E87B05;
-    border-radius: 15px;
-    text-align: center;
+		top: 2.5rem;
+		right: 5rem;
+		height: 29px;
+		width: 91px;
+		font-size: 14px;
+		background-color: #E87B05;
+		border-radius: 15px;
+		text-align: center;
+	}
+}
+
+@media ( max-width : 990px) {
+	.resetBtnSpan {
+		position: relative;
+		top: 2.5rem;
+		right: 6rem;
+	}
+	#attributeVallanding::placeholder {
+		font-size: 13px;
+	}
+	.landingSearchDiv {
+		position: relative;
+		display: flex;
+		margin-top: -5px;
+		background-color: transparent;
 	}
 	.mobileContainer {
 		display: block !important;
@@ -332,7 +365,6 @@
 @media ( max-width : 380px) {
 	#topNav {
 		width: 100%;
-		display: inline-block;
 		margin-top: -57px;
 	}
 	#changeUserMenu.dropdown-menu {
