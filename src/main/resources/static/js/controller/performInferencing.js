@@ -288,7 +288,7 @@ $(document).on('click', '#performModelAnalysisBtn', function() {
 	var testInputPath = $("#performModelAnalysisModal").find("#testInputPath").val();
 
 	var inference = {};
-	inference.applicableModelNamesList = applicableModelName;
+	inference.applicableModelNamesList = applicableModelName.join();
 	inference.outcomeFilePath = resultName;
 	inference.uploadFrom = "gdcData";
 	inference.assetPath = $("#assetPath").val();

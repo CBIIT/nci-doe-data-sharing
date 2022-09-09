@@ -29,7 +29,7 @@ import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.domain.InferencingTask;
 import gov.nih.nci.doe.web.domain.ModelStatus;
 import gov.nih.nci.doe.web.domain.ReferenceDataset;
-import gov.nih.nci.doe.web.domain.ReferenceDataset.Path;
+import gov.nih.nci.doe.web.model.Path;
 import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.model.InferencingTaskModel;
@@ -1347,7 +1347,9 @@ public class RestAPICommonController extends AbstractDoeController {
 
 	}
 
-	@PostMapping(value = "/models/evaluate")
+	@PostMapping(value = "/models/evaluate", consumes = { MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE,
+					MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<?> performModelEvaluationForReferenceDatasets(@RequestHeader HttpHeaders headers,
 			HttpSession session, HttpServletResponse response, HttpServletRequest request,
 			@RequestBody @Valid ReferenceDataset referenceDataset) throws DoeWebException, IOException {

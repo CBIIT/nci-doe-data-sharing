@@ -2,10 +2,11 @@ package gov.nih.nci.doe.web.domain;
 
 import java.util.List;
 
+import gov.nih.nci.doe.web.model.Path;
+
 public class ReferenceDataset {
 
 	private List<Path> modelPaths;
-
 	private List<Path> referenceDatasetPaths;
 
 	public List<Path> getModelPaths() {
@@ -22,19 +23,6 @@ public class ReferenceDataset {
 
 	public void setReferenceDatasetPaths(List<Path> referenceDatasetPaths) {
 		this.referenceDatasetPaths = referenceDatasetPaths;
-	}
-
-	public class Path {
-		private String path;
-
-		public String getPath() {
-			return path;
-		}
-
-		public void setPath(String path) {
-			this.path = path;
-		}
-
 	}
 
 }
