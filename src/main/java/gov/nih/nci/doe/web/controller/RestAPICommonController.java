@@ -1270,14 +1270,14 @@ public class RestAPICommonController extends AbstractDoeController {
 	 * @throws IOException
 	 */
 
-	@GetMapping(value = "/model/status/**", produces = { MediaType.APPLICATION_JSON_VALUE,
+	@GetMapping(value = "/model/evaluate/**", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_OCTET_STREAM_VALUE })
 	public ResponseEntity<?> getStatusByTaskId(@RequestHeader HttpHeaders headers, HttpSession session,
 			HttpServletResponse response, HttpServletRequest request) throws DoeWebException, JsonProcessingException {
 
 		log.info("get status:");
 		log.info("Headers: {}", headers);
-		String taskId = request.getRequestURI().split(request.getContextPath() + "/model/status/")[1];
+		String taskId = request.getRequestURI().split(request.getContextPath() + "/model/evaluate/")[1];
 		log.info("taskId: " + taskId);
 
 		try {
@@ -1347,7 +1347,7 @@ public class RestAPICommonController extends AbstractDoeController {
 
 	}
 
-	@PostMapping(value = "/model/referencedataset")
+	@PostMapping(value = "/models/evaluate")
 	public ResponseEntity<?> performModelEvaluationForReferenceDatasets(@RequestHeader HttpHeaders headers,
 			HttpSession session, HttpServletResponse response, HttpServletRequest request,
 			@RequestBody @Valid ReferenceDataset referenceDataset) throws DoeWebException, IOException {
@@ -1468,17 +1468,17 @@ public class RestAPICommonController extends AbstractDoeController {
 
 	}
 
-	@PostMapping(value = "/model/datasets/**")
+	@PostMapping(value = "/model/evaluate/**")
 	public ResponseEntity<?> performModelEvaluationForDatasets(@RequestHeader HttpHeaders headers, HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
-			@RequestParam(required = false) Boolean isManifestFile, @RequestBody @Valid MultipartFile inputDataset,
+			@RequestParam(required = false) Boolean isManifestFile, @RequestBody @Valid MultipartFile inputFile,
 			@RequestBody(required = false) @Valid MultipartFile outcomeFile) throws DoeWebException, IOException {
 
 		log.info("get status:");
 		log.info("Headers: {}", headers);
 		String doeLogin = (String) session.getAttribute("doeLogin");
 		log.info("doeLogin: " + doeLogin);
-		String assetPath = request.getRequestURI().split(request.getContextPath() + "/model/datasets/")[1];
+		String assetPath = request.getRequestURI().split(request.getContextPath() + "/model/evaluate")[1];
 		log.info("assetPath: " + assetPath);
 		log.info("isManifestFile" + isManifestFile);
 		String authToken = (String) session.getAttribute("hpcUserToken");
@@ -1489,7 +1489,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		}
 
 		if (isManifestFile == null) {
-			isManifestFile = Boolean.TRUE;
+			isManifestFile = Boolean.FALSE;
 		}
 
 		if (StringUtils.isNotEmpty(doeLogin) && Boolean.TRUE.equals(isUploader(doeLogin))
@@ -1521,7 +1521,8 @@ public class RestAPICommonController extends AbstractDoeController {
 			// check if the file name is already used for inferencing for the same user and
 			// same model path and is not in failed status
 			if (Boolean.TRUE.equals(inferencingTaskService.checkifFileExistsForUser(doeLogin, assetPath,
-					inputDataset.getOriginalFilename()))) {
+					inputFile.getOriginalFilename()))) {
+
 				throw new DoeWebException("Input file name already exists", HttpServletResponse.SC_BAD_REQUEST);
 			}
 
@@ -1538,13 +1539,13 @@ public class RestAPICommonController extends AbstractDoeController {
 			inference.setTaskId(taskId);
 			inference.setResultPath(resultPath);
 			inference.setAssetPath(assetPath);
-			inference.setTestInputPath(assetPath + "/" + inputDataset.getOriginalFilename());
+			inference.setTestInputPath(assetPath + "/" + inputFile.getOriginalFilename());
 			inference.setUserId(doeLogin);
 
 			inferencingTaskService.saveInferenceTask(inference);
 
 			// copy the test dataset file to IRODsTest mount
-			Files.copy(inputDataset.getInputStream(), Paths.get(uploadPath + inputDataset.getOriginalFilename()),
+			Files.copy(inputFile.getInputStream(), Paths.get(uploadPath + inputFile.getOriginalFilename()),
 					StandardCopyOption.REPLACE_EXISTING);
 
 			return new ResponseEntity<>("Perform inferencing task submitted. Your task id is: " + taskId,
