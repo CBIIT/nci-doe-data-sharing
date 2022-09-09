@@ -1214,6 +1214,15 @@ public class RestAPICommonController extends AbstractDoeController {
 
 	}
 
+	/**
+	 * get data object or collection download status
+	 * @param headers
+	 * @param session
+	 * @param response
+	 * @param request
+	 * @return
+	 * @throws DoeWebException
+	 */
 	@GetMapping(value = "/download/**", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<?> getDataObjectsOrCollectionsDownloadStatus(@RequestHeader HttpHeaders headers,
 			HttpSession session, HttpServletResponse response, HttpServletRequest request) throws DoeWebException {
@@ -1261,6 +1270,7 @@ public class RestAPICommonController extends AbstractDoeController {
 
 	/**
 	 * 
+	 * get evaluation status
 	 * @param headers
 	 * @param session
 	 * @param response
