@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -62,7 +63,7 @@ public class PerformInferencingController extends AbstractDoeController {
 	private String dataObjectServiceURL;
 
 	/*
-	 * Get all reference data sets wi
+	 * Get all reference data sets for an asset path
 	 */
 	@GetMapping(value = "/getReferenceDatasets")
 	public ResponseEntity<?> getReferenceDatasets(@RequestParam(value = "assetPath") String assetPath,
@@ -132,6 +133,7 @@ public class PerformInferencingController extends AbstractDoeController {
 		log.info("perform model analysis for reference dataset");
 
 		String applicableModelNamesList = inference.getApplicableModelNamesList();
+		List<String> taskIdList = new ArrayList<String>();
 
 		// get the h5 model path for the applicable model name selected
 
@@ -193,12 +195,13 @@ public class PerformInferencingController extends AbstractDoeController {
 					inference.setResultPath(resultPath);
 					inference.setTestInputPath(inference.getTestInputPath());
 					inferencingTaskService.saveInferenceTask(inference);
+					taskIdList.add(taskId);
 				} catch (Exception e) {
 					log.error("Exception in evaluating task: " + e);
 					throw new DoeWebException("Exception in evaluating task: " + e);
 				}
 			}
-			return "Evaluate task(s) submitted.";
+			return "Evaluate task(s) submitted. Your task id(s): " + String.join(",", taskIdList);
 		}
 
 		return "Exception in evaluating task";
@@ -223,6 +226,7 @@ public class PerformInferencingController extends AbstractDoeController {
 		try {
 			if (StringUtils.isNotEmpty(referenceDatasets)) {
 				String authToken = (String) session.getAttribute("hpcUserToken");
+				List<String> taskIdList = new ArrayList<String>();
 				/*
 				 * When reference dataset option is selected, the test input path is the asset
 				 * path
@@ -280,11 +284,12 @@ public class PerformInferencingController extends AbstractDoeController {
 						inferenceDataset.setModelPath(inference.getModelPath());
 						inferenceDataset.setUploadFrom(inference.getUploadFrom());
 						inferencingTaskService.saveInferenceTask(inferenceDataset);
+						taskIdList.add(taskId);
 					}
 
 				}
 
-				return "Evaluate task(s) submitted.";
+				return "Evaluate task(s) submitted. Your task id(s): " + String.join(",", taskIdList);
 			} else {
 
 				/*
