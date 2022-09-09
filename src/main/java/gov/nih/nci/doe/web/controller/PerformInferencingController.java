@@ -331,7 +331,7 @@ public class PerformInferencingController extends AbstractDoeController {
 
 				inferencingTaskService.saveInferenceTask(inference);
 
-				// copy the test dataset file to IRODsTest mount
+				// copy the test dataset file to /mnt/MoDaC/ mount
 				Files.copy(uploadTestInferFile.getInputStream(), Paths.get(uploadPath + testInputName),
 						StandardCopyOption.REPLACE_EXISTING);
 
