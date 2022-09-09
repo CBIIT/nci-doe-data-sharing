@@ -174,6 +174,9 @@ public abstract class AbstractDoeController {
 	@Value("${upload.path}")
 	public String uploadPath;
 
+	@Value("${upload.container}")
+	public String containerId;
+
 	@Autowired
 	InferencingTaskService inferencingTaskService;
 
