@@ -45,7 +45,7 @@
 						<input type="text" th:value="${fullName}"
 							th:disabled="${fullName != null}"
 							th:style="${loggedOnUser != null ? 'background-color: #C9DEF3;color: #466D93;padding-top: 10px;': ''}"
-							autocomplete="off" id="contact_us_name" name="contact_us_name"
+							autocomplete="off" id="contact_us_name" aria-labelledby="contact_us_name" name="contact_us_name"
 							placeholder="Name *" maxlength="20"
 							class="form-control defaultFocus contactUsTextbox"> <span
 							class="TextField-floatingLabel-qefpP" style="display: none;">Name</span>
@@ -61,7 +61,7 @@
 							placeholder="Email *"
 							th:style="${loggedOnUser != null ? 'background-color: #C9DEF3;color: #466D93;padding-top: 10px;': ''}"
 							th:disabled="${loggedOnUser != null}" autocomplete="off"
-							id="id_user_email" name="id_user_email" maxlength="50"
+							id="id_user_email" aria-labelledby="id_user_email"name="id_user_email" maxlength="50"
 							class="form-control defaultFocus contactUsTextbox"> <span
 							class="TextField-floatingLabel-qefpP" style="display: none;">Email</span>
 					</div>
@@ -71,7 +71,7 @@
 						<label class="infoLabel" for="contact_us_txtarea">Message<span>*</span></label>
 					</div>-->
 					<div class="col-lg-12">
-						<textarea id="contact_us_txtarea"
+						<textarea id="contact_us_txtarea" aria-labelledby="contact_us_txtarea"
 							placeholder="Type your message here *" name="contact_us_txtarea"
 							rows="9" class="form-control defaultFocus contactUsTextbox"></textarea>
 						<span class="TextField-floatingLabel-qefpP" style="display: none;">Type
