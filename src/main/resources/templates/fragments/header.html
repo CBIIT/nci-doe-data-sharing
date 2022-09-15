@@ -83,7 +83,7 @@
         <ul class="navbar-nav card-header-tabs text-white justify-content-end" role="tablist" style="margin-top: -2px;">
                 
                 <li th:if= "${loggedOnUser != null}" class="nav-item dropdown" role="tab">
-                    <a class="nav-link dropdown-toggle" style="color: #D06709;" href="#" role="button" aria-label="Help"
+                    <a class="nav-link dropdown-toggle" style="color: #CC5200;" href="#" role="button" aria-label="Help"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                        <span style="text-transform: uppercase;" th:text="${firstName}">&nbsp;
                        <i aria-hidden="true" class="fa fa-caret-down pull-right"></i></span>
@@ -95,11 +95,11 @@
                 </li>
 
                   <li class="nav-item" role="tab" th:if="${loggedOnUser == null}">
-                <a class="nav-link" id="login-tab" style="color: #D06709;" th:href="@{/loginTab}" role="tab">Login</a>
+                <a class="nav-link" id="login-tab" style="color:#CC5200;" th:href="@{/loginTab}" role="tab">Login</a>
               </li>
                 			    	
                <li class="nav-item" th:if= "${loggedOnUser != null}" role="tab">
-			    	<a class="nav-link" style="color: #D06709;" href="#" id="logout">|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LOGOUT</a>
+			    	<a class="nav-link" style="color: #CC5200;" href="#" id="logout">|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LOGOUT</a>
 			    	</li>
             </ul>
         </div>

@@ -520,7 +520,7 @@ table#searchResultTable tr.even td {
 #updateMetaData, #addMetaData, #addNewMetaDataForSingleDataFile,
 	#updatePermissions, #addUserMetadataForBulkAssets,
 	#btnUpdateAccessGroup, #btnUpdatePermissions, #btnPredictionAccessGrp {
-	background-color: #E87B05 !important;
+	background-color: #E66F05 !important;
 	font-family: 'inter_regular';
 }
 
@@ -533,7 +533,7 @@ table#searchResultTable tr.even td {
 }
 
 #registerCollectionBtn {
-	background-color: #E87B05 !important;
+	background-color: #E66F05 !important;
 	color: #fff !important;
 	border-radius: 15px;
 	width: fit-content;
@@ -551,7 +551,7 @@ table#searchResultTable tr.even td {
 }
 
 .backToSearch, .backToStatusTab, .backToUpload {
-	color: #E87B05;
+	color: #E66F05;
 	font-family: 'inter_regular';
 	font-size: 16px;
 	font-weight: 900;
@@ -1126,7 +1126,7 @@ a.detail-control {
 	text-align: center;
 	margin-top: 179px;
 	margin-bottom: 50px;
-	background-color: #E87B05;
+	background-color: #E66F05;
 	/* height: 65px;*/
 	max-width: 86%;
 }
@@ -1466,15 +1466,14 @@ a {
 	font-family: latoregular;
 	font-size: 22px;
 	transform: translateY(0px);
-    color: #E87B05;
+    color: #E66F05;
 
 }
 
 #attributeVallanding::placeholder {
-	font-family: latoregular;
-	
+	font-family: latoregular;	
 	transform: translateY(0px);
-    color: #E87B05;
+    color: #E66F05;
 
 }
 
@@ -1686,7 +1685,7 @@ label {
 	line-height: 27px;
 	height: 42px;
 	width: 175px;
-	color: #397ded;
+	color: #1F6DEA;
 }
 
 .cil_13_no_color {
