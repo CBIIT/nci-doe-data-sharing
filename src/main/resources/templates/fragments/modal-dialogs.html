@@ -26,7 +26,7 @@
 							<div class="col-md-12"
 								style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
 								<div class="alert alert-danger">
-									<h6 class="forgotPswdErrorMsg"></h6>
+									<h6 aria-hidden="true" class="forgotPswdErrorMsg"></h6>
 								</div>
 							</div>
 						</div>
@@ -36,7 +36,7 @@
 							<div class="col-md-12"
 								style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
 								<div class="alert alert-success">
-									<h6 class="forgotPswdSuccessMsg"></h6>
+									<h6 aria-hidden="true" class="forgotPswdSuccessMsg"></h6>
 								</div>
 							</div>
 						</div>
@@ -93,7 +93,7 @@
 						<div class="col-md-12"
 							style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
 							<div class="alert alert-success">
-								<h6 class="updateAccessMsg"></h6>
+								<h6 aria-hidden="true" class="updateAccessMsg"></h6>
 							</div>
 						</div>
 					</div>
@@ -103,7 +103,7 @@
 						<div class="col-md-12"
 							style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
 							<div class="alert alert-danger">
-								<h6 class="updateErrorAccessMsg"></h6>
+								<h6 aria-hidden="true" class="updateErrorAccessMsg"></h6>
 							</div>
 						</div>
 					</div>
@@ -161,7 +161,7 @@
 						<div class="col-md-12"
 							style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
 							<div class="alert alert-success">
-								<h6 class="updatePermMsg"></h6>
+								<h6 aria-hidden="true" class="updatePermMsg"></h6>
 							</div>
 						</div>
 					</div>
@@ -212,7 +212,7 @@
 						<div class="col-md-12"
 							style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
 							<div class="alert alert-success">
-								<h6 class="updatePredGrpMsg"></h6>
+								<h6 aria-hidden="true" class="updatePredGrpMsg"></h6>
 							</div>
 						</div>
 					</div>
@@ -263,7 +263,7 @@
 						<div class="col-md-12"
 							style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
 							<div class="alert alert-success">
-								<h6 class="createAssetMsg"></h6>
+								<h6 aria-hidden="true" class="createAssetMsg"></h6>
 							</div>
 						</div>
 					</div>
@@ -310,7 +310,7 @@
 						<div class="col-md-12"
 							style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
 							<div class="alert alert-danger">
-								<h6 class="performInferMsgError"></h6>
+								<h6 aria-hidden="true" class="performInferMsgError"></h6>
 							</div>
 						</div>
 					</div>
@@ -327,8 +327,8 @@
 								id="displayDataTypeDiv"
 								style="margin-left: 30px; margin-top: 6px; margin-bottom: -5px; display: table;">
 
-								<label for="uploadFrom"></label> <select class="simple-select2"
-									id="uploadFrom" name="uploadFrom" style="width: 84%"
+								<select class="simple-select2"
+									id="uploadFrom" aria-labelledby="uploadFrom" name="uploadFrom" style="width: 84%"
 									onChange="displayPredictionSelectionDiv(this.options[this.selectedIndex]);">
 
 								</select>
@@ -338,9 +338,9 @@
 
 							<div class="row row-buffer referenceDatasetSelectionDiv"
 								style="justify-content: center; margin-top: 10px; display: none">
-								<label for="referenceDatasetList" style="margin-bottom: 10px;"></label>
+								
 								<select class="simple-select2" multiple="multiple"
-									id="referenceDatasetList" name="referenceDatasetList"
+									id="referenceDatasetList" aria-labelledby="referenceDatasetList" name="referenceDatasetList"
 									style="width: 60%; border: 2px solid #E87B05;">
 								</select>
 							</div>
@@ -351,7 +351,7 @@
 									style="font-family: 'inter_regular'; font-size: 14px; font-weight: 500;">Upload
 									input file to generate predictions.&nbsp;<span id="tooltipHtml"></span>
 								</label> <input type="file" style="margin-top: 14px;"
-									id="uploadTestInferFile" name="uploadTestInferFile" />
+									id="uploadTestInferFile" aria-labelledby="uploadTestInferFile" name="uploadTestInferFile" />
 							</div>
 
 							<div class="row row-buffer userInputDiv"
@@ -360,7 +360,7 @@
 									class="optionalLabelInfo"> Upload outcome file to
 									evaluate the model.&nbsp;<span id="outputTooltipHtml"></span>
 								</label> <input type="file" style="margin-top: 14px;"
-									id="uploadTestOutputFile" name="uploadTestOutputFile" />
+									id="uploadTestOutputFile" aria-labelledby="uploadTestOutputFile" name="uploadTestOutputFile" />
 							</div>
 
 						</form>
@@ -397,7 +397,7 @@
 						<div class="col-md-12"
 							style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
 							<div class="alert alert-danger">
-								<h6 class="performAnalysisMsgError"></h6>
+								<h6 aria-hidden="true" class="performAnalysisMsgError"></h6>
 							</div>
 						</div>
 					</div>
