@@ -1558,7 +1558,7 @@ public class RestAPICommonController extends AbstractDoeController {
 			Files.copy(inputFile.getInputStream(), Paths.get(uploadPath + inputFile.getOriginalFilename()),
 					StandardCopyOption.REPLACE_EXISTING);
 
-			return new ResponseEntity<>("Evaluate task(s) submitted. Your task id is: " + taskId, HttpStatus.OK);
+			return new ResponseEntity<>("Evaluate task submitted. Your task id is: " + taskId, HttpStatus.OK);
 		}
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
 
