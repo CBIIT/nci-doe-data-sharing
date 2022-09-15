@@ -111,6 +111,7 @@ public class PerformInferencingController extends AbstractDoeController {
 								.readValueAs(HpcBulkDataObjectRegistrationStatusDTO.class);
 						if (dto != null) {
 							if (dto.getTask().getCompleted() != null) {
+								t.setStatus("COMPLETED");
 								t.setCompletedDate(dto.getTask().getCompleted().getTime());
 								inferencingTaskService.save(t);
 							}
