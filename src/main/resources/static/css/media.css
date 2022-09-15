@@ -177,13 +177,13 @@
 @media ( max-width : 360px) {
 	#aboutText{
 	font-size: 25px !important;
-	margin-left: 0rem !important;
+	margin-left: 1rem !important;
 	}
 }
 @media ( max-width : 280px) {
 	#aboutText{
 	font-size: 19px !important;
-	margin-left: 1rem !important;
+	margin-left: 0rem !important;
 	}
 }
 @media ( max-width : 990px) {
