@@ -1102,7 +1102,6 @@ public class RestAPICommonController extends AbstractDoeController {
 				client.header("Authorization", "Bearer " + authToken);
 				Response restResponse = client.invoke("GET", null);
 
-				// if the file is available, call the flask web service
 				if (restResponse.getStatus() == 200) {
 					ObjectMapper mapper = new ObjectMapper();
 					mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -1148,7 +1147,6 @@ public class RestAPICommonController extends AbstractDoeController {
 				client.header("Authorization", "Bearer " + authToken);
 				Response restResponse = client.invoke("GET", null);
 
-				// if the file is available, call the flask web service
 				if (restResponse.getStatus() == 200) {
 					ObjectMapper mapper = new ObjectMapper();
 					mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -1193,7 +1191,6 @@ public class RestAPICommonController extends AbstractDoeController {
 				client.header("Authorization", "Bearer " + authToken);
 				Response restResponse = client.invoke("GET", null);
 
-				// if the file is available, call the flask web service
 				if (restResponse.getStatus() == 200) {
 					ObjectMapper mapper = new ObjectMapper();
 					mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -1248,7 +1245,6 @@ public class RestAPICommonController extends AbstractDoeController {
 				client.header("Authorization", "Bearer " + authToken);
 				Response restResponse = client.invoke("GET", null);
 
-				// if the file is available, call the flask web service
 				if (restResponse.getStatus() == 200) {
 					ObjectMapper mapper = new ObjectMapper();
 					mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -1313,7 +1309,6 @@ public class RestAPICommonController extends AbstractDoeController {
 							client.header("Authorization", "Bearer " + authToken);
 							Response restResponse = client.invoke("GET", null);
 
-							// if the file is available, call the flask web service
 							if (restResponse.getStatus() == 200) {
 								ObjectMapper mapper = new ObjectMapper();
 								MappingJsonFactory factory = new MappingJsonFactory(mapper);
@@ -1402,7 +1397,6 @@ public class RestAPICommonController extends AbstractDoeController {
 					throw new DoeWebException("Cannot find any trained model", HttpServletResponse.SC_BAD_REQUEST);
 				}
 				for (Path referenceDatasetPath : referenceDatasetPaths) {
-					// create a modac task Id
 
 					InferencingTaskModel inferenceDataset = new InferencingTaskModel();
 
