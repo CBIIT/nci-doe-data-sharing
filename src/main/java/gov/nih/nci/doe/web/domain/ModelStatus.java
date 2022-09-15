@@ -1,11 +1,9 @@
 package gov.nih.nci.doe.web.domain;
 
-import java.util.Date;
-
 public class ModelStatus {
 	private String status;
-	private Date startDate;
-	private Date completedDate;
+	private String startDate;
+	private String completedDate;
 	private String resultPath;
 	private String failureMsg;
 	private String inputFile;
@@ -18,19 +16,19 @@ public class ModelStatus {
 		this.status = status;
 	}
 
-	public Date getStartDate() {
+	public String getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(Date startDate) {
+	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}
 
-	public Date getCompletedDate() {
+	public String getCompletedDate() {
 		return completedDate;
 	}
 
-	public void setCompletedDate(Date completedDate) {
+	public void setCompletedDate(String completedDate) {
 		this.completedDate = completedDate;
 	}
 

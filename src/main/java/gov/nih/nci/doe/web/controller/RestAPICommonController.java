@@ -34,7 +34,6 @@ import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.model.InferencingTaskModel;
 import gov.nih.nci.doe.web.model.KeyValueBean;
-import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.datamanagement.HpcCollectionListingEntry;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
@@ -65,6 +64,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -84,7 +84,6 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -119,9 +118,6 @@ public class RestAPICommonController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.download}")
 	private String queryServiceURL;
 
-	@Autowired
-	TaskManagerService taskManagerService;
-
 	private static final String TOKEN_SUBJECT = "MoDaCAuthenticationToken";
 
 	@Value("${doe.userid.token.claim}")
@@ -133,6 +129,8 @@ public class RestAPICommonController extends AbstractDoeController {
 	// The authentication token expiration period in minutes.
 	@Value("${doe.service.security.authenticationTokenExpirationPeriod}")
 	private int authenticationTokenExpirationPeriod = 0;
+
+	SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 
 	/**
 	 * Returns the preassigned Url.
@@ -1082,7 +1080,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	public ResponseEntity<?> getDataObjectsRegistrationStatus(@RequestHeader HttpHeaders headers, HttpSession session,
 			HttpServletResponse response, HttpServletRequest request) throws DoeWebException {
 
-		log.info("get status:");
+		log.info("get registration status by task Id.");
 		log.info("Headers: {}", headers);
 		String taskId = request.getRequestURI().split(request.getContextPath() + "/v2/registration/")[1];
 		log.info("taskId: " + taskId);
@@ -1127,7 +1125,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	public ResponseEntity<?> getCollectionDownloadStatus(@RequestHeader HttpHeaders headers, HttpSession session,
 			HttpServletResponse response, HttpServletRequest request) throws DoeWebException {
 
-		log.info("get status:");
+		log.info("get download status for collection by task Id.");
 		log.info("Headers: {}", headers);
 		String taskId = request.getRequestURI().split(request.getContextPath() + "/collection/download/")[1];
 		log.info("taskId: " + taskId);
@@ -1173,7 +1171,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	public ResponseEntity<?> getDataObjectDownloadStatus(@RequestHeader HttpHeaders headers, HttpSession session,
 			HttpServletResponse response, HttpServletRequest request) throws DoeWebException {
 
-		log.info("get status:");
+		log.info("get download status for data object by task Id.");
 		log.info("Headers: {}", headers);
 		String taskId = request.getRequestURI().split(request.getContextPath() + "/dataObject/download/")[1];
 		log.info("taskId: " + taskId);
@@ -1216,6 +1214,7 @@ public class RestAPICommonController extends AbstractDoeController {
 
 	/**
 	 * get data object or collection download status
+	 * 
 	 * @param headers
 	 * @param session
 	 * @param response
@@ -1227,7 +1226,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	public ResponseEntity<?> getDataObjectsOrCollectionsDownloadStatus(@RequestHeader HttpHeaders headers,
 			HttpSession session, HttpServletResponse response, HttpServletRequest request) throws DoeWebException {
 
-		log.info("get status:");
+		log.info("get status for data object or collection list by task Id.");
 		log.info("Headers: {}", headers);
 		String taskId = request.getRequestURI().split(request.getContextPath() + "/download/")[1];
 		log.info("taskId: " + taskId);
@@ -1271,6 +1270,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	/**
 	 * 
 	 * get evaluation status
+	 * 
 	 * @param headers
 	 * @param session
 	 * @param response
@@ -1285,7 +1285,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	public ResponseEntity<?> getStatusByTaskId(@RequestHeader HttpHeaders headers, HttpSession session,
 			HttpServletResponse response, HttpServletRequest request) throws DoeWebException, JsonProcessingException {
 
-		log.info("get status:");
+		log.info("get model evaluate status by task Id.");
 		log.info("Headers: {}", headers);
 		String taskId = request.getRequestURI().split(request.getContextPath() + "/model/evaluate/")[1];
 		log.info("taskId: " + taskId);
@@ -1295,7 +1295,7 @@ public class RestAPICommonController extends AbstractDoeController {
 				ModelStatus responseDTO = new ModelStatus();
 				InferencingTask task = inferencingTaskService.getInferenceByTaskId(taskId);
 				responseDTO.setInputFile(task.getTestDataSetPath());
-				responseDTO.setStartDate(task.getStartDate());
+				responseDTO.setStartDate(format.format(task.getStartDate()));
 				if (task != null) {
 					if ("NOTSTARTED".equalsIgnoreCase(task.getStatus())) {
 						responseDTO.setStatus("Not Started");
@@ -1327,7 +1327,8 @@ public class RestAPICommonController extends AbstractDoeController {
 										inferencingTaskService.save(task);
 
 										responseDTO.setStatus("Completed");
-										responseDTO.setCompletedDate(dto.getTask().getCompleted().getTime());
+										responseDTO.setCompletedDate(
+												format.format(dto.getTask().getCompleted().getTime()));
 										responseDTO.setResultPath(task.getResultPath());
 									}
 								}
@@ -1336,7 +1337,7 @@ public class RestAPICommonController extends AbstractDoeController {
 
 					} else if ("COMPLETED".equalsIgnoreCase(task.getStatus())) {
 						responseDTO.setStatus("Completed");
-						responseDTO.setCompletedDate(task.getCompletedDate());
+						responseDTO.setCompletedDate(format.format(task.getCompletedDate()));
 						responseDTO.setResultPath(task.getResultPath());
 					} else if ("FAILURE".equalsIgnoreCase(task.getStatus())) {
 						responseDTO.setStatus("Failed");
@@ -1364,7 +1365,7 @@ public class RestAPICommonController extends AbstractDoeController {
 			HttpSession session, HttpServletResponse response, HttpServletRequest request,
 			@RequestBody @Valid ReferenceDataset referenceDataset) throws DoeWebException, IOException {
 
-		log.info("get status:");
+		log.info("model evaluate for reference datasets.");
 		log.info("Headers: {}", headers);
 		String doeLogin = (String) session.getAttribute("doeLogin");
 		log.info("doeLogin: " + doeLogin);
@@ -1484,7 +1485,7 @@ public class RestAPICommonController extends AbstractDoeController {
 			@RequestParam(required = false) Boolean isManifestFile, @RequestBody @Valid MultipartFile inputFile,
 			@RequestBody(required = false) @Valid MultipartFile outcomeFile) throws DoeWebException, IOException {
 
-		log.info("get status:");
+		log.info("model evaluate for input file");
 		log.info("Headers: {}", headers);
 		String doeLogin = (String) session.getAttribute("doeLogin");
 		log.info("doeLogin: " + doeLogin);
