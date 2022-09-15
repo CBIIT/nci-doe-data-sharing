@@ -156,7 +156,38 @@
 	}
 }
 
+@media ( max-width : 1500px) {
+	#aboutMoDaCDescp{
+	margin-right:0rem !important;
+	margin-left:1rem !important;
+	}
+	#aboutImgDiv{
+	margin-left:1rem !important;
+	}
+}
+@media ( max-width : 440px) {
+	#aboutImgDiv{
+	margin-left:0rem !important;
+	margin-right:0rem !important;
+	}
+	#aboutText{
+	margin-left: 1rem !important;
+	}
+}
+@media ( max-width : 360px) {
+	#aboutText{
+	font-size: 25px !important;
+	margin-left: 0rem !important;
+	}
+}
+@media ( max-width : 280px) {
+	#aboutText{
+	font-size: 19px !important;
+	margin-left: 1rem !important;
+	}
+}
 @media ( max-width : 990px) {
+	
 	#searchResultsDiv {
 		display:none;
 	}
