@@ -204,8 +204,8 @@
 }
 
 .registerDiv {
-	border: 1px solid #E87B05;
-	background-color: #F4F4F4;
+	border: 1px solid #AD5A00;
+	background-color: #FFFFFF;
 	border-radius: 7px !important;
 	color: #F8F6F6;
 	margin-bottom: 14px !important;
@@ -542,7 +542,7 @@ table#searchResultTable tr.even td {
 }
 
 #cancelRegisterBtn {
-	background-color: #E87B05 !important;
+	background-color: #E66F05!important;
 	color: #fff !important;
 	border-radius: 15px;
 	width: 90px;
@@ -879,7 +879,7 @@ li.nav-item>a:hover {
 }
 
 .uploadLabels {
-	color: #C06400;
+	color: #a85300;
 	font-family: 'inter_regular';
 	font-weight: 200;
 	font-size: 17px;
@@ -1418,8 +1418,9 @@ a {
 
 .select2-container--default .select2-results__option--highlighted[aria-selected]
 	{
-	background-color: transparent !important;
-	color: #E87B05 !important;
+	background-color: #E6EEF8 !important;
+	color: #2660a9 !important;
+	font-weight:bold;
 }
 
 .select2-container--bootstrap4 .select2-results__option--highlighted[aria-selected]
@@ -1826,7 +1827,7 @@ select.form-control:not ([size] ):not ([multiple] ){
 
 input.select2-search__field {
 	min-width: fit-content;
-	margin-left: 13px;
+	/* margin-left: 13px; */
 }
 
 .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice
@@ -1855,14 +1856,13 @@ input.select2-search__field {
 }
 
 .select2-container span.select2-selection.select2-selection--single {
-	border: 2px solid #E87B05;
+	border: 2px solid #AD5A00;
 }
 
 .select2-container .select2-selection--single #select2-instituteList-container,
 	#select2-studyList-container, #select2-dataList-container {
 	background-color: #fff !important;
 	color: #000 !important;
-	/*border: 2px solid #E87B05;*/
 }
 
 .select2-results__option[aria-selected=true] {
@@ -1870,7 +1870,7 @@ input.select2-search__field {
 }
 
 span.select2-selection.select2-selection--multiple {
-	border: 2px solid #E87B05 !important;
+	border: 2px solid #AD5A00 !important;
 }
 
 .select2-container--bootstrap4.select2-container--focus .select2-selection

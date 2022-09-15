@@ -53,7 +53,7 @@
 				     title="Permissions to Edit Metadata and Create Subcollections"></i></div>
 				     
 					<div class="form-group col-lg-4 col-md-4 labelEditCollection permissionsLabel" style="background-color: transparent;padding-left: 0px !important;
-                     margin-left: -3px;line-height: 29px;color: #000;"> 
+                     margin-left: -4px;line-height: 28px;color: #000;"> 
                      <select class="simple-select2" multiple="multiple" id="metaDataPermissionsList" 
                        name="metaDataPermissionsList" style="height:54px !important;width:70% !important">
                       </select>  				 
@@ -67,15 +67,15 @@
                             <div class="form-group col-lg-4 col-md-4 labelEditCollection parentCollectionDiv" 
                             style="background-color: transparent;margin-top: 0px; margin-left: -16px;display: flex;">
                           
-                               <input type="text" disabled id="parentCollectionName" class="parentCollectionName"/>
+                               <input type="text" disabled id="parentCollectionName" aria-labelledby="parentCollectionName" class="parentCollectionName"/>
                             </div>
                             <div class="form-group col-lg-4 col-md-12" style="display:none;">
                                 <label for="collectionType">Collection Type</label>
-                                <input type="text" id="collectionType" name="zAttrStr_collection_type">     
+                                <input type="text" id="collectionType" aria-labelledby="collectionType" name="zAttrStr_collection_type">     
                             </div>
                              <div class="form-group col-lg-4 col-md-12" style="display:none;">
                             <label for="collectionPath">Parent Collection Path
-                               <input type="text" disabled id="collectionPath" style="width:90%;font-size: 16px;"/></label>
+                               <input type="text" disabled id="collectionPath" aria-labelledby="collectionPath" style="width:90%;font-size: 16px;"/></label>
                             </div>
                             
                             
@@ -89,7 +89,7 @@
                       
                         <div class="col-lg-12 col-md-12 col-sm-12">
                         <a href="#" id="addNewMetaData"
-                        class="float-right mb-2 mr-2"  style="color: #E87B05!important;margin-top: -41px;padding-right: 8px;"
+                        class="float-right mb-2 mr-2"  style="color: #E66F05!important;margin-top: -41px;padding-right: 8px;"
                         onclick="addNewMetaDataCollection('newMetaDataTable')">Add Metadata</a>
                                <table id="newMetaDataTable" class="table display dt-responsive wrap" style="width:99%;border:none;">
                       <thead>

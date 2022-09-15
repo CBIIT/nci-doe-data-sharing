@@ -131,32 +131,6 @@
 	}
 }
 
-@media ( max-width : 460px) {
-	#attributeVallanding {
-		border-radius: 24px;
-		font-size: 13px;
-		font-weight: 550;
-		height: 45px;
-		width: 13rem;
-		border: 2.51px solid #397DED;
-		background-color: #FFFFFF;
-		margin-left: 0rem;
-	}
-	#landingSearch {
-		position: relative;
-		top: 2.4rem;
-		right: 4.5rem; width : 105px; font-size : 13px;
-		height: 29px;
-		background-color: #E87B05;
-		border-radius: 15px;
-		text-align: center;
-		width: 105px;
-		font-size: 13px;
-	}
-	#landingSearch img {
-		width: 49px !important;
-	}
-}
 
 @media ( min-width : 461px) and ( max-width : 990px) {
 	#attributeVallanding {
@@ -183,19 +157,40 @@
 }
 
 @media ( max-width : 990px) {
+	#searchResultsDiv {
+		display:none;
+	}
+	#clearFilters{
+		display:none;
+	}
+	.mobileFilterSearch {
+	display:inline-block!important;;
+	}
+	.td_class_7 {
+		width: 30% !important;
+		word-break: break-word;
+	}
+	.td_class_9 {
+		width: 70% !important;
+		word-break: break-word;
+	}
+	#searchResultsDiv {
+		margin-top: 7px !important;
+		margin-left: -13px;
+	}
 	.resetBtnSpan {
-		position: relative;
-		top: 2.5rem;
-		right: 6rem;
+		position: relative!important;
+		top: 2.5rem!important;
+		right: 6rem!important;
 	}
 	#attributeVallanding::placeholder {
 		font-size: 13px;
 	}
 	.landingSearchDiv {
-		position: relative;
-		display: flex;
-		margin-top: -5px;
-		background-color: transparent;
+		position: relative!important;
+		display: flex!important;
+		margin-top: -5px!important;
+		background-color: transparent!important;
 	}
 	.mobileContainer {
 		display: block !important;
@@ -253,9 +248,7 @@
 		padding-bottom: 15px;
 		text-align: center;
 	}
-	#registerMobileToggle {
-		display: none
-	}
+
 	.mobile-navigation {
 		position: absolute;
 		top: 50px;
@@ -304,6 +297,34 @@
 	}
 }
 
+
+@media ( max-width : 460px) {
+	#attributeVallanding {
+		border-radius: 24px;
+		font-size: 13px;
+		font-weight: 550;
+		height: 45px;
+		width: 13rem;
+		border: 2.51px solid #397DED;
+		background-color: #FFFFFF;
+		margin-left: 0rem;
+	}
+	#landingSearch {
+		position: relative!important;
+		top: 2.4rem!important;
+		right: 4.5rem!important; width : 105px!important; font-size : 13px!important;
+		height: 29px!important;
+		background-color: #E87B05;
+		border-radius: 15px!important;
+		text-align: center!important;
+	}
+	#landingSearch img {
+		width: 49px !important;
+	}
+	.resetBtnSpan{
+	right: 5rem !important;
+	}
+}
 @media ( max-width :1200px) and (min-width: 992px) {
 	.topNav-item {
 		display: none;
@@ -382,21 +403,6 @@
 @media ( min-width : 992px) {
 	.modal-lg {
 		max-width: 95%;
-	}
-}
-
-@media ( max-width : 990px) {
-	.td_class_7 {
-		width: 30% !important;
-		word-break: break-word;
-	}
-	.td_class_9 {
-		width: 70% !important;
-		word-break: break-word;
-	}
-	#searchResultsDiv {
-		margin-top: 7px !important;
-		margin-left: -13px;
 	}
 }
 

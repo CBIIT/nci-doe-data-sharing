@@ -120,11 +120,11 @@
 
 						</div>
 						<div class="row row-buffer" style="padding-top: 0px;">
-							<label for="updateAccessGroupsList">Access Groups
+							<label for="updateAccessGroupsList" style="padding-bottom: 0.5rem;">Access Groups
 								Permissions <span id="infoTxtForAccessGroups"
 								style="font-size: 14px;"></span>
 							</label> <select class="simple-select2" multiple="multiple"
-								id="updateAccessGroupsList" name="updateAccessGroupsList"
+								id="updateAccessGroupsList" aria-labelledby="updateAccessGroupsList" name="updateAccessGroupsList"
 								style="width: 70%">
 							</select> &nbsp;&nbsp; <span id="publicCheckBox"> <input
 								type="checkbox" id="editPublicAccess" aria-label="public access"
@@ -168,16 +168,16 @@
 
 
 					<input type="hidden" id="hiddenCollectionId" />
-					<div id="updatePermissionsContent"
+					<div id="updatePermissionsContent" style="margin-top: -2rem;"
 						class="modal-body drilldown-content">
 						<div class="row row-buffer">
-							<label for="updateMetaDataPermissionsList">Specify who
+							<label for="updateMetaDataPermissionsList" style="padding-bottom: 0.5rem;">Specify who
 								can edit the collection &nbsp; <i class="fas fa-question-circle"
 								data-toggle="tooltip"
 								title="Permissions to Edit Metadata and Create Subcollections"></i>
 								:
 							</label> <select class="simple-select2" multiple="multiple"
-								id="updateMetaDataPermissionsList"
+								id="updateMetaDataPermissionsList" aria-labelledby="updateMetaDataPermissionsList"
 								name="updateMetaDataPermissionsList" style="width: 70%">
 							</select>
 						</div>
@@ -226,7 +226,7 @@
 							<label for="updatePredictionAccessGrpList"
 								style="padding-bottom: 10px;">Prediction Access Groups:
 							</label> <select class="simple-select2" multiple="multiple"
-								id="updatePredictionAccessGrpList"
+								id="updatePredictionAccessGrpList" aria-labelledby="updatePredictionAccessGrpList"
 								name="updatePredictionAccessGrpList" style="width: 70%">
 							</select>&nbsp;&nbsp; <span id="isPublicAccessForPredictionSpan"> <input
 								type="checkbox" id="isPublicAccessForPrediction"
@@ -271,7 +271,7 @@
 					<div class="modal-body drilldown-content">
 						<div class="row row-buffer">
 							<label for="createAssetCollectionType">Asset Type: </label> <select
-								class="simple-select2" id="createAssetCollectionType"
+								class="simple-select2" id="createAssetCollectionType" aria-labelledby="createAssetCollectionType"
 								name="createAssetCollectionType" style="width: 70%">
 								<option value="Dataset">Dataset</option>
 								<option value="Model">Model</option>
