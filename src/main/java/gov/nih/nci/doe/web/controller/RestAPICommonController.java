@@ -1398,7 +1398,7 @@ public class RestAPICommonController extends AbstractDoeController {
 				try {
 					InferencingTaskModel inference = new InferencingTaskModel();
 					inference.setAssetPath(referenceDatasetPath);
-					
+					inference.setUserId(doeLogin);
 					dataObjectsList.stream().forEach(e -> {
 						String path = e.getPath();
 						String name = path.substring(path.lastIndexOf('/') + 1);

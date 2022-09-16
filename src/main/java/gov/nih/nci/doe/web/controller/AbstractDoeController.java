@@ -1382,7 +1382,6 @@ public abstract class AbstractDoeController {
 		}
 		inference.setTaskId(taskId);
 		inference.setIsReferenceAsset(Boolean.TRUE);
-		inference.setUserId(getLoggedOnUserInfo());
 		return taskId;
 	}
 
