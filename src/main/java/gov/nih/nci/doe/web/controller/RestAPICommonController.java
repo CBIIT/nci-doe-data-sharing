@@ -1292,6 +1292,7 @@ public class RestAPICommonController extends AbstractDoeController {
 				InferencingTask task = inferencingTaskService.getInferenceByTaskId(taskId);
 				responseDTO.setInputFile(task.getTestDataSetPath());
 				responseDTO.setStartDate(format.format(task.getStartDate()));
+				responseDTO.setOutcomeFile(task.getOutcomeFilePath());
 				if (task != null) {
 					if ("NOTSTARTED".equalsIgnoreCase(task.getStatus())) {
 						responseDTO.setStatus("Not Started");

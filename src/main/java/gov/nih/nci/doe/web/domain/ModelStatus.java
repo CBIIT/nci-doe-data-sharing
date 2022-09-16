@@ -7,6 +7,15 @@ public class ModelStatus {
 	private String resultPath;
 	private String failureMsg;
 	private String inputFile;
+	private String outcomeFile;
+
+	public String getOutcomeFile() {
+		return outcomeFile;
+	}
+
+	public void setOutcomeFile(String outcomeFile) {
+		this.outcomeFile = outcomeFile;
+	}
 
 	public String getStatus() {
 		return status;
