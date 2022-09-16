@@ -1382,9 +1382,9 @@ public class RestAPICommonController extends AbstractDoeController {
 			HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
 					referenceDatasetPath, true);
 			HpcCollectionDTO result = collectionDto.getCollections().get(0);
-			
+
 			List<HpcCollectionListingEntry> dataObjectsList = result.getCollection().getDataObjects();
-			
+
 			String resultFileName = getAttributeValue("outcome_file_name",
 					result.getMetadataEntries().getSelfMetadataEntries(), null);
 
@@ -1423,7 +1423,7 @@ public class RestAPICommonController extends AbstractDoeController {
 						throw new DoeWebException("Reference dataset file not found for : " + referenceDatasetPath,
 								HttpServletResponse.SC_BAD_REQUEST);
 					}
-					
+
 					String taskId = performModelEvaluation(inference, referenceDatasetPath,
 							applicableModelName.getPath(), session, authToken);
 					// save the inferencing task
@@ -1446,8 +1446,8 @@ public class RestAPICommonController extends AbstractDoeController {
 
 	@PostMapping(value = "/model/evaluate/**")
 	public ResponseEntity<?> performModelEvaluationForDatasets(@RequestHeader HttpHeaders headers, HttpSession session,
-			HttpServletResponse response, HttpServletRequest request, @RequestParam String type,
-			@RequestBody(required = false) @Valid ReferenceDataset referenceDataset,
+			HttpServletResponse response, HttpServletRequest request, @RequestParam(value = "type") String type,
+			@RequestPart(name = "referenceDataset", required = false) @Valid ReferenceDataset referenceDataset,
 			@RequestBody(required = false) @Valid MultipartFile inputFile,
 			@RequestBody(required = false) @Valid MultipartFile outcomeFile) throws DoeWebException, IOException {
 
