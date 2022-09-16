@@ -27,13 +27,15 @@ import org.springframework.http.MediaType;
 
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.domain.InferencingTask;
-import gov.nih.nci.doe.web.domain.ModelStatus;
-import gov.nih.nci.doe.web.domain.ReferenceDataset;
 import gov.nih.nci.doe.web.model.Path;
+import gov.nih.nci.doe.web.model.ReferenceDataset;
 import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
+import gov.nih.nci.doe.web.model.EvaluationResponse;
 import gov.nih.nci.doe.web.model.InferencingTaskModel;
 import gov.nih.nci.doe.web.model.KeyValueBean;
+import gov.nih.nci.doe.web.model.ModelPath;
+import gov.nih.nci.doe.web.model.ModelStatus;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.datamanagement.HpcCollectionListingEntry;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
@@ -1354,35 +1356,122 @@ public class RestAPICommonController extends AbstractDoeController {
 
 	}
 
-	@PostMapping(value = "/models/evaluate", consumes = { MediaType.APPLICATION_XML_VALUE,
+	@PostMapping(value = "/models/evaluate/**", consumes = { MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE,
 					MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<?> performModelEvaluationForReferenceDatasets(@RequestHeader HttpHeaders headers,
 			HttpSession session, HttpServletResponse response, HttpServletRequest request,
-			@RequestBody @Valid ReferenceDataset referenceDataset) throws DoeWebException, IOException {
+			@RequestBody @Valid ModelPath modelPaths) throws DoeWebException, IOException {
 
-		log.info("model evaluate for reference datasets.");
+		log.info("model evaluate using reference datasets on one or more models.");
 		log.info("Headers: {}", headers);
 		String doeLogin = (String) session.getAttribute("doeLogin");
 		log.info("doeLogin: " + doeLogin);
 		String authToken = (String) session.getAttribute("hpcUserToken");
+		String referenceDatasetPath = request.getRequestURI().split(request.getContextPath() + "/models/evaluate")[1];
+		log.info("referenceDatasetPath: " + referenceDatasetPath);
 
 		if (StringUtils.isNotEmpty(doeLogin) && Boolean.TRUE.equals(isUploader(doeLogin))
-				&& CollectionUtils.isNotEmpty(referenceDataset.getModelPaths())
-				&& CollectionUtils.isNotEmpty(referenceDataset.getReferenceDatasetPaths())) {
+				&& CollectionUtils.isNotEmpty(modelPaths.getModelPaths())) {
 
-			List<Path> modelPaths = referenceDataset.getModelPaths();
-			List<Path> referenceDatasetPaths = referenceDataset.getReferenceDatasetPaths();
-			if (modelPaths.size() > 1 && referenceDatasetPaths.size() > 1) {
-				throw new DoeWebException("Invalid Request", HttpServletResponse.SC_BAD_REQUEST);
-			} else if (modelPaths.size() == 1 && referenceDatasetPaths.size() > 0) {
+			EvaluationResponse evaluation = new EvaluationResponse();
+			List<Path> modelPathsList = modelPaths.getModelPaths();
+
+			// perform model evaluation on a reference dataset against multiple models
+			List<String> taskIdList = new ArrayList<String>();
+			HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
+					referenceDatasetPath, true);
+			HpcCollectionDTO result = collectionDto.getCollections().get(0);
+			List<HpcCollectionListingEntry> dataObjectsList = result.getCollection().getDataObjects();
+			String resultFileName = getAttributeValue("outcome_file_name",
+					result.getMetadataEntries().getSelfMetadataEntries(), null);
+
+			if (StringUtils.isEmpty(resultFileName)) {
+
+				throw new DoeWebException("Outcome file not found in reference dataset",
+						HttpServletResponse.SC_BAD_REQUEST);
+			}
+
+			for (Path applicableModelName : modelPathsList) {
+				try {
+					InferencingTaskModel inference = new InferencingTaskModel();
+					inference.setAssetPath(referenceDatasetPath);
+					dataObjectsList.stream().forEach(e -> {
+						String path = e.getPath();
+						String name = path.substring(path.lastIndexOf('/') + 1);
+						/*
+						 * check for outcome file name and input dataset paths and upload to mount
+						 */
+						if (StringUtils.isNotEmpty(name) && name.contains(resultFileName)) {
+							inference.setOutcomeFileName(name);
+							inference.setOutcomeFilePath(path);
+
+						} else {
+							inference.setTestInputPath(path);
+						}
+					});
+
+					if (StringUtils.isEmpty(inference.getTestInputPath())) {
+
+						throw new DoeWebException("Reference dataset file not found for : " + referenceDatasetPath,
+								HttpServletResponse.SC_BAD_REQUEST);
+					}
+					String taskId = performModelEvaluation(inference, referenceDatasetPath,
+							applicableModelName.getPath(), session, authToken);
+					// save the inferencing task
+
+					inferencingTaskService.saveInferenceTask(inference);
+					taskIdList.add(taskId);
+				} catch (Exception e) {
+					log.error("Exception in performing model analysis: " + e);
+					throw new DoeWebException("Exception in performing model analysis: " + e);
+				}
+			}
+			evaluation.setMessage("Evaluate task(s) submitted.");
+			evaluation.setTaskId(taskIdList);
+			return new ResponseEntity<>(evaluation, HttpStatus.OK);
+		}
+
+		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
+
+	}
+
+	@PostMapping(value = "/model/evaluate/**")
+	public ResponseEntity<?> performModelEvaluationForDatasets(@RequestHeader HttpHeaders headers, HttpSession session,
+			HttpServletResponse response, HttpServletRequest request, @RequestParam String type,
+			@RequestBody(required = false) @Valid ReferenceDataset referenceDataset,
+			@RequestBody(required = false) @Valid MultipartFile inputFile,
+			@RequestBody(required = false) @Valid MultipartFile outcomeFile) throws DoeWebException, IOException {
+
+		log.info("model evaluate for input file");
+		log.info("Headers: {}", headers);
+		String doeLogin = (String) session.getAttribute("doeLogin");
+		log.info("doeLogin: " + doeLogin);
+		String modelPath = request.getRequestURI().split(request.getContextPath() + "/model/evaluate")[1];
+		log.info("modelPath: " + modelPath);
+		log.info("type of input" + type);
+		String authToken = (String) session.getAttribute("hpcUserToken");
+		log.info("authToken: " + authToken);
+
+		if (authToken == null) {
+			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
+		}
+
+		if (StringUtils.isNotEmpty(doeLogin) && Boolean.TRUE.equals(isUploader(doeLogin))
+				&& StringUtils.isNotEmpty(modelPath)) {
+			EvaluationResponse evaluation = new EvaluationResponse();
+			List<String> taskIdList = new ArrayList<String>();
+
+			if ("ReferenceDataset".equalsIgnoreCase(type) && referenceDataset != null
+					&& CollectionUtils.isNotEmpty(referenceDataset.getReferenceDatasetPaths())) {
+
 				// perform generate predictions using a model and one or more reference datasets
 
-				String testInputPath = modelPaths.get(0).getPath();
 				String modelh5Path = null;
-				List<String> taskIdList = new ArrayList<String>();
+				List<Path> referenceDatasetPaths = referenceDataset.getReferenceDatasetPaths();
+
 				// get the model path from the asset
-				HpcCollectionListDTO assetDto = DoeClientUtil.getCollection(authToken, serviceURL, testInputPath, true);
+				HpcCollectionListDTO assetDto = DoeClientUtil.getCollection(authToken, serviceURL, modelPath, true);
 				HpcCollectionDTO assetResult = assetDto.getCollections().get(0);
 
 				List<HpcCollectionListingEntry> assetList = assetResult.getCollection().getDataObjects();
@@ -1402,7 +1491,7 @@ public class RestAPICommonController extends AbstractDoeController {
 					InferencingTaskModel inferenceDataset = new InferencingTaskModel();
 
 					String taskId = performGeneratePredictions(inferenceDataset, referenceDatasetPath.getPath(),
-							session, authToken, testInputPath);
+							session, authToken, modelPath);
 
 					inferenceDataset.setUserId(doeLogin);
 					inferenceDataset.setModelPath(modelh5Path);
@@ -1410,151 +1499,70 @@ public class RestAPICommonController extends AbstractDoeController {
 					taskIdList.add(taskId);
 				}
 
-				return new ResponseEntity<>(
-						"Evaluate task(s) submitted. Your task id(s): " + String.join(",", taskIdList), HttpStatus.OK);
-
-			} else if (referenceDatasetPaths.size() == 1 && modelPaths.size() > 1) {
-				// perform model evaluation on a reference dataset against multiple models
-				List<String> taskIdList = new ArrayList<String>();
-				HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
-						referenceDatasetPaths.get(0).getPath(), true);
+			} else if (("GDCManifest".equalsIgnoreCase(type) || "UserInput".equalsIgnoreCase(type))
+					&& inputFile != null) {
+				InferencingTaskModel inference = new InferencingTaskModel();
+				// get the model path from the asset
+				HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, modelPath,
+						true);
 				HpcCollectionDTO result = collectionDto.getCollections().get(0);
+
 				List<HpcCollectionListingEntry> dataObjectsList = result.getCollection().getDataObjects();
-				String resultFileName = getAttributeValue("outcome_file_name",
-						result.getMetadataEntries().getSelfMetadataEntries(), null);
+				Optional<HpcCollectionListingEntry> entry = dataObjectsList.stream()
+						.filter(e -> e != null && e.getPath().contains(".h5")).findFirst();
+				if (entry != null && entry.isPresent()) {
 
-				if (StringUtils.isEmpty(resultFileName)) {
+					inference.setModelPath(entry.get().getPath());
 
-					throw new DoeWebException("Outcome file not found in reference dataset",
+				} else {
+					throw new DoeWebException("No trained model file found in the asset provided.",
 							HttpServletResponse.SC_BAD_REQUEST);
 				}
 
-				for (Path applicableModelName : modelPaths) {
-					try {
-						InferencingTaskModel inference = new InferencingTaskModel();
-						inference.setAssetPath(referenceDatasetPaths.get(0).getPath());
-						dataObjectsList.stream().forEach(e -> {
-							String path = e.getPath();
-							String name = path.substring(path.lastIndexOf('/') + 1);
-							/*
-							 * check for outcome file name and input dataset paths and upload to mount
-							 */
-							if (StringUtils.isNotEmpty(name) && name.contains(resultFileName)) {
-								inference.setOutcomeFileName(name);
-								inference.setOutcomeFilePath(path);
+				// create a modac task Id
+				String taskId = UUID.randomUUID().toString();
 
-							} else {
-								inference.setTestInputPath(path);
-							}
-						});
+				// create a file name for y_pred file and append to the asset Path
+				String resultPath = modelPath + "/y_pred_" + taskId + ".csv";
 
-						if (StringUtils.isEmpty(inference.getTestInputPath())) {
+				// check if the file name is already used for inferencing for the same user and
+				// same model path and is not in failed status
+				if (Boolean.TRUE.equals(inferencingTaskService.checkifFileExistsForUser(doeLogin, modelPath,
+						inputFile.getOriginalFilename()))) {
 
-							throw new DoeWebException("Reference dataset file not found for : " + referenceDataset,
-									HttpServletResponse.SC_BAD_REQUEST);
-						}
-						String taskId = performModelEvaluation(inference, referenceDatasetPaths.get(0).getPath(),
-								applicableModelName.getPath(), session, authToken);
-						// save the inferencing task
-
-						inferencingTaskService.saveInferenceTask(inference);
-						taskIdList.add(taskId);
-					} catch (Exception e) {
-						log.error("Exception in performing model analysis: " + e);
-						throw new DoeWebException("Exception in performing model analysis: " + e);
-					}
+					throw new DoeWebException("Input file name already exists", HttpServletResponse.SC_BAD_REQUEST);
 				}
-				return new ResponseEntity<>(
-						"Evaluate task(s) submitted. Your task id(s): " + String.join(",", taskIdList), HttpStatus.OK);
-			}
 
-		}
+				if (outcomeFile != null) {
 
-		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
+					inference.setOutcomeFileName(outcomeFile.getOriginalFilename());
+					Files.copy(outcomeFile.getInputStream(), Paths.get(uploadPath + outcomeFile.getOriginalFilename()),
+							StandardCopyOption.REPLACE_EXISTING);
+				}
 
-	}
+				// save the inferencing task
+				inference.setIsReferenceAsset(Boolean.FALSE);
+				inference.setUploadFrom(type.equalsIgnoreCase("GDCManifest") ? "gdcData" : "inputFile");
+				inference.setTaskId(taskId);
+				inference.setResultPath(resultPath);
+				inference.setAssetPath(modelPath);
+				inference.setTestInputPath(modelPath + "/" + inputFile.getOriginalFilename());
+				inference.setUserId(doeLogin);
 
-	@PostMapping(value = "/model/evaluate/**")
-	public ResponseEntity<?> performModelEvaluationForDatasets(@RequestHeader HttpHeaders headers, HttpSession session,
-			HttpServletResponse response, HttpServletRequest request,
-			@RequestParam(required = false) Boolean isManifestFile, @RequestBody @Valid MultipartFile inputFile,
-			@RequestBody(required = false) @Valid MultipartFile outcomeFile) throws DoeWebException, IOException {
+				inferencingTaskService.saveInferenceTask(inference);
 
-		log.info("model evaluate for input file");
-		log.info("Headers: {}", headers);
-		String doeLogin = (String) session.getAttribute("doeLogin");
-		log.info("doeLogin: " + doeLogin);
-		String assetPath = request.getRequestURI().split(request.getContextPath() + "/model/evaluate")[1];
-		log.info("assetPath: " + assetPath);
-		log.info("isManifestFile" + isManifestFile);
-		String authToken = (String) session.getAttribute("hpcUserToken");
-		log.info("authToken: " + authToken);
-
-		if (authToken == null) {
-			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
-		}
-
-		if (isManifestFile == null) {
-			isManifestFile = Boolean.FALSE;
-		}
-
-		if (StringUtils.isNotEmpty(doeLogin) && Boolean.TRUE.equals(isUploader(doeLogin))
-				&& StringUtils.isNotEmpty(assetPath)) {
-
-			InferencingTaskModel inference = new InferencingTaskModel();
-			// get the model path from the asset
-			HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, assetPath, true);
-			HpcCollectionDTO result = collectionDto.getCollections().get(0);
-
-			List<HpcCollectionListingEntry> dataObjectsList = result.getCollection().getDataObjects();
-			Optional<HpcCollectionListingEntry> entry = dataObjectsList.stream()
-					.filter(e -> e != null && e.getPath().contains(".h5")).findFirst();
-			if (entry != null && entry.isPresent()) {
-
-				inference.setModelPath(entry.get().getPath());
+				// copy the test dataset file to mount
+				Files.copy(inputFile.getInputStream(), Paths.get(uploadPath + inputFile.getOriginalFilename()),
+						StandardCopyOption.REPLACE_EXISTING);
+				taskIdList.add(taskId);
 
 			} else {
-				throw new DoeWebException("No trained model file found in the asset provided.",
-						HttpServletResponse.SC_BAD_REQUEST);
+				throw new DoeWebException("Invalid Request", HttpServletResponse.SC_BAD_REQUEST);
 			}
+			evaluation.setMessage("Evaluate task(s) submitted.");
+			evaluation.setTaskId(taskIdList);
+			return new ResponseEntity<>(evaluation, HttpStatus.OK);
 
-			// create a modac task Id
-			String taskId = UUID.randomUUID().toString();
-
-			// create a file name for y_pred file and append to the asset Path
-			String resultPath = assetPath + "/y_pred_" + taskId + ".csv";
-
-			// check if the file name is already used for inferencing for the same user and
-			// same model path and is not in failed status
-			if (Boolean.TRUE.equals(inferencingTaskService.checkifFileExistsForUser(doeLogin, assetPath,
-					inputFile.getOriginalFilename()))) {
-
-				throw new DoeWebException("Input file name already exists", HttpServletResponse.SC_BAD_REQUEST);
-			}
-
-			if (outcomeFile != null) {
-
-				inference.setOutcomeFileName(outcomeFile.getOriginalFilename());
-				Files.copy(outcomeFile.getInputStream(), Paths.get(uploadPath + outcomeFile.getOriginalFilename()),
-						StandardCopyOption.REPLACE_EXISTING);
-			}
-
-			// save the inferencing task
-			inference.setIsReferenceAsset(Boolean.FALSE);
-			inference.setUploadFrom(Boolean.TRUE.equals(isManifestFile) ? "gdcData" : "inputFile");
-			inference.setTaskId(taskId);
-			inference.setResultPath(resultPath);
-			inference.setAssetPath(assetPath);
-			inference.setTestInputPath(assetPath + "/" + inputFile.getOriginalFilename());
-			inference.setUserId(doeLogin);
-
-			inferencingTaskService.saveInferenceTask(inference);
-
-			// copy the test dataset file to /mnt/MoDaC/ mount
-			Files.copy(inputFile.getInputStream(), Paths.get(uploadPath + inputFile.getOriginalFilename()),
-					StandardCopyOption.REPLACE_EXISTING);
-
-			return new ResponseEntity<>("Evaluate task submitted. Your task id is: " + taskId, HttpStatus.OK);
 		}
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
 

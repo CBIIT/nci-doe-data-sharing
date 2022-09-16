@@ -1,4 +1,4 @@
-package gov.nih.nci.doe.web.domain;
+package gov.nih.nci.doe.web.model;
 
 public class ModelStatus {
 	private String status;
