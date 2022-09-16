@@ -1437,7 +1437,10 @@ public class RestAPICommonController extends AbstractDoeController {
 			}
 			evaluation.setMessage("Evaluate task(s) submitted.");
 			evaluation.setTaskId(taskIdList);
-			return new ResponseEntity<>(evaluation, HttpStatus.OK);
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+			mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+			return new ResponseEntity<>(mapper.writeValueAsString(evaluation), HttpStatus.OK);
 		}
 
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
@@ -1558,7 +1561,10 @@ public class RestAPICommonController extends AbstractDoeController {
 			}
 			evaluation.setMessage("Evaluate task(s) submitted.");
 			evaluation.setTaskId(taskIdList);
-			return new ResponseEntity<>(evaluation, HttpStatus.OK);
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+			mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+			return new ResponseEntity<>(mapper.writeValueAsString(evaluation), HttpStatus.OK);
 
 		}
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
