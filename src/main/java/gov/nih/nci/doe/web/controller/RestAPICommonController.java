@@ -1382,13 +1382,15 @@ public class RestAPICommonController extends AbstractDoeController {
 			HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
 					referenceDatasetPath, true);
 			HpcCollectionDTO result = collectionDto.getCollections().get(0);
+			
 			List<HpcCollectionListingEntry> dataObjectsList = result.getCollection().getDataObjects();
+			
 			String resultFileName = getAttributeValue("outcome_file_name",
 					result.getMetadataEntries().getSelfMetadataEntries(), null);
 
 			if (StringUtils.isEmpty(resultFileName)) {
 
-				throw new DoeWebException("Outcome file not found in reference dataset",
+				throw new DoeWebException("Outcome file name metadata not found in reference dataset provided.",
 						HttpServletResponse.SC_BAD_REQUEST);
 			}
 
@@ -1396,11 +1398,12 @@ public class RestAPICommonController extends AbstractDoeController {
 				try {
 					InferencingTaskModel inference = new InferencingTaskModel();
 					inference.setAssetPath(referenceDatasetPath);
+					
 					dataObjectsList.stream().forEach(e -> {
 						String path = e.getPath();
 						String name = path.substring(path.lastIndexOf('/') + 1);
 						/*
-						 * check for outcome file name and input dataset paths and upload to mount
+						 * check for outcome file name and input dataset paths
 						 */
 						if (StringUtils.isNotEmpty(name) && name.contains(resultFileName)) {
 							inference.setOutcomeFileName(name);
@@ -1411,11 +1414,16 @@ public class RestAPICommonController extends AbstractDoeController {
 						}
 					});
 
+					if (StringUtils.isEmpty(inference.getOutcomeFilePath())) {
+						throw new DoeWebException("Outcome file not found in reference dataset provided.",
+								HttpServletResponse.SC_BAD_REQUEST);
+					}
 					if (StringUtils.isEmpty(inference.getTestInputPath())) {
 
 						throw new DoeWebException("Reference dataset file not found for : " + referenceDatasetPath,
 								HttpServletResponse.SC_BAD_REQUEST);
 					}
+					
 					String taskId = performModelEvaluation(inference, referenceDatasetPath,
 							applicableModelName.getPath(), session, authToken);
 					// save the inferencing task
@@ -1424,7 +1432,7 @@ public class RestAPICommonController extends AbstractDoeController {
 					taskIdList.add(taskId);
 				} catch (Exception e) {
 					log.error("Exception in performing model analysis: " + e);
-					throw new DoeWebException("Exception in performing model analysis: " + e);
+					throw new DoeWebException("Exception in performing model evaluation: " + e);
 				}
 			}
 			evaluation.setMessage("Evaluate task(s) submitted.");
@@ -1459,33 +1467,36 @@ public class RestAPICommonController extends AbstractDoeController {
 
 		if (StringUtils.isNotEmpty(doeLogin) && Boolean.TRUE.equals(isUploader(doeLogin))
 				&& StringUtils.isNotEmpty(modelPath)) {
+
 			EvaluationResponse evaluation = new EvaluationResponse();
 			List<String> taskIdList = new ArrayList<String>();
+			String trainedModelPath;
+
+			// get the model path from the asset
+			HpcCollectionListDTO assetDto = DoeClientUtil.getCollection(authToken, serviceURL, modelPath, true);
+			HpcCollectionDTO assetResult = assetDto.getCollections().get(0);
+
+			List<HpcCollectionListingEntry> dataObjectsList = assetResult.getCollection().getDataObjects();
+
+			Optional<HpcCollectionListingEntry> entry = dataObjectsList.stream()
+					.filter(e -> e != null && e.getPath().contains(".h5")).findFirst();
+
+			if (entry != null && entry.isPresent()) {
+
+				trainedModelPath = entry.get().getPath();
+
+			} else {
+				throw new DoeWebException("No trained model file found in the asset provided.",
+						HttpServletResponse.SC_BAD_REQUEST);
+			}
 
 			if ("ReferenceDataset".equalsIgnoreCase(type) && referenceDataset != null
 					&& CollectionUtils.isNotEmpty(referenceDataset.getReferenceDatasetPaths())) {
 
 				// perform generate predictions using a model and one or more reference datasets
 
-				String modelh5Path = null;
 				List<Path> referenceDatasetPaths = referenceDataset.getReferenceDatasetPaths();
 
-				// get the model path from the asset
-				HpcCollectionListDTO assetDto = DoeClientUtil.getCollection(authToken, serviceURL, modelPath, true);
-				HpcCollectionDTO assetResult = assetDto.getCollections().get(0);
-
-				List<HpcCollectionListingEntry> assetList = assetResult.getCollection().getDataObjects();
-				Optional<HpcCollectionListingEntry> entry = assetList.stream()
-						.filter(e -> e != null && e.getPath().contains(".h5")).findFirst();
-				if (entry != null && entry.isPresent()) {
-					modelh5Path = entry.get().getPath();
-
-				}
-
-				if (StringUtils.isEmpty(modelh5Path)) {
-
-					throw new DoeWebException("Cannot find any trained model", HttpServletResponse.SC_BAD_REQUEST);
-				}
 				for (Path referenceDatasetPath : referenceDatasetPaths) {
 
 					InferencingTaskModel inferenceDataset = new InferencingTaskModel();
@@ -1494,7 +1505,7 @@ public class RestAPICommonController extends AbstractDoeController {
 							session, authToken, modelPath);
 
 					inferenceDataset.setUserId(doeLogin);
-					inferenceDataset.setModelPath(modelh5Path);
+					inferenceDataset.setModelPath(trainedModelPath);
 					inferencingTaskService.saveInferenceTask(inferenceDataset);
 					taskIdList.add(taskId);
 				}
@@ -1502,22 +1513,8 @@ public class RestAPICommonController extends AbstractDoeController {
 			} else if (("GDCManifest".equalsIgnoreCase(type) || "UserInput".equalsIgnoreCase(type))
 					&& inputFile != null) {
 				InferencingTaskModel inference = new InferencingTaskModel();
-				// get the model path from the asset
-				HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, modelPath,
-						true);
-				HpcCollectionDTO result = collectionDto.getCollections().get(0);
 
-				List<HpcCollectionListingEntry> dataObjectsList = result.getCollection().getDataObjects();
-				Optional<HpcCollectionListingEntry> entry = dataObjectsList.stream()
-						.filter(e -> e != null && e.getPath().contains(".h5")).findFirst();
-				if (entry != null && entry.isPresent()) {
-
-					inference.setModelPath(entry.get().getPath());
-
-				} else {
-					throw new DoeWebException("No trained model file found in the asset provided.",
-							HttpServletResponse.SC_BAD_REQUEST);
-				}
+				inference.setModelPath(trainedModelPath);
 
 				// create a modac task Id
 				String taskId = UUID.randomUUID().toString();

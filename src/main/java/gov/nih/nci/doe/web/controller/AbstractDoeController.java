@@ -1294,7 +1294,7 @@ public abstract class AbstractDoeController {
 		}
 		if (StringUtils.isEmpty(resultFileName)) {
 
-			throw new DoeWebException("Outcome file not found in reference dataset",
+			throw new DoeWebException("Outcome file name metadata not found in reference dataset provided.",
 					HttpServletResponse.SC_BAD_REQUEST);
 		} else {
 			List<HpcCollectionListingEntry> dataObjectsList = result.getCollection().getDataObjects();
@@ -1320,6 +1320,10 @@ public abstract class AbstractDoeController {
 				}
 			});
 
+			if (StringUtils.isEmpty(inference.getOutcomeFilePath())) {
+				throw new DoeWebException("Outcome file not found in reference dataset provided.",
+						HttpServletResponse.SC_BAD_REQUEST);
+			}
 			if (StringUtils.isEmpty(inference.getTestInputPath())) {
 
 				throw new DoeWebException("Reference dataset file not found for : " + referenceDataset,
@@ -1363,16 +1367,11 @@ public abstract class AbstractDoeController {
 		inference.setResultPath(resultPath);
 		String testInputName = inference.getTestInputPath()
 				.substring(inference.getTestInputPath().lastIndexOf('/') + 1);
-		String outcomeFileName = inference.getOutcomeFilePath()
-				.substring(inference.getOutcomeFilePath().lastIndexOf('/') + 1);
 
-		if (StringUtils.isNotEmpty(outcomeFileName)) {
+		if (StringUtils.isNotEmpty(inference.getOutcomeFilePath())) {
 
-			String status = uploadFileToMount(session, outcomeFileName, inference.getOutcomeFilePath());
-			if ("SUCCESS".equalsIgnoreCase(status)) {
+			uploadFileToMount(session, inference.getOutcomeFileName(), inference.getOutcomeFilePath());
 
-				inference.setOutcomeFileName(outcomeFileName);
-			}
 		}
 
 		if (StringUtils.isNotEmpty(inference.getTestInputPath())) {
