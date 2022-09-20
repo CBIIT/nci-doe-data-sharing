@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Title</title>
+</head>
+<body>
+	<div th:fragment="search_results_mobile"
+		class="col-lg-12 col-md-12 col-sm-12"
+		style="background-color: #C6D9EC; margin-top: 5rem;">
+
+		<div
+			style="background-image: linear-gradient(to right, #3a73b9, #3a75bc, #61a9df); height: 84px; margin-left: -15px; margin-right: -19px;">
+
+			<div class="col-lg-12 col-md-12 col-sm-12"
+				style="margin-top: 10px; padding-top: 25px;">
+				<p
+					style="color: #fff; font-family: latoregular; font-size: 30px; text-align: center; margin-top: -4px;">Search
+					Results</p>
+			</div>
+		</div>
+		<div class="table-responsive">
+			<table id="searchResultMobileTable"
+				class="table table-bordered display dt-responsive wrap" role="grid"
+				style="width: 100%; border: transparent;"
+				aria-label="search result table">
+				<thead>
+					<tr>
+						<th aria-sort="none" class="sortable" data-sort="text"
+							role="columnheader" scope="col">DataSetName</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+</html>

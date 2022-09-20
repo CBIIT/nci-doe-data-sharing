@@ -143,7 +143,7 @@
 		background-color: #FFFFFF;
 		margin-left: 0rem;
 	}
-	#landingSearch {
+	#landingSearchMobileButton {
 		position: relative;
 		top: 2.5rem;
 		right: 5rem;
@@ -166,6 +166,18 @@
 	}
 }
 @media ( max-width : 440px) {
+  .popover {
+    margin-top: 8rem;
+    word-break: break-word;
+    height: fit-content;
+    max-width: fit-content !important;
+    width: fit-content;
+    margin-left: 3rem;
+  }
+  
+  .divTableRow div:first-child {
+    width: 32%;
+}
 	#aboutImgDiv{
 	margin-left:0rem !important;
 	margin-right:0rem !important;
@@ -188,27 +200,114 @@
 }
 @media ( max-width : 990px) {
 	
-	#searchResultsDiv {
-		display:none;
+	div.wrapper{
+	left: 0px !important;
+    right: 0px !important;
 	}
-	#clearFilters{
-		display:none;
+	#attributeVal::placeholder{
+	font-size:25px !important;
+	}
+	#attributeVal{
+	height: 89px!important;
+    font-size: 25px!important;
+    margin-left: -1.3rem!important;
+    margin-top: 0px!important;
+    border-radius: 0px!important;
+    width: 21rem!important;
+    border: 2px solid #E66F05;
+    font-weight: 550;
+	}
+	#resetBtnMobile {
+	position: absolute;
+    top: 2rem;
+    right: 6rem;
+	}
+	#searchMobileBtn{
+	position: absolute; 
+    top: 0rem!important;
+    right: -1.5rem!important;
+    height: 5.5rem!important;
+    width: 6rem!important;
+    font-size: 47px!important;
+    border-radius: 0px !important;
+    background-color: #E66F05;
+    text-align: center;
+	}
+	#searchMobileBtn img{
+	width: 44px!important;
+	transform: translateY(-12px);
+	}
+	#searchMobileBtn span {
+	position: relative;
+    top: -3.5rem;
+    font-size: 15px;
+    color: #fff;
+    text-align: center;
+	}
+	#backMobileFilter{
+	font-family:'inter_regular';
+	font-size: 22px;
+	color: #4D91D5;
+	font-weight: 500;
+	}
+	#mobileKeyworkSearchDiv{
+	padding-bottom: 20px;
+	}
+	#filterSectionDiv{
+	border-radius: 1rem;
+	margin-left: 2rem !important;
 	}
 	.mobileFilterSearch {
-	display:inline-block!important;;
+	display:inline-block!important;
 	}
-	.td_class_7 {
-		width: 30% !important;
-		word-break: break-word;
+	#searchResultMobileTable_length{
+	margin-left: 10rem;
 	}
-	.td_class_9 {
-		width: 70% !important;
-		word-break: break-word;
+	
+	#searchResultsDiv{
+	display:none !important;
 	}
-	#searchResultsDiv {
-		margin-top: 7px !important;
-		margin-left: -13px;
+	#searchResultsMobileDiv{
+	padding-right: 0px !important;
+    padding-left: 5px !important;
 	}
+	#searchSubSectionDiv{
+	/* margin-right: -30px !important;
+	margin-left: -12px !important; */
+	margin-right: -1rem !important;
+    margin-left: -2rem !important;
+	}
+	#searchResultMobileTable_wrapper{
+	padding-top: 2rem;
+	padding-left: 1rem;
+	}
+	#keyworkSearchDiv{
+	display:none;
+	}
+	
+	table#searchResultMobileTable tr {
+	   display: inline-grid !important;
+	}
+	table#searchResultMobileTable tr.odd td {
+	  background-color: #FFFFFF !important;
+	  padding-bottom: 2rem;
+    padding-top: 1rem;
+	}
+
+	table#searchResultMobileTable tr.even td {
+	  background-color: #FFFFFF !important;
+	  padding-bottom: 2rem;
+    padding-top: 1rem;
+	}
+
+.cil_12_bold_no_color_mobile_dataset{
+	    margin-left: 0px;
+    margin-top: 1rem;
+    color: #000000;
+    font-family: 'latoregular';
+    font-size: 16px;
+    line-height: 21px;
+}
 	.resetBtnSpan {
 		position: relative!important;
 		top: 2.5rem!important;
@@ -335,12 +434,12 @@
 		font-size: 13px;
 		font-weight: 550;
 		height: 45px;
-		width: 13rem;
+		width: 27rem;
 		border: 2.51px solid #397DED;
 		background-color: #FFFFFF;
 		margin-left: 0rem;
 	}
-	#landingSearch {
+	#landingSearchMobileButton {
 		position: relative!important;
 		top: 2.4rem!important;
 		right: 4.5rem!important; width : 105px!important; font-size : 13px!important;
@@ -349,7 +448,7 @@
 		border-radius: 15px!important;
 		text-align: center!important;
 	}
-	#landingSearch img {
+	#landingSearchMobileButton img {
 		width: 49px !important;
 	}
 	.resetBtnSpan{
@@ -434,6 +533,9 @@
 @media ( min-width : 992px) {
 	.modal-lg {
 		max-width: 95%;
+	}
+	#mobileKeyworkSearchDiv{
+	display:none;
 	}
 }
 

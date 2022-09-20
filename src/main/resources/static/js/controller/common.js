@@ -9,7 +9,9 @@ $(document)
 							if(keycode == '13'){
 								if($("#landingSearch").is(':visible')) {					
 									 $("#landingSearch").click();
-								}				 
+								} else if($("#landingSearchMobileButton").is(':visible')) {					
+									 $("#landingSearchMobileButton").click();
+								}			 
 							}
 						});
 					// Auto-lowercase Email Username (Usernames are always
@@ -36,8 +38,10 @@ $(document)
 					$(".keywordSearch").keyup(function(){
 						if ($(this).val()) {
 							$(".resetBtnSpan").show();
+							$("#resetBtnMobile").show();
 						} else {
 							$(".resetBtnSpan").hide();
+							$("#resetBtnMobile").hide();
 						}
 					});
 
@@ -79,9 +83,28 @@ $(document)
 						e.preventDefault();
 						populateSearchCriteria('simpleSearch');
 					});
+					$("#searchMobileBtn").click(function(e) {
+						e.preventDefault();
+						$("#mobileKeyworkSearchDiv").hide();
+						$("#filterSectionDiv").hide();
+						populateSearchCriteria('simpleSearch');
+					});
+					
 
+					$("#backtoFiltersMobilebtn").click(function(e){
+						$("#searchResultsDiv").hide();
+						$("#mobileKeyworkSearchDiv").show();
+						$("#filterSectionDiv").show();
+						$("#searchResultsMobileDiv").hide();
+					});
+					
 					$("#landingSearch").click(function(e) {
 						location.replace('/searchTab?keyWord='+$("#attributeVallanding").val());
+					});
+					
+					$("#landingSearchMobileButton").click(function(e) {
+						var txt = $(".mobileContainer").find("#attributeVallanding").val();
+						location.replace('/searchTab?keyWord='+txt);
 					});
 					
 					$("#downloadSelected").click(
@@ -375,11 +398,22 @@ $(document)
 						populateSearchCriteria('simpleSearch');
 					});
 					
+					$("#resetBtnMobile").click(function(e) {
+						$("#attributeVal").val("");
+						$("#resetBtnMobile").hide();
+					});
+					
 					$("#resetBtnLanding").click(function(e) {
 						$("#attributeVallanding").val("");
 						$("#resetBtnLanding").hide();
 					});
+					
+					$("#resetBtnLandingForMobile").click(function(e) {
+						$(this).parent().find("#attributeVallanding").val("");
+						$("#resetBtnLandingForMobile").hide();
+					});
 
+					
 					$(".backToSearchBtn").click(function(e) {
 						$("#searchFragmentDiv").show();
 						$("#dataSetFragment").hide();

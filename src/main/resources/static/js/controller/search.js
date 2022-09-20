@@ -1,4 +1,9 @@
 $(document).ready(function () {
+	 if (screen.width > 990) { 	
+		 $("#mobileKeyworkSearchDiv").hide();
+	 } else {
+		 $("#mobileKeyworkSearchDiv").show();
+	 }
 	$(".landing-tab").removeClass('active');
 	$(".search-tab").addClass('active');
 	if($(".backToStatusTabLink").is(':visible')) {
@@ -51,15 +56,20 @@ $(document).ready(function () {
 		 }
 		 populateSearchCriteria(null);
 	 } else if($("#keyWord").val()) {
-		 $("#attributeVal").val($("#keyWord").val());
-		 $("#resetBtn").show();
+		 if (screen.width > 990) { 	
+			 $("#attributeVal").val($("#keyWord").val());
+			 $("#resetBtn").show(); 
+		 } else {
+			 $("#mobileKeyworkSearchDiv").find("#attributeVal").val($("#keyWord").val());
+			 $("#resetBtnMobile").show();
+		 }
+		 
+		
 		 populateSearchCriteria(null);
-	 } else {
-		 populateSearchCriteria(null);
+	 } else if (screen.width > 990) { 
+			 populateSearchCriteria(null);
+		 
 	 }
-	 
-	 
-	 
 	 showFirstFewFields();
 	 
 	 $(document).keypress(function(event){	
@@ -75,7 +85,16 @@ $(document).ready(function () {
 
 function populateSearchCriteria(searchType) {
 	
-	$("#searchResultsDiv").show();
+	if (screen.width > 990) { 	
+		$("#searchResultsDiv").show();
+		$("#searchResultsMobileDiv").hide();
+	} else {
+		$("#searchResultsDiv").hide();
+		$("#mobileKeyworkSearchDiv").hide();
+		$("#filterSectionDiv").hide();
+		$("#searchResultsMobileDiv").show();
+	}
+	
 	search_criteria_json.detailed = true;
 	search_criteria_json.searchType = "dataobject";	
 	
@@ -94,11 +113,17 @@ function populateSearchCriteria(searchType) {
 	rowIds.push(1);
 	operators.push("EQUAL");
 	iskeyWordSearch.push(false);
-
+	var attributeVal;
+	
+	if (screen.width > 990) { 	
+		attributeVal = $("#attributeVal").val();
+	} else {
+		attributeVal = $("#mobileKeyworkSearchDiv").find("#attributeVal").val();
+	}
 			
-	 if($("#attributeVal").val()) {
+	 if(attributeVal) {
 		    attrNames.push("ANY");
-			attrValues.push('%' + $("#attributeVal").val().trim() + '%');
+			attrValues.push('%' + attributeVal.trim() + '%');
 			levelValues.push("ANY");
 			isExcludeParentMetadata.push(false);
 			rowIds.push(2);
@@ -150,7 +175,13 @@ function populateSearchCriteria(searchType) {
 		search_criteria_json.operator = operators.join();
 		var myCollection = $("#returnToSearchMyCollection").val();
 		search_criteria_json.isShowMyCollection = myCollection;
-		refreshDataTable();
+		
+		if (screen.width > 990) { 	
+			refreshDataTable();
+		} else {
+			refreshDataTableMobile();
+		}
+		
 }
 
 function refreshDataTable() {
