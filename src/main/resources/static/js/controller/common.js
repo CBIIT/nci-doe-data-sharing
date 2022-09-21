@@ -399,7 +399,7 @@ $(document)
 					});
 					
 					$("#resetBtnMobile").click(function(e) {
-						$("#attributeVal").val("");
+						$(this).parent().find("#attributeVal").val("");
 						$("#resetBtnMobile").hide();
 					});
 					
