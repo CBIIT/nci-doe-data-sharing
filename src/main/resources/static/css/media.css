@@ -145,14 +145,14 @@
 	}
 	#landingSearchMobileButton {
 		position: relative;
-		top: 2.5rem;
+		top: 2.3rem;
 		right: 5.5rem;
-		height: 29px;
-		width: 4rem;
-		font-size: 14px;
-		background-color: #E87B05;
-		border-radius: 15px;
 		text-align: center;
+	}
+	
+	#landingSearchMobileButton img {
+		width: 60px !important;
+        height: 30px !important;
 	}
 }
 
@@ -443,16 +443,11 @@
 	#landingSearchMobileButton {
 		position: relative!important;
 		top: 2.4rem!important;
-		right: 5rem!important; 
-		width : 3.5rem!important; 
-		font-size : 13px!important;
-		height: 29px!important;
-		background-color: #E87B05;
-		border-radius: 15px!important;
-		text-align: center!important;
+		right: 5rem!important;
 	}
 	#landingSearchMobileButton img {
 		width: 49px !important;
+        height: 30px !important;
 	}
 	.resetBtnSpan{
 	right: 5.5rem !important;
