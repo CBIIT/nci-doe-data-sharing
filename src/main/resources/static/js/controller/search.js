@@ -79,6 +79,8 @@ $(document).ready(function() {
 			if ($("#searchBtn").is(':visible')) {
 				event.preventDefault();
 				populateSearchCriteria('displayAllResults');
+			} else if($("#searchMobileBtn").is(':visible')) {
+				$("#searchMobileBtn").click();
 			}
 		}
 	});

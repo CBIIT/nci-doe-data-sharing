@@ -90,6 +90,13 @@ $(document)
 						populateSearchCriteria('simpleSearch');
 					});
 					
+					$("#searchFiltersMobilebtn").click(function(e) {
+						e.preventDefault();
+						$("#mobileKeyworkSearchDiv").hide();
+						$("#filterSectionDiv").hide();
+						populateSearchCriteria('simpleSearch');
+					});
+					
 
 					$("#backtoFiltersMobilebtn").click(function(e){
 						$("#searchResultsDiv").hide();
@@ -770,6 +777,17 @@ $(document).on('click', '#clearFilters', function() {
 	showFirstFewFields();
 	populateSearchCriteria('simpleSearch');
 });
+
+$(document).on('click', '#cancelFiltersMobile', function() {
+	$(".filterGroupDiv").each(function(e) {
+		$(this).show();
+		$(this).find('.showMorefields').show();
+		$(this).find('.filteritem').prop('checked', false);
+		$(this).find('span').css('color', '#212529');
+	});
+	showFirstFewFields();
+});
+
 
 $(document).on('click', '.clearMetadata', function() {
 	$(this).parent().find("input[type='text']").val("");

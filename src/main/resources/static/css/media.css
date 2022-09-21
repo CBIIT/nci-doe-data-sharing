@@ -217,6 +217,33 @@
     border: 2px solid #E66F05;
     font-weight: 550;
 	}
+	
+	#clearFilters{
+	display:none;
+	}
+	#mobileFiltersSection{
+	display:flex !important;
+	padding-bottom: 1rem;
+	}
+	
+	#cancelFiltersMobile{
+	position: relative;
+    top: 0rem;
+    left: 15rem;
+	}
+	#cancelFiltersMobile img{
+	height: 28px;
+    width: 45px;
+	}
+	#searchFiltersMobilebtn{
+	position: relative;
+    top: 0rem;
+    left: 15rem;
+	}
+	#searchFiltersMobilebtn img {
+	height: 28px;
+    width: 45px;
+	}
 	#resetBtnMobile {
 	position: absolute;
     top: 2rem;
