@@ -135,20 +135,20 @@
 @media ( min-width : 461px) and ( max-width : 990px) {
 	#attributeVallanding {
 		border-radius: 24px;
-		font-size: 13px;
+		font-size: 18px;
 		font-weight: 550;
 		height: 45px;
-		width: 150%;
+		width: 20rem;
 		border: 2.51px solid #397DED;
 		background-color: #FFFFFF;
-		margin-left: 0rem;
+		margin-left: -1rem;
 	}
 	#landingSearchMobileButton {
 		position: relative;
 		top: 2.5rem;
 		right: 5rem;
 		height: 29px;
-		width: 91px;
+		width: 4rem;
 		font-size: 14px;
 		background-color: #E87B05;
 		border-radius: 15px;
@@ -314,13 +314,14 @@
 		right: 6rem!important;
 	}
 	#attributeVallanding::placeholder {
-		font-size: 13px;
+		font-size: 18px;
 	}
 	.landingSearchDiv {
 		position: relative!important;
 		display: flex!important;
 		margin-top: -5px!important;
 		background-color: transparent!important;
+		max-width: 100% !important;
 	}
 	.mobileContainer {
 		display: block !important;
@@ -431,18 +432,20 @@
 @media ( max-width : 460px) {
 	#attributeVallanding {
 		border-radius: 24px;
-		font-size: 13px;
+		font-size: 18px;
 		font-weight: 550;
 		height: 45px;
-		width: 27rem;
+		width: 22rem;
 		border: 2.51px solid #397DED;
 		background-color: #FFFFFF;
-		margin-left: 0rem;
+		margin-left: -1rem;
 	}
 	#landingSearchMobileButton {
 		position: relative!important;
 		top: 2.4rem!important;
-		right: 4.5rem!important; width : 105px!important; font-size : 13px!important;
+		right: 5rem!important; 
+		width : 4.5rem!important; 
+		font-size : 13px!important;
 		height: 29px!important;
 		background-color: #E87B05;
 		border-radius: 15px!important;
@@ -452,7 +455,7 @@
 		width: 49px !important;
 	}
 	.resetBtnSpan{
-	right: 5rem !important;
+	right: 5.5rem !important;
 	}
 }
 @media ( max-width :1200px) and (min-width: 992px) {
