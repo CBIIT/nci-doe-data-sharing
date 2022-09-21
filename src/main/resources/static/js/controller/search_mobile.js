@@ -128,7 +128,7 @@ function renderSearchAssetRow(data, type, row) {
 			+ "title='Copy to clipboard' data-clipboard-text='"
 			+ row.dataSetdmeDataId
 			+ "'>"
-			+ "<img src='images/clippy.svg' width='13' alt='Copy to clipboard'/></button></div>";
+			+ "<img src='images/Search.Shareable_Link_Mobile.svg' width='20' alt='Copy to clipboard' style='filter: none;'/></button></div>";
 
 	html += "<div class='col-md-12 cil_12_bold_no_color_mobile_dataset' >" + "<span style='word-break: break-all;'>"
 			+ row.dataSetDescription
