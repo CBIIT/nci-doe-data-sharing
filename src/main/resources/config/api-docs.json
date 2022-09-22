@@ -60,9 +60,6 @@
         "responses": {
           "200": {
             "description": "```\n{  \n            inProgress: false\n            task:\n              taskId: c857706a-a916-4d35-9903-db494ff72a36\n              result: true\n              completedItems:\n                - path: /NCI_DOE_Archive/Program_demo/Study_9_19_2022/Asset_9_16_2022/autoencoder_ratchet.index\n                  result: true\n                  completed: 1663309760000\n                  effectiveTransferSpeed: 89\n              effectiveTransferSpeed: 89\n              created: 1663309705911\n              completed: 1663309775519\n }",
-            "schema": {
-              "$ref": "#/definitions/HpcBulkDataObjectRegistrationStatusDTO"
-            },
             "headers": {}
           },
           "400": {
@@ -99,9 +96,6 @@
         "responses": {
           "200": {
             "description": "```\n   {\n    \"inProgress\": false,\n    \"path\": \"/NCI_DOE_Archive/Program_demo/Study_9_19_2022/asset_udit\",\n    \"destinationLocation\": {\n      \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n      \"fileId\": \"bulk-collections-9_18_2022\"\n    },\n    \"destinationType\": \"GLOBUS\",\n    \"result\": \"COMPLETED\",\n    \"completedItems\": [{\n      \"dataObjectDownloadTaskId\": \"3ee39875-069e-4386-94dc-65686204d70b\",\n      \"path\": \"/NCI_DOE_Archive/Program_demo/Study_9_19_2022/asset_udit/Analysis_9_18_2022.txt\",\n      \"destinationLocation\": {\n        \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n        \"fileId\": \"bulk-collections-1_28_2021/Analysis_9_18_2022.txt\"\n      },\n      \"result\": \"COMPLETED\",\n      \"effectiveTransferSpeed\": 1857,\n      \"size\": 170468\n    }, {\n      \"dataObjectDownloadTaskId\": \"b06cd192-5ee7-4012-bdc1-7f89a2b2f158\",\n      \"path\": \"/NCI_DOE_Archive/Program_demo/Study_9_19_2022/asset_udit/Analysis_7_15_2022.txt\",\n      \"destinationLocation\": {\n        \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n        \"fileId\": \"bulk-collections-9_21_2022/Analysis_7_15_2022.txt\"\n      },\n      \"result\": \"COMPLETED\",\n      \"effectiveTransferSpeed\": 143,\n      \"size\": 12035\n    }, {\n      \"dataObjectDownloadTaskId\": \"74d80965-f300-4cdf-a551-c74b6a802a72\",\n      \"path\": \"/NCI_DOE_Archive/Program_demo/Study_9_19_2022/asset_udit/Analysis_6_13_2022.txt\",\n      \"destinationLocation\": {\n        \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n        \"fileId\": \"bulk-collections-9_21_2022/Analysis_6_13_2022.txt\"\n      },\n      \"result\": \"COMPLETED\",\n      \"effectiveTransferSpeed\": 7,\n      \"size\": 591\n    }],\n    \"effectiveTrasnsferSpeed\": 669,\n    \"created\": 1611857613881,\n    \"completed\": 1611857755006\n  }",
-            "schema": {
-              "$ref": "#/definitions/HpcCollectionDownloadStatusDTO"
-            },
             "headers": {}
           },
           "400": {
@@ -138,9 +132,6 @@
         "responses": {
           "200": {
             "description": "```\n{\n      \"inProgress\": false,\n      \"path\": \"/NCI_DOE_Archive/Program_demo/Study_9_19_2022/Asset_9_18_2022/SRR479079.sra\",\n      \"destinationLocation\": {\n        \"fileContainerId\": \"MyDrive\",\n        \"fileContainerName\": \"MyDrive\",\n        \"fileId\": \"DOE/SRR479079.sra\"\n      },\n      \"destinationType\": \"GOOGLE_DRIVE\",\n      \"result\": \"COMPLETED\",\n      \"effectiveTrasnsferSpeed\": 222,\n      \"size\": 378,\n      \"created\": 1606859709852,\n      \"completed\": 1606859711548\n  }",
-            "schema": {
-              "$ref": "#/definitions/HpcDataObjectDownloadStatusDTO"
-            },
             "headers": {}
           },
           "400": {
@@ -177,9 +168,6 @@
         "responses": {
           "200": {
             "description": "```\n {\n        \"inProgress\": false,\n        \"destinationLocation\": {\n          \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n          \"fileId\": \"/~/Demo_9_15_2022\"\n        },\n        \"destinationType\": \"GLOBUS\",\n        \"result\": \"COMPLETED\",\n        \"completedItems\": [{\n          \"dataObjectDownloadTaskId\": \"d57927c8-97da-459d-a150-576eb495df76\",\n          \"path\": \"/NCI_DOE_Archive/Program_demo/Study_9_19_2022/US_Model_5_6_2022/SRR479649.sra\",\n          \"destinationLocation\": {\n            \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n            \"fileId\": \"/~/Demo_9_15_2022/NCI_DOE_Archive/Program_demo/Study_9_19_2022/US_Model_5_6_2022/SRR479649.sra\"\n          },\n          \"result\": \"COMPLETED\",\n          \"effectiveTransferSpeed\": 6,\n          \"size\": 378\n        }, {\n          \"dataObjectDownloadTaskId\": \"cfa366fe-8cbc-4523-8517-bd9f9311f7b5\",\n          \"path\": \"/NCI_DOE_Archive/Program_demo/Study_9_19_2022/US_Model_5_6_2022/SRR479648a.vdbcache\",\n          \"destinationLocation\": {\n            \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n            \"fileId\": \"/~//NCI_DOE_Archive/Program_demo/Study_9_19_2022/US_Model_5_6_2022/SRR479648a.vdbcache\"\n          },\n          \"result\": \"COMPLETED\",\n          \"effectiveTransferSpeed\": 3,\n          \"size\": 378\n        }, {\n          \"dataObjectDownloadTaskId\": \"506e8021-bd62-44dc-804b-2d1d671a3264\",\n          \"path\": \"/NCI_DOE_Archive/Program_demo/Study_9_19_2022/US_Model_5_6_2022/Analysis_9_18_2022.txt\",\n          \"destinationLocation\": {\n            \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n            \"fileId\": \"/~/NCI_DOE_Archive/Program_demo/Study_9_19_2022/US_Model_5_6_2022/Analysis_9_18_2022.txt\"\n          },\n          \"result\": \"COMPLETED\",\n          \"size\": 8\n        }],\n        \"effectiveTrasnsferSpeed\": 4,\n        \"created\": 1663310485515,\n        \"completed\": 1663310670014\n   }",
-            "schema": {
-              "$ref": "#/definitions/HpcCollectionDownloadStatusDTO"
-            },
             "headers": {}
           },
           "400": {
@@ -217,7 +205,7 @@
             "description": "Dataset",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DatasetDto"
+              "$ref": "#/definitions/ReferenceDataset"
             }
           }
         ],
@@ -802,66 +790,58 @@
     }
   },
   "definitions": {
-    "HpcCollectionDownloadStatusDTO": {
-      "type": "object",
-      "properties": {
-        "inProgress": {
-          "type": "boolean"
-        }
-      }
-    },
-    "HpcDataObjectDownloadStatusDTO": {
-      "type": "object",
-      "properties": {
-        "inProgress": {
-          "type": "boolean"
-        }
-      }
-    },
-    "DatasetDto": {
-      "type": "object",
-      "properties": {
-        "modelPaths": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "referenceDatasetPaths": {
-          "type": "array",
-          "items": {
+    "Path": {
+        "type": "object",
+        "properties": {
+          "path": {
             "type": "string"
           }
         }
-      }
     },
-    "HpcBulkDataObjectRegistrationStatusDTO": {
-      "type": "object",
-      "properties": {
-        "inProgress": {
-          "type": "boolean"
+    "ModelPath": {
+        "type": "object",
+        "properties": {
+          "modelPaths": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/Path"
+            }
+          }
         }
-      }
+    },
+    "ReferenceDataset": {
+        "type": "object",
+        "properties": {
+          "referenceDatasetPaths": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/Path"
+            }
+          }
+        }
     },
     "ModelStatus": {
       "type": "object",
-      "properties": {
-        "status": {
+      "properties" : {
+        "status" : {
           "type": "string"
         },
-        "startDate": {
+        "startDate" : {
           "type": "number"
         },
-        "completedDate": {
+        "completedDate" : {
           "type": "number"
         },
-        "resultPath": {
+        "resultPath" : {
           "type": "string"
         },
-        "failureMsg": {
+        "failureMsg" : {
           "type": "string"
         },
-        "inputFile": {
+        "inputFile" : {
+          "type": "string"
+        },
+        "outcomeFile" : {
           "type": "string"
         }
       }
