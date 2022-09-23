@@ -261,8 +261,9 @@ $(document).on(
 				$("#performModelAnalysisModal").find("#outputResultFilePath").val(outputResultFilePath);
 				var applicableModelNamesList = applicableModelNames.split(',');
 
-				$("#performModelAnalysisModal").find("#selectApplicableModelName").append(
-						$('<option></option>').attr('value', "Select").text("Select"));
+				// $("#performModelAnalysisModal").find("#selectApplicableModelName").append(
+				// $('<option></option>').attr('value',
+				// "Select").text("Select"));
 				$.each(applicableModelNamesList, function(index, value) {
 
 					var displayVal = value.substring(value.lastIndexOf('/') + 1, value.length);
