@@ -231,7 +231,7 @@
         "tags": [
           "Evaluate Models"
         ],
-        "summary": "Perform model evaluation using GDC manifest, input dataset, or reference. dataset.",
+        "summary": "Perform model evaluation using GDC manifest, input dataset, or reference dataset.",
         "operationId": "evaluationOfDatasetsUsingPost",
         "produces": [
           "*/*"
