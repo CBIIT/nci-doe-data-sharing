@@ -338,7 +338,7 @@
 	.resetBtnSpan {
 		position: relative!important;
 		top: 2.5rem!important;
-		right: 6rem!important;
+		left: -6rem!important;
 	}
 	#attributeVallanding::placeholder {
 		font-size: 18px;
@@ -477,7 +477,7 @@
         height: 30px !important;
 	}
 	.resetBtnSpan{
-	right: 5.5rem !important;
+    left: -6rem !important;
 	}
 }
 @media ( max-width :1200px) and (min-width: 992px) {
