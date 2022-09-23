@@ -37,8 +37,8 @@
     },
     "/api/v2/registration/{taskId}": {
       "get": {
-        "description": "This service allows you to get the status of a registration task. The *taskid* parameter is the task identifier returned in registration REST API response. \n\nThis service returns the status and path of each file in MoDaC.\n\n1. **CURL COMMAND**\n  ```\n  curl -k 'https://fsdmel-modac01t.ncifcrf.gov/api/v2/registration/{taskId}' -D header.txt -o output.json -u <Your Email ID>\n  ```\n\n  2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k 'https://fsdmel-modac01t.ncifcrf.gov/api/v2/registration/c857706a-a916-4d35-9903-db494ff72a36  -D header.txt -o output.json -u myemailid@nih.gov\n  ```\n",
-        "summary": "Get the status of a registration task",
+        "description": "This service allows you to get the status of a registration task. The *taskId* parameter is the task identifier returned in the *Registration REST API* response. \n\nThis service returns the status and path of each file in MoDaC.\n\n1. **CURL COMMAND**\n  ```\n  curl -k 'https://fsdmel-modac01t.ncifcrf.gov/api/v2/registration/{taskId}' -D header.txt -o output.json -u <Your Email ID>\n  ```\n\n  2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k 'https://fsdmel-modac01t.ncifcrf.gov/api/v2/registration/c857706a-a916-4d35-9903-db494ff72a36  -D header.txt -o output.json -u myemailid@nih.gov\n  ```\n",
+        "summary": "Get the status of a registration task.",
         "tags": [
           "Get Task Status"
         ],
@@ -73,8 +73,8 @@
     },
     "/api/collection/download/{taskId}": {
       "get": {
-        "description": "This service allows you to get the status of a collection download task. The *taskid* parameter is the task identifier returned in *Collection Download* REST API response. \n\nThis service returns the download status of each file in MoDaC.\n\n1. **CURL COMMAND**\n  ```\n  curl -k 'https://fsdmel-modac01t.ncifcrf.gov/api/collection/download/{taskId}' -D header.txt -o output.json -u <Your Email ID>\n  ```\n\n  2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k 'https://fsdmel-modac01t.ncifcrf.gov/api/collection/download/bb0d13ca-2026-4153-9c13-c63c7fadffe2 -D header.txt -o output.json -u JaneDoe@nih.gov\n  ```\n",
-        "summary": "Get the status of a collection download task",
+        "description": "This service allows you to get the status of a collection download task. The *taskId* parameter is the task identifier returned in the *Collection Download* REST API response. \n\nThis service returns the download status of each file in MoDaC.\n\n1. **CURL COMMAND**\n  ```\n  curl -k 'https://fsdmel-modac01t.ncifcrf.gov/api/collection/download/{taskId}' -D header.txt -o output.json -u <Your Email ID>\n  ```\n\n  2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k 'https://fsdmel-modac01t.ncifcrf.gov/api/collection/download/bb0d13ca-2026-4153-9c13-c63c7fadffe2 -D header.txt -o output.json -u JaneDoe@nih.gov\n  ```\n",
+        "summary": "Get the status of a collection download task.",
         "tags": [
           "Get Task Status"
         ],
@@ -109,8 +109,8 @@
     },
     "/api/dataObject/download/{taskId}": {
       "get": {
-        "description": "This service allows you to get the status of a data file download task. The *taskid* parameter is the task identifier returned in *Data Object Download* REST API response. \n\nThis service returns the download status of each data file in MoDaC.\n1. **CURL COMMAND**\n  ```\n  curl -k 'https://fsdmel-modac01t.ncifcrf.gov/api/dataObject/download/{taskId}' -D header.txt -o output.json -u <Your Email ID>\n  ```\n\n  2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k 'https://fsdmel-modac01t.ncifcrf.gov/api/dataObject/download/a24b4026-423c-4d27-a824-4c51635f445e -D header.txt -o output.json -u JaneDoe@nih.gov\n  ```\n",
-        "summary": "Get the status of a data file download task",
+        "description": "This service allows you to get the status of a data file download task. The *taskId* parameter is the task identifier returned in the *Data Object Download* REST API response. \n\nThis service returns the download status of each data file in MoDaC.\n1. **CURL COMMAND**\n  ```\n  curl -k 'https://fsdmel-modac01t.ncifcrf.gov/api/dataObject/download/{taskId}' -D header.txt -o output.json -u <Your Email ID>\n  ```\n\n  2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k 'https://fsdmel-modac01t.ncifcrf.gov/api/dataObject/download/a24b4026-423c-4d27-a824-4c51635f445e -D header.txt -o output.json -u JaneDoe@nih.gov\n  ```\n",
+        "summary": "Get the status of a data file download task.",
         "tags": [
           "Get Task Status"
         ],
@@ -145,8 +145,8 @@
     },
     "/api/download/{taskId}": {
       "get": {
-        "description": "This service allows you to get the status of data file list or collection list  download task. The *taskid* parameter is the task identifier returned in *Download Object and Collection List* REST API response. \nThis service returns the download status of each file. For collection list, the collection summary information is also returned. \n1.**CURL COMMAND**\n  ```\n  curl -k 'https://fsdmel-modac01t.ncifcrf.gov/api/download/{taskId}' -D header.txt -o output.json -u <Your Email ID>\n  ```\n\n  2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k 'https://fsdmel-modac01t.ncifcrf.gov/api/download/be6cefdc-0ea5-4bd6-b84b-1d0b876407db -D header.txt -o output.json -u JaneDoe@nih.gov\n  ```\n",
-        "summary": "Get the status of a data file list or a collection list download task",
+        "description": "This service allows you to get the status of a data file list download task or a collection list download task. The *taskId* parameter is the task identifier returned in the *Download Object and Collection List* REST API response. \nThis service returns the download status of each file. For collection list, the service also returns the collection summary information.\n\n1.**CURL COMMAND**\n  ```\n  curl -k 'https://fsdmel-modac01t.ncifcrf.gov/api/download/{taskId}' -D header.txt -o output.json -u <Your Email ID>\n  ```\n\n  2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k 'https://fsdmel-modac01t.ncifcrf.gov/api/download/be6cefdc-0ea5-4bd6-b84b-1d0b876407db -D header.txt -o output.json -u JaneDoe@nih.gov\n  ```\n",
+        "summary": "Get the status of a data file list download task or a collection list download task.",
         "tags": [
           "Get Task Status"
         ],
@@ -167,25 +167,25 @@
         ],
         "responses": {
           "200": {
-            "description": "```\n {\n        \"inProgress\": false,\n        \"destinationLocation\": {\n          \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n          \"fileId\": \"/~/Demo_9_15_2022\"\n        },\n        \"destinationType\": \"GLOBUS\",\n        \"result\": \"COMPLETED\",\n        \"completedItems\": [{\n          \"dataObjectDownloadTaskId\": \"d57927c8-97da-459d-a150-576eb495df76\",\n          \"path\": \"/NCI_DOE_Archive/Program_demo/Study_9_19_2022/US_Model_5_6_2022/SRR479649.sra\",\n          \"destinationLocation\": {\n            \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n            \"fileId\": \"/~/Demo_9_15_2022/NCI_DOE_Archive/Program_demo/Study_9_19_2022/US_Model_5_6_2022/SRR479649.sra\"\n          },\n          \"result\": \"COMPLETED\",\n          \"effectiveTransferSpeed\": 6,\n          \"size\": 378\n        }, {\n          \"dataObjectDownloadTaskId\": \"cfa366fe-8cbc-4523-8517-bd9f9311f7b5\",\n          \"path\": \"/NCI_DOE_Archive/Program_demo/Study_9_19_2022/US_Model_5_6_2022/SRR479648a.vdbcache\",\n          \"destinationLocation\": {\n            \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n            \"fileId\": \"/~//NCI_DOE_Archive/Program_demo/Study_9_19_2022/US_Model_5_6_2022/SRR479648a.vdbcache\"\n          },\n          \"result\": \"COMPLETED\",\n          \"effectiveTransferSpeed\": 3,\n          \"size\": 378\n        }, {\n          \"dataObjectDownloadTaskId\": \"506e8021-bd62-44dc-804b-2d1d671a3264\",\n          \"path\": \"/NCI_DOE_Archive/Program_demo/Study_9_19_2022/US_Model_5_6_2022/Analysis_9_18_2022.txt\",\n          \"destinationLocation\": {\n            \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n            \"fileId\": \"/~/NCI_DOE_Archive/Program_demo/Study_9_19_2022/US_Model_5_6_2022/Analysis_9_18_2022.txt\"\n          },\n          \"result\": \"COMPLETED\",\n          \"size\": 8\n        }],\n        \"effectiveTrasnsferSpeed\": 4,\n        \"created\": 1663310485515,\n        \"completed\": 1663310670014\n   }",
+            "description": "\n**Datafile list download task response**\n```\n {\n        \"inProgress\": false,\n        \"destinationLocation\": {\n          \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n          \"fileId\": \"/~/Demo_9_15_2022\"\n        },\n        \"destinationType\": \"GLOBUS\",\n        \"result\": \"COMPLETED\",\n        \"completedItems\": [{\n          \"dataObjectDownloadTaskId\": \"d57927c8-97da-459d-a150-576eb495df76\",\n          \"path\": \"/NCI_DOE_Archive/Program_demo/Study_9_19_2022/US_Model_5_6_2022/SRR479649.sra\",\n          \"destinationLocation\": {\n            \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n            \"fileId\": \"/~/Demo_9_15_2022/NCI_DOE_Archive/Program_demo/Study_9_19_2022/US_Model_5_6_2022/SRR479649.sra\"\n          },\n          \"result\": \"COMPLETED\",\n          \"effectiveTransferSpeed\": 6,\n          \"size\": 378\n        }, {\n          \"dataObjectDownloadTaskId\": \"cfa366fe-8cbc-4523-8517-bd9f9311f7b5\",\n          \"path\": \"/NCI_DOE_Archive/Program_demo/Study_9_19_2022/US_Model_5_6_2022/SRR479648a.vdbcache\",\n          \"destinationLocation\": {\n            \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n            \"fileId\": \"/~//NCI_DOE_Archive/Program_demo/Study_9_19_2022/US_Model_5_6_2022/SRR479648a.vdbcache\"\n          },\n          \"result\": \"COMPLETED\",\n          \"effectiveTransferSpeed\": 3,\n          \"size\": 378\n        }, {\n          \"dataObjectDownloadTaskId\": \"506e8021-bd62-44dc-804b-2d1d671a3264\",\n          \"path\": \"/NCI_DOE_Archive/Program_demo/Study_9_19_2022/US_Model_5_6_2022/Analysis_9_18_2022.txt\",\n          \"destinationLocation\": {\n            \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n            \"fileId\": \"/~/NCI_DOE_Archive/Program_demo/Study_9_19_2022/US_Model_5_6_2022/Analysis_9_18_2022.txt\"\n          },\n          \"result\": \"COMPLETED\",\n          \"size\": 8\n        }],\n        \"effectiveTrasnsferSpeed\": 4,\n        \"created\": 1663310485515,\n        \"completed\": 1663310670014\n   }\n```   \n   **Collection list download task response**\n```\n    {\n        \"inProgress\": false,\n        \"destinationLocation\": {\n          \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n          \"fileId\": \"/~/Collection_Download_9_22_2022/\"\n        },\n        \"destinationType\": \"GLOBUS\",\n        \"result\": \"COMPLETED\",\n        \"completedItems\": [{\n          \"dataObjectDownloadTaskId\": \"1b48f48c-3395-4655-8105-07d9fa03253d\",\n          \"path\": \"/NCI_DOE_Archive/Program_3_19_2021/Study_3_19_2021/Asset_9_21_2022/tc1.model.h5\",\n          \"collectionPath\": \"/NCI_DOE_Archive/Program_3_19_2021/Study_3_19_2021/Asset_9_21_2022\",\n          \"destinationLocation\": {\n            \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n            \"fileId\": \"/~/Collection_Download_9_22_2022/NCI_DOE_Archive/Program_3_19_2021/Study_3_19_2021/Asset_9_21_2022/tc1.model.h5\"\n          },\n          \"result\": \"COMPLETED\",\n          \"effectiveTransferSpeed\": 5153750,\n          \"size\": 619723016\n        }, {\n          \"dataObjectDownloadTaskId\": \"24e2220e-0ff7-464a-8645-a1fb4aae596b\",\n          \"path\": \"/NCI_DOE_Archive/Program_3_19_2021/Study_3_19_2021/Asset_9_22_2022/y_pred_7ea1d5c6-d0b1-48c1-a6ec-e08188970c2f.csv\",\n          \"collectionPath\": \"/NCI_DOE_Archive/Program_3_19_2021/Study_3_19_2021_study/Asset_9_22_2022\",\n          \"destinationLocation\": {\n            \"fileContainerId\": \"16572124-19cb-11e9-934d-0e3d676669f4\",\n            \"fileId\": \"/~/Collection_Download_9_22_2022/NCI_DOE_Archive/Program_3_19_2021/Study_3_19_2021/Asset_9_22_2022/y_pred_7ea1d5c6-d0b1-48c1-a6ec-e08188970c2f.csv\"\n          },\n          \"result\": \"COMPLETED\",\n          \"effectiveTransferSpeed\": 11,\n          \"size\": 409\n        }],\n        \"effectiveTrasnsferSpeed\": 576205,\n        \"created\": 1663962942892,\n        \"completed\": 1663963110033,\n        \"collectionListResultSummary\": [{\n          \"path\": \"/NCI_DOE_Archive/3_19_2021/3_19_2021_study/Asset_9_21_2022\",\n          \"processed\": true,\n          \"result\": \"COMPLETED\",\n          \"completedCount\": 2\n        }, {\n          \"path\": \"/NCI_DOE_Archive/3_19_2021/3_19_2021_study/Asset_9_22_2022\",\n          \"processed\": true,\n          \"result\": \"COMPLETED\",\n          \"completedCount\": 8\n        }]\n}",
             "headers": {}
           },
           "400": {
             "description": "Bad Request"
           },
           "401": {
-            "description": "Authentication Failure: \n\nHTTP/1.1 401 Unauthorized Content-Type: application/json\n\n\nJSON:\n\n{ \"errorType\": \"REQUEST_AUTHENTICATION_FAILED\",\n\n\"message\": \"Access Denied: LDAP authentication failed\",\n\n\"stackTrace\": \"…\" } "
+            "description": "\nAuthentication Failure: \n\nHTTP/1.1 401 Unauthorized Content-Type: application/json\n\n\nJSON:\n\n{ \"errorType\": \"REQUEST_AUTHENTICATION_FAILED\",\n\n\"message\": \"Access Denied: LDAP authentication failed\",\n\n\"stackTrace\": \"…\" } "
           }
         }
       }
     },
     "/api/models/evaluate/{referenceDatasetPath}": {
       "post": {
-        "description": "This service allows you to evaluate one or more models using a reference dataset. A reference dataset is a MoDaC dataset containing an input file and an outcome file. The paths of the models to be evalauted are provided in the input.json file. \n\nTo invoke this service, you require a MoDaC user account with upload permission.\n\n   Use *Get Evaluate Task status* Rest API to get the evaluation result by providing the task id returned from this service. \n\n \n\n \n\n1. **CURL COMMAND**\n  ```\n  curl -H Content-Type: application/json -d @<model paths json> -X POST https://fsdmel-modac01t.ncifcrf.gov/api/models/evaluate/{referenceDatasetPath} -u <Your Email ID>\n  ```\n2.  **ModelPaths.json Example**\n  ```\n     {\n           \"modelPaths\" : [\n           {\n           \"path\": \"/NCI_DOE_Archive/Program_3_1_21/Study_3_1_21/US_Model_5_6_2022\"\n           },\n           {\n            \"path\": \"/NCI_DOE_Archive/Program_3_1_21/Study_3_1_21/US_Model_9_6_2022\"\n          }\n        ]\n    }\n  ```\n3. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -H Content-Type: application/json -d @ModelPaths.json -X POST https://fsdmel-modac01t.ncifcrf.gov/api/models/evaluate/NCI_DOE_Archive/Program_demo/Study_9_19_2022/Asset_9_19_2022 -u JohnDoe@nih.gov",
+        "description": "This service allows you to evaluate one or more models that are deployed. using a reference dataset. A reference dataset is a MoDaC dataset containing an input file and an outcome file. The input.json file provides the paths of the models to be evaluated.. \n\nTo invoke this service, you require a MoDaC user account with upload permission.\n\n   Use the *Get Evaluate Task Status* Rest API to get the evaluation result by providing the task Id returned from this service. \n\n \n\n \n\n1. **CURL COMMAND**\n  ```\n  curl -H Content-Type: application/json -d @<model paths json> -X POST https://fsdmel-modac01t.ncifcrf.gov/api/models/evaluate/{referenceDatasetPath} -u <Your Email ID>\n  ```\n2.  **ModelPaths.json Example**\n  ```\n     {\n           \"modelPaths\" : [\n           {\n           \"path\": \"/NCI_DOE_Archive/Program_3_1_21/Study_3_1_21/US_Model_5_6_2022\"\n           },\n           {\n            \"path\": \"/NCI_DOE_Archive/Program_3_1_21/Study_3_1_21/US_Model_9_6_2022\"\n          }\n        ]\n    }\n  ```\n3. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -H Content-Type: application/json -d @ModelPaths.json -X POST https://fsdmel-modac01t.ncifcrf.gov/api/models/evaluate/NCI_DOE_Archive/Program_demo/Study_9_19_2022/Asset_9_19_2022 -u JohnDoe@nih.gov",
         "tags": [
           "Evaluate Models"
         ],
-        "summary": "Perform model evaluation using reference datasets",
+        "summary": "Perform model evaluation using reference datasets.",
         "operationId": "evaluationUsingPost",
         "produces": [
           "*/*"
@@ -227,11 +227,11 @@
     },
     "/api/model/evaluate/{path}": {
       "post": {
-        "description": "This service allows you to evaluate a model using a Genomic Data Commons (GDC) manifest file, an\n input dataset file, or one or more reference datasets. \n \n \nThe query parameter *type* is mandatory and can be one of the following:\n  1. **ReferenceDataset**: This requires the *referenceDataset* file option to be provided. This JSON file lists one or more reference dataset paths.  \n  2. **UserInput**: This requires the *inputFile* file option to be provided. This file contains the input dataset.   The *outcomeFile* file option is optional. This file contains the expected outcome. \n  3. **GDCManifest**: This requires the *inputeFile* file option to be provided. This file contains a manifest file from GDC. The steps for creating a GDC Manifest file are available at https://docs.gdc.cancer.gov/Encyclopedia/pages/Manifest_File. The *outcomeFile* file option is optional. This file contains the expected outcome. \n   \n  \n  Use *Get Evaluate Task status* Rest API to get the evaluation result by providing the task id returned from this service.\n\n**Evaluating model using one or more reference datasets**\n1. **CURL COMMAND**\n  ```\n  curl -k -F \"referenceDataset=@<reference dataset json>;type=application/json\" -X POST https://fsdmel-modac01t.ncifcrf.gov/api/model/evaluate/{modelPath}?type=ReferenceDataset -u JaneDoe@nih.gov\n  ```\n2.  **ReferenceDataset.json Example**\n  ```\n       {\n          \"referenceDatasetPaths\": [{\n            \"path\": \"/NCI_DOE_Archive/Program_demo/Study_9_19_2022/Asset_9_16_2022\"\n          }, {\n            \"path\": \"/NCI_DOE_Archive/Program_demo/Study_9_19_2022/Asset_9_20_2022\"\n          }]\n        }\n  ```\n3. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k -F \"referenceDataset=@ReferenceDataset.json;type=application/json\" -X POST https://fsdmel-modac01t.ncifcrf.gov/api/model/evaluate/NCI_DOE_Archive/Program_demo/Study_9_19_2022/US_Model_5_6_2022?type=ReferenceDataset -u JaneDoe@nih.gov\n  ```\n **Evaluating model using user supplied dataset file** \n\n1. **CURL COMMAND**\n  ```\n  curl -k -F inputFile=@<input dataset file> -F outcomeFile=@<outcome file> -X POST https://fsdmel-modac01t.ncifcrf.gov/api/model/evaluate/{modelPath}?type=UserInput -u <Your Email ID>\n  ```\n\n2. **EXAMPLE - CURL COMMAND**\n  ```\n   curl -k -F inputFile=@UserInput.txt -F outcomeFile=@OutcomeFile.txt -X POST https://fsdmel-modac01t.ncifcrf.gov/api/model/evaluate/NCI_DOE_Archive/Program_demo/Study_9_19_2022/US_Model_5_6_2022?type=UserInput -u JaneDoe@nih.gov\n   ```\n   **Evaluating model using GDC Manifest file** \n    \n1. **CURL COMMAND**\n  ```\n  curl -k -F inputFile=@<GDC manifest file> -F outcomeFile=@<outcome file> -X POST https://fsdmel-modac01t.ncifcrf.gov/api/model/evaluate/{modelPath}?type=GDCManifest -u <Your Email ID>\n  ```\n\n2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k -F inputFile=@GDCManifestFile.txt -F outcomeFile=@OutcomeFile.txt -X POST https://fsdmel-modac01t.ncifcrf.gov/api/model/evaluate/NCI_DOE_Archive/Program_demo/Study_9_19_2022/US_Model_5_6_2022?type=GDCManifest -u JaneDoe@nih.gov\n",
+        "description": "This service allows you to evaluate a model using a Genomic Data Commons (GDC) manifest file, an\n input dataset file, or one or more reference datasets. \n \n To invoke this service, you require a MoDaC user account with upload permission.\n \n \nThe query parameter *type* is mandatory and can be one of the following:\n  1. **ReferenceDataset**: This requires the *referenceDataset* file option to be provided. This JSON file lists one or more reference dataset paths.  \n  2. **UserInput**: This requires the *inputFile* file option to be provided. This file contains the input dataset.   The *outcomeFile* file option is optional. This file contains the expected outcome. \n  3. **GDCManifest**: This requires the *inputFile* file option to be provided. This file contains a manifest file from GDC. The steps for creating a GDC Manifest file are available at https://docs.gdc.cancer.gov/Encyclopedia/pages/Manifest_File. The *outcomeFile* file option is optional. This file contains the expected outcome. \n   \n  \n  Use the *Get Evaluate Task Status* REST API to get the evaluation result by providing the task Id returned from this service.\n\n**Evaluating model using one or more reference datasets**\n1. **CURL COMMAND**\n  ```\n  curl -k -F \"referenceDataset=@<reference dataset json>;type=application/json\" -X POST https://fsdmel-modac01t.ncifcrf.gov/api/model/evaluate/{modelPath}?type=ReferenceDataset -u JaneDoe@nih.gov\n  ```\n2.  **ReferenceDataset.json Example**\n  ```\n       {\n          \"referenceDatasetPaths\": [{\n            \"path\": \"/NCI_DOE_Archive/Program_demo/Study_9_19_2022/Asset_9_16_2022\"\n          }, {\n            \"path\": \"/NCI_DOE_Archive/Program_demo/Study_9_19_2022/Asset_9_20_2022\"\n          }]\n        }\n  ```\n3. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k -F \"referenceDataset=@ReferenceDataset.json;type=application/json\" -X POST https://fsdmel-modac01t.ncifcrf.gov/api/model/evaluate/NCI_DOE_Archive/Program_demo/Study_9_19_2022/US_Model_5_6_2022?type=ReferenceDataset -u JaneDoe@nih.gov\n  ```\n **Evaluating model using user supplied dataset file** \n\n1. **CURL COMMAND**\n  ```\n  curl -k -F inputFile=@<input dataset file> -F outcomeFile=@<outcome file> -X POST https://fsdmel-modac01t.ncifcrf.gov/api/model/evaluate/{modelPath}?type=UserInput -u <Your Email ID>\n  ```\n\n2. **EXAMPLE - CURL COMMAND**\n  ```\n   curl -k -F inputFile=@UserInput.txt -F outcomeFile=@OutcomeFile.txt -X POST https://fsdmel-modac01t.ncifcrf.gov/api/model/evaluate/NCI_DOE_Archive/Program_demo/Study_9_19_2022/US_Model_5_6_2022?type=UserInput -u JaneDoe@nih.gov\n   ```\n   **Evaluating model using GDC Manifest file** \n    \n1. **CURL COMMAND**\n  ```\n  curl -k -F inputFile=@<GDC manifest file> -F outcomeFile=@<outcome file> -X POST https://fsdmel-modac01t.ncifcrf.gov/api/model/evaluate/{modelPath}?type=GDCManifest -u <Your Email ID>\n  ```\n\n2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k -F inputFile=@GDCManifestFile.txt -F outcomeFile=@OutcomeFile.txt -X POST https://fsdmel-modac01t.ncifcrf.gov/api/model/evaluate/NCI_DOE_Archive/Program_demo/Study_9_19_2022/US_Model_5_6_2022?type=GDCManifest -u JaneDoe@nih.gov\n",
         "tags": [
           "Evaluate Models"
         ],
-        "summary": "Perform model evaluation using GDC manifest, input dataset or reference dataset",
+        "summary": "Perform model evaluation using GDC manifest, input dataset, or reference. dataset.",
         "operationId": "evaluationOfDatasetsUsingPost",
         "produces": [
           "*/*"
@@ -271,8 +271,8 @@
     },
     "/api/model/evaluate/{taskId}": {
       "get": {
-        "description": "This service allows you to get the status of a model evaluation task. The *taskid* parameter is the task identifier returned in evaulate model REST API response. \n\nIf the task is completed, the paths of the results file, input file and outcome file are also returned by this service. These files can be retrieved from MoDaC using the *download a data file* REST API\n\n\n1. **CURL COMMAND**\n  ```\n  curl -k 'https://fsdmel-modac01t.ncifcrf.gov/api/model/evaluate/{taskId}' -D header.txt -o output.json -u <Your Email ID>\n  ```\n\n  2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k https://fsdmel-modac01t.ncifcrf.gov/api/model/evaluate/b25b79c1-c719-4710-b1b9-841e937efe7b -D header.txt -o output.json -u JohnDoe@nih.gov\n  ```\n",
-        "summary": "Get the status of a model evaluation task",
+        "description": "This service allows you to get the status of a model evaluation task. The *taskId* parameter is the task identifier returned in the *Evaluate Models* REST API response. \n\nIf the task is completed, the paths of the results file, input file, and outcome file are also returned by this service. These files can be retrieved from MoDaC using the *Download a data file* REST API\n\n\n1. **CURL COMMAND**\n  ```\n  curl -k 'https://fsdmel-modac01t.ncifcrf.gov/api/model/evaluate/{taskId}' -D header.txt -o output.json -u <Your Email ID>\n  ```\n\n  2. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k https://fsdmel-modac01t.ncifcrf.gov/api/model/evaluate/b25b79c1-c719-4710-b1b9-841e937efe7b -D header.txt -o output.json -u JohnDoe@nih.gov\n  ```\n",
+        "summary": "Get the status of a model evaluation task.",
         "tags": [
           "Get Task Status"
         ],
@@ -293,7 +293,7 @@
         ],
         "responses": {
           "200": {
-            "description": "```\n  {\n    \"status\": \"Completed\",\n    \"startDate\": \"09/21/2022 09:37:06\",\n    \"completedDate\": \"09/21/2022 09:42:35\",\n    \"resultPath\": \"/DOE_TEST_Archive/3_19_2021/3_19_2021_study/US_Model_5_6_2022/Prediction_b25b79c1-c719-4710-b1b9-841e937efe7b/y_pred_b25b79c1-c719-4710-b1b9-841e937efe7b.csv\",\n    \"inputFile\": \"/DOE_TEST_Archive/3_19_2021/3_19_2021_study/US_Model_5_6_2022/Prediction_b25b79c1-c719-4710-b1b9-841e937efe7b/gdc_manifest_tc1.txt\",\n    \"outcomeFile\": \"/DOE_TEST_Archive/3_19_2021/3_19_2021_study/US_Model_5_6_2022/Prediction_b25b79c1-c719-4710-b1b9-841e937efe7b/actual_result_tc1.csv\"\n  }\n``` ",
+            "description": "```\n  {\n    \"status\": \"Completed\",\n    \"startDate\": \"09/21/2022 09:37:06\",\n    \"completedDate\": \"09/21/2022 09:42:35\",\n    \"resultPath\": \"/NCI_DOE_Archive/3_19_2021/3_19_2021_study/US_Model_5_6_2022/Prediction_b25b79c1-c719-4710-b1b9-841e937efe7b/y_pred_b25b79c1-c719-4710-b1b9-841e937efe7b.csv\",\n    \"inputFile\": \"/NCI_DOE_Archive/3_19_2021/3_19_2021_study/US_Model_5_6_2022/Prediction_b25b79c1-c719-4710-b1b9-841e937efe7b/gdc_manifest_tc1.txt\",\n    \"outcomeFile\": \"/NCI_DOE_Archive/3_19_2021/3_19_2021_study/US_Model_5_6_2022/Prediction_b25b79c1-c719-4710-b1b9-841e937efe7b/actual_result_tc1.csv\"\n  }\n``` ",
             "schema": {
               "$ref": "#/definitions/ModelStatus"
             },
@@ -406,7 +406,7 @@
     },
     "/api/collection/query": {
       "post": {
-        "description": "This service allows you to perform a query for a collection. To do a collection query, first we define the simple query, then we show how to combine multiple simple queries into a compound query.\n\n\n  Simple query is the basic building block of the compound query. It consists of :\n  \n  • *attribute* - This is the metadata attribute name which you want to query.\n    \n  • *value* - This is the metadata attribute's value which you want to query.\n    \n  • *operator* - When searching for a collection, you could limit your search to a level using comparison operators. Supported operators are: EQUAL, NOT_EQUAL, LIKE, NUM_LESS_THAN, NUM_LESS_OR_EQUAL, NUM_GREATER_OR_EQUAL, NUM_GREATER_THAN.  \n    \n  • *levelFilter* - This is an optional attribute. If levelFilter attribute is used, search will match the metadata found at the specified *level*. If this filter is not provided, the query will match metadata found at any level of the path.\n    \n  • *attributeMatch* - This is an optional attribute. If it is set to *ANY*, then the query will apply to any metadata attribute, and ‘attribute’ of the query is expected to be omitted. If ‘attributeMatch’ is omitted, or set to EXACT, then the search will be limited to the provided metadata attribute.\n\n    \n   Multiple simple queries can be combined with a join operator (\"AND\", \"OR\") to create a list of queries. Multiple lists can be further combined to create a combined query. \n      \n\n  Example:\n          \n          {\n             \"compoundQuery\": {\n               \"operator\": \"AND\",\n               \"queries\": [{\n                   \"attribute\": \"experiment\",\n                   \"value\": \"H1_M2_update_10M\",\n                   \"operator\": \"EQUAL\",\n                   \"levelFilter\": {\n                     \"level\": 1,\n                     \"operator\": \"NOT_EQUAL\"\n                   }\n                 },\n                 {\n                   \"attribute\": \"run_name\",\n                   \"value\": \"run_02_20_2020\",\n                   \"operator\": \"LIKE\"\n                 }\n               ]\n             },\n             \"detailedResponse\": true,\n             \"page\": 1,\n             \"totalCount\": false\n          }\n\n  \n  **detailedResponse**: By default, search lists returns only paths of matched resulted collections. If “detailedResponse=true”, collections are returned with metadata.\n  **page**: Ask for a specific page of results. By default, the query will return the first 100 results in page 1, the second 100 in page 2, etc. If omitted, page 1 is fetched. \n  **totalCount**: If set to ‘true’, the total count of collections matching the query regardless of the query limit and page will be returned. By default if omitted, this is set to 'false' and no total count will be returned.\n  \n  \n  \n  \n  \n  \n\n  1. **CURL COMMAND TO GET GET A BOOKMARK BY NAME**\n  ```\n  curl -k -H \"Content-Type: application/json\" -d @<attributesFile.json> -X POST https://fsdmel-modac01t.ncifcrf.gov/api/collection/query -H \"Accept: application/json\" -D  <response-header> -o <response-message.json> -u <Your Email ID>\n  \n  ```\n  2.  **attributesFile.json Example**\n  ```\n       {\n          \"compoundQuery\": {\n          \"operator\": \"AND\",\n          \"queries\": [{\n          \"attribute\": \"access_group\",\n          \"value\": \"public\",\n          \"operator\": \"LIKE\"\n          },\n             {\n            \"attribute\": \"collection_type\",\n          \"value\": \"Asset\",\n         \"operator\": \"LIKE\"\n          }]},\n              \"detailedResponse\": true,\n            \"page\": 1,\n            \"pageSize\": 100,\n            \"totalCount\": true,\n  \n        }\n  ```\n  3. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k -H \"Content-Type: application/json\" -d @attributesFile.json -X POST https://fsdmel-modac01t.ncifcrf.gov/api/collection/query -H \"Accept: application/json\" -D header.txt -o output.json -u us39@nih.gov\n  ``` \n",
+        "description": "This service allows you to perform a query for a collection. To do a collection query, first we define the simple query, then we show how to combine multiple simple queries into a compound query.\n\n\n  Simple query is the basic building block of the compound query. It consists of :\n  \n  • *attribute* - This is the metadata attribute name which you want to query.\n    \n  • *value* - This is the metadata attribute's value which you want to query.\n    \n  • *operator* - When searching for a collection, you could limit your search to a level using comparison operators. Supported operators are: EQUAL, NOT_EQUAL, LIKE, NUM_LESS_THAN, NUM_LESS_OR_EQUAL, NUM_GREATER_OR_EQUAL, NUM_GREATER_THAN.  \n    \n  • *levelFilter* - This is an optional attribute. If levelFilter attribute is used, search will match the metadata found at the specified *level*. If this filter is not provided, the query will match metadata found at any level of the path.\n    \n  • *attributeMatch* - This is an optional attribute. If it is set to *ANY*, then the query will apply to any metadata attribute, and ‘attribute’ of the query is expected to be omitted. If ‘attributeMatch’ is omitted, or set to EXACT, then the search will be limited to the provided metadata attribute.\n\n    \n   Multiple simple queries can be combined with a join operator (\"AND\", \"OR\") to create a list of queries. Multiple lists can be further combined to create a combined query. \n      \n\n  Example:\n          \n          {\n             \"compoundQuery\": {\n               \"operator\": \"AND\",\n               \"queries\": [{\n                   \"attribute\": \"experiment\",\n                   \"value\": \"H1_M2_update_10M\",\n                   \"operator\": \"EQUAL\",\n                   \"levelFilter\": {\n                     \"level\": 1,\n                     \"operator\": \"NOT_EQUAL\"\n                   }\n                 },\n                 {\n                   \"attribute\": \"run_name\",\n                   \"value\": \"run_02_20_2020\",\n                   \"operator\": \"LIKE\"\n                 }\n               ]\n             },\n             \"detailedResponse\": true,\n             \"page\": 1,\n             \"totalCount\": false\n          }\n\n  \n  **detailedResponse**: By default, search lists returns only paths of matched resulted collections. If “detailedResponse=true”, collections are returned with metadata.\n  **page**: Ask for a specific page of results. By default, the query will return the first 100 results in page 1, the second 100 in page 2, etc. If omitted, page 1 is fetched. \n  **totalCount**: If set to ‘true’, the total count of collections matching the query regardless of the query limit and page will be returned. By default if omitted, this is set to 'false' and no total count will be returned.\n  \n  \n  \n  \n  \n  \n\n  1. **CURL COMMAND**\n  ```\n  curl -k -H \"Content-Type: application/json\" -d @<attributesFile.json> -X POST https://fsdmel-modac01t.ncifcrf.gov/api/collection/query -H \"Accept: application/json\" -D  <response-header> -o <response-message.json> -u <Your Email ID>\n  \n  ```\n  2.  **attributesFile.json Example**\n  ```\n       {\n          \"compoundQuery\": {\n          \"operator\": \"AND\",\n          \"queries\": [{\n          \"attribute\": \"access_group\",\n          \"value\": \"public\",\n          \"operator\": \"LIKE\"\n          },\n             {\n            \"attribute\": \"collection_type\",\n          \"value\": \"Asset\",\n         \"operator\": \"LIKE\"\n          }]},\n              \"detailedResponse\": true,\n            \"page\": 1,\n            \"pageSize\": 100,\n            \"totalCount\": true,\n  \n        }\n  ```\n  3. **EXAMPLE - CURL COMMAND**\n  ```\n  curl -k -H \"Content-Type: application/json\" -d @attributesFile.json -X POST https://fsdmel-modac01t.ncifcrf.gov/api/collection/query -H \"Accept: application/json\" -D header.txt -o output.json -u us39@nih.gov\n  ``` \n",
         "summary": "Find collection by metadata query.",
         "tags": [
           "Search Data"
@@ -791,57 +791,57 @@
   },
   "definitions": {
     "Path": {
-        "type": "object",
-        "properties": {
-          "path": {
-            "type": "string"
-          }
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
         }
+      }
     },
     "ModelPath": {
-        "type": "object",
-        "properties": {
-          "modelPaths": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/Path"
-            }
+      "type": "object",
+      "properties": {
+        "modelPaths": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Path"
           }
         }
+      }
     },
     "ReferenceDataset": {
-        "type": "object",
-        "properties": {
-          "referenceDatasetPaths": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/Path"
-            }
+      "type": "object",
+      "properties": {
+        "referenceDatasetPaths": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Path"
           }
         }
+      }
     },
     "ModelStatus": {
       "type": "object",
-      "properties" : {
-        "status" : {
+      "properties": {
+        "status": {
           "type": "string"
         },
-        "startDate" : {
+        "startDate": {
           "type": "number"
         },
-        "completedDate" : {
+        "completedDate": {
           "type": "number"
         },
-        "resultPath" : {
+        "resultPath": {
           "type": "string"
         },
-        "failureMsg" : {
+        "failureMsg": {
           "type": "string"
         },
-        "inputFile" : {
+        "inputFile": {
           "type": "string"
         },
-        "outcomeFile" : {
+        "outcomeFile": {
           "type": "string"
         }
       }
