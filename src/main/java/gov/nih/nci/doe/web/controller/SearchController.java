@@ -3,7 +3,6 @@ package gov.nih.nci.doe.web.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 
 import org.apache.cxf.jaxrs.client.WebClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -52,6 +52,9 @@ import io.micrometer.core.instrument.util.StringUtils;
 @EnableAutoConfiguration
 @RequestMapping("/search")
 public class SearchController extends AbstractDoeController {
+
+	@Value("${asset.bulk.collections.size}")
+	public String bulkCollectionSize;
 
 	@GetMapping
 	public ResponseEntity<?> search(HttpSession session, @RequestHeader HttpHeaders headers, HttpServletRequest request,
@@ -127,8 +130,6 @@ public class SearchController extends AbstractDoeController {
 		List<DoeSearchResult> returnResults = new ArrayList<DoeSearchResult>();
 		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(user).getBody();
 
-		List<String> bulkAssetsList = Arrays.asList(bulkAssetsPaths.split(","));
-
 		for (HpcCollectionDTO result : searchResults) {
 
 			String absolutePath = result.getCollection().getAbsolutePath();
@@ -158,6 +159,7 @@ public class SearchController extends AbstractDoeController {
 					if (Boolean.TRUE.equals(isShow)) {
 
 						DoeSearchResult returnResult = new DoeSearchResult();
+						String collectionSize = getAttributeValue("collection_size", selfMetadatEntries, "Asset");
 
 						String studyPath = result.getCollection().getCollectionParentName();
 						String programPath = studyPath.substring(0, studyPath.lastIndexOf('/'));
@@ -166,9 +168,9 @@ public class SearchController extends AbstractDoeController {
 						Integer programCollectionId = getCollectionId(
 								result.getMetadataEntries().getParentMetadataEntries(), "Program");
 
-						Boolean isBulkAsset = bulkAssetsList.stream()
-								.anyMatch(s -> result.getCollection().getCollectionName().equalsIgnoreCase(s));
-						returnResult.setIsBulkAsset(isBulkAsset);
+						returnResult.setIsBulkAsset((collectionSize != null
+								&& Long.valueOf(collectionSize) > Long.valueOf(bulkCollectionSize)) ? Boolean.TRUE
+										: Boolean.FALSE);
 						returnResult.setDataSetPath(result.getCollection().getCollectionName());
 						returnResult.setDataSetCollectionId(result.getCollection().getCollectionId());
 						returnResult.setStudyCollectionId(studyCollectionId);
