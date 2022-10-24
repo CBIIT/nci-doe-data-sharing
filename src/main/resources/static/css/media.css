@@ -211,6 +211,12 @@
 }
 @media ( max-width : 990px) {
 	
+	.assetFilesmobileMsg{
+	display:block !important;
+	}
+	.assetFilesDiv{
+	display:none;
+	}
 	form#contact-us-form .contactUsFieldsDiv{
 	  margin-left: -2rem !important;
       margin-right: -5rem !important;
