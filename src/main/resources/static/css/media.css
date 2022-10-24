@@ -107,6 +107,9 @@
 		white-space: nowrap;
 		font-size: 16px;
 	}
+	form#contact-us-form .googleCaptchaDiv{
+	    margin-left: 8rem !important;
+	}
 }
 
 @media ( min-width : 991px) {
@@ -132,6 +135,14 @@
 }
 
 
+@media ( min-width : 991px) and ( max-width : 1420px) {
+	.submitBtnDiv{
+	margin-left: 0rem !important;
+	}
+	.cancelBtnDiv{
+	margin-left: 2rem !important;
+	}
+}
 @media ( min-width : 461px) and ( max-width : 990px) {
 	#attributeVallanding {
 		border-radius: 24px;
@@ -200,12 +211,43 @@
 }
 @media ( max-width : 990px) {
 	
-	div.wrapper{
-	left: 0px !important;
-    right: 0px !important;
+	form#contact-us-form .contactUsFieldsDiv{
+	  margin-left: -2rem !important;
+      margin-right: -5rem !important;
 	}
+	
+	form#contact-us-form .loginHr {
+      margin-left: -1rem !important;
+      margin-right: -4rem !important;
+	}
+	#cancelContactUs{
+	margin-left:0px !important;
+	margin-right:0px !important;
+	}
+	#btnSubmitEmail{
+	margin-left:0px !important;
+	margin-right:0px !important;
+	margin-top: 1rem;
+	}
+	.cancelBtnDiv{
+	margin-left: auto!important;
+    margin-right: auto !important;
+	}
+	.submitBtnDiv{
+	margin-left: auto!important;
+    margin-right: auto !important;
+	}
+	.contactUsBtns{
+	margin-left: 2rem;
+	display: block !important;
+	}
+	div.wrapper{
+	 left: 0px !important;
+     right: 0px !important;
+	}
+	
 	#attributeVal::placeholder{
-	font-size:25px !important;
+	 font-size:25px !important;
 	}
 	#attributeVal{
 	height: 88.5px!important;
@@ -457,6 +499,10 @@
 
 
 @media ( max-width : 460px) {
+	.googleCaptchaDiv{
+	
+	margin-left: -3rem !important;
+	}
 	#attributeVallanding {
 		border-radius: 24px;
 		font-size: 18px;
@@ -500,9 +546,14 @@
 		float: right;
 		margin-left: 0px;
 	}
+
 }
 
 @media ( max-width : 550px) {
+	.googleCaptchaDiv{
+	
+	margin-left: -1.5rem !important;
+	}
 	.nav-bar .nabar-toggler
      #changeUserMenu.dropdown-menu {
 		margin-left: -50px !important;
@@ -522,6 +573,10 @@
 }
 
 @media ( min-width : 768px) {
+	.googleCaptchaDiv{
+	margin-left: 8rem !important;
+	}
+	    
 	.appName {
 		font-size: 18px;
 		/*margin-left: 24px;*/
@@ -544,6 +599,10 @@
 	}
 }
 @media ( max-width : 380px) {
+	.googleCaptchaDiv{
+	
+	margin-left: -3rem !important;
+	}
 	#topNav {
 		width: 100%;
 		margin-top: -57px;
@@ -555,6 +614,13 @@
 	}
 }
 
+@media (max-width: 280px){
+	.googleCaptchaDiv{
+	
+	margin-left: -3rem !important;
+	}
+}
+
 @media ( min-width : 992px) {
 	.modal-lg {
 		max-width: 95%;
@@ -562,6 +628,9 @@
 	#mobileKeyworkSearchDiv{
 	display:none;
 	}
+	.googleCaptchaDiv {
+    margin-left: -3rem !important;
+}
 }
 
 @media ( min-width : 992px) and (max-width:1082px) {
