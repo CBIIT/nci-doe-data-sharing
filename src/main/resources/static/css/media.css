@@ -2,18 +2,8 @@
 	font-size: 13px;
 }
 
-.jFDlvU {
-	height: 2px;
-	background-color: #184161;
-}
-
 .lkkECO {
 	padding: 2rem 0px 0px;
-}
-
-.emRwHY.emRwHY span {
-	color: #fff;
-	font-size: 0.75rem;
 }
 
 .krkYvd.krkYvd a {
@@ -27,6 +17,7 @@
 	padding: 0.3125rem 0px;
 	text-align: center;
 	font-family: 'inter_regular';
+	padding-bottom: 1rem;
 }
 
 .col-12 {
@@ -74,11 +65,6 @@
 	margin: 0px auto;
 }
 
-.emRwHY {
-	text-align: center;
-	padding: 0.625rem 0px;
-}
-
 .cBoHoo {
 	background-color: #11314A;
 	bottom: 0px;
@@ -114,7 +100,7 @@
 
 @media ( min-width : 991px) {
 	#attributeVallanding::placeholder {
-		font-size: 22px;
+		font-size: 26px;
 	}
 	.dpehyt {
 		list-style: none;
@@ -146,11 +132,11 @@
 @media ( min-width : 461px) and ( max-width : 990px) {
 	#attributeVallanding {
 		border-radius: 24px;
-		font-size: 18px;
+		font-size: 24px;
 		font-weight: 550;
 		height: 45px;
 		width: 40rem;
-		border: 2.51px solid #397DED;
+		border: 2.51px solid #E0730F;
 		background-color: #FFFFFF;
 		margin-left: -1rem;
 	}
@@ -169,7 +155,7 @@
 
 @media ( max-width : 1500px) {
 	#aboutMoDaCDescp{
-	margin-right:0rem !important;
+	margin-right:1rem !important;
 	margin-left:1rem !important;
 	}
 	#aboutImgDiv{
@@ -190,8 +176,8 @@
     width: 32%;
 }
 	#aboutImgDiv{
-	margin-left:0rem !important;
-	margin-right:0rem !important;
+	margin-left: 2.5rem !important;
+    margin-right: 2.5rem !important;
 	}
 	#aboutText{
 	margin-left: 1rem !important;
@@ -210,6 +196,10 @@
 	}
 }
 @media ( max-width : 990px) {
+	
+	.col.order-first {
+	    margin-left: -1rem !important;
+	}
 	
 	.assetFilesmobileMsg{
 	display:block !important;
@@ -389,7 +379,7 @@
 		left: -6rem!important;
 	}
 	#attributeVallanding::placeholder {
-		font-size: 18px;
+		font-size: 26px;
 	}
 	.landingSearchDiv {
 		position: relative!important;
@@ -401,6 +391,7 @@
 	.mobileContainer {
 		display: block !important;
 		margin: 0px auto;
+		margin-left: 20px !important;
 	}
 	.subbuttoncontainer {
 		height: 42px;
@@ -410,7 +401,8 @@
 	}
 	#titleText {
 		letter-spacing: 1px;
-		font-size: 22px;
+		font-size: 26px;
+        text-align: center;
 	}
 	.globalContainer {
 		display: none;
@@ -511,18 +503,18 @@
 	}
 	#attributeVallanding {
 		border-radius: 24px;
-		font-size: 18px;
+		font-size: 24px;
 		font-weight: 550;
 		height: 45px;
 		width: 22rem;
-		border: 2.51px solid #397DED;
+		border: 2.51px solid #E0730F;
 		background-color: #FFFFFF;
 		margin-left: -1rem;
 	}
 	#landingSearchMobileButton {
 		position: relative!important;
-		top: 2.4rem!important;
-		right: 5rem!important;
+		top: 2.3rem!important;
+		right: 4.5rem!important;
 	}
 	#landingSearchMobileButton img {
 		width: 49px !important;
@@ -601,7 +593,7 @@
 
 @media ( max-width : 550px) {
 	.col.order-first {
-	    margin-left: -1.7rem !important;
+	    margin-left: 0rem !important;
 	}
 }
 @media ( max-width : 380px) {
