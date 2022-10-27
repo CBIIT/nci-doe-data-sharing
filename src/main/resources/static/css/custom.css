@@ -773,7 +773,7 @@ label.infoLabel {
 	color: #4e8bc6;
 }
 
-#driveUploadAuthlink {
+#driveUploadAuthlink,#cloudUploadAuthlink {
 	background-color: #E87B05 !important;
 	color: #fff !important;
 	border-radius: 15px;

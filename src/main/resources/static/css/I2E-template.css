@@ -153,6 +153,19 @@ FONTS, FONT AWESOME, FONT SOURCE SANS PRO
 	src: url("../webfont/Lato-Bold.ttf") format("truetype");
 }
 
+
+@font-face {
+	font-family: "poppins_bold";
+	font-style: bold;
+	src: url("../fonts/Poppins-Bold.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "openSans_Condensed";
+	font-style: bold;
+	src: url("../fonts/OpenSans_Condensed-Regular.ttf") format("truetype");
+}
+
 body {
 	background: rgb(255, 255, 255); /* Old browsers */
 	/*background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(226,225,224,1) 34%, rgba(226,225,224,1) 100%); /* FF3.6-15 */
