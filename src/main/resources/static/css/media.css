@@ -595,6 +595,11 @@
 	.col.order-first {
 	    margin-left: 0rem !important;
 	}
+	
+	.Aboutbuttoncontainer{
+	background-image: url(/images/About_Image_Mobile.png) !important;
+	background-position: inherit;
+	}
 }
 @media ( max-width : 380px) {
 	.googleCaptchaDiv{
