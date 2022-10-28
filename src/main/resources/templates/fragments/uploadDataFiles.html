@@ -116,7 +116,15 @@
 						Transfer from Google Drive</label>
 				</div>
 			</div>
-
+			<div class="form-group">
+				<div class="pull-left" style="margin-left: 15px">
+					<label class="uploadLabels radio-inline"><input
+						type="radio" name="datafileTypeUpload"
+						id="datafileTypeCloudUpload" value="cloud"
+						onchange="displayDataFileSection('cloud')">&nbsp;&nbsp;
+						Transfer from Google Cloud</label>
+				</div>
+			</div>
 
 			<div class="col-md-12 col-sm-12" id="singleFileDataUploadSection"
 				style="display: none;">
@@ -209,8 +217,8 @@
 
 							<div class="form-group col-lg-12 col-md-12"
 								id="displayDriveUploadDiv" style="display: none;">
-								<div th:if="${authorized != null}" id="driveAuthorisedMsg" class="alert-success"
-									style="margin-left: 13px">
+								<div th:if="${authorized != null}" id="driveAuthorisedMsg"
+									class="alert-success" style="margin-left: 13px">
 									<i class="fa fa-check">&nbsp;</i>Access Token successfully
 									generated
 								</div>
@@ -225,6 +233,38 @@
 									id="driveDiv">
 									<a href="javascript:void();" id="pickerUploadLink"> Select
 										Files from Google Drive</a>
+								</div>
+							</div>
+
+							<div class="form-group col-lg-12 col-md-12"
+								id="displayCloudUploadDiv" style="display: none;">
+								<div th:if="${gcAuthorized != null}" id="cloudAuthorisedMsg"
+									class="alert-success" style="margin-left: 13px">
+									<i class="fa fa-check">&nbsp;</i>Access Token successfully
+									generated
+								</div>
+								<div class="form-group" style="margin-left: 13px">
+									<button type="button" class="btn btn-primary"
+										id="cloudUploadAuthlink">Authorize MoDaC to Access
+										Your Google Cloud</button>
+								</div>
+
+								<div th:if="${gcAuthorized != null}" class="col-sm-12 column">
+
+									<div>
+										<label for="gcbucketName">Google Cloud Bucket:</label> <input
+											type="text" class="form-control" name="gcbucketName"
+											th:value="${gcbucketName}" id="gcbucketName"
+											placeholder="Enter Google Cloud Bucket Name" />
+
+									</div>
+									<div>
+										<label for="gcPath">Google Cloud Source Path:</label> <input
+											type="text" class="form-control" th:value="${gcPath}"
+											name="gcPath" id="gcPath"
+											placeholder="Enter Google Cloud Source Path" size="40" />
+
+									</div>
 								</div>
 							</div>
 							<div class="form-group col-lg-12 col-md-12"

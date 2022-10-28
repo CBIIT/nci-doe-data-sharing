@@ -655,6 +655,7 @@ function display(value) {
 		$("#SyncDiv").hide();
 		$("#s3Div").hide();
 		$("#driveDiv").hide();
+		$("#googleCloudDiv").hide();
 		$("#download-btn").prop("disabled", false);
 		$("#download-btn").css('cursor', 'pointer');
 	} else if (value == "sync") {
@@ -662,6 +663,7 @@ function display(value) {
 		$("#AsyncDiv").hide();
 		$("#s3Div").hide();
 		$("#driveDiv").hide();
+		$("#googleCloudDiv").hide();
 		$("#download-btn").prop("disabled", false);
 		$("#download-btn").css('cursor', 'pointer');
 	} else if (value == "drive") {
@@ -669,6 +671,7 @@ function display(value) {
 		$("#AsyncDiv").hide();
 		$("#s3Div").hide();
 		$("#driveDiv").show();
+		$("#googleCloudDiv").hide();
 		var googleDriveIsAuthorized = $("#googleDriveIsAuthorized").val();
 		if (googleDriveIsAuthorized) {
 			$("#download-btn").prop("disabled", false);
@@ -678,11 +681,27 @@ function display(value) {
 			$("#download-btn").css('cursor', 'default');
 		}
 
-	} else {
+	} else if(value == 'cloud'){
+		$("#SyncDiv").hide();
+		$("#AsyncDiv").hide();
+		$("#s3Div").hide();
+		$("#driveDiv").hide();
+		$("#googleCloudDiv").show();
+		var googleCloudIsAuthorized = $("#googleCloudIsAuthorized").val();
+		if (googleCloudIsAuthorized) {
+			$("#download-btn").prop("disabled", false);
+			$("#download-btn").css('cursor', 'pointer');
+		} else {
+			$("#download-btn").prop("disabled", true);
+			$("#download-btn").css('cursor', 'default');
+		}
+	}
+	else {
 		$("#SyncDiv").hide();
 		$("#AsyncDiv").hide();
 		$("#s3Div").show();
 		$("#driveDiv").hide();
+		$("#googleCloudDiv").hide();
 		$("#download-btn").prop("disabled", false);
 		$("#download-btn").css('cursor', 'pointer');
 	}

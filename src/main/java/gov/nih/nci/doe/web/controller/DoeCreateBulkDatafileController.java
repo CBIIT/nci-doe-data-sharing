@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeDatafileModel;
+import gov.nih.nci.doe.web.service.DoeAuthorizationService;
 import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.doe.web.util.DoeExcelUtil;
@@ -75,20 +76,48 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			return "redirect:/loginTab";
 		}
 		String code = request.getParameter("code");
+		String action = (String) session.getAttribute("actionType");
 		model.addAttribute("clientId", clientId);
 		if (code != null) {
-			// Return from Google Drive Authorization
-			final String returnURL = this.webServerName + "/addbulk";
-			model.addAttribute("uploadAsyncType", "drive");
-			try {
-				String accessToken = doeAuthorizationService.getToken(code, returnURL);
-				session.setAttribute("accessToken", accessToken);
-				model.addAttribute("accessToken", accessToken);
-			} catch (Exception e) {
-				model.addAttribute("error", "Failed to redirect to Google for authorization: " + e.getMessage());
-				log.error("Failed to redirect to Google for authorization: " + e.getMessage());
+			if (StringUtils.isNotEmpty(action) && action.equalsIgnoreCase(DoeAuthorizationService.GOOGLE_DRIVE_TYPE)) {
+				// Return from Google Drive Authorization
+				final String returnURL = this.webServerName + "/addbulk";
+				model.addAttribute("uploadAsyncType", DoeAuthorizationService.GOOGLE_DRIVE_TYPE);
+				try {
+					String accessToken = doeAuthorizationService.getToken(code, returnURL,
+							DoeAuthorizationService.ResourceType.GOOGLEDRIVE);
+
+					session.setAttribute("accessToken", accessToken);
+					model.addAttribute("accessToken", accessToken);
+					model.addAttribute("authorized", "true");
+
+				} catch (Exception e) {
+
+					model.addAttribute("error", "Failed to redirect to Google for authorization: " + e.getMessage());
+					log.error("Failed to redirect to Google for authorization: " + e.getMessage());
+					throw new DoeWebException("Failed to redirect to Google for authorization.");
+				}
+
+			} else if (StringUtils.isNotEmpty(action)
+					&& action.equalsIgnoreCase(DoeAuthorizationService.GOOGLE_CLOUD_TYPE)) {
+				// Return from Google cloud Authorization
+				final String returnURL = this.webServerName + "/addbulk";
+				model.addAttribute("uploadAsyncType", DoeAuthorizationService.GOOGLE_CLOUD_TYPE);
+				try {
+					String refreshTokenDetailsGoogleCloud = doeAuthorizationService.getToken(code, returnURL,
+							DoeAuthorizationService.ResourceType.GOOGLECLOUD);
+
+					session.setAttribute("refreshTokenDetailsGoogleCloud", refreshTokenDetailsGoogleCloud);
+					model.addAttribute("refreshTokenDetailsGoogleCloud", refreshTokenDetailsGoogleCloud);
+					model.addAttribute("authorizedGC", "true");
+
+				} catch (Exception e) {
+					model.addAttribute("error", "Failed to redirect to Google for authorization: " + e.getMessage());
+					log.error("Failed to redirect to Google for authorization: " + e.getMessage());
+					throw new DoeWebException("Failed to redirect to Google for authorization.");
+				}
+
 			}
-			model.addAttribute("authorized", "true");
 		}
 
 		if (request.getParameterNames().hasMoreElements()) {

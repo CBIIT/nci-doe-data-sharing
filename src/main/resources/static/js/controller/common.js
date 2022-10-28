@@ -238,7 +238,7 @@ $(document)
 											 */
 											$('.downloadErrorMsg').html("Select atleast one path.");
 											$("#message").show();
-										} else if (searchType == 's3' || searchType == 'async' || searchType == 'drive'
+										} else if (searchType == 's3' || searchType == 'async' || searchType == 'drive' || searchType == 'cloud'
 												|| selectedFiles) {
 											d.bucketName = $("#downloadBucketName").val();
 											d.s3Path = $("#downloadS3Path").val();
@@ -248,6 +248,8 @@ $(document)
 											d.endPointName = $("#endPointName").val();
 											d.endPointLocation = $("#endPointLocation").val();
 											d.drivePath = $("#drivePath").val();
+											d.googleCloudPath = $("#cloudPath").val();
+											d.googleCloudBucketName = $("#cloudBucketName").val();
 
 											var url;
 											if (selectedFiles) {
@@ -271,6 +273,12 @@ $(document)
 												});
 											} else if (searchType == 'drive') {
 												$('div#driveDiv input[type="text"]').each(function() {
+													if (!$(this).val()) {
+														validate = false;
+													}
+												});
+											} else if (searchType == 'cloud') {
+												$('div#googleCloudDiv input[type="text"]').each(function() {
 													if (!$(this).val()) {
 														validate = false;
 													}
@@ -490,7 +498,22 @@ $(document)
 								var params = {
 									type : $("#downloadType").val(),
 									downloadFilePath : $("#selectedFilesList").val(),
-									action : "Drive",
+									action : "drive",
+									assetIdentifier : $("#assetIdentifier").val(),
+									returnToStatus : $("#returnToStatus").val(),
+									returnToSearch : $("#returnToSearch").val()
+								}
+
+								invokeAjax('/download', 'GET', params, postGoogleDriveFunction, postFailureFunction,
+										null, 'text');
+							});
+					
+					$("#googleCloudAuthlink").click(
+							function(e) {
+								var params = {
+									type : $("#downloadType").val(),
+									downloadFilePath : $("#selectedFilesList").val(),
+									action : "cloud",
 									assetIdentifier : $("#assetIdentifier").val(),
 									returnToStatus : $("#returnToStatus").val(),
 									returnToSearch : $("#returnToSearch").val()

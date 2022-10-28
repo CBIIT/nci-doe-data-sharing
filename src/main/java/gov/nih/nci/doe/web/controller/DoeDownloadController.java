@@ -27,6 +27,7 @@ import gov.nih.nci.doe.web.model.AjaxResponseBody;
 import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeDownloadDatafile;
 import gov.nih.nci.doe.web.model.Views;
+import gov.nih.nci.doe.web.service.DoeAuthorizationService;
 import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.doe.web.util.MiscUtil;
@@ -59,14 +60,14 @@ public class DoeDownloadController extends AbstractDoeController {
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "assetIdentifier", required = false) String assetIdentifier,
 			@RequestParam(value = "returnToSearch", required = false) String returnToSearch,
-			@RequestParam(value = "returnToStatus", required = false) String returnToStatus,
-			HttpSession session,
+			@RequestParam(value = "returnToStatus", required = false) String returnToStatus, HttpSession session,
 			HttpServletRequest request) throws DoeWebException {
 
 		String downloadType = request.getParameter("type");
 		session.setAttribute("assetIdentifier", assetIdentifier);
 		session.setAttribute("returnToSearch", returnToSearch);
 		session.setAttribute("returnToStatus", returnToStatus);
+		session.setAttribute("actionType", action);
 		String code = request.getParameter("code");
 		log.info("code from download" + code);
 		if (code != null) {
@@ -74,23 +75,45 @@ public class DoeDownloadController extends AbstractDoeController {
 			downloadType = (String) session.getAttribute("downloadType");
 			final String returnURL = this.webServerName + "/downloadTab";
 			try {
-				String accessToken = doeAuthorizationService.getToken(code, returnURL);
-				session.setAttribute("accessToken", accessToken);
-				model.addAttribute("accessToken", accessToken);
+				if (action.equalsIgnoreCase(DoeAuthorizationService.GOOGLE_DRIVE_TYPE)) {
+					String accessToken = doeAuthorizationService.getToken(code, returnURL,
+							DoeAuthorizationService.ResourceType.GOOGLEDRIVE);
+					session.setAttribute("accessToken", accessToken);
+					model.addAttribute("accessToken", accessToken);
+					model.addAttribute("asyncSearchType", "drive");
+					model.addAttribute("transferType", "drive");
+					model.addAttribute("authorized", "true");
+				} else if (action.equalsIgnoreCase(DoeAuthorizationService.GOOGLE_CLOUD_TYPE)) {
+					String refreshTokenDetailsGoogleCloud = doeAuthorizationService.getRefreshToken(code, returnURL,
+							DoeAuthorizationService.ResourceType.GOOGLECLOUD);
+					session.setAttribute("refreshTokenDetailsGoogleCloud", refreshTokenDetailsGoogleCloud);
+					model.addAttribute("authorizedGC", "true");
+					model.addAttribute("asyncSearchType", "Cloud");
+					model.addAttribute("transferType", "Cloud");
+				}
 			} catch (Exception e) {
 				throw new DoeWebException("Failed to redirect from Google for authorization: " + e.getMessage());
 			}
-			model.addAttribute("asyncSearchType", "drive");
-			model.addAttribute("transferType", "drive");
-			model.addAttribute("authorized", "true");
 
 		}
 
-		if (action.equals("Drive")) {
+		if (action.equalsIgnoreCase(DoeAuthorizationService.GOOGLE_DRIVE_TYPE)) {
 			session.setAttribute("downloadType", downloadType);
 			String returnURL = this.webServerName + "/downloadTab";
 			try {
-				return new ResponseEntity<>(doeAuthorizationService.authorize(returnURL), HttpStatus.OK);
+				return new ResponseEntity<>(
+						doeAuthorizationService.authorize(returnURL, DoeAuthorizationService.ResourceType.GOOGLEDRIVE),
+						HttpStatus.OK);
+			} catch (Exception e) {
+				throw new DoeWebException("Failed to redirect to Google for authorization: " + e.getMessage());
+			}
+		} else if (action.equalsIgnoreCase(DoeAuthorizationService.GOOGLE_CLOUD_TYPE)) {
+			session.setAttribute("downloadType", downloadType);
+			String returnURL = this.webServerName + "/downloadTab";
+			try {
+				return new ResponseEntity<>(
+						doeAuthorizationService.authorize(returnURL, DoeAuthorizationService.ResourceType.GOOGLECLOUD),
+						HttpStatus.OK);
 			} catch (Exception e) {
 				throw new DoeWebException("Failed to redirect to Google for authorization: " + e.getMessage());
 			}

@@ -34,8 +34,19 @@ $(document).ready(
 				d.studyPath = $("#studyList").val();
 				d.dataSetPath = $("#dataList").val();
 				d.uploadPath = $("#bulkDataFilePathCollection").val();
-				d.action = "Drive";
+				d.action = "drive";
 				invokeAjax('/upload', 'GET', d, postUploadGlobusFunction, postFailureFunction, null, 'text');
+			});
+			
+			$("#cloudUploadAuthlink").click(function(e){
+				var d = {};
+				d.institutionPath = $("#instituteList").val();
+				d.studyPath = $("#studyList").val();
+				d.dataSetPath = $("#dataList").val();
+				d.uploadPath = $("#bulkDataFilePathCollection").val();
+				d.action = "cloud";
+				invokeAjax('/upload', 'GET', d, postUploadGlobusFunction, postFailureFunction, null, 'text');
+				
 			});
 
 			$("#assetSelectionGlobusButton").click(function(e) {
@@ -222,10 +233,17 @@ function loadUploadTab() {
 					$("#datafileTypeDriveUpload").prop("checked", true);
 					$("#displayGlobusUploadDiv").hide();
 					$("#displayDriveUploadDiv").show();
+					$("#displayCloudUploadDiv").hide();
+				} else if(uploadAsyncType && uploadAsyncType == 'cloud'){
+					$("#datafileTypeCloudUpload").prop("checked", true);
+					$("#displayGlobusUploadDiv").hide();
+					$("#displayDriveUploadDiv").hide();
+					$("#displayCloudUploadDiv").show();
 				} else {
 					$("#datafileTypeGlobusUpload").prop("checked", true);
 					$("#displayGlobusUploadDiv").show();
 					$("#displayDriveUploadDiv").hide();
+					$("#displayCloudUploadDiv").hide();
 				}
 			}
 		}
@@ -1479,6 +1497,7 @@ function displayDataFileSection(value) {
 		$("#fileNamesDiv").show();
 		$("#folderNamesDiv").show();
 		$("#displayDriveUploadDiv").hide();
+		$("#displayCloudUploadDiv").hide();
 		$("#registerBulkDataFileBtn").prop("disabled", true);
 		$("#fileNamesDiv").html("");
 		$("#folderNamesDiv").html("");
@@ -1491,6 +1510,7 @@ function displayDataFileSection(value) {
 		$("#fileNamesDiv").hide();
 		$("#folderNamesDiv").hide();
 		$("#displayDriveUploadDiv").hide();
+		$("#displayCloudUploadDiv").hide();
 		$("#registerBulkDataFileBtn").prop("disabled", false);
 
 	} else if (value == 'drive') {
@@ -1501,8 +1521,25 @@ function displayDataFileSection(value) {
 		$("#fileNamesDiv").hide();
 		$("#folderNamesDiv").hide();
 		$("#displayDriveUploadDiv").show();
+		$("#displayCloudUploadDiv").hide();
 		$("#driveDiv").hide();
 		$("#driveAuthorisedMsg").hide();
+		$("#cloudAuthorisedMsg").hide();
+		$("#fileNamesDiv").html("");
+		$("#folderNamesDiv").html("");
+		$("#registerBulkDataFileBtn").prop("disabled", true);
+	} else if (value == 'cloud') {
+		$("#singleFileDataUploadSection").hide();
+		$("#bulkFileUploadSection").show();
+		$("#displayGlobusUploadDiv").hide();
+		$("#displayS3UploadDiv").hide();
+		$("#fileNamesDiv").hide();
+		$("#folderNamesDiv").hide();
+		$("#displayDriveUploadDiv").hide();
+		$("#displayCloudUploadDiv").show();
+		$("#driveDiv").hide();
+		$("#driveAuthorisedMsg").hide();
+		$("#cloudAuthorisedMsg").hide();
 		$("#fileNamesDiv").html("");
 		$("#folderNamesDiv").html("");
 		$("#registerBulkDataFileBtn").prop("disabled", true);

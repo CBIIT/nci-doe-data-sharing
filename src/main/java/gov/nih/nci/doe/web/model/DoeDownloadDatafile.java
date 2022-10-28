@@ -15,9 +15,24 @@ public class DoeDownloadDatafile {
 	private String downloadType;
 	private String selectedPaths;
 	private String drivePath;
+	private String googleCloudPath;
+	private String googleCloudBucketName;
 
-	
-	
+	public String getGoogleCloudPath() {
+		return googleCloudPath;
+	}
+
+	public void setGoogleCloudPath(String googleCloudPath) {
+		this.googleCloudPath = googleCloudPath;
+	}
+
+	public String getGoogleCloudBucketName() {
+		return googleCloudBucketName;
+	}
+
+	public void setGoogleCloudBucketName(String googleCloudBucketName) {
+		this.googleCloudBucketName = googleCloudBucketName;
+	}
 
 	public String getDrivePath() {
 		return drivePath;

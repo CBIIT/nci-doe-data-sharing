@@ -69,6 +69,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		session.removeAttribute("folderIds");
 		session.removeAttribute("accessToken");
 		session.removeAttribute("authorized");
+		session.removeAttribute("actionType");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -81,6 +82,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		List<String> folderIds = new ArrayList<String>();
 		Enumeration<String> names = request.getParameterNames();
 		String accessToken = (String) session.getAttribute("accessToken");
+		String refreshTokenDetailsGoogleCloud = (String) session.getAttribute("refreshTokenDetailsGoogleCloud");
 
 		while (names.hasMoreElements()) {
 			String paramName = names.nextElement();
@@ -152,6 +154,10 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			model.addAttribute("authorized", "true");
 		}
 
+		if (refreshTokenDetailsGoogleCloud != null) {
+			model.addAttribute("refreshTokenDetailsGoogleCloud", refreshTokenDetailsGoogleCloud);
+			model.addAttribute("authorizedGC", "true");
+		}
 		model.addAttribute("datafilePath", session.getAttribute("datafilePath"));
 		model.addAttribute("institutePath", session.getAttribute("institutePath"));
 		model.addAttribute("studyPath", session.getAttribute("studyPath"));
@@ -183,6 +189,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		List<String> googleDriveFileIds = (List<String>) session.getAttribute("fileIds");
 		List<String> googleDriveFolderIds = (List<String>) session.getAttribute("folderIds");
 		String accessToken = (String) session.getAttribute("accessToken");
+		String refreshTokenDetailsGoogleCloud = (String) session.getAttribute("refreshTokenDetailsGoogleCloud");
 
 		String bulkType = (String) request.getParameter("uploadType");
 		String bucketName = (String) request.getParameter("bucketName");
@@ -192,6 +199,9 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		String region = (String) request.getParameter("region");
 		String s3File = (String) request.getParameter("s3File");
 		boolean isS3File = s3File != null && s3File.equals("on");
+		String gcbucketName = (String)request.getParameter("gcbucketName");
+		String gcPath = (String)request.getParameter("gcPath");
+		gcPath = (gcPath != null ? gcPath.trim() : null);
 
 		if (StringUtils.equals(bulkType, "globus") && globusEndpointFiles != null) {
 			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO> files = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO>();
@@ -227,6 +237,22 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				log.info(path + "/" + fileName);
 				files.add(file);
 			}
+			dto.getDataObjectRegistrationItems().addAll(files);
+		} else if (StringUtils.equals(bulkType, "cloud") && googleDriveFileIds != null) {
+			// Upload File From Google Cloud Storage
+			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO> files = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO>();
+			gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO file = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO();
+			HpcFileLocation source = new HpcFileLocation();
+			source.setFileContainerId(gcbucketName);
+			source.setFileId(gcPath);
+			HpcStreamingUploadSource googleCloudSource = new HpcStreamingUploadSource();
+			googleCloudSource.setSourceLocation(source);
+			googleCloudSource.setAccessToken(refreshTokenDetailsGoogleCloud);
+			file.setGoogleCloudStorageUploadSource(googleCloudSource);
+			Path gcFilePath = Paths.get(gcPath);
+			file.setPath(path + "/" + gcFilePath.getFileName());
+			files.add(file);
+			dto.getDataObjectRegistrationItems().addAll(files);
 			dto.getDataObjectRegistrationItems().addAll(files);
 		}
 		List<String> include = new ArrayList<String>();
