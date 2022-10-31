@@ -239,6 +239,7 @@ function loadUploadTab() {
 					$("#displayGlobusUploadDiv").hide();
 					$("#displayDriveUploadDiv").hide();
 					$("#displayCloudUploadDiv").show();
+					$("#registerBulkDataFileBtn").prop("disabled", false);
 				} else {
 					$("#datafileTypeGlobusUpload").prop("checked", true);
 					$("#displayGlobusUploadDiv").show();

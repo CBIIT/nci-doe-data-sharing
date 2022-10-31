@@ -26,6 +26,7 @@ import gov.nih.nci.doe.web.domain.LookUp;
 import gov.nih.nci.doe.web.model.DoeCollectionModel;
 import gov.nih.nci.doe.web.model.DoeMetadataAttrEntry;
 import gov.nih.nci.doe.web.model.KeyValueBean;
+import gov.nih.nci.doe.web.service.DoeAuthorizationService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.doe.web.util.LambdaUtils;
 import gov.nih.nci.hpc.domain.datamanagement.HpcDataHierarchy;
@@ -199,8 +200,8 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		String region = (String) request.getParameter("region");
 		String s3File = (String) request.getParameter("s3File");
 		boolean isS3File = s3File != null && s3File.equals("on");
-		String gcbucketName = (String)request.getParameter("gcbucketName");
-		String gcPath = (String)request.getParameter("gcPath");
+		String gcbucketName = (String) request.getParameter("gcbucketName");
+		String gcPath = (String) request.getParameter("gcPath");
 		gcPath = (gcPath != null ? gcPath.trim() : null);
 
 		if (StringUtils.equals(bulkType, "globus") && globusEndpointFiles != null) {
@@ -219,7 +220,8 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				files.add(file);
 			}
 			dto.getDataObjectRegistrationItems().addAll(files);
-		} else if (StringUtils.equals(bulkType, "drive") && googleDriveFileIds != null) {
+		} else if (StringUtils.equals(bulkType, DoeAuthorizationService.GOOGLE_DRIVE_TYPE)
+				&& googleDriveFileIds != null) {
 			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO> files = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO>();
 			for (String fileId : googleDriveFileIds) {
 				gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO file = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO();
@@ -238,7 +240,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				files.add(file);
 			}
 			dto.getDataObjectRegistrationItems().addAll(files);
-		} else if (StringUtils.equals(bulkType, "cloud") && googleDriveFileIds != null) {
+		} else if (StringUtils.equals(bulkType, DoeAuthorizationService.GOOGLE_CLOUD_TYPE) && gcPath != null) {
 			// Upload File From Google Cloud Storage
 			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO> files = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO>();
 			gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO file = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO();
@@ -252,7 +254,6 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			Path gcFilePath = Paths.get(gcPath);
 			file.setPath(path + "/" + gcFilePath.getFileName());
 			files.add(file);
-			dto.getDataObjectRegistrationItems().addAll(files);
 			dto.getDataObjectRegistrationItems().addAll(files);
 		}
 		List<String> include = new ArrayList<String>();
@@ -309,7 +310,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			dto.getDirectoryScanRegistrationItems().addAll(folders);
 		}
 
-		if (StringUtils.equals(bulkType, "drive") && googleDriveFolderIds != null) {
+		if (StringUtils.equals(bulkType, DoeAuthorizationService.GOOGLE_DRIVE_TYPE) && googleDriveFolderIds != null) {
 			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO> folders = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO>();
 			for (String folderId : googleDriveFolderIds) {
 				gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO folder = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO();
