@@ -190,7 +190,8 @@ public class DoeDownloadController extends AbstractDoeController {
 				account.setRegion(downloadFile.getRegion());
 				destination.setAccount(account);
 				dto.setS3DownloadDestination(destination);
-			} else if (downloadFile.getSearchType() != null && downloadFile.getSearchType().equals("drive")) {
+			} else if (downloadFile.getSearchType() != null
+					&& downloadFile.getSearchType().equalsIgnoreCase(DoeAuthorizationService.GOOGLE_DRIVE_TYPE)) {
 				String accessToken = (String) session.getAttribute("accessToken");
 				HpcGoogleDownloadDestination destination = new HpcGoogleDownloadDestination();
 				HpcFileLocation location = new HpcFileLocation();
@@ -199,6 +200,16 @@ public class DoeDownloadController extends AbstractDoeController {
 				destination.setDestinationLocation(location);
 				destination.setAccessToken(accessToken);
 				dto.setGoogleDriveDownloadDestination(destination);
+			} else if (downloadFile.getSearchType() != null
+					&& downloadFile.getSearchType().equalsIgnoreCase(DoeAuthorizationService.GOOGLE_CLOUD_TYPE)) {
+				String refreshTokenDetailsGoogleCloud = (String) session.getAttribute("refreshTokenDetailsGoogleCloud");
+				HpcGoogleDownloadDestination googleCloudDestination = new HpcGoogleDownloadDestination();
+				HpcFileLocation location = new HpcFileLocation();
+				location.setFileContainerId(downloadFile.getGoogleCloudBucketName());
+				location.setFileId(downloadFile.getGoogleCloudPath().trim());
+				googleCloudDestination.setDestinationLocation(location);
+				googleCloudDestination.setAccessToken(refreshTokenDetailsGoogleCloud);
+				dto.setGoogleCloudStorageDownloadDestination(googleCloudDestination);
 			}
 			final String downloadTaskType = "collection".equals(downloadFile.getDownloadType())
 					? HpcDownloadTaskType.COLLECTION.name()

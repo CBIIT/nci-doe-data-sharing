@@ -309,8 +309,8 @@ public class HomeController extends AbstractDoeController {
 								DoeAuthorizationService.ResourceType.GOOGLECLOUD);
 						session.setAttribute("refreshTokenDetailsGoogleCloud", refreshTokenDetailsGoogleCloud);
 						model.addAttribute("authorizedGC", "true");
-						model.addAttribute("asyncSearchType", "Cloud");
-						model.addAttribute("transferType", "Cloud");
+						model.addAttribute("asyncSearchType", "cloud");
+						model.addAttribute("transferType", "cloud");
 						model.addAttribute("refreshTokenDetailsGoogleCloud", refreshTokenDetailsGoogleCloud);
 					} catch (Exception e) {
 						throw new DoeWebException("Failed to redirect to Google for authorization: " + e.getMessage());

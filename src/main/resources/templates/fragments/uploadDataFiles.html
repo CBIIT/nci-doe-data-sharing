@@ -238,7 +238,7 @@
 
 							<div class="form-group col-lg-12 col-md-12"
 								id="displayCloudUploadDiv" style="display: none;">
-								<div th:if="${gcAuthorized != null}" id="cloudAuthorisedMsg"
+								<div th:if="${authorizedGC != null}" id="cloudAuthorisedMsg"
 									class="alert-success" style="margin-left: 13px">
 									<i class="fa fa-check">&nbsp;</i>Access Token successfully
 									generated
@@ -249,7 +249,7 @@
 										Your Google Cloud</button>
 								</div>
 
-								<div th:if="${gcAuthorized != null}" class="col-sm-12 column">
+								<div th:if="${authorizedGC != null}" class="col-sm-12 column">
 
 									<div>
 										<label for="gcbucketName">Google Cloud Bucket:</label> <input

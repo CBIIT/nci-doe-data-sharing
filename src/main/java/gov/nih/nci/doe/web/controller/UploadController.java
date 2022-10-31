@@ -50,7 +50,7 @@ public class UploadController extends AbstractDoeController {
 		session.removeAttribute("folderIds");
 		session.removeAttribute("accessToken");
 		session.removeAttribute("authorized");
-		session.removeAttribute("gcAuthorized");
+		session.removeAttribute("authorizedGC");
 
 		if (uploadCollectionModel.getUploadType() != null
 				&& uploadCollectionModel.getUploadType().equalsIgnoreCase("assetBulkUpload")) {
