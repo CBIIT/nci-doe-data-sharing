@@ -1275,8 +1275,8 @@ BRANDING
 	height: 20px;
 	width: 110px;
 	color: #2E76ED;
-	font-family: 'latoregular';
-	font-size: 20px;
+	font-family: 'lato_bold';
+	font-size: 22px;
 	font-weight: bold;
 	letter-spacing: 0;
 	line-height: 18px;
@@ -1284,7 +1284,7 @@ BRANDING
 }
 
 .cil_12_bold_no_color {
-	font-family: 'latoregular';
+	font-family: 'lato_bold';
 	font-size: 13px;
 	font-weight: bold;
 }

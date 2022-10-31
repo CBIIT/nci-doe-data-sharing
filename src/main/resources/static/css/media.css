@@ -243,7 +243,7 @@
 	}
 	
 	#attributeVal::placeholder{
-	 font-size:25px !important;
+	 font-size:26px !important;
 	}
 	#attributeVal{
 	height: 88.5px!important;
@@ -254,6 +254,7 @@
     width: 56.5rem!important;
     border: 2px solid #E66F05;
     font-weight: 550;
+    padding-left: 1.8rem !important;
 	}
 	
 	#clearFilters{
@@ -262,6 +263,7 @@
 	#mobileFiltersSection{
 	display:flex !important;
 	padding-bottom: 1rem;
+	padding-left: 2rem;
 	}
 	
 	#cancelFiltersMobile{
@@ -335,6 +337,7 @@
 	#searchResultsMobileDiv{
 	padding-right: 0px !important;
     padding-left: 5px !important;
+    padding-top: 1rem;
 	}
 	#searchSubSectionDiv{
 	/* margin-right: -30px !important;
@@ -351,18 +354,20 @@
 	}
 	
 	table#searchResultMobileTable tr {
-	   display: inline-grid !important;
+	   display: inherit !important;
 	}
 	table#searchResultMobileTable tr.odd td {
 	  background-color: #FFFFFF !important;
 	  padding-bottom: 2rem;
-    padding-top: 1rem;
+      padding-top: 1rem;
+      border-bottom: 1px solid #A5A5A5;
 	}
 
 	table#searchResultMobileTable tr.even td {
 	  background-color: #FFFFFF !important;
 	  padding-bottom: 2rem;
-    padding-top: 1rem;
+      padding-top: 1rem;
+      border-bottom: 1px solid #A5A5A5;
 	}
 
 .cil_12_bold_no_color_mobile_dataset{
