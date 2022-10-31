@@ -1481,7 +1481,7 @@ a {
 #attributeVal::placeholder {
 	font-family: latoregular;
 	font-size: 22px;
-	transform: translateY(0px);
+	transform: translateY(2px);
     color: #E66F05;
 
 }
@@ -1490,6 +1490,8 @@ a {
 	font-family: latoregular;	
 	transform: translateY(0px);
     color: #E66F05;
+    font-size: 24px;
+    transform: translateY(2px);
 
 }
 

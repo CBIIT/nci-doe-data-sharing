@@ -478,7 +478,7 @@ function renderDataSetName(data, type, row) {
 					+ row.dataSetPath
 					+ "'>"
 					+ "<img src='images/Search_EditMetaData.svg' data-toggle='tooltip' title='Edit Asset Metadata' th:src='@{/images/Search_EditMetaData.svg}' "
-					+ "style='width:15px;' alt='edit collection'></span>";
+					+ "style='width:15px;transform: translateY(-2px);' alt='edit collection'></span>";
 
 			if (row.dataSetPermissionRole == 'Owner') {
 				editDataSetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collection_name = '"
@@ -486,7 +486,7 @@ function renderDataSetName(data, type, row) {
 						+ " selectedCollection = 'Asset' " + "metadata_path  = '" + row.dataSetPath + "'>"
 						+ "<img src='images/Search_AccessGroups.svg' data-toggle='tooltip' "
 						+ "title='Edit Asset Access Permissions' " + "th:src='@{/images/Search_AccessGroups.svg}' "
-						+ "style='width:15px;' alt='Edit Asset Access Permissions'></span>";
+						+ "style='width:15px;transform: translateY(-2px);' alt='Edit Asset Access Permissions'></span>";
 			}
 		}
 
