@@ -8,7 +8,7 @@
 
 .krkYvd.krkYvd a {
 	color: #fff;
-	margin: 0px 0.5rem;
+	margin: 0px 1rem;
 	text-decoration: none;
 }
 
@@ -17,7 +17,7 @@
 	padding: 0.3125rem 0px;
 	text-align: center;
 	font-family: 'inter_regular';
-	padding-bottom: 1rem;
+	padding-bottom: 2rem;
 }
 
 .col-12 {
@@ -30,12 +30,14 @@
 	font-weight: bold;
 	line-height: 13px;
 	color: #fff;
+	font-family:'raleway_medium';
 }
 
 .illmTA {
 	padding-left: 0px;
 	list-style: none;
 	font-size: 14px;
+	padding-top: 0.5rem;
 }
 
 .hyACbC {
@@ -62,7 +64,7 @@
 	font-weight: 400;
 	text-decoration: none;
 	position: relative;
-	margin: 0px auto;
+	margin: 0px 3rem;
 }
 
 .cBoHoo {
@@ -80,11 +82,13 @@
 .erAkNO h1 span {
 	font-size: 14px;
 	display: block;
+	line-height: 1.5rem;
+	font-family:'poppins_medium';
 }
 
 @media ( min-width : 1200px) {
 	.iWqacH {
-		width: 1200px;
+		width: 100%;
 	}
 }
 
@@ -383,7 +387,8 @@
 		left: -6rem!important;
 	}
 	#attributeVallanding::placeholder {
-		font-size: 26px;
+		font-size: 22px;
+		transform: translateY(-2px);
 	}
 	.landingSearchDiv {
 		position: relative!important;
@@ -443,7 +448,13 @@
 	}
 	.erAkNO h1 {
 		text-align: center;
+		font-size: 18px;
 	}
+	
+	.erAkNO h1 span {
+	font-size:12px;
+	}
+	
 	.QgNfY {
 		position: relative;
 		top: 0px;
@@ -489,13 +500,19 @@
 	.hQrVZb a {
 		display: block;
 		text-decoration: none;
-		padding-left: 25px;
+		padding-left: 1.5rem;
 		color: #fff !important;
 		cursor: pointer;
+	}
+	
+	.hQrVZb_subTab a {
+	  padding-left: 2rem;
+	  font-size: 16px;
 	}
 	.hQrVZb a.active {
 		background-color: #FFFFFF;
 		color: #0C375E !important;
+		font-family: 'nunito_sansbold';
 	}
 }
 
