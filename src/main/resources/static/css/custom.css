@@ -774,7 +774,7 @@ label.infoLabel {
 }
 
 #driveUploadAuthlink,#cloudUploadAuthlink {
-	background-color: #E87B05 !important;
+	background-color: #E66F05 !important;
 	color: #fff !important;
 	border-radius: 15px;
 	width: 300px;
@@ -782,7 +782,7 @@ label.infoLabel {
 
 #pickerUploadLink {
 	color: #E87B05;
-	margin-left: 15px;
+	margin-left: 1.1rem;
 }
 
 ol#dataListing>li {
@@ -1760,7 +1760,7 @@ label.showMorefields {
 
 #registerBulkAssets, #registerBulkDataFileBtn {
 	margin-top: 5px;
-	background-color: #E87B05;
+	background-color: #E66F05;
 	color: #fff;
 	border-radius: 14px;
 	width: 100px;
@@ -1837,14 +1837,12 @@ select.form-control:not ([size] ):not ([multiple] ){
 	{
 	font-size: 14px;
 	padding-bottom: 3px;
-	/* color:#fff;background-color: #E87B05; */
 	color: #000;
 	background-color: transparent;
 }
 
 input.select2-search__field {
 	min-width: fit-content;
-	/* margin-left: 13px; */
 }
 
 .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice

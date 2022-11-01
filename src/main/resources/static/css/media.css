@@ -197,6 +197,10 @@
 }
 @media ( max-width : 990px) {
 	
+	#spinner{
+	left: 5% !important;
+	}
+	
 	.col.order-first {
 	    margin-left: -1rem !important;
 	}
@@ -262,33 +266,28 @@
 	}
 	#mobileFiltersSection{
 	display:flex !important;
-	padding-bottom: 1rem;
-	padding-left: 2rem;
+	float: right;
+	margin-top: 0.5rem;
+	margin-right: 0.5rem;
 	}
 	
-	#cancelFiltersMobile{
-	position: relative;
-    top: 0rem;
-    left: 15rem;
-	}
+
 	#cancelFiltersMobile img{
 	height: 28px;
     width: 45px;
 	}
-	#searchFiltersMobilebtn{
-	position: relative;
-    top: 0rem;
-    left: 15rem;
-	}
+
 	#searchFiltersMobilebtn img {
 	height: 28px;
     width: 45px;
 	}
+	
 	#resetBtnMobile {
 	position: absolute;
     top: 2rem;
     right: 6rem;
 	}
+	
 	#searchMobileBtn{
 	position: absolute; 
     top: 0rem!important;
