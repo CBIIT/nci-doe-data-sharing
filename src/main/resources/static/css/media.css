@@ -18,6 +18,7 @@
 	text-align: center;
 	font-family: 'inter_regular';
 	padding-bottom: 2rem;
+	letter-spacing: 0.5px;
 }
 
 .col-12 {
@@ -64,7 +65,7 @@
 	font-weight: 400;
 	text-decoration: none;
 	position: relative;
-	margin: 0px 3rem;
+	margin: 0px 2rem;
 }
 
 .cBoHoo {
@@ -76,7 +77,6 @@
 .erAkNO h1 {
 	font-size: 22px;
 	text-align: left;
-	font-weight: 600;
 }
 
 .erAkNO h1 span {
@@ -113,10 +113,20 @@
 		display: none;
 		width: 100%;
 	}
+	.footer_more_info {
+	 margin-left:8rem;
+	}
+	.footer_policies {
+	 margin-left: -4rem;
+	}
 	.irmCui {
 		width: 100%;
 		display: flex;
 	}
+	.footer_subsection {
+	     margin-left: -1.5rem;
+	}
+	
 	.QgNfY {
 		position: absolute;
 		font-size: 0.6875rem;
@@ -412,6 +422,7 @@
 		letter-spacing: 1px;
 		font-size: 26px;
         text-align: center;
+        line-height:42px;
 	}
 	.globalContainer {
 		display: none;
