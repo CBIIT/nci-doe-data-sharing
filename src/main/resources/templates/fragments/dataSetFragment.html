@@ -7,7 +7,7 @@
 
 <body>
 	<div class="M-4 p-4" id="dataSetFragment" th:fragment="dataSetFragment"
-		style="font-size: 13px;">
+		style="font-size: 13px; margin-top: -2rem;">
 		<div class="form-row pt-2 pb-2 mb-2" id="assetDetailsFragment">
 
 			<div class="col-lg-12 col-md-12 col-sm-12 float-right"
@@ -33,49 +33,48 @@
 				id="applicableModelName" />
 
 			<div class="col-lg-12 col-md-12 col-sm-12"
-				style="margin-top: 20px; border-bottom: 4px solid #194F85;">
+				style="margin-top: 5px; border-bottom: 4px solid #194F85;">
 				<h4 class="datasetDetailsheader">Asset Details</h4>
 			</div>
 
 			<br /> <br />
 
 			<div class="form-row col-lg-12 col-md-12 col-sm-12"
+				id="assetDetailsSubSection"
 				style="padding: 2rem 2rem; border-bottom: 2px solid #194F85;">
 				<div class="col-md-12 col-sm-12"
-					style="color: #000000; font-family: 'latoregular'; font-size: 13px; margin-left: -19px;word-break: break-word;">
+					style="color: #000000; font-family: 'latoregular'; font-size: 13px; margin-left: -19px; word-break: break-word;">
 					<table id="assetDetailsDiv"
 						class="table display dt-responsive wrap"
 						style="border: none; background-color: transparent;">
 						<tbody style="background-color: transparent;">
 							<tr>
-								<td style="font-weight: lighter; width: 15%;">PROGRAM NAME:
-								</td>
-								<td style="font-weight: bold;" id="selectedProgramName"
+								<td>PROGRAM NAME:</td>
+								<td style="font-family: lato_bold;" id="selectedProgramName"
 									th:text="${progName}"></td>
 							</tr>
 							<tr>
-								<td style="font-weight: lighter; width: 15%;">STUDY NAME:</td>
-								<td style="font-weight: bold;" id="selectedStudyName"
+								<td>STUDY NAME:</td>
+								<td style="font-family: lato_bold;" id="selectedStudyName"
 									th:text="${studyName}"></td>
 							</tr>
 							<tr>
-								<td style="font-weight: lighter; width: 15%;">ASSET NAME:</td>
-								<td style="font-weight: bold;" id="selectedDataSetName"
+								<td>ASSET NAME:</td>
+								<td style="font-family: lato_bold;" id="selectedDataSetName"
 									th:text="${assetName}"></td>
 							</tr>
 							<tr>
-								<td style="font-weight: lighter; width: 15%;">ASSET PATH:</td>
-								<td style="font-weight: bold;" id="selectedAssetPath"
+								<td>ASSET PATH:</td>
+								<td style="font-family: lato_bold;" id="selectedAssetPath"
 									th:text="${assetPath}"></td>
 							</tr>
 							<tr>
-								<td style="font-weight: lighter; width: 15%;">SHARABLE
-									LINK:</td>
-								<td style="font-weight: bold;"><span th:text="${assetLink}"
-									id="assetUrlLink"></span>
+								<td class="sharableLinkAssetDetails">SHARABLE LINK:</td>
+								<td style="font-family: lato_bold;"><span
+									th:text="${assetLink}" id="assetUrlLink"></span>
 									<button type="button" class="share-assetLink-copy-button"
 										data-toggle="tooltip" data-placement="bottom" title=""
-										data-clipboard-target="#assetUrlLink"
+										th:data-clipboard-text="${assetLink}"
 										data-original-title="Copy to clipboard">
 										<img src="images/clippy.svg" width="13"
 											alt="Copy to clipboard">
@@ -86,38 +85,41 @@
 				</div>
 			</div>
 
-			<button type="button" class="float-left btn asset-attributes"
-				data-toggle="collapse" data-target="#dataSetMetaData">
-				<img src="images/arrow.collapse-open.svg"
-					th:src="@{/images/arrow.collapse-open.svg}" style="width: 14px;"
-					alt="asset attributes"> <strong>&nbsp;&nbsp;Asset
-					Attributes</strong>
-			</button>
+			<div class="form-row col-lg-12 col-md-12 col-sm-12"
+				style="padding-bottom: 1rem;">
+				<button type="button" class="float-left btn asset-attributes"
+					data-toggle="collapse" data-target="#dataSetMetaData">
+					<img src="images/arrow.collapse-open.svg"
+						th:src="@{/images/arrow.collapse-open.svg}" style="width: 14px;"
+						alt="asset attributes"> <strong>&nbsp;&nbsp;Asset
+						Attributes</strong>
+				</button>
 
-			<table id="dataSetMetaData" class="table display dt-responsive wrap">
-				<thead>
-					<tr>
-						<th aria-sort="none" class="sortable" data-sort="text"
-							role="columnheader" scope="col" style="width: 26%;">&nbsp;&nbsp;ATTRIBUTE</th>
-						<th aria-sort="none" class="sortable" data-sort="text"
-							role="columnheader" scope="col">VALUE</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="metadata : ${assetMetadata}">
-						<td th:text="${metadata.displayName}"></td>
-						<td
-							th:if="${#strings.startsWith(metadata.value, 'https') OR #strings.startsWith(metadata.value, 'http')}">
-							<a target="_blank" th:href="${metadata.value}"><span
-								th:text="${metadata.value}"></span></a>
-						</td>
-						<td
-							th:unless="${#strings.startsWith(metadata.value, 'https') OR #strings.startsWith(metadata.value, 'http')}"
-							th:text="${metadata.value}"></td>
-					</tr>
-				</tbody>
-			</table>
-
+				<table id="dataSetMetaData" class="table display dt-responsive wrap">
+					<thead>
+						<tr>
+							<th aria-sort="none" class="sortable" data-sort="text"
+								role="columnheader" scope="col" style="width: 26%;">&nbsp;&nbsp;ATTRIBUTE</th>
+							<th aria-sort="none" class="sortable" data-sort="text"
+								role="columnheader" scope="col">VALUE</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="metadata : ${assetMetadata}">
+							<td style="font-family: lato_bold;"
+								th:text="${metadata.displayName}"></td>
+							<td
+								th:if="${#strings.startsWith(metadata.value, 'https') OR #strings.startsWith(metadata.value, 'http')}">
+								<a target="_blank" th:href="${metadata.value}"><span
+									th:text="${metadata.value}"></span></a>
+							</td>
+							<td
+								th:unless="${#strings.startsWith(metadata.value, 'https') OR #strings.startsWith(metadata.value, 'http')}"
+								th:text="${metadata.value}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 			<div th:if="${showGeneratePredTab eq true}"
 				class="form-row col-lg-12 col-md-12 col-sm-12"
 				style="margin-left: 5px;">
@@ -154,7 +156,8 @@
 						Predictions</button>
 				</div>
 			</div>
-			<div th:if="${showGeneratePredTab ne true}">
+			<div th:if="${showGeneratePredTab ne true}"
+				class="assetFilesConditional">
 				<p class="assetFilesheader">Asset Files</p>
 			</div>
 
@@ -176,92 +179,90 @@
 					Predictions</button>
 			</div>
 
-			<div class="col-lg-12 col-md-12 col-sm-12 assetFilesmobileMsg" style="display: none;">
-				To access asset files, login to MoDaC from a desktop device
-				</div>
-				<div class="col-lg-12 col-md-12 col-sm-12 assetFilesDiv"
-					style="border: 2px solid #194F85; margin-top: -8px;">
-					<div class="col-lg-12 col-md-12 col-sm-12 float-right"
-						style="border-bottom: 2px solid rgb(197, 197, 197) !important; padding-bottom: 3px; margin-top: -10px;">
-						<div class="controls controls-row mt-4">
-							<p th:if="${loggedOnUser == null}" class="infoDownload">
-								<img src='images/Status.info-tooltip.png'
-									th:src='@{/images/Status.info-tooltip.png}'
-									style='width: 12px;' alt='Status info'> To download
-								files, <a th:href="@{/loginTab}">log in.</a>
-							</p>
+			<div class="col-lg-12 col-md-12 col-sm-12 assetFilesmobileMsg"
+				style="display: none;">To access asset files, login to MoDaC
+				from a desktop device</div>
+			<div class="col-lg-12 col-md-12 col-sm-12 assetFilesDiv"
+				style="border: 2px solid #194F85; margin-top: -8px;">
+				<div class="col-lg-12 col-md-12 col-sm-12 float-right"
+					style="border-bottom: 2px solid rgb(197, 197, 197) !important; padding-bottom: 3px; margin-top: -10px;">
+					<div class="controls controls-row mt-4">
+						<p th:if="${loggedOnUser == null}" class="infoDownload">
+							<img src='images/Status.info-tooltip.png'
+								th:src='@{/images/Status.info-tooltip.png}' style='width: 12px;'
+								alt='Status info'> To download files, <a
+								th:href="@{/loginTab}">log in.</a>
+						</p>
 
-							<button id="downloadSelectedMetadata" type="button"
-								class="btn btn-primary float-right mb-2 mr-2" disabled>Download
-								Selected Metadata</button>
-							<button id="downloadSelectedDataSet" type="button"
-								class="btn btn-primary float-right mb-2 mr-2" disabled>
-								Download <br />Selected Files
-							</button>
-						</div>
+						<button id="downloadSelectedMetadata" type="button"
+							class="btn btn-primary float-right mb-2 mr-2" disabled>Download
+							Selected Metadata</button>
+						<button id="downloadSelectedDataSet" type="button"
+							class="btn btn-primary float-right mb-2 mr-2" disabled>
+							Download <br />Selected Files
+						</button>
 					</div>
-					<table id="dataSetTable" class="table display dt-responsive wrap"
-						role="grid" aria-label="data set table">
-						<thead>
-							<tr>
-								<th aria-sort="none" class="sortable"
-									aria-label="select all checkbox" role="columnheader"
-									scope="colgroup"><label
-									style="color: rgba(255, 255, 255, 0.66) !important;"
-									class="select-checkbox-label"> <input type="checkbox"
-										class="selectAll">&nbsp;&nbsp;BATCH SELECT
-								</label></th>
-								<th aria-sort="none" class="sortable" data-sort="text"
-									role="columnheader" scope="colgroup"
-									style="padding-left: 10px;">FILE/COLLECTION</th>
-								<th aria-sort="none" class="sortable" data-sort="text"
-									role="columnheader" scope="colgroup"
-									style="padding-left: 10px;">FILE SIZE</th>
-								<th aria-sort="none" class="sortable" data-sort="text"
-									role="columnheader" scope="colgroup">ACTIONS</th>
-							</tr>
-						</thead>
-						<tbody>
-						</tbody>
-					</table>
-
-
-					<table id="generatePredTable"
-						class="table display dt-responsive wrap" role="grid"
-						style="display: none;" aria-label="data set table">
-						<thead>
-							<tr>
-								<th aria-sort="none" class="sortable"
-									aria-label="select all checkbox" role="columnheader"
-									scope="colgroup"><label
-									style="color: rgba(255, 255, 255, 0.66) !important;"
-									class="select-checkbox-label"> <input type="checkbox"
-										class="selectAll">&nbsp;&nbsp;BATCH SELECT
-								</label></th>
-								<th aria-sort="none" class="sortable" data-sort="text"
-									role="columnheader" scope="colgroup">INPUT DATASET
-									FILENAME</th>
-								<th aria-sort="none" class="sortable" data-sort="text"
-									role="columnheader" scope="colgroup">PREDICTION FILENAME</th>
-								<th aria-sort="none" class="sortable" data-sort="text"
-									role="columnheader" scope="colgroup">OUTCOME FILENAME</th>
-								<th aria-sort="none" class="sortable" data-sort="text"
-									role="columnheader" scope="colgroup">TASK ID</th>
-								<th aria-sort="none" class="sortable" data-sort="text"
-									role="columnheader" scope="colgroup">SHARED BY</th>
-								<th aria-sort="none" class="sortable" data-sort="text"
-									role="columnheader" scope="colgroup">COMPLETED DATE</th>
-								<th aria-sort="none" class="sortable" data-sort="text"
-									role="columnheader" scope="colgroup">ACTIONS</th>
-							</tr>
-						</thead>
-						<tbody>
-						</tbody>
-					</table>
 				</div>
+				<table id="dataSetTable" class="table display dt-responsive wrap"
+					role="grid" aria-label="data set table">
+					<thead>
+						<tr>
+							<th aria-sort="none" class="sortable"
+								aria-label="select all checkbox" role="columnheader"
+								scope="colgroup"><label
+								style="color: rgba(255, 255, 255, 0.66) !important;"
+								class="select-checkbox-label"> <input type="checkbox"
+									class="selectAll">&nbsp;&nbsp;BATCH SELECT
+							</label></th>
+							<th aria-sort="none" class="sortable" data-sort="text"
+								role="columnheader" scope="colgroup" style="padding-left: 10px;">FILE/COLLECTION</th>
+							<th aria-sort="none" class="sortable" data-sort="text"
+								role="columnheader" scope="colgroup" style="padding-left: 10px;">FILE
+								SIZE</th>
+							<th aria-sort="none" class="sortable" data-sort="text"
+								role="columnheader" scope="colgroup">ACTIONS</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+
+
+				<table id="generatePredTable"
+					class="table display dt-responsive wrap" role="grid"
+					style="display: none;" aria-label="data set table">
+					<thead>
+						<tr>
+							<th aria-sort="none" class="sortable"
+								aria-label="select all checkbox" role="columnheader"
+								scope="colgroup"><label
+								style="color: rgba(255, 255, 255, 0.66) !important;"
+								class="select-checkbox-label"> <input type="checkbox"
+									class="selectAll">&nbsp;&nbsp;BATCH SELECT
+							</label></th>
+							<th aria-sort="none" class="sortable" data-sort="text"
+								role="columnheader" scope="colgroup">INPUT DATASET FILENAME</th>
+							<th aria-sort="none" class="sortable" data-sort="text"
+								role="columnheader" scope="colgroup">PREDICTION FILENAME</th>
+							<th aria-sort="none" class="sortable" data-sort="text"
+								role="columnheader" scope="colgroup">OUTCOME FILENAME</th>
+							<th aria-sort="none" class="sortable" data-sort="text"
+								role="columnheader" scope="colgroup">TASK ID</th>
+							<th aria-sort="none" class="sortable" data-sort="text"
+								role="columnheader" scope="colgroup">SHARED BY</th>
+							<th aria-sort="none" class="sortable" data-sort="text"
+								role="columnheader" scope="colgroup">COMPLETED DATE</th>
+							<th aria-sort="none" class="sortable" data-sort="text"
+								role="columnheader" scope="colgroup">ACTIONS</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
 			</div>
-			<div
-				th:replace="fragments/editCollectionFragment :: editCollectionFragment"></div>
 		</div>
+		<div
+			th:replace="fragments/editCollectionFragment :: editCollectionFragment"></div>
+	</div>
 </body>
 </html>

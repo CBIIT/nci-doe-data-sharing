@@ -220,9 +220,18 @@
 	
 	.assetFilesmobileMsg{
 	display:block !important;
+	margin-left: 0.6rem;
+	}
+	#assetDetailsSubSection{
+	padding: 1rem 0.4rem !important;
+	}
+	#assetUrlLink {
+	display:none;
 	}
 	.assetFilesDiv{
 	display:none;
+	}
+	.sharableLinkAssetDetails{
 	}
 	form#contact-us-form .contactUsFieldsDiv{
 	  margin-left: -2rem !important;

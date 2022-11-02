@@ -175,24 +175,22 @@
 	float: right;
 	margin-right: 24px;
 }
-
-#searchBtn {
-	position: absolute;
-	top: 1rem;
-	left: 20rem;
+#searchBtn{
+    position: absolute;
+    top: 1rem;
+    left: 20rem;
 }
 
-#searchBtn img {
+#searchBtn img{
 	height: 26px;
 	width: 43px;
 }
 
-.resetBtnSpan {
+.resetBtnSpan{
 	position: relative;
-	top: -2.3rem;
-	left: 17rem;
+    top: -2.3rem;
+    left: 17rem;
 }
-
 #searchResultTable_info {
 	font-family: 'latoregular';
 	font-size: 12px;
@@ -559,7 +557,7 @@ table#searchResultTable tr.even td {
 }
 
 #cancelRegisterBtn {
-	background-color: #E66F05 !important;
+	background-color: #E66F05!important;
 	color: #fff !important;
 	border-radius: 15px;
 	width: 90px;
@@ -612,7 +610,7 @@ table#searchResultTable tr.even td {
 	font-size: 19px;
 	font-weight: 500;
 	font-family: 'latoregular';
-	margin-left: 3px;
+	margin-left: 1rem;
 	color: #5099AB;
 }
 
@@ -775,7 +773,7 @@ label.infoLabel {
 	color: #4e8bc6;
 }
 
-#driveUploadAuthlink, #cloudUploadAuthlink {
+#driveUploadAuthlink,#cloudUploadAuthlink {
 	background-color: #E66F05 !important;
 	color: #fff !important;
 	border-radius: 15px;
@@ -1074,7 +1072,6 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before
 	letter-spacing: 1px;
 	line-height: 29px;
 }
-
 .buttoncontainer {
 	margin-bottom: 110px;
 	background-image: url(/images/LP-HeroGraphic.jpg);
@@ -1160,10 +1157,9 @@ a.detail-control {
 	/* height: 65px;*/
 	max-width: 86%;
 }
-
 .landingSearchDiv {
 	height: 111px;
-	width: 778px;
+	width: 778px; 
 	border: 1px solid #000000;
 	background-color: #195DB2;
 	text-align: center;
@@ -1171,18 +1167,17 @@ a.detail-control {
 	max-width: 86%;
 	border: none;
 }
-
-#attributeVallanding {
+#attributeVallanding{
 	margin-top: 30px;
-	border-radius: 24px;
-	font-size: 13px;
-	font-weight: 550;
-	padding-left: 31px;
-	height: 45px;
-	width: 80%;
-	border: 2.51px solid #397DED;
-	background-color: #FFFFFF;
-	margin-left: 66px;
+    border-radius: 24px;
+    font-size: 13px;
+    font-weight: 550;
+    padding-left: 31px;
+    height: 45px;
+    width: 80%;
+    border: 2.51px solid #397DED;
+    background-color: #FFFFFF;
+    margin-left: 66px;
 }
 
 div.container.main {
@@ -1234,7 +1229,6 @@ BRANDING
 	font-family: 'inter_medium';
 	font-size: 16px;
 }
-
 .td_class_5_percent {
 	width: 5% !important;
 }
@@ -1465,7 +1459,7 @@ a {
 	{
 	background-color: #E6EEF8 !important;
 	color: #2660a9 !important;
-	font-weight: bold;
+	font-weight:bold;
 }
 
 .select2-container--bootstrap4 .select2-results__option--highlighted[aria-selected]
@@ -1512,15 +1506,17 @@ a {
 	font-family: latoregular;
 	font-size: 22px;
 	transform: translateY(2px);
-	color: #E66F05;
+    color: #E66F05;
+
 }
 
 #attributeVallanding::placeholder {
-	font-family: latoregular;
+	font-family: latoregular;	
 	transform: translateY(0px);
-	color: #E66F05;
-	font-size: 24px;
-	transform: translateY(2px);
+    color: #E66F05;
+    font-size: 24px;
+    transform: translateY(2px);
+
 }
 
 input#includeCriteria:focus {
@@ -1745,49 +1741,11 @@ label {
 	color: #397ded;
 }
 
-div
-
-
-.dataDivCollapse
-
- 
-
-:not
-
- 
-
-(
-:first-child
-
- 
-
-)
-{
-margin-top
-
-
-:
-
- 
-
--9
-px
-
-
-;
-margin-bottom
-
-
-:
-
- 
-
-0
-px
-
-
-;
+div.dataDivCollapse :not(:first-child) {
+    margin-top: -9px;
+    margin-bottom: 0px;
 }
+
 div.dataDivCollapse :first-child {
 	margin-bottom: 0px;
 }
@@ -1862,67 +1820,10 @@ label.showMorefields {
 .form-control::-ms-input-placeholder {
 	color: #afafaf;
 } /* Microsoft Edge */
-select
-
-
-
-
-.form-control
-
-
-
-
-:not
-
-
- 
-
-
-(
-[
-size
-]
-
-
- 
-
-
-)
-:not
-
-
- 
-
-
-(
-[
-multiple
-]
-
-
- 
-
-
-){
-height
-
-
-
-
-:
-
-
- 
-
-
-35
-px
-
-
-
-
-;
+select.form-control:not ([size] ):not ([multiple] ){
+	height: 35px;
 }
+
 .multiselect-selected-text {
 	font-size: 14px;
 }
