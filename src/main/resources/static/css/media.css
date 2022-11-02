@@ -16,7 +16,7 @@
 	font-size: 13px;
 	padding: 0.3125rem 0px;
 	text-align: center;
-	font-family: 'inter_regular';
+	font-family: 'inter_light';
 	padding-bottom: 2rem;
 	letter-spacing: 0.5px;
 }
@@ -27,8 +27,7 @@
 }
 
 .iONckA {
-	font-size: 15px;
-	font-weight: bold;
+	font-size: 14px;
 	line-height: 13px;
 	color: #fff;
 	font-family:'raleway_medium';
@@ -37,7 +36,7 @@
 .illmTA {
 	padding-left: 0px;
 	list-style: none;
-	font-size: 14px;
+	font-size: 13px;
 	padding-top: 0.5rem;
 }
 
@@ -47,7 +46,6 @@
 
 .hyACbC.hyACbC a {
 	color: #fff;
-	font-weight: 400;
 	text-decoration: none;
 }
 
@@ -65,7 +63,7 @@
 	font-weight: 400;
 	text-decoration: none;
 	position: relative;
-	margin: 0px 2rem;
+	margin: 0px 1.5rem;
 }
 
 .cBoHoo {
@@ -114,7 +112,7 @@
 		width: 100%;
 	}
 	.footer_more_info {
-	 margin-left:8rem;
+	 margin-left:7.5rem;
 	}
 	.footer_policies {
 	 margin-left: -4rem;
@@ -192,6 +190,7 @@
 	#aboutImgDiv{
 	margin-left: 2.5rem !important;
     margin-right: 2.5rem !important;
+    margin-top: 4rem !important;
 	}
 	#aboutText{
 	margin-left: 1rem !important;
@@ -403,7 +402,7 @@
 	.landingSearchDiv {
 		position: relative!important;
 		display: flex!important;
-		margin-top: -5px!important;
+		margin-top: 0px!important;
 		background-color: transparent!important;
 		max-width: 110% !important;
 	}
@@ -411,6 +410,11 @@
 		display: block !important;
 		margin: 0px auto;
 		margin-left: 20px !important;
+		margin-top:-0.5rem !important;
+	}
+	.buttoncontainer{
+	background-image: url(/images/modac.hero1.png);
+	background-position: center;
 	}
 	.subbuttoncontainer {
 		height: 42px;
@@ -439,12 +443,27 @@
 	.mobile-nav-toggle[aria-expanded="false"] .toggleNavBarIcon {
 		display: block !important;
 	}
+	.toggleNavBarIcon {
+	font-size:25px;
+	transform: translateY(-3px);
+	}
 	.krkYvd span {
 		display: none;
 	}
 	.krkYvd {
 		display: grid;
 		font-size: 10px;
+	}
+	.illmTA{
+	padding-top:0.25rem;
+	}
+	.iWqacH {
+	margin: 0px 0.5rem;
+	}
+	.footer_subsection {
+	margin:-0.5rem;
+	margin-top:1rem;
+	padding-bottom: 1rem;
 	}
 	.irmCui {
 		display: grid;
@@ -454,8 +473,11 @@
 		width: 100%;
 		max-width: 100%;
 	}
+	.footer_nci{
+	margin-top: 0.5rem;
+	}
 	.erAkNO {
-		padding-bottom: 50px;
+		padding-bottom: 35px;
 	}
 	.erAkNO h1 {
 		text-align: center;
@@ -475,7 +497,7 @@
 
 	.mobile-navigation {
 		position: absolute;
-		top: 50px;
+		top: 46px;
 		left: 0px;
 		display: block;
 		z-index: 1000;
@@ -491,7 +513,7 @@
 	.hQrVZb {
 		display: grid;
 		position: relative;
-		line-height: 50px;
+		line-height: 42px;
 		text-align: left;
 		font-size: 18px;
 		font-family: Nunito Sans;
@@ -511,13 +533,13 @@
 	.hQrVZb a {
 		display: block;
 		text-decoration: none;
-		padding-left: 1.5rem;
+		padding-left: 1.75rem;
 		color: #fff !important;
 		cursor: pointer;
 	}
 	
 	.hQrVZb_subTab a {
-	  padding-left: 2rem;
+	  padding-left: 2.2rem;
 	  font-size: 16px;
 	}
 	.hQrVZb a.active {
@@ -542,11 +564,12 @@
 		border: 2.51px solid #E0730F;
 		background-color: #FFFFFF;
 		margin-left: -1rem;
+		padding-left: 1.25rem;
 	}
 	#landingSearchMobileButton {
 		position: relative!important;
 		top: 2.3rem!important;
-		right: 4.5rem!important;
+		right: 4rem!important;
 	}
 	#landingSearchMobileButton img {
 		width: 49px !important;
@@ -589,7 +612,7 @@
 		margin-left: -50px !important;
 	}
 	.logoImg {
-		width: 250px
+		width: 283px;
 	}
 	.appnameWrapper {
 		margin-top: 20px;
@@ -625,12 +648,18 @@
 
 @media ( max-width : 550px) {
 	.col.order-first {
-	    margin-left: 0rem !important;
+	    margin-left: -0.25rem !important;
 	}
 	
 	.Aboutbuttoncontainer{
 	background-image: url(/images/About_Image_Mobile.png) !important;
 	background-position: inherit;
+	height: 176px;
+	}
+	#aboutMoDaCDescp p {
+	font-size: 16px;
+    letter-spacing: 0.02rem;
+    line-height: 1.5rem;
 	}
 }
 @media ( max-width : 380px) {
