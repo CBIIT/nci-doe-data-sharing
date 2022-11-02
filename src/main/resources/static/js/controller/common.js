@@ -176,6 +176,7 @@ $(document)
 							$(".selectedFilesDiv").show();
 							$("#destinationPathId").val(selectedPathsString);
 							$("#drivePath").val(downloadFileName);
+							$("#cloudPath").val(downloadFileName);
 							$("#informationalText")
 									.html(
 											"This page allows you to download the "
