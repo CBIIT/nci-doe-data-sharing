@@ -1405,7 +1405,7 @@ function registerBulkDataFile() {
 			}
 		});
 
-		if (bulkUploadType == 's3' && !validate) {
+		if ((bulkUploadType == 's3' || bulkUploadType == 'cloud') && !validate) {
 			$(".uploadBulkDataError").show();
 			$(".uploadBulkDataErrorMsg").html("Enter all the required fields.")
 		} else if (bulkUploadType == 'globus' && !$("#globusEndPointInformation").length) {
