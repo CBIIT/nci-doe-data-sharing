@@ -104,7 +104,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 				final String returnURL = this.webServerName + "/addbulk";
 				model.addAttribute("uploadAsyncType", DoeAuthorizationService.GOOGLE_CLOUD_TYPE);
 				try {
-					String refreshTokenDetailsGoogleCloud = doeAuthorizationService.getToken(code, returnURL,
+					String refreshTokenDetailsGoogleCloud = doeAuthorizationService.getRefreshToken(code, returnURL,
 							DoeAuthorizationService.ResourceType.GOOGLECLOUD);
 
 					session.setAttribute("refreshTokenDetailsGoogleCloud", refreshTokenDetailsGoogleCloud);
