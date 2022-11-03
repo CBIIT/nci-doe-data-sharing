@@ -198,8 +198,6 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		String accessKey = (String) request.getParameter("accessKey");
 		String secretKey = (String) request.getParameter("secretKey");
 		String region = (String) request.getParameter("region");
-		String s3File = (String) request.getParameter("s3File");
-		boolean isS3File = s3File != null && s3File.equals("on");
 		String gcbucketName = (String) request.getParameter("gcbucketName");
 		String gcPath = (String) request.getParameter("gcPath");
 		gcPath = (gcPath != null ? gcPath.trim() : null);
@@ -337,7 +335,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			}
 			dto.getDirectoryScanRegistrationItems().addAll(folders);
 		}
-		if (StringUtils.equals(bulkType, "s3") && s3Path != null && isS3File) {
+		if (StringUtils.equals(bulkType, "s3") && s3Path != null) {
 			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO> files = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO>();
 			gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO file = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO();
 			HpcFileLocation source = new HpcFileLocation();
@@ -357,24 +355,6 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			System.out.println(path + "/" + s3FilePath.getFileName());
 			files.add(file);
 			dto.getDataObjectRegistrationItems().addAll(files);
-		} else if (StringUtils.equals(bulkType, "s3") && s3Path != null) {
-			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO> folders = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO>();
-			gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO folder = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO();
-			HpcFileLocation source = new HpcFileLocation();
-			source.setFileContainerId(bucketName);
-			source.setFileId(s3Path);
-			folder.setBasePath(path);
-			HpcS3ScanDirectory s3Directory = new HpcS3ScanDirectory();
-			s3Directory.setDirectoryLocation(source);
-			HpcS3Account s3Account = new HpcS3Account();
-			s3Account.setAccessKey(accessKey);
-			s3Account.setSecretKey(secretKey);
-			s3Account.setRegion(region);
-			s3Directory.setAccount(s3Account);
-			folder.setS3ScanDirectory(s3Directory);
-			folders.add(folder);
-
-			dto.getDirectoryScanRegistrationItems().addAll(folders);
 		}
 
 		return dto;
