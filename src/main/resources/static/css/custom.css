@@ -176,9 +176,9 @@
 	margin-right: 24px;
 }
 #searchBtn{
-    position: absolute;
+    position: relative;
     top: 1rem;
-    left: 20rem;
+    left: -4.5rem;
 }
 
 #searchBtn img{
@@ -1172,10 +1172,26 @@ a.detail-control {
 	max-width: 86%;
 	border: none;
 }
+#attributeVal {
+	margin-top: 10px; 
+	border: 2px solid #E66F05; 
+	border-radius: 15px; 
+	height: 42px; font-size: 13px; 
+	font-weight: 550; 
+	padding-left: 20px;
+	width:76%;
+}
+#keyworkSearchDiv {
+	float: left; 
+	margin-top: 10px; 
+	margin-bottom: 16px; 
+	margin-left: -18px; 
+	display: inline-flex;
+}
 #attributeVallanding{
 	margin-top: 30px;
     border-radius: 24px;
-    font-size: 13px;
+    font-size: 22px;
     font-weight: 550;
     padding-left: 31px;
     height: 45px;
@@ -1781,7 +1797,7 @@ input.filteritem:checked + div {
 	font-family: 'latoregular'; 
 	font-size: 22px; 
 	margin-left: 25px; 
-	padding-top: 6px; 
+	padding-top: 3px; 
 	float: left;
 }
 #clearFilters{

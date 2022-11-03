@@ -101,9 +101,6 @@
 }
 
 @media ( min-width : 991px) {
-	#attributeVallanding::placeholder {
-		font-size: 26px;
-	}
 	.dpehyt {
 		list-style: none;
 		margin-bottom: 0px;
@@ -141,21 +138,13 @@
 	margin-left: 2rem !important;
 	}
 }
+
 @media ( min-width : 461px) and ( max-width : 990px) {
-	#attributeVallanding {
-		border-radius: 24px;
-		font-size: 24px;
-		font-weight: 550;
-		height: 45px;
-		width: 40rem;
-		border: 2.51px solid #E0730F;
-		background-color: #FFFFFF;
-		margin-left: -1rem;
-	}
+
 	#landingSearchMobileButton {
 		position: relative;
 		top: 2.3rem;
-		right: 5.5rem;
+		right: 7.5rem;
 		text-align: center;
 	}
 	
@@ -236,6 +225,21 @@
 	div.wrapper{
 	 left: 0px !important;
      right: 0px !important;
+	}
+	
+	
+   #attributeVallanding {
+		border-radius: 24px;
+		height: 45px;
+		border: 2.51px solid #E0730F;
+		background-color: #FFFFFF;
+		margin-left: -1.5rem;
+		padding-left: 1.25rem;
+		width:100% !important;
+	}
+	#attributeVallanding::placeholder {
+		font-size: 22px;
+		transform: translateY(-2px);
 	}
 	
 	#attributeVal::placeholder{
@@ -397,21 +401,17 @@
 		top: 2.5rem!important;
 		left: -6rem!important;
 	}
-	#attributeVallanding::placeholder {
-		font-size: 22px;
-		transform: translateY(-2px);
-	}
-	.landingSearchDiv {
-		position: relative!important;
+	
+	.landingSearchDivMobile {
 		display: flex!important;
-		margin-top: 0px!important;
+		margin-top: -6px!important;
 		background-color: transparent!important;
-		max-width: 110% !important;
+		width:120%;
 	}
 	.mobileContainer {
 		display: block !important;
 		margin: 0px auto;
-		margin-left: 20px !important;
+		margin-left: 15px !important;
 		margin-top:-0.5rem !important;
 	}
 	.buttoncontainer{
@@ -557,17 +557,7 @@
 	
 	margin-left: -3rem !important;
 	}
-	#attributeVallanding {
-		border-radius: 24px;
-		font-size: 24px;
-		font-weight: 550;
-		height: 45px;
-		width: 22rem;
-		border: 2.51px solid #E0730F;
-		background-color: #FFFFFF;
-		margin-left: -1rem;
-		padding-left: 1.25rem;
-	}
+
 	#landingSearchMobileButton {
 		position: relative!important;
 		top: 2.3rem!important;
@@ -614,22 +604,13 @@
 	#spinner {
 	 left: 0%;
 	}
-	
-	#attributeVallanding {
-	 width: 19rem;
-	
-	}
-	
+
 	#landingSearchMobileButton {
      right: 4.5rem!important;
    }
    
 }
-@media ( max-width : 340px) {
-	#attributeVallanding {
-	 width: 16rem;	
-	}
-}
+
 @media ( max-width : 320px) {
 	.Aboutbuttoncontainer{
      background-image: url(/images/About_Image_Mobile.png) !important;
@@ -727,6 +708,7 @@
 	.navbar .navbar-brand {
 		margin-top: 0px;
 	}
+
 }
 
 @media ( max-width : 380px) {
@@ -750,10 +732,7 @@
 	
 	margin-left: -3rem !important;
 	}
-	#attributeVallanding {
-	width: 14rem;
-	}
-	
+
 }
 
 @media ( min-width : 992px) {
