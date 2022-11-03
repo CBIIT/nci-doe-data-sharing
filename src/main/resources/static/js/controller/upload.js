@@ -1400,7 +1400,7 @@ function registerBulkDataFile() {
 		var bulkUploadType = $('input[name=datafileTypeUpload]:checked').val();
 		var validate = true;
 		$('form#registerBulkDataForm input[type="text"]').each(function() {
-			if (!$(this).val()) {
+			if ($(this).is(":visible") && !$(this).val()) {
 				validate = false;
 			}
 		});
