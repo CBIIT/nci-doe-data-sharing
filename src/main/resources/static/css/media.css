@@ -639,6 +639,15 @@
 	#spinner {
 	left: 0%;
 	}
+	
+	#attributeVallanding {
+	width: 16rem;
+	
+	}
+	
+	#landingSearchMobileButton {
+     right: 4.5rem!important;
+   }
 }
 @media ( max-width : 550px) {
 	.googleCaptchaDiv{
@@ -721,6 +730,10 @@
 	
 	margin-left: -3rem !important;
 	}
+	#attributeVallanding {
+	width: 14rem;
+	}
+	
 }
 
 @media ( min-width : 992px) {
