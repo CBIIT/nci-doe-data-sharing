@@ -1069,10 +1069,13 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before
 #aboutMoDaCDescp p {
 	opacity: 0.98;
 	color: #000000;
-	font-family: latoregular;
+	font-family: 'inter_regular';
 	font-size: 17px;
 	letter-spacing: 1px;
 	line-height: 29px;
+}
+#aboutMoDaCDescp a{
+	font-family: 'inter_bold'; 
 }
 .buttoncontainer {
 	margin-bottom: 110px;
@@ -1146,7 +1149,7 @@ a.detail-control {
 .Aboutbuttoncontainer {
 	margin-bottom: 110px;
 	background-repeat: no-repeat;
-	background-size: 701px 400px;
+	background-size: auto;
 	height: 350px;
 	background-position: right;
 }

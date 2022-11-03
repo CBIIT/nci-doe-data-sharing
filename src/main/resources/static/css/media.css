@@ -174,35 +174,8 @@
 	margin-left:1rem !important;
 	}
 }
-@media ( max-width : 440px) {
-  .popover {
-    margin-top: 8rem;
-    word-break: break-word;
-    height: fit-content;
-    max-width: fit-content !important;
-    width: fit-content;
-    margin-left: 3rem;
-  }
-  
-  .divTableRow div:first-child {
-    width: 32%;
-}
-	#aboutImgDiv{
-	margin-left: 2.5rem !important;
-    margin-right: 2.5rem !important;
-    margin-top: 4rem !important;
-	}
-	#aboutText{
-	margin-left: 1rem !important;
-	}
-}
 
-@media ( max-width : 280px) {
-	#aboutText{
-	font-size: 19px !important;
-	margin-left: 0rem !important;
-	}
-}
+
 @media ( max-width : 990px) {
 	
 	#spinner{
@@ -473,7 +446,7 @@
 		display: block !important;
 	}
 	.toggleNavBarIcon {
-	font-size:25px;
+	font-size:28px;
 	transform: translateY(-3px);
 	}
 	.krkYvd span {
@@ -607,6 +580,10 @@
 	.resetBtnSpan{
     left: -6rem !important;
 	}
+	   
+   .Aboutbuttoncontainer{
+     background-image: url(/images/About.image.responsive.png) !important;
+	}
 }
 @media ( max-width :1200px) and (min-width: 992px) {
 	.topNav-item {
@@ -631,23 +608,32 @@
 
 }
 
+
+
 @media ( max-width : 360px) {
-	#aboutText{
-	font-size: 25px !important;
-	margin-left: 1rem !important;
-	}
 	#spinner {
-	left: 0%;
+	 left: 0%;
 	}
 	
 	#attributeVallanding {
-	width: 16rem;
+	 width: 19rem;
 	
 	}
 	
 	#landingSearchMobileButton {
      right: 4.5rem!important;
    }
+   
+}
+@media ( max-width : 340px) {
+	#attributeVallanding {
+	 width: 16rem;	
+	}
+}
+@media ( max-width : 320px) {
+	.Aboutbuttoncontainer{
+     background-image: url(/images/About_Image_Mobile.png) !important;
+	}
 }
 @media ( max-width : 550px) {
 	.googleCaptchaDiv{
@@ -670,8 +656,58 @@
 		justify-content: left;
 		margin-left: -50px;
 	}
+	
+		.col.order-first {
+	    margin-left: -0.25rem !important;
+	}
+	
+	.Aboutbuttoncontainer{
+	height: 176px;
+	}
+	#aboutMoDaCDescp p {
+	font-size: 16px;
+    letter-spacing: 0.02rem;
+    line-height: 1.5rem;
+	}
+	
+	#aboutImgDiv{
+	margin-left: 1.0rem !important;
+    margin-right: 1.0rem !important;
+    margin-top: 4.2rem !important;
+    height:42px !important;
+	}
+	#aboutText{
+	margin-left: 0rem !important;
+	font-size:26px !important;
+	line-height:2.5rem !important;
+	}
 }
+@media ( max-width : 440px) {
+  .popover {
+    margin-top: 8rem;
+    word-break: break-word;
+    height: fit-content;
+    max-width: fit-content !important;
+    width: fit-content;
+    margin-left: 3rem;
+  }
+  
+  .divTableRow div:first-child {
+    width: 32%;
+   }
 
+	#aboutImgDiv{
+	margin-left: 1.0rem !important;
+    margin-right: 1.0rem !important;
+    margin-top: 4.2rem !important;
+    height:42px !important;
+	}
+	#aboutText{
+	margin-left: 0rem !important;
+	font-size:26px !important;
+	line-height:2.5rem !important;
+	}
+}
 @media ( min-width : 768px) {
 	.googleCaptchaDiv{
 	margin-left: 8rem !important;
@@ -693,22 +729,6 @@
 	}
 }
 
-@media ( max-width : 550px) {
-	.col.order-first {
-	    margin-left: -0.25rem !important;
-	}
-	
-	.Aboutbuttoncontainer{
-	background-image: url(/images/About_Image_Mobile.png) !important;
-	background-position: inherit;
-	height: 176px;
-	}
-	#aboutMoDaCDescp p {
-	font-size: 16px;
-    letter-spacing: 0.02rem;
-    line-height: 1.5rem;
-	}
-}
 @media ( max-width : 380px) {
 	.googleCaptchaDiv{
 	
