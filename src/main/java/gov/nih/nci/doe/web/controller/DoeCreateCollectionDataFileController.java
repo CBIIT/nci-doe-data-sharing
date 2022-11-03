@@ -33,7 +33,6 @@ import gov.nih.nci.hpc.domain.datamanagement.HpcDataHierarchy;
 import gov.nih.nci.hpc.domain.datamanagement.HpcDirectoryScanPathMap;
 import gov.nih.nci.hpc.domain.datatransfer.HpcFileLocation;
 import gov.nih.nci.hpc.domain.datatransfer.HpcS3Account;
-import gov.nih.nci.hpc.domain.datatransfer.HpcS3ScanDirectory;
 import gov.nih.nci.hpc.domain.datatransfer.HpcScanDirectory;
 import gov.nih.nci.hpc.domain.datatransfer.HpcStreamingUploadSource;
 import gov.nih.nci.hpc.domain.datatransfer.HpcUploadSource;
