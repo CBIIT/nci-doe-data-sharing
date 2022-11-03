@@ -118,22 +118,22 @@ function renderSearchAssetRow(data, type, row) {
 
 	var html = "";
 
-	html += "<div class='col-md-12' style='font-size:16px;margin-top:10px;'>"
+	html += "<div class='col-md-12' style='margin-top:10px;display: inline-flex;'>"
 			+ "&nbsp;&nbsp;&nbsp;<a href='#' class='dataSetFragment' " + "dme_data_id  = '" + row.dmeDataId
 			+ "' permissions_role = '" + row.dataSetPermissionRole + "'" + "data_set_path = " + row.dataSetPath + ">"
-			+ "<span class='cil_14_bold_no_color' style='margin-left:-1rem;'>" + row.dataSetName + "</span></a>"
+			+ "<div class='cil_14_bold_no_color_mobile' style='margin-left:-1rem;'>" + row.dataSetName + "</div></a>"
 			+ "&nbsp&nbsp;";
 
-	html += "<button type='button' style='float:right;' class='share-link-copy-button' data-toggle='tooltip' data-placement='bottom' "
+	html += "<button type='button' style='float:right;transform: translate(18px, 0px);' class='share-link-copy-button' data-toggle='tooltip' data-placement='bottom' "
 			+ "title='Copy to clipboard' data-clipboard-text='"
 			+ row.dataSetdmeDataId
 			+ "'>"
-			+ "<img src='images/Search.Shareable_Link_Mobile.svg' width='20' alt='Copy to clipboard' style='filter: none;'/></button></div>";
+			+ "<img src='images/Search.Shareable_Link.svg' width='18' alt='Copy to clipboard'/></button></div>";
 
 	html += "<div class='col-md-12 cil_12_bold_no_color_mobile_dataset' >" + "<span style='word-break: break-all;'>"
 			+ row.dataSetDescription
 			+ "</span>"
-			+ "</a><hr style='background-color: #A7A7A7;height: 3px;width: 27px;margin-left: 0rem;'></div><div class='col-md-12' style='margin-top: 10px;'>"
+			+ "</a><hr style='background-color: #A7A7A7;height: 3px;width: 27px;margin-left: 2px;'></div><div class='col-md-12' style='margin-top: -10px;'>"
 			+ "<span style='color: #747474;' class='cil_12_bold_no_color'>STUDY: </span><a class='cil_12_no_color button2a'"
 			+ "selected_path='"
 			+ row.studyPath

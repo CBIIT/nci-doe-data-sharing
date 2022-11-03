@@ -196,12 +196,7 @@
 	margin-left: 1rem !important;
 	}
 }
-@media ( max-width : 360px) {
-	#aboutText{
-	font-size: 25px !important;
-	margin-left: 1rem !important;
-	}
-}
+
 @media ( max-width : 280px) {
 	#aboutText{
 	font-size: 19px !important;
@@ -211,7 +206,9 @@
 @media ( max-width : 990px) {
 	
 	#spinner{
-	left: 5% !important;
+	text-align: center;
+    left: 5%;
+    right: 5%;
 	}
 	
 	.col.order-first {
@@ -269,10 +266,10 @@
 	}
 	
 	#attributeVal::placeholder{
-	 font-size:26px !important;
+	 font-size:22px !important;
 	}
 	#attributeVal{
-	height: 88.5px!important;
+	height: 88px!important;
     font-size: 25px!important;
     margin-left: -1.3rem!important;
     margin-top: 0px!important;
@@ -280,7 +277,7 @@
     width: 56.5rem!important;
     border: 2px solid #E66F05;
     font-weight: 550;
-    padding-left: 1.8rem !important;
+    padding-left: 1.6rem !important;
 	}
 	
 	#clearFilters{
@@ -289,10 +286,21 @@
 	#mobileFiltersSection{
 	display:flex !important;
 	float: right;
-	margin-top: 0.5rem;
+	margin-top: 0rem;
 	margin-right: 0.5rem;
 	}
 	
+	#filterSectionDiv > .filterComponentDiv {
+          margin-top: 3rem;
+	}
+	
+	#filterSectionDiv > .filterComponentDiv ~ .filterComponentDiv {
+          margin-top: 0rem;
+	}
+
+    #filterSectionSubDiv{
+        margin-left: -7px;
+    }
 
 	#cancelFiltersMobile img{
 	height: 28px;
@@ -316,34 +324,46 @@
     right: -1.5rem!important;
     height: 5.5rem!important;
     width: 6rem!important;
-    font-size: 47px!important;
     border-radius: 0px !important;
     background-color: #E66F05;
     text-align: center;
 	}
 	#searchMobileBtn img{
-	width: 44px!important;
-	transform: translateY(-12px);
+	width: 32px!important;
+	transform: translate(19px, 22.5px);
 	}
 	#searchMobileBtn span {
 	position: relative;
-    top: -3.5rem;
-    font-size: 15px;
+    top: 3rem;
+    left:-1.5rem;
+    font-size: 12px;
     color: #fff;
-    text-align: center;
+    font-family: inter_regular;
 	}
+	.cil_14_bold_no_color_mobile{
+	color: #2E76ED;
+    font-family: 'lato_bold';
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: 0;
+    line-height: 23px;
+    word-break: break-all;
+	}
+	
 	#backMobileFilter{
-	font-family:'inter_regular';
-	font-size: 22px;
+	font-family:'inter_medium';
+	font-size: 17px;
 	color: #4D91D5;
-	font-weight: 500;
+	letter-spacing
 	}
 	#mobileKeyworkSearchDiv{
 	padding-bottom: 20px;
 	}
 	#filterSectionDiv{
 	border-radius: 1rem;
-	margin-left: 2rem !important;
+	margin-left: 2.5rem !important;
+    margin-right: 1.5rem !important;
+	border: 2px solid #3a73b9;
 	}
 	.mobileFilterSearch {
 	display:inline-block!important;
@@ -358,7 +378,7 @@
 	#searchResultsMobileDiv{
 	padding-right: 0px !important;
     padding-left: 5px !important;
-    padding-top: 1rem;
+    padding-top: 0rem;
 	}
 	#searchSubSectionDiv{
 	/* margin-right: -30px !important;
@@ -367,8 +387,8 @@
     margin-left: -2rem !important;
 	}
 	#searchResultMobileTable_wrapper{
-	padding-top: 2rem;
-	padding-left: 1rem;
+	padding-top: 1rem;
+	padding-left: 0.7rem;
 	}
 	#keyworkSearchDiv{
 	display:none;
@@ -392,7 +412,7 @@
 	}
 
 .cil_12_bold_no_color_mobile_dataset{
-	    margin-left: 0px;
+	margin-left: -1px;
     margin-top: 1rem;
     color: #000000;
     font-family: 'latoregular';
@@ -611,6 +631,15 @@
 
 }
 
+@media ( max-width : 360px) {
+	#aboutText{
+	font-size: 25px !important;
+	margin-left: 1rem !important;
+	}
+	#spinner {
+	left: 0%;
+	}
+}
 @media ( max-width : 550px) {
 	.googleCaptchaDiv{
 	

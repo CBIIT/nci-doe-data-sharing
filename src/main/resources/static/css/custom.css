@@ -358,10 +358,11 @@ input:checked+.slider:before {
 	margin-right: 29px;
 	margin-top: -6px;
 	font-size: 13px;
+	letter-spacing: 1px;
 }
 
 .dataTables_length label {
-	font-size: 12px;
+	font-size: 13px;
 	font-family: 'latoregular';
 }
 
@@ -844,11 +845,11 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
 	color: #f39530 !important;
 }
 
-button.share-link-copy-button>img, button.share-assetLink-copy-button>img
+/* button.share-link-copy-button>img, button.share-assetLink-copy-button>img
 	{
 	filter: invert(40%) sepia(97%) saturate(5634%) hue-rotate(202deg)
 		brightness(109%) contrast(104%);
-}
+} */
 
 img.line {
 	float: left;
@@ -1000,15 +1001,16 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before
 .css-17rpx5x, .css-17rpx5xLess {
 	float: right;
 	cursor: pointer;
-	margin-top: -24px;
+	margin-top: -1.5rem;
 	color: rgb(107, 98, 98);
 	font-size: 14px;
 }
 
 .css-17rpx5x a, .css-17rpx5xLess a {
-	color: rgb(107, 98, 98);
-	font-size: 14px;
+	color: #707070;
 	float: right;
+	font-family: 'latoregular';
+    font-size: 16px;
 }
 
 .divTableBody {
@@ -1296,14 +1298,12 @@ BRANDING
 
 }
 .cil_14_bold_no_color {
-	height: 20px;
-	width: 110px;
 	color: #2E76ED;
 	font-family: 'lato_bold';
 	font-size: 22px;
 	font-weight: bold;
 	letter-spacing: 0;
-	line-height: 18px;
+	line-height: 1.5rem;
 	word-break: break-all;
 }
 
@@ -1519,6 +1519,22 @@ a {
 
 }
 
+.filterComponentDiv {
+	border-radius: 12px 12px 0px 0px; 
+	border: 1px solid #fff; 
+	margin-bottom: 13px; 
+	background-color: #fff; 
+	margin-left: 10px; 
+	margin-right: 8px;
+}
+.filterComponentDiv p {
+	background-color: #E66F05; 
+	border-radius: 6px 6px 0px 0px; 
+	color: #fff; width: 101%; 
+	margin-left: -1px; 
+	margin-top: -1px; 
+	font-size: 19px;
+}
 input#includeCriteria:focus {
 	outline: none;
 }
@@ -1719,6 +1735,65 @@ label {
 	padding-right: 10px;
 }
 
+.filteritem {
+	transform: translateY(4px);
+    box-sizing: border-box;
+    height: 15px;
+    width: 15px;
+    border: 1px solid #7C7C7C;
+    background-color: #7C7C7C;
+}
+
+input.filteritem:checked {
+    color: #006DD9;
+    transform: translateY(4px);
+    box-sizing: border-box;
+    height: 15px;
+    width: 15px;
+    border: 1px solid #7C7C7C;
+    background-color: #7C7C7C;
+}
+input.filteritem:checked + div {
+	 color: #006DD9;
+}
+
+#filterSectionDiv{
+	margin-left: -1rem; 
+	margin-right: 1rem; 
+	margin-top: -3px; 
+	overflow: auto; 
+	height: fit-content; 
+	background-color: #C6D9EC; 
+	overflow-x: hidden;
+}
+#filterSectionSubDiv {
+	background-color: #3a73b9; 
+	margin-bottom: 10px; 
+	margin-left: -10px; 
+	height: 42px; 
+	width: 105%;
+}
+#filterSectionSubDiv p {
+	color: #fff; 
+	font-family: 'latoregular'; 
+	font-size: 22px; 
+	margin-left: 25px; 
+	padding-top: 6px; 
+	float: left;
+}
+#clearFilters{
+	float: right; 
+	margin-right: 16px; 
+	background-color: #FFFFFF; 
+	margin-top: 8px; 
+	border-radius: 15px; 
+	font-family: 'inter_regular'; 
+	width: 70px; 
+	font-size: 9px;
+	 font-weight: 300; 
+	 color: #000;
+}
+
 .cil_12_no_color {
 	cursor: pointer;
 	font-family: 'latoregular';
@@ -1728,6 +1803,7 @@ label {
 	height: 42px;
 	width: 175px;
 	color: #1F6DEA;
+	letter-spacing: 0.2px;
 }
 
 .cil_13_no_color {
@@ -1741,6 +1817,15 @@ label {
 	color: #397ded;
 }
 
+div.dataDivCollapse{
+	padding-top: 5px; 
+	margin-top: -10px; 
+	max-height: 256px; 
+	overflow: auto; 
+	margin-bottom: 10px; 
+	margin-left: -5px; 
+	font-family: 'latoregular';
+}
 div.dataDivCollapse :not(:first-child) {
     margin-top: -9px;
     margin-bottom: 0px;
@@ -1754,20 +1839,32 @@ div.dataDivCollapse :last-child {
 	padding-bottom: 6px;
 }
 
+label.attrName {
+	color: #fff; 
+	margin-bottom: 5px; 
+	margin-top: -8px; 
+	margin-left: 9px; 
+	font-weight: 400; 
+	font-size: 18px; 
+	width: 65%; 
+	font-family: 'latoregular';
+}
 .filterSearchBox {
-	width: 96%;
+	width: 91%;
 	border-radius: 4px;
-	border: 2px solid #A7A7A7;
-	font-size: 14px;
-	height: 2.1rem;
+	border: 1px solid #707070;
+	font-size: 17px;
+	height: 2.5rem;
 	padding: 6px 12px;
 	margin-bottom: 15px;
 	display: none;
-	margin-left: 6px;
+	margin-left: 12px;
+	font-family: 'latoregular';
 }
 
 label.showMorefields {
 	width: fit-content;
+	font-size:15px;
 }
 
 .btn-danger {
