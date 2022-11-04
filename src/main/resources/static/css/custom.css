@@ -100,6 +100,7 @@
 
 .popover-header {
 	background-color: #c1e3ff !important;
+	font-family: 'latoregular';
 }
 
 /*.bordered{border-bottom: 1px solid #616A70;}*/
@@ -176,9 +177,9 @@
 	margin-right: 24px;
 }
 #searchBtn{
-    position: relative;
+    position: absolute;
     top: 1rem;
-    left: -4.5rem;
+    right:1rem;
 }
 
 #searchBtn img{
@@ -186,7 +187,13 @@
 	width: 43px;
 }
 
-.resetBtnSpan{
+#resetBtn {
+	position: absolute;
+	top: 1rem;
+    right: 4.5rem;
+}
+
+#resetBtnLanding{
 	position: relative;
     top: -2.3rem;
     left: 17rem;
@@ -1175,7 +1182,6 @@ a.detail-control {
 	height: 42px; font-size: 13px; 
 	font-weight: 550; 
 	padding-left: 20px;
-	width:76%;
 }
 #keyworkSearchDiv {
 	float: left; 
@@ -1183,6 +1189,7 @@ a.detail-control {
 	margin-bottom: 16px; 
 	margin-left: -18px; 
 	display: inline-flex;
+	flex-wrap: wrap;
 }
 #attributeVallanding{
 	margin-top: 30px;
@@ -1190,7 +1197,7 @@ a.detail-control {
     font-size: 22px;
     font-weight: 550;
     padding-left: 31px;
-    height: 45px;
+    height: 48px;
     width: 80%;
     border: 2.51px solid #397DED;
     background-color: #FFFFFF;
@@ -1529,8 +1536,17 @@ a {
 	font-family: latoregular;	
     color: #E66F05;
     font-size: 24px;
-    transform: translateY(1px);
 
+}
+
+#landingSearch{
+	position: absolute;
+    top: 40px;
+    right: 156px;
+}
+
+#landingSearch img {
+	width: 42px;
 }
 
 .filterComponentDiv {
@@ -1544,7 +1560,7 @@ a {
 .filterComponentDiv p {
 	background-color: #E66F05; 
 	border-radius: 6px 6px 0px 0px; 
-	color: #fff; width: 101%; 
+	color: #fff; width: 100.5%; 
 	margin-left: -1px; 
 	margin-top: -1px; 
 	font-size: 19px;

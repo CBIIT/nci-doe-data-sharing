@@ -37,11 +37,15 @@ $(document)
 					});
 					$(".keywordSearch").keyup(function(){
 						if ($(this).val()) {
-							$(".resetBtnSpan").show();
+							$("#resetBtn").show();
 							$("#resetBtnMobile").show();
+							$("#resetBtnLanding").show();
+							$("#resetBtnLandingForMobile").show();
 						} else {
-							$(".resetBtnSpan").hide();
+							$("#resetBtn").hide();
 							$("#resetBtnMobile").hide();
+							$("#resetBtnLanding").hide();
+							$("#resetBtnLandingForMobile").hide();
 						}
 					});
 

@@ -139,21 +139,6 @@
 	}
 }
 
-@media ( min-width : 461px) and ( max-width : 990px) {
-
-	#landingSearchMobileButton {
-		position: relative;
-		top: 2.3rem;
-		right: 7.5rem;
-		text-align: center;
-	}
-	
-	#landingSearchMobileButton img {
-		width: 60px !important;
-        height: 30px !important;
-	}
-}
-
 @media ( max-width : 1500px) {
 	#aboutMoDaCDescp{
 	margin-right:1rem !important;
@@ -221,7 +206,7 @@
 		background-color: #FFFFFF;
 		margin-left: -1.5rem;
 		padding-left: 1.25rem;
-		width:100% !important;
+		width: -webkit-fill-available;
 	}
 	#attributeVallanding::placeholder {
 		font-size: 22px;
@@ -241,6 +226,24 @@
     border: 2px solid #E66F05;
     font-weight: 550;
     padding-left: 1.6rem !important;
+	}
+	
+	#resetBtnLandingForMobile {
+	position: absolute;
+     top: 2.4rem!important;
+     right: 6.5rem!important;
+     
+    }
+	
+	#landingSearchMobileButton {
+	 position: absolute;
+     right: 29px;
+     top: 36px;
+	}
+	
+    #landingSearchMobileButton img {
+		width: 60px;
+        height: 30px;
 	}
 	
 	#clearFilters{
@@ -374,25 +377,21 @@
       border-bottom: 1px solid #A5A5A5;
 	}
 
-.cil_12_bold_no_color_mobile_dataset{
+  .cil_12_bold_no_color_mobile_dataset{
 	margin-left: -1px;
     margin-top: 1rem;
     color: #000000;
     font-family: 'latoregular';
     font-size: 16px;
     line-height: 21px;
-}
-	.resetBtnSpan {
-		position: relative!important;
-		top: 2.5rem!important;
-		left: -6rem!important;
-	}
+  }
+	
 	
 	.landingSearchDivMobile {
 		display: flex!important;
 		margin-top: -6px!important;
 		background-color: transparent!important;
-		width:120%;
+		flex-wrap: wrap;
 	}
 	.mobileContainer {
 		display: block !important;
@@ -564,19 +563,6 @@
 	margin-left: -3rem !important;
 	}
 
-	#landingSearchMobileButton {
-		position: relative!important;
-		top: 2.3rem!important;
-		right: 4rem!important;
-	}
-	#landingSearchMobileButton img {
-		width: 49px !important;
-        height: 30px !important;
-	}
-	.resetBtnSpan{
-    left: -6rem !important;
-	}
-	   
    .Aboutbuttoncontainer{
      background-image: url(/images/About.image.responsive.png) !important;
 	}
@@ -591,6 +577,9 @@
 }
 
 @media ( max-width :990px) {
+	.closeBtn {
+	 color:#DE7417;
+	}
 	.appName {
 		white-space: nowrap;
 		margin-top: 40px;
@@ -610,10 +599,6 @@
 	#spinner {
 	 left: 0%;
 	}
-
-	#landingSearchMobileButton {
-     right: 4.5rem!important;
-   }
    
 }
 

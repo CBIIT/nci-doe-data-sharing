@@ -2,6 +2,7 @@ $(document).ready(function() {
 	if (screen.width > 990) {
 		$("#mobileKeyworkSearchDiv").hide();
 	} else {
+		$("#filterSectionDiv").removeClass('col-lg-3 col-md-8');
 		$("#mobileKeyworkSearchDiv").show();
 	}
 	$(".landing-tab").removeClass('active');
