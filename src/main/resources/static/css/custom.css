@@ -608,7 +608,7 @@ table#searchResultTable tr.even td {
 }
 
 .assetFilesheader {
-	font-size: 19px;
+	font-size: 23px;
 	font-weight: 500;
 	font-family: 'latoregular';
 	margin-left: 1rem;
@@ -843,13 +843,9 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
 	border: none;
 	background-color: #fff;
 	color: #f39530 !important;
+	transform: translateY(-3px);
 }
 
-/* button.share-link-copy-button>img, button.share-assetLink-copy-button>img
-	{
-	filter: invert(40%) sepia(97%) saturate(5634%) hue-rotate(202deg)
-		brightness(109%) contrast(104%);
-} */
 
 img.line {
 	float: left;
@@ -1531,10 +1527,9 @@ a {
 
 #attributeVallanding::placeholder {
 	font-family: latoregular;	
-	transform: translateY(0px);
     color: #E66F05;
     font-size: 24px;
-    transform: translateY(2px);
+    transform: translateY(1px);
 
 }
 

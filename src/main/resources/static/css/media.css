@@ -177,21 +177,7 @@
 	    margin-left: -1rem !important;
 	}
 	
-	.assetFilesmobileMsg{
-	display:block !important;
-	margin-left: 0.6rem;
-	}
-	#assetDetailsSubSection{
-	padding: 1rem 0.4rem !important;
-	}
-	#assetUrlLink {
-	display:none;
-	}
-	.assetFilesDiv{
-	display:none;
-	}
-	.sharableLinkAssetDetails{
-	}
+
 	form#contact-us-form .contactUsFieldsDiv{
 	  margin-left: -2rem !important;
       margin-right: -5rem !important;
@@ -552,6 +538,26 @@
 }
 
 
+@media ( max-width : 768px) {
+   .assetFilesmobileMsg{
+	 display:block !important;
+	 margin-left: 0.7rem;
+	 color: #000000;
+    font-family: 'latoregular';
+    font-size: 16px;
+	}
+	
+	#assetUrlLink {
+	 display:none;
+	}
+	.assetFilesDiv{
+	 display:none;
+	}
+	.assetFilesConditional{
+	padding-top: 25px;
+	}
+}
+
 @media ( max-width : 460px) {
 	.googleCaptchaDiv{
 	
@@ -662,6 +668,53 @@
 	font-size:26px !important;
 	line-height:2.5rem !important;
 	}
+	#dataSetFragment_mobile{
+	display:block !important;
+	}
+	
+	#assetDetailsSubSection{
+	display:none;
+	/* padding: 1rem 0.4rem !important; */
+	}
+	.asset_attributes_subsection{
+	 display:none;
+	}
+	table#dataSetMetaData tr:nth-child(odd) td {
+     padding-left: 13px;
+     border: none;
+     display: inline-flex;
+    }
+    table#dataSetMetaData tr:nth-child(even) td {
+     padding-left: 13px;
+     border: none;
+     display: inline-flex;
+    }
+    table#dataSetMetaData tbody tr {
+     padding-bottom: 5px;
+    }
+    
+     table#dataSetMetaData tr td:nth-child(even) {
+     margin-top: -16px !important;
+     }
+    .attrClass{
+    color: #194F85;
+    font-size: 13px;
+    font-family:'inter_bold';
+    }
+    .attrValClass{
+    font-family: lato_bold;
+    font-size: 15px;
+    margin-top: -2px;
+    line-height: 20px;
+    color: #000000;
+    }
+    .AttrValueTxt{
+    font-family: 'latoregular';
+    font-size: 16px;
+    color: #000000;
+    line-height: 17px;
+    overflow-wrap: anywhere;
+    }
 }
 @media ( max-width : 440px) {
   .popover {
@@ -708,7 +761,6 @@
 	.navbar .navbar-brand {
 		margin-top: 0px;
 	}
-
 }
 
 @media ( max-width : 380px) {

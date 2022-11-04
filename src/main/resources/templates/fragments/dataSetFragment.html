@@ -13,7 +13,7 @@
 			<div class="col-lg-12 col-md-12 col-sm-12 float-right"
 				th:if="${returnToSearch eq true}">
 				<div class="controls controls-row mt-4">
-					<a class="float-left mb-2 mr-2" id="backtoSearch"><img
+					<a class="float-left mb-2 mr-2" id="backtoSearch" style="margin-left:-8px;"><img
 						src="images/BackSearch-icon.png" data-toggle="tooltip"
 						title="Back to Search Results"
 						th:src="@{/images/BackSearch-icon.png}" style="width: 50px;"
@@ -39,6 +39,8 @@
 
 			<br /> <br />
 
+			<div
+				th:replace="fragments/dataSetFragment_mobile :: dataSetFragment_mobile"></div>
 			<div class="form-row col-lg-12 col-md-12 col-sm-12"
 				id="assetDetailsSubSection"
 				style="padding: 2rem 2rem; border-bottom: 2px solid #194F85;">
@@ -69,7 +71,7 @@
 									th:text="${assetPath}"></td>
 							</tr>
 							<tr>
-								<td class="sharableLinkAssetDetails">SHARABLE LINK:</td>
+								<td>SHARABLE LINK:</td>
 								<td style="font-family: lato_bold;"><span
 									th:text="${assetLink}" id="assetUrlLink"></span>
 									<button type="button" class="share-assetLink-copy-button"
@@ -85,7 +87,8 @@
 				</div>
 			</div>
 
-			<div class="form-row col-lg-12 col-md-12 col-sm-12"
+			<div
+				class="form-row col-lg-12 col-md-12 col-sm-12 asset_attributes_subsection"
 				style="padding-bottom: 1rem;">
 				<button type="button" class="float-left btn asset-attributes"
 					data-toggle="collapse" data-target="#dataSetMetaData">
@@ -120,6 +123,7 @@
 					</tbody>
 				</table>
 			</div>
+
 			<div th:if="${showGeneratePredTab eq true}"
 				class="form-row col-lg-12 col-md-12 col-sm-12"
 				style="margin-left: 5px;">
