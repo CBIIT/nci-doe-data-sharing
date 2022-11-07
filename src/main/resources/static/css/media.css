@@ -646,12 +646,13 @@
 	margin-left: 1.0rem !important;
     margin-right: 1.0rem !important;
     margin-top: 4.2rem !important;
-    height:42px !important;
+    height:50px !important;
 	}
 	#aboutText{
 	margin-left: 0rem !important;
 	font-size:26px !important;
 	line-height:2.5rem !important;
+	text-align: center;
 	}
 	#dataSetFragment_mobile{
 	display:block !important;
@@ -719,12 +720,11 @@
 	margin-left: 1.0rem !important;
     margin-right: 1.0rem !important;
     margin-top: 4.2rem !important;
-    height:42px !important;
 	}
 	#aboutText{
 	margin-left: 0rem !important;
 	font-size:26px !important;
-	line-height:2.5rem !important;
+	line-height:3rem !important;
 	}
 }
 @media ( min-width : 768px) {
