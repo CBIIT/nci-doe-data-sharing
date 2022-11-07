@@ -80,7 +80,7 @@ $(document).ready(function() {
 			if ($("#searchBtn").is(':visible')) {
 				event.preventDefault();
 				populateSearchCriteria('displayAllResults');
-			} else if($("#searchMobileBtn").is(':visible')) {
+			} else if ($("#searchMobileBtn").is(':visible')) {
 				$("#searchMobileBtn").click();
 			}
 		}
@@ -682,7 +682,7 @@ function display(value) {
 			$("#download-btn").css('cursor', 'default');
 		}
 
-	} else if(value == 'cloud'){
+	} else if (value == 'cloud') {
 		$("#SyncDiv").hide();
 		$("#AsyncDiv").hide();
 		$("#s3Div").hide();
@@ -696,8 +696,7 @@ function display(value) {
 			$("#download-btn").prop("disabled", true);
 			$("#download-btn").css('cursor', 'default');
 		}
-	}
-	else {
+	} else {
 		$("#SyncDiv").hide();
 		$("#AsyncDiv").hide();
 		$("#s3Div").show();
@@ -751,7 +750,13 @@ function displayPopover() {
 function openPopOver($this) {
 	var pop = $this;
 	$('.button2a').not($this).popover('hide');
-	var headerTest = 'User Metadata';
+	if($this.text()) {
+		var headerName = "<div class='popoverHeader'><p class='popoverInfo'>" + $this.text()
+		+ "</p><p class='popoverHeading'>USER METADATA</p></div>";
+	} else {
+		var headerName = "<div class='popoverHeader'><p class='popoverInfoNoHeader'>USER METADATA</p></div>";
+	}
+
 	var selectedPath = $this.attr('selected_path');
 	var collection_type = $this.attr('collection_type');
 
@@ -779,10 +784,9 @@ function openPopOver($this) {
 
 						if (data.length > 0) {
 
-							var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\">"
-									+ ""
-									+ headerTest
-									+ " <a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a> </div>"
+							var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\"><a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a>"
+									+ headerName
+									+ "</div>"
 									+ "<div class='popover-body'> <div class='divTable' style='width: 100%;border: 1px solid #000;'>"
 									+ "<div class='divTableBody'><div class='divTableRow'>"
 									+ "<div class='divTableHead'>ATTRIBUTE</div>"
@@ -790,24 +794,32 @@ function openPopOver($this) {
 
 							var content = "";
 
-							$.each(data, function(key, value) {
-								var attrVal = value.attrValue;
-								if (attrVal && (attrVal.startsWith('https') || attrVal.startsWith('http'))) {
-									content += "<div class='divTableRow'><div class='divTableCell'>"
-											+ value.displayName + "</div>"
-											+ "<div class='divTableCell'><a target='_blank' href=" + attrVal + ">"
-											+ attrVal + "</a></div></div>";
-								} else if (value.attrName.indexOf("access_group") == -1) {
-									content += "<div class='divTableRow'><div class='divTableCell'>"
-											+ value.displayName + "</div>" + "<div class='divTableCell'>" + attrVal
-											+ "</div></div>";
-								}
+							$
+									.each(
+											data,
+											function(key, value) {
+												var attrVal = value.attrValue;
+												if (attrVal
+														&& (attrVal.startsWith('https') || attrVal.startsWith('http'))) {
+													content += "<div class='divTableRow divTableContent'><div class='divTableCell divAttrName'>"
+															+ value.displayName.toUpperCase()
+															+ "</div>"
+															+ "<div class='divTableCell divAttrVal'><a target='_blank' href="
+															+ attrVal + ">" + attrVal + "</a></div></div>";
+												} else if (value.attrName.indexOf("access_group") == -1) {
+													content += "<div class='divTableRow divTableContent'><div class='divTableCell divAttrName'>"
+															+ value.displayName.toUpperCase()
+															+ "</div>"
+															+ "<div class='divTableCell divAttrVal'>"
+															+ attrVal
+															+ "</div></div>";
+												}
 
-							});
+											});
 							table = ind + content + "</div> </div></div> </div>";
 						} else {
 							table = "<div id=\"a01\" class=\"col-md-12 hidden\">"
-									+ "<div class=\"popover-heading\"> No User Metadata &nbsp;&nbsp;"
+									+ "<div class=\"popover-heading\"> NO USER METADATA &nbsp;&nbsp;"
 									+ "<a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a> </div>"
 									+ "<div class='popover-body'></div></div>";
 						}
@@ -838,9 +850,11 @@ function openDataObjectPopOver($this) {
 	var fileName = $this.attr('file_name');
 	var selectedPath = $this.attr('selected_path');
 
-	var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"><div class=\"popover-heading\">" + "Metadata for " + fileName
-			+ "<a class=\"button closeBtn float-right\" href=\"javascript:void(0);\">"
-			+ "<i class=\"fa fa-times\"></i></a> </div><div class='popover-body'>";
+	var headerName = "<div class='popoverHeader'><p class='popoverInfoDatObj'>Metadata for " + fileName + "</p></div>";
+
+	var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"><div class=\"popover-heading\"><a class=\"button closeBtn float-right\" href=\"javascript:void(0);\">"
+			+ "<i class=\"fa fa-times\"></i></a>" + headerName + " </div><div class='popover-body'>";
+
 	var table = "";
 	var content = "";
 
@@ -866,19 +880,19 @@ function openDataObjectPopOver($this) {
 
 					if (data.selfMetadata.length > 0) {
 
-						ind += "<p><b>User Metadata </b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>"
+						ind += "<p class='divDataObjUserMetadata'><b>USER METADATA</b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>"
 								+ "<div class='divTableBody'><div class='divTableRow'>"
 								+ "<div class='divTableHead rowAttribute'>ATTRIBUTE</div>"
 								+ "<div class='divTableHead'>VALUE</div></div>";
 
 						$.each(data.selfMetadata, function(key, value) {
 							if (value.value.startsWith('https') || value.value.startsWith('http')) {
-								content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName
-										+ "</div>" + "<div class='divTableCell'><a target='_blank' href=" + value.value
+								content += "<div class='divTableRow divTableContent'><div class='divTableCell divAttrName'>" + value.displayName.toUpperCase()
+										+ "</div>" + "<div class='divTableCell divAttrVal'><a target='_blank' href=" + value.value
 										+ ">" + value.value + "</a></div></div>";
 							} else {
-								content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName
-										+ "</div>" + "<div class='divTableCell'>" + value.value + "</div></div>";
+								content += "<div class='divTableRow divTableContent'><div class='divTableCell divAttrName'>" + value.displayName.toUpperCase()
+										+ "</div>" + "<div class='divTableCell divAttrVal'>" + value.value + "</div></div>";
 							}
 
 						});
@@ -887,14 +901,14 @@ function openDataObjectPopOver($this) {
 					}
 
 					if (data.systemMetadata.length > 0) {
-						content += "<p><b>Key System Metadata </b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>"
+						content += "<p class='divDataObjSysMetadata'><b>KEY SYSTEM METADATA </b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>"
 								+ "<div class='divTableBody'><div class='divTableRow'>"
 								+ "<div class='divTableHead rowAttribute'>ATTRIBUTE</div>"
 								+ "<div class='divTableHead'>VALUE</div></div>";
 
 						$.each(data.systemMetadata, function(key, value) {
-							content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName
-									+ "</div>" + "<div class='divTableCell'>" + value.value + "</div></div>";
+							content += "<div class='divTableRow divTableContent'><div class='divTableCell divAttrName'>" + value.displayName.toUpperCase()
+									+ "</div>" + "<div class='divTableCell divAttrVal'>" + value.value + "</div></div>";
 						});
 
 						content += "</div> </div>";

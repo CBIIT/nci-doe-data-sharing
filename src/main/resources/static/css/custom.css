@@ -103,7 +103,6 @@
 	font-family: 'latoregular';
 }
 
-/*.bordered{border-bottom: 1px solid #616A70;}*/
 .btn {
 	font-size: .875rem;
 	border: 1px solid #a5a5a591;
@@ -218,7 +217,7 @@
 	display: table;
 	width: 100%;
 	max-height: 500px;
-	overflow-y: scroll;
+	overflow-y: scroll;	
 }
 
 .divTableRow {
@@ -422,13 +421,6 @@ table.dataTable tr.even td {
 	background-color: #FBFBFB !important;
 }
 
-/*table#subAssetsDataSetTable tbody tr:nth-child(even) td {
-	background-color: #FBFBFB!important;
-}
-
-table#subAssetsDataSetTable tbody tr:nth-child(odd) td {
-	background-color: #E0F0F4!important
-}*/
 table#assetBulkMetadataTable tbody tr td {
 	background-color: #E0F0F4 !important;
 	padding: 5px;
@@ -467,12 +459,7 @@ table#dataSetMetaData tr:nth-child(even) td {
 	background-color: #FBFBFB !important;
 	padding-left: 25px;
 }
-/*table#newMetaDataTable tr:nth-child(odd) td{
-	background-color: #E0F0F4!important;
-}
-table#newMetaDataTable tr:nth-child(even) td{
-	background-color: #FBFBFB!important;
-}*/
+
 table#searchResultTable tr.odd td {
 	background-color: #FBFBFB !important;
 }
@@ -626,12 +613,6 @@ table.subAssetsDataSetTable, table.subFolderAssetsDataSetTable {
 	border: transparent;
 	background-color: rgb(251, 251, 251);
 	margin-bottom: 0px;
-}
-
-.divTableHeading {
-	background-color: #EEE;
-	display: table-header-group;
-	font-weight: bold;
 }
 
 .addDeleteUploadLabels {
@@ -1163,6 +1144,22 @@ a.detail-control {
 	margin-bottom: 50px;
 	background-color: #E66F05;
 	/* height: 65px;*/
+	max-width: 86%;
+}
+#aboutText{
+	color: #FFFFFF;
+    font-family: latoregular;
+    font-size: 29px;
+    line-height: 60px;
+    margin-left: 2rem;
+    letter-spacing: 1px;
+}
+
+#aboutImgDiv{
+	text-align: left;
+	margin-top: 179px;
+	margin-bottom: 50px;
+	background-color: #E66F05;
 	max-width: 86%;
 }
 .landingSearchDiv {
@@ -2116,7 +2113,7 @@ mrs-100 {
 }
 
 .popover {
-	max-width: 900px !important
+	max-width: 900px !important;
 }
 
 .infoTooltip+.popover {
