@@ -528,7 +528,7 @@ function renderDataSetName(data, type, row) {
 	html += "<div class='col-md-12' style='margin-left: 0.8rem;'><span>Sharable Link"
 			+ "</span>&nbsp;<button type='button' class='share-link-copy-button' data-toggle='tooltip' data-placement='bottom' "
 			+ "title='Copy to clipboard' data-clipboard-text='" + row.dataSetdmeDataId + "'>"
-			+ "<img src='images/Search.Shareable_Link.svg' width='17' alt='Copy to clipboard'/></button></div>";
+			+ "<img src='images/Search.Shareable_Link.svg' width='15' alt='Copy to clipboard'/></button></div>";
 
 	return html;
 }
