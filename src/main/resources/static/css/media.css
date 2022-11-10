@@ -139,8 +139,8 @@
 
 @media ( max-width : 1500px) {
 	#aboutMoDaCDescp {
-		margin-right: 1rem !important;
-		margin-left: 1rem !important;
+		margin-right: 0rem !important;
+		margin-left: 0.5rem !important;
 	}
 	#aboutImgDiv {
 		margin-left: 1rem !important;
@@ -503,7 +503,6 @@
 @media ( max-width : 768px) {
 	.assetFilesmobileMsg {
 		display: block !important;
-		margin-left: 0.7rem;
 		color: #000000;
 		font-family: 'latoregular';
 		font-size: 16px;
@@ -516,6 +515,7 @@
 	}
 	.assetFilesConditional {
 		padding-top: 25px;
+		margin-left: -10px;
 	}
 }
 
@@ -600,12 +600,12 @@
 		margin-left: 1.0rem !important;
 		margin-right: 1.0rem !important;
 		margin-top: 4.2rem !important;
-		height: 50px !important;
+		height: 42px !important;
 	}
 	#aboutText {
 		margin-left: 0rem !important;
 		font-size: 26px !important;
-		line-height: 3rem !important;
+		line-height: 2.5rem !important;
 		text-align: center;
 	}
 	#dataSetFragment_mobile {
@@ -675,7 +675,7 @@
 	#aboutText {
 		margin-left: 0rem !important;
 		font-size: 26px !important;
-		line-height: 3rem !important;
+		line-height: 2.5rem !important;
 	}
 }
 
