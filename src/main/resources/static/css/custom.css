@@ -1053,13 +1053,13 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before
 #aboutMoDaCDescp p {
 	opacity: 0.98;
 	color: #000000;
-	font-family: 'inter_regular';
+	font-family: 'latoregular';
 	font-size: 17px;
 	letter-spacing: 1px;
 	line-height: 29px;
 }
 #aboutMoDaCDescp a{
-	font-family: 'inter_bold'; 
+	font-family: 'lato_bold'; 
 }
 .buttoncontainer {
 	margin-bottom: 110px;
