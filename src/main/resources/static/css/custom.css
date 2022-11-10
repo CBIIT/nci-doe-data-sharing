@@ -1154,6 +1154,15 @@ a.detail-control {
     letter-spacing: 1.2px;
 }
 
+#aboutTxtlandingPage {
+	height: 18px; 
+	width: 189px; 
+	color: #FFFFFF; 
+	font-family: 'latoregular'; 
+	font-size: 26px; 
+	line-height: 45px; 
+	letter-spacing: 2px;
+}
 #aboutImgDiv{
 	text-align: left;
 	margin-top: 179px;

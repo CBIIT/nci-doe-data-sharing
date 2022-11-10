@@ -194,13 +194,14 @@
 		height: 45px;
 		border: 2.51px solid #E0730F;
 		background-color: #FFFFFF;
-		margin-left: -1.5rem;
-		padding-left: 1.25rem;
+		margin-left: -1.2rem;
+		margin-right: -9px;
 		width: -webkit-fill-available;
+		padding-left: 20px;
 	}
 	#attributeVallanding::placeholder {
 		font-size: 22px;
-		transform: translateY(-2px);
+		transform: translateY(-1px);
 	}
 	#attributeVal::placeholder {
 		font-size: 22px !important;
@@ -220,12 +221,12 @@
 	#resetBtnLandingForMobile {
 		position: absolute;
 		top: 2.4rem !important;
-		right: 6.5rem !important;
+		right: 5rem !important;
 	}
 	#landingSearchMobileButton {
 		position: absolute;
-		right: 29px;
-		top: 36px;
+		right: 13px;
+		top: 37px;
 	}
 	#landingSearchMobileButton img {
 		width: 60px;
