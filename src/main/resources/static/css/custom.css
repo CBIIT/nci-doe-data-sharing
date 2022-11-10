@@ -1107,8 +1107,12 @@ ul#subTab {
 	font-size: 18px;
 	margin-top: -3px;
 	flex-wrap: nowrap;
+	line-height: 11px;
 }
 
+#myCollections {
+	margin-left:1rem;
+}
 #subNav a.dropdown-item {
 	padding-bottom: 10px;
 	font-family: Nunito Sans;

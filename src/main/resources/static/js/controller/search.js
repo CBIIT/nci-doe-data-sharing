@@ -491,7 +491,7 @@ function renderDataSetName(data, type, row) {
 			}
 		}
 
-		html += "<div class='col-md-12' style='font-size:16px;margin-top:0.5rem;'><div class='row'><div class='col-md-12' style='display:flex;'>"
+		html += "<div class='col-md-12' style='font-size:16px;margin-top:0.5rem;'><div class='row'><div class='col-md-12'>"
 				+ ""
 				+ checkboxHtml
 				+ "&nbsp;&nbsp;&nbsp;"
@@ -504,9 +504,9 @@ function renderDataSetName(data, type, row) {
 				+ "data_set_path = "
 				+ row.dataSetPath
 				+ ">"
-				+ "<div class='cil_14_bold_no_color'>"
+				+ "<span class='cil_14_bold_no_color'>"
 				+ row.dataSetName
-				+ "</div></a>" + "&nbsp&nbsp;" + editDataSetHtml + "</div></div></div>";
+				+ "</span></a>" + "&nbsp&nbsp;" + editDataSetHtml + "</div></div></div>";
 
 	} else {
 		html += "<div class='col-md-12' style='font-size:16px;margin-top:-15px;margin-bottom:-1rem;'><div class='row'><div class='col-md-12'>"
@@ -519,13 +519,13 @@ function renderDataSetName(data, type, row) {
 				+ "data_set_path = "
 				+ row.dataSetPath
 				+ ">"
-				+ "<div class='cil_14_bold_no_color'>"
+				+ "<div class='cil_14_bold_no_color' style='margin-left: 27px;'>"
 				+ row.dataSetName
 				+ "</div></a>"
 				+ "&nbsp&nbsp;</div></div></div>";
 	}
 
-	html += "<div class='col-md-12' style='margin-left: 0.8rem;'><span>Sharable Link"
+	html += "<div class='col-md-12' style='margin-left: 1.8rem;'><span>Sharable Link"
 			+ "</span>&nbsp;<button type='button' class='share-link-copy-button' data-toggle='tooltip' data-placement='bottom' "
 			+ "title='Copy to clipboard' data-clipboard-text='" + row.dataSetdmeDataId + "'>"
 			+ "<img src='images/Search.Shareable_Link.svg' width='15' alt='Copy to clipboard'/></button></div>";
