@@ -1105,7 +1105,7 @@ ul#subTab li {
 
 ul#subTab {
 	font-size: 18px;
-	margin-top: -3px;
+	margin-top: -1px;
 	flex-wrap: nowrap;
 	line-height: 11px;
 }
@@ -1114,10 +1114,10 @@ ul#subTab {
 	margin-left:1rem;
 }
 #subNav a.dropdown-item {
-	padding-bottom: 10px;
+	padding-bottom: 17px;
 	font-family: Nunito Sans;
 	font-size: 15px;
-	padding-top: 15px;
+	padding-top: 17px;
 	letter-spacing: 1px;
 	color: #fff;
 }
