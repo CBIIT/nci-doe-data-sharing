@@ -295,7 +295,7 @@
 	#backMobileFilter {
 		font-family: 'inter_medium';
 		font-size: 17px;
-		color: #4D91D5;
+		color: #4079B2;
 	}
 	#mobileKeyworkSearchDiv {
 		padding-bottom: 20px;
@@ -514,7 +514,7 @@
 		display: none;
 	}
 	.assetFilesConditional {
-		padding-top: 25px;
+		padding-top: 40px;
 		margin-left: -10px;
 	}
 }
@@ -610,10 +610,23 @@
 	}
 	#dataSetFragment_mobile {
 		display: block !important;
+		padding-top: 6px;
+		margin-right: -1rem;
+	}
+	.datasetDetailsheader {
+		margin-bottom: -5px;
+	}
+	#backtoSearch {
+		margin-left: 10px !important;
+		margin-top: -6px;
+		margin-right: 1px !important;
+	}
+	#backtoSearch  img {
+		content: url('/images/Asset-Detail.Back_Arrow.Mobile.svg') !important;
+		width: 55px !important;
 	}
 	#assetDetailsSubSection {
 		display: none;
-		/* padding: 1rem 0.4rem !important; */
 	}
 	.asset_attributes_subsection {
 		display: none;
@@ -629,7 +642,7 @@
 		display: inline-flex;
 	}
 	table#dataSetMetaData tbody tr {
-		padding-bottom: 5px;
+		padding-bottom: 1px;
 	}
 	table#dataSetMetaData tr td:nth-child(even) {
 		margin-top: -16px !important;

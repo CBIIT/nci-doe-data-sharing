@@ -562,9 +562,8 @@ table#searchResultTable tr.even td {
 
 .backToSearch, .backToStatusTab, .backToUpload {
 	color: #E66F05;
-	font-family: 'inter_regular';
-	font-size: 16px;
-	font-weight: 900;
+	font-family: 'inter_medium';
+	font-size: 17px;
 }
 
 .parentCollectionName {
