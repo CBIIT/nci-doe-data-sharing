@@ -107,6 +107,7 @@ $(document)
 						$("#mobileKeyworkSearchDiv").show();
 						$("#filterSectionDiv").show();
 						$("#searchResultsMobileDiv").hide();
+						showFirstFewFields();
 					});
 					
 					$("#landingSearch").click(function(e) {
@@ -1036,7 +1037,7 @@ function showFirstFewFields($this, oper) {
 						$(this).find('.showMorefields').show();
 					}
 				});
-				$this.find(".showMore").text(modifiedSize + " More ..");
+				$this.find(".showMore").text(modifiedSize + " More");
 			} else {
 				$this.find('.css-17rpx5x').hide();				
 			}
@@ -1045,7 +1046,7 @@ function showFirstFewFields($this, oper) {
 			if (len > 4) {
 				var modifiedSize = len - 4;
 				$this.find('.css-17rpx5x').show();
-				$this.find(".showMore").text(modifiedSize + " More ..");
+				$this.find(".showMore").text(modifiedSize + " More");
 			} else {
 				$this.find('.css-17rpx5x').hide();				
 			}
@@ -1056,7 +1057,7 @@ function showFirstFewFields($this, oper) {
 			var len = $(this).find('.filterGroupDiv:visible').length;
 			var modifiedSize = len - 4;
 			if (len > 4) {
-				$(this).parent().find('.showMore').text(modifiedSize + " More..");
+				$(this).parent().find('.showMore').text(modifiedSize + " More");
 				$(this).parent().find('.showMore').show();
 				$(this).parent().find('.css-17rpx5x').show();
 				$(this).parent().find('.css-17rpx5xLess').hide();

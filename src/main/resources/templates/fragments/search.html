@@ -68,8 +68,8 @@
 							<img alt="search checkbox Icon"
 								th:if="${list.key != 'Asset Type' && list.key != 'Is Reference Dataset' && 
 								 list.key != 'Is Model Deployed'}"
-								src="images/Search.svg" class="searchCheckBoxlist"
-								th:src="@{/images/Search.svg}"
+								src="images/Filter.Magnifying.Icon.svg" class="searchCheckBoxlist"
+								th:src="@{/images/Filter.Magnifying.Icon.svg}"
 								style="width: 20px; height: 21px; float: right; margin-right: 12px; margin-top: 8px;" />
 						</p>
 
@@ -85,7 +85,7 @@
 								<input type="hidden" th:value="${attrStat.index}" /> <input
 									type="hidden" class="filterSize" th:value="${attrStat.size}" />
 								<label class="showMorefields"> <input type="checkbox"
-									class="filteritem" th:value="${attr}" />&nbsp;
+									class="filteritem" th:value="${attr}" />&nbsp;&nbsp;
 									<div th:text="${attr}"
 										style="margin-left: 20px; margin-top: -21px;"></div>
 								</label>
@@ -116,12 +116,12 @@
 
 					<div class="col-lg-12 col-md-12 col-sm-12 float-right">
 						<div class="controls controls-row mt-4"
-							style="margin-left: 2rem;">
+							style="margin-left: 2.2rem;">
 							<a id="backtoFiltersMobilebtn"><img
 								src="images/Search.Back_Arrow_Mobile.svg" data-toggle="tooltip"
 								title="Back to Search Results"
 								th:src="@{/images/Search.Back_Arrow_Mobile.svg}"
-								style="width: 55px;" alt="back to search">
+								style="width: 55px;height: 31px;" alt="back to search">
 								&nbsp;&nbsp;<span id="backMobileFilter">Back to Search
 									Filters</span></a>
 						</div>

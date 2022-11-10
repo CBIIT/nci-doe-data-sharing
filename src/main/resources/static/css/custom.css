@@ -1151,7 +1151,7 @@ a.detail-control {
     font-size: 29px;
     line-height: 60px;
     margin-left: 2rem;
-    letter-spacing: 1px;
+    letter-spacing: 1.2px;
 }
 
 #aboutImgDiv{
@@ -1159,7 +1159,6 @@ a.detail-control {
 	margin-top: 179px;
 	margin-bottom: 50px;
 	background-color: #E66F05;
-	max-width: 86%;
 }
 .landingSearchDiv {
 	height: 111px;
@@ -1556,10 +1555,10 @@ a {
 .filterComponentDiv p {
 	background-color: #E66F05; 
 	border-radius: 6px 6px 0px 0px; 
-	color: #fff; width: 100.5%; 
+	color: #fff; 
+	width: 101%; 
 	margin-left: -1px; 
 	margin-top: -1px; 
-	font-size: 19px;
 }
 input#includeCriteria:focus {
 	outline: none;
@@ -1882,10 +1881,11 @@ label.attrName {
 	font-size: 17px;
 	height: 2.5rem;
 	padding: 6px 12px;
-	margin-bottom: 15px;
+	margin-bottom: 20px;
 	display: none;
 	margin-left: 12px;
 	font-family: 'latoregular';
+	margin-top: -7px;
 }
 
 label.showMorefields {
