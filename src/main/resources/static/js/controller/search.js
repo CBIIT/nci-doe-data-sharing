@@ -40,8 +40,15 @@ $(document).ready(function() {
 			if (iskeyWordSearch == true) {
 				var attrval = attrVal[i];
 				var newAttrVal = attrval.replaceAll('%', '');
-				$("#attributeVal").val(newAttrVal);
-				$("#resetBtn").show();
+				
+				if (screen.width > 990) {
+					$("#attributeVal").val(newAttrVal);
+					$("#resetBtn").show();
+				} else {
+					$("#mobileKeyworkSearchDiv").find("#attributeVal").val(newAttrVal);
+					$("#resetBtnMobile").show();
+				}
+				
 			} else {
 				var attrName = list.attrName[i];
 				var attrVal = attrVal[i];
