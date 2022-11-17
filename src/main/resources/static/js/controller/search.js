@@ -40,7 +40,7 @@ $(document).ready(function() {
 			if (iskeyWordSearch == true) {
 				var attrval = attrVal[i];
 				var newAttrVal = attrval.replaceAll('%', '');
-				
+
 				if (screen.width > 990) {
 					$("#attributeVal").val(newAttrVal);
 					$("#resetBtn").show();
@@ -48,7 +48,7 @@ $(document).ready(function() {
 					$("#mobileKeyworkSearchDiv").find("#attributeVal").val(newAttrVal);
 					$("#resetBtnMobile").show();
 				}
-				
+
 			} else {
 				var attrName = list.attrName[i];
 				var attrVal = attrVal[i];
@@ -528,8 +528,7 @@ function renderDataSetName(data, type, row) {
 				+ ">"
 				+ "<div class='cil_14_bold_no_color' style='margin-left: 27px;'>"
 				+ row.dataSetName
-				+ "</div></a>"
-				+ "&nbsp&nbsp;</div></div></div>";
+				+ "</div></a>" + "&nbsp&nbsp;</div></div></div>";
 	}
 
 	html += "<div class='col-md-12' style='margin-left: 1.8rem;'><span>Sharable Link"
@@ -757,15 +756,10 @@ function displayPopover() {
 function openPopOver($this) {
 	var pop = $this;
 	$('.button2a').not($this).popover('hide');
-	if($this.text()) {
-		var headerName = "<div class='popoverHeader'><p class='popoverInfo'>" + $this.text()
-		+ "</p><p class='popoverHeading'>USER METADATA</p></div>";
-	} else {
-		var headerName = "<div class='popoverHeader'><p class='popoverInfoNoHeader'>USER METADATA</p></div>";
-	}
-
 	var selectedPath = $this.attr('selected_path');
 	var collection_type = $this.attr('collection_type');
+
+	var headerName = "<div class='popoverHeader'><p class='popoverInfo'>" + collection_type + " Metadata</p></div>";
 
 	if (collection_type != 'DataObject') {
 		var params = {
@@ -892,17 +886,26 @@ function openDataObjectPopOver($this) {
 								+ "<div class='divTableHead rowAttribute'>ATTRIBUTE</div>"
 								+ "<div class='divTableHead'>VALUE</div></div>";
 
-						$.each(data.selfMetadata, function(key, value) {
-							if (value.value.startsWith('https') || value.value.startsWith('http')) {
-								content += "<div class='divTableRow divTableContent'><div class='divTableCell divAttrName'>" + value.displayName.toUpperCase()
-										+ "</div>" + "<div class='divTableCell divAttrVal'><a target='_blank' href=" + value.value
-										+ ">" + value.value + "</a></div></div>";
-							} else {
-								content += "<div class='divTableRow divTableContent'><div class='divTableCell divAttrName'>" + value.displayName.toUpperCase()
-										+ "</div>" + "<div class='divTableCell divAttrVal'>" + value.value + "</div></div>";
-							}
+						$
+								.each(
+										data.selfMetadata,
+										function(key, value) {
+											if (value.value.startsWith('https') || value.value.startsWith('http')) {
+												content += "<div class='divTableRow divTableContent'><div class='divTableCell divAttrName'>"
+														+ value.displayName.toUpperCase()
+														+ "</div>"
+														+ "<div class='divTableCell divAttrVal'><a target='_blank' href="
+														+ value.value + ">" + value.value + "</a></div></div>";
+											} else {
+												content += "<div class='divTableRow divTableContent'><div class='divTableCell divAttrName'>"
+														+ value.displayName.toUpperCase()
+														+ "</div>"
+														+ "<div class='divTableCell divAttrVal'>"
+														+ value.value
+														+ "</div></div>";
+											}
 
-						});
+										});
 						content += "</div> </div><br/>";
 
 					}
@@ -913,10 +916,17 @@ function openDataObjectPopOver($this) {
 								+ "<div class='divTableHead rowAttribute'>ATTRIBUTE</div>"
 								+ "<div class='divTableHead'>VALUE</div></div>";
 
-						$.each(data.systemMetadata, function(key, value) {
-							content += "<div class='divTableRow divTableContent'><div class='divTableCell divAttrName'>" + value.displayName.toUpperCase()
-									+ "</div>" + "<div class='divTableCell divAttrVal'>" + value.value + "</div></div>";
-						});
+						$
+								.each(
+										data.systemMetadata,
+										function(key, value) {
+											content += "<div class='divTableRow divTableContent'><div class='divTableCell divAttrName'>"
+													+ value.displayName.toUpperCase()
+													+ "</div>"
+													+ "<div class='divTableCell divAttrVal'>"
+													+ value.value
+													+ "</div></div>";
+										});
 
 						content += "</div> </div>";
 
