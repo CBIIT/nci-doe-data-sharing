@@ -87,7 +87,7 @@ function dataTableInitForMobile() {
 
 			initializeToolTips();
 			initializePopover();
-			displayPopover();
+			displayPopoverMobile();
 		},
 
 		"columns" : [ {
@@ -150,4 +150,98 @@ function renderSearchAssetRow(data, type, row) {
 			+ "data-popover-content='#a01'>" + row.programName + "</a>" + "&nbsp&nbsp;</div>";
 
 	return html;
+}
+
+function displayPopoverMobile() {
+	$('.button2a').on('click', function() {
+		openPopOverMobile($(this));
+
+	});
+	$('.button2a').on('keypress', function(e) {
+		if (e.which == 13 || e.keyCode == 13) {
+			openPopOverMobile($(this));
+		}
+	});
+}
+
+function openPopOverMobile($this) {
+	var pop = $this;
+	$('.button2a').not($this).popover('hide');
+	var selectedPath = $this.attr('selected_path');
+	var collection_type = $this.attr('collection_type');
+	var headerName = "<div class='popoverHeader'><p class='popoverInfo'>" + collection_type + " Metadata</p></div>";
+
+	var params = {
+		selectedPath : selectedPath,
+		collectionType : collection_type,
+		refresh : false
+	};
+	$
+			.ajax({
+				url : '/addCollection',
+				type : 'GET',
+				contentType : 'application/json',
+				dataType : 'json',
+				data : params,
+				beforeSend : function() {
+					$("#spinner").show();
+					$("#dimmer").show();
+				},
+				success : function(data, status) {
+					$("#spinner").hide();
+					$("#dimmer").hide();
+					var table = "";
+
+					if (data.length > 0) {
+
+						var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\"><a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a>"
+								+ headerName
+								+ "</div>"
+								+ "<div class='popover-body'> <div class='divTable' style='width: 100%;border: 1px solid #000;'>"
+								+ "<div class='divTableBody'>";
+
+						var content = "";
+
+						$
+								.each(
+										data,
+										function(key, value) {
+											var attrVal = value.attrValue;
+											if (attrVal && (attrVal.startsWith('https') || attrVal.startsWith('http'))) {
+												content += "<div class='divTableRowMobile divTableContent'><div class='divTableCell divAttrNameMobile'><span class='popoverMobileAttrName'>ATTRIBUTE: </span>"
+														+ value.displayName
+														+ "<br/><span class='popoverMobileAttrVal'>VALUE: </span><a target='_blank' href="
+														+ attrVal + ">" + attrVal + "</a></div></div>";
+											} else if (value.attrName.indexOf("access_group") == -1) {
+												content += "<div class='divTableRowMobile divTableContent'><div class='divTableCell divAttrNameMobile'><span class='popoverMobileAttrName'>ATTRIBUTE: </span>"
+														+ value.displayName
+														+ "<br/><span class='popoverMobileAttrVal'>VALUE: </span>"
+														+ attrVal + "</div></div>";
+											}
+
+										});
+						table = ind + content + "</div> </div></div> </div>";
+					} else {
+						table = "<div id=\"a01\" class=\"col-md-12 hidden\">"
+								+ "<div class=\"popover-heading\"> NO USER METADATA &nbsp;&nbsp;"
+								+ "<a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a> </div>"
+								+ "<div class='popover-body'></div></div>";
+					}
+
+					$("#a01").remove();
+					pop.after(table);
+					initializePopover();
+					pop.data('bs.popover').setContent();
+					pop.popover('show');
+				},
+				error : function(data, status, error) {
+					$("#spinner").hide();
+					$("#dimmer").hide();
+					console.log("===> data: ", data);
+					console.log("===> status: ", status);
+					console.log("===> error: ", error);
+				}
+
+			});
+
 }

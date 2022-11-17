@@ -697,6 +697,13 @@
 		width: fit-content;
 		margin-left: 3rem;
 	}
+	.popoverHeader {
+		margin-top: -6px !important;
+	}
+	.popover-body {
+		padding-left: 3px;
+		padding-right: 3px;
+	}
 	.divTableRow div:first-child {
 		width: 32%;
 	}
