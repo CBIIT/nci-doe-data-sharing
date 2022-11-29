@@ -169,7 +169,8 @@ function openPopOverMobile($this) {
 	$('.button2a').not($this).popover('hide');
 	var selectedPath = $this.attr('selected_path');
 	var collection_type = $this.attr('collection_type');
-	var headerName = "<div class='popoverHeader'><p class='popoverInfo'>" + collection_type + " Metadata</p></div>";
+	var headerName = "<div class='popoverHeaderMobile'><p class='popoverInfoMobile'>" + collection_type.toUpperCase()
+			+ " METADATA</p></div>";
 
 	var params = {
 		selectedPath : selectedPath,
@@ -194,7 +195,7 @@ function openPopOverMobile($this) {
 
 					if (data.length > 0) {
 
-						var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\"><a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a>"
+						var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\"><a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><img src='images/Search.Metadata.Cancel.svg' width='13' style='margin-top: -8px;'/></a>"
 								+ headerName
 								+ "</div>"
 								+ "<div class='popover-body'> <div class='divTable' style='width: 100%;border: 1px solid #000;'>"
@@ -208,14 +209,14 @@ function openPopOverMobile($this) {
 										function(key, value) {
 											var attrVal = value.attrValue;
 											if (attrVal && (attrVal.startsWith('https') || attrVal.startsWith('http'))) {
-												content += "<div class='divTableRowMobile divTableContent'><div class='divTableCell divAttrNameMobile'><span class='popoverMobileAttrName'>ATTRIBUTE: </span>"
+												content += "<div class='divTableRowMobile divTableContent'><div class='divTableCell divAttrNameMobile'><span class='popoverMobileAttrName'>ATTRIBUTE: </span>&nbsp;&nbsp;"
 														+ value.displayName
-														+ "<br/><span class='popoverMobileAttrVal'>VALUE: </span><a target='_blank' href="
+														+ "<br/><span class='popoverMobileAttrVal'>VALUE: </span>&nbsp;&nbsp;<a target='_blank' href="
 														+ attrVal + ">" + attrVal + "</a></div></div>";
 											} else if (value.attrName.indexOf("access_group") == -1) {
-												content += "<div class='divTableRowMobile divTableContent'><div class='divTableCell divAttrNameMobile'><span class='popoverMobileAttrName'>ATTRIBUTE: </span>"
+												content += "<div class='divTableRowMobile divTableContent'><div class='divTableCell divAttrNameMobile'><span class='popoverMobileAttrName'>ATTRIBUTE: </span>&nbsp;&nbsp;"
 														+ value.displayName
-														+ "<br/><span class='popoverMobileAttrVal'>VALUE: </span>"
+														+ "<br/><span class='popoverMobileAttrVal'>VALUE: </span>&nbsp;&nbsp;"
 														+ attrVal + "</div></div>";
 											}
 

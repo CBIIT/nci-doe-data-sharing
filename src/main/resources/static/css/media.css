@@ -560,7 +560,7 @@
 
 @media ( max-width :990px) {
 	.closeBtn {
-		color: #DE7417;
+		margin-top: -15px !important;
 	}
 	.appName {
 		white-space: nowrap;
@@ -692,14 +692,11 @@
 @media ( max-width : 440px) {
 	.popover {
 		margin-top: 8rem;
-		word-break: break-word;
+		word-break: break-all;
 		height: fit-content;
 		max-width: fit-content !important;
 		width: fit-content;
 		margin-left: 3rem;
-	}
-	.popoverHeader {
-		margin-top: -6px !important;
 	}
 	.popover-body {
 		padding-left: 3px;
