@@ -330,7 +330,8 @@
 		display: inline-block !important;
 	}
 	#searchResultMobileTable_length {
-		margin-left: 10rem;
+		margin-right: 2rem;
+        float: right;
 	}
 	#searchResultsDiv {
 		display: none !important;
