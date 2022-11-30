@@ -124,7 +124,7 @@ function renderSearchAssetRow(data, type, row) {
 			+ "<div class='cil_14_bold_no_color_mobile' style='margin-left:-1rem;'>" + row.dataSetName + "</div></a>"
 			+ "&nbsp&nbsp;";
 
-	html += "<button type='button' style='float:right;transform: translate(18px, 0px); width:15%;' class='share-link-copy-button' data-toggle='tooltip' data-placement='bottom' "
+	html += "<button type='button' style='float:right; width:15%;' class='share-link-copy-button' data-toggle='tooltip' data-placement='bottom' "
 			+ "title='Copy to clipboard' data-clipboard-text='"
 			+ row.dataSetdmeDataId
 			+ "'>"
