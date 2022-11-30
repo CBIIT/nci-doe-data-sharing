@@ -119,12 +119,12 @@ function renderSearchAssetRow(data, type, row) {
 	var html = "";
 
 	html += "<div class='col-md-12' style='margin-top:10px;display: inline-flex;'>"
-			+ "&nbsp;&nbsp;&nbsp;<a href='#' class='dataSetFragment' " + "dme_data_id  = '" + row.dmeDataId
+			+ "&nbsp;&nbsp;&nbsp;<a href='#' style='width: 85%;' class='dataSetFragment' " + "dme_data_id  = '" + row.dmeDataId
 			+ "' permissions_role = '" + row.dataSetPermissionRole + "'" + "data_set_path = " + row.dataSetPath + ">"
 			+ "<div class='cil_14_bold_no_color_mobile' style='margin-left:-1rem;'>" + row.dataSetName + "</div></a>"
 			+ "&nbsp&nbsp;";
 
-	html += "<button type='button' style='float:right;transform: translate(18px, 0px);' class='share-link-copy-button' data-toggle='tooltip' data-placement='bottom' "
+	html += "<button type='button' style='float:right;transform: translate(18px, 0px); width:15%;' class='share-link-copy-button' data-toggle='tooltip' data-placement='bottom' "
 			+ "title='Copy to clipboard' data-clipboard-text='"
 			+ row.dataSetdmeDataId
 			+ "'>"
@@ -195,7 +195,7 @@ function openPopOverMobile($this) {
 
 					if (data.length > 0) {
 
-						var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\"><a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><img src='images/Search.Metadata.Cancel.svg' width='13' style='margin-top: -8px;'/></a>"
+						var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\"><a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><img src='images/Search.Metadata.Cancel.svg' style='margin-top: -8px;' width='13' /></a>"
 								+ headerName
 								+ "</div>"
 								+ "<div class='popover-body'> <div class='divTable' style='width: 100%;border: 1px solid #000;'>"

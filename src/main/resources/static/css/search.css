@@ -135,6 +135,9 @@
 	margin-right: 18px;
 	margin-top: -10px;
 }
+.closeBtn img {
+	margin-top: -8px;
+}
 
 .divTable {
 	display: table;
