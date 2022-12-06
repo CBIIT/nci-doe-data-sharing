@@ -170,12 +170,13 @@ public class TaskManagerCotroller extends AbstractDoeController {
 
 					download.getItems().stream().forEach(x -> {
 						if (x.getMessage() != null && !message.contains(x.getMessage())) {
-							message.add(x.getMessage());
+							message.add(x.getMessage().replaceAll("[\']", ""));
 						}
 					});
 
 					if (CollectionUtils.isEmpty(message)) {
-						message.add(download.getResult() != null ? download.getResult().value() : null);
+						message.add(download.getResult() != null ? download.getResult().value().replaceAll("[\']", "")
+								: null);
 					}
 
 					String filteredMessage = CollectionUtils.isNotEmpty(message)
@@ -270,7 +271,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
 
 		upload.getFailedItems().stream().forEach(x -> {
 			if (x.getMessage() != null && !message.contains(x.getMessage())) {
-				message.add(x.getMessage());
+				message.add(StringEscapeUtils.escapeHtml((x.getMessage().replaceAll("[\']", ""))));
 			}
 		});
 
@@ -290,15 +291,13 @@ public class TaskManagerCotroller extends AbstractDoeController {
 					break;
 				}
 			}
-			if (CollectionUtils.isEmpty(message)) {
-				message.add(uploadTask.getTask().getMessage());
+			if (CollectionUtils.isEmpty(message) && StringUtils.isNotEmpty(uploadTask.getTask().getMessage())) {
+				message.add(StringEscapeUtils.escapeHtml((uploadTask.getTask().getMessage().replaceAll("[\']", ""))));
 			}
 
 		}
 
-		String filteredMessage = CollectionUtils.isNotEmpty(message)
-				? StringEscapeUtils.escapeHtml(String.join(",", message))
-				: "";
+		String filteredMessage = CollectionUtils.isNotEmpty(message) ? String.join(",", message) : "";
 
 		if (Boolean.TRUE.equals(retry)) {
 
