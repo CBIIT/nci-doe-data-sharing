@@ -1515,6 +1515,7 @@ function displayDataFileSection(value) {
 		$("#registerBulkDataFileBtn").prop("disabled", false);
 
 	} else if (value == 'drive') {
+		$("#driveUploadAuthlink").prop("disabled",false);
 		$("#singleFileDataUploadSection").hide();
 		$("#bulkFileUploadSection").show();
 		$("#displayGlobusUploadDiv").hide();
@@ -1530,6 +1531,7 @@ function displayDataFileSection(value) {
 		$("#folderNamesDiv").html("");
 		$("#registerBulkDataFileBtn").prop("disabled", true);
 	} else if (value == 'cloud') {
+		$("#cloudUploadAuthlink").prop("disabled",false);
 		$("#singleFileDataUploadSection").hide();
 		$("#bulkFileUploadSection").show();
 		$("#displayGlobusUploadDiv").hide();

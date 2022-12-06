@@ -683,11 +683,13 @@ function display(value) {
 		if (googleDriveIsAuthorized) {
 			$("#download-btn").prop("disabled", false);
 			$("#download-btn").css('cursor', 'pointer');
-			$("#driveAuthlink").prop("disabled", true);
+			$("#driveAuthlink").css('pointer-events', 'none');
+			$("#driveAuthlink").css('opacity', '0.65');
 		} else {
 			$("#download-btn").prop("disabled", true);
 			$("#download-btn").css('cursor', 'default');
-			$("#driveAuthlink").prop("disabled", false);
+			$("#driveAuthlink").css('pointer-events', 'auto');
+			$("#driveAuthlink").css('opacity', '1');
 		}
 
 	} else if (value == 'cloud') {
@@ -700,11 +702,13 @@ function display(value) {
 		if (googleCloudIsAuthorized) {
 			$("#download-btn").prop("disabled", false);
 			$("#download-btn").css('cursor', 'pointer');
-			$("#googleCloudAuthlink").prop("disabled", true);
+			$("#googleCloudAuthlink").css('pointer-events', 'none');
+			$("#googleCloudAuthlink").css('opacity', '0.65');
 		} else {
 			$("#download-btn").prop("disabled", true);
 			$("#download-btn").css('cursor', 'default');
-			$("#googleCloudAuthlink").prop("disabled", false);
+			$("#googleCloudAuthlink").css('pointer-events', 'auto');
+			$("#googleCloudAuthlink").css('opacity', '1');
 		}
 	} else {
 		$("#SyncDiv").hide();
