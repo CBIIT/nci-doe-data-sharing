@@ -683,9 +683,11 @@ function display(value) {
 		if (googleDriveIsAuthorized) {
 			$("#download-btn").prop("disabled", false);
 			$("#download-btn").css('cursor', 'pointer');
+			$("#driveAuthlink").prop("disabled", true);
 		} else {
 			$("#download-btn").prop("disabled", true);
 			$("#download-btn").css('cursor', 'default');
+			$("#driveAuthlink").prop("disabled", false);
 		}
 
 	} else if (value == 'cloud') {
@@ -698,9 +700,11 @@ function display(value) {
 		if (googleCloudIsAuthorized) {
 			$("#download-btn").prop("disabled", false);
 			$("#download-btn").css('cursor', 'pointer');
+			$("#googleCloudAuthlink").prop("disabled", true);
 		} else {
 			$("#download-btn").prop("disabled", true);
 			$("#download-btn").css('cursor', 'default');
+			$("#googleCloudAuthlink").prop("disabled", false);
 		}
 	} else {
 		$("#SyncDiv").hide();
