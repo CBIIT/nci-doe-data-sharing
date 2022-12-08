@@ -235,7 +235,9 @@ public class DoeDownloadController extends AbstractDoeController {
 					audit.setPath(downloadFile.getDestinationPath());
 					audit.setTaskId(taskId);
 					auditingService.saveAuditInfo(audit);
-					result.setMessage("Asynchronous download request is submitted successfully! Task ID: " + taskId);
+					result.setMessage(
+							"Asynchronous download request is submitted successfully! Task ID: <a href='/tasksTab'>"
+									+ taskId + "</a>");
 				}
 
 			}
