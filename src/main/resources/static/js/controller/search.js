@@ -683,9 +683,13 @@ function display(value) {
 		if (googleDriveIsAuthorized) {
 			$("#download-btn").prop("disabled", false);
 			$("#download-btn").css('cursor', 'pointer');
+			$("#driveAuthlink").css('pointer-events', 'none');
+			$("#driveAuthlink").css('opacity', '0.65');
 		} else {
 			$("#download-btn").prop("disabled", true);
 			$("#download-btn").css('cursor', 'default');
+			$("#driveAuthlink").css('pointer-events', 'auto');
+			$("#driveAuthlink").css('opacity', '1');
 		}
 
 	} else if (value == 'cloud') {
@@ -698,9 +702,13 @@ function display(value) {
 		if (googleCloudIsAuthorized) {
 			$("#download-btn").prop("disabled", false);
 			$("#download-btn").css('cursor', 'pointer');
+			$("#googleCloudAuthlink").css('pointer-events', 'none');
+			$("#googleCloudAuthlink").css('opacity', '0.65');
 		} else {
 			$("#download-btn").prop("disabled", true);
 			$("#download-btn").css('cursor', 'default');
+			$("#googleCloudAuthlink").css('pointer-events', 'auto');
+			$("#googleCloudAuthlink").css('opacity', '1');
 		}
 	} else {
 		$("#SyncDiv").hide();
@@ -785,7 +793,7 @@ function openPopOver($this) {
 
 						if (data.length > 0) {
 
-							var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\"><a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a>"
+							var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\"><a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><img src='images/Search.Metadata.Cancel.svg' width='13' style='margin-top: -8px;'/></a>"
 									+ headerName
 									+ "</div>"
 									+ "<div class='popover-body'> <div class='divTable' style='width: 100%;border: 1px solid #000;'>"
@@ -821,7 +829,7 @@ function openPopOver($this) {
 						} else {
 							table = "<div id=\"a01\" class=\"col-md-12 hidden\">"
 									+ "<div class=\"popover-heading\"> NO USER METADATA &nbsp;&nbsp;"
-									+ "<a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a> </div>"
+									+ "<a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><img src='images/Search.Metadata.Cancel.svg' width='13' style='margin-top: -8px;'/></a> </div>"
 									+ "<div class='popover-body'></div></div>";
 						}
 
@@ -854,7 +862,9 @@ function openDataObjectPopOver($this) {
 	var headerName = "<div class='popoverHeader'><p class='popoverInfoDatObj'>Metadata for " + fileName + "</p></div>";
 
 	var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"><div class=\"popover-heading\"><a class=\"button closeBtn float-right\" href=\"javascript:void(0);\">"
-			+ "<i class=\"fa fa-times\"></i></a>" + headerName + " </div><div class='popover-body'>";
+			+ "<img src='images/Search.Metadata.Cancel.svg' width='13' style='margin-top: -8px;'/></a>"
+			+ headerName
+			+ " </div><div class='popover-body'>";
 
 	var table = "";
 	var content = "";

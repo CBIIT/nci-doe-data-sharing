@@ -330,7 +330,8 @@
 		display: inline-block !important;
 	}
 	#searchResultMobileTable_length {
-		margin-left: 10rem;
+		margin-right: 2rem;
+        float: right;
 	}
 	#searchResultsDiv {
 		display: none !important;
@@ -349,6 +350,7 @@
 	#searchResultMobileTable_wrapper {
 		padding-top: 1rem;
 		padding-left: 0.7rem;
+		padding-bottom: 4rem;
 	}
 	#keyworkSearchDiv {
 		display: none;
@@ -559,7 +561,7 @@
 
 @media ( max-width :990px) {
 	.closeBtn {
-		color: #DE7417;
+		margin-top: -15px !important;
 	}
 	.appName {
 		white-space: nowrap;
@@ -691,14 +693,11 @@
 @media ( max-width : 440px) {
 	.popover {
 		margin-top: 8rem;
-		word-break: break-word;
+		word-break: break-all;
 		height: fit-content;
 		max-width: fit-content !important;
 		width: fit-content;
 		margin-left: 3rem;
-	}
-	.popoverHeader {
-		margin-top: -6px !important;
 	}
 	.popover-body {
 		padding-left: 3px;
