@@ -1,61 +1,254 @@
 [class^='select2'] {
-  border-radius: 10px !important;
-}
-#select2-metadatalist-results {
-	color: #000000;
-    font-family: 'inter_regular';
-    font-size: 15px;
-    font-weight: 500;
-}
-.select2-results__option{
-	font-size:12px!important;
-	font-family:'inter_regular';
-	margin-left:10px;
+	border-radius: 10px !important;
 }
 
-.select2-results{
+#select2-metadatalist-results {
+	color: #000000;
+	font-family: 'inter_regular';
+	font-size: 15px;
+	font-weight: 500;
+}
+
+.select2-results__option {
+	font-size: 12px !important;
+	font-family: 'inter_regular';
+	margin-left: 10px;
+}
+
+.select2-results {
 	margin-top: -4px;
 }
 
 .selectIndividualCheckbox {
-    margin-left: 6px;
+	margin-left: 6px;
 }
 
 #dataSetMetaData {
 	width: 100%;
-    font-size: 14px;
-    font-family: 'latoregular';
-    border-color: transparent;
-    margin-top: 13px;
-    margin-bottom: 30px;
+	font-size: 14px;
+	font-family: 'latoregular';
+	border-color: transparent;
+	margin-top: 13px;
+	margin-bottom: 30px;
 }
-#dataSetTable_wrapper,#generatePredTable_wrapper {
-	width:100%;
+
+#dataSetTable_wrapper, #generatePredTable_wrapper {
+	width: 100%;
 }
+
 #advancedSearch {
-	background-color:transparent; 
-    border:0px;color: #5099AB !important;font-family: 'latoregular';font-size: 20px;margin-left: 37px;
-    margin-top: 10px;
-    font-weight: 100;
+	background-color: transparent;
+	border: 0px;
+	color: #5099AB !important;
+	font-family: 'latoregular';
+	font-size: 20px;
+	margin-left: 37px;
+	margin-top: 10px;
+	font-weight: 100;
 }
 
-#dataSetTable_length,#generatePredTable_length {
-    margin-top: -6px;
-    font-family: 'latoregular';
-    margin-right: 25px;
-    float: right;
+#dataSetTable_length, #generatePredTable_length {
+	margin-top: -6px;
+	font-family: 'latoregular';
+	margin-right: 25px;
+	float: right;
 }
 
-#dataSetTable{
+#dataSetTable {
 	font-family: 'latoregular';
 	width: 97% !important;
-    border: transparent;
-    border-bottom: 8px solid rgb(197, 197, 197) !important;
+	border: transparent;
+	border-bottom: 8px solid rgb(197, 197, 197) !important;
 }
 
 #generatePredTable {
 	font-family: 'latoregular';
 	width: 97% !important;
-    border: transparent;
-    border-bottom: 8px solid rgb(197, 197, 197) !important;
+	border: transparent;
+	border-bottom: 8px solid rgb(197, 197, 197) !important;
+}
+
+.popover {
+	border-radius: 17px;
+}
+
+.popover-header {
+	background-color: transparent !important;
+	font-family: 'latoregular';
+	border-bottom: none;
+	margin-top: 17px;
+	margin-left: 24px;
+	color: #1C3D5D;
+	font-size: 20px;
+}
+
+.popover-body {
+	padding-top: 0px;
+	padding-bottom: 15px;
+	margin-top: -15px;
+}
+
+.popoverHeader {
+	margin-top: 11px;
+	width: 94%;
+}
+
+.popoverInfo {
+	color: #1C3D5D;
+	font-family: 'latoregular';
+	font-size: 20px;
+	width: 70%;
+	margin-left: -12px;
+	margin-top: -19px;
+}
+
+.popoverInfoDatObj {
+	color: #1C3D5D;
+	font-family: 'latoregular';
+	font-size: 20px;
+	width: 70%;
+	margin-left: -10px;
+	margin-top: -10px;
+}
+
+.popoverInfoNoHeader {
+	color: #1C3D5D;
+	font-family: 'latoregular';
+	font-size: 16px;
+	width: 70%;
+	margin-left: -12px;
+	margin-bottom: 0px;
+	margin-top: -15px;
+}
+
+.popoverHeading {
+	text-align: right;
+	color: #1C3D5D;
+	font-family: 'latoregular';
+	font-size: 13px;
+	margin-top: -49px;
+}
+
+.closeBtn {
+	color: #DE7417 !important;
+	font-size: 26px;
+	margin-right: 18px;
+	margin-top: -10px;
+}
+.closeBtn img {
+	margin-top: -8px;
+}
+
+.divTable {
+	display: table;
+	width: 100%;
+	max-height: 500px;
+	overflow-y: scroll;
+	padding: 10px;
+}
+
+.divTableBody {
+	border: 1px solid #898989;
+}
+
+.divTableRow {
+	display: table-row;
+	border-bottom: none;
+}
+
+.divTableHeading {
+	background-color: #EEE;
+	display: table-header-group;
+	font-weight: bold;
+}
+
+.divTableHead {
+	background-color: #00467f;
+	color: #fff;
+	display: table-cell;
+	border: none;
+	padding: 9px;
+	width: 14rem;
+	padding-left: 30px;
+	font-size: 13px;
+	font-family: 'inter_regular';
+	letter-spacing: 1px;
+}
+
+.divTableCell {
+	/* border: 1px solid #898989; */
+	display: table-cell;
+	padding: 10px 28px;
+}
+
+.divAttrName {
+	font-family: 'lato_bold';
+	font-size: 14px;
+	color: #000000;
+	border: 0.9px solid #898989;
+}
+
+.divAttrVal {
+	color: #000000;
+	font-family: 'latoregular';
+	font-size: 15px;
+	border: 0.9px solid #898989;
+}
+
+div.divTableBody div.divTableContent:nth-child(odd) {
+	background-color: #E0F0F4 !important;
+	border: 1px solid #898989;
+}
+
+div.divTableBody div.divTableContent:nth-child(even) {
+	background-color: #FBFBFB !important;
+	border: 1px solid #898989;
+}
+
+.divDataObjUserMetadata {
+	margin-left: 15px;
+	margin-top: -11px;
+	margin-bottom: 7px;
+	color: #1C3D5D;
+	font-family: 'latoregular';
+	font-size: 13px;
+}
+
+.divDataObjSysMetadata {
+	margin-left: 15px;
+	margin-top: -11px;
+	margin-bottom: 7px;
+	color: #1C3D5D;
+	font-family: 'latoregular';
+	font-size: 13px;
+}
+
+.divTableRowMobile {
+	display: flow-root;
+	border-bottom: none;
+}
+
+.popoverMobileAttrName, .popoverMobileAttrVal {
+	color: #194F85;
+	font-family: 'inter_bold';
+	font-size: 13px;
+}
+
+.divAttrNameMobile {
+	font-family: 'latoregular';
+	padding: 12px 10px;
+	letter-spacing: 1px;
+	font-size:15px;
+	padding-left: 16px;
+}
+
+.popoverInfoMobile{
+	color: #1C3D5D;
+    font-family: 'latoregular';
+    font-size: 12px;
+    width: 70%;
+    margin-left: -12px;
+}
+.popoverHeaderMobile{
+	margin-top: -6px !important;
 }

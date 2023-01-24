@@ -37,11 +37,15 @@ $(document)
 					});
 					$(".keywordSearch").keyup(function(){
 						if ($(this).val()) {
-							$(".resetBtnSpan").show();
+							$("#resetBtn").show();
 							$("#resetBtnMobile").show();
+							$("#resetBtnLanding").show();
+							$("#resetBtnLandingForMobile").show();
 						} else {
-							$(".resetBtnSpan").hide();
+							$("#resetBtn").hide();
 							$("#resetBtnMobile").hide();
+							$("#resetBtnLanding").hide();
+							$("#resetBtnLandingForMobile").hide();
 						}
 					});
 
@@ -103,6 +107,7 @@ $(document)
 						$("#mobileKeyworkSearchDiv").show();
 						$("#filterSectionDiv").show();
 						$("#searchResultsMobileDiv").hide();
+						showFirstFewFields();
 					});
 					
 					$("#landingSearch").click(function(e) {
@@ -176,6 +181,7 @@ $(document)
 							$(".selectedFilesDiv").show();
 							$("#destinationPathId").val(selectedPathsString);
 							$("#drivePath").val(downloadFileName);
+							$("#cloudPath").val(downloadFileName);
 							$("#informationalText")
 									.html(
 											"This page allows you to download the "
@@ -238,7 +244,7 @@ $(document)
 											 */
 											$('.downloadErrorMsg').html("Select atleast one path.");
 											$("#message").show();
-										} else if (searchType == 's3' || searchType == 'async' || searchType == 'drive'
+										} else if (searchType == 's3' || searchType == 'async' || searchType == 'drive' || searchType == 'cloud'
 												|| selectedFiles) {
 											d.bucketName = $("#downloadBucketName").val();
 											d.s3Path = $("#downloadS3Path").val();
@@ -248,6 +254,8 @@ $(document)
 											d.endPointName = $("#endPointName").val();
 											d.endPointLocation = $("#endPointLocation").val();
 											d.drivePath = $("#drivePath").val();
+											d.googleCloudPath = $("#cloudPath").val();
+											d.googleCloudBucketName = $("#cloudBucketName").val();
 
 											var url;
 											if (selectedFiles) {
@@ -271,6 +279,12 @@ $(document)
 												});
 											} else if (searchType == 'drive') {
 												$('div#driveDiv input[type="text"]').each(function() {
+													if (!$(this).val()) {
+														validate = false;
+													}
+												});
+											} else if (searchType == 'cloud') {
+												$('div#googleCloudDiv input[type="text"]').each(function() {
 													if (!$(this).val()) {
 														validate = false;
 													}
@@ -490,7 +504,22 @@ $(document)
 								var params = {
 									type : $("#downloadType").val(),
 									downloadFilePath : $("#selectedFilesList").val(),
-									action : "Drive",
+									action : "drive",
+									assetIdentifier : $("#assetIdentifier").val(),
+									returnToStatus : $("#returnToStatus").val(),
+									returnToSearch : $("#returnToSearch").val()
+								}
+
+								invokeAjax('/download', 'GET', params, postGoogleDriveFunction, postFailureFunction,
+										null, 'text');
+							});
+					
+					$("#googleCloudAuthlink").click(
+							function(e) {
+								var params = {
+									type : $("#downloadType").val(),
+									downloadFilePath : $("#selectedFilesList").val(),
+									action : "cloud",
 									assetIdentifier : $("#assetIdentifier").val(),
 									returnToStatus : $("#returnToStatus").val(),
 									returnToSearch : $("#returnToSearch").val()
@@ -1008,7 +1037,7 @@ function showFirstFewFields($this, oper) {
 						$(this).find('.showMorefields').show();
 					}
 				});
-				$this.find(".showMore").text(modifiedSize + " More ..");
+				$this.find(".showMore").text(modifiedSize + " More");
 			} else {
 				$this.find('.css-17rpx5x').hide();				
 			}
@@ -1017,7 +1046,7 @@ function showFirstFewFields($this, oper) {
 			if (len > 4) {
 				var modifiedSize = len - 4;
 				$this.find('.css-17rpx5x').show();
-				$this.find(".showMore").text(modifiedSize + " More ..");
+				$this.find(".showMore").text(modifiedSize + " More");
 			} else {
 				$this.find('.css-17rpx5x').hide();				
 			}
@@ -1028,7 +1057,7 @@ function showFirstFewFields($this, oper) {
 			var len = $(this).find('.filterGroupDiv:visible').length;
 			var modifiedSize = len - 4;
 			if (len > 4) {
-				$(this).parent().find('.showMore').text(modifiedSize + " More..");
+				$(this).parent().find('.showMore').text(modifiedSize + " More");
 				$(this).parent().find('.showMore').show();
 				$(this).parent().find('.css-17rpx5x').show();
 				$(this).parent().find('.css-17rpx5xLess').hide();

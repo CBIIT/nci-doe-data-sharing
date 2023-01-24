@@ -148,9 +148,40 @@ FONTS, FONT AWESOME, FONT SOURCE SANS PRO
 }
 
 @font-face {
+	font-family: "inter_bold";
+	font-style: normal;
+	src: url("../fonts/Inter-Bold.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "inter_light";
+	font-style: normal;
+	src: url("../fonts/Inter-Light.ttf") format("truetype");
+}
+
+@font-face {
 	font-family: "lato_bold";
 	font-style: bold;
-	src: url("../webfont/Lato-Bold.ttf") format("truetype");
+	src: url("../fonts/Lato-Bold.ttf") format("truetype");
+}
+
+
+@font-face {
+	font-family: "poppins_bold";
+	font-style: bold;
+	src: url("../fonts/Poppins-Bold.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "poppins_medium";
+	font-style: bold;
+	src: url("../fonts/Poppins-Medium.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "raleway_medium";
+	font-style: bold;
+	src: url("../webfonts/Raleway-Medium.ttf") format("truetype");
 }
 
 body {

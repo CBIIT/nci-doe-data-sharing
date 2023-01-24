@@ -11,7 +11,7 @@
 		style="display: none; font-size: 13px; background-color: transparent;">
 
 		<div class="col-lg-12 col-md-12 col-sm-12 float-right"
-			style="margin-top: -16px; margin-left: -7px;">
+			style="margin-top: -16px; margin-left: 1.5rem;">
 			<div class="controls controls-row mt-4">
 				<a class="float-left mb-2 mr-2 backToUploadTab"> <img
 					src="/images/BackSearch-icon.png"
@@ -116,7 +116,15 @@
 						Transfer from Google Drive</label>
 				</div>
 			</div>
-
+			<div class="form-group">
+				<div class="pull-left" style="margin-left: 15px">
+					<label class="uploadLabels radio-inline"><input
+						type="radio" name="datafileTypeUpload"
+						id="datafileTypeCloudUpload" value="cloud"
+						onchange="displayDataFileSection('cloud')">&nbsp;&nbsp;
+						Transfer from Google Cloud</label>
+				</div>
+			</div>
 
 			<div class="col-md-12 col-sm-12" id="singleFileDataUploadSection"
 				style="display: none;">
@@ -207,16 +215,16 @@
 								</div>
 							</div>
 
-							<div class="form-group col-lg-12 col-md-12"
+							<div class="form-group col-lg-8 col-md-8"
 								id="displayDriveUploadDiv" style="display: none;">
-								<div th:if="${authorized != null}" id="driveAuthorisedMsg" class="alert-success"
-									style="margin-left: 13px">
+								<div th:if="${authorized != null}" id="driveAuthorisedMsg"
+									class="alert-success" style="margin-left: 13px">
 									<i class="fa fa-check">&nbsp;</i>Access Token successfully
 									generated
 								</div>
 								<div class="form-group" style="margin-left: 13px">
 									<button type="button" class="btn btn-primary"
-										id="driveUploadAuthlink"
+										id="driveUploadAuthlink" th:disabled="${authorized != null}"
 										onClick="return refreshAttributes('Drive')">
 										Authorize MoDaC to Access Your Google Drive</button>
 								</div>
@@ -227,7 +235,39 @@
 										Files from Google Drive</a>
 								</div>
 							</div>
-							<div class="form-group col-lg-12 col-md-12"
+
+							<div class="form-group col-lg-8 col-md-8"
+								id="displayCloudUploadDiv" style="display: none;">
+								<div th:if="${authorizedGC != null}" id="cloudAuthorisedMsg"
+									class="alert-success" style="margin-left: 1rem">
+									<i class="fa fa-check">&nbsp;</i>Access Token successfully
+									generated
+								</div>
+								<div class="form-group" style="margin-left: 13px">
+									<button type="button" class="btn btn-primary" th:disabled="${authorizedGC != null}"
+										id="cloudUploadAuthlink">Authorize MoDaC to Access
+										Your Google Cloud</button>
+								</div>
+
+								<div th:if="${authorizedGC != null}" class="col-sm-12 column">
+
+									<div>
+										<label for="gcbucketName">Google Cloud Bucket:</label> <input
+											type="text" class="form-control" name="gcbucketName"
+											th:value="${gcbucketName}" id="gcbucketName"
+											placeholder="Enter Google Cloud Bucket Name" />
+
+									</div>
+									<div>
+										<label for="gcPath">Google Cloud Source Path:</label> <input
+											type="text" class="form-control" th:value="${gcPath}"
+											name="gcPath" id="gcPath"
+											placeholder="Enter Google Cloud Source Path" size="40" />
+
+									</div>
+								</div>
+							</div>
+							<div class="form-group col-lg-11 col-md-11"
 								id="displayS3UploadDiv"
 								style="display: none; background-color: #E0F0F4; padding-bottom: 20px;">
 								<div class="form-group col-lg-12 col-md-12">
@@ -238,9 +278,7 @@
 								<div class="col-sm-12 column">
 									<label for="s3Path">S3 (Source) Path:</label> <input
 										type="text" class="form-control" name="s3Path" id="s3Path"
-										placeholder="Enter S3 (Destination) Path" size="40" /> <input
-										aria-label="s3 file" type="checkbox" name="s3File" id="s3File">
-									Check this if the source path is a file and not a folder.
+										placeholder="Enter S3 (Destination) Path" size="40" />
 								</div>
 								<div class="col-sm-12 column">
 									<label for="accessKey">Access Key:</label> <input type="text"
@@ -260,7 +298,7 @@
 							</div>
 						</div>
 						<div class="form-group col-lg-12 col-md-12" id="fileNamesDiv"
-							th:style="${fileNames != null ? 'display:block;margin-left: 10px;' : 'display:none'}">
+							th:style="${fileNames != null ? 'display:block;margin-left: 1.3rem;' : 'display:none'}">
 							<label for="fileName">Selected Files:</label>
 							<div class="form-group col-lg-12 col-md-12">
 								<ul>
@@ -272,7 +310,7 @@
 						</div>
 
 						<div class="form-group col-lg-12 col-md-12" id="folderNamesDiv"
-							th:style="${folderNames != null ? 'display:block;margin-left: 10px;' : 'display:none'}">
+							th:style="${folderNames != null ? 'display:block;margin-left: 1.3rem;' : 'display:none'}">
 							<label for="folderName">Selected Folders:</label>
 							<ul>
 								<li th:each="folderName:${folderNames}" th:text="${folderName}"></li>

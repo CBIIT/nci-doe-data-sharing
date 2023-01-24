@@ -2,6 +2,7 @@ $(document).ready(function() {
 	if (screen.width > 990) {
 		$("#mobileKeyworkSearchDiv").hide();
 	} else {
+		$("#filterSectionDiv").removeClass('col-lg-3 col-md-8');
 		$("#mobileKeyworkSearchDiv").show();
 	}
 	$(".landing-tab").removeClass('active');
@@ -39,8 +40,15 @@ $(document).ready(function() {
 			if (iskeyWordSearch == true) {
 				var attrval = attrVal[i];
 				var newAttrVal = attrval.replaceAll('%', '');
-				$("#attributeVal").val(newAttrVal);
-				$("#resetBtn").show();
+
+				if (screen.width > 990) {
+					$("#attributeVal").val(newAttrVal);
+					$("#resetBtn").show();
+				} else {
+					$("#mobileKeyworkSearchDiv").find("#attributeVal").val(newAttrVal);
+					$("#resetBtnMobile").show();
+				}
+
 			} else {
 				var attrName = list.attrName[i];
 				var attrVal = attrVal[i];
@@ -79,7 +87,7 @@ $(document).ready(function() {
 			if ($("#searchBtn").is(':visible')) {
 				event.preventDefault();
 				populateSearchCriteria('displayAllResults');
-			} else if($("#searchMobileBtn").is(':visible')) {
+			} else if ($("#searchMobileBtn").is(':visible')) {
 				$("#searchMobileBtn").click();
 			}
 		}
@@ -478,7 +486,7 @@ function renderDataSetName(data, type, row) {
 					+ row.dataSetPath
 					+ "'>"
 					+ "<img src='images/Search_EditMetaData.svg' data-toggle='tooltip' title='Edit Asset Metadata' th:src='@{/images/Search_EditMetaData.svg}' "
-					+ "style='width:15px;' alt='edit collection'></span>";
+					+ "style='width:15px;transform: translateY(-2px);' alt='edit collection'></span>";
 
 			if (row.dataSetPermissionRole == 'Owner') {
 				editDataSetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collection_name = '"
@@ -486,11 +494,11 @@ function renderDataSetName(data, type, row) {
 						+ " selectedCollection = 'Asset' " + "metadata_path  = '" + row.dataSetPath + "'>"
 						+ "<img src='images/Search_AccessGroups.svg' data-toggle='tooltip' "
 						+ "title='Edit Asset Access Permissions' " + "th:src='@{/images/Search_AccessGroups.svg}' "
-						+ "style='width:15px;' alt='Edit Asset Access Permissions'></span>";
+						+ "style='width:15px;transform: translateY(-2px);' alt='Edit Asset Access Permissions'></span>";
 			}
 		}
 
-		html += "<div class='col-md-12' style='font-size:16px;margin-top:10px;'><div class='row'><div class='col-md-12'>"
+		html += "<div class='col-md-12' style='font-size:16px;margin-top:0.5rem;'><div class='row'><div class='col-md-12'>"
 				+ ""
 				+ checkboxHtml
 				+ "&nbsp;&nbsp;&nbsp;"
@@ -508,7 +516,7 @@ function renderDataSetName(data, type, row) {
 				+ "</span></a>" + "&nbsp&nbsp;" + editDataSetHtml + "</div></div></div>";
 
 	} else {
-		html += "<div class='col-md-12' style='font-size:16px;margin-top:10px;'><div class='row'><div class='col-md-12'>"
+		html += "<div class='col-md-12' style='font-size:16px;margin-top:-15px;margin-bottom:-1rem;'><div class='row'><div class='col-md-12'>"
 				+ "&nbsp;&nbsp;&nbsp;<a href='#' class='dataSetFragment' "
 				+ "dme_data_id  = '"
 				+ row.dmeDataId
@@ -518,16 +526,15 @@ function renderDataSetName(data, type, row) {
 				+ "data_set_path = "
 				+ row.dataSetPath
 				+ ">"
-				+ "<span class='cil_14_bold_no_color'>"
+				+ "<div class='cil_14_bold_no_color' style='margin-left: 27px;'>"
 				+ row.dataSetName
-				+ "</span></a>"
-				+ "&nbsp&nbsp;</div></div></div>";
+				+ "</div></a>" + "&nbsp&nbsp;</div></div></div>";
 	}
 
-	html += "<div class='col-md-12' style='margin-left: 25px;'><span>Sharable Link"
+	html += "<div class='col-md-12' style='margin-left: 1.8rem;'><span>Sharable Link"
 			+ "</span>&nbsp;<button type='button' class='share-link-copy-button' data-toggle='tooltip' data-placement='bottom' "
 			+ "title='Copy to clipboard' data-clipboard-text='" + row.dataSetdmeDataId + "'>"
-			+ "<img src='images/clippy.svg' width='13' alt='Copy to clipboard'/></button></div>";
+			+ "<img src='images/Search.Shareable_Link.svg' width='15' alt='Copy to clipboard'/></button></div>";
 
 	return html;
 }
@@ -655,6 +662,7 @@ function display(value) {
 		$("#SyncDiv").hide();
 		$("#s3Div").hide();
 		$("#driveDiv").hide();
+		$("#googleCloudDiv").hide();
 		$("#download-btn").prop("disabled", false);
 		$("#download-btn").css('cursor', 'pointer');
 	} else if (value == "sync") {
@@ -662,6 +670,7 @@ function display(value) {
 		$("#AsyncDiv").hide();
 		$("#s3Div").hide();
 		$("#driveDiv").hide();
+		$("#googleCloudDiv").hide();
 		$("#download-btn").prop("disabled", false);
 		$("#download-btn").css('cursor', 'pointer');
 	} else if (value == "drive") {
@@ -669,20 +678,44 @@ function display(value) {
 		$("#AsyncDiv").hide();
 		$("#s3Div").hide();
 		$("#driveDiv").show();
+		$("#googleCloudDiv").hide();
 		var googleDriveIsAuthorized = $("#googleDriveIsAuthorized").val();
 		if (googleDriveIsAuthorized) {
 			$("#download-btn").prop("disabled", false);
 			$("#download-btn").css('cursor', 'pointer');
+			$("#driveAuthlink").css('pointer-events', 'none');
+			$("#driveAuthlink").css('opacity', '0.65');
 		} else {
 			$("#download-btn").prop("disabled", true);
 			$("#download-btn").css('cursor', 'default');
+			$("#driveAuthlink").css('pointer-events', 'auto');
+			$("#driveAuthlink").css('opacity', '1');
 		}
 
+	} else if (value == 'cloud') {
+		$("#SyncDiv").hide();
+		$("#AsyncDiv").hide();
+		$("#s3Div").hide();
+		$("#driveDiv").hide();
+		$("#googleCloudDiv").show();
+		var googleCloudIsAuthorized = $("#googleCloudIsAuthorized").val();
+		if (googleCloudIsAuthorized) {
+			$("#download-btn").prop("disabled", false);
+			$("#download-btn").css('cursor', 'pointer');
+			$("#googleCloudAuthlink").css('pointer-events', 'none');
+			$("#googleCloudAuthlink").css('opacity', '0.65');
+		} else {
+			$("#download-btn").prop("disabled", true);
+			$("#download-btn").css('cursor', 'default');
+			$("#googleCloudAuthlink").css('pointer-events', 'auto');
+			$("#googleCloudAuthlink").css('opacity', '1');
+		}
 	} else {
 		$("#SyncDiv").hide();
 		$("#AsyncDiv").hide();
 		$("#s3Div").show();
 		$("#driveDiv").hide();
+		$("#googleCloudDiv").hide();
 		$("#download-btn").prop("disabled", false);
 		$("#download-btn").css('cursor', 'pointer');
 	}
@@ -731,9 +764,10 @@ function displayPopover() {
 function openPopOver($this) {
 	var pop = $this;
 	$('.button2a').not($this).popover('hide');
-	var headerTest = 'User Metadata';
 	var selectedPath = $this.attr('selected_path');
 	var collection_type = $this.attr('collection_type');
+
+	var headerName = "<div class='popoverHeader'><p class='popoverInfo'>" + collection_type + " Metadata</p></div>";
 
 	if (collection_type != 'DataObject') {
 		var params = {
@@ -759,10 +793,9 @@ function openPopOver($this) {
 
 						if (data.length > 0) {
 
-							var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\">"
-									+ ""
-									+ headerTest
-									+ " <a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a> </div>"
+							var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\"><a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><img src='images/Search.Metadata.Cancel.svg' width='13' style='margin-top: -8px;'/></a>"
+									+ headerName
+									+ "</div>"
 									+ "<div class='popover-body'> <div class='divTable' style='width: 100%;border: 1px solid #000;'>"
 									+ "<div class='divTableBody'><div class='divTableRow'>"
 									+ "<div class='divTableHead'>ATTRIBUTE</div>"
@@ -770,25 +803,33 @@ function openPopOver($this) {
 
 							var content = "";
 
-							$.each(data, function(key, value) {
-								var attrVal = value.attrValue;
-								if (attrVal && (attrVal.startsWith('https') || attrVal.startsWith('http'))) {
-									content += "<div class='divTableRow'><div class='divTableCell'>"
-											+ value.displayName + "</div>"
-											+ "<div class='divTableCell'><a target='_blank' href=" + attrVal + ">"
-											+ attrVal + "</a></div></div>";
-								} else if (value.attrName.indexOf("access_group") == -1) {
-									content += "<div class='divTableRow'><div class='divTableCell'>"
-											+ value.displayName + "</div>" + "<div class='divTableCell'>" + attrVal
-											+ "</div></div>";
-								}
+							$
+									.each(
+											data,
+											function(key, value) {
+												var attrVal = value.attrValue;
+												if (attrVal
+														&& (attrVal.startsWith('https') || attrVal.startsWith('http'))) {
+													content += "<div class='divTableRow divTableContent'><div class='divTableCell divAttrName'>"
+															+ value.displayName.toUpperCase()
+															+ "</div>"
+															+ "<div class='divTableCell divAttrVal'><a target='_blank' href="
+															+ attrVal + ">" + attrVal + "</a></div></div>";
+												} else if (value.attrName.indexOf("access_group") == -1) {
+													content += "<div class='divTableRow divTableContent'><div class='divTableCell divAttrName'>"
+															+ value.displayName.toUpperCase()
+															+ "</div>"
+															+ "<div class='divTableCell divAttrVal'>"
+															+ attrVal
+															+ "</div></div>";
+												}
 
-							});
+											});
 							table = ind + content + "</div> </div></div> </div>";
 						} else {
 							table = "<div id=\"a01\" class=\"col-md-12 hidden\">"
-									+ "<div class=\"popover-heading\"> No User Metadata &nbsp;&nbsp;"
-									+ "<a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a> </div>"
+									+ "<div class=\"popover-heading\"> NO USER METADATA &nbsp;&nbsp;"
+									+ "<a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><img src='images/Search.Metadata.Cancel.svg' width='13' style='margin-top: -8px;'/></a> </div>"
 									+ "<div class='popover-body'></div></div>";
 						}
 
@@ -818,9 +859,13 @@ function openDataObjectPopOver($this) {
 	var fileName = $this.attr('file_name');
 	var selectedPath = $this.attr('selected_path');
 
-	var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"><div class=\"popover-heading\">" + "Metadata for " + fileName
-			+ "<a class=\"button closeBtn float-right\" href=\"javascript:void(0);\">"
-			+ "<i class=\"fa fa-times\"></i></a> </div><div class='popover-body'>";
+	var headerName = "<div class='popoverHeader'><p class='popoverInfoDatObj'>Metadata for " + fileName + "</p></div>";
+
+	var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"><div class=\"popover-heading\"><a class=\"button closeBtn float-right\" href=\"javascript:void(0);\">"
+			+ "<img src='images/Search.Metadata.Cancel.svg' width='13' style='margin-top: -8px;'/></a>"
+			+ headerName
+			+ " </div><div class='popover-body'>";
+
 	var table = "";
 	var content = "";
 
@@ -846,36 +891,52 @@ function openDataObjectPopOver($this) {
 
 					if (data.selfMetadata.length > 0) {
 
-						ind += "<p><b>User Metadata </b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>"
+						ind += "<p class='divDataObjUserMetadata'><b>USER METADATA</b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>"
 								+ "<div class='divTableBody'><div class='divTableRow'>"
 								+ "<div class='divTableHead rowAttribute'>ATTRIBUTE</div>"
 								+ "<div class='divTableHead'>VALUE</div></div>";
 
-						$.each(data.selfMetadata, function(key, value) {
-							if (value.value.startsWith('https') || value.value.startsWith('http')) {
-								content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName
-										+ "</div>" + "<div class='divTableCell'><a target='_blank' href=" + value.value
-										+ ">" + value.value + "</a></div></div>";
-							} else {
-								content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName
-										+ "</div>" + "<div class='divTableCell'>" + value.value + "</div></div>";
-							}
+						$
+								.each(
+										data.selfMetadata,
+										function(key, value) {
+											if (value.value.startsWith('https') || value.value.startsWith('http')) {
+												content += "<div class='divTableRow divTableContent'><div class='divTableCell divAttrName'>"
+														+ value.displayName.toUpperCase()
+														+ "</div>"
+														+ "<div class='divTableCell divAttrVal'><a target='_blank' href="
+														+ value.value + ">" + value.value + "</a></div></div>";
+											} else {
+												content += "<div class='divTableRow divTableContent'><div class='divTableCell divAttrName'>"
+														+ value.displayName.toUpperCase()
+														+ "</div>"
+														+ "<div class='divTableCell divAttrVal'>"
+														+ value.value
+														+ "</div></div>";
+											}
 
-						});
+										});
 						content += "</div> </div><br/>";
 
 					}
 
 					if (data.systemMetadata.length > 0) {
-						content += "<p><b>Key System Metadata </b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>"
+						content += "<p class='divDataObjSysMetadata'><b>KEY SYSTEM METADATA </b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>"
 								+ "<div class='divTableBody'><div class='divTableRow'>"
 								+ "<div class='divTableHead rowAttribute'>ATTRIBUTE</div>"
 								+ "<div class='divTableHead'>VALUE</div></div>";
 
-						$.each(data.systemMetadata, function(key, value) {
-							content += "<div class='divTableRow'><div class='divTableCell'>" + value.displayName
-									+ "</div>" + "<div class='divTableCell'>" + value.value + "</div></div>";
-						});
+						$
+								.each(
+										data.systemMetadata,
+										function(key, value) {
+											content += "<div class='divTableRow divTableContent'><div class='divTableCell divAttrName'>"
+													+ value.displayName.toUpperCase()
+													+ "</div>"
+													+ "<div class='divTableCell divAttrVal'>"
+													+ value.value
+													+ "</div></div>";
+										});
 
 						content += "</div> </div>";
 

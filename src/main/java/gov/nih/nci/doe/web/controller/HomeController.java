@@ -30,6 +30,7 @@ import gov.nih.nci.doe.web.domain.InferencingTask;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.model.PermissionsModel;
+import gov.nih.nci.doe.web.service.DoeAuthorizationService;
 
 /**
  *
@@ -283,19 +284,39 @@ public class HomeController extends AbstractDoeController {
 				// Return from Google Drive Authorization
 				selectedPaths = (String) session.getAttribute("selectedPathsString");
 				downloadAsyncType = (String) session.getAttribute("downloadAsyncType");
+				String actionType = (String) session.getAttribute("actionType");
 				fileName = (String) session.getAttribute("fileName");
 				final String returnURL = this.webServerName + "/downloadTab";
-				try {
-					String accessToken = doeAuthorizationService.getToken(code, returnURL);
-					log.info("access token for download tab" + accessToken);
-					session.setAttribute("accessToken", accessToken);
-					model.addAttribute("accessToken", accessToken);
-				} catch (Exception e) {
-					throw new DoeWebException("Failed to redirect to Google for authorization: " + e.getMessage());
+				if (actionType != null && actionType.equalsIgnoreCase(DoeAuthorizationService.GOOGLE_DRIVE_TYPE)) {
+					try {
+
+						String accessToken = doeAuthorizationService.getToken(code, returnURL,
+								DoeAuthorizationService.ResourceType.GOOGLEDRIVE);
+						log.info("access token for download tab" + accessToken);
+						session.setAttribute("accessToken", accessToken);
+						model.addAttribute("accessToken", accessToken);
+						model.addAttribute("asyncSearchType", "drive");
+						model.addAttribute("transferType", "drive");
+						model.addAttribute("authorized", "true");
+					} catch (Exception e) {
+						throw new DoeWebException("Failed to redirect to Google for authorization: " + e.getMessage());
+					}
+				} else if (actionType != null
+						&& actionType.equalsIgnoreCase(DoeAuthorizationService.GOOGLE_CLOUD_TYPE)) {
+					try {
+
+						String refreshTokenDetailsGoogleCloud = doeAuthorizationService.getRefreshToken(code, returnURL,
+								DoeAuthorizationService.ResourceType.GOOGLECLOUD);
+						session.setAttribute("refreshTokenDetailsGoogleCloud", refreshTokenDetailsGoogleCloud);
+						model.addAttribute("authorizedGC", "true");
+						model.addAttribute("asyncSearchType", "cloud");
+						model.addAttribute("transferType", "cloud");
+						model.addAttribute("refreshTokenDetailsGoogleCloud", refreshTokenDetailsGoogleCloud);
+					} catch (Exception e) {
+						throw new DoeWebException("Failed to redirect to Google for authorization: " + e.getMessage());
+					}
 				}
-				model.addAttribute("asyncSearchType", "drive");
-				model.addAttribute("transferType", "drive");
-				model.addAttribute("authorized", "true");
+
 				model.addAttribute("selectedPathsString", selectedPaths);
 				model.addAttribute("downloadAsyncType", downloadAsyncType);
 				model.addAttribute("fileName", fileName);

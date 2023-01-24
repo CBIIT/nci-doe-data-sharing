@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.UploadCollectionModel;
+import gov.nih.nci.doe.web.service.DoeAuthorizationService;
 import gov.nih.nci.doe.web.util.MiscUtil;
 
 @CrossOrigin
@@ -33,7 +34,7 @@ public class UploadController extends AbstractDoeController {
 		if (StringUtils.isEmpty(user)) {
 			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
 		}
-		
+
 		session.setAttribute("basePathSelected", basePath);
 		session.removeAttribute("GlobusEndpoint");
 		session.removeAttribute("includeCriteria");
@@ -44,23 +45,40 @@ public class UploadController extends AbstractDoeController {
 		session.setAttribute("institutePath", uploadCollectionModel.getInstitutionPath());
 		session.setAttribute("studyPath", uploadCollectionModel.getStudyPath());
 		session.setAttribute("uploadPath", uploadCollectionModel.getUploadPath());
+		session.setAttribute("actionType", uploadCollectionModel.getAction());
 		session.removeAttribute("fileIds");
 		session.removeAttribute("folderIds");
 		session.removeAttribute("accessToken");
 		session.removeAttribute("authorized");
-		
+		session.removeAttribute("authorizedGC");
+
 		if (uploadCollectionModel.getUploadType() != null
 				&& uploadCollectionModel.getUploadType().equalsIgnoreCase("assetBulkUpload")) {
-             session.setAttribute("bulkUploadCollection", "Asset");
+			session.setAttribute("bulkUploadCollection", "Asset");
 		} else {
 			session.removeAttribute("bulkUploadCollection");
 		}
 
-		if (uploadCollectionModel.getAction() != null && uploadCollectionModel.getAction().equalsIgnoreCase("Drive")) {
+		if (uploadCollectionModel.getAction() != null
+				&& uploadCollectionModel.getAction().equalsIgnoreCase(DoeAuthorizationService.GOOGLE_DRIVE_TYPE)) {
 
 			String returnURL = this.webServerName + "/addbulk";
 			try {
-				return new ResponseEntity<>(doeAuthorizationService.authorize(returnURL), HttpStatus.OK);
+				return new ResponseEntity<>(
+						doeAuthorizationService.authorize(returnURL, DoeAuthorizationService.ResourceType.GOOGLEDRIVE),
+						HttpStatus.OK);
+			} catch (Exception e) {
+				throw new DoeWebException("Failed to redirect to Google for authorization: " + e.getMessage());
+			}
+
+		} else if (uploadCollectionModel.getAction() != null
+				&& uploadCollectionModel.getAction().equalsIgnoreCase(DoeAuthorizationService.GOOGLE_CLOUD_TYPE)) {
+
+			String returnURL = this.webServerName + "/addbulk";
+			try {
+				return new ResponseEntity<>(
+						doeAuthorizationService.authorize(returnURL, DoeAuthorizationService.ResourceType.GOOGLECLOUD),
+						HttpStatus.OK);
 			} catch (Exception e) {
 				throw new DoeWebException("Failed to redirect to Google for authorization: " + e.getMessage());
 			}

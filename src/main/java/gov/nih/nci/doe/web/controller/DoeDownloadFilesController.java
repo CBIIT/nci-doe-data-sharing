@@ -128,7 +128,8 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 				account.setRegion(downloadFile.getRegion());
 				destination.setAccount(account);
 				dto.setS3DownloadDestination(destination);
-			} else if (downloadFile.getSearchType() != null && downloadFile.getSearchType().equals("drive")) {
+			} else if (downloadFile.getSearchType() != null
+					&& downloadFile.getSearchType().equalsIgnoreCase(DoeAuthorizationService.GOOGLE_DRIVE_TYPE)) {
 				String accessToken = (String) session.getAttribute("accessToken");
 				HpcGoogleDownloadDestination destination = new HpcGoogleDownloadDestination();
 				HpcFileLocation location = new HpcFileLocation();
@@ -137,13 +138,23 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 				destination.setDestinationLocation(location);
 				destination.setAccessToken(accessToken);
 				dto.setGoogleDriveDownloadDestination(destination);
+			} else if (downloadFile.getSearchType() != null
+					&& downloadFile.getSearchType().equalsIgnoreCase(DoeAuthorizationService.GOOGLE_CLOUD_TYPE)) {
+				String refreshTokenDetailsGoogleCloud = (String) session.getAttribute("refreshTokenDetailsGoogleCloud");
+				HpcGoogleDownloadDestination googleCloudDestination = new HpcGoogleDownloadDestination();
+				HpcFileLocation location = new HpcFileLocation();
+				location.setFileContainerId(downloadFile.getGoogleCloudBucketName());
+				location.setFileId(downloadFile.getGoogleCloudPath().trim());
+				googleCloudDestination.setDestinationLocation(location);
+				googleCloudDestination.setAccessToken(refreshTokenDetailsGoogleCloud);
+				dto.setGoogleCloudStorageDownloadDestination(googleCloudDestination);
 			}
 
 			HpcBulkDataObjectDownloadResponseDTO downloadDTO = null;
 			downloadDTO = DoeClientUtil.downloadFiles(authToken, downloadServiceURL, dto);
 			if (downloadDTO != null) {
 				String taskId = downloadDTO.getTaskId();
-				result.setMessage("Download request successful. Task ID: " + taskId);
+				result.setMessage("Download request successful. Task ID: <a href='/tasksTab'>" + taskId + "</a>");
 				if (loggedOnUser != null) {
 					taskManagerService.saveTransfer(taskId, "Download", downloadFile.getSearchType(),
 							name != null ? name : downloadType, getLoggedOnUserInfo());

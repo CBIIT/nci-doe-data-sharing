@@ -17,18 +17,14 @@
 					type="hidden" id="keyWord" th:value="${keyWord}" />
 
 
-				<div class="form-group col-lg-3 col-md-3" id="keyworkSearchDiv"
-					style="float: left; margin-top: 10px; margin-bottom: -10px; margin-left: -18px;">
+				<div class="form-group col-lg-3 col-md-3" id="keyworkSearchDiv">
 
 					<input type="text" placeholder="Search MoDaC" id="attributeVal"
-						aria-labelledby="attributeVal"
-						style="margin-top: 10px; border: 2px solid #E66F05; border-radius: 15px; height: 42px; font-size: 13px; font-weight: 550; padding-left: 20px;"
-						class="form-control keywordSearch"> <span id="resetBtn"
-						class="resetBtnSpan" data-toggle="tooltip" title="Reset"
-						style="display: none; top: 1rem; left: 18rem; position: absolute;"><img
-						alt="cancel icon" src="/images/cancel-X-grey.svg"
-						style="width: 14px;" /></span> <span data-toggle="tooltip"
-						title="Search" id="searchBtn"> <img
+						aria-labelledby="attributeVal" class="form-control keywordSearch">
+					<span id="resetBtn" data-toggle="tooltip" title="Reset"
+						style="display: none;"><img alt="cancel icon"
+						src="/images/cancel-X-grey.svg" style="width: 14px;" /></span> <span
+						data-toggle="tooltip" title="Search" id="searchBtn"> <img
 						src="/images/Filter.Right_Arrow.Submit.svg" alt="search Icon"></span>
 					<br>
 				</div>
@@ -39,24 +35,19 @@
 					<span id="resetBtnMobile" style="display: none;"
 						data-toggle="tooltip" title="Reset"><img alt="cancel icon"
 						src="/images/cancel-X-grey.svg" style="width: 25px;" /></span> <span
-						data-toggle="tooltip" title="Search" id="searchMobileBtn">
-						<img src="/images/arrow-white-large.svg" alt="search Icon"
+						id="searchMobileBtn"> <img
+						src="/images/arrow-white-large.svg" alt="search Icon"
 						style="width: 18px;"> <span>SUBMIT</span>
 					</span>
 				</div>
 			</div>
 			<div class="form-row" id="searchSubSectionDiv">
-				<div class="form-group col-lg-3 col-md-8" id="filterSectionDiv"
-					style="margin-left: -1rem; margin-right: 1rem; margin-top: -3px; overflow: auto; height: fit-content; background-color: #C6D9EC; overflow-x: hidden;">
-					<div
-						style="background-color: #3a73b9; margin-bottom: 10px; margin-left: -10px; height: 42px; width: 105%;">
-						<p
-							style="color: #fff; font-family: 'latoregular'; font-size: 20px; margin-left: 25px; padding-top: 6px; float: left;">Filters:
-						</p>
+				<div class="form-group col-lg-3 col-md-8" id="filterSectionDiv">
+					<div id="filterSectionSubDiv">
+						<p>Filters:</p>
 
 						<input type="button" value="CLEAR ALL" id="clearFilters"
-							class="btn btn-sm"
-							style="float: right; margin-right: 16px; background-color: #FFFFFF; margin-top: 8px; border-radius: 15px; font-family: 'inter_regular'; width: 70px; font-size: 9px; font-weight: 300; color: #000;">
+							class="btn btn-sm">
 					</div>
 					<div id="mobileFiltersSection" style="display: none;">
 						<span id="cancelFiltersMobile"><img alt="reset icon"
@@ -66,23 +57,20 @@
 					</div>
 
 
-					<div th:each="list : ${browseList}" class="filterComponentDiv"
-						style="border-radius: 12px 12px 0px 0px; border: 1px solid #fff; margin-bottom: 13px; background-color: #fff; margin-left: 10px; margin-right: 8px;">
-						<p
-							style="background-color: #E66F05; border-radius: 6px 6px 0px 0px; color: #fff; width: 101%; margin-left: -1px; margin-top: -1px; font-size: 19px;"
-							class="attributeLabel">
-							<label class="attrName" th:text="${list.key}"
-								style="color: #fff; margin-bottom: 5px; margin-top: -8px; margin-left: 9px; font-weight: 400; font-size: 17px; width: 65%; font-family: 'latoregular';"></label>
-							<img src="images/AccordionDown.svg" class="dataTargetCollapse"
+					<div th:each="list : ${browseList}" class="filterComponentDiv">
+						<p class="attributeLabel">
+							<label class="attrName" th:text="${list.key}"></label> <img
+								src="images/AccordionDown.svg" class="dataTargetCollapse"
 								alt="accordian Icon" th:src="@{/images/AccordionDown.svg}"
-								style="width: 11px; float: left; margin-top: 12px; margin-left: 12px;" />
+								style="width: 15px; float: left; margin-top: 12px; margin-left: 12px;" />
 
 							<img alt="search checkbox Icon"
 								th:if="${list.key != 'Asset Type' && list.key != 'Is Reference Dataset' && 
 								 list.key != 'Is Model Deployed'}"
-								src="images/Search.svg" class="searchCheckBoxlist"
-								th:src="@{/images/Search.svg}"
-								style="width: 18px; font-size: 15px; float: right; margin-right: 12px; margin-top: 8px;" />
+								src="images/Filter.Magnifying.Icon.svg"
+								class="searchCheckBoxlist"
+								th:src="@{/images/Filter.Magnifying.Icon.svg}"
+								style="width: 20px; height: 21px; float: right; margin-right: 12px; margin-top: 8px;" />
 						</p>
 
 						<input type="text"
@@ -90,16 +78,14 @@
                                 list.key != 'Is Model Deployed'}"
 							class="filterSearchBox" placeholder="Search...">
 
-						<div class="dataDivCollapse"
-							style="padding-top: 5px; margin-top: -10px; max-height: 256px; overflow: auto; font-size: 14px; margin-bottom: 10px; margin-left: -5px; font-family: 'latoregular';">
+						<div class="dataDivCollapse">
 							<div class="form-group col-lg-12 col-md-12 filterGroupDiv"
 								th:id="${list.key}" th:each="attr: ${list.value}">
 
 								<input type="hidden" th:value="${attrStat.index}" /> <input
 									type="hidden" class="filterSize" th:value="${attrStat.size}" />
 								<label class="showMorefields"> <input type="checkbox"
-									class="filteritem" style="transform: translateY(2px);"
-									th:value="${attr}" />&nbsp;
+									class="filteritem" th:value="${attr}" />&nbsp;&nbsp;
 									<div th:text="${attr}"
 										style="margin-left: 20px; margin-top: -21px;"></div>
 								</label>
@@ -129,13 +115,14 @@
 					id="searchResultsMobileDiv" style="display: none;">
 
 					<div class="col-lg-12 col-md-12 col-sm-12 float-right">
-						<div class="controls controls-row mt-4" style="margin-left: 1rem;">
+						<div class="controls controls-row mt-4"
+							style="margin-left: 2.2rem;">
 							<a id="backtoFiltersMobilebtn"><img
-								src="images/Search.Back_Arrow_Mobile.svg" data-toggle="tooltip"
-								title="Back to Search Results"
+								src="images/Search.Back_Arrow_Mobile.svg"
 								th:src="@{/images/Search.Back_Arrow_Mobile.svg}"
-								style="width: 50px;" alt="back to search"> &nbsp;&nbsp;<span
-								id="backMobileFilter">Back to Search Filters</span></a>
+								style="width: 55px; height: 31px;" alt="back to search">
+								&nbsp;&nbsp;<span id="backMobileFilter">Back to Search
+									Filters</span></a>
 						</div>
 					</div>
 					<!-- search results -->
