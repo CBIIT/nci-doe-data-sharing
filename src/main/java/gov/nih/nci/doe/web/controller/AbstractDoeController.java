@@ -71,6 +71,7 @@ import gov.nih.nci.doe.web.service.ModelInfoService;
 import gov.nih.nci.doe.web.service.PredictionAccessService;
 import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
+import gov.nih.nci.doe.web.util.MiscUtil;
 import gov.nih.nci.doe.web.util.LambdaUtils;
 import gov.nih.nci.hpc.domain.datamanagement.HpcCollectionListingEntry;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
@@ -154,7 +155,7 @@ public abstract class AbstractDoeController {
 	String clientSecret;
 
 	@Value("${gov.nih.nci.hpc.server.search.collection.compound}")
-	String compoundCollectionSearchServiceURL;
+	public String compoundCollectionSearchServiceURL;
 
 	@Value("${doe.writeaccount.password}")
 	private String writeAccessUserPassword;
@@ -221,10 +222,12 @@ public abstract class AbstractDoeController {
 	@ModelAttribute("loggedOnUser")
 	public String getLoggedOnUserInfo() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		Boolean isAnonymousUSer = auth.getAuthorities().stream()
-				.anyMatch(o -> o.getAuthority().equals("ROLE_ANONYMOUS"));
-		if (auth.isAuthenticated() && Boolean.FALSE.equals(isAnonymousUSer)) {
-			return auth.getName().trim();
+		if (auth != null) {
+			Boolean isAnonymousUSer = auth.getAuthorities().stream()
+					.anyMatch(o -> o.getAuthority().equals("ROLE_ANONYMOUS"));
+			if (auth.isAuthenticated() && Boolean.FALSE.equals(isAnonymousUSer)) {
+				return auth.getName().trim();
+			}
 		}
 		return null;
 	}
@@ -315,7 +318,7 @@ public abstract class AbstractDoeController {
 					if ((lookUpVal.getIsVisible() == null)
 							|| isVisible != null && lookUpVal.getIsVisible().equals(isVisible)) {
 						if (entry.getAttribute().equalsIgnoreCase("collection_size")) {
-							updatedString = addHumanReadableSize(Long.valueOf(entry.getValue()));
+							updatedString = MiscUtil.addHumanReadableSize(String.valueOf(entry.getValue()));
 						}
 
 						k = new KeyValueBean(entry.getAttribute(), lookUpVal.getDisplayName(), updatedString,
@@ -337,14 +340,6 @@ public abstract class AbstractDoeController {
 						.thenComparing(KeyValueBean::getDisplayName));
 
 		return entryList;
-	}
-
-	public String addHumanReadableSize(Long value) {
-		if (value != null) {
-			return FileUtils.byteCountToDisplaySize(value);
-		}
-
-		return null;
 	}
 
 	public String getAttributeValue(String attrName, List<HpcMetadataEntry> list, String levelName) {
