@@ -1141,8 +1141,8 @@ function renderActions(data, type, row) {
 				+ "' th:src='@{/images/Download.png}' " + "style='width:17px;' alt='download file'></a>";
 	}
 
-	if (accessgroups && accessgroups.indexOf("public") == -1 && permissions && permissions == 'Owner'
-			&& row.isFolder == false) {
+	if (accessgroups && accessgroups.indexOf("public") == -1 && row.isFolder == false && permissions &&
+	       permissions != 'No Permissions' && (permissions == 'Owner' || isDeletePermission == true)) {
 
 		html += "<span style='border: transparent;' data-filePath = '"
 				+ path

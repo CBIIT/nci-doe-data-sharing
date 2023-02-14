@@ -25,6 +25,7 @@ public class DoeUsers {
 	private Date createdDate;
 	private Date lastChangedDate;
 	private Boolean isAdmin;
+	private Boolean isDelete;
 
 	@Transient
 	private List<String> progNamesList;
@@ -191,6 +192,17 @@ public class DoeUsers {
 
 	public void setIsActivated(Boolean isActivated) {
 		this.isActivated = isActivated;
+	}
+
+	@Basic
+	@Column(name = "IS_DELETE", nullable = true, length = 1)
+	@Type(type = "yes_no")
+	public Boolean getIsDelete() {
+		return isDelete;
+	}
+
+	public void setIsDelete(Boolean isDelete) {
+		this.isDelete = isDelete;
 	}
 
 	@Basic
