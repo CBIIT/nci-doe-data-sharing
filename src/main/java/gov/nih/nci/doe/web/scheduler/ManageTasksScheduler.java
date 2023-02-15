@@ -5,7 +5,9 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,13 +23,23 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.controller.AbstractDoeController;
 import gov.nih.nci.doe.web.domain.Auditing;
 import gov.nih.nci.doe.web.domain.InferencingTask;
+import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.repository.AuditingRepository;
 import gov.nih.nci.doe.web.repository.InferencingTaskRepository;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
@@ -43,6 +55,7 @@ import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationReques
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationTaskDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcRegistrationSummaryDTO;
+import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
 
 public class ManageTasksScheduler extends AbstractDoeController {
 
@@ -61,6 +74,15 @@ public class ManageTasksScheduler extends AbstractDoeController {
 	@Value("${modac.flask.webservice}")
 	private String modacFlaskServer;
 
+	@Value("${modac.transfer.s3.accesskey}")
+	private String accessKey;
+
+	@Value("${modac.transfer.s3.secretkey}")
+	private String secretKey;
+
+	@Value("${modac.transfer.s3.bucketName}")
+	private String bucketName;
+
 	@Autowired
 	InferencingTaskRepository inferencingTaskRepository;
 
@@ -73,6 +95,8 @@ public class ManageTasksScheduler extends AbstractDoeController {
 	public void init() {
 		log.info("manage scheduler called");
 	}
+
+	SimpleDateFormat format = new SimpleDateFormat("MM_dd_yyyy");
 
 	@Scheduled(cron = "${doe.scheduler.cron.auditing}")
 	public void updateAuditingService() throws DoeWebException {
@@ -150,6 +174,90 @@ public class ManageTasksScheduler extends AbstractDoeController {
 
 			}
 		}
+	}
+
+	@Scheduled(cron = "${doe.scheduler.cron.auditing}")
+	public void deleteInferncingFilesFromMount() throws DoeWebException {
+
+		log.info("delete any intermediate files from mount when generating predictions");
+
+		// retrieve all completed and failed inferencing tasks for the past 24 hours
+		List<InferencingTask> getAllCompletedAndFailedTasks = inferencingTaskRepository.getAllCompletedAndFailedTasks();
+
+		for (InferencingTask t : getAllCompletedAndFailedTasks) {
+
+			log.info("verify the inferencing files for : " + t.getTestDataSetPath());
+			try {
+				String dataFilePath = t.getTestDataSetPath();
+				String resultPath = t.getResultPath();
+				String outcomeFilePath = t.getActualResultsFileName();
+
+				String dataFileName = dataFilePath != null
+						? dataFilePath.substring(dataFilePath.lastIndexOf('/') + 1, dataFilePath.length())
+						: null;
+				String predFileName = resultPath != null
+						? resultPath.substring(resultPath.lastIndexOf('/') + 1, resultPath.length())
+						: null;
+
+				String outcomeFileName = outcomeFilePath != null
+						? outcomeFilePath.substring(outcomeFilePath.lastIndexOf('/') + 1, outcomeFilePath.length())
+						: null;
+
+				File predFile = new File(uploadPath + predFileName);
+				File errorFile = new File(uploadPath + predFileName + "_error.txt");
+				File outcomeFile = new File(uploadPath + outcomeFileName);
+				File inputFile = new File(uploadPath + dataFileName);
+
+				// verify and delete predictions file
+				if (predFile.exists()) {
+					if (predFile.delete()) {
+						log.info("Pred file deleted successfully: " + predFile);
+					} else {
+						log.info("Failed to delete the pred file: " + predFile);
+					}
+				} else {
+					log.info("Pred file does not exist: " + predFile);
+				}
+
+				// verify and delete error file
+				if (errorFile.exists()) {
+					if (errorFile.delete()) {
+						log.info("error file deleted successfully: " + errorFile);
+					} else {
+						log.info("Failed to delete the error file: " + errorFile);
+					}
+				} else {
+					log.info("error file does not exist: " + errorFile);
+				}
+
+				// verify and delete outcome file
+				if (outcomeFile.exists()) {
+					if (outcomeFile.delete()) {
+						log.info("outcome file deleted successfully: " + outcomeFile);
+					} else {
+						log.info("Failed to delete the outcome file: " + outcomeFile);
+					}
+				} else {
+					log.info("outcome file does not exist: " + outcomeFile);
+				}
+
+				// verify and delete input file
+				if (inputFile.exists()) {
+					if (inputFile.delete()) {
+						log.info("inputFile file deleted successfully: " + inputFile);
+					} else {
+						log.info("Failed to delete the input file: " + inputFile);
+					}
+				} else {
+					log.info("input file does not exist: " + inputFile);
+				}
+
+			} catch (Exception e) {
+				log.error("Exception in deleting inferencing files from mount: " + e);
+				throw new DoeWebException(e.getMessage());
+			}
+		}
+
 	}
 
 	@Scheduled(cron = "${doe.scheduler.cron.infer}")
@@ -388,5 +496,96 @@ public class ManageTasksScheduler extends AbstractDoeController {
 
 		dto.getDataObjectRegistrationItems().add(file);
 		return dto;
+	}
+
+	@Scheduled(cron = "${modac.scheduler.cron.transfer.metadata}")
+	private void transferTaskToRC() {
+
+		log.info("scheduler to get asset metadata and transfer to an S3 bucket");
+
+		try {
+			DoeSearch search = new DoeSearch();
+
+			String[] attrNames = { "collection_type", "metadata_updated" };
+			final Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.DATE, -30);
+			String[] attrValues = { "Asset", format.format(cal.getTime()) };
+			search.setAttrName(attrNames);
+			search.setAttrValue(attrValues);
+
+			String[] levelValues = { "Asset", "Asset" };
+			boolean[] isExcludeParentMetadata = { true, true };
+			String[] rowIds = { "1", "2" };
+			String[] operators = { "EQUAL", "TIMESTAMP_GREATER_THAN" };
+			boolean[] iskeyWordSearch = { false, false };
+
+			search.setLevel(levelValues);
+			search.setIsExcludeParentMetadata(isExcludeParentMetadata);
+			search.setRowId(rowIds);
+			search.setOperator(operators);
+			search.setIskeyWordSearch(iskeyWordSearch);
+
+			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search, "Asset");
+			compoundQuery.setDetailedResponse(true);
+			log.info("search compund query" + compoundQuery);
+
+			UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(compoundCollectionSearchServiceURL);
+
+			if (ucBuilder != null) {
+				final String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
+
+				WebClient client = DoeClientUtil.getWebClient(requestURL);
+				String authToken = DoeClientUtil.getAuthenticationToken(writeAccessUserName, writeAccessUserPassword,
+						authenticateURL);
+				client.header("Authorization", "Bearer " + authToken);
+				Response restResponse = client.invoke("POST", compoundQuery);
+
+				if (restResponse.getStatus() == 200) {
+
+					MappingJsonFactory factory = new MappingJsonFactory();
+					JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+					ObjectMapper mapper = new ObjectMapper();
+					mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+					mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+					String json = mapper.writeValueAsString(parser.readValueAs(HpcCollectionListDTO.class));
+					log.info("json for modac transfer: " + json);
+					// transfer to modac transfer bucket
+					uploadMetadataToS3(json);
+
+				} else if (restResponse.getStatus() == 204) {
+					// no metadata retrieved
+					log.info("No Metadata updates retrieved for the previous day: " + cal.getTime());
+				}
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+
+		}
+	}
+
+	public void uploadMetadataToS3(String responseJson) throws JsonProcessingException {
+
+		log.info("upload metadata to S3");
+		final Calendar cal = Calendar.getInstance();
+		String key = "Metadata_" + format.format(cal.getTime()) + ".json";
+
+		try {
+
+			BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
+			AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+					.withCredentials(new AWSStaticCredentialsProvider(awsCreds)).withRegion("us-east-1").build();
+
+			s3Client.putObject(bucketName, key, responseJson);
+
+		} catch (AmazonServiceException e) {
+			// The call was transmitted successfully, but Amazon S3 couldn't process
+			// it, so it returned an error response.
+			log.error(e.getMessage(), e);
+		} catch (SdkClientException e) {
+			// Amazon S3 couldn't be contacted for a response, or the client
+			// couldn't parse the response from Amazon S3.
+			log.error(e.getMessage(), e);
+		}
+
 	}
 }
