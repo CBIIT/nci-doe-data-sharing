@@ -250,7 +250,7 @@ public abstract class AbstractDoeController {
 		String emailAddr = getLoggedOnUserInfo();
 		if (!StringUtils.isEmpty(emailAddr)) {
 			DoeUsersModel user = authenticateService.getUserInfo(emailAddr);
-			if (user != null && Boolean.TRUE.equals(user.getIsDelete())) {
+			if (user != null && Boolean.TRUE.equals(user.getIsDeletePrivilege())) {
 				return true;
 			}
 		}

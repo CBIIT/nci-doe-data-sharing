@@ -25,7 +25,7 @@ public class DoeUsers {
 	private Date createdDate;
 	private Date lastChangedDate;
 	private Boolean isAdmin;
-	private Boolean isDelete;
+	private Boolean isDeletePrivilege;
 
 	@Transient
 	private List<String> progNamesList;
@@ -197,12 +197,12 @@ public class DoeUsers {
 	@Basic
 	@Column(name = "IS_DELETE", nullable = true, length = 1)
 	@Type(type = "yes_no")
-	public Boolean getIsDelete() {
-		return isDelete;
+	public Boolean getIsDeletePrivilege() {
+		return isDeletePrivilege;
 	}
 
-	public void setIsDelete(Boolean isDelete) {
-		this.isDelete = isDelete;
+	public void setIsDeletePrivilege(Boolean isDeletePrivilege) {
+		this.isDeletePrivilege = isDeletePrivilege;
 	}
 
 	@Basic
