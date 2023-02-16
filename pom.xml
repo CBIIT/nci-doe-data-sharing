@@ -116,6 +116,16 @@
 			<artifactId>spring-integration-http</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-s3</artifactId>
+			<version>1.12.57</version>
+		</dependency>
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-secretsmanager</artifactId>
+			<version>1.12.57</version>
+		</dependency>
+		<dependency>
 			<groupId>org.passay</groupId>
 			<artifactId>passay</artifactId>
 			<version>1.2.0</version>
@@ -254,12 +264,10 @@
 						</fileset>
 					</filesets>
 				</configuration>
-
 			</plugin>
-
 			<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.8</version><!--$NO-MVN-MAN-VER$ -->
+				<version>1.8</version> <!--$NO-MVN-MAN-VER$ -->
 				<executions>
 					<execution>
 						<id>gen-app-props</id>
