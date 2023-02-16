@@ -796,9 +796,9 @@ $('#dataSetTable tbody')
 																		+ "style='width:17px;' alt='download file'></a>";
 															}
 
-															if (accessgroups && accessgroups.indexOf("public") == -1
-																	&& permissions && permissions == 'Owner'
-																	&& value.isFolder == false) {
+																							
+															if (accessgroups && accessgroups.indexOf("public") == -1 && value.isFolder == false && permissions &&
+	                                                                permissions != 'No Permissions' && (permissions == 'Owner' || isDeletePermission == true)) {
 
 																nestedEditPermissionsHtml += "<span style='border: transparent;' data-filePath = '"
 																		+ value.path
