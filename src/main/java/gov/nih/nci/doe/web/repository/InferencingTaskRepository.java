@@ -34,6 +34,6 @@ public interface InferencingTaskRepository extends JpaRepository<InferencingTask
 	@Query("select a from InferencingTask a where a.userId =?1 and a.assetPath = ?2 and a.status IS NOT NULL and a.status !='FAILED'")
 	List<InferencingTask> getInferenceByUserIdAndModelPath(String userId, String assetPath);
 
-	@Query("select a from InferencingTask a where a.completedDate >= sysdate() and a.status IS NOT NULL and a.status not in ('INPROGRESS', 'NOTSTARTED')")
+	@Query("select a from InferencingTask a where a.completedDate >= sysdate() - 1 and a.status IS NOT NULL and a.status not in ('INPROGRESS', 'NOTSTARTED')")
 	List<InferencingTask> getAllCompletedAndFailedTasks();
 }
