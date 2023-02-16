@@ -288,6 +288,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 			userModel.setInstitution(d.getInstitution());
 			userModel.setIsWrite(d.getIsWrite());
 			userModel.setIsAdmin(d.getIsAdmin());
+			userModel.setIsDeletePrivilege(d.getIsDeletePrivilege());
 			List<String> progNamesList = userGroupRespitory.getProgramNames(d.getId());
 			userModel.setProgramName(String.join(",", progNamesList));
 			return userModel;
