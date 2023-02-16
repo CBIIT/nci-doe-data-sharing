@@ -100,7 +100,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 
 	SimpleDateFormat format = new SimpleDateFormat("MM_dd_yyyy");
 
-	@Scheduled(cron = "${doe.scheduler.cron.cleanup}")
+	@Scheduled(cron = "${doe.scheduler.cron.auditing}")
 	public void updateAuditingService() throws DoeWebException {
 
 		log.info("auditing service scheduler");
@@ -178,7 +178,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 		}
 	}
 
-	@Scheduled(cron = "${doe.scheduler.cron.auditing}")
+	@Scheduled(cron = "${doe.scheduler.cron.cleanup}")
 	public void deleteInferncingFilesFromMount() throws DoeWebException {
 
 		log.info("delete any intermediate files from mount when generating predictions");
