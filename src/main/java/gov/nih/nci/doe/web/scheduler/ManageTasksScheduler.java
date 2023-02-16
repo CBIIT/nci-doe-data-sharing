@@ -29,6 +29,8 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.PutObjectResult;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -499,7 +501,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 	}
 
 	@Scheduled(cron = "${modac.scheduler.cron.transfer.metadata}")
-	private void transferTaskToRC() {
+	private void transferTaskToRC() throws DoeWebException {
 
 		log.info("scheduler to get asset metadata and transfer to an S3 bucket");
 
@@ -564,7 +566,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 		}
 	}
 
-	public void uploadMetadataToS3(String responseJson) throws JsonProcessingException {
+	public void uploadMetadataToS3(String responseJson) throws JsonProcessingException, DoeWebException {
 
 		log.info("upload metadata to S3");
 		final Calendar cal = Calendar.getInstance();
