@@ -100,7 +100,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 
 	SimpleDateFormat format = new SimpleDateFormat("MM_dd_yyyy");
 
-	@Scheduled(cron = "${doe.scheduler.cron.auditing}")
+	@Scheduled(cron = "${doe.scheduler.cron.cleanup}")
 	public void updateAuditingService() throws DoeWebException {
 
 		log.info("auditing service scheduler");
