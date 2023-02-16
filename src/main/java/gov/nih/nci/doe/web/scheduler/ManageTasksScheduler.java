@@ -559,6 +559,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
+			throw new DoeWebException(e.getMessage());
 
 		}
 	}
@@ -575,16 +576,23 @@ public class ManageTasksScheduler extends AbstractDoeController {
 			AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
 					.withCredentials(new AWSStaticCredentialsProvider(awsCreds)).withRegion("us-east-1").build();
 
-			s3Client.putObject(bucketName, key, responseJson);
+			PutObjectResult result = s3Client.putObject(bucketName, key, responseJson);
+
+			// track the status of the put object result
+			String eTag = result.getETag();
+			String versionId = result.getVersionId();
+			log.info("File uploaded to S3 bucket successfully. ETag: " + eTag + ", Version ID: " + versionId);
 
 		} catch (AmazonServiceException e) {
 			// The call was transmitted successfully, but Amazon S3 couldn't process
 			// it, so it returned an error response.
 			log.error(e.getMessage(), e);
+			throw new DoeWebException(e.getMessage());
 		} catch (SdkClientException e) {
 			// Amazon S3 couldn't be contacted for a response, or the client
 			// couldn't parse the response from Amazon S3.
 			log.error(e.getMessage(), e);
+			throw new DoeWebException(e.getMessage());
 		}
 
 	}
