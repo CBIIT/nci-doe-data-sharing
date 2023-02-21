@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections.CollectionUtils;
+import gov.nih.nci.doe.web.util.MiscUtil;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.ResponseEntity;
@@ -155,7 +156,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 				DoeDatafileSearchResultDetailed returnResult = new DoeDatafileSearchResultDetailed();
 				returnResult.setPath(dataObject.getPath());
 				returnResult.setName(name);
-				returnResult.setFileSize(addHumanReadableSize(dataObject.getDataSize()));
+				returnResult.setFileSize(MiscUtil.addHumanReadableSize(String.valueOf(dataObject.getDataSize())));
 				returnResult.setIsFolder(false);
 				returnResults.add(returnResult);
 			}
