@@ -152,6 +152,90 @@ public class ManageTasksScheduler extends AbstractDoeController {
 		}
 	}
 
+	@Scheduled(cron = "${doe.scheduler.cron.cleanup}")
+	public void deleteInferncingFilesFromMount() throws DoeWebException {
+
+		log.info("delete any intermediate files from mount when generating predictions");
+
+		// retrieve all completed and failed inferencing tasks for the past 24 hours
+		List<InferencingTask> getAllCompletedAndFailedTasks = inferencingTaskRepository.getAllCompletedAndFailedTasks();
+
+		for (InferencingTask t : getAllCompletedAndFailedTasks) {
+
+			log.info("verify the inferencing files for : " + t.getTestDataSetPath());
+			try {
+				String dataFilePath = t.getTestDataSetPath();
+				String resultPath = t.getResultPath();
+				String outcomeFilePath = t.getActualResultsFileName();
+
+				String dataFileName = dataFilePath != null
+						? dataFilePath.substring(dataFilePath.lastIndexOf('/') + 1, dataFilePath.length())
+						: null;
+				String predFileName = resultPath != null
+						? resultPath.substring(resultPath.lastIndexOf('/') + 1, resultPath.length())
+						: null;
+
+				String outcomeFileName = outcomeFilePath != null
+						? outcomeFilePath.substring(outcomeFilePath.lastIndexOf('/') + 1, outcomeFilePath.length())
+						: null;
+
+				File predFile = new File(uploadPath + predFileName);
+				File errorFile = new File(uploadPath + predFileName + "_error.txt");
+				File outcomeFile = new File(uploadPath + outcomeFileName);
+				File inputFile = new File(uploadPath + dataFileName);
+
+				// verify and delete predictions file
+				if (predFile.exists()) {
+					if (predFile.delete()) {
+						log.info("Pred file deleted successfully: " + predFile);
+					} else {
+						log.info("Failed to delete the pred file: " + predFile);
+					}
+				} else {
+					log.info("Pred file does not exist: " + predFile);
+				}
+
+				// verify and delete error file
+				if (errorFile.exists()) {
+					if (errorFile.delete()) {
+						log.info("error file deleted successfully: " + errorFile);
+					} else {
+						log.info("Failed to delete the error file: " + errorFile);
+					}
+				} else {
+					log.info("error file does not exist: " + errorFile);
+				}
+
+				// verify and delete outcome file
+				if (outcomeFile.exists()) {
+					if (outcomeFile.delete()) {
+						log.info("outcome file deleted successfully: " + outcomeFile);
+					} else {
+						log.info("Failed to delete the outcome file: " + outcomeFile);
+					}
+				} else {
+					log.info("outcome file does not exist: " + outcomeFile);
+				}
+
+				// verify and delete input file
+				if (inputFile.exists()) {
+					if (inputFile.delete()) {
+						log.info("inputFile file deleted successfully: " + inputFile);
+					} else {
+						log.info("Failed to delete the input file: " + inputFile);
+					}
+				} else {
+					log.info("input file does not exist: " + inputFile);
+				}
+
+			} catch (Exception e) {
+				log.error("Exception in deleting inferencing files from mount: " + e);
+				throw new DoeWebException(e.getMessage());
+			}
+		}
+
+	}
+
 	@Scheduled(cron = "${doe.scheduler.cron.infer}")
 	public void performInferencing() throws DoeWebException, MalformedURLException {
 
