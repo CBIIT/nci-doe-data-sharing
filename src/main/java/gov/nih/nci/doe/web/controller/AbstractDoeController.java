@@ -1324,6 +1324,7 @@ public abstract class AbstractDoeController {
 				uploadFileToMount(session, inference.getOutcomeFileName(), inference.getOutcomeFilePath());
 			} catch (Exception e1) {
 				log.error("Failed to upload input file");
+				throw new DoeWebException("Failed to upload input file.", HttpServletResponse.SC_BAD_REQUEST);
 			}
 
 			inference.setResultPath(resultPath);

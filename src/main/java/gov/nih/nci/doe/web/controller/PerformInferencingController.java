@@ -273,16 +273,13 @@ public class PerformInferencingController extends AbstractDoeController {
 						}
 
 						// all validations have passed, upload the input and outcome files to mount
-						try {
-							uploadFileToMount(session,
-									inferenceDataset.getTestInputPath()
-											.substring(inferenceDataset.getTestInputPath().lastIndexOf('/') + 1),
-									inferenceDataset.getTestInputPath());
-							uploadFileToMount(session, inferenceDataset.getOutcomeFileName(),
-									inferenceDataset.getOutcomeFilePath());
-						} catch (Exception e1) {
-							log.error("Failed to upload input file");
-						}
+
+						uploadFileToMount(session,
+								inferenceDataset.getTestInputPath()
+										.substring(inferenceDataset.getTestInputPath().lastIndexOf('/') + 1),
+								inferenceDataset.getTestInputPath());
+						uploadFileToMount(session, inferenceDataset.getOutcomeFileName(),
+								inferenceDataset.getOutcomeFilePath());
 
 						inferenceDataset.setResultPath(resultPath);
 						inferenceDataset.setIsReferenceAsset(Boolean.FALSE);
