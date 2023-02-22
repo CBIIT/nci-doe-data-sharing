@@ -256,7 +256,7 @@ public class PerformInferencingController extends AbstractDoeController {
 							String path = e.getPath();
 							String name = path.substring(path.lastIndexOf('/') + 1);
 							/*
-							 * check for outcome file name and input dataset paths and upload to mount
+							 * check for outcome file name and input dataset paths
 							 */
 							if (StringUtils.isNotEmpty(name) && name.contains(resultFileName)) {
 								inferenceDataset.setOutcomeFileName(name);
@@ -266,17 +266,24 @@ public class PerformInferencingController extends AbstractDoeController {
 								inferenceDataset.setTestInputPath(path);
 							}
 
-							try {
-								uploadFileToMount(session, name, path);
-							} catch (Exception e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
 						});
 
 						if (StringUtils.isEmpty(inferenceDataset.getTestInputPath())) {
 							return "Reference dataset file not found for : " + referenceDatasetPath;
 						}
+
+						// all validations have passed, upload the input and outcome files to mount
+						try {
+							uploadFileToMount(session,
+									inferenceDataset.getTestInputPath()
+											.substring(inferenceDataset.getTestInputPath().lastIndexOf('/') + 1),
+									inferenceDataset.getTestInputPath());
+							uploadFileToMount(session, inferenceDataset.getOutcomeFileName(),
+									inferenceDataset.getOutcomeFilePath());
+						} catch (Exception e1) {
+							log.error("Failed to upload input file");
+						}
+
 						inferenceDataset.setResultPath(resultPath);
 						inferenceDataset.setIsReferenceAsset(Boolean.FALSE);
 						inferenceDataset.setAssetPath(testInputPath);
