@@ -188,7 +188,8 @@ public class ManageTasksScheduler extends AbstractDoeController {
 
 		for (InferencingTask t : getAllCompletedAndFailedTasks) {
 
-			log.info("verify the inferencing files for : " + t.getTestDataSetPath());
+			log.info("verify the inferencing files for : " + t.getTestDataSetPath() + " and task Id is : "
+					+ t.getTaskId());
 			try {
 				String dataFilePath = t.getTestDataSetPath();
 				String resultPath = t.getResultPath();
