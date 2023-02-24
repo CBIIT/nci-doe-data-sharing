@@ -155,7 +155,7 @@ public abstract class AbstractDoeController {
 	String clientSecret;
 
 	@Value("${gov.nih.nci.hpc.server.search.collection.compound}")
-	String compoundCollectionSearchServiceURL;
+	public String compoundCollectionSearchServiceURL;
 
 	@Value("${doe.writeaccount.password}")
 	private String writeAccessUserPassword;

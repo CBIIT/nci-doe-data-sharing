@@ -202,7 +202,8 @@ public class PerformInferencingController extends AbstractDoeController {
 					throw new DoeWebException("Exception in evaluating task: " + e);
 				}
 			}
-			return "Evaluate task(s) submitted. Your task id(s): " + String.join(",", taskIdList);
+			return "Evaluate task(s) submitted. Your task id(s): <a href='/tasksTab?isPred=true'>" + String.join(",", taskIdList)
+					+ "</a>";
 		}
 
 		return "Exception in evaluating task";
@@ -294,7 +295,8 @@ public class PerformInferencingController extends AbstractDoeController {
 
 				}
 
-				return "Evaluate task(s) submitted. Your task id(s): " + String.join(",", taskIdList);
+				return "Evaluate task(s) submitted. Your task id(s): <a href='/tasksTab?isPred=true'>"
+						+ String.join(",", taskIdList) + "</a>";
 			} else {
 
 				/*
@@ -340,7 +342,7 @@ public class PerformInferencingController extends AbstractDoeController {
 				Files.copy(uploadTestInferFile.getInputStream(), Paths.get(uploadPath + testInputName),
 						StandardCopyOption.REPLACE_EXISTING);
 
-				return "Evaluate task submitted. Your task id is " + taskId;
+				return "Evaluate task submitted. Your task id is: <a href='/tasksTab?isPred=true'>" + taskId + "<a>";
 			}
 
 		} catch (Exception e) {

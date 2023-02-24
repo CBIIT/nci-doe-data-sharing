@@ -126,7 +126,8 @@ public class HomeController extends AbstractDoeController {
 	}
 
 	@GetMapping(value = "/tasksTab")
-	public String getTasksTab(Model model, HttpSession session, HttpServletRequest request) throws DoeWebException {
+	public String getTasksTab(Model model, @RequestParam(value = "isPred", required = false) String isPred,
+			HttpSession session, HttpServletRequest request) throws DoeWebException {
 
 		log.info("tasks Tab");
 		String user = getLoggedOnUserInfo();
@@ -137,6 +138,9 @@ public class HomeController extends AbstractDoeController {
 		List<InferencingTask> getAllInferencingTasks = inferencingTaskService.getAllTaskByUserId(user);
 		if (CollectionUtils.isNotEmpty(getAllInferencingTasks)) {
 			model.addAttribute("showModelAnalysisTab", true);
+			if (StringUtils.isNotEmpty(isPred)) {
+				model.addAttribute("redirectToPredTab", true);
+			}
 		}
 
 		return "tasksTab";
