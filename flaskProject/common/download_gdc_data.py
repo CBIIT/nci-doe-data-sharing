@@ -56,7 +56,7 @@ def isValidManifestFile(manifestFile):
 # Function for reading manifest file :
 def read_manifest(manifest_loc):
     uuid_list = []
-    with open('/mnt/MoDaC/' + manifest_loc, 'r') as myfile:
+    with open('/mnt/IRODsTest/MoDaC_Inferencing/' + manifest_loc, 'r') as myfile:
         if myfile.readline()[0:2] != 'id':
             raise ValueError('Bad Manifest File')
         else:
@@ -77,7 +77,7 @@ def run_pre_process(File, manifest_dir_save_path, output_results):
     Manifest_Loc = str(File.replace('\\', '').strip())
     print('Reading Manifest File from: ' + Manifest_Loc)
     UUIDs = read_manifest(Manifest_Loc)
-    gdc_manifest = pd.read_csv('/mnt/MoDaC/' + Manifest_Loc, sep="\t")
+    gdc_manifest = pd.read_csv('/mnt/IRODsTest/MoDaC_Inferencing/' + Manifest_Loc, sep="\t")
     gdc_manifest.set_index("id", inplace=True)
 
     print("UUIDs are extracted from manifest")
