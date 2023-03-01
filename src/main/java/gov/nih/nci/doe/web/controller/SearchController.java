@@ -103,10 +103,8 @@ public class SearchController extends AbstractDoeController {
 				String searchQuery = gson.toJson(search);
 				session.setAttribute("searchQuery", searchQuery);
 				log.info("Search query" + search);
-				if (search.getSearchType() != null && search.getSearchType().equals("dataobject")) {
-					results = processCollectionResults(systemAttrs, restResponse, search);
-					return new ResponseEntity<>(results, HttpStatus.OK);
-				}
+				results = processCollectionResults(systemAttrs, restResponse, search);
+				return new ResponseEntity<>(results, HttpStatus.OK);
 
 			} else if (restResponse.getStatus() == 204) {
 				return new ResponseEntity<>(results, HttpStatus.OK);
