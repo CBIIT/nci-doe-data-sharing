@@ -1292,6 +1292,18 @@ public class RestAPICommonController extends AbstractDoeController {
 		log.info("Headers: {}", headers);
 		String taskId = request.getRequestURI().split(request.getContextPath() + "/model/evaluate/")[1];
 		log.info("taskId: " + taskId);
+		String authToken = (String) session.getAttribute("hpcUserToken");
+
+		if (authToken == null) {
+			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
+		}
+
+		String doeLogin = (String) session.getAttribute("doeLogin");
+		log.info("doeLogin: " + doeLogin);
+
+		if (doeLogin == null) {
+			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
+		}
 
 		try {
 			if (StringUtils.isNotEmpty(taskId)) {
@@ -1306,8 +1318,6 @@ public class RestAPICommonController extends AbstractDoeController {
 					} else if ("INPROGRESS".equalsIgnoreCase(task.getStatus())) {
 						responseDTO.setStatus("In Progress");
 						if (task.getDmeTaskId() != null) {
-							String authToken = (String) session.getAttribute("hpcUserToken");
-							log.info("authToken: " + authToken);
 							UriComponentsBuilder ucBuilder1 = UriComponentsBuilder.fromHttpUrl(bulkRegistrationURL)
 									.path("/{dme-archive-path}");
 							final String serviceURL = ucBuilder1.buildAndExpand(task.getDmeTaskId()).encode().toUri()
@@ -1375,6 +1385,14 @@ public class RestAPICommonController extends AbstractDoeController {
 		String authToken = (String) session.getAttribute("hpcUserToken");
 		String referenceDatasetPath = request.getRequestURI().split(request.getContextPath() + "/models/evaluate")[1];
 		log.info("referenceDatasetPath: " + referenceDatasetPath);
+
+		if (authToken == null) {
+			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
+		}
+
+		if (doeLogin == null) {
+			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
+		}
 
 		if (StringUtils.isNotEmpty(doeLogin) && Boolean.TRUE.equals(isUploader(doeLogin))
 				&& CollectionUtils.isNotEmpty(modelPaths.getModelPaths())) {
@@ -1470,6 +1488,10 @@ public class RestAPICommonController extends AbstractDoeController {
 		log.info("authToken: " + authToken);
 
 		if (authToken == null) {
+			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
+		}
+
+		if (doeLogin == null) {
 			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
 		}
 
