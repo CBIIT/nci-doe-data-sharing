@@ -71,6 +71,7 @@ import gov.nih.nci.doe.web.service.ModelInfoService;
 import gov.nih.nci.doe.web.service.PredictionAccessService;
 import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
+import gov.nih.nci.doe.web.util.MiscUtil;
 import gov.nih.nci.doe.web.util.LambdaUtils;
 import gov.nih.nci.hpc.domain.datamanagement.HpcCollectionListingEntry;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
@@ -162,9 +163,6 @@ public abstract class AbstractDoeController {
 	@Value("${doe.writeaccount.username}")
 	private String writeAccessUserName;
 
-	@Value("${asset.bulk.collections}")
-	public String bulkAssetsPaths;
-
 	@Value("${google.captcha.sitekey}")
 	public String siteKey;
 
@@ -221,10 +219,12 @@ public abstract class AbstractDoeController {
 	@ModelAttribute("loggedOnUser")
 	public String getLoggedOnUserInfo() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		Boolean isAnonymousUSer = auth.getAuthorities().stream()
-				.anyMatch(o -> o.getAuthority().equals("ROLE_ANONYMOUS"));
-		if (auth.isAuthenticated() && Boolean.FALSE.equals(isAnonymousUSer)) {
-			return auth.getName().trim();
+		if (auth != null) {
+			Boolean isAnonymousUSer = auth.getAuthorities().stream()
+					.anyMatch(o -> o.getAuthority().equals("ROLE_ANONYMOUS"));
+			if (auth.isAuthenticated() && Boolean.FALSE.equals(isAnonymousUSer)) {
+				return auth.getName().trim();
+			}
 		}
 		return null;
 	}
@@ -315,7 +315,7 @@ public abstract class AbstractDoeController {
 					if ((lookUpVal.getIsVisible() == null)
 							|| isVisible != null && lookUpVal.getIsVisible().equals(isVisible)) {
 						if (entry.getAttribute().equalsIgnoreCase("collection_size")) {
-							updatedString = addHumanReadableSize(Long.valueOf(entry.getValue()));
+							updatedString = MiscUtil.addHumanReadableSize(String.valueOf(entry.getValue()));
 						}
 
 						k = new KeyValueBean(entry.getAttribute(), lookUpVal.getDisplayName(), updatedString,
@@ -337,14 +337,6 @@ public abstract class AbstractDoeController {
 						.thenComparing(KeyValueBean::getDisplayName));
 
 		return entryList;
-	}
-
-	public String addHumanReadableSize(Long value) {
-		if (value != null) {
-			return FileUtils.byteCountToDisplaySize(value);
-		}
-
-		return null;
 	}
 
 	public String getAttributeValue(String attrName, List<HpcMetadataEntry> list, String levelName) {
@@ -1302,7 +1294,7 @@ public abstract class AbstractDoeController {
 				String path = e.getPath();
 				String name = path.substring(path.lastIndexOf('/') + 1);
 				/*
-				 * check for outcome file name and input dataset paths and upload to mount
+				 * check for outcome file name and input dataset paths and set values
 				 */
 				if (StringUtils.isNotEmpty(name) && name.contains(resultFileName)) {
 					inference.setOutcomeFileName(name);
@@ -1312,12 +1304,6 @@ public abstract class AbstractDoeController {
 					inference.setTestInputPath(path);
 				}
 
-				try {
-					uploadFileToMount(session, name, path);
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 			});
 
 			if (StringUtils.isEmpty(inference.getOutcomeFilePath())) {
@@ -1329,6 +1315,18 @@ public abstract class AbstractDoeController {
 				throw new DoeWebException("Reference dataset file not found for : " + referenceDataset,
 						HttpServletResponse.SC_BAD_REQUEST);
 			}
+
+			// all validations have passed, upload the input and outcome files to mount
+			try {
+				uploadFileToMount(session,
+						inference.getTestInputPath().substring(inference.getTestInputPath().lastIndexOf('/') + 1),
+						inference.getTestInputPath());
+				uploadFileToMount(session, inference.getOutcomeFileName(), inference.getOutcomeFilePath());
+			} catch (Exception e1) {
+				log.error("Failed to upload input file");
+				throw new DoeWebException("Failed to upload input file.", HttpServletResponse.SC_BAD_REQUEST);
+			}
+
 			inference.setResultPath(resultPath);
 			inference.setIsReferenceAsset(Boolean.FALSE);
 			inference.setAssetPath(testInputPath);
