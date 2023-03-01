@@ -1,0 +1,24 @@
+create table NCI_DOE_DB.AUDIT_TRANSFER_METADATA_T
+(
+    ID                NUMBER generated as identity,
+    START_TIME        DATE not null,
+    COMPLETED_TIME    DATE,
+    ERROR_MSG         VARCHAR2(1000),
+    PROCESS           VARCHAR2(100),
+    FILE_NAME         VARCHAR2(500),
+    STATUS            VARCHAR2(100),
+    LAST_UPDATED_TIME DATE
+)
+/
+
+GRANT INSERT,UPDATE ON AUDIT_TRANSFER_METADATA_T TO MODAC_APP_USER;
+
+create trigger NCI_DOE_DB.TRG_AUDIT_METADATA_TRANSFER
+    before update
+    on NCI_DOE_DB.AUDIT_TRANSFER_METADATA_T
+    for each row
+BEGIN
+    :new.LAST_UPDATED_TIME := SYSDATE;
+END;
+/
+

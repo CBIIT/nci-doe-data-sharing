@@ -26,7 +26,6 @@ import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -60,6 +59,7 @@ import gov.nih.nci.doe.web.model.InferencingTaskModel;
 import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.model.PermissionsModel;
 import gov.nih.nci.doe.web.service.AccessGroupsService;
+import gov.nih.nci.doe.web.service.AuditMetadataTransferService;
 import gov.nih.nci.doe.web.service.AuditingService;
 import gov.nih.nci.doe.web.service.AuthenticateService;
 import gov.nih.nci.doe.web.service.DoeAuthorizationService;
@@ -115,6 +115,9 @@ public abstract class AbstractDoeController {
 
 	@Autowired
 	AccessGroupsService accessGroupsService;
+
+	@Autowired
+	public AuditMetadataTransferService auditMetadataTransferService;
 
 	@Autowired
 	public AuditingService auditingService;
