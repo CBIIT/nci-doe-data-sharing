@@ -1601,24 +1601,26 @@ public class RestAPICommonController extends AbstractDoeController {
 	@PatchMapping(value = "/auditMetadataTransfer")
 	public ResponseEntity<?> updateStatusForMetadataTransfer(@RequestHeader HttpHeaders headers,
 			HttpServletRequest request, HttpSession session, HttpServletResponse response,
-			@RequestBody @Valid AuditMetadataTransferModel auditMetadataTransferModel)
-			throws DoeWebException, ParseException {
+			@RequestBody @Valid AuditMetadataTransferModel auditMetadataTransferModel,
+			@RequestParam(value = "fileName") String fileName) throws DoeWebException, ParseException {
 
 		log.info("update audit metadata transfer status");
-//		String authToken = (String) session.getAttribute("hpcUserToken");
-//		log.info("authToken: " + authToken);
-//
-//		if (authToken == null) {
-//			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
-//		}
+		String authToken = (String) session.getAttribute("hpcUserToken");
+		log.info("authToken: " + authToken);
 
-//		String awsTokenAuthenticatedToken = (String) session.getAttribute("awsTokenAuthenticated");
-//
-//		if (awsTokenAuthenticatedToken == null) {
-//			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
-//		}
+		if (authToken == null) {
+			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
+		}
 
-		AuditMetadataTransfer audit = auditMetadataTransferService.getAuditMetadaTransferForCurrentDay();
+		Boolean awsTokenAuthenticatedToken = (Boolean) session.getAttribute("awsTokenAuthenticated");
+
+		if (awsTokenAuthenticatedToken == null || Boolean.FALSE.equals(awsTokenAuthenticatedToken)) {
+			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
+		}
+
+		// get the audit record based on the file name and also verify if the start Date
+		// is today
+		AuditMetadataTransfer audit = auditMetadataTransferService.getAuditMetadaTransferForFileName(fileName, new Date());
 
 		if (audit != null) {
 			audit.setStatus(auditMetadataTransferModel.getStatus());

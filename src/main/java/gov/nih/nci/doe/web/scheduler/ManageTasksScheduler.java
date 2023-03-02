@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,8 +24,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
@@ -38,10 +37,12 @@ import com.fasterxml.jackson.databind.MappingJsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gov.nih.nci.doe.web.DoeWebException;
+import gov.nih.nci.doe.web.constants.AuditMetadataTransferProcessCodes;
 import gov.nih.nci.doe.web.controller.AbstractDoeController;
 import gov.nih.nci.doe.web.domain.Auditing;
 import gov.nih.nci.doe.web.domain.InferencingTask;
 import gov.nih.nci.doe.web.model.DoeSearch;
+import gov.nih.nci.doe.web.repository.AuditMetadataTransferRepository;
 import gov.nih.nci.doe.web.repository.AuditingRepository;
 import gov.nih.nci.doe.web.repository.InferencingTaskRepository;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
@@ -58,6 +59,7 @@ import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRespon
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationTaskDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcRegistrationSummaryDTO;
 import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
+import gov.nih.nci.doe.web.domain.AuditMetadataTransfer;
 
 public class ManageTasksScheduler extends AbstractDoeController {
 
@@ -87,6 +89,9 @@ public class ManageTasksScheduler extends AbstractDoeController {
 
 	@Autowired
 	InferencingTaskRepository inferencingTaskRepository;
+
+	@Autowired
+	AuditMetadataTransferRepository auditMetadataTransferRepository;
 
 	@Autowired
 	AuditingRepository auditingRepository;
@@ -502,16 +507,44 @@ public class ManageTasksScheduler extends AbstractDoeController {
 	}
 
 	@Scheduled(cron = "${modac.scheduler.cron.transfer.metadata}")
-	private void transferTaskToRC() throws DoeWebException {
+	private void transferMetadataToCICRSystem() throws DoeWebException {
 
 		log.info("scheduler to get asset metadata and transfer to an S3 bucket");
 
 		try {
-			DoeSearch search = new DoeSearch();
 
-			String[] attrNames = { "collection_type", "metadata_updated" };
+			// create a new record in audit_metadata_transfer table.
+			AuditMetadataTransfer auditMetadata = new AuditMetadataTransfer();
+			auditMetadata.setStartTime(new Date());
+			auditMetadata.setProcess(String.valueOf(AuditMetadataTransferProcessCodes.MODAC_SCHEDULER));
+			auditMetadata.setStatus("INPROGRESS");
+
+			auditMetadataTransferRepository.saveAndFlush(auditMetadata);
+
+			DoeSearch search = new DoeSearch();
 			final Calendar cal = Calendar.getInstance();
-			cal.add(Calendar.DATE, -30);
+
+			// verify the audit metadata transfer row for the previous day
+			// If process is "LAMDA_FUNCTION" and status is "COMPLETED", the previous audit
+			// row
+			// transaction is successful, else the process has failed
+
+			AuditMetadataTransfer auditMetadataPrev = auditMetadataTransferRepository
+					.getAuditMetadaTransferForPreviousDay();
+
+			if (auditMetadataPrev != null && "COMPLETED".equals(auditMetadataPrev.getStatus())
+					&& String.valueOf(AuditMetadataTransferProcessCodes.LAMDA_FUNCTION)
+							.equalsIgnoreCase(auditMetadataPrev.getProcess())) {
+				cal.add(Calendar.DATE, -1);
+			} else {
+				cal.add(Calendar.DATE, -2);
+			}
+
+			AuditMetadataTransfer auditMetadataCurr = auditMetadataTransferRepository
+					.getAuditMetadaTransferForCurrentDay();
+
+			// Retrieve any metadata added/updated for the computed time
+			String[] attrNames = { "collection_type", "metadata_updated" };
 			String[] attrValues = { "Asset", format.format(cal.getTime()) };
 			search.setAttrName(attrNames);
 			search.setAttrValue(attrValues);
@@ -519,7 +552,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 			String[] levelValues = { "Asset", "Asset" };
 			boolean[] isExcludeParentMetadata = { true, true };
 			String[] rowIds = { "1", "2" };
-			String[] operators = { "EQUAL", "TIMESTAMP_GREATER_THAN" };
+			String[] operators = { "EQUAL", "TIMESTAMP_GREATER_OR_EQUAL" };
 			boolean[] iskeyWordSearch = { false, false };
 
 			search.setLevel(levelValues);
@@ -542,8 +575,11 @@ public class ManageTasksScheduler extends AbstractDoeController {
 						authenticateURL);
 				client.header("Authorization", "Bearer " + authToken);
 				Response restResponse = client.invoke("POST", compoundQuery);
+				log.info("response status for modac transfer: " + restResponse.getStatus());
 
 				if (restResponse.getStatus() == 200) {
+
+					// metadata retrieved
 
 					MappingJsonFactory factory = new MappingJsonFactory();
 					JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
@@ -552,51 +588,66 @@ public class ManageTasksScheduler extends AbstractDoeController {
 					mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
 					String json = mapper.writeValueAsString(parser.readValueAs(HpcCollectionListDTO.class));
 					log.info("json for modac transfer: " + json);
-					// transfer to modac transfer bucket
-					uploadMetadataToS3(json);
+
+					// transfer the metadata to modac transfer bucket
+					final Calendar currCal = Calendar.getInstance();
+					String fileName = "Metadata_" + format.format(currCal.getTime()) + ".json";
+					auditMetadataCurr.setFileName(fileName);
+					auditMetadataTransferRepository.saveAndFlush(auditMetadataCurr);
+					PutObjectResult uploadResult = uploadMetadataToS3(json, fileName);
+
+					// Check the HTTP status code
+					// Integer statusCode =
+					// uploadResult.getMetadata().getStatusLine().getStatusCode();
+
+					// transfer completed successfully to S3 bucket
+					// log the put object result to track the status
+					String eTag = uploadResult.getETag();
+					String versionId = uploadResult.getVersionId();
+					log.info("File uploaded to S3 bucket. ETag: " + eTag + ", Version ID: " + versionId);
+
+					updateAuditMetadataTransferStatus("COMPLETED", null);
 
 				} else if (restResponse.getStatus() == 204) {
 					// no metadata retrieved
 					log.info("No Metadata updates retrieved for the previous day: " + cal.getTime());
+					updateAuditMetadataTransferStatus("COMPLETED", null);
 				}
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
+			updateAuditMetadataTransferStatus("FAILED", e.getMessage());
 			throw new DoeWebException(e.getMessage());
 
 		}
 	}
 
-	public void uploadMetadataToS3(String responseJson) throws JsonProcessingException, DoeWebException {
+	private void updateAuditMetadataTransferStatus(String status, String errorMsg) {
+
+		log.info("update audit metadata transfer status");
+		AuditMetadataTransfer auditMetadataCurr = auditMetadataTransferRepository.getAuditMetadaTransferForCurrentDay();
+		auditMetadataCurr.setStatus(status);
+		auditMetadataCurr.setErrorMsg(errorMsg);
+		auditMetadataTransferRepository.saveAndFlush(auditMetadataCurr);
+	}
+
+	private PutObjectResult uploadMetadataToS3(String responseJson, String fileName)
+			throws JsonProcessingException, DoeWebException {
 
 		log.info("upload metadata to S3");
-		final Calendar cal = Calendar.getInstance();
-		String key = "Metadata_" + format.format(cal.getTime()) + ".json";
 
-		try {
+		// Creating credential provider
+		BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
+		AWSStaticCredentialsProvider awsCredentialsProvider = new AWSStaticCredentialsProvider(awsCreds);
 
-			BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
-			AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-					.withCredentials(new AWSStaticCredentialsProvider(awsCreds)).withRegion("us-east-1").build();
+		// Instantiating S3 client.
+		AmazonS3 s3Client = AmazonS3ClientBuilder.standard().withCredentials(awsCredentialsProvider)
+				.withRegion("us-east-1").build();
 
-			PutObjectResult result = s3Client.putObject(bucketName, key, responseJson);
+		// put the metadata file to S3 bucket
+		PutObjectResult result = s3Client.putObject(bucketName, fileName, responseJson);
 
-			// track the status of the put object result
-			String eTag = result.getETag();
-			String versionId = result.getVersionId();
-			log.info("File uploaded to S3 bucket successfully. ETag: " + eTag + ", Version ID: " + versionId);
-
-		} catch (AmazonServiceException e) {
-			// The call was transmitted successfully, but Amazon S3 couldn't process
-			// it, so it returned an error response.
-			log.error(e.getMessage(), e);
-			throw new DoeWebException(e.getMessage());
-		} catch (SdkClientException e) {
-			// Amazon S3 couldn't be contacted for a response, or the client
-			// couldn't parse the response from Amazon S3.
-			log.error(e.getMessage(), e);
-			throw new DoeWebException(e.getMessage());
-		}
+		return result;
 
 	}
 }

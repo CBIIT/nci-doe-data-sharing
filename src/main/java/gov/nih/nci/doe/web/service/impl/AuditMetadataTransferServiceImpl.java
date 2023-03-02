@@ -7,6 +7,8 @@ import gov.nih.nci.doe.web.domain.AuditMetadataTransfer;
 import gov.nih.nci.doe.web.repository.AuditMetadataTransferRepository;
 import gov.nih.nci.doe.web.service.AuditMetadataTransferService;
 
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +35,17 @@ public class AuditMetadataTransferServiceImpl implements AuditMetadataTransferSe
 		log.info("Save audit metadata transfer information for: " + audit.getStartTime());
 
 		auditMetadataTransferRepository.saveAndFlush(audit);
+	}
+
+	@Override
+	public AuditMetadataTransfer getAuditMetadaTransferForFileName(String fileName, Date startDate) {
+		log.info("get audit metadata for the filename: " + fileName);
+		AuditMetadataTransfer auditMetadata = auditMetadataTransferRepository
+				.getAuditMetadaTransferForFileName(fileName, startDate);
+		if (auditMetadata != null) {
+			return auditMetadata;
+		}
+		return null;
 	}
 
 }

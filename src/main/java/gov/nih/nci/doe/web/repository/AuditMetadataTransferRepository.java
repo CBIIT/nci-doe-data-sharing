@@ -14,7 +14,7 @@ public interface AuditMetadataTransferRepository extends JpaRepository<AuditMeta
 	@Query("select a from AuditMetadataTransfer a where TRUNC(a.startTime) = TRUNC(sysdate() -1)")
 	AuditMetadataTransfer getAuditMetadaTransferForPreviousDay();
 
-	@Query("select a from AuditMetadataTransfer a where TRUNC(a.startTime) = TRUNC(?1)")
-	AuditMetadataTransfer getAuditMetadataForStartDate(Date startTime);
+	@Query("select a from AuditMetadataTransfer a where a.fileName = ?1 and TRUNC(a.startTime) = TRUNC(?2)")
+	AuditMetadataTransfer getAuditMetadaTransferForFileName(String fileName, Date startDate);
 
 }
