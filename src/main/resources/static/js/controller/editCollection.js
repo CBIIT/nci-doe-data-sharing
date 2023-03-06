@@ -32,11 +32,16 @@ function constructEditCollectionMetadata(data, status) {
 						if (attrVal) {
 							attrValModified = attrVal.replace(/"/g, "");
 						}
+						var infoHtml = "";
+						if(value.description) {
+						infoHtml = '<i class="fas fa-question-circle" data-toggle="tooltip"'
+														+ 'data-placement="right" title="'
+														+ value.description
+														+ '"></i>';
+						}
 						if (value.isEditable == false && value.isVisible != true && value.attrName.indexOf("access_group") == -1) {
 							$("#userMetaData tbody").append(
-									"<tr><td>" + value.displayName + "&nbsp;&nbsp;<i class='fas fa-question-circle'"
-											+ "data-toggle='tooltip' " + "data-placement='right' title=\""
-											+ value.description + "\"></i></td><td><input "
+									"<tr><td>" + value.displayName + "&nbsp;&nbsp;" + infoHtml + "</td><td><input "
 											+ "type='text' disabled='true' " + "aria-label='value of meta data' "
 											+ "name='zAttrStr_" + value.attrName + "' style='width:70%;' value=\""
 											+ attrValModified + "\"></td></tr>");
@@ -54,9 +59,7 @@ function constructEditCollectionMetadata(data, status) {
 							if (value.attrName.indexOf("description") != -1) {
 								$("#userMetaData tbody").append(
 										"<tr><td>" + value.displayName
-												+ "&nbsp;&nbsp;<i class='fas fa-question-circle'"
-												+ " data-toggle='tooltip' " + "data-placement='right' title=\""
-												+ value.description + "\">" + "</i></td><td><textarea rows='5'"
+												+ "&nbsp;&nbsp;" + infoHtml + "</td><td><textarea rows='5'"
 												+ "placeholder='" + placeholderValue + "' is_mandatory='" + isMandatory
 												+ "' " + "aria-label='value of meta data' name='zAttrStr_"
 												+ value.attrName + "' " + "style='width:70%;'>" + attrValModified
@@ -65,9 +68,7 @@ function constructEditCollectionMetadata(data, status) {
 								if (!isMandatory) {
 									$("#userMetaData tbody").append(
 											"<tr id='" + value.attrName + "'><td>" + value.displayName
-													+ "&nbsp;&nbsp;<i class='fas fa-question-circle'"
-													+ "data-toggle='tooltip' " + "data-placement='right' title=\""
-													+ value.description + "\">" + "</i></td><td><input type='text' "
+													+ "&nbsp;&nbsp;" + infoHtml + "</td><td><input type='text' "
 													+ "placeholder='" + placeholderValue + "' is_mandatory='"
 													+ isMandatory + "' "
 													+ "aria-label='value of meta data' name='zAttrStr_"
@@ -79,9 +80,7 @@ function constructEditCollectionMetadata(data, status) {
 								} else {
 									$("#userMetaData tbody").append(
 											"<tr><td>" + value.displayName
-													+ "&nbsp;&nbsp;<i class='fas fa-question-circle'"
-													+ "data-toggle='tooltip' " + "data-placement='right' title=\""
-													+ value.description + "\">" + "</i></td><td><input type='text' "
+													+ "&nbsp;&nbsp;" + infoHtml + "</td><td><input type='text' "
 													+ "placeholder='" + placeholderValue + "' is_mandatory='"
 													+ isMandatory + "' "
 													+ "aria-label='value of meta data' name='zAttrStr_"
@@ -98,10 +97,7 @@ function constructEditCollectionMetadata(data, status) {
 										.append(
 												'<tr><td>'
 														+ value.displayName
-														+ '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'
-														+ 'data-placement="right" title="'
-														+ value.description
-														+ '"></i></td><td>'
+														+ '&nbsp;&nbsp;" + infoHtml + "</td><td>'
 														+ '<select class="simple-select2" multiple="multiple" placeholder="Required" is_mandatory="'
 														+ value.mandatory + '" id="' + value.attrName
 														+ '" name="zAttrStr_' + value.attrName + '" '
@@ -111,9 +107,7 @@ function constructEditCollectionMetadata(data, status) {
 							} else {
 								$("#userMetaData tbody").append(
 										"<tr><td>" + value.displayName
-												+ "&nbsp;&nbsp;<i class='fas fa-question-circle'"
-												+ " data-toggle='tooltip' " + "data-placement='right' title=\""
-												+ value.description + "\"></i></td><td>" + "<select id='"
+												+ "&nbsp;&nbsp;" + infoHtml + "</td><td>" + "<select id='"
 												+ value.attrName + "' is_mandatory='" + value.mandatory
 												+ "' onChange='onChangeForMetadata(collectionForm, "
 												+ value.controllerAttribute + ",userMetaData, " + value.attrName

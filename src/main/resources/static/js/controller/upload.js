@@ -497,6 +497,13 @@ function constructNewCollectionMetaDataSet(data, status) {
 					data,
 					function(key, value) {
 						var controllerAttribute = value.controllerAttribute;
+						var infoHtml = "";
+						if(value.description) {
+						infoHtml = '<i class="fas fa-question-circle" data-toggle="tooltip"'
+														+ 'data-placement="right" title="'
+														+ value.description
+														+ '"></i>';
+						}
 						if (value.attrName == 'access_group') {
 
 							if (!parentAccessgrp || (parentAccessgrp && parentAccessgrp == "public")) {
@@ -504,10 +511,7 @@ function constructNewCollectionMetaDataSet(data, status) {
 										.append(
 												'<tr><td>'
 														+ value.displayName
-														+ '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'
-														+ 'data-placement="right" title="'
-														+ value.description
-														+ '"></i></td><td>'
+														+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
 														+ '<select class="simple-select2" multiple="multiple" id="accessGroupSelect" name="zAttrStr_'
 														+ value.attrName
 														+ '"'
@@ -521,10 +525,7 @@ function constructNewCollectionMetaDataSet(data, status) {
 										.append(
 												'<tr><td>'
 														+ value.displayName
-														+ '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'
-														+ 'data-placement="right" title="'
-														+ value.description
-														+ '"></i></td><td>'
+														+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
 														+ '<input type="text" placeholder="Required" aria-label="value of meta data" name="zAttrStr_'
 														+ value.attrName
 														+ '" value ="'
@@ -542,10 +543,7 @@ function constructNewCollectionMetaDataSet(data, status) {
 									.append(
 											'<tr><td>'
 													+ value.displayName
-													+ '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'
-													+ 'data-placement="right" title="'
-													+ value.description
-													+ '"></i></td><td>'
+													+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
 													+ '<input type="text" disabled="disabled" aria-label="value of meta data" value ="'
 													+ assetType + '" name="zAttrStr_' + value.attrName + '"'
 													+ 'style="width:70%;"><input type="hidden" name="zAttrStr_'
@@ -554,8 +552,7 @@ function constructNewCollectionMetaDataSet(data, status) {
 						} else if (value.validValues != null) {
 							$("#newMetaDataTable tbody").append(
 									"<tr><td>" + value.displayName
-											+ "&nbsp;&nbsp;<i class='fas fa-question-circle' data-toggle='tooltip'"
-											+ "data-placement='right' title='" + value.description + "'></i></td><td>"
+											+ "&nbsp;&nbsp;" + infoHtml + "</td><td>"
 											+ "<select class='simple-select2' is_mandatory='" + value.mandatory
 											+ "' onChange='onChangeForMetadata(registerCollectionForm,"
 											+ value.controllerAttribute + ",newMetaDataTable, " + value.attrName
@@ -583,8 +580,7 @@ function constructNewCollectionMetaDataSet(data, status) {
 						} else if (value.attrValue) {
 							$("#newMetaDataTable tbody").append(
 									'<tr><td>' + value.displayName
-											+ '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'
-											+ 'data-placement="right" title="' + value.description + '"></i></td><td>'
+											+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
 											+ '<input type="text" is_mandatory="' + value.mandatory
 											+ '" placeholder="Required" aria-label="value of meta data" value="'
 											+ value.attrValue + '" name="zAttrStr_' + value.attrName + '"'
@@ -594,18 +590,14 @@ function constructNewCollectionMetaDataSet(data, status) {
 							if (value.attrName.indexOf("description") != -1) {
 								$("#newMetaDataTable tbody").append(
 										'<tr><td>' + value.displayName
-												+ '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'
-												+ 'data-placement="right" title="' + value.description
-												+ '"></i></td><td>' + '<textarea rows="5" is_mandatory="'
+												+ '&nbsp;&nbsp;' + infoHtml + '</td><td>' + '<textarea rows="5" is_mandatory="'
 												+ value.mandatory + '" placeholder="' + placeholderValue
 												+ '" aria-label="value of meta data" name="zAttrStr_' + value.attrName
 												+ '"' + 'style="width:70%;"></textarea></td></tr>');
 							} else {
 								$("#newMetaDataTable tbody").append(
 										'<tr><td>' + value.displayName
-												+ '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'
-												+ 'data-placement="right" title="' + value.description
-												+ '"></i></td><td>' + '<input type="text" is_mandatory="'
+												+ '&nbsp;&nbsp;' + infoHtml + '</td><td>' + '<input type="text" is_mandatory="'
 												+ value.mandatory + '" placeholder="' + placeholderValue
 												+ '" aria-label="value of meta data" name="zAttrStr_' + value.attrName
 												+ '"' + 'style="width:70%;"></td></tr>');
@@ -1133,10 +1125,7 @@ function constructAssetTypeBulkDiv(data, status) {
 									.append(
 											'<tr><td>'
 													+ value.displayName
-													+ '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'
-													+ 'data-placement="right" title="'
-													+ value.description
-													+ '"></i></td><td>'
+													+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
 													+ '<select class="simple-select2" is_mandatory="'
 													+ value.mandatory
 													+ '" style="width:99%;" onChange="onChangeForMetadata(registerBulkAssetForm,'
@@ -1182,9 +1171,7 @@ function constructAssetTypeBulkDiv(data, status) {
 							} else {
 								$("#assetBulkMetadataTable tbody").append(
 										'<tr><td>' + value.displayName
-												+ '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'
-												+ 'data-placement="right" title="' + value.description
-												+ '"></i></td><td>' + '<input type="text" placeholder="'
+												+ '&nbsp;&nbsp;' + infoHtml + '</td><td>' + '<input type="text" placeholder="'
 												+ placeholderValue + '" class="bulkAssetTextbox" is_mandatory="'
 												+ value.mandatory
 												+ '" aria-label="value of meta data"  name="zAttrStr_' + value.attrName
