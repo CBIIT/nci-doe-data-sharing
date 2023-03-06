@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Clob;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -12,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.sql.rowset.serial.SerialClob;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -524,9 +526,10 @@ public class ManageTasksScheduler extends AbstractDoeController {
 			DoeSearch search = new DoeSearch();
 			final Calendar cal = Calendar.getInstance();
 
-			// verify the audit metadata transfer row for the previous day
-			// If process is "LAMDA_FUNCTION" and status is "COMPLETED", the previous audit
-			// row
+			// verify the previous audit metadata transfer rows
+			// If the last process is "LAMDA_FUNCTION" and status is "COMPLETED", the
+			// previous audit
+			// rows
 			// transaction is successful, else the process has failed
 
 			AuditMetadataTransfer auditMetadataPrev = auditMetadataTransferRepository
@@ -593,6 +596,8 @@ public class ManageTasksScheduler extends AbstractDoeController {
 					final Calendar currCal = Calendar.getInstance();
 					String fileName = "Metadata_" + format.format(currCal.getTime()) + ".json";
 					auditMetadataCurr.setFileName(fileName);
+					Clob clob = new SerialClob(json.toCharArray());
+					auditMetadataCurr.setMetadataFile(clob);
 					auditMetadataTransferRepository.saveAndFlush(auditMetadataCurr);
 					PutObjectResult uploadResult = uploadMetadataToS3(json, fileName);
 

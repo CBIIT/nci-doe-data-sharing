@@ -1,5 +1,6 @@
 package gov.nih.nci.doe.web.domain;
 
+import java.sql.Clob;
 import java.util.Date;
 import javax.persistence.*;
 
@@ -14,6 +15,7 @@ public class AuditMetadataTransfer {
 	private String errorMsg;
 	private String process;
 	private String fileName;
+	private Clob metadataFile;
 
 	public boolean equals(Object object) {
 		if (this == object) {
@@ -122,6 +124,17 @@ public class AuditMetadataTransfer {
 
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+	
+	@Lob
+	@Basic
+	@Column(name = "METADATA_FILE")
+	public Clob getMetadataFile() {
+		return metadataFile;
+	}
+
+	public void setMetadataFile(Clob metadataFile) {
+		this.metadataFile = metadataFile;
 	}
 
 	@Override
