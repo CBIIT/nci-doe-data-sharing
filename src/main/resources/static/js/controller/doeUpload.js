@@ -53,7 +53,7 @@ function uploadPickerCallback(data) {
  * @param {String} fileId ID of the file/folder.
  */
 function populateSelection(fileId) {
-	gapi.client.load('drive', 'v3', function() {
+	gapi.client.load('drive', 'v2', function() {
 		var request = gapi.client.drive.files.get({
 			'fileId' : fileId
 		});
@@ -86,7 +86,7 @@ function populateSelection(fileId) {
  * @param {String} path Child path to prepend to.
  */
 function constructPath(fileId, path, origFileId) {
-	gapi.client.load('drive', 'v3', function() {
+	gapi.client.load('drive', 'v2', function() {
 		var request = gapi.client.drive.files.get({
 			'fileId' : fileId
 		});
