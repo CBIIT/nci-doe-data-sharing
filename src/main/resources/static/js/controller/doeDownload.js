@@ -48,7 +48,7 @@ function downloadPickerCallback(data) {
  * @param {String} path Child path to prepend to.
  */
 function constructPath(fileId, path) {
-	gapi.client.load('drive', 'v2', function() {
+	gapi.client.load('drive', 'v3', function() {
 		var request = gapi.client.drive.files.get({
 			'fileId' : fileId
 		});
