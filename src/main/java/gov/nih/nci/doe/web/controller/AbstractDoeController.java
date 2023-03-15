@@ -485,7 +485,7 @@ public abstract class AbstractDoeController {
 
 				} else {
 					HpcDataObjectDTO datafiles = DoeClientUtil.getDatafiles(authToken, dataObjectAsyncServiceURL,
-							selectedPath, false, true);
+							selectedPath, false, false);
 					if (datafiles != null && datafiles.getDataObject() != null) {
 						for (HpcMetadataEntry entry : datafiles.getMetadataEntries().getSelfMetadataEntries()
 								.getUserMetadataEntries()) {

@@ -318,14 +318,14 @@ public class DoeClientUtil {
 		return getDatafiles(token, hpcDatafileURL, path, list, false);
 	}
 
-	public static HpcDataObjectDTO getDatafiles(String token, String hpcDatafileURL, String path, Boolean list,
-			Boolean includeAcl) throws DoeWebException {
+	public static HpcDataObjectDTO getDatafiles(String token, String hpcDatafileURL, String path, Boolean includeAcl,
+			Boolean excludeParentMetadata) throws DoeWebException {
 		try {
 
 			final UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(hpcDatafileURL)
 					.path("/{dme-archive-path}");
-			if (list != null) {
-				ucBuilder.queryParam("list", list);
+			if (excludeParentMetadata != null) {
+				ucBuilder.queryParam("excludeParentMetadata", excludeParentMetadata);
 			}
 
 			if (includeAcl != null) {

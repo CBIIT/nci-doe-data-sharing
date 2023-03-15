@@ -51,6 +51,7 @@ import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
+
 import java.util.Collections;
 
 /**
@@ -119,6 +120,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 
 		gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectDTO datafiles = DoeClientUtil.getDatafiles(authToken,
 				dataObjectAsyncServiceURL, selectedPath, false, false);
+
 		if (datafiles != null && datafiles.getDataObject() != null) {
 			dataResult = getAssetFile(datafiles, systemAttrs);
 		}

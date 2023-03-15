@@ -522,13 +522,16 @@ public class RestAPICommonController extends AbstractDoeController {
 			MediaType.APPLICATION_OCTET_STREAM_VALUE })
 	public ResponseEntity<?> getDataObject(@RequestHeader HttpHeaders headers, HttpSession session,
 			HttpServletResponse response, HttpServletRequest request,
-			@RequestParam(required = false) Boolean includeAcl) throws DoeWebException, JsonProcessingException {
+			@RequestParam(required = false) Boolean includeAcl,
+			@RequestParam(required = false) Boolean excludeParentMetadata)
+			throws DoeWebException, JsonProcessingException {
 
 		log.info("get dataobject:");
 		log.info("Headers: {}", headers);
 		String path = request.getRequestURI().split(request.getContextPath() + "/v2/dataObject/")[1];
 		log.info("pathName: " + path);
 		log.info("query params: includeAcl: " + includeAcl);
+		log.info("query params: excludeParentMetadata: " + excludeParentMetadata);
 
 		String authToken = (String) session.getAttribute("hpcUserToken");
 		log.info("authToken: " + authToken);
@@ -557,7 +560,7 @@ public class RestAPICommonController extends AbstractDoeController {
 			if (Boolean.TRUE.equals(isPermissions)) {
 
 				HpcDataObjectDTO dataObjectList = DoeClientUtil.getDatafiles(authToken, dataObjectAsyncServiceURL, path,
-						true, includeAcl);
+						includeAcl, excludeParentMetadata);
 				if (dataObjectList != null) {
 					ObjectMapper mapper = new ObjectMapper();
 					mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -1620,7 +1623,8 @@ public class RestAPICommonController extends AbstractDoeController {
 
 		// get the audit record based on the file name and also verify if the start Date
 		// is today
-		AuditMetadataTransfer audit = auditMetadataTransferService.getAuditMetadaTransferForFileName(fileName, new Date());
+		AuditMetadataTransfer audit = auditMetadataTransferService.getAuditMetadaTransferForFileName(fileName,
+				new Date());
 
 		if (audit != null) {
 			audit.setStatus(auditMetadataTransferModel.getStatus());
