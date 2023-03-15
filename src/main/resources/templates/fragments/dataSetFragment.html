@@ -57,7 +57,7 @@
 									<button type="button" class="share-assetLink-copy-button"
 										data-toggle="tooltip" data-placement="bottom"
 										th:data-clipboard-text="${assetLink}"
-										data-original-title="Copy to clipboard">
+										data-original-title="Copy asset link">
 										<img src="images/Asset_link.svg" width="17"
 											alt="Copy to clipboard">
 									</button></td>
@@ -79,8 +79,15 @@
 							</tr>
 							<tr>
 								<td>ASSET PATH:</td>
-								<td style="font-family: lato_bold;" id="selectedAssetPath"
-									th:text="${assetPath}"></td>
+								<td style="font-family: lato_bold;"><span
+									th:text="${assetPath}" id="selectedAssetPath"></span>
+									<button type="button" class="share-assetPath-copy-button"
+										data-toggle="tooltip" data-placement="bottom"
+										th:data-clipboard-text="${assetPath}"
+										data-original-title="Copy asset path">
+										<img src="images/Asset_link.svg" width="17"
+											alt="Copy to clipboard">
+									</button></td>
 							</tr>
 						</tbody>
 					</table>

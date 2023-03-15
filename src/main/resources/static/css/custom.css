@@ -834,7 +834,7 @@ ol#dataListing>li:before {
 	letter-spacing: 1px;
 }
 
-button.share-link-copy-button, button.share-assetLink-copy-button {
+button.share-link-copy-button, button.share-assetLink-copy-button,button.share-assetPath-copy-button {
 	border: none;
 	background-color: #fff;
 	color: #f39530 !important;
