@@ -53,18 +53,9 @@
 						</tr>
 						<tr>
 							<td><div class="col-md-12">ASSET PATH:</div>
-							    <div class="col-md-12"
-									style="font-family: lato_bold; font-size: 18px;">
-									<span th:text="${assetPath}" id="selectedAssetPath"></span>
-									<button type="button" class="share-assetPath-copy-button"
-										data-toggle="tooltip" data-placement="bottom"
-										th:data-clipboard-text="${assetPath}"
-										data-original-title="Copy asset path">
-										<img src="images/Asset_link.svg" width="17"
-											alt="Copy to clipboard">
-									</button>
-								</div>
-							</td>
+								<div class="col-md-12"
+									style="font-family: lato_bold; font-size: 18px;"
+									id="selectedAssetPath" th:text="${assetPath}"></div></td>
 						</tr>
 					</tbody>
 				</table>

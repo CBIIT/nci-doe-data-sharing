@@ -421,22 +421,6 @@ function dataTableInitDataSet(isVisible) {
 			clipboard1.on('error', function(e) {
 				console.log(e);
 			});
-			
-			var clipboard_assetPath = new ClipboardJS('.share-assetPath-copy-button');
-
-			clipboard_assetPath.on('success', function(e) {
-				console.log(e);
-				$(e.trigger).tooltip('hide').attr('data-original-title', 'Copied').tooltip('show');
-				setTimeout(function() {
-					$(e.trigger).tooltip('hide');
-					$(e.trigger).attr('data-original-title', 'Copy to Clipboard');
-				}, 2000);
-
-			});
-
-			clipboard_assetPath.on('error', function(e) {
-				console.log(e);
-			});
 
 			initializeToolTips();
 			initializePopover();
