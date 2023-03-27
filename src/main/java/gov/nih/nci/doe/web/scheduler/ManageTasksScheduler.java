@@ -5,15 +5,11 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.Clob;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.sql.rowset.serial.SerialClob;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -26,30 +22,17 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.PutObjectResult;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import gov.nih.nci.doe.web.DoeWebException;
-import gov.nih.nci.doe.web.constants.AuditMetadataTransferProcessCodes;
 import gov.nih.nci.doe.web.controller.AbstractDoeController;
 import gov.nih.nci.doe.web.domain.Auditing;
 import gov.nih.nci.doe.web.domain.InferencingTask;
-import gov.nih.nci.doe.web.model.DoeSearch;
-import gov.nih.nci.doe.web.repository.AuditMetadataTransferRepository;
+
 import gov.nih.nci.doe.web.repository.AuditingRepository;
 import gov.nih.nci.doe.web.repository.InferencingTaskRepository;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
-import gov.nih.nci.doe.web.util.JsonDiff;
+
 import gov.nih.nci.hpc.domain.datatransfer.HpcFileLocation;
 import gov.nih.nci.hpc.domain.datatransfer.HpcUploadSource;
 import gov.nih.nci.hpc.domain.datatransfer.HpcUserDownloadRequest;
@@ -62,8 +45,6 @@ import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationReques
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationTaskDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcRegistrationSummaryDTO;
-import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
-import gov.nih.nci.doe.web.domain.AuditMetadataTransfer;
 
 public class ManageTasksScheduler extends AbstractDoeController {
 
@@ -93,9 +74,6 @@ public class ManageTasksScheduler extends AbstractDoeController {
 
 	@Autowired
 	InferencingTaskRepository inferencingTaskRepository;
-
-	@Autowired
-	AuditMetadataTransferRepository auditMetadataTransferRepository;
 
 	@Autowired
 	AuditingRepository auditingRepository;
@@ -510,151 +488,4 @@ public class ManageTasksScheduler extends AbstractDoeController {
 		return dto;
 	}
 
-	private void transferMetadataToCICRSystem() throws DoeWebException {
-
-		log.info("scheduler to get asset metadata and transfer to an S3 bucket");
-
-		try {
-
-			// create a new record in audit_metadata_transfer table.
-			AuditMetadataTransfer auditMetadata = new AuditMetadataTransfer();
-			auditMetadata.setStartTime(new Date());
-			auditMetadata.setProcess(String.valueOf(AuditMetadataTransferProcessCodes.MODAC_SCHEDULER));
-			auditMetadata.setStatus("INPROGRESS");
-			auditMetadataTransferRepository.saveAndFlush(auditMetadata);
-
-			DoeSearch search = new DoeSearch();
-
-			// get all asset metadata
-			String[] attrNames = { "collection_type" };
-			String[] attrValues = { "Asset" };
-			search.setAttrName(attrNames);
-			search.setAttrValue(attrValues);
-
-			String[] levelValues = { "Asset" };
-			boolean[] isExcludeParentMetadata = { true };
-			String[] rowIds = { "1" };
-			String[] operators = { "EQUAL" };
-			boolean[] iskeyWordSearch = { false };
-
-			search.setLevel(levelValues);
-			search.setIsExcludeParentMetadata(isExcludeParentMetadata);
-			search.setRowId(rowIds);
-			search.setOperator(operators);
-			search.setIskeyWordSearch(iskeyWordSearch);
-
-			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search, "Asset");
-			compoundQuery.setDetailedResponse(true);
-			log.info("search compund query" + compoundQuery);
-
-			UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(compoundCollectionSearchServiceURL);
-
-			if (ucBuilder != null) {
-				final String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
-
-				WebClient client = DoeClientUtil.getWebClient(requestURL);
-				String authToken = DoeClientUtil.getAuthenticationToken(writeAccessUserName, writeAccessUserPassword,
-						authenticateURL);
-				client.header("Authorization", "Bearer " + authToken);
-				Response restResponse = client.invoke("POST", compoundQuery);
-				log.info("response status for modac transfer: " + restResponse.getStatus());
-
-				if (restResponse.getStatus() == 200) {
-
-					// metadata retrieved
-
-					MappingJsonFactory factory = new MappingJsonFactory();
-					JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-					ObjectMapper mapper = new ObjectMapper();
-					mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-					mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-					String currJson = mapper.writeValueAsString(parser.readValueAs(HpcCollectionListDTO.class));
-					log.info("json for modac transfer: " + currJson);
-
-					// get the metadata file from previous completed
-					AuditMetadataTransfer previousCompletedAudit = auditMetadataTransferRepository
-							.previousCompletedAudit();
-
-					Clob prevJsonClob = previousCompletedAudit.getMetadataFile();
-
-					SerialClob serialClob = new SerialClob(prevJsonClob);
-					char[] buffer = new char[(int) serialClob.length()];
-					serialClob.getCharacterStream().read(buffer);
-					String prevJson = new String(buffer);
-
-					JsonNode diff = JsonDiff.getJsonDiff(prevJson, currJson);
-					log.info("the diff json is: " + diff);
-
-					if (diff != null) {
-						String diffJson = mapper.writeValueAsString(diff);
-						// if there are json diff, put the file in S3 bucket
-						// transfer the metadata to modac transfer bucket
-						AuditMetadataTransfer inProgressAudit = auditMetadataTransferRepository.getInProgressAudit();
-						final Calendar currCal = Calendar.getInstance();
-						String fileName = "Metadata_" + format.format(currCal.getTime()) + ".json";
-						inProgressAudit.setFileName(fileName);
-						Clob clob = new SerialClob(currJson.toCharArray());
-						inProgressAudit.setMetadataFile(clob);
-						auditMetadataTransferRepository.saveAndFlush(inProgressAudit);
-
-						String s3FileName = "Metadata_Diff_" + format.format(currCal.getTime()) + ".json";
-
-						PutObjectResult uploadResult = uploadMetadataToS3(diffJson, s3FileName);
-
-						// Check the HTTP status code
-						// Integer statusCode =
-						// uploadResult.getMetadata().getStatusLine().getStatusCode();
-						// transfer completed successfully to S3 bucket
-						// log the put object result to track the status
-						String eTag = uploadResult.getETag();
-						String versionId = uploadResult.getVersionId();
-						log.info("File uploaded to S3 bucket. ETag: " + eTag + ", Version ID: " + versionId);
-
-						updateAuditMetadataTransferStatus("COMPLETED", null);
-					} else {
-						updateAuditMetadataTransferStatus("NODIFF", null);
-					}
-
-				} else if (restResponse.getStatus() == 204) {
-					// no metadata retrieved
-					log.info("No asset metadata retreived");
-					updateAuditMetadataTransferStatus("COMPLETED", null);
-				}
-			}
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			updateAuditMetadataTransferStatus("FAILED", e.getMessage());
-			throw new DoeWebException(e.getMessage());
-
-		}
-	}
-
-	private void updateAuditMetadataTransferStatus(String status, String errorMsg) {
-
-		log.info("update audit metadata transfer status");
-		AuditMetadataTransfer auditMetadataCurr = auditMetadataTransferRepository.getInProgressAudit();
-		auditMetadataCurr.setStatus(status);
-		auditMetadataCurr.setErrorMsg(errorMsg);
-		auditMetadataTransferRepository.saveAndFlush(auditMetadataCurr);
-	}
-
-	private PutObjectResult uploadMetadataToS3(String responseJson, String fileName)
-			throws JsonProcessingException, DoeWebException {
-
-		log.info("upload metadata to S3");
-
-		// Creating credential provider
-		BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
-		AWSStaticCredentialsProvider awsCredentialsProvider = new AWSStaticCredentialsProvider(awsCreds);
-
-		// Instantiating S3 client.
-		AmazonS3 s3Client = AmazonS3ClientBuilder.standard().withCredentials(awsCredentialsProvider)
-				.withRegion("us-east-1").build();
-
-		// put the metadata file to S3 bucket
-		PutObjectResult result = s3Client.putObject(bucketName, fileName, responseJson);
-
-		return result;
-
-	}
 }

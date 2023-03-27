@@ -2,7 +2,6 @@ package gov.nih.nci.doe.web.controller;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,12 +26,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
 
 import gov.nih.nci.doe.web.DoeWebException;
-import gov.nih.nci.doe.web.constants.AuditMetadataTransferProcessCodes;
-import gov.nih.nci.doe.web.domain.AuditMetadataTransfer;
 import gov.nih.nci.doe.web.domain.InferencingTask;
 import gov.nih.nci.doe.web.model.Path;
 import gov.nih.nci.doe.web.model.ReferenceDataset;
-import gov.nih.nci.doe.web.model.AuditMetadataTransferModel;
 import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.model.EvaluationResponse;
@@ -70,7 +66,6 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1599,47 +1594,6 @@ public class RestAPICommonController extends AbstractDoeController {
 		}
 		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
 
-	}
-
-	@PatchMapping(value = "/auditMetadataTransfer")
-	public ResponseEntity<?> updateStatusForMetadataTransfer(@RequestHeader HttpHeaders headers,
-			HttpServletRequest request, HttpSession session, HttpServletResponse response,
-			@RequestBody @Valid AuditMetadataTransferModel auditMetadataTransferModel,
-			@RequestParam(value = "fileName") String fileName) throws DoeWebException, ParseException {
-
-		log.info("update audit metadata transfer status");
-		String authToken = (String) session.getAttribute("hpcUserToken");
-		log.info("authToken: " + authToken);
-
-		if (authToken == null) {
-			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
-		}
-
-		Boolean awsTokenAuthenticatedToken = (Boolean) session.getAttribute("awsTokenAuthenticated");
-
-		if (awsTokenAuthenticatedToken == null || Boolean.FALSE.equals(awsTokenAuthenticatedToken)) {
-			throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
-		}
-
-		// get the audit record based on the file name and also verify if the start Date
-		// is today
-		AuditMetadataTransfer audit = auditMetadataTransferService.getAuditMetadaTransferForFileName(fileName,
-				new Date());
-
-		if (audit != null) {
-			audit.setStatus(auditMetadataTransferModel.getStatus());
-			audit.setProcess(auditMetadataTransferModel.getProcess());
-			audit.setCompletedTime("COMPLETED".equalsIgnoreCase(auditMetadataTransferModel.getStatus())
-					&& String.valueOf(AuditMetadataTransferProcessCodes.LAMDA_FUNCTION)
-							.equalsIgnoreCase(auditMetadataTransferModel.getProcess()) ? new Date() : null);
-			audit.setErrorMsg(auditMetadataTransferModel.getErrorMsg());
-
-			auditMetadataTransferService.saveAuditForMetadataTransfer(audit);
-
-			return new ResponseEntity<>("Audit Metadata updated successfully", HttpStatus.OK);
-		}
-
-		throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
 	}
 
 	@SuppressWarnings("unchecked")
