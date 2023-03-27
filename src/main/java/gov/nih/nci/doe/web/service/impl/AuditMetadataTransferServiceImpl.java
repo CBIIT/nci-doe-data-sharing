@@ -21,16 +21,6 @@ public class AuditMetadataTransferServiceImpl implements AuditMetadataTransferSe
 	AuditMetadataTransferRepository auditMetadataTransferRepository;
 
 	@Override
-	public AuditMetadataTransfer getAuditMetadaTransferForCurrentDay() {
-		log.info("get audit metadata for today");
-		AuditMetadataTransfer auditMetadataCurr = auditMetadataTransferRepository.getAuditMetadaTransferForCurrentDay();
-		if (auditMetadataCurr != null) {
-			return auditMetadataCurr;
-		}
-		return null;
-	}
-
-	@Override
 	public void saveAuditForMetadataTransfer(AuditMetadataTransfer audit) {
 		log.info("Save audit metadata transfer information for: " + audit.getStartTime());
 

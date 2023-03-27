@@ -6,8 +6,6 @@ import gov.nih.nci.doe.web.domain.AuditMetadataTransfer;
 
 public interface AuditMetadataTransferService {
 
-	public AuditMetadataTransfer getAuditMetadaTransferForCurrentDay();
-
 	public void saveAuditForMetadataTransfer(AuditMetadataTransfer audit);
 
 	public AuditMetadataTransfer getAuditMetadaTransferForFileName(String fileName, Date startDate);

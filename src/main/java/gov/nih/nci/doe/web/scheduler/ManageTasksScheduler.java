@@ -35,6 +35,7 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -48,6 +49,7 @@ import gov.nih.nci.doe.web.repository.AuditMetadataTransferRepository;
 import gov.nih.nci.doe.web.repository.AuditingRepository;
 import gov.nih.nci.doe.web.repository.InferencingTaskRepository;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
+import gov.nih.nci.doe.web.util.JsonDiff;
 import gov.nih.nci.hpc.domain.datatransfer.HpcFileLocation;
 import gov.nih.nci.hpc.domain.datatransfer.HpcUploadSource;
 import gov.nih.nci.hpc.domain.datatransfer.HpcUserDownloadRequest;
@@ -508,7 +510,6 @@ public class ManageTasksScheduler extends AbstractDoeController {
 		return dto;
 	}
 
-	@Scheduled(cron = "${modac.scheduler.cron.transfer.metadata}")
 	private void transferMetadataToCICRSystem() throws DoeWebException {
 
 		log.info("scheduler to get asset metadata and transfer to an S3 bucket");
@@ -520,43 +521,21 @@ public class ManageTasksScheduler extends AbstractDoeController {
 			auditMetadata.setStartTime(new Date());
 			auditMetadata.setProcess(String.valueOf(AuditMetadataTransferProcessCodes.MODAC_SCHEDULER));
 			auditMetadata.setStatus("INPROGRESS");
-
 			auditMetadataTransferRepository.saveAndFlush(auditMetadata);
 
 			DoeSearch search = new DoeSearch();
-			final Calendar cal = Calendar.getInstance();
 
-			// verify the previous audit metadata transfer rows
-			// If the last process is "LAMDA_FUNCTION" and status is "COMPLETED", the
-			// previous audit
-			// rows
-			// transaction is successful, else the process has failed
-
-			AuditMetadataTransfer auditMetadataPrev = auditMetadataTransferRepository
-					.getAuditMetadaTransferForPreviousDay();
-
-			if (auditMetadataPrev != null && "COMPLETED".equals(auditMetadataPrev.getStatus())
-					&& String.valueOf(AuditMetadataTransferProcessCodes.LAMDA_FUNCTION)
-							.equalsIgnoreCase(auditMetadataPrev.getProcess())) {
-				cal.add(Calendar.DATE, -1);
-			} else {
-				cal.add(Calendar.DATE, -2);
-			}
-
-			AuditMetadataTransfer auditMetadataCurr = auditMetadataTransferRepository
-					.getAuditMetadaTransferForCurrentDay();
-
-			// Retrieve any metadata added/updated for the computed time
-			String[] attrNames = { "collection_type", "metadata_updated" };
-			String[] attrValues = { "Asset", format.format(cal.getTime()) };
+			// get all asset metadata
+			String[] attrNames = { "collection_type" };
+			String[] attrValues = { "Asset" };
 			search.setAttrName(attrNames);
 			search.setAttrValue(attrValues);
 
-			String[] levelValues = { "Asset", "Asset" };
-			boolean[] isExcludeParentMetadata = { true, true };
-			String[] rowIds = { "1", "2" };
-			String[] operators = { "EQUAL", "TIMESTAMP_GREATER_OR_EQUAL" };
-			boolean[] iskeyWordSearch = { false, false };
+			String[] levelValues = { "Asset" };
+			boolean[] isExcludeParentMetadata = { true };
+			String[] rowIds = { "1" };
+			String[] operators = { "EQUAL" };
+			boolean[] iskeyWordSearch = { false };
 
 			search.setLevel(levelValues);
 			search.setIsExcludeParentMetadata(isExcludeParentMetadata);
@@ -589,33 +568,56 @@ public class ManageTasksScheduler extends AbstractDoeController {
 					ObjectMapper mapper = new ObjectMapper();
 					mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 					mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-					String json = mapper.writeValueAsString(parser.readValueAs(HpcCollectionListDTO.class));
-					log.info("json for modac transfer: " + json);
+					String currJson = mapper.writeValueAsString(parser.readValueAs(HpcCollectionListDTO.class));
+					log.info("json for modac transfer: " + currJson);
 
-					// transfer the metadata to modac transfer bucket
-					final Calendar currCal = Calendar.getInstance();
-					String fileName = "Metadata_" + format.format(currCal.getTime()) + ".json";
-					auditMetadataCurr.setFileName(fileName);
-					Clob clob = new SerialClob(json.toCharArray());
-					auditMetadataCurr.setMetadataFile(clob);
-					auditMetadataTransferRepository.saveAndFlush(auditMetadataCurr);
-					PutObjectResult uploadResult = uploadMetadataToS3(json, fileName);
+					// get the metadata file from previous completed
+					AuditMetadataTransfer previousCompletedAudit = auditMetadataTransferRepository
+							.previousCompletedAudit();
 
-					// Check the HTTP status code
-					// Integer statusCode =
-					// uploadResult.getMetadata().getStatusLine().getStatusCode();
+					Clob prevJsonClob = previousCompletedAudit.getMetadataFile();
 
-					// transfer completed successfully to S3 bucket
-					// log the put object result to track the status
-					String eTag = uploadResult.getETag();
-					String versionId = uploadResult.getVersionId();
-					log.info("File uploaded to S3 bucket. ETag: " + eTag + ", Version ID: " + versionId);
+					SerialClob serialClob = new SerialClob(prevJsonClob);
+					char[] buffer = new char[(int) serialClob.length()];
+					serialClob.getCharacterStream().read(buffer);
+					String prevJson = new String(buffer);
 
-					updateAuditMetadataTransferStatus("COMPLETED", null);
+					JsonNode diff = JsonDiff.getJsonDiff(prevJson, currJson);
+					log.info("the diff json is: " + diff);
+
+					if (diff != null) {
+						String diffJson = mapper.writeValueAsString(diff);
+						// if there are json diff, put the file in S3 bucket
+						// transfer the metadata to modac transfer bucket
+						AuditMetadataTransfer inProgressAudit = auditMetadataTransferRepository.getInProgressAudit();
+						final Calendar currCal = Calendar.getInstance();
+						String fileName = "Metadata_" + format.format(currCal.getTime()) + ".json";
+						inProgressAudit.setFileName(fileName);
+						Clob clob = new SerialClob(currJson.toCharArray());
+						inProgressAudit.setMetadataFile(clob);
+						auditMetadataTransferRepository.saveAndFlush(inProgressAudit);
+
+						String s3FileName = "Metadata_Diff_" + format.format(currCal.getTime()) + ".json";
+
+						PutObjectResult uploadResult = uploadMetadataToS3(diffJson, s3FileName);
+
+						// Check the HTTP status code
+						// Integer statusCode =
+						// uploadResult.getMetadata().getStatusLine().getStatusCode();
+						// transfer completed successfully to S3 bucket
+						// log the put object result to track the status
+						String eTag = uploadResult.getETag();
+						String versionId = uploadResult.getVersionId();
+						log.info("File uploaded to S3 bucket. ETag: " + eTag + ", Version ID: " + versionId);
+
+						updateAuditMetadataTransferStatus("COMPLETED", null);
+					} else {
+						updateAuditMetadataTransferStatus("NODIFF", null);
+					}
 
 				} else if (restResponse.getStatus() == 204) {
 					// no metadata retrieved
-					log.info("No Metadata updates retrieved for the previous day: " + cal.getTime());
+					log.info("No asset metadata retreived");
 					updateAuditMetadataTransferStatus("COMPLETED", null);
 				}
 			}
@@ -630,7 +632,7 @@ public class ManageTasksScheduler extends AbstractDoeController {
 	private void updateAuditMetadataTransferStatus(String status, String errorMsg) {
 
 		log.info("update audit metadata transfer status");
-		AuditMetadataTransfer auditMetadataCurr = auditMetadataTransferRepository.getAuditMetadaTransferForCurrentDay();
+		AuditMetadataTransfer auditMetadataCurr = auditMetadataTransferRepository.getInProgressAudit();
 		auditMetadataCurr.setStatus(status);
 		auditMetadataCurr.setErrorMsg(errorMsg);
 		auditMetadataTransferRepository.saveAndFlush(auditMetadataCurr);
