@@ -63,15 +63,6 @@ public class ManageTasksScheduler extends AbstractDoeController {
 	@Value("${modac.flask.webservice}")
 	private String modacFlaskServer;
 
-	@Value("${modac.transfer.s3.accesskey}")
-	private String accessKey;
-
-	@Value("${modac.transfer.s3.secretkey}")
-	private String secretKey;
-
-	@Value("${modac.transfer.s3.bucketName}")
-	private String bucketName;
-
 	@Autowired
 	InferencingTaskRepository inferencingTaskRepository;
 
