@@ -595,6 +595,13 @@
             "description": "includeAcl",
             "required": false,
             "type": "boolean"
+          },
+          {
+            "name": "excludeParentMetadata",
+            "in": "query",
+            "description": "excludeParentMetadata",
+            "required": false,
+            "type": "boolean"
           }
         ],
         "responses": {
