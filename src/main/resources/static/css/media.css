@@ -154,23 +154,7 @@
 		margin-left: -1rem !important;
 		margin-right: -4rem !important;
 	}
-	#cancelContactUs {
-		margin-left: 0px !important;
-		margin-right: 0px !important;
-	}
-	#btnSubmitEmail {
-		margin-left: 0px !important;
-		margin-right: 0px !important;
-		margin-top: 1rem;
-	}
-	.cancelBtnDiv {
-		margin-left: auto !important;
-		margin-right: auto !important;
-	}
-	.submitBtnDiv {
-		margin-left: auto !important;
-		margin-right: auto !important;
-	}
+
 	div.wrapper {
 		left: 0px !important;
 		right: 0px !important;
@@ -780,5 +764,32 @@
 	.td_class_9 {
 		width: 60% !important;
 		word-break: break-word;
+	}
+}
+@media ( max-width : 623px) {
+	.cancelBtnDiv {
+		margin-left: auto !important;
+		margin-right: auto !important;
+	}
+	.submitBtnDiv {
+		margin-left: auto !important;
+		margin-right: auto !important;
+	}
+	
+	#cancelContactUs {
+       margin-left: 0px !important;
+       margin-right: 0px !important;
+    }
+    
+    #btnSubmitEmail {
+    	margin-left: 0px !important;
+    	margin-right: 0px !important;
+    	]margin-top: 0rem !important;
+	}
+}
+
+@media ( max-width : 561px) {
+	#btnSubmitEmail {
+	  margin-top: 1rem !important;
 	}
 }
