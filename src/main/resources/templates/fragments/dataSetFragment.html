@@ -50,6 +50,18 @@
 						class="table display dt-responsive wrap"
 						style="border: none; background-color: transparent;">
 						<tbody style="background-color: transparent;">
+						  <tr>
+								<td>ASSET LINK:</td>
+								<td style="font-family: lato_bold;"><span
+									th:text="${assetLink}" id="assetUrlLink"></span>
+									<button type="button" class="share-assetLink-copy-button"
+										data-toggle="tooltip" data-placement="bottom"
+										th:data-clipboard-text="${assetLink}"
+										data-original-title="Copy asset link">
+										<img src="images/Asset_link.svg" width="17"
+											alt="Copy to clipboard">
+									</button></td>
+							</tr>
 							<tr>
 								<td>PROGRAM NAME:</td>
 								<td style="font-family: lato_bold;" id="selectedProgramName"
@@ -69,18 +81,6 @@
 								<td>ASSET PATH:</td>
 								<td style="font-family: lato_bold;" id="selectedAssetPath"
 									th:text="${assetPath}"></td>
-							</tr>
-							<tr>
-								<td>SHARABLE LINK:</td>
-								<td style="font-family: lato_bold;"><span
-									th:text="${assetLink}" id="assetUrlLink"></span>
-									<button type="button" class="share-assetLink-copy-button"
-										data-toggle="tooltip" data-placement="bottom" title=""
-										th:data-clipboard-text="${assetLink}"
-										data-original-title="Copy to clipboard">
-										<img src="images/Search.Shareable_Link.svg" width="17"
-											alt="Copy to clipboard">
-									</button></td>
 							</tr>
 						</tbody>
 					</table>

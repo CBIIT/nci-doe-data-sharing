@@ -95,9 +95,7 @@
 		white-space: nowrap;
 		font-size: 16px;
 	}
-	form#contact-us-form .googleCaptchaDiv {
-		margin-left: 8rem !important;
-	}
+	
 }
 
 @media ( min-width : 991px) {
@@ -128,14 +126,6 @@
 	}
 }
 
-@media ( min-width : 991px) and ( max-width : 1420px) {
-	.submitBtnDiv {
-		margin-left: 0rem !important;
-	}
-	.cancelBtnDiv {
-		margin-left: 2rem !important;
-	}
-}
 
 @media ( max-width : 1500px) {
 	#aboutMoDaCDescp {
@@ -161,30 +151,10 @@
 		margin-right: -5rem !important;
 	}
 	form#contact-us-form .loginHr {
-		margin-left: -1rem !important;
+		margin-left: -3rem !important;
 		margin-right: -4rem !important;
 	}
-	#cancelContactUs {
-		margin-left: 0px !important;
-		margin-right: 0px !important;
-	}
-	#btnSubmitEmail {
-		margin-left: 0px !important;
-		margin-right: 0px !important;
-		margin-top: 1rem;
-	}
-	.cancelBtnDiv {
-		margin-left: auto !important;
-		margin-right: auto !important;
-	}
-	.submitBtnDiv {
-		margin-left: auto !important;
-		margin-right: auto !important;
-	}
-	.contactUsBtns {
-		margin-left: 2rem;
-		display: block !important;
-	}
+
 	div.wrapper {
 		left: 0px !important;
 		right: 0px !important;
@@ -542,9 +512,6 @@
 }
 
 @media ( max-width : 460px) {
-	.googleCaptchaDiv {
-		margin-left: -3rem !important;
-	}
 	.Aboutbuttoncontainer {
 		background-image: url(/images/About.image.responsive.png) !important;
 	}
@@ -588,9 +555,7 @@
 }
 
 @media ( max-width : 550px) {
-	.googleCaptchaDiv {
-		margin-left: -1.5rem !important;
-	}
+
 	.nav-bar .nabar-toggler
      #changeUserMenu.dropdown-menu {
 		margin-left: -50px !important;
@@ -719,9 +684,6 @@
 }
 
 @media ( min-width : 768px) {
-	.googleCaptchaDiv {
-		margin-left: 8rem !important;
-	}
 	.appName {
 		font-size: 18px;
 		/*margin-left: 24px;*/
@@ -739,9 +701,7 @@
 }
 
 @media ( max-width : 380px) {
-	.googleCaptchaDiv {
-		margin-left: -3rem !important;
-	}
+
 	#topNav {
 		width: 100%;
 		margin-top: -57px;
@@ -753,11 +713,6 @@
 	}
 }
 
-@media ( max-width : 280px) {
-	.googleCaptchaDiv {
-		margin-left: -3rem !important;
-	}
-}
 
 @media ( min-width : 992px) {
 	.modal-lg {
@@ -765,9 +720,6 @@
 	}
 	#mobileKeyworkSearchDiv {
 		display: none;
-	}
-	.googleCaptchaDiv {
-		margin-left: -3rem !important;
 	}
 }
 
@@ -812,5 +764,32 @@
 	.td_class_9 {
 		width: 60% !important;
 		word-break: break-word;
+	}
+}
+@media ( max-width : 623px) {
+	.cancelBtnDiv {
+		margin-left: auto !important;
+		margin-right: auto !important;
+	}
+	.submitBtnDiv {
+		margin-left: auto !important;
+		margin-right: auto !important;
+	}
+	
+	#cancelContactUs {
+       margin-left: 0px !important;
+       margin-right: 0px !important;
+    }
+    
+    #btnSubmitEmail {
+    	margin-left: 0px !important;
+    	margin-right: 0px !important;
+    	]margin-top: 0rem !important;
+	}
+}
+
+@media ( max-width : 561px) {
+	#btnSubmitEmail {
+	  margin-top: 1rem !important;
 	}
 }

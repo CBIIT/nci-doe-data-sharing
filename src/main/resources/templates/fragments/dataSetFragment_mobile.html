@@ -17,6 +17,21 @@
 					style="border: none; background-color: transparent;">
 					<tbody style="background-color: transparent;">
 						<tr>
+							<td style="display: inline-flex; width: -webkit-fill-available;"><div
+									class="col-md-12">ASSET LINK:</div>
+								<div class="col-md-12"
+									style="font-family: lato_bold; font-size: 18px; margin-top: -5px;">
+									<span th:text="${assetLink}" id="assetUrlLink"></span>
+									<button type="button" class="share-assetLink-copy-button"
+										data-toggle="tooltip" data-placement="bottom"
+										th:data-clipboard-text="${assetLink}"
+										data-original-title="Copy asset link">
+										<img src="images/Asset_link.svg" width="17"
+											alt="Copy to clipboard">
+									</button>
+								</div></td>
+						</tr>
+						<tr>
 							<td>
 								<div class="col-md-12">PROGRAM NAME:</div>
 								<div class="col-md-12"
@@ -41,21 +56,6 @@
 								<div class="col-md-12"
 									style="font-family: lato_bold; font-size: 18px;"
 									id="selectedAssetPath" th:text="${assetPath}"></div></td>
-						</tr>
-						<tr>
-							<td style="display: inline-flex; width: -webkit-fill-available;"><div
-									class="col-md-12">SHARABLE LINK:</div>
-								<div class="col-md-12"
-									style="font-family: lato_bold; font-size: 18px; margin-top: -5px;">
-									<span th:text="${assetLink}" id="assetUrlLink"></span>
-									<button type="button" class="share-assetLink-copy-button"
-										data-toggle="tooltip" data-placement="bottom" title=""
-										th:data-clipboard-text="${assetLink}"
-										data-original-title="Copy to clipboard">
-										<img src="images/Search.Shareable_Link.svg" width="17"
-											alt="Copy to clipboard">
-									</button>
-								</div></td>
 						</tr>
 					</tbody>
 				</table>

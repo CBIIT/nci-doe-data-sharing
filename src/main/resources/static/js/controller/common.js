@@ -659,7 +659,15 @@ function postSuccessOnChangeIsReferenceDataset(form,data, tableId) {
 	  /* new elements added from new conditional attribute */
 	  if(newElements.length != 0) {
 		  $.each(newElements, function(key, value) {
-			  
+			
+			var infoHtml = "";
+			if(value.description) {
+			infoHtml = '<i class="fas fa-question-circle" data-toggle="tooltip"'
+											+ 'data-placement="right" title="'
+											+ value.description
+											+ '"></i>';
+			}  
+			
 			if(value.isVisible != true && value.validValues != null && value.attrName !='asset_type') {
 				   
 				if(tableId == 'assetBulkMetadataTable') {
@@ -670,16 +678,14 @@ function postSuccessOnChangeIsReferenceDataset(form,data, tableId) {
 				
 				if(value.attrName  == 'applicable_model_paths') {
 					   
-				$("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
-			       'data-placement="right" title="'+value.description+'"></i></td><td>'+
+				$("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;' + infoHtml + '</td><td>'+
 			       '<select class="simple-select2" multiple="multiple" placeholder="Required" is_mandatory="'+value.mandatory+'" id="'+value.attrName+'" name="zAttrStr_'+value.attrName+'" ' +
 			       'style="' + width +'""></select></td></tr>');
 				   
 				  var $select = $("#"+value.attrName);
 				   
 				} else {
-					$("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
-				    'data-placement="right" title="'+value.description+'"></i></td><td>'+
+					$("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;' + infoHtml + '</td><td>'+
 				    '<select class="simple-select2" is_mandatory="'+value.mandatory+'" style="' + width +'" id="'+value.attrName+'" name="zAttrStr_'+value.attrName+'" value="'+value.attrValue+'"></select></td></tr>');
 					
 				  var $select = $("#"+value.attrName);
@@ -708,13 +714,11 @@ function postSuccessOnChangeIsReferenceDataset(form,data, tableId) {
 			    
 				   if(tableId == 'assetBulkMetadataTable' && value.attrName != 'asset_name' && value.attrName !='asset_type' &&
 					        value.attrName !='asset_identifier') {
-					   $("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
-					        	'data-placement="right" title="'+value.description+'"></i></td><td>'+
+					   $("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;' + infoHtml + '</td><td>'+
 					        	'<input type="text" is_mandatory="'+value.mandatory+'"  value = "' + attrVal + '" class="bulkAssetTextbox" placeholder="'+placeholder+'" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
 					        	'></td></tr>');
 					} else if(tableId != 'assetBulkMetadataTable') {
-						$("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'+
-					        	'data-placement="right" title="'+value.description+'"></i></td><td>'+
+						$("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;' + infoHtml + '</td><td>'+
 					        	'<input type="text" is_mandatory="'+value.mandatory+'" value = "' + attrVal + '" placeholder="'+placeholder+'" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
 					        	'style="width:70%;"></td></tr>');
 					}

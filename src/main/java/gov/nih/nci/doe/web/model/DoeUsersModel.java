@@ -9,6 +9,15 @@ public class DoeUsersModel {
 	private Boolean isWrite;
 	private String programName;
 	private Boolean isAdmin;
+	private Boolean isDeletePrivilege;
+
+	public Boolean getIsDeletePrivilege() {
+		return isDeletePrivilege;
+	}
+
+	public void setIsDeletePrivilege(Boolean isDeletePrivilege) {
+		this.isDeletePrivilege = isDeletePrivilege;
+	}
 
 	public Boolean getIsAdmin() {
 		return isAdmin;

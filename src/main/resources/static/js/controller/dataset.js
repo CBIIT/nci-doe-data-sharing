@@ -775,30 +775,18 @@ $('#dataSetTable tbody')
 																		+ "style='width:17px;' alt='Download File Metadata'></a>";
 
 																nestedEditPermissionsHtml += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLink' href='javascript:void(0);' "
-																		+ "data-fileName = "
-																		+ downdloadFileName
-																		+ " data-path="
-																		+ value.path
-																		+ " "
-																		+ "><img src='images/Download.png' data-toggle='tooltip' title='Download File' th:src='@{/images/Download.png}' "
+																		+ "data-fileName = '" + downdloadFileName + "' data-path = '" + value.path + "'><img src='images/Download.png' data-toggle='tooltip' title='Download File' th:src='@{/images/Download.png}' "
 																		+ "style='width:17px;' alt='download file'></a>";
 															} else {
 																downloadFileTitle = "Download Folder";
 																nestedEditPermissionsHtml += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLinkFolder' href='javascript:void(0);' "
-																		+ "data-fileName = "
-																		+ downdloadFileName
-																		+ " data-path="
-																		+ value.path
-																		+ " "
-																		+ "><img src='images/Download.png' data-toggle='tooltip' title='"
-																		+ downloadFileTitle
-																		+ "' th:src='@{/images/Download.png}' "
+																		+ "data-fileName = '" + downdloadFileName + "' data-path = '" + value.path + "'><img src='images/Download.png' data-toggle='tooltip' title = '" + downloadFileTitle + "' th:src='@{/images/Download.png}' "
 																		+ "style='width:17px;' alt='download file'></a>";
 															}
 
-															if (accessgroups && accessgroups.indexOf("public") == -1
-																	&& permissions && permissions == 'Owner'
-																	&& value.isFolder == false) {
+																							
+															if (accessgroups && accessgroups.indexOf("public") == -1 && value.isFolder == false && permissions &&
+	                                                                permissions != 'No Permissions' && (permissions == 'Owner' || isDeletePermission == true)) {
 
 																nestedEditPermissionsHtml += "<span style='border: transparent;' data-filePath = '"
 																		+ value.path
@@ -1124,25 +1112,19 @@ function renderActions(data, type, row) {
 				+ "style='width:17px;' alt='Download File Metadata'></a>";
 
 		html += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLink' "
-				+ "href='javascript:void(0);' " + "data-fileName = " + downdloadFileName + " data-path=" + row.path
-				+ " " + "><img src='images/Download.png' data-toggle='tooltip' title='" + downloadFileTitle
+				+ "href='javascript:void(0);' data-fileName = '" + downdloadFileName + "' data-path = '" + path + "'><img src='images/Download.png' data-toggle='tooltip' title='" + downloadFileTitle
 				+ "' th:src='@{/images/Download.png}' " + "style='width:17px;' alt='download file'></a>";
 	} else {
 		downloadFileTitle = "Download Folder";
 		html += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLinkFolder' "
 				+ "href='javascript:void(0);' "
-				+ "data-fileName = "
-				+ downdloadFileName
-				+ " data-path="
-				+ row.path
-				+ " "
-				+ "><img src='images/Download.png' data-toggle='tooltip' title='"
+				+ "data-fileName = '" + downdloadFileName + "' data-path = '" + row.path + "'><img src='images/Download.png' data-toggle='tooltip' title = '"
 				+ downloadFileTitle
-				+ "' th:src='@{/images/Download.png}' " + "style='width:17px;' alt='download file'></a>";
+				+ "' th:src ='@{/images/Download.png}' " + "style ='width:17px;' alt ='download file'></a>";
 	}
 
-	if (accessgroups && accessgroups.indexOf("public") == -1 && permissions && permissions == 'Owner'
-			&& row.isFolder == false) {
+	if (accessgroups && accessgroups.indexOf("public") == -1 && row.isFolder == false && permissions &&
+	       permissions != 'No Permissions' && (permissions == 'Owner' || isDeletePermission == true)) {
 
 		html += "<span style='border: transparent;' data-filePath = '"
 				+ path

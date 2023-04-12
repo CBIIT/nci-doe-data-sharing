@@ -171,6 +171,29 @@
 	background-color: transparent !important;
 }
 
+.googleCaptchaDiv {
+    display: flex;
+    justify-content: center;
+    margin-left: auto;
+}
+.contactUsBtns {
+	display: flex;
+	justify-content: center; 
+	margin-top: 30px; 
+	margin-bottom: 30px;
+	flex-wrap: wrap;
+}
+
+#contactUsLabel {
+    text-align: center; 
+    font-family: latoregular;
+    letter-spacing: 2px;
+    padding-top: 18px; 
+    padding-bottom: 14px; 
+    font-size: 26px; 
+    color: #fff;
+}
+
 #searchResultTable_length {
 	float: right;
 	margin-right: 24px;

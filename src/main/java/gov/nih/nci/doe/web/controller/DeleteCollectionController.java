@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import gov.nih.nci.doe.web.DoeWebException;
-import gov.nih.nci.doe.web.domain.MetaDataPermissions;
 import gov.nih.nci.doe.web.model.AuditingModel;
+import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
@@ -32,6 +32,7 @@ public class DeleteCollectionController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	private String serviceURL;
 
+	@SuppressWarnings("unchecked")
 	@PostMapping
 	@ResponseBody
 	public String deletCollection(@RequestParam(value = "collPath") String collPath, HttpSession session,
@@ -54,16 +55,22 @@ public class DeleteCollectionController extends AbstractDoeController {
 				&& !CollectionUtils.isEmpty(collections.getCollections())) {
 
 			HpcCollectionDTO collection = collections.getCollections().get(0);
-			MetaDataPermissions perm = metaDataPermissionService
-					.getMetaDataPermissionsOwnerByCollectionId(collection.getCollection().getCollectionId());
 
-			if (perm != null && perm.getUser().getEmailAddrr().equalsIgnoreCase(userInfo)) {
+			// collection owners and group access users with delete flag can delete
+			// collection
+
+			List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(userInfo)
+					.getBody();
+			String role = getPermissionRole(userInfo, collection.getCollection().getCollectionId(),
+					loggedOnUserPermissions);
+			if ("Owner".equalsIgnoreCase(role)
+					|| (Boolean.TRUE.equals(getIsDelete()) && "Group User".equalsIgnoreCase(role))) {
 
 				String deleted = DoeClientUtil.deleteCollection(authToken, serviceURL, collPath);
 				if (StringUtils.isNotEmpty(deleted) && deleted.equalsIgnoreCase("SUCCESS")) {
 
 					// delete from collection permission table
-					metaDataPermissionService.deleteAllPermissionsByCollectionId(getLoggedOnUserInfo(),
+					metaDataPermissionService.deleteAllPermissionsByCollectionId(userInfo,
 							collection.getCollection().getCollectionId());
 
 					// delete from access group table
@@ -75,7 +82,7 @@ public class DeleteCollectionController extends AbstractDoeController {
 
 					// store the auditing info
 					AuditingModel audit = new AuditingModel();
-					audit.setName(getLoggedOnUserInfo());
+					audit.setName(userInfo);
 					audit.setOperation("delete collection");
 					audit.setStartTime(new Date());
 					audit.setPath(collPath);
@@ -86,7 +93,7 @@ public class DeleteCollectionController extends AbstractDoeController {
 					return "Failed to delete collection." + deleted;
 				}
 			} else {
-				return "Only the collection owner can delete this.";
+				return "Insufficient permissions to delete this collection.";
 			}
 		}
 

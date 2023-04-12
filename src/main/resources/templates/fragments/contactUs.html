@@ -12,9 +12,7 @@
 			<form role="form" id="contact-us-form" class="mx-auto"
 				style="width: 60%; color: #fff">
 				<input type="hidden" id="siteKey" th:value="${siteKey}" />
-				<h3
-					style="text-align: center; font-family: latoregular; padding-top: 18px; padding-bottom: 14px; font-size: 26px; color: #fff;">CONTACT
-					US</h3>
+				<h3 id="contactUsLabel">CONTACT US</h3>
 				<hr class="loginHr">
 				<div class="clearfix errorBlock" style="display: none;">
 					<div class="col-md-12"
@@ -37,7 +35,7 @@
 				<br>
 
 				<div class="row row-buffer contactUsFieldsDiv"
-					style="padding-top: 0px; margin-left: 120px;">
+					style="margin-top: -23px; margin-left: 120px;">
 					<!--  <div class="col-lg-3">
 						<label class="infoLabel" for="contact_us_name">Name <span>*</span></label>
 					</div>-->
@@ -63,7 +61,7 @@
 							class="TextField-floatingLabel-qefpP" style="display: none;">Email</span>
 					</div>
 				</div>
-				<div class="row row-buffer contactUsFieldsDiv" style="margin-left: 120px;">
+				<div class="row row-buffer contactUsFieldsDiv" style="margin-left: 120px;padding-bottom: 20px;">
 					<div class="col-lg-12">
 						<textarea id="contact_us_txtarea" aria-labelledby="contact_us_txtarea"
 							placeholder="Type your message here *" name="contact_us_txtarea"
@@ -74,22 +72,18 @@
 				</div>
 
 				<hr class="loginHr">
-				<div class="row row-buffer googleCaptchaDiv">
-					<div class="col-lg-4"></div>
-					<div class="col-lg-4">
+				<div class="row row-buffer googleCaptchaDiv">					
 						<div id="google_recaptcha"></div>
-					</div>
 				</div>
 
 
-				<div class="row contactUsBtns"
-					style="justify-content: center; margin-top: 30px; margin-bottom: 30px;">
-					<div class="col-xs-3 col-sm-3 col-md-3 cancelBtnDiv" style="margin-left: 3rem">
+				<div class="contactUsBtns">
+					<div class="cancelBtnDiv">
 						<a class="btn btn-lg btn-success btn-block"
 							style="background-color: #626262 !important; color: #FFFFFF;"
 							th:href="@{/}" id="cancelContactUs">CANCEL</a>
 					</div>
-					<div class="col-xs-3 col-sm-3 col-md-3 submitBtnDiv" style="margin-left: -6rem">
+					<div class="submitBtnDiv">
 						<button class="btn btn-lg btn-primary btn-block" id="btnSubmitEmail">SUBMIT</button>
 					</div>
 				</div>

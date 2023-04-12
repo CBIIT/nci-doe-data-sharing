@@ -635,7 +635,8 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				// models,
 				// add/update the hidden metadata applicable_model_identifiers
 
-				if (StringUtils.isNotEmpty(attrName) && attrName.equalsIgnoreCase("applicable_model_paths")) {
+				if (StringUtils.isNotEmpty(attrName) && attrValue != null && attrValue.length > 0
+						&& attrName.equalsIgnoreCase("applicable_model_paths")) {
 
 					HpcMetadataEntry hiddenMetadataForApplicableModels = new HpcMetadataEntry();
 					hiddenMetadataForApplicableModels.setAttribute("applicable_model_identifiers");
@@ -653,11 +654,11 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 					if (CollectionUtils.isNotEmpty(attrNamesDisplay)) {
 						hiddenMetadataForApplicableModels.setValue(String.join(", ", attrNamesDisplay));
 						hiddenAttrEntryForApplicableModels.setAttrValue(String.join(", ", attrNamesDisplay));
+						metadataEntries.add(hiddenMetadataForApplicableModels);
+						hiddenAttrEntryForApplicableModels.setSystemAttr(false);
+						selfMetadataEntries.add(hiddenAttrEntryForApplicableModels);
 					}
 
-					metadataEntries.add(hiddenMetadataForApplicableModels);
-					hiddenAttrEntryForApplicableModels.setSystemAttr(false);
-					selfMetadataEntries.add(hiddenAttrEntryForApplicableModels);
 				}
 
 				attrEntry.setAttrName(attrName);

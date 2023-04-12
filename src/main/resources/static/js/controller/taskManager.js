@@ -2,25 +2,30 @@ $(document).ready(function() {
 	$.fn.dataTable.moment("MM/DD/YYYY HH:mm:ss");
 	$(".landing-tab").removeClass('active');
 	$(".search-tab").removeClass('active');
-	$("#manageTasks-tab").addClass('active');
-	refreshTaskDatatable('manageTasksTable');
+	
+	var redirectToPredTab = $("#redirectToPredTab").val();
+	if(redirectToPredTab) {
+	  $("#modelAnalysisStatus").click();
+	} else {
+	  $("#manageTasks-tab").addClass('active');
+	  refreshTaskDatatable('manageTasksTable');
+	}	
+});
 
-	$("#modelAnalysisStatus").click(function(e) {
+$("#modelAnalysisStatus").click(function(e) {
 		$(this).css('background-color', '#E87B05');
 		$("#transferTaskStatus").css('background-color', '#B7B7B7');
 		$("#manageTasksTable").hide();
 		$("#inferencingTable").show();
 		refreshTaskDatatable('inferencingTable');
-	});
+});
 
-	$("#transferTaskStatus").click(function(e) {
+$("#transferTaskStatus").click(function(e) {
 		$(this).css('background-color', '#E87B05');
 		$("#modelAnalysisStatus").css('background-color', '#B7B7B7');
 		$("#inferencingTable").hide();
 		$("#manageTasksTable").show();
 		refreshTaskDatatable('manageTasksTable');
-	});
-
 });
 
 $("#showAll").on('change', function() {

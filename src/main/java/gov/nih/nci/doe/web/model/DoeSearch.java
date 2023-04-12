@@ -9,7 +9,6 @@ public class DoeSearch {
 	private String[] attrValue;
 	private String attrValuesString;
 	private boolean detailed;
-	private String searchType;
 	private int pageNumber = 1;
 	private boolean[] isExcludeParentMetadata;
 	private boolean[] iskeyWordSearch;
@@ -78,14 +77,6 @@ public class DoeSearch {
 
 	public void setAttrValue(String[] attrValue) {
 		this.attrValue = attrValue;
-	}
-
-	public String getSearchType() {
-		return searchType;
-	}
-
-	public void setSearchType(String searchType) {
-		this.searchType = searchType;
 	}
 
 	public void setLevel(String[] level) {

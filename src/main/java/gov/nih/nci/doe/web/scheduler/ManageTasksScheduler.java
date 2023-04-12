@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,14 +24,15 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
-
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.controller.AbstractDoeController;
 import gov.nih.nci.doe.web.domain.Auditing;
 import gov.nih.nci.doe.web.domain.InferencingTask;
+
 import gov.nih.nci.doe.web.repository.AuditingRepository;
 import gov.nih.nci.doe.web.repository.InferencingTaskRepository;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
+
 import gov.nih.nci.hpc.domain.datatransfer.HpcFileLocation;
 import gov.nih.nci.hpc.domain.datatransfer.HpcUploadSource;
 import gov.nih.nci.hpc.domain.datatransfer.HpcUserDownloadRequest;
@@ -73,6 +75,8 @@ public class ManageTasksScheduler extends AbstractDoeController {
 	public void init() {
 		log.info("manage scheduler called");
 	}
+
+	SimpleDateFormat format = new SimpleDateFormat("MM_dd_yyyy");
 
 	@Scheduled(cron = "${doe.scheduler.cron.auditing}")
 	public void updateAuditingService() throws DoeWebException {
@@ -474,4 +478,5 @@ public class ManageTasksScheduler extends AbstractDoeController {
 		dto.getDataObjectRegistrationItems().add(file);
 		return dto;
 	}
+
 }

@@ -21,7 +21,6 @@ function dataTableInitForMobile() {
 			"url" : "/search",
 			"type" : "GET",
 			"data" : function(d) {
-				d.searchType = search_criteria_json.searchType;
 				d.detailed = search_criteria_json.detailed;
 				d.level = search_criteria_json.level;
 				d.attrName = search_criteria_json.attrName;

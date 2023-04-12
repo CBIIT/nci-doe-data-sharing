@@ -1,5 +1,4 @@
--- auto-generated definition
-create table USER_T
+create table NCI_DOE_DB_T.USER_T
 (
     ID                NUMBER not null
         constraint DOE_USER_PKEY
@@ -12,10 +11,13 @@ create table USER_T
     LOCKOUT_COUNTER   NUMBER,
     LOCKOUT_DATE      DATE,
     IS_WRITE          CHAR,
+    IS_ACTIVATED      CHAR,
+    UUID              VARCHAR2(255),
     CREATED_DATE      DATE,
     LAST_UPDATED_DATE DATE,
-    UUID              VARCHAR2(255),
-    IS_ACTIVATED      CHAR
+    IS_ADMIN          CHAR,
+    IS_DELETE         CHAR
 )
+
 /
 GRANT INSERT,UPDATE ON USER_T TO MODAC_APP_USER;

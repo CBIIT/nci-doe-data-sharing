@@ -57,6 +57,9 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 	@Value("${doe.jwt.secret.key}")
 	private String jwtSecretkey;
 
+	@Value("${modac.lamda.jwt.secret.key}")
+	private String jwtSecretKeyForLamda;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -109,17 +112,31 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 				// Authorization: get token from the header
 				String[] authorizations = authorization.split(" ");
 				String token = authorizations[1];
-				// get user name from JWT token
-				Jws<Claims> jwsClaims = Jwts.parser().setSigningKey(jwtSecretkey).parseClaimsJws(token);
-				String user = (String) jwsClaims.getBody().get(userIdTokenClaim);
-				log.info("token authorization user: " + user);
-				// validate if the user exists in MoDaC system and set the write and read access
-				// tokens to session
-				if (StringUtils.isNotEmpty(user) && authService.doesUsernameExist(user.trim().toLowerCase())) {
-					session.setAttribute("writeAccessUserToken", writeAuthToken);
-					session.setAttribute("hpcUserToken", readAuthToken);
-					session.setAttribute("doeLogin", user);
+
+				if (requestUri.contains("/api/auditMetadataTransfer")) {
+
+					// this is for verifying the JWT token for the AWS Lamda function
+					Jws<Claims> jwsClaims = Jwts.parser().setSigningKey(jwtSecretKeyForLamda.getBytes())
+							.parseClaimsJws(token);
+					String user_token = (String) jwsClaims.getBody().get("user_token");
+					if (StringUtils.isNotEmpty(user_token) && user_token.equalsIgnoreCase(writeAccessUserName)) {
+						session.setAttribute("awsTokenAuthenticated", true);
+						session.setAttribute("hpcUserToken", readAuthToken);
+					}
+				} else {
+					// get user name from JWT token
+					Jws<Claims> jwsClaims = Jwts.parser().setSigningKey(jwtSecretkey).parseClaimsJws(token);
+					String user = (String) jwsClaims.getBody().get(userIdTokenClaim);
+					log.info("token authorization user: " + user);
+					// validate if the user exists in MoDaC system and set the write and read access
+					// tokens to session
+					if (StringUtils.isNotEmpty(user) && authService.doesUsernameExist(user.trim().toLowerCase())) {
+						session.setAttribute("writeAccessUserToken", writeAuthToken);
+						session.setAttribute("hpcUserToken", readAuthToken);
+						session.setAttribute("doeLogin", user);
+					}
 				}
+
 			} else if (Boolean.TRUE.equals(isExistsUrl)) {
 				// verify if API url is applicable to bypass username authorization
 				session.setAttribute("hpcUserToken", readAuthToken);

@@ -26,7 +26,6 @@ import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -155,7 +154,7 @@ public abstract class AbstractDoeController {
 	String clientSecret;
 
 	@Value("${gov.nih.nci.hpc.server.search.collection.compound}")
-	String compoundCollectionSearchServiceURL;
+	public String compoundCollectionSearchServiceURL;
 
 	@Value("${doe.writeaccount.password}")
 	private String writeAccessUserPassword;
@@ -235,6 +234,19 @@ public abstract class AbstractDoeController {
 		if (!StringUtils.isEmpty(emailAddr)) {
 			DoeUsersModel user = authenticateService.getUserInfo(emailAddr);
 			if (user != null && Boolean.TRUE.equals(user.getIsAdmin())) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	@ModelAttribute("isDelete")
+	public Boolean getIsDelete() {
+		String emailAddr = getLoggedOnUserInfo();
+		if (!StringUtils.isEmpty(emailAddr)) {
+			DoeUsersModel user = authenticateService.getUserInfo(emailAddr);
+			if (user != null && Boolean.TRUE.equals(user.getIsDeletePrivilege())) {
 				return true;
 			}
 		}
@@ -469,7 +481,7 @@ public abstract class AbstractDoeController {
 
 				} else {
 					HpcDataObjectDTO datafiles = DoeClientUtil.getDatafiles(authToken, dataObjectAsyncServiceURL,
-							selectedPath, false, true);
+							selectedPath, false, false);
 					if (datafiles != null && datafiles.getDataObject() != null) {
 						for (HpcMetadataEntry entry : datafiles.getMetadataEntries().getSelfMetadataEntries()
 								.getUserMetadataEntries()) {
