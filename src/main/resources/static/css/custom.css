@@ -1252,12 +1252,8 @@ BRANDING
 
 /* NCI Logo */
 #brand {
-	/*background-image: url(../images/tempate-bg-blue-02.png);*/
 	background-repeat: no-repeat;
 	background-size: cover;
-	/*border-bottom: 8px solid rgb(3, 158, 31);*/
-	/*border-bottom: 6px solid rgba(0,0,0,.4);*/
-	/*background-color:#01223e;*/
 }
 
 #nci-brand {
