@@ -395,9 +395,7 @@ public class RestAPICommonController extends AbstractDoeController {
 				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 				HpcDataObjectDownloadResponseDTO dataObject = parser
 						.readValueAs(HpcDataObjectDownloadResponseDTO.class);
-				downloadToUrl(dataObject.getDownloadRequestURL(),
-						dataObject.getDestinationFile() != null ? dataObject.getDestinationFile().getName() : "test",
-						response);
+				downloadToUrl(dataObject.getDownloadRequestURL(), dataObject.getDestinationFile().getName(), response);
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		}
