@@ -212,6 +212,12 @@ public class HomeController extends AbstractDoeController {
 		return "contactUsTab";
 	}
 
+	@GetMapping(value = "/siteFeedback")
+	public String getSiteFeedback(Model model, HttpSession session, HttpServletRequest request) {
+		model.addAttribute("siteKey", siteKey);
+		return "siteFeedbackTab";
+	}
+
 	@GetMapping(value = "/aboutTab")
 	public String getAboutTab(HttpSession session, HttpServletRequest request) {
 		return "aboutTab";

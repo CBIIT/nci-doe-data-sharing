@@ -16,5 +16,7 @@ public interface MailService {
 	public void sendErrorEmail(Exception e, String user);
 
 	public void sendContactUsEmail(String name, String email, String message);
+	
+	public void sendSiteFeedbackEmail(String name, String email, String message);
 
 }

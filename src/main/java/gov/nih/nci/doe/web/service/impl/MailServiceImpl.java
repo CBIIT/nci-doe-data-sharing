@@ -237,4 +237,18 @@ public class MailServiceImpl implements MailService {
 		params.put("username", name);
 		send("CONTACT_US_EMAIL", params);
 	}
+
+	@Override
+	public void sendSiteFeedbackEmail(String name, String email, String message) {
+		log.info("Sending site feedback us email");
+		final Map<String, Object> params = new HashMap<String, Object>();
+		final List<String> to = new ArrayList<String>();
+		to.add(supportEmail);
+		params.put(FROM, email);
+		params.put(TO, to.toArray(new String[0]));
+		params.put("message", message);
+		params.put("username", name);
+		send("SITE_FEEDBACK_EMAIL", params);
+		
+	}
 }
