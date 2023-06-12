@@ -318,3 +318,13 @@
   white-space: nowrap;
   margin-top: -1rem;
 }
+
+#siteFeedbackMsg {
+	font-family: inter_regular;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 26px;
+    text-align: center;
+    color: #2859DA;
+}

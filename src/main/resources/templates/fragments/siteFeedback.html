@@ -19,25 +19,8 @@
 		<form role="form" id="site-feedback-form" class="mx-auto">
 				<input type="hidden" id="siteKey" th:value="${siteKey}" />
 				
-				<div class="clearfix errorBlock" style="display: none;">
-					<div class="col-md-12"
-						style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
-						<div class="alert alert-danger" style="background-color: #E87B05;text-align: center;">
-							<h6 class="errorMsg" style="color: #EAF6FF"></h6>
-						</div>
-					</div>
-				</div>
 
-				<div class="clearfix successBlock" style="display: none;">
-					<div class="col-md-12"
-						style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
-						<div class="alert alert-success">
-							<h6 class="successMsg" style="text-align: center;"></h6>
-						</div>
-					</div>
-				</div>
-
-	   <div class="form-row">
+	     <div class="form-row">
 				  <div class="form-group col-lg-4 col-md-4 col-sm-4 more_information_div">
 				    <div class="get-more-information poppins-semi-bold-calypso-23px">Get More Information</div>
 				
@@ -55,6 +38,18 @@
 					
 			    <div class="frame-69">
 				  <div class="overlap-group2">
+				  				
+				  				
+				  <div class="clearfix errorBlock" style="display: none;">
+					<div class="col-md-12"
+						style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
+						<div class="alert alert-danger" style="text-align: center;">
+							<h6 class="errorMsg" style="color: #FF0000"></h6>
+						</div>
+					</div>
+				</div>
+
+				
 				    <div class="flex-row">
 				      <div class="site_feedback_header">
 				        <div class="contact-form">Site Feedback Form</div>
@@ -134,6 +129,17 @@
 				      <button class="btn btn-lg btn-primary btn-block" id="submitFeedback">Submit Form</button>
 				      </div>
 				    </div>
+				    
+				    <div class="clearfix successBlock" style="display: none;">
+					<div class="col-md-12"
+						style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
+						<div class="alert">
+							<h6 class="successMsg" id="siteFeedbackMsg" style="text-align: center;">
+							Thank you for your inquiry. We are redirecting you to the homepage.</h6>
+						</div>
+					</div>
+				</div>
+				
 				    </div>			    
 				  </div>				  
 				</div>	

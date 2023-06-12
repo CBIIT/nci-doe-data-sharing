@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import gov.nih.nci.doe.web.service.MailService;
 import gov.nih.nci.doe.web.domain.MailTemplate;
+import gov.nih.nci.doe.web.model.SiteFeedback;
 import gov.nih.nci.doe.web.repository.MailTemplateRepository;
 
 @Component
@@ -239,16 +240,16 @@ public class MailServiceImpl implements MailService {
 	}
 
 	@Override
-	public void sendSiteFeedbackEmail(String name, String email, String message) {
+	public void sendSiteFeedbackEmail(SiteFeedback feedback) {
 		log.info("Sending site feedback us email");
 		final Map<String, Object> params = new HashMap<String, Object>();
 		final List<String> to = new ArrayList<String>();
 		to.add(supportEmail);
-		params.put(FROM, email);
+		params.put(FROM, feedback.getEmailAddress());
 		params.put(TO, to.toArray(new String[0]));
-		params.put("message", message);
-		params.put("username", name);
+		params.put("message", feedback.getMessage());
+		params.put("username", feedback.getFirstName() + " " + feedback.getLastName());
 		send("SITE_FEEDBACK_EMAIL", params);
-		
+
 	}
 }

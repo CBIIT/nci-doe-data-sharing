@@ -68,7 +68,6 @@ function callSiteFeedbackFormValidation() {
 						invokeAjax('/siteFeedback', 'POST', JSON.stringify(siteFeedbackForm), postSiteFeedbackFunction,
 								postSiteFeedbackFailure, null, 'text');
 					} else {
-						//alert("Please verify reCAPTCHA");
 						$(".errorBlock").show();
 						$(".errorMsg").html("Please verify reCAPTCHA");
 						$('#btnSubmitEmail').prop('disabled', false);
@@ -84,7 +83,9 @@ function postSiteFeedbackFunction(data, status) {
 		$('#submitFeedback').prop('disabled', false);
 		$(".errorBlock").hide();
 		$(".successBlock").show();
-		$(".successMsg").html("Message sent. We'll contact you soon.");
+		$("#siteFeedbackMsg").fadeIn(1000).delay(5000).fadeOut(1000, function() {
+        location.replace('/');
+      });
 	} else {
 		$('#submitFeedback').prop('disabled', false);
 		$(".successBlock").hide();
