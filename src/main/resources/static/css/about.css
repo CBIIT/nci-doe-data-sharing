@@ -1,0 +1,51 @@
+.Aboutbuttoncontainer {
+	margin-bottom: 110px;
+	background-repeat: no-repeat;
+	background-size: auto;
+	height: 350px;
+	background-position: right;
+}
+
+#aboutText{
+	color: #FFFFFF;
+    font-family: latoregular;
+    font-size: 29px;
+    line-height: 60px;
+    margin-left: 2rem;
+    letter-spacing: 1.2px;
+}
+
+#aboutTxtlandingPage {
+	height: 18px; 
+	width: 189px; 
+	color: #E66F05;; 
+	font-family: 'Poppins'; 
+	font-size: 26px; 
+	line-height: 45px; 
+	letter-spacing: 2px;
+}
+#aboutImgDiv{
+	text-align: left;
+	margin-top: 179px;
+	margin-bottom: 50px;
+	background-color: #E66F05;
+}
+#aboutMoDaCDescp {
+	margin-top: -4rem;
+	margin-left: 8rem;
+	margin-right: 39rem;
+	width: fit-content;
+	padding-bottom: 10rem;
+}
+
+#aboutMoDaCDescp p {
+	opacity: 0.98;
+	color: #000000;
+	font-family: 'latoregular';
+	font-size: 17px;
+	letter-spacing: 1px;
+	line-height: 29px;
+}
+#aboutMoDaCDescp a{
+	font-family: 'lato_bold'; 
+}

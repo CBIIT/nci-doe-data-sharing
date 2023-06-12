@@ -7,82 +7,96 @@
 <body>
 	<div id="footer" class="col-md-12 col-sm-12 p-0" th:fragment="footer"
 		style="margin-top: 10px; height: fit-content;">
-		<footer role="contentinfo" class="sc-xGAEC cBoHoo">
-			<div class="sc-dWBRfb iWqacH">
-				<div class="sc-jHcXXw lkkECO">
-					<div class="sc-bQCEYZ irmCui footer_nci">
-						<div class="col-6">
-							<div class="sc-fXgAZx erAkNO">
-								<h1 aria-hidden="true" style="font-family: poppins_bold;">
-									National Cancer Institute<span>at the National
-										Institutes of Health</span>
-								</h1>
-							</div>
-						</div>
-						<div class="col-6 footer_more_info">
-							<div class="sc-bQCEYZ irmCui"
-								style="font-family: ralewayregular; letter-spacing: 1px;">
-								<div class="col-6"
-									style="padding-bottom: 1rem !important; margin-bottom: 0.5rem !important;">
-									<div class="sc-bQCEYZ irmCui">
-										<div class="col-12">
-											<h2 aria-hidden="true" class="sc-EZqKI iONckA">MORE
-												INFORMATION</h2>
-											<ul class="sc-eEVmNe illmTA">
-												<li class="sc-fmdNqN hyACbC"><a
-													aria-label="About MoDaC" class="sc-jXcxbT eINlL"
-													th:href="@{/aboutTab}">About MoDaC</a></li>
-												<li class="sc-fmdNqN hyACbC"><a
-													aria-label="About MoDaC" class="sc-jXcxbT eINlL"
-													target="_blank"
-													href="https://wiki.nci.nih.gov/display/MoDaCdoc">MoDaC
-														User Guide</a></li>
-												<li class="sc-fmdNqN hyACbC"><a th:href="@{/contactUs}">Contact
-														Us</a></li>
-											</ul>
-										</div>
-									</div>
-								</div>
-								<div class="col-6 footer_policies">
-									<h2 aria-hidden="true" class="sc-EZqKI iONckA">POLICIES</h2>
-									<ul class="sc-eEVmNe illmTA">
-
-										<li class="sc-fmdNqN hyACbC"><a
-											href="https://www.cancer.gov/policies/accessibility"
-											target="_blank" rel="noopener noreferrer">Accessibility</a></li>
-										<li class="sc-fmdNqN hyACbC"><a
-											href="https://www.cancer.gov/policies/disclaimer"
-											target="_blank" rel="noopener noreferrer">Disclaimer</a></li>
-										<li class="sc-fmdNqN hyACbC"><a
-											href="https://www.cancer.gov/policies/foia" target="_blank"
-											rel="noopener noreferrer">FOIA</a></li>
-										<li class="sc-fmdNqN hyACbC"><a
-											href="https://www.hhs.gov/vulnerability-disclosure-policy/index.html"
-											target="_blank" rel="noopener noreferrer">HHS
-												Vulnerability Disclosure</a></li>
-									</ul>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="sc-bQCEYZ irmCui footer_subsection">
-					<div class="col-12">
-						<div class="sc-dTSzeu krkYvd">
-							<a href="http://www.hhs.gov/" target="_blank"
-								rel="noopener noreferrer">U.S. Department of Health and
-								Human Services</a><span>|</span><a href="http://www.nih.gov/"
-								target="_blank" rel="noopener noreferrer">National
-								Institutes of Health</a><span>|</span><a
-								href="http://www.cancer.gov/" target="_blank"
-								rel="noopener noreferrer">National Cancer Institute</a><span>|</span><a
-								href="http://www.usa.gov/" target="_blank"
-								rel="noopener noreferrer">USA.gov</a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</footer>
+	
+	<div class="top-footer">
+	<div class="group-44">
+	  <div class="flex-container flex">
+	    <div class="text0-1 text0-3 opensans-normal-white-16-2px">
+	      <span class="opensans-bold-white-16px">More Information</span>
+	    </div>
+	    <div class="text1-1 opensans-normal-white-16-2px">
+	      <span class="opensans-normal-white-16-2px">
+	      <a aria-label="About MoDaC" th:href="@{/aboutTab}">About MoDaC </a><br />
+	      <a aria-label="About MoDaC" target="_blank" href="https://wiki.nci.nih.gov/display/MoDaCdoc">MoDaC
+		User Guide</a>
+	      <br/>
+	     <a th:href="@{/contactUs}"> Contact MoDaC </a>
+	      </span>
+	    </div>
+	  </div>
+	  <div class="flex-container-1 flex-container-3">
+	    <div class="text0 opensans-normal-white-16-2px">
+	      <span class="opensans-bold-white-16px">Policies</span>
+	    </div>
+	    <div class="text1 opensans-normal-white-16-2px">
+	      <span class="opensans-normal-white-16px">
+	      <a href="https://www.cancer.gov/policies/accessibility" target="_blank" rel="noopener noreferrer">Accessibility</a>
+	      <br />
+	      <a href="https://www.cancer.gov/policies/foia" target="_blank" rel="noopener noreferrer">FOIA</a>
+	      <br />
+	      <a href="/policies/privacy-security" target="_blank" rel="noopener noreferrer">Privacy &amp; Security</a>
+	      </span>
+	    </div>
+	  </div>
+	  <div class="flex-container-2 flex-container-3">
+	    <div class="text0 opensans-normal-white-16-2px">
+	      <span class="opensans-bold-white-16px"></span>
+	    </div>
+	    <div class="disclaimer_text opensans-normal-white-16-2px">
+	      <span class="opensans-normal-white-16px">
+	      <a href="/policies/disclaimer" target="_blank" rel="noopener noreferrer">Disclaimers</a>
+	      <br />
+	      <a href="https://www.hhs.gov/vulnerability-disclosure-policy/index.html" target="_blank" rel="noopener noreferrer">Vulnerability Disclosure</a>
+	      </span>
+	    </div>
+	  </div>
+	</div>
+	</div>
+	
+	<div class="bottom-footer">
+    <div class="frame-container">
+		<div class="frame-55">
+		  <div class="overlap-group1-2">
+		    <div class="flex-col-3 flex-col-4">
+		      <div class="institute-container">
+		        <p class="at-the-national-institutes-of-health poppins-normal-white-18-7px">
+		          <span class="poppins-normal-white-18-7px">at the National Institutes of Health</span>
+		        </p>
+		        <div class="national-cancer-institute poppins-bold-white-25px">
+		          <span class="poppins-bold-white-25px">National Cancer Institute</span>
+		        </div>
+		      </div>
+		      <div class="follow-us poppins-bold-white-22-9px">
+		        <span class="poppins-bold-white-22-9px">Follow us</span>
+		      </div>
+		      <img class="group-66" th:src="@{/images/group-66-1.png}" alt="Group 66" />
+		    </div>
+		    <div class="frame-46">
+		      <div class="contact-us poppins-bold-white-22-9px">
+		        <span class="poppins-bold-white-22-9px">Contact Us</span>
+		      </div>
+		      <div class="group-65">
+		        
+		        <div class="site-feedback opensans-normal-white-16px">
+		          <span class="opensans-normal-white-16px">Site Feedback</span>
+		        </div>
+		      </div>
+		      <div class="text0-2 text0-3 opensans-normal-white-14-2px">
+		        <span class="opensans-normal-white-14-2px">
+		        <a href="https://www.hhs.gov/" target="_blank" rel="noopener noreferrer"> U.S. Department of Health and Human Services </a>
+		        <br />
+		        <a href="https://www.nih.gov/" target="_blank" rel="noopener noreferrer">National Institutes of Health </a>
+		        <br />
+		        <a href="https://www.cancer.gov/" target="_blank" rel="noopener noreferrer">National Cancer Institute </a>
+		        <br />
+		        <a href="https://usa.gov/" target="_blank" rel="noopener noreferrer">USA.gov</a>
+		        </span>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+      </div>
+      </div>
 	</div>
 </body>
 </html>

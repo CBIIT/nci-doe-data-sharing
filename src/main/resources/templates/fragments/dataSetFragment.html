@@ -6,21 +6,9 @@
 </head>
 
 <body>
-	<div class="M-4 p-4" id="dataSetFragment" th:fragment="dataSetFragment"
-		style="font-size: 13px; margin-top: -2rem;">
+	<div id="dataSetFragment" th:fragment="dataSetFragment">
 		<div class="form-row pt-2 pb-2 mb-2" id="assetDetailsFragment">
 
-			<div class="col-lg-12 col-md-12 col-sm-12 float-right"
-				th:if="${returnToSearch eq true}">
-				<div class="controls controls-row mt-4">
-					<a class="float-left mb-2 mr-2" id="backtoSearch"><img
-						src="images/BackSearch-icon.png" data-toggle="tooltip"
-						title="Back to Search Results"
-						th:src="@{/images/BackSearch-icon.png}" style="width: 50px;"
-						alt="back to search"> &nbsp;&nbsp;<span class="backToSearch">Back
-							to Search Results</span></a>
-				</div>
-			</div>
 			<input type="hidden" th:value="${assetPath}" id="assetPath" /> <input
 				type="hidden" th:value="${accessGrp}" id="assetAccessGrp" /> <input
 				type="hidden" th:value="${assetPermission}" id="assetPermission" />
@@ -32,27 +20,33 @@
 				type="hidden" th:value="${applicableModelName}"
 				id="applicableModelName" />
 
-			<div class="col-lg-12 col-md-12 col-sm-12"
-				style="margin-top: 5px; border-bottom: 4px solid #194F85;">
-				<h4 class="datasetDetailsheader">Asset Details</h4>
+			<div class="col-lg-12 col-md-12 col-sm-12 assetDetailsHeader">
+			
+			<div class="controls controls-row mt-4" style="display: inline-flex">
+				<div th:if="${returnToSearch eq true}" id="backtoSearch" class="backToSearch_AssetDetailsDiv">
+    				<img src="/images/back_to_search_arrrow.png" alt="back to search" data-original-title="Back to Search Results"></div>
+                    <span class="backToSearch_assetDetails inter-semi-bold-tropical-blue-10px">BACK TO SEARCH RESULTS</span>
+				<div class="group-103">
+                  <h1 class="asset-detail_header">Asset Detail:</h1>
+                    <div class="assetName inter-medium-white-32px">11_4_2021_2nd Asset</div>
+                </div>
+			 </div>
 			</div>
+			
+			<div th:replace="fragments/dataSetFragment_mobile :: dataSetFragment_mobile"></div>
 
-			<br /> <br />
+			<div class="form-row col-lg-12 col-md-12 col-sm-12 poppins-semi-bold-blue-bayoux-23px"
+				id="assetDetailsSubSection">
+				<div class="overview-container">
+                   <div class="overview">Overview</div>            
+                 </div>
 
-			<div
-				th:replace="fragments/dataSetFragment_mobile :: dataSetFragment_mobile"></div>
-			<div class="form-row col-lg-12 col-md-12 col-sm-12"
-				id="assetDetailsSubSection"
-				style="padding: 2rem 2rem; border-bottom: 2px solid #194F85;">
-				<div class="col-md-12 col-sm-12"
-					style="color: #000000; font-family: 'latoregular'; font-size: 13px; margin-left: -19px; word-break: break-word;">
 					<table id="assetDetailsDiv"
-						class="table display dt-responsive wrap"
-						style="border: none; background-color: transparent;">
-						<tbody style="background-color: transparent;">
+						class="table display dt-responsive wrap">
+						<tbody>
 						  <tr>
-								<td>ASSET LINK:</td>
-								<td style="font-family: lato_bold;"><span
+								<td class="opensans-bold-midnight-blue-13px">ASSET LINK:</td>
+								<td class="inter-semi-bold-green-blue-16px"><span
 									th:text="${assetLink}" id="assetUrlLink"></span>
 									<button type="button" class="share-assetLink-copy-button"
 										data-toggle="tooltip" data-placement="bottom"
@@ -61,45 +55,44 @@
 										<img src="images/Asset_link.svg" width="17"
 											alt="Copy to clipboard">
 									</button></td>
+									
 							</tr>
 							<tr>
-								<td>PROGRAM NAME:</td>
-								<td style="font-family: lato_bold;" id="selectedProgramName"
+								<td class="opensans-bold-midnight-blue-13px">PROGRAM NAME:</td>
+								<td class="inter-normal-deep-sapphire-16px" id="selectedProgramName"
 									th:text="${progName}"></td>
 							</tr>
+							
 							<tr>
-								<td>STUDY NAME:</td>
-								<td style="font-family: lato_bold;" id="selectedStudyName"
+								<td class="opensans-bold-midnight-blue-13px">STUDY NAME:</td>
+								<td class="inter-normal-deep-sapphire-16px" id="selectedStudyName"
 									th:text="${studyName}"></td>
 							</tr>
+							
 							<tr>
-								<td>ASSET NAME:</td>
-								<td style="font-family: lato_bold;" id="selectedDataSetName"
+								<td class="opensans-bold-midnight-blue-13px">ASSET NAME:</td>
+								<td class="inter-normal-deep-sapphire-16px" id="selectedDataSetName"
 									th:text="${assetName}"></td>
 							</tr>
+							
 							<tr>
-								<td>ASSET PATH:</td>
-								<td style="font-family: lato_bold;" id="selectedAssetPath"
+								<td class="opensans-bold-midnight-blue-13px">ASSET PATH:</td>
+								<td class="inter-normal-deep-sapphire-16px" id="selectedAssetPath"
 									th:text="${assetPath}"></td>
 							</tr>
 						</tbody>
 					</table>
-				</div>
+			
 			</div>
 
 			<div
-				class="form-row col-lg-12 col-md-12 col-sm-12 asset_attributes_subsection"
-				style="padding-bottom: 1rem;">
-				<button type="button" class="float-left btn asset-attributes"
-					data-toggle="collapse" data-target="#dataSetMetaData">
-					<img src="images/arrow.collapse-open.svg"
-						th:src="@{/images/arrow.collapse-open.svg}" style="width: 14px;"
-						alt="asset attributes"> <strong>&nbsp;&nbsp;Asset
-						Attributes</strong>
-				</button>
+				class="form-row col-lg-12 col-md-12 col-sm-12 poppins-semi-bold-blue-bayoux-23px asset_attributes_subsection">
+				<div class="asset-attributes-container">
+              		<div class="asset-attributes asset">Asset Attributes</div>
+            	</div>
 
 				<table id="dataSetMetaData" class="table display dt-responsive wrap">
-					<thead>
+					<thead class="opensans-normal-white-15px">
 						<tr>
 							<th aria-sort="none" class="sortable" data-sort="text"
 								role="columnheader" scope="col" style="width: 26%;">&nbsp;&nbsp;ATTRIBUTE</th>
@@ -109,14 +102,14 @@
 					</thead>
 					<tbody>
 						<tr th:each="metadata : ${assetMetadata}">
-							<td style="font-family: lato_bold;"
-								th:text="${metadata.displayName}"></td>
-							<td
+							<td class="opensans-bold-midnight-blue-13px"
+								th:text="${#strings.toUpperCase(metadata.displayName)}"></td>
+							<td class="inter-normal-deep-sapphire-16px"
 								th:if="${#strings.startsWith(metadata.value, 'https') OR #strings.startsWith(metadata.value, 'http')}">
 								<a target="_blank" th:href="${metadata.value}"><span
 									th:text="${metadata.value}"></span></a>
 							</td>
-							<td
+							<td class="inter-normal-deep-sapphire-16px"
 								th:unless="${#strings.startsWith(metadata.value, 'https') OR #strings.startsWith(metadata.value, 'http')}"
 								th:text="${metadata.value}"></td>
 						</tr>
@@ -124,6 +117,7 @@
 				</table>
 			</div>
 
+ 			
 			<div th:if="${showGeneratePredTab eq true}"
 				class="form-row col-lg-12 col-md-12 col-sm-12"
 				style="margin-left: 5px;">
@@ -161,7 +155,7 @@
 				</div>
 			</div>
 			<div th:if="${showGeneratePredTab ne true}"
-				class="assetFilesConditional">
+				class="assetFilesConditional poppins-semi-bold-blue-bayoux-23px">
 				<p class="assetFilesheader">Asset Files</p>
 			</div>
 
@@ -186,8 +180,7 @@
 			<div class="col-lg-12 col-md-12 col-sm-12 assetFilesmobileMsg"
 				style="display: none;">To access asset files, log in to MoDaC
 				from a desktop device.</div>
-			<div class="col-lg-12 col-md-12 col-sm-12 assetFilesDiv"
-				style="border: 2px solid #194F85; margin-top: -8px;">
+			<div class="col-lg-12 col-md-12 col-sm-12 assetFilesDiv">
 				<div class="col-lg-12 col-md-12 col-sm-12 float-right"
 					style="border-bottom: 2px solid rgb(197, 197, 197) !important; padding-bottom: 3px; margin-top: -10px;">
 					<div class="controls controls-row mt-4">

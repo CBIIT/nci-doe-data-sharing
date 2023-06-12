@@ -1,0 +1,176 @@
+.infoDownload {
+	font-size: 14px;
+	font-weight: bold;
+	font-style: italic;
+	margin-left: -12px;
+}
+
+#dataSetTable_wrapper, #generatePredTable_wrapper {
+    margin-top: -8px;
+    margin-left: -18px;
+}
+
+.assetFilesConditional {
+    margin-top: 27px;
+    margin-left: 6rem;
+}
+
+.group-103 {
+	align-items: flex-start;
+    display: flex;
+    gap: 12px;
+    margin-left: 196px;
+}
+
+.asset-detail_header {
+	color: var(--white);
+    font-family: var(--font-family-inter);
+    font-size: 32px;
+    font-weight: 300;
+    letter-spacing: -0.32px;
+    line-height: 34.1px;
+    white-space: nowrap;
+}
+.assetName {
+	letter-spacing: -0.32px;
+    line-height: 34.1px;
+    white-space: nowrap;
+    font-family: inter_medium;
+}
+
+.backToSearch_assetDetails {
+	display: flex;
+    flex-direction: column;
+    justify-content: center;
+    letter-spacing: 0.1px;
+    margin-left: 16px;
+    white-space: nowrap;
+    font-size: 10px;
+    color: #bdd8ff;
+}
+
+.backToSearch {
+    color: #E66F05;
+    font-family: 'inter_medium';
+    font-size: 17px;
+}
+
+table.subAssetsDataSetTable, table.subFolderAssetsDataSetTable {
+	border: transparent;
+	background-color: rgb(251, 251, 251);
+	margin-bottom: 0px;
+}
+
+.datasetDetailsheader {
+	font-family: 'inter_regular';
+}
+.asset-attributes {
+	margin-top: 10px;
+}
+#performInferencing, #performModelAnalysisBtn {
+	background-color: #E87B05 !important;
+	width: 155px;
+	border-radius: 14px;
+	font-family: 'inter_regular';
+	font-size: 15px;
+}
+img.infoMetadata {
+	width: 12px;
+	margin-top: -5px;
+}
+#assetDetailsDiv {
+	border: none;
+    background-color: transparent;
+    margin-left: 2rem;
+}
+table#assetDetailsDiv td {
+	border: none;
+	background-color: transparent;
+	padding-top: 2px;
+}
+
+#dataSetMetaData {
+	margin-top: 6px;
+    width: 88%
+}
+
+table#dataSetMetaData thead th {
+	background-color: var(--lapis-lazuli);
+}
+
+table#dataSetMetaData thead tr th {
+	padding-left: 2rem;
+}
+
+table#dataSetMetaData tr:nth-child(even) td {
+	background-color: #E0F0F4 !important;
+	padding-left: 2.3rem;
+}
+
+table#dataSetMetaData tr:nth-child(odd) td {
+	background-color: #FBFBFB !important;
+	padding-left: 2.3rem;
+}
+
+.assetDetailsHeader {
+	background-image: url(/images/asset_details_background.png);
+	align-items: center;
+	background-size: 100% 100%;
+    display: flex;
+    height: 141px;
+    padding: 45px 95px !important;
+}
+
+
+.backToSearch_AssetDetailsDiv {
+	align-items: center;
+    display: flex;
+    height: 41px;
+    justify-content: center;
+    transform: rotate(3.14deg);
+    background-color: #e66f05;
+    border-radius: 65px;
+    width: 41px;
+}
+
+.backToSearch_AssetDetailsDiv img {
+	height: 23px;
+    width: 16px;
+}
+
+.asset_attributes_subsection {
+	margin-left: 6rem;
+	display: block;
+	border-bottom: 1px solid rgb(197, 197, 197) !important;
+}
+.assetFilesDiv{
+	 margin-left: 5.5rem;
+}
+
+#assetDetailsSubSection {
+	padding-top: 1rem;
+    gap: 26px;
+    padding-left: 6rem;
+}
+
+
+.overview-container	{
+	height: 75px;
+    position: relative;
+    width: 880px;
+}
+
+.overview-container .overview {
+ 	line-height: 24.5px;
+    position: absolute;
+    top: 39px;
+    white-space: nowrap;
+}
+
+.asset-attributes-container{
+	padding-top: 1rem;
+}
+
+#assetUrlLink {
+	text-decoration: underline;
+}

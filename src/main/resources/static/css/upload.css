@@ -37,3 +37,166 @@ table#newMetaDataTable thead tr th {
 .select2-selection .select2-selection--multiple{
 	background-color: #F7F7F7;
 }
+
+.uploadAssetLabels {
+	color: #000000;
+	font-family: 'inter_regular';
+	font-size: 14px;
+	font-weight: 500;
+}
+.assetBulkRadioButtons {
+	height: 19px;
+	width: 22px;
+	transform: translateY(5px);
+}
+.registeRadioButtons {
+	transform: scale(1.25);
+}
+
+.uploadslogo {
+	width: 15px;
+}
+#registerBulkAssets, #registerBulkDataFileBtn {
+	margin-top: 5px;
+	background-color: #E66F05;
+	color: #fff;
+	border-radius: 14px;
+	width: 100px;
+	font-family: 'inter_regular';
+	font-size: 15px;
+	letter-spacing: 0.5px;
+}
+#registerCollectionBtn {
+	background-color: #E66F05 !important;
+	color: #fff !important;
+	border-radius: 15px;
+	width: fit-content;
+	font-size: 15px;
+	font-family: 'inter_regular';
+}
+#cancelRegisterBtn {
+	background-color: #E66F05!important;
+	color: #fff !important;
+	border-radius: 15px;
+	width: 90px;
+	font-size: 15px;
+	font-family: 'inter_regular';
+}
+.parentCollectionName {
+	/*width: 130%;*/
+	height: 46px;
+	padding-left: 25px;
+	border: none;
+	background-color: #E0F0F4;
+	color: #000;
+	/* flex: 1; */
+}
+#btnRegister {
+	background-color: #245D93 !important;
+	font-size: 15px;
+	border-radius: 12px;
+	height: 38px;
+	width: 154px;
+	font-family: 'latoregular';
+	margin-left: 83px;
+}
+#driveUploadAuthlink,#cloudUploadAuthlink {
+	background-color: #E66F05 !important;
+	color: #fff !important;
+	border-radius: 15px;
+	width: 300px;
+}
+
+.uploadLabels {
+	color: #a85300;
+	font-family: 'inter_regular';
+	font-weight: 200;
+	font-size: 17px;
+}
+
+.uploadSubLabels {
+	color: #C06400;
+	font-family: 'inter_regular';
+	font-weight: 200;
+	font-size: 14px;
+}
+.assetGlobusSelectionFields {
+	color: #fff;
+	font-size: 13px;
+	letter-spacing: 0.5px;
+	margin-left: 10px;
+}
+.assetBulkGlobusLabels {
+	background-color: #194F85;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border: 0.95px solid #898989;
+	height: 47px;
+	padding-left: 10px;
+	font-family: 'inter_regular';
+	margin-right: 10px;
+}
+.assetBulkGlobusValues {
+	border: 0.95px solid #898989;
+	padding: 10px;
+	color: #000000;
+	font-family: 'inter_regular';
+}
+#pickerUploadLink {
+	color: #E87B05;
+	margin-left: 1.1rem;
+}
+.bulkAssetTextbox {
+	width: 100%;
+	border-radius: 9px;
+	border-color: transparent;
+	height: 29px;
+	padding-left: 10px;
+	font-family: 'inter_regular';
+}
+input#includeCriteria:focus {
+	outline: none;
+}
+.addUserMetadaDiv {
+	margin-top: -42px;
+	float: right;
+	padding-left: 0px;
+}
+.addDeleteUploadLabels {
+	color: #F39530;
+	font-family: 'inter_regular';
+	font-size: 14px;
+}
+#primaryGlobusButton, #assetSelectionGlobusButton {
+	background-color: #E66F05;
+	color: #fff !important;
+	border-radius: 15px;
+	width: 326px;
+	font-size: 15px;
+	font-family: 'inter_regular';
+}
+#collectionMetaDataLabel {
+	color: #1C3D5D;
+	font-family: latoregular;
+}
+table#globusDetailsDiv td {
+	border: none;
+	padding-top: 2px;
+}
+
+table#assetBulkMetadataTable tbody tr td {
+	background-color: #E0F0F4 !important;
+	padding: 5px;
+	padding-left: 14px;
+	font-family: 'latoregular';
+}
+
+table#assetBulkMetadataTable thead tr th {
+	background-color: #194F85 !important;
+	color: #fff;
+	font-weight: 400;
+	padding: 7px;
+	font-size: 13px;
+	font-family: 'inter_regular';
+	padding-left: 14px;
+}

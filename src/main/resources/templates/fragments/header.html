@@ -21,9 +21,9 @@
  <div id="brand" class="col-md-12 col-sm-12 pl-0 pr-0" role="navigation" th:fragment="header" aria-label="brand div">
 
   <!--logo image-->
-    <div class="col order-first" style="margin-left:-2.5rem;">
+    <div class="col order-first" style="margin-left:-0.5rem;">
         <a th:href="@{/}" aria-label="image link">
-        <img src="images/nci_logo.png" th:src="@{/images/nci_logo_2.svg}" class="logoImg" alt="National Cancer Institute"></a>
+        <img src="images/nci_logo_2.svg" th:src="@{/images/nci_logo_2.svg}" class="logoImg" alt="National Cancer Institute"></a>
     </div>
     
     <div th:if= "${downtimeMessage!= null}" class="col-md-12" style="color: red;font-size: 17px;font-weight: bold;text-align: center;">
@@ -35,25 +35,33 @@
     <button class="col-md-10 col-sm-6 navbar-toggler order-first" type="button" data-toggle="collapse" data-target="#globalNav" aria-controls="globalNav" aria-expanded="false" aria-label="Toggle navigation">
         <span style="float: left"><i class="fas fa-bars"></i></span>
     </button>
-<div id="globalNav" class="col-lg-8 col-md-11 navbar-collapse justify-content-end collapse navbar-collapse col order-last bordered" style="z-index:101010;max-height:15%;">
-            <div id="subNav" class="card-header" style="height:45px;">
+<div id="globalNav" class="col-lg-8 col-md-11 navbar-collapse collapse navbar-collapse col order-last bordered" style="z-index:101010;max-height:15%;">
+            <div id="subNav" class="card-header" style="height:45px;margin-left: -32px;">
         <ul class="nav nav-tabs card-header-tabs" id="subTab" role="tablist" style="margin-right: -37px;">
             <li class="nav-item" role="tab">
-                <a class="nav-link active landing-tab" th:href="@{/}"role="tab"><u>Home</u></a>
+                <a class="nav-link active landing-tab" th:href="@{/}"role="tab"><u>Home</u>
+                <img class="rectangle-4" th:src="@{/images/rectangle-4-1.png}" alt="Rectangle 4" />
+                </a>
             </li>
             
             
                 
             <li class="nav-item" role="tab">
-                <a class="nav-link search-tab"  th:href="@{/searchTab}" role="tab"><u>Search</u></a>
+                <a class="nav-link search-tab"  th:href="@{/searchTab}" role="tab"><u>Search</u>
+                <img class="rectangle-4" th:src="@{/images/rectangle-4-1.png}" alt="Rectangle 4" />
+                </a>
             </li>
            
            <li class="nav-item" role="tab" th:if="${loggedOnUser != null && isUploader eq true}">
-                <a class="nav-link" id="upload-tab" th:href="@{/addbulk}" role="tab" ><u>Upload</u></a>
+                <a class="nav-link" id="upload-tab" th:href="@{/addbulk}" role="tab" ><u>Upload</u>
+                <img class="rectangle-4" th:src="@{/images/rectangle-4-1.png}" alt="Rectangle 4" />
+                </a>
             </li>
             
             <li class="nav-item" role="tab" th:if="${loggedOnUser != null}">
-                <a class="nav-link" id="manageTasks-tab" th:href="@{/tasksTab}" role="tab"><u>Status</u></a>
+                <a class="nav-link" id="manageTasks-tab" th:href="@{/tasksTab}" role="tab"><u>Status</u>
+                <img class="rectangle-4" th:src="@{/images/rectangle-4-1.png}" alt="Rectangle 4" />
+                </a>
             </li>
             
             
@@ -61,14 +69,19 @@
                     <a class="nav-link dropdown-toggle aboutTabNav" href="#" role="button" aria-label="Help"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                        <u>About</u>
+                      <img class="rectangle-4" th:src="@{/images/rectangle-4-1.png}" alt="Rectangle 4" />
+							<img class="frame-49" th:src="@{/images/bottom-arrow.png}"  alt="Frame 49" />
                     </a>
-                         <div class="dropdown-menu" style="margin-top:14px !important;margin-left: 33px;background-color: #1D90FF;">
+                         
+                    
+                 <div class="dropdown-menu" style="margin-top:14px !important;margin-left: 33px;background-color: #1D90FF;">
                         <a class="dropdown-item" id="about-tab" th:href="@{/aboutTab}">About MoDaC</a>
                         <a th:if= "${showApiDocs}" class="dropdown-item" id="api-docs" 
                         target="_blank" th:href="@{/swagger-ui/index.html}">API Documentation</a>
                         <a class="dropdown-item" target="_blank" href="https://wiki.nci.nih.gov/display/MoDaCdoc" rel="noopener noreferrer">User Guide</a>
                         <a class="dropdown-item" th:href="@{/contactUs}">Contact</a>
                     </div>
+                    
 
                 </li>
  
@@ -80,7 +93,7 @@
         <ul class="navbar-nav card-header-tabs text-white justify-content-end" role="tablist" style="margin-top: -2px;">
                 
                 <li th:if= "${loggedOnUser != null}" class="nav-item dropdown" role="tab">
-                    <a class="nav-link dropdown-toggle" style="color: #CC5200;" href="#" role="button" aria-label="Help"
+                    <a class="nav-link dropdown-toggle" href="#" role="button" aria-label="Help"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                        <span style="text-transform: uppercase;" th:text="${firstName}">&nbsp;
                        <i aria-hidden="true" class="fa fa-caret-down pull-right"></i></span>
@@ -92,11 +105,11 @@
                 </li>
 
                   <li class="nav-item" role="tab" th:if="${loggedOnUser == null}">
-                <a class="nav-link" id="login-tab" style="color:#CC5200;" th:href="@{/loginTab}" role="tab">Login</a>
+                <a class="nav-link" id="login-tab" th:href="@{/loginTab}" role="tab">Login</a>
               </li>
                 			    	
                <li class="nav-item" th:if= "${loggedOnUser != null}" role="tab">
-			    	<a class="nav-link" style="color: #CC5200;" href="#" id="logout">|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LOGOUT</a>
+			    	<a class="nav-link" href="#" id="logout">|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LOGOUT</a>
 			    	</li>
             </ul>
         </div>

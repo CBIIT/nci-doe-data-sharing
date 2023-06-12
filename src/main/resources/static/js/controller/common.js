@@ -762,15 +762,15 @@ $(document).on('click', '.dataTargetCollapse', function() {
 	if ($(this).parent().parent().find('div.dataDivCollapse').is(":visible")) {
 		$(this).parent().css('margin-bottom', '-1px');
 		$(this).parent().parent().find('div.dataDivCollapse').css('display', 'none');
-		$(this).parent().parent().find('.filterSearchBox').css('display', 'none');
-		$(this).attr('src', '/images/AccordionUp.svg');
+		$(this).parent().parent().find('.search_filter_div').css('display', 'none');
+		$(this).attr('src', '/images/AccordionUp.png');
 		$(this).parent().parent().find(".css-17rpx5x").hide();
 		$(this).parent().parent().find(".css-17rpx5xLess").hide();
 	} else {
 		$(this).parent().css('margin-bottom', '15px');
 		$(this).parent().parent().find('div.dataDivCollapse').css('display', 'block');
-		$(this).parent().parent().find('.filterSearchBox').css('display', 'none');
-		$(this).attr('src', '/images/AccordionDown.svg');
+		$(this).parent().parent().find('.search_filter_div').css('display', 'none');
+		$(this).attr('src', '/images/AccordionDown.png');
 		$(this).parent().parent().find('.css-17rpx5x').show();
 		$(this).parent().parent().find('.showMore').show();
 		showFirstFewFields($(this).parent().parent(), 'Less');
@@ -778,16 +778,20 @@ $(document).on('click', '.dataTargetCollapse', function() {
 });
 
 $(document).on('click', '.searchCheckBoxlist', function() {
-	if ($(this).parent().parent().find('.filterSearchBox').is(":visible")) {
-		$(this).parent().parent().find('.filterSearchBox').css('display', 'none');
+	if ($(this).parent().parent().find('.search_filter_div').is(":visible")) {
+		$(this).parent().parent().find('.search_filter_div').css('display', 'none');
 	} else {
-		$(this).parent().parent().find('.filterSearchBox').css('display', 'block');
+		$(this).parent().parent().find('.search_filter_div').css('display', 'flex');
 	}
+});
+
+$(document).on('click', '.cancel_fiter_icon', function() {
+		$(this).parent().find('.filterSearchBox').val("").trigger('keyup');
 });
 
 $(document).on('keyup', '.filterSearchBox', function() {
 	var query = $(this).val().toLowerCase();
-	$(this).parent().find('.filteritem').each(function(i, elem) {
+	$(this).parent().parent().find('.filteritem').each(function(i, elem) {
 		var x = $(this).val().toLowerCase();
 		if (x.indexOf(query) != -1) {
 			$(this).parent().parent().show();
@@ -1041,7 +1045,7 @@ function showFirstFewFields($this, oper) {
 						$(this).find('.showMorefields').show();
 					}
 				});
-				$this.find(".showMore").text(modifiedSize + " More");
+				$this.find(".showMore").html(modifiedSize + " More Items " + '<i class="fas fa-angle-right"></i>');
 			} else {
 				$this.find('.css-17rpx5x').hide();				
 			}
@@ -1050,7 +1054,7 @@ function showFirstFewFields($this, oper) {
 			if (len > 4) {
 				var modifiedSize = len - 4;
 				$this.find('.css-17rpx5x').show();
-				$this.find(".showMore").text(modifiedSize + " More");
+				$this.find(".showMore").html(modifiedSize + " More Items " + '<i class="fas fa-angle-right"></i>');
 			} else {
 				$this.find('.css-17rpx5x').hide();				
 			}
@@ -1061,7 +1065,7 @@ function showFirstFewFields($this, oper) {
 			var len = $(this).find('.filterGroupDiv:visible').length;
 			var modifiedSize = len - 4;
 			if (len > 4) {
-				$(this).parent().find('.showMore').text(modifiedSize + " More");
+				$(this).parent().find('.showMore').html(modifiedSize + " More Items " + '<i class="fas fa-angle-right"></i>');
 				$(this).parent().find('.showMore').show();
 				$(this).parent().find('.css-17rpx5x').show();
 				$(this).parent().find('.css-17rpx5xLess').hide();
