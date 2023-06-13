@@ -30,8 +30,18 @@ function checkEmail() {
 	return valid;
 }
 
+function checkInquiry() {
+
+	var valid = false;
+	if ($("#inquiryList").val() && $("#inquiryList").val() != "Select") {
+		valid = true;
+	}
+	return valid;
+}
+
 function callContactUsFormValidation() {
 	jQuery.validator.addMethod("validEmail", checkEmail);
+	jQuery.validator.addMethod("validInquiry", checkInquiry);
 	$("#contact-us-form").validate(
 			{
 				rules : {
@@ -48,6 +58,11 @@ function callContactUsFormValidation() {
 					contact_us_org : {
 						required : true
 					},
+					inquiryList : {
+						required : true,
+						validInquiry : true
+					},
+					
 					id_user_email : {
 						required : true,
 						validEmail : true
@@ -56,6 +71,9 @@ function callContactUsFormValidation() {
 				messages : {
 					id_user_email : {
 						validEmail : "Enter a valid email address."
+					},
+					inquiryList : {
+						validInquiry : "Select a type of inquiry."
 					},
 				},
 				submitHandler : function(form) {
@@ -71,6 +89,7 @@ function callContactUsFormValidation() {
 						contactusForm.lastName = $("#contact_us_lastname").val();
 						contactusForm.org = $("#contact_us_org").val();
 						contactusForm.message = $("#contact_us_txtarea").val();
+						contactusForm.inquiry = $("#inquiryList").val();
 						contactusForm.response = rcres;
 						invokeAjax('/contactUs', 'POST', JSON.stringify(contactusForm), postContactUsFunction,
 								postContactUsFailure, null, 'text');

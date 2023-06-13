@@ -178,6 +178,16 @@
   position: relative;
   width: 325px;
 }
+
+.frame-66 {
+  align-items: flex-start;
+  display: flex;
+  gap: 12px;
+  height: 29px;
+  position: relative;
+  width: 325px;
+}
+
 .CaptchaDiv {
 	display: flex;
     justify-content: center;
@@ -207,6 +217,16 @@
 	border: none;
 	outline: none;	
 }
+
+.typeofinquiry {
+	margin-left: -1rem;
+    margin-top: 1rem;
+    white-space: nowrap;
+}
+.typeofinquiry_selections {
+	margin-top: 0.5rem;
+}
+
 
 .for-specific-question {
   margin-left: -1rem;
@@ -273,4 +293,39 @@ form#contact-us-form .error {
 }
 form#contact-us-form label {
 	color: #fff;
+}
+
+.select2-container span.select2-selection.select2-selection--single {
+    border: none;
+    background-color: var(--aqua-squeeze);
+    align-items: center;
+    background-color: var(--aqua-squeeze);
+    display: flex;
+    gap: 15px;
+    height: 38px;
+    padding: 0px 20px;
+    letter-spacing: 0;
+    line-height: 26px;
+    white-space: nowrap;
+    width: 422px;
+    border-radius: 0px;
+}
+.select2-container .select2-selection--single .select2-selection__rendered {
+	    color: var(--midnight-blue);
+	font-family: var(--font-family-inter);
+	font-size: var(--font-size-m);
+	font-weight: 400;
+	font-style: normal;
+}
+.select2-container--bootstrap4 .select2-selection--single .select2-selection__arrow b {
+    border-color: #000 transparent transparent transparent !important;
+    height: 20px;
+}
+
+.errorBlock {
+	padding-left: 0px; 
+	padding-right: 0px; 
+	padding-top: 10px; 
+	border-radius: 0px;
+	padding-bottom: 22px;
 }
