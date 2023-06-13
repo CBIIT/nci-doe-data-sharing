@@ -10,23 +10,6 @@
     justify-content: center;
     margin-left: auto;
 }
-.contactUsBtns {
-	display: flex;
-	justify-content: center; 
-	margin-top: 30px; 
-	margin-bottom: 30px;
-	flex-wrap: wrap;
-}
-
-#contactUsLabel {
-    text-align: center; 
-    font-family: latoregular;
-    letter-spacing: 2px;
-    padding-top: 18px; 
-    padding-bottom: 14px; 
-    font-size: 26px; 
-    color: #fff;
-}
 
 .registerDiv {
 	border: 1px solid #AD5A00;
@@ -69,16 +52,6 @@
 	width: 600px;
 }
 
-#contactUsSubTab {
-	border: 2.5px solid #214C75;
-	margin-top: 50px;
-	background-color: #6496C6;
-	box-sizing: border-box;
-	opacity: 0.96;
-	border-radius: 11px;
-	height: fit-content;
-}
-
 #registrationTab {
 	background-color: rgb(100, 150, 198);
 	box-sizing: border-box;
@@ -96,7 +69,7 @@
 	font-size: 13px;
 	color: #03233C;
 }
-#btnUpdateProfile, #btnSubmitEmail {
+#btnUpdateProfile {
 	width: 154px;
 	height: 38px;
 	border-radius: 12px;
@@ -114,7 +87,7 @@
 }
 
 
-#cancelUpdate, #cancelContactUs {
+#cancelUpdate {
 	width: 154px;
 	height: 38px;
 	border-radius: 12px;
@@ -160,9 +133,7 @@ form#update-profile-form label {
 	color: #fff;
 }
 
-form#contact-us-form label {
-	color: #fff;
-}
+
 
 form#userlogin label {
 	color: #fff;
@@ -186,10 +157,6 @@ form#userlogin .error {
 	padding-top: 0px;
 }
 
-form#contact-us-form .error {
-	color: rgb(251, 6, 10);
-	padding-top: 15px;
-}
 
 label.myErrorClass {
 	color: red;
@@ -205,13 +172,6 @@ label.myErrorClass {
 	transform: translateY(-3px);
 }
 
-.contactUsTextbox::placeholder {
-	color: #466D93 !important;
-	font-family: inter_medium;
-	font-size: 14px;
-	padding-left: 5px;
-	transform: translateY(-10px);
-}
 /*login fields */
 .loginFieldsTextBox {
 	width: 70%;
@@ -227,17 +187,6 @@ label.myErrorClass {
 	width: 100%;
 	height: 40px;
 	padding-top: 9px;
-	border-radius: 22px;
-	padding-left: 26px;
-	font-family: 'inter_medium';
-}
-
-.contactUsTextbox {
-	border: 0 solid #000000;
-	background-color: #FFFFFF;
-	width: 90%;
-	height: 45px;
-	padding-top: 25px;
 	border-radius: 22px;
 	padding-left: 26px;
 	font-family: 'inter_medium';

@@ -39,7 +39,13 @@ function callContactUsFormValidation() {
 						required : true,
 						minlength : 1
 					},
-					contact_us_name : {
+					contact_us_first_name : {
+						required : true
+					},
+					contact_us_lastname : {
+						required : true
+					},
+					contact_us_org : {
 						required : true
 					},
 					id_user_email : {
@@ -60,8 +66,10 @@ function callContactUsFormValidation() {
 						$("#dimmer").show();
 						grecaptcha.reset();
 						var contactusForm = {};
-						contactusForm.name = $("#contact_us_name").val();
+						contactusForm.firstName = $("#contact_us_first_name").val();
 						contactusForm.emailAddress = $("#id_user_email").val();
+						contactusForm.lastName = $("#contact_us_lastname").val();
+						contactusForm.org = $("#contact_us_org").val();
 						contactusForm.message = $("#contact_us_txtarea").val();
 						contactusForm.response = rcres;
 						invokeAjax('/contactUs', 'POST', JSON.stringify(contactusForm), postContactUsFunction,
@@ -83,7 +91,9 @@ function postContactUsFunction(data, status) {
 		$('#btnSubmitEmail').prop('disabled', false);
 		$(".errorBlock").hide();
 		$(".successBlock").show();
-		$(".successMsg").html("Message sent. We'll contact you soon.");
+		$("#contactusMsg").fadeIn(1000).delay(5000).fadeOut(1000, function() {
+        	location.replace('/');
+        });
 	} else {
 		$('#btnSubmitEmail').prop('disabled', false);
 		$(".successBlock").hide();

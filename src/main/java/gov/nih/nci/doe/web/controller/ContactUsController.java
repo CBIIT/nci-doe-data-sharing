@@ -37,8 +37,7 @@ public class ContactUsController extends AbstractDoeController {
 			} else {
 				Boolean success = DoeClientUtil.getResponseFromGoogleCaptcha(secretKey, contactUs.getResponse());
 				if (Boolean.TRUE.equals(success)) {
-					mailService.sendContactUsEmail(contactUs.getName(), contactUs.getEmailAddress(),
-							contactUs.getMessage());
+					mailService.sendContactUsEmail(contactUs);
 
 					log.info("successfully reset the password...");
 					return new ResponseEntity<>("SUCCESS", HttpStatus.OK);

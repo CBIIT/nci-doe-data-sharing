@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import gov.nih.nci.doe.web.service.MailService;
+import gov.nih.nci.doe.web.model.ContactUs;
 import gov.nih.nci.doe.web.domain.MailTemplate;
 import gov.nih.nci.doe.web.model.SiteFeedback;
 import gov.nih.nci.doe.web.repository.MailTemplateRepository;
@@ -227,15 +228,17 @@ public class MailServiceImpl implements MailService {
 	}
 
 	@Override
-	public void sendContactUsEmail(String name, String email, String message) {
+	public void sendContactUsEmail(ContactUs contactUs) {
 		log.info("Sending contact us email");
 		final Map<String, Object> params = new HashMap<String, Object>();
 		final List<String> to = new ArrayList<String>();
 		to.add(supportEmail);
-		params.put(FROM, email);
+		params.put(FROM, contactUs.getEmailAddress());
 		params.put(TO, to.toArray(new String[0]));
-		params.put("message", message);
-		params.put("username", name);
+		params.put("message", contactUs.getMessage());
+		params.put("org", contactUs.getOrg());
+		params.put("inquiry", contactUs.getInquiry());
+		params.put("username", contactUs.getFirstName() + " " + contactUs.getLastName());
 		send("CONTACT_US_EMAIL", params);
 	}
 

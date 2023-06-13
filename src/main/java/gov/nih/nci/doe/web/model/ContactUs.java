@@ -2,10 +2,13 @@ package gov.nih.nci.doe.web.model;
 
 public class ContactUs {
 
-	private String name;
+	private String firstName;
 	private String emailAddress;
+	private String lastName;
+	private String org;
 	private String message;
 	private String response;
+	private String inquiry;
 
 	public String getResponse() {
 		return response;
@@ -15,12 +18,36 @@ public class ContactUs {
 		this.response = response;
 	}
 
-	public String getName() {
-		return name;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getOrg() {
+		return org;
+	}
+
+	public void setOrg(String org) {
+		this.org = org;
+	}
+
+	public String getInquiry() {
+		return inquiry;
+	}
+
+	public void setInquiry(String inquiry) {
+		this.inquiry = inquiry;
 	}
 
 	public String getEmailAddress() {

@@ -125,23 +125,6 @@
   position: relative;
 }
 
-.email-address {
-  letter-spacing: 0;
-  line-height: 26px;
-  margin-top: -0.5px;
-  position: relative;
-  white-space: nowrap;
-  width: fit-content;
-}
-
-.john-smithnihgov {
-  letter-spacing: 0;
-  line-height: 26px;
-  margin-top: -0.5px;
-  position: relative;
-  white-space: nowrap;
-  width: fit-content;
-}
 
 .frame-61 {
   align-items: flex-start;
@@ -155,7 +138,7 @@
   position: relative;
 }
 
-.first-name {
+.first-name,.email-address,.last-name,.organization {
   letter-spacing: 0;
   line-height: 26px;
   margin-top: -0.5px;
@@ -163,17 +146,8 @@
   white-space: nowrap;
   width: fit-content;
 }
-
-.name {
-  letter-spacing: 0;
-  line-height: 26px;
-  margin-top: -0.5px;
-  position: relative;
-  white-space: nowrap;
-  width: fit-content;
-}
-
-.site_feedback-form {
+	
+.contact-form {
   align-self: flex-start;
   color: #409cc6;
   font-family: var(--font-family-poppins);
@@ -185,7 +159,7 @@
   white-space: nowrap;
 }
 
-.sitefeedback-container {
+.contactus-container {
 	align-items: flex-start;
     display: flex;
     flex-direction: column;
@@ -209,48 +183,12 @@
     justify-content: center;
 }
 
-.organization {
-  letter-spacing: 0;
-  line-height: 26px;
-  margin-top: -0.5px;
-  position: relative;
-  white-space: nowrap;
-  width: fit-content;
-}
-
-.nih {
-  letter-spacing: 0;
-  line-height: 26px;
-  margin-top: -0.5px;
-  position: relative;
-  white-space: nowrap;
-  width: fit-content;
-}
-
-.surname {
-  letter-spacing: 0;
-  line-height: 26px;
-  margin-top: -0.5px;
-  position: relative;
-  white-space: nowrap;
-  width: fit-content;
-}
-
-.last-name {
-  letter-spacing: 0;
-  line-height: 26px;
-  margin-top: -0.5px;
-  position: relative;
-  white-space: nowrap;
-  width: fit-content;
-}
-
 .your-text-here {
 	display: flex;
     justify-content: center;
 }
 
-#site_feedback_txtarea {
+#contact_us_txtarea {
 	width: 66%;
 	background: #E7EDF1;
 	border: none;
@@ -262,10 +200,10 @@
   	font-style: normal;
 }
 
-.site_feedback_text {
+.contact_us_text {
 	border: none;	
 }
-.site_feedback_text:focus {
+.contact_us_text:focus {
 	border: none;
 	outline: none;	
 }
@@ -287,7 +225,7 @@
   justify-content: center;
 }
 
-#submitFeedback {
+#btnSubmitEmail {
 	color: var(--white);
     font-family: var(--font-family-inter);
     font-size: 15px;
@@ -319,7 +257,7 @@
   margin-top: -1rem;
 }
 
-#siteFeedbackMsg {
+#contactusMsg {
 	font-family: inter_regular;
     font-style: normal;
     font-weight: 400;
@@ -327,4 +265,12 @@
     line-height: 26px;
     text-align: center;
     color: #2859DA;
+}
+
+form#contact-us-form .error {
+	color: rgb(251, 6, 10);
+	padding-top: 2px;
+}
+form#contact-us-form label {
+	color: #fff;
 }

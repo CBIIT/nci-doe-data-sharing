@@ -1,6 +1,7 @@
 package gov.nih.nci.doe.web.service;
 
 import gov.nih.nci.doe.web.model.SiteFeedback;
+import gov.nih.nci.doe.web.model.ContactUs;
 
 public interface MailService {
 
@@ -17,7 +18,7 @@ public interface MailService {
 
 	public void sendErrorEmail(Exception e, String user);
 
-	public void sendContactUsEmail(String name, String email, String message);
+	public void sendContactUsEmail(ContactUs contactUs);
 
 	public void sendSiteFeedbackEmail(SiteFeedback feedback);
 
