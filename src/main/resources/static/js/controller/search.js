@@ -22,6 +22,7 @@ $(document).ready(function() {
 	$('body').tooltip({
 		selector : '[data-toggle="tooltip"]'
 	});
+	
 	var dmeDataId = $("#dmeDataId").val();
 	var doiId = $("#doi").val();
 	var returnToSearch = $("#returnToSearch").val();
@@ -249,10 +250,10 @@ function refreshDataTable() {
 function dataTableInit(isVisible) {
 	$('#searchResultTable').DataTable({
 		"paging" : true,
-		"ordering" : false,
 		"info" : true,
 		"pageLength" : 25,
 		"responsive": true,
+		"order": [[0, 'asc']],
 		"ajax" : {
 			"url" : "/search",
 			"type" : "GET",
@@ -320,6 +321,19 @@ function dataTableInit(isVisible) {
 				var dmeDataId = $(this).attr('dme_data_id');
 				location.replace('/assetDetails?returnToSearch=true&&dme_data_id=' + dmeDataId);
 			});
+			
+			 		  
+			 $("#descSpan").click(function() {
+			   var table = $('#searchResultTable').DataTable();
+				    table.order([[0, 'desc']]).draw();
+				    table.ajax.reload(null, true);
+			  });
+  
+			 $('#ascSpan').on('click', function () {
+				var table = $('#searchResultTable').DataTable();
+				    table.order([[0, 'asc']]).draw();
+				    table.ajax.reload(null, true);
+			  });
 
 			$(".editCollectionMetadata").click(function() {
 				$("#searchFragmentDiv").hide();

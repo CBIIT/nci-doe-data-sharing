@@ -605,6 +605,10 @@ table#searchResultTable tr td{
 }
 
 
+table#searchResultTable.display tbody tr>.sorting_1, table#searchResultTable.order-column.stripe tbody tr>.sorting_1 {
+   background-color: transparent !important;
+}
+
 .cil_14_bold_no_color {
 	color: #2E76ED;
 	font-family: 'lato_bold';
@@ -790,4 +794,7 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
 #editCollectionFragment {
 	font-size: 13px;
     padding-left: 3rem;
+}
+#ascSpan, #descSpan {
+	cursor:pointer;
 }

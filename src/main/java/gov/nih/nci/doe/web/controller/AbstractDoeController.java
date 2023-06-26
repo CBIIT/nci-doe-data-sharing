@@ -279,6 +279,18 @@ public abstract class AbstractDoeController {
 		}
 		return null;
 	}
+	
+	@ModelAttribute("lastName")
+	public String getLoggedOnUserLastName() {
+		String emailAddr = getLoggedOnUserInfo();
+		if (StringUtils.isNotEmpty(emailAddr)) {
+			DoeUsersModel user = authService.getUserInfo(emailAddr);
+			if (user != null) {
+				return user.getLastName();
+			}
+		}
+		return null;
+	}
 
 	@ModelAttribute("fullName")
 	public String getLoggedOnUserFullName() {

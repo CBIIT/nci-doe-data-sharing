@@ -30,25 +30,12 @@ function checkEmail() {
 	return valid;
 }
 
-function checkInquiry() {
-
-	var valid = false;
-	if ($("#inquiryList").val() && $("#inquiryList").val() != "Select") {
-		valid = true;
-	}
-	return valid;
-}
 
 function callContactUsFormValidation() {
 	jQuery.validator.addMethod("validEmail", checkEmail);
-	jQuery.validator.addMethod("validInquiry", checkInquiry);
 	$("#contact-us-form").validate(
 			{
 				rules : {
-					contact_us_txtarea : {
-						required : true,
-						minlength : 1
-					},
 					contact_us_first_name : {
 						required : true
 					},
@@ -58,11 +45,6 @@ function callContactUsFormValidation() {
 					contact_us_org : {
 						required : true
 					},
-					inquiryList : {
-						required : true,
-						validInquiry : true
-					},
-					
 					id_user_email : {
 						required : true,
 						validEmail : true
@@ -72,13 +54,26 @@ function callContactUsFormValidation() {
 					id_user_email : {
 						validEmail : "Enter a valid email address."
 					},
-					inquiryList : {
-						validInquiry : "Select a type of inquiry."
-					},
 				},
 				submitHandler : function(form) {
 					var rcres = grecaptcha.getResponse();
-					if (rcres.length) {
+					var valid = true;
+					if ($("#inquiryList").val() && $("#inquiryList").val() == "Select") {
+						valid = false;
+						$(".errorBlock").show();
+						$(".errorMsg").html("Please select a type of inquiry.");
+						$('#btnSubmitEmail').prop('disabled', false);
+						return false;
+					}
+					if(!rcres.length) {
+						valid = false;
+						$(".errorBlock").show();
+						$(".errorMsg").html("Please verify reCAPTCHA");
+						$('#btnSubmitEmail').prop('disabled', false);
+						return false;
+					}
+					
+					if (valid) {
 						$('#btnSubmitEmail').prop('disabled', true);
 						$("#spinner").show();
 						$("#dimmer").show();
@@ -93,12 +88,6 @@ function callContactUsFormValidation() {
 						contactusForm.response = rcres;
 						invokeAjax('/contactUs', 'POST', JSON.stringify(contactusForm), postContactUsFunction,
 								postContactUsFailure, null, 'text');
-					} else {
-						//alert("Please verify reCAPTCHA");
-						$(".errorBlock").show();
-						$(".errorMsg").html("Please verify reCAPTCHA");
-						$('#btnSubmitEmail').prop('disabled', false);
-						return false;
 					}
 
 				},

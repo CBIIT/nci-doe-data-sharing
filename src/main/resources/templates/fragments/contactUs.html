@@ -63,6 +63,8 @@
                                         </div>
                                         <div class="contact_us_field_div inter-normal-midnight-blue-16px">
                                             <input type="text" autocomplete="off" id="contact_us_first_name" 
+                                            th:value="${firstName}" th:disabled="${firstName != null}"
+							                
                                             aria-labelledby="contact_us_first_name" name="contact_us_first_name" 
                                             maxlength="30" class="contact_us_text">
                                         </div>
@@ -75,6 +77,7 @@
                                         </div>
                                         <div class="contact_us_field_div inter-normal-midnight-blue-16px">
                                             <input type="text" autocomplete="off" id="id_user_email" 
+                                            th:value="${loggedOnUser}" th:disabled="${loggedOnUser != null}"
                                             aria-labelledby="id_user_email" name="id_user_email" 
                                             maxlength="30" class="contact_us_text">
                                         </div>
@@ -84,11 +87,13 @@
                                     <div class="frame-6">
                                         <div class="last-name opensans-bold-white-13px">
                                             <span class="opensans-bold-midnight-blue-13px">Last Name</span
-				            ><span class="opensans-bold-tamarillo-13px">*</span
-				            ><span class="opensans-bold-midnight-blue-13px">:</span>
+				            				><span class="opensans-bold-tamarillo-13px">*</span
+				           					 ><span class="opensans-bold-midnight-blue-13px">:</span>
                                         </div>
                                         <div class="contact_us_field_div inter-normal-midnight-blue-16px">
                                             <input type="text" autocomplete="off" id="contact_us_lastname" 
+                                            th:value="${lastName}" th:disabled="${lastName != null}"
+							             
                                             aria-labelledby="contact_us_lastname" name="contact_us_lastname" 
                                             maxlength="30" class="contact_us_text">
                                         </div>
@@ -172,6 +177,9 @@
                 </div>
             </div>
     </div>
+    
+
+    
     </form>
 
     </div>
