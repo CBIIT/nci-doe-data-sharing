@@ -1,9 +1,38 @@
-.Aboutbuttoncontainer {
-	margin-bottom: 110px;
-	background-repeat: no-repeat;
-	background-size: auto;
-	height: 350px;
-	background-position: right;
+.aboutcontainer {
+  align-items: flex-start;
+  background-image: url(/images/about_background.svg);
+  background-size: 100% 105%;
+  display: flex;
+  min-width: 1440px;
+  padding: 45px 438px;
+  height: 148px;
+}
+.valign-text-middle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.h4-inter-light-size {
+    align-items: flex-start;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    position: relative;
+    width: 564px;
+}
+
+.h4-inter-light-siz {
+    color: var(--white);
+    font-family: var(--font-family-inter);
+    font-size: var(--font-size-xxxxl);
+    font-weight: 300;
+    letter-spacing: -0.7px;
+    line-height: 37.3px;
+    margin-top: -1px;
+    position: relative;
+    text-align: center;
+    white-space: nowrap;
+    width: fit-content;
 }
 
 #aboutText{
@@ -31,21 +60,24 @@
 	background-color: #E66F05;
 }
 #aboutMoDaCDescp {
-	margin-top: -4rem;
-	margin-left: 8rem;
-	margin-right: 39rem;
-	width: fit-content;
-	padding-bottom: 10rem;
+  color: transparent;
+  font-family: var(--font-family-inter);
+  font-size: var(--font-size-m);
+  font-weight: 400;
+  left: 220px;
+  letter-spacing: 0;
+  line-height: 24px;
+  width: 1000px;
+  margin-top: 4rem;
+  padding-bottom: 4rem;
 }
 
-#aboutMoDaCDescp p {
-	opacity: 0.98;
-	color: #000000;
-	font-family: 'latoregular';
-	font-size: 17px;
-	letter-spacing: 1px;
-	line-height: 29px;
-}
+
 #aboutMoDaCDescp a{
-	font-family: 'lato_bold'; 
+  text-decoration: underline;
+  color: var(--green-blue);
+  font-family: var(--font-family-inter);
+  font-size: var(--font-size-m);
+  font-weight: 600;
+  font-style: normal; 
 }
