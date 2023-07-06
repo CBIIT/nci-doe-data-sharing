@@ -19,7 +19,7 @@
 	font-size: 14px;
 	font-weight: bold;
 	font-style: italic;
-	margin-left: -12px;
+	margin-left: 7rem;
 }
 
 #dataSetTable_wrapper, #generatePredTable_wrapper {
@@ -138,25 +138,18 @@ table#dataSetMetaData tr:nth-child(odd) td {
 	float: right;
 }
 
-#dataSetTable {
+#dataSetTable,#generatePredTable {
 	font-family: 'latoregular';
 	width: 97% !important;
 	border: transparent;
 	border-bottom: 8px solid rgb(197, 197, 197) !important;
 }
 
-#generatePredTable {
-	font-family: 'latoregular';
-	width: 97% !important;
-	border: transparent;
-	border-bottom: 8px solid rgb(197, 197, 197) !important;
-}
-
-table#dataSetTable tr:nth-child(even) td {
+table#dataSetTable tr:nth-child(even) td, table#generatePredTable tr:nth-child(even) td{
 	background-color: #E0F0F4 !important;
 }
 
-table#dataSetTable tr:nth-child(odd) td {
+table#dataSetTable tr:nth-child(odd) td, table#generatePredTable tr:nth-child(odd) td{
 	background-color: #FBFBFB !important;
 	
 }
@@ -181,7 +174,7 @@ table#dataSetTable thead tr th.select-checkbox {
 	background-image: none !important;
 }
 
-table#dataSetTable thead th {
+table#dataSetTable thead th, table#generatePredTable thead th{
     background-color: var(--lapis-lazuli);
     color:#fff;
 }
@@ -271,4 +264,43 @@ table#dataSetTable thead th {
 
 #assetUrlLink {
 	text-decoration: underline;
+}
+
+#assetFilesTab {
+	height: 55px; 
+	background-color: #194F85; 
+	color: #fff;
+}
+
+#assetFilesTab p {
+	font-weight: 500; 
+	color: #5099AB; 
+	margin-left: 18px; 
+	font-family: latoregular; 
+	font-size: 20px; 
+	line-height: 52px; 
+	cursor: pointer;
+}
+
+#generatePredictionsTab {
+	float: right; 
+	height: 55px; 
+	background-color: rgb(128 128 128/ 33%); 
+	color: #fff; 
+	margin-left: 4px;
+}
+
+#generatePredictionsTab p {
+	font-weight: 500; 
+	color: #5099AB; 
+	margin-left: 15px; 
+	font-family: latoregular; 
+	font-size: 20px; 
+	line-height: 52px; 
+	cursor: pointer;
+}
+
+#assetHeaderWithPredictions {
+	margin-left: 5rem;
+    margin-top: 3rem;
 }
