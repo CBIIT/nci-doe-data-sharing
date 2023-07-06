@@ -181,8 +181,7 @@
 				style="display: none;">To access asset files, log in to MoDaC
 				from a desktop device.</div>
 			<div class="col-lg-12 col-md-12 col-sm-12 assetFilesDiv">
-				<div class="col-lg-12 col-md-12 col-sm-12 float-right"
-					style="border-bottom: 2px solid rgb(197, 197, 197) !important; padding-bottom: 3px; margin-top: -10px;">
+				<div class="col-lg-12 col-md-12 col-sm-12 float-right assetFilesBtns">
 					<div class="controls controls-row mt-4">
 						<p th:if="${loggedOnUser == null}" class="infoDownload">
 							<img src='images/Status.info-tooltip.png'
@@ -192,11 +191,13 @@
 						</p>
 
 						<button id="downloadSelectedMetadata" type="button"
-							class="btn btn-primary float-right mb-2 mr-2" disabled>Download
-							Selected Metadata</button>
+							class="btn btn-primary float-right mb-2 mr-2" disabled>DOWNLOAD <br/>
+							SELECTED METADATA <img class="arrow_right_assets_files"
+							 th:src='@{/images/white_right_arrow.svg}'/></button>
 						<button id="downloadSelectedDataSet" type="button"
 							class="btn btn-primary float-right mb-2 mr-2" disabled>
-							Download <br />Selected Files
+							DOWNLOAD <br />SELECTED FILES <img class="arrow_right_assets_files" 
+							th:src='@{/images/white_right_arrow.svg}'/>
 						</button>
 					</div>
 				</div>
@@ -209,7 +210,7 @@
 								scope="colgroup"><label
 								style="color: rgba(255, 255, 255, 0.66) !important;"
 								class="select-checkbox-label"> <input type="checkbox"
-									class="selectAll">&nbsp;&nbsp;BATCH SELECT
+									class="selectAll">&nbsp;&nbsp;Batch Select
 							</label></th>
 							<th aria-sort="none" class="sortable" data-sort="text"
 								role="columnheader" scope="colgroup" style="padding-left: 10px;">FILE/COLLECTION</th>

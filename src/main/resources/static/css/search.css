@@ -34,26 +34,7 @@
 	font-weight: 100;
 }
 
-#dataSetTable_length, #generatePredTable_length {
-	margin-top: -6px;
-	font-family: 'latoregular';
-	margin-right: 25px;
-	float: right;
-}
 
-#dataSetTable {
-	font-family: 'latoregular';
-	width: 97% !important;
-	border: transparent;
-	border-bottom: 8px solid rgb(197, 197, 197) !important;
-}
-
-#generatePredTable {
-	font-family: 'latoregular';
-	width: 97% !important;
-	border: transparent;
-	border-bottom: 8px solid rgb(197, 197, 197) !important;
-}
 
 .popover {
 	border-radius: 17px;

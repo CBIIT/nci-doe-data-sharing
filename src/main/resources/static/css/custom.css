@@ -327,15 +327,6 @@ table#userMetaData tr:nth-child(even) td {
 	background-color: #00579e !important;
 }
 
-#downloadSelectedDataSet, #downloadSelectedMetadata,
-	#openInferModal, #performModelAnalysis {
-	background-color: #E87B05 !important;
-	margin-top: 0px;
-	border-radius: 13px;
-	height: 47px;
-	width: 191px;
-	font-size: 13px;
-}
 
 #updateMetaData, #addMetaData, #addNewMetaDataForSingleDataFile,
 	#updatePermissions, #addUserMetadataForBulkAssets,
@@ -424,33 +415,22 @@ table.dataTable thead .sorting_asc {
 	background-image: none !important;
 }
 
-table#manageTasksTable thead .sorting, table#dataSetTable thead .sorting,
-	table#inferencingTable thead .sorting {
+table#manageTasksTable thead .sorting{
 	background-image: url(/images/Sort-up.icon.svg) !important;
 	background-size: 16px 19px;
-}
-
-table#dataSetTable thead .sorting, table#dataSetTable thead .sorting_asc,
-	table#dataSetTable thead .sorting_desc {
-	background-position: 28% 60%;
 }
 
 table#manageTasksTable thead .sorting, table#manageTasksTable thead .sorting_asc,
-	table#manageTasksTable thead .sorting_desc, table#inferencingTable thead .sorting,
-	table#inferencingTable thead .sorting_asc {
+	table#manageTasksTable thead .sorting_desc {
 	background-position: 90% 50%;
 }
 
-table#manageTasksTable thead .sorting_asc, table#dataSetTable thead .sorting_asc,
-	table#inferencingTable thead .sorting_asc {
-	background-image: url(/images/Sort-up.icon.svg) !important;
+table#manageTasksTable thead .sorting_asc{
 	background-image: url(/images/Sort-up.icon.svg) !important;
 	background-size: 16px 19px;
 }
 
-table#manageTasksTable thead .sorting_desc, table#dataSetTable thead .sorting_desc,
-	table#inferencingTable thead .sorting_desc {
-	background-image: url(/images/Sort-down.icon.svg) !important;
+table#manageTasksTable thead .sorting_desc{
 	background-image: url(/images/Sort-down.icon.svg) !important;
 	background-size: 16px 19px;
 }
@@ -460,10 +440,6 @@ table#manageTasksTable thead .sorting_desc, table#dataSetTable thead .sorting_de
 	margin-left: -27px;
 }
 
-
-table#dataSetTable thead tr th.select-checkbox {
-	background-image: none !important;
-}
 
 table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after,
 	table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:after,
