@@ -178,11 +178,9 @@
 			<div class="col-lg-12 col-md-12 col-sm-12 assetFilesDiv">
 				<div class="col-lg-12 col-md-12 col-sm-12 float-right assetFilesBtns">
 					<div class="controls controls-row mt-4">
-						<p th:if="${loggedOnUser == null}" class="infoDownload">
-							<img src='images/Status.info-tooltip.png'
-								th:src='@{/images/Status.info-tooltip.png}' style='width: 12px;'
-								alt='Status info'> To download files, <a
-								th:href="@{/loginTab}">log in.</a>
+						<p th:if="${loggedOnUser == null}" class="infoDownload inter-normal-midnight-blue-16px">
+								To download files, please <a
+								th:href="@{/loginTab}">login.</a>
 						</p>
 
 						<button id="downloadSelectedMetadata" type="button"

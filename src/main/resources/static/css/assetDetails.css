@@ -16,9 +16,6 @@
 
 
 .infoDownload {
-	font-size: 14px;
-	font-weight: bold;
-	font-style: italic;
 	margin-left: 7rem;
 }
 
@@ -133,13 +130,11 @@ table#dataSetMetaData tr:nth-child(odd) td {
 
 #dataSetTable_length, #generatePredTable_length {
 	margin-top: -6px;
-	font-family: 'latoregular';
 	margin-right: 25px;
 	float: right;
 }
 
 #dataSetTable,#generatePredTable {
-	font-family: 'latoregular';
 	width: 97% !important;
 	border: transparent;
 	border-bottom: 8px solid rgb(197, 197, 197) !important;
@@ -147,10 +142,20 @@ table#dataSetMetaData tr:nth-child(odd) td {
 
 table#dataSetTable tr:nth-child(even) td, table#generatePredTable tr:nth-child(even) td{
 	background-color: #E0F0F4 !important;
+	color: var(--deep-sapphire);
+  	font-family: var(--font-family-inter);
+  	font-size: var(--font-size-m);
+  	font-weight: 400;
+  	font-style: normal;
 }
 
 table#dataSetTable tr:nth-child(odd) td, table#generatePredTable tr:nth-child(odd) td{
 	background-color: #FBFBFB !important;
+	color: var(--deep-sapphire);
+  	font-family: var(--font-family-inter);
+  	font-size: var(--font-size-m);
+  	font-weight: 400;
+  	font-style: normal;
 	
 }
 
@@ -176,7 +181,11 @@ table#dataSetTable thead tr th.select-checkbox {
 
 table#dataSetTable thead th, table#generatePredTable thead th{
     background-color: var(--lapis-lazuli);
-    color:#fff;
+    color: var(--white);
+  	font-family: var(--font-family-open_sans);
+  	font-size: var(--font-size-s);
+	font-weight: 400;
+	font-style: normal;
 }
 
 #downloadSelectedDataSet, #downloadSelectedMetadata,
