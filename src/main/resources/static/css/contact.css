@@ -329,3 +329,8 @@ form#contact-us-form label {
 	border-radius: 0px;
 	padding-bottom: 22px;
 }
+
+.arrow_right_contact_us {
+	width: 16px;
+    transform: translate(20px ,-2px);
+}
