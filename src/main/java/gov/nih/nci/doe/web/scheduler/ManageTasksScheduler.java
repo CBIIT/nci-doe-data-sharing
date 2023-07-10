@@ -249,10 +249,9 @@ public class ManageTasksScheduler extends AbstractDoeController {
 		log.info("generate prediction scheduler");
 		List<InferencingTask> getAllNotStartedTasks = inferencingTaskRepository.getAllNotStartedTasks("NOTSTARTED");
 
-		String authToken = DoeClientUtil.getAuthenticationToken(writeAccessUserName, writeAccessUserPassword,
-				authenticateURL);
 		for (InferencingTask t : getAllNotStartedTasks) {
 			log.info("call flask API for File Path: " + t.getTestDataSetPath());
+			;
 			try {
 				String dataFilePath = t.getTestDataSetPath();
 				String modelh5Path = t.getModelh5Path();
@@ -329,6 +328,8 @@ public class ManageTasksScheduler extends AbstractDoeController {
 
 			String outcomeFileName = t.getActualResultsFileName() != null ? t.getActualResultsFileName().substring(
 					t.getActualResultsFileName().lastIndexOf('/') + 1, t.getActualResultsFileName().length()) : null;
+			String authToken = DoeClientUtil.getAuthenticationToken(writeAccessUserName, writeAccessUserPassword,
+					authenticateURL);
 
 			try {
 				log.info("verify if inferencing file is available on mount " + predFileName);
