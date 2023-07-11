@@ -25,7 +25,7 @@
 			<div class="controls controls-row mt-4" style="display: inline-flex">
 				<div th:if="${returnToSearch eq true}" id="backtoSearch" class="backToSearch_AssetDetailsDiv">
     				<img src="/images/back_to_search_arrrow.png" alt="back to search" data-original-title="Back to Search Results"></div>
-                    <span class="backToSearch_assetDetails inter-semi-bold-tropical-blue-10px">BACK TO SEARCH RESULTS</span>
+                    <span th:if="${returnToSearch eq true}" class="backToSearch_assetDetails inter-semi-bold-tropical-blue-10px">BACK TO SEARCH RESULTS</span>
 				<div class="group-103">
                   <h1 class="asset-detail_header">Asset Detail:</h1>
                     <div class="assetName inter-medium-white-32px">11_4_2021_2nd Asset</div>
