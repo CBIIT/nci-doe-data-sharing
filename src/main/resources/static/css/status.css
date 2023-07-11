@@ -25,3 +25,7 @@ table#manageTasksTable th, table#inferencingTable th {
 	font-family: 'latoregular';
 	font-size: 16px;
 }
+
+table#manageTasksTable tr.odd td, table#inferencingTable tr.odd td {
+    background-color: #E0F0F4 !important;
+}
