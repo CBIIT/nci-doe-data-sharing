@@ -70,6 +70,7 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 	@ResponseBody
 	public AjaxResponseBody download(@RequestBody @Valid DoeDownloadDatafile downloadFile, HttpSession session,
 			HttpServletRequest request, HttpServletResponse response) {
+		log.info("download files: " + downloadFile.getSelectedPaths());
 		AjaxResponseBody result = new AjaxResponseBody();
 		try {
 			String authToken = null;
@@ -158,13 +159,12 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 				if (loggedOnUser != null) {
 					taskManagerService.saveTransfer(taskId, "Download", downloadFile.getSearchType(),
 							name != null ? name : downloadType, getLoggedOnUserInfo());
-					String transferType = downloadFile.getSearchType().equals("async") ? "Globus" : "S3";
 					// store the auditing info
 					AuditingModel audit = new AuditingModel();
 					audit.setName(loggedOnUser);
 					audit.setOperation("Download");
 					audit.setStartTime(new Date());
-					audit.setTransferType(transferType);
+					audit.setTransferType(downloadFile.getSearchType());
 					audit.setPath(String.join(",  ", downloadFile.getSelectedPaths()));
 					audit.setTaskId(taskId);
 					auditingService.saveAuditInfo(audit);

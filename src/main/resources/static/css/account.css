@@ -1,0 +1,206 @@
+.loginHr {
+	border: 0 solid #022749;
+	background-color: #022749;
+	box-sizing: border-box;
+	height: 1px;
+}
+
+.googleCaptchaDiv {
+    display: flex;
+    justify-content: center;
+    margin-left: auto;
+}
+
+.registerDiv {
+	border: 1px solid #AD5A00;
+	background-color: #FFFFFF;
+	border-radius: 7px !important;
+	color: #F8F6F6;
+	margin-bottom: 14px !important;
+}
+#loginSubTab {
+	width: 680px;
+	margin-top: 50px;
+	background-color: #6496C6;
+	border: 2.5px solid #214C75;
+	box-sizing: border-box;
+	opacity: 0.96;
+	border-radius: 11px;
+	height: fit-content;
+}
+
+#myAccountSubTab {
+	background-color: #6496C6;
+	border: 0 solid #000000;
+	box-sizing: border-box;
+	opacity: 0.96;
+	border-radius: 11px;
+	height: 635px;
+	width: 617px;
+	margin-top: 50px;
+	border: 2.5px solid #214C75;
+}
+
+#changePswdSubTab {
+	border: 2.5px solid #214C75;
+	margin-top: 50px;
+	background-color: #6496C6;
+	box-sizing: border-box;
+	opacity: 0.96;
+	border-radius: 11px;
+	height: fit-content;
+	width: 600px;
+}
+
+#registrationTab {
+	background-color: rgb(100, 150, 198);
+	box-sizing: border-box;
+	border: 2.5px solid #214C75;
+	opacity: 0.96;
+	border-radius: 11px;
+	height: fit-content;
+	margin-top: 50px;
+	width: 838px;
+	display: none;
+}
+
+#returnToLoginForm {
+	font-family: inter_medium;
+	font-size: 13px;
+	color: #03233C;
+}
+#btnUpdateProfile {
+	width: 154px;
+	height: 38px;
+	border-radius: 12px;
+	margin-left: 45px;
+	font-family: 'latoregular';
+	background-color: #245D93 !important;
+}
+#loginButton {
+	background-color: #245D93 !important;
+	font-size: 15px;
+	border-radius: 12px;
+	font-family: 'latoregular';
+	width: 154px;
+	height: 38px;
+}
+
+
+#cancelUpdate {
+	width: 154px;
+	height: 38px;
+	border-radius: 12px;
+	margin-left: -8px;
+	font-family: 'latoregular';
+	background-color: #C6E3FF !important;
+	color: #1C5886;
+}
+
+#btnforgotPassword {
+	width: 154px;
+	height: 38px;
+	border-radius: 12px;
+	font-family: 'latoregular';
+	margin-left: 45px;
+	background-color: #245D93 !important;
+}
+
+#cancelPassword {
+	width: 154px;
+	height: 38px;
+	border-radius: 12px;
+	font-family: 'latoregular';
+	margin-left: -8px;
+	background-color: #C6E3FF !important;
+	color: #1C5886;
+}
+#groupNames {
+	background-color: #A1C1DB;
+	color: #000000;
+	word-break: break-all;
+	height: 100%;
+}
+label.error {
+	color: rgb(251, 6, 10) !important;
+	margin-left: 17px;
+}
+form#register-form label {
+	color: #fff;
+}
+
+form#update-profile-form label {
+	color: #fff;
+}
+
+
+
+form#userlogin label {
+	color: #fff;
+}
+
+form#forgot-password-form label {
+	color: #fff;
+}
+
+form#forgot-password-form .error {
+	color: rgb(251, 6, 10);
+}
+
+form#register-form .error {
+	color: rgb(251, 6, 10);
+	padding-top: 0px;
+}
+
+form#userlogin .error {
+	color: rgb(251, 6, 10);
+	padding-top: 0px;
+}
+
+
+label.myErrorClass {
+	color: red;
+	font-size: 11px;
+	/*    font-style: italic;*/
+	display: block;
+}
+.loginFieldsTextBox::placeholder {
+	color: #4E8BC6 !important;
+	font-family: inter_medium;
+	font-size: 14px;
+	padding-left: 20px;
+	transform: translateY(-3px);
+}
+
+/*login fields */
+.loginFieldsTextBox {
+	width: 70%;
+	height: 110%;
+	padding-top: 14px;
+	border-radius: 22px;
+	padding-left: 26px;
+}
+
+.myaccountTextbox {
+	border: 0 solid #000000;
+	background-color: #FFFFFF;
+	width: 100%;
+	height: 40px;
+	padding-top: 9px;
+	border-radius: 22px;
+	padding-left: 26px;
+	font-family: 'inter_medium';
+}
+
+.TextField-floatingLabel-qefpP {
+	position: absolute;
+	left: 2.75rem;
+	top: 2px;
+	font-size: 11px;
+	color: #000;
+	font-family: 'inter_medium';
+}
+.modacSupportLink {
+	color: #fff;
+	text-decoration: underline;
+}

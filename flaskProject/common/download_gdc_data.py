@@ -76,7 +76,7 @@ def gunzip(file_path, output_path):
 def run_pre_process(File, manifest_dir_save_path, output_results):
     Manifest_Loc = str(File.replace('\\', '').strip())
     print('Reading Manifest File from: ' + Manifest_Loc)
-    UUIDs = read_manifest(Manifest_Loc)MoDaC_Inferencing/
+    UUIDs = read_manifest(Manifest_Loc)
     gdc_manifest = pd.read_csv('/mnt/IRODsTest/MoDaC_Inferencing/' + Manifest_Loc, sep="\t")
     gdc_manifest.set_index("id", inplace=True)
 

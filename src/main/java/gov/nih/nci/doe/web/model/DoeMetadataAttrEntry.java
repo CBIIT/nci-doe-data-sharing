@@ -16,6 +16,15 @@ public class DoeMetadataAttrEntry {
 	private Integer displayOrder;
 	private Boolean controllerAttribute;
 	private Boolean isVisible;
+	private Boolean isVisibleOnUplaodPage;
+
+	public Boolean getIsVisibleOnUplaodPage() {
+		return isVisibleOnUplaodPage;
+	}
+
+	public void setIsVisibleOnUplaodPage(Boolean isVisibleOnUplaodPage) {
+		this.isVisibleOnUplaodPage = isVisibleOnUplaodPage;
+	}
 
 	public Integer getDisplayOrder() {
 		return displayOrder;

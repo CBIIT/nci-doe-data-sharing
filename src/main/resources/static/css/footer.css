@@ -1,0 +1,245 @@
+footer {
+	background: #fff;
+	font-size: 14px;
+}
+
+.list-inline .list-inline-item a {
+	color: #333;
+}
+
+.list-inline .list-inline-item a:hover {
+	color: #00467f;
+}
+
+.frame-55 {
+  align-items: flex-start;
+  background-color: var(--biscay);
+  display: flex;
+  height: 224px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 1920px;
+}
+
+.overlap-group1-2 {
+  align-items: flex-start;
+  background-color: var(--biscay);
+  display: flex;
+  gap: 296px;
+  height: 224px;
+  min-width: 1920px;
+  padding: 16px 50px;
+}
+
+.frame-46 {
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+  margin-top: 1px;
+  min-height: 184px;
+  width: 524px;
+}
+
+.contact-us {
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: -1px;
+  min-height: 34px;
+  min-width: 130px;
+  text-align: right;
+}
+
+.text0-2 {
+  line-height: 18px;
+  margin-top: 34px;
+  min-height: 54px;
+  text-align: right;
+  width: 315px;
+}
+
+.text0-3 {
+  letter-spacing: 0;
+  position: relative;
+}
+
+.group-65 {
+  align-items: flex-start;
+  display: flex;
+  gap: 35px;
+  height: 22px;
+  margin-top: 7px;
+}
+
+.site-feedback {
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: -1px;
+  min-height: 22px;
+  min-width: 103px;
+  text-align: right;
+}
+
+.flex-col-4 {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-col-3 {
+  min-height: 166px;
+  width: 518px;
+}
+
+.institute-container {
+  height: 74px;
+  position: relative;
+  width: 518px;
+}
+
+.at-the-national-institutes-of-health {
+  left: 0;
+  letter-spacing: 0;
+  line-height: 40px;
+  position: absolute;
+  top: 27px;
+  white-space: nowrap;
+}
+
+.national-cancer-institute {
+  left: 0;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  top: 0;
+  width: 518px;
+}
+
+.group-66 {
+  height: 29px;
+  margin-left: 2px;
+  margin-top: 15px;
+  width: 205px;
+}
+
+.follow-us {
+  letter-spacing: 0;
+  line-height: normal;
+  margin-left: 2px;
+  margin-top: 14px;
+  min-height: 34px;
+}
+
+
+.bottom-footer {
+    align-items: flex-end;
+    background-color: var(--biscay);
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+.bottom-footer a {
+	color:#fff;
+}
+
+.frame-container {
+    height: 224px;
+    margin-bottom: 0;
+    position: relative;
+    width: 1920px;
+}
+
+.group-44 {
+  align-items: flex-start;
+  display: flex;
+  height: 150px;
+  left: 53px;
+  min-width: 630px;
+  position: absolute;
+  top: 29px;
+}
+
+.flex-container-2 {
+  height: 86px;
+}
+
+.flex-container-3 {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: -1px;
+  position: relative;
+  width: 195px;
+}
+
+.text0 {
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+  white-space: nowrap;
+  width: 195px;
+}
+
+.text1 {
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+  width: 195px;
+  line-height: 30px;
+}
+.disclaimer_text {
+	letter-spacing: 0;
+    line-height: normal;
+    position: relative;
+    width: 195px;
+    margin-top: 1.3rem;
+    line-height: 30px;
+}
+
+.flex-container {
+  gap: 10px;
+  height: 118px;
+  margin-top: -1px;
+  position: relative;
+  width: 145px;
+}
+
+.flex {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+}
+
+.text0-3 {
+  letter-spacing: 0;
+  position: relative;
+}
+
+.text0-1 {
+  line-height: normal;
+  white-space: nowrap;
+  width: 145px;
+}
+
+.text1-1 {
+  letter-spacing: 0;
+  line-height: 30px;
+  position: relative;
+  width: 145px;
+}
+
+.flex-container-1 {
+  height: 150px;
+  margin-left: 89px;
+}
+.top-footer {
+  background-color: #4566a6;
+  height: 330px;
+  margin-bottom: -80px;
+  width: 1920px;
+}
+
+.top-footer a {
+	color: #fff;
+}

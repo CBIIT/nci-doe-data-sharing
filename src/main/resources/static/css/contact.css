@@ -1,0 +1,336 @@
+@import url("https://fonts.googleapis.com/css?family=Inter:300,700,400,500|Poppins:500,600|Open+Sans:700");
+
+.component-2 {
+  align-items: flex-start;
+  background: linear-gradient(
+    180deg,
+    rgb(130.9, 82.9, 10.91) 0%,
+    rgba(255, 203.58, 126.44, 0) 100%
+  );
+  display: flex;
+  padding: 45px 438px;
+}
+
+.h4-inter-light-size {
+  align-items: flex-start;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  position: relative;
+  width: 564px;
+}
+
+.frame-32 {
+  align-items: flex-start;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  padding: 10px;
+  position: relative;
+  width: fit-content;
+}
+
+.valign-text-middle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.h4-inter-light-siz {
+  color: var(--white);
+  font-family: var(--font-family-inter);
+  font-size: var(--font-size-xxxxl);
+  font-weight: 300;
+  letter-spacing: -0.7px;
+  line-height: 37.3px;
+  margin-top: -1px;
+  position: relative;
+  text-align: center;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.frame-22 {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 50px 0px 0px;
+  position: relative;
+  width: 230px;
+}
+
+.more_information_div {
+  align-items: flex-start;
+  background-color: var(--white);
+  padding: 85px 100px;	
+  padding-left: 4rem !important;
+}
+
+.get-more-information {
+  letter-spacing: 0.92px;
+  line-height: 24.5px;
+  min-height: 25px;
+  white-space: nowrap;
+  margin-bottom: 2rem;
+}
+
+.lorem-ipsum-dolor-si-1 {
+  color: #152868;
+  font-family: var(--font-family-inter);
+  font-size: var(--font-size-m);
+  font-weight: 400;
+  left: 100px;
+  letter-spacing: 0.16px;
+  line-height: 24px;
+}
+
+
+.overlap-group2 {
+  align-items: center;
+  background-color: var(--white);
+  border-radius: 20px;
+  box-shadow: 0px 4px 20px #45454573;
+  display: inline-flex;
+  flex-direction: column;
+  padding: 29px 38px;
+}
+
+
+.lorem-ipsum-dolor-si {
+  letter-spacing: 0;
+  line-height: 26px;
+  margin-right: -17px;
+  margin-top: -0.5px;
+  position: relative;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.flex-row {
+	align-self: flex-start;
+    display: flex;
+    gap: 56px;
+}
+	
+.frame-63 {
+  align-items: flex-start;
+  border-bottom-style: solid;
+  border-bottom-width: 0.5px;
+  border-color: var(--shady-lady);
+  display: flex;
+  gap: 12px;
+  height: 29px;
+  margin-top: 29px;
+  position: relative;
+}
+
+
+.frame-61 {
+  align-items: flex-start;
+  border-bottom-style: solid;
+  border-bottom-width: 0.5px;
+  border-color: var(--shady-lady);
+  display: flex;
+  gap: 12px;
+  height: 29px;
+  margin-top: 40px;
+  position: relative;
+}
+
+.first-name,.email-address,.last-name,.organization {
+  letter-spacing: 0;
+  line-height: 26px;
+  margin-top: -0.5px;
+  position: relative;
+  white-space: nowrap;
+  width: fit-content;
+}
+	
+.contact-form {
+  align-self: flex-start;
+  color: #409cc6;
+  font-family: var(--font-family-poppins);
+  font-size: var(--font-size-xxxl);
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 29.8px;
+  min-height: 30px;
+  white-space: nowrap;
+}
+
+.contactus-container {
+	align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: 34px;	
+    margin-top: 4rem;
+}
+
+.frame-6 {
+  align-items: flex-start;
+  border-bottom-style: solid;
+  border-bottom-width: 0.5px;
+  border-color: var(--shady-lady);
+  display: flex;
+  gap: 12px;
+  height: 29px;
+  position: relative;
+  width: 325px;
+}
+
+.frame-66 {
+  align-items: flex-start;
+  display: flex;
+  gap: 12px;
+  height: 29px;
+  position: relative;
+  width: 325px;
+}
+
+.CaptchaDiv {
+	display: flex;
+    justify-content: center;
+}
+
+.your-text-here {
+	display: flex;
+    justify-content: center;
+}
+
+#contact_us_txtarea {
+	width: 66%;
+	background: #E7EDF1;
+	border: none;
+    border-radius: 0px;
+    color: var(--midnight-blue);
+  	font-family: var(--font-family-inter);
+  	font-size: var(--font-size-m);
+  	font-weight: 400;
+  	font-style: normal;
+}
+
+.contact_us_text {
+	border: none;	
+}
+.contact_us_text:focus {
+	border: none;
+	outline: none;	
+}
+
+.typeofinquiry {
+	margin-left: -1rem;
+    margin-top: 1rem;
+    white-space: nowrap;
+}
+.typeofinquiry_selections {
+	margin-top: 0.5rem;
+}
+
+
+.for-specific-question {
+  margin-left: -1rem;
+  margin-top: 42px;
+  white-space: nowrap;
+}
+
+.contact .group {
+  align-items: flex-start;
+  display: flex;
+}
+
+.valign-text-middle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#btnSubmitEmail {
+	color: var(--white);
+    font-family: var(--font-family-inter);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.15px;
+    white-space: nowrap;
+    background-color: var(--black) !important;
+    border: 1px solid;
+    border-color: #b6c8d2;
+    border-radius: 30px;
+    height: 54px;
+    margin-top: 24px;
+    min-width: 295px;
+}
+
+.form_div {
+	padding: 86px 108px;
+	padding-left: 5rem !important;
+}
+
+.layer-1 {
+  height: 35px;
+  width: 24px;
+}
+
+.let-us-know-how-we-can-assist-you {
+  letter-spacing: 0;
+  white-space: nowrap;
+  margin-top: -1rem;
+}
+
+#contactusMsg {
+	font-family: inter_regular;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 26px;
+    text-align: center;
+    color: #2859DA;
+}
+
+form#contact-us-form .error {
+	color: rgb(251, 6, 10);
+	padding-top: 2px;
+}
+form#contact-us-form label {
+	color: #fff;
+}
+
+.select2-container span.select2-selection.select2-selection--single {
+    border: none;
+    background-color: var(--aqua-squeeze);
+    align-items: center;
+    background-color: var(--aqua-squeeze);
+    display: flex;
+    gap: 15px;
+    height: 38px;
+    padding: 0px 20px;
+    letter-spacing: 0;
+    line-height: 26px;
+    white-space: nowrap;
+    width: 422px;
+    border-radius: 0px;
+}
+.select2-container .select2-selection--single .select2-selection__rendered {
+	    color: var(--midnight-blue);
+	font-family: var(--font-family-inter);
+	font-size: var(--font-size-m);
+	font-weight: 400;
+	font-style: normal;
+}
+.select2-container--bootstrap4 .select2-selection--single .select2-selection__arrow b {
+    border-color: #000 transparent transparent transparent !important;
+    height: 20px;
+}
+
+.errorBlock {
+	padding-left: 0px; 
+	padding-right: 0px; 
+	padding-top: 10px; 
+	border-radius: 0px;
+	padding-bottom: 22px;
+}
+
+.arrow_right_contact_us {
+	width: 16px;
+    transform: translate(20px ,-2px);
+}

@@ -1,98 +1,190 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<meta charset="UTF-8">
-<title>Title</title>
+    <meta charset="UTF-8">
+    <title>Title</title>
 </head>
+
 <body>
-	<div class="M-4 p-4 mx-auto" id="contactUs" th:fragment="contactUs"
-		style="background-color: #9BB1C7;">
-
-		<div class="form-row pt-2 pb-2 mb-2" style="height: fit-content;">
-			<form role="form" id="contact-us-form" class="mx-auto"
-				style="width: 60%; color: #fff">
-				<input type="hidden" id="siteKey" th:value="${siteKey}" />
-				<h3
-					style="text-align: center; font-family: latoregular; padding-top: 18px; padding-bottom: 14px; font-size: 26px; color: #fff;">CONTACT
-					US</h3>
-				<hr class="loginHr">
-				<div class="clearfix errorBlock" style="display: none;">
-					<div class="col-md-12"
-						style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
-						<div class="alert alert-danger" style="background-color: #E87B05;text-align: center;">
-							<h6 class="errorMsg" style="color: #EAF6FF"></h6>
-						</div>
-					</div>
-				</div>
-
-				<div class="clearfix successBlock" style="display: none;">
-					<div class="col-md-12"
-						style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
-						<div class="alert alert-success">
-							<h6 class="successMsg" style="text-align: center;"></h6>
-						</div>
-					</div>
-				</div>
-
-				<br>
-
-				<div class="row row-buffer contactUsFieldsDiv"
-					style="padding-top: 0px; margin-left: 120px;">
-					<!--  <div class="col-lg-3">
-						<label class="infoLabel" for="contact_us_name">Name <span>*</span></label>
-					</div>-->
-					<div class="col-lg-12">
-						<input type="text" th:value="${fullName}"
-							th:disabled="${fullName != null}"
-							th:style="${loggedOnUser != null ? 'background-color: #C9DEF3;color: #466D93;padding-top: 10px;': ''}"
-							autocomplete="off" id="contact_us_name" aria-labelledby="contact_us_name" name="contact_us_name"
-							placeholder="Name *" maxlength="20"
-							class="form-control defaultFocus contactUsTextbox"> <span
-							class="TextField-floatingLabel-qefpP" style="display: none;">Name</span>
-					</div>
-				</div>
-
-				<div class="row row-buffer contactUsFieldsDiv" style="margin-left: 120px;">
-					<div class="col-lg-12">
-						<input type="text" th:value="${loggedOnUser}"
-							placeholder="Email *"
-							th:style="${loggedOnUser != null ? 'background-color: #C9DEF3;color: #466D93;padding-top: 10px;': ''}"
-							th:disabled="${loggedOnUser != null}" autocomplete="off"
-							id="id_user_email" aria-labelledby="id_user_email"name="id_user_email" maxlength="50"
-							class="form-control defaultFocus contactUsTextbox"> <span
-							class="TextField-floatingLabel-qefpP" style="display: none;">Email</span>
-					</div>
-				</div>
-				<div class="row row-buffer contactUsFieldsDiv" style="margin-left: 120px;">
-					<div class="col-lg-12">
-						<textarea id="contact_us_txtarea" aria-labelledby="contact_us_txtarea"
-							placeholder="Type your message here *" name="contact_us_txtarea"
-							rows="9" class="form-control defaultFocus contactUsTextbox"></textarea>
-						<span class="TextField-floatingLabel-qefpP" style="display: none;">Type
-							your message here</span>
-					</div>
-				</div>
-
-				<hr class="loginHr">
-				<div class="row row-buffer googleCaptchaDiv">					
-						<div id="google_recaptcha"></div>
-				</div>
+    <div class="M-4 mx-auto" id="contactUs" th:fragment="contactUs">
 
 
-				<div class="contactUsBtns">
-					<div class="col-xs-3 col-sm-3 col-md-3 cancelBtnDiv">
-						<a class="btn btn-lg btn-success btn-block"
-							style="background-color: #626262 !important; color: #FFFFFF;"
-							th:href="@{/}" id="cancelContactUs">CANCEL</a>
-					</div>
-					<div class="col-xs-3 col-sm-3 col-md-3 submitBtnDiv" style="margin-left: -6rem">
-						<button class="btn btn-lg btn-primary btn-block" id="btnSubmitEmail">SUBMIT</button>
-					</div>
-				</div>
-			</form>
-		</div>
-	</div>
+        <div class="component-2">
+            <div class="h4-inter-light-size">
+                <div class="frame-32">
+                    <h1 class="h4-inter-light-siz valign-text-middle">CONTACT MoDaC</h1>
+                </div>
+            </div>
+        </div>
 
+        <form role="form" id="contact-us-form" class="mx-auto">
+            <input type="hidden" id="siteKey" th:value="${siteKey}" />
+
+
+            <div class="form-row">
+                <div class="form-group col-lg-4 col-md-4 col-sm-4 more_information_div">
+                    <div class="get-more-information poppins-semi-bold-calypso-23px">Get More Information</div>
+
+                    <p class="lorem-ipsum-dolor-si-1">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut 
+                        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
+                        nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit 
+                        esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in 
+                        culpa qui officia deserunt mollit anim id est laborum.
+                    </p>
+                </div>
+
+                <div class="form-group col-lg-8 col-md-8 col-sm-8 form_div">
+                    <p class="let-us-know-how-we-can-assist-you poppins-semi-bold-calypso-23px">
+                        Let us know how we can assist you!</p>
+
+                    <div class="frame-69">
+                        <div class="overlap-group2">
+
+
+                            <div class="clearfix errorBlock" style="display: none;">
+                                <div class="col-md-12">
+                                    <div class="alert alert-danger" style="text-align: center;">
+                                        <h6 class="errorMsg" style="color: #FF0000"></h6>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="flex-row">
+                                <div class="contact_us_header">
+                                    <div class="contact-form">Contact Form</div>
+                                    <div class="frame-61">
+                                        <div class="first-name opensans-bold-white-13px">
+                                            <span class="opensans-bold-midnight-blue-13px">First Name</span
+				            ><span class="opensans-bold-tamarillo-13px">*</span
+				            ><span class="opensans-bold-midnight-blue-13px">:</span>
+                                        </div>
+                                        <div class="contact_us_field_div inter-normal-midnight-blue-16px">
+                                            <input type="text" autocomplete="off" id="contact_us_first_name" 
+                                            th:value="${firstName}" th:disabled="${firstName != null}"
+							                
+                                            aria-labelledby="contact_us_first_name" name="contact_us_first_name" 
+                                            maxlength="30" class="contact_us_text">
+                                        </div>
+                                    </div>
+                                    <div class="frame-63">
+                                        <div class="email-address opensans-bold-white-13px">
+                                            <span class="opensans-bold-midnight-blue-13px">Email Address</span
+				            ><span class="opensans-bold-tamarillo-13px">*</span
+				            ><span class="opensans-bold-midnight-blue-13px">:</span>
+                                        </div>
+                                        <div class="contact_us_field_div inter-normal-midnight-blue-16px">
+                                            <input type="text" autocomplete="off" id="id_user_email" 
+                                            th:value="${loggedOnUser}" th:disabled="${loggedOnUser != null}"
+                                            aria-labelledby="id_user_email" name="id_user_email" 
+                                            maxlength="30" class="contact_us_text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="contactus-container">
+                                    <div class="frame-6">
+                                        <div class="last-name opensans-bold-white-13px">
+                                            <span class="opensans-bold-midnight-blue-13px">Last Name</span
+				            				><span class="opensans-bold-tamarillo-13px">*</span
+				           					 ><span class="opensans-bold-midnight-blue-13px">:</span>
+                                        </div>
+                                        <div class="contact_us_field_div inter-normal-midnight-blue-16px">
+                                            <input type="text" autocomplete="off" id="contact_us_lastname" 
+                                            th:value="${lastName}" th:disabled="${lastName != null}"
+							             
+                                            aria-labelledby="contact_us_lastname" name="contact_us_lastname" 
+                                            maxlength="30" class="contact_us_text">
+                                        </div>
+                                    </div>
+                                    <div class="frame-6">
+                                        <div class="organization opensans-bold-white-13px">
+                                            <span class="opensans-bold-midnight-blue-13px">Organization</span
+				            					><span class="opensans-bold-tamarillo-13px">*</span
+				           						 ><span class="opensans-bold-midnight-blue-13px">:</span>
+                                        </div>
+                                        <div class="contact_us_field_div inter-normal-midnight-blue-16px">
+                                            <input type="text" autocomplete="off" id="contact_us_org" 
+                                            aria-labelledby="contact_us_org" name="contact_us_org" 
+                                            maxlength="30" class="contact_us_text">
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                </div>
+                            </div>
+	
+	
+						<div class="col-lg-12 row row-buffer" style="display:block;">						
+							   <div class="frame-66">
+                                        <div class="typeofinquiry opensans-bold-white-13px">
+                                            <span class="opensans-bold-midnight-blue-13px">Type of Inquiry:</span
+				            					><span class="opensans-bold-tamarillo-13px">*</span
+				           						 ><span class="opensans-bold-midnight-blue-13px">:</span>
+                                        </div>
+                                          <div class="typeofinquiry_selections inter-normal-midnight-blue-16px">
+                                          <select class="simple-select2" id="inquiryList" name="inquiryList" style="width: 100%";>
+											<option>Select</option>
+											<option>I would like permission to upload data/model</option>
+											<option>I would like permission to delete data/model</option>
+											<option>I have a question on a functionality</option>
+											<option>I would like to report a problem</option>
+											<option>Other</option>
+									</select>
+		                                   
+                                </div>
+                              </div>
+                               
+                            </div>
+                            
+                            <div class="col-lg-12 row row-buffer" style="display:block;">
+                                <p class="for-specific-question opensans-bold-midnight-blue-13px">
+                                    For specific questions, suggestions or feedback, please type here:
+                                </p>
+
+                                <div class="your-text-here inter-normal-midnight-blue-16px">
+                                    <textarea id="contact_us_txtarea" aria-labelledby="contact_us_txtarea" 
+                                    placeholder="Your text here..." name="contact_us_txtarea" rows="9" 
+                                    class="form-control defaultFocus contact_us_txtarea"></textarea>
+                                </div>
+                            </div>
+
+
+
+                            <div class="row row-buffer CaptchaDiv">
+                                <div id="google_recaptcha"></div>
+                            </div>
+
+                            <div class="group">
+                                <div class="valign-text-middle">
+                                    <button class="btn btn-lg btn-primary btn-block" id="btnSubmitEmail">Submit Form <img class="arrow_right_contact_us"
+							 th:src='@{/images/white_right_arrow.svg}'/></button>
+                                </div>
+                            </div>
+
+                            <div class="clearfix successBlock" style="display: none;">
+                                <div class="col-md-12" style="padding-left: 0px; padding-right: 0px; padding-top: 10px; 
+                                	border-radius: 0px;">
+                                    <div class="alert">
+                                        <h6 class="successMsg" id="contactusMsg" style="text-align: center;">
+                                            Thank you for your inquiry. We are redirecting you to the homepage.</h6>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    
+
+    
+    </form>
+
+    </div>
 
 </body>
+
 </html>

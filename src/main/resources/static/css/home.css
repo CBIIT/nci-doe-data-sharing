@@ -1,0 +1,277 @@
+.pub-1 {
+  background-color: var(--mango-tango);
+  height: 6px;
+  width: 67px;
+}
+
+.landingSubText {
+	text-align: center;
+    padding-top: 2.5rem;
+    position: absolute;
+    width: 399px;
+    height: 75px;
+    left: calc(50% - 399px/2 - 360.5px);
+    /* top: 857px; */
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 23px;
+    line-height: 106.52%;
+    font-feature-settings: 'tnum' on, 'lnum' on;
+}
+
+.overlap-group1-1 {
+    border-radius: 65px;
+    height: 62px;
+    left: 0;
+    position: absolute;
+    top: 240px;
+    width: 289px;
+}
+
+.overlap-group-1 {
+    align-items: flex-start;
+    background: linear-gradient(180deg, rgb(38, 79.48, 160) 0%, rgb(173.28, 111.26, 66.34) 56.49%, rgb(207, 89, 43) 87.22%);
+    border-radius: 65px;
+    box-shadow: 0px 4px 50px #ffffff8c;
+    display: flex;
+    height: 62px;
+    left: 0;
+    min-width: 289px;
+    padding: 16px 34.3px;
+    position: absolute;
+    top: 0;
+}
+
+.arrow-on-dark {
+    height: 35px;
+    left: 237px;
+    position: absolute;
+    top: 14px;
+    width: 24px;
+}
+
+.group-131 {
+  align-items: flex-start;
+  display: flex;
+  gap: 109px;
+  height: 423px;
+  margin-left: 160px;
+  min-width: 1128px;
+  top: 0;
+}
+
+.overlap-group3 {
+  height: 327px;
+  margin-top: -1px;
+  position: relative;
+  width: 319px;
+}
+
+.overlap-group1-1 {
+  border-radius: 65px;
+  height: 62px;
+  left: 0;
+  position: absolute;
+  top: 240px;
+  width: 289px;
+}
+
+.arrow-on-dark {
+  height: 28px;
+  left: 237px;
+  position: absolute;
+  top: 14px;
+  width: 24px;
+}
+
+
+
+.learn-more-about-mo-da-c {
+  height: 25px;
+  width: 107px;
+}
+
+.a-data-repository-an {
+  left: 0;
+  letter-spacing: -0.9px;
+  line-height: 45px;
+  position: absolute;
+  top: 0;
+  width: 319px;
+}
+
+.flex-col-2 {
+  margin-top: -1px;
+  min-height: 423px;
+  width: 694px;
+}
+
+.flex-col-4 {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.the-predictive-oncol {
+  letter-spacing: 0;
+  line-height: 24px;
+  margin-top: 25px;
+  min-height: 291px;
+  width: 694px;
+}
+
+.span1 {
+  color: #0b5eb6;
+  font-family: var(--font-family-inter);
+  font-size: var(--font-size-m);
+  font-weight: 600;
+}
+
+.welcome-to-predicti {
+  letter-spacing: 0;
+  line-height: 24.5px;
+  min-height: 75px;
+}
+
+.ms {
+  -webkit-backdrop-filter: blur(30px) brightness(100%);
+  align-items: flex-start;
+  backdrop-filter: blur(30px) brightness(100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.7) 41.84%);
+  display: flex;
+  height: 159px;
+  justify-content: flex-end;
+  left: 0;
+  min-width: 1517px;
+  padding: 48px 179px;
+  position: absolute;
+  top: 208px;
+}
+
+
+.search-container {
+  align-items: center;
+  background-color: var(--white);
+  border-radius: 65px;
+  box-shadow: 0px 4px 50px #ffffff8c;
+  display: flex;
+  gap: 339px;
+  height: 62px;
+  justify-content: flex-end;
+  left: 0;
+  min-width: 650px;
+  padding: 12px 35.3px;
+  position: absolute;
+  top: 0;
+}
+
+.header-search-2 {
+  height: 30px;
+  margin-bottom: 0.19px;
+  width: 30px;
+}
+
+.search-mo-da-c {
+  align-self: flex-end;
+  height: 29px;
+  width: 205px;
+}
+
+.predictive-oncology {
+  left: 168px;
+  letter-spacing: -0.9px;
+  line-height: 45px;
+  position: absolute;
+  top: 193px;
+  width: 399px;
+  font-size: 42px;
+}
+.ms-1 {
+  left: 482px;
+  top: 208px;
+  width: 1036px;
+}
+
+.ms-2 {
+  left: 577px;
+  top: 350px;
+  width: 940px;
+}
+.ms-3 {
+  background-color: var(--mango-tango);
+  height: 17px;
+  position: absolute;
+}
+
+.subbuttoncontainer {
+	text-align: center;
+	margin-top: 179px;
+	margin-bottom: 50px;
+	background-color: #E66F05;
+	/* height: 65px;*/
+	max-width: 86%;
+}
+
+.overlap-group1 {
+	margin-top: -31px;
+}
+
+.landingSearchDiv {
+	display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 4px 50px #ffffff8c;
+    height: 125px;
+    width: 679px;
+	text-align: center;
+	border: none;
+}
+#attributeVallanding{
+    border-radius: 24px;
+    font-size: 22px;
+    font-weight: 550;
+    padding-left: 31px;
+    height: 48px;
+    width: 80%;
+    background-color: #FFFFFF;
+    margin-left: 66px;
+}
+#attributeVallanding::placeholder {
+	font-family: 'inter_medium';	
+    color: #1C4794;	
+    font-size: 20px;
+
+}
+
+#landingSearch{
+	position: relative;
+    top: 0rem;
+    right: 5rem;
+}
+
+#landingSearch img {
+	 height: 30px;
+ 	 width: 30px;
+}
+
+#resetBtnLanding{
+	position: relative;
+    top: -0.2rem;
+    left: -6rem;
+}
+
+#resetBtnLanding img {
+	width: 24px;
+}
+
+#navigateToaboutTab {
+	cursor: pointer;
+}
+
+.buttoncontainer {
+	margin-bottom: 110px;
+	background-image: url(/images/landing_background.svg);
+	height: 486px;
+}

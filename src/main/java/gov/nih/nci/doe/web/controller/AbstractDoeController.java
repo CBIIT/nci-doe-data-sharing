@@ -59,7 +59,6 @@ import gov.nih.nci.doe.web.model.InferencingTaskModel;
 import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.model.PermissionsModel;
 import gov.nih.nci.doe.web.service.AccessGroupsService;
-import gov.nih.nci.doe.web.service.AuditMetadataTransferService;
 import gov.nih.nci.doe.web.service.AuditingService;
 import gov.nih.nci.doe.web.service.AuthenticateService;
 import gov.nih.nci.doe.web.service.DoeAuthorizationService;
@@ -115,9 +114,6 @@ public abstract class AbstractDoeController {
 
 	@Autowired
 	AccessGroupsService accessGroupsService;
-
-	@Autowired
-	public AuditMetadataTransferService auditMetadataTransferService;
 
 	@Autowired
 	public AuditingService auditingService;
@@ -279,6 +275,18 @@ public abstract class AbstractDoeController {
 			DoeUsersModel user = authService.getUserInfo(emailAddr);
 			if (user != null) {
 				return user.getFirstName();
+			}
+		}
+		return null;
+	}
+	
+	@ModelAttribute("lastName")
+	public String getLoggedOnUserLastName() {
+		String emailAddr = getLoggedOnUserInfo();
+		if (StringUtils.isNotEmpty(emailAddr)) {
+			DoeUsersModel user = authService.getUserInfo(emailAddr);
+			if (user != null) {
+				return user.getLastName();
 			}
 		}
 		return null;

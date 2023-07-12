@@ -506,6 +506,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 						entry.setIsEditable(val.getIsEditable());
 						entry.setDisplayOrder(val.getDisplayOrder());
 						entry.setIsVisible(val.getIsVisible());
+						entry.setIsVisibleOnUplaodPage(val.getIsVisibleOnUplaodPage());
 					} else {
 						entry.setDisplayName(rule.getAttribute());
 						entry.setIsEditable(true);
@@ -531,6 +532,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 						x.setIsEditable(lookUpVal.getIsEditable());
 						x.setDisplayOrder(lookUpVal.getDisplayOrder());
 						x.setIsVisible(lookUpVal.getIsVisible());
+						x.setIsVisibleOnUplaodPage(lookUpVal.getIsVisibleOnUplaodPage());
 					} else {
 						x.setDisplayName(x.getAttrName());
 						x.setIsEditable(true);

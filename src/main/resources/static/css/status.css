@@ -1,0 +1,31 @@
+table#manageTasksTable th, table#inferencingTable th {
+	color: #FFFFFF;
+	font-family: 'inter_regular';
+	font-size: 13px;
+	line-height: 17px;
+}
+#manageTasksTable_length, #inferencingTable_length {
+	float: right;
+	color: #000000;
+	font-family: 'latoregular';
+	font-size: 16px;
+	margin-right: 24px;
+	margin-bottom: -7px;
+	margin-top: -20px;
+}
+#manageTasksTable_info, #inferencingTable_info {
+	margin-bottom: 13px;
+	margin-top: -6px;
+}
+#displayAllDiv {
+	float: right;
+	margin-bottom: 10px;
+	margin-right: -27px;
+	color: #000000;
+	font-family: 'latoregular';
+	font-size: 16px;
+}
+
+table#manageTasksTable tr.odd td, table#inferencingTable tr.odd td {
+    background-color: #E0F0F4 !important;
+}

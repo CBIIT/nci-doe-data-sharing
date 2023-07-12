@@ -1,0 +1,315 @@
+#filterSearchBox {
+	background-color: var(--white);
+    border: 1px solid;
+    border-color: var(--bali-hai);
+    border-radius: 65px;
+    height: 34px;
+    width: 262px;
+    padding-left: 13px;
+}
+
+.assetFilesBtns {
+	padding-bottom: 3px; 
+	margin-top: -10px;
+	margin-right: 8rem;
+}
+
+
+.infoDownload {
+	margin-left: 7rem;
+}
+
+#dataSetTable_wrapper, #generatePredTable_wrapper {
+    margin-top: -8px;
+    margin-left: -18px;
+    width: 93%;
+    border-top: 2px solid rgb(197, 197, 197) !important;
+}
+
+.assetFilesConditional {
+    margin-top: 27px;
+    margin-left: 6rem;
+}
+
+.group-103 {
+	align-items: flex-start;
+    display: flex;
+    gap: 12px;
+    margin-left: 196px;
+}
+
+.asset-detail_header {
+	color: var(--white);
+    font-family: var(--font-family-inter);
+    font-size: 32px;
+    font-weight: 300;
+    letter-spacing: -0.32px;
+    line-height: 34.1px;
+    white-space: nowrap;
+}
+.assetName {
+	letter-spacing: -0.32px;
+    line-height: 34.1px;
+    white-space: nowrap;
+    font-family: inter_medium;
+}
+
+.backToSearch_assetDetails {
+	display: flex;
+    flex-direction: column;
+    justify-content: center;
+    letter-spacing: 0.1px;
+    margin-left: 16px;
+    white-space: nowrap;
+    font-size: 10px;
+    color: #bdd8ff;
+}
+
+.backToSearch {
+    color: #E66F05;
+    font-family: 'inter_medium';
+    font-size: 17px;
+}
+
+table.subAssetsDataSetTable, table.subFolderAssetsDataSetTable {
+	border: transparent;
+	background-color: rgb(251, 251, 251);
+	margin-bottom: 0px;
+}
+
+.datasetDetailsheader {
+	font-family: 'inter_regular';
+}
+.asset-attributes {
+	margin-top: 10px;
+}
+#performInferencing, #performModelAnalysisBtn {
+	background-color: #E87B05 !important;
+	width: 155px;
+	border-radius: 14px;
+	font-family: 'inter_regular';
+	font-size: 15px;
+}
+img.infoMetadata {
+	width: 12px;
+	margin-top: -5px;
+}
+#assetDetailsDiv {
+	border: none;
+    background-color: transparent;
+    margin-left: 2rem;
+}
+table#assetDetailsDiv td {
+	border: none;
+	background-color: transparent;
+	padding-top: 2px;
+}
+
+#dataSetMetaData {
+	margin-top: 6px;
+    width: 88%
+}
+
+table#dataSetMetaData thead th {
+	background-color: var(--lapis-lazuli);
+}
+
+table#dataSetMetaData thead tr th {
+	padding-left: 2rem;
+}
+
+table#dataSetMetaData tr:nth-child(even) td {
+	background-color: #E0F0F4 !important;
+	padding-left: 2.3rem;
+}
+
+table#dataSetMetaData tr:nth-child(odd) td {
+	background-color: #FBFBFB !important;
+	padding-left: 2.3rem;
+}
+
+#dataSetTable_length, #generatePredTable_length {
+	margin-top: -6px;
+	margin-right: 25px;
+	float: right;
+}
+
+#dataSetTable,#generatePredTable {
+	width: 97% !important;
+	border: transparent;
+	border-bottom: 8px solid rgb(197, 197, 197) !important;
+}
+
+table#dataSetTable tr:nth-child(even) td, table#generatePredTable tr:nth-child(even) td{
+	background-color: #E0F0F4 !important;
+	color: var(--deep-sapphire);
+  	font-family: var(--font-family-inter);
+  	font-size: var(--font-size-m);
+  	font-weight: 400;
+  	font-style: normal;
+}
+
+table#dataSetTable tr:nth-child(odd) td, table#generatePredTable tr:nth-child(odd) td{
+	background-color: #FBFBFB !important;
+	color: var(--deep-sapphire);
+  	font-family: var(--font-family-inter);
+  	font-size: var(--font-size-m);
+  	font-weight: 400;
+  	font-style: normal;
+	
+}
+
+table#dataSetTable thead .sorting_asc,
+	table#inferencingTable thead .sorting_asc {
+	background-image: url(/images/asset_files_sort_up.svg) !important;
+	background-position: 28% 60%;
+}
+
+table#dataSetTable thead .sorting_desc,
+	table#inferencingTable thead .sorting_desc {
+	background-image: url(/images/asset_files_sort_down.svg) !important;
+	background-position: 28% 60%;
+}
+
+table#dataSetTable thead .sorting {
+	background-image: url(/images/asset_files_sort_up.svg) !important;
+	background-position: 28% 60%;
+}
+table#dataSetTable thead tr th.select-checkbox {
+	background-image: none !important;
+}
+
+table#dataSetTable thead th, table#generatePredTable thead th{
+    background-color: var(--lapis-lazuli);
+    color: var(--white);
+  	font-family: var(--font-family-open_sans);
+  	font-size: var(--font-size-s);
+	font-weight: 400;
+	font-style: normal;
+}
+
+#downloadSelectedDataSet, #downloadSelectedMetadata,
+	#openInferModal, #performModelAnalysis {
+	background-color: var(--bay-of-many) !important;
+	border-radius: 65px;
+    box-shadow: 0px 4px 50px #ffffff8c;
+	margin-top: 0px;
+	height: 47px;
+	width: 191px;
+    color: var(--white);
+    font-family: var(--font-family-inter);
+    font-size: 10px;
+    font-weight: 600;
+    font-style: normal;
+    border-color: transparent;
+}
+
+#downloadSelectedDataSet:disabled, #downloadSelectedMetadata:disabled {
+	background-color: var(--nobel) !important;
+}
+.arrow_right_assets_files {
+    width: 16px;
+    transform: translate(20px ,-8px);
+}
+
+.assetDetailsHeader {
+	background-image: url(/images/asset_details_background.png);
+	align-items: center;
+	background-size: 100% 100%;
+    display: flex;
+    height: 141px;
+    padding: 45px 95px !important;
+}
+
+
+.backToSearch_AssetDetailsDiv {
+	align-items: center;
+    display: flex;
+    height: 41px;
+    justify-content: center;
+    transform: rotate(3.14deg);
+    background-color: #e66f05;
+    border-radius: 65px;
+    width: 41px;
+}
+
+.backToSearch_AssetDetailsDiv img {
+	height: 23px;
+    width: 16px;
+}
+
+.asset_attributes_subsection {
+	margin-left: 6rem;
+	display: block;
+	border-bottom: 1px solid rgb(197, 197, 197) !important;
+}
+.assetFilesDiv{
+	 margin-left: 5.5rem;
+}
+
+#assetDetailsSubSection {
+	padding-top: 1rem;
+    gap: 26px;
+    padding-left: 6rem;
+}
+
+
+.overview-container	{
+	height: 75px;
+    position: relative;
+    width: 880px;
+}
+
+.overview-container .overview {
+ 	line-height: 24.5px;
+    position: absolute;
+    top: 39px;
+    white-space: nowrap;
+}
+
+.asset-attributes-container{
+	padding-top: 1rem;
+}
+
+#assetUrlLink {
+	text-decoration: underline;
+}
+
+#assetFilesTab {
+	height: 55px; 
+	background-color: #194F85; 
+	color: #fff;
+}
+
+#assetFilesTab p {
+	font-weight: 500; 
+	color: #5099AB; 
+	margin-left: 18px; 
+	font-family: latoregular; 
+	font-size: 20px; 
+	line-height: 52px; 
+	cursor: pointer;
+}
+
+#generatePredictionsTab {
+	float: right; 
+	height: 55px; 
+	background-color: rgb(128 128 128/ 33%); 
+	color: #fff; 
+	margin-left: 4px;
+}
+
+#generatePredictionsTab p {
+	font-weight: 500; 
+	color: #5099AB; 
+	margin-left: 15px; 
+	font-family: latoregular; 
+	font-size: 20px; 
+	line-height: 52px; 
+	cursor: pointer;
+}
+
+#assetHeaderWithPredictions {
+	margin-left: 5rem;
+    margin-top: 3rem;
+}

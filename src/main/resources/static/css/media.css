@@ -90,14 +90,6 @@
 	}
 }
 
-@media ( max-width :990px)and(min-width:768px) {
-	.appName {
-		white-space: nowrap;
-		font-size: 16px;
-	}
-	
-}
-
 @media ( min-width : 991px) {
 	.dpehyt {
 		list-style: none;
@@ -151,26 +143,10 @@
 		margin-right: -5rem !important;
 	}
 	form#contact-us-form .loginHr {
-		margin-left: -1rem !important;
+		margin-left: -3rem !important;
 		margin-right: -4rem !important;
 	}
-	#cancelContactUs {
-		margin-left: 0px !important;
-		margin-right: 0px !important;
-	}
-	#btnSubmitEmail {
-		margin-left: 0px !important;
-		margin-right: 0px !important;
-		margin-top: 1rem;
-	}
-	.cancelBtnDiv {
-		margin-left: auto !important;
-		margin-right: auto !important;
-	}
-	.submitBtnDiv {
-		margin-left: auto !important;
-		margin-right: auto !important;
-	}
+
 	div.wrapper {
 		left: 0px !important;
 		right: 0px !important;
@@ -537,20 +513,15 @@
 	.topNav-item {
 		display: none;
 	}
-	#changeUserMenu.dropdown-menu {
-		margin-left: -250px;
-	}
+
 }
 
 @media ( max-width :990px) {
 	.closeBtn {
 		margin-top: -15px !important;
 	}
-	.appName {
-		white-space: nowrap;
-		margin-top: 40px;
-	}
-	#changeUserMenu.dropdown-menu, #userGuideMenu.dropdown-menu, #helpMenu.dropdown-menu
+
+	#userGuideMenu.dropdown-menu, #helpMenu.dropdown-menu
 		{
 		width: 350px;
 		float: right;
@@ -579,15 +550,7 @@
 	.logoImg {
 		width: 283px;
 	}
-	.appnameWrapper {
-		margin-top: 20px;
-		margin-left: 0px;
-		z-index: -1;
-	}
-	.appName {
-		justify-content: left;
-		margin-left: -50px;
-	}
+
 	.col.order-first {
 		margin-left: -0.25rem !important;
 	}
@@ -700,17 +663,6 @@
 }
 
 @media ( min-width : 768px) {
-	.appName {
-		font-size: 18px;
-		/*margin-left: 24px;*/
-		padding-top: 9px;
-		z-index: 999;
-		margin-top: 10px;
-		margin-bottom: 10px;
-		text-shadow: 2px 2px #333;
-		/*text-transform: uppercase;*/
-		white-space: nowrap;
-	}
 	.navbar .navbar-brand {
 		margin-top: 0px;
 	}
@@ -780,5 +732,27 @@
 	.td_class_9 {
 		width: 60% !important;
 		word-break: break-word;
+	}
+}
+@media ( max-width : 623px) {
+	.cancelBtnDiv {
+		margin-left: auto !important;
+		margin-right: auto !important;
+	}
+	.submitBtnDiv {
+		margin-left: auto !important;
+		margin-right: auto !important;
+	}
+    
+    #btnSubmitEmail {
+    	margin-left: 0px !important;
+    	margin-right: 0px !important;
+    	]margin-top: 0rem !important;
+	}
+}
+
+@media ( max-width : 561px) {
+	#btnSubmitEmail {
+	  margin-top: 1rem !important;
 	}
 }
