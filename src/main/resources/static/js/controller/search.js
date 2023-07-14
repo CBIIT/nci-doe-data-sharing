@@ -606,7 +606,7 @@ function renderDataSetName(data, type, row) {
                  + "<span class='inter-normal-congress-blue-16px'>" + row.dataSetDescription + "</span></div></div>"               
                  + "<div class='study-container'><div class='study opensans-bold-midnight-blue-13px'>"
                  + "<span class='opensans-bold-midnight-blue-13px'>STUDY: &nbsp;&nbsp;</span>"
-                 + "<a class='button2a' style='text-decoration:underline;' selected_path = '" + row.studyPath + "' collection_type='Study' tabindex='0'"
+                 + "<a class='button2a' style='text-decoration:underline;' collection_name = '" + row.studyName +"' selected_path = '" + row.studyPath + "' collection_type='Study' tabindex='0'"
 				 + " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
 				 + "data-popover-content='#a01'>"
                  + "<span class='inter-medium-green-blue-15px'>" + row.studyName + " </span></a>"
@@ -615,7 +615,7 @@ function renderDataSetName(data, type, row) {
                  + "<div class='program-container'>"
                  + "<div class='program opensans-bold-midnight-blue-13px'>"
                  + "<span class='opensans-bold-midnight-blue-13px'>PROGRAM: &nbsp;&nbsp;</span>"
-                 + "<a class='button2a' style='text-decoration:underline;' selected_path = '" + row.institutePath + "' collection_type='Program' tabindex='0'"
+                 + "<a class='button2a' style='text-decoration:underline;' collection_name = '" + row.programName + "' selected_path = '" + row.institutePath + "' collection_type='Program' tabindex='0'"
 				 + "data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
 				 + "data-popover-content='#a01'>"
                  + "<span class='inter-medium-green-blue-15px'>" + row.programName + " </span></a>"
@@ -739,8 +739,10 @@ function openPopOver($this) {
 	$('.button2a').not($this).popover('hide');
 	var selectedPath = $this.attr('selected_path');
 	var collection_type = $this.attr('collection_type');
+	var collection_name = $this.attr('collection_name');
 
-	var headerName = "<div class='popoverHeader'><p class='popoverInfo'>" + collection_type + " Metadata</p></div>";
+	var headerName = "<div class='popoverHeader'><p class='popoverInfo'>Metadata for " + collection_name +"</p>"	+
+	                  "<p class='popoverSubInfo'>" + collection_type+ " Metadata</p></div>";
 
 	if (collection_type != 'DataObject') {
 		var params = {
@@ -864,7 +866,7 @@ function openDataObjectPopOver($this) {
 
 					if (data.selfMetadata.length > 0) {
 
-						ind += "<p class='divDataObjUserMetadata'><b>USER METADATA</b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>"
+						ind += "<p class='divDataObjUserMetadata'>User Metadata</p><div class='divTable' style='width: 100%;border: 1px solid #000;'>"
 								+ "<div class='divTableBody'><div class='divTableRow'>"
 								+ "<div class='divTableHead rowAttribute'>ATTRIBUTE</div>"
 								+ "<div class='divTableHead'>VALUE</div></div>";
@@ -894,7 +896,7 @@ function openDataObjectPopOver($this) {
 					}
 
 					if (data.systemMetadata.length > 0) {
-						content += "<p class='divDataObjSysMetadata'><b>KEY SYSTEM METADATA </b></p><div class='divTable' style='width: 100%;border: 1px solid #000;'>"
+						content += "<p class='divDataObjSysMetadata'>Key System Metadata</p><div class='divTable' style='width: 100%;border: 1px solid #000;'>"
 								+ "<div class='divTableBody'><div class='divTableRow'>"
 								+ "<div class='divTableHead rowAttribute'>ATTRIBUTE</div>"
 								+ "<div class='divTableHead'>VALUE</div></div>";

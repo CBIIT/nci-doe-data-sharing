@@ -62,18 +62,28 @@
 }
 
 .popoverInfo {
-	color: #1C3D5D;
-	font-family: 'latoregular';
-	font-size: 20px;
-	width: 70%;
+	color: #46597b;
+	font-family: var(--font-family-poppins);
+  	font-size: 25px;
+	font-weight: 600;
 	margin-left: -12px;
 	margin-top: -19px;
 }
 
+.popoverSubInfo {	
+	font-family: var(--font-family-inter);
+	margin-top: -1rem;
+	color: var(--midnight-blue);
+    font-weight: 400;
+    font-size: var(--font-size-m);
+    margin-left: -12px;
+}
+
 .popoverInfoDatObj {
-	color: #1C3D5D;
-	font-family: 'latoregular';
-	font-size: 20px;
+	color: #46597b;
+	font-family: var(--font-family-poppins);
+  	font-size: 25px;
+	font-weight: 600;
 	width: 70%;
 	margin-left: -10px;
 	margin-top: -10px;
@@ -177,18 +187,20 @@ div.divTableBody div.divTableContent:nth-child(even) {
 	margin-left: 15px;
 	margin-top: -11px;
 	margin-bottom: 7px;
-	color: #1C3D5D;
-	font-family: 'latoregular';
-	font-size: 13px;
+	font-family: var(--font-family-inter);
+	color: var(--midnight-blue);
+    font-weight: 400;
+    font-size: var(--font-size-m);
 }
 
 .divDataObjSysMetadata {
 	margin-left: 15px;
 	margin-top: -11px;
 	margin-bottom: 7px;
-	color: #1C3D5D;
-	font-family: 'latoregular';
-	font-size: 13px;
+	font-family: var(--font-family-inter);
+	color: var(--midnight-blue);
+    font-weight: 400;
+    font-size: var(--font-size-m);
 }
 
 .divTableRowMobile {
