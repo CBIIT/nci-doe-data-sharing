@@ -268,10 +268,6 @@ div.divTableBody div.divTableContent:nth-child(even) {
     font-style: normal;
 }
 
-#myCollections {
-	margin-left:1rem;
-}
-
 .css-17rpx5x, .css-17rpx5xLess {
 	float: right;
 	cursor: pointer;
@@ -569,16 +565,6 @@ label.showMorefields {
     border-top: 1px solid #409CC6;
     padding-left: 17px;
 }
-
-.view_details_info {
-	color: #7d7d83;
-    font-family: 'inter_regular';
-    font-size: 16px;
-    font-weight: 300;
-    letter-spacing: 0.17px;
-	
-}
-
     
 #assetsEditDiv label{
  	color: #004187;

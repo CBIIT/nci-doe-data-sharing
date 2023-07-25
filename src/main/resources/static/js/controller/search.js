@@ -217,8 +217,12 @@ function refreshDataTable() {
 							+ '<span id="descSpan"><img src="images/search_descending.svg"/></span>'
 							+ '</div>');
 		$("div.toolbar").after (
-				'<div id="assetinfo" >'
-				+ '<p class="view_details_info">To view details of each card, <img src="images/subtract.svg"/> click icon.</p></div>');
+				'<div id="assetinfo"></div><div class="col-lg-12 col-md-12 col-sm-12 float-right"'
+				 + 'style="margin-top: -60px;">'
+				 + '<div class="controls controls-row mt-4">'
+				 + '<button id="downloadSelected" type="button"'
+				 + 'class="btn btn-primary float-right mb-2 mr-2" disabled>'
+				 + 'DOWNLOAD SELECTED <br />ASSETS</button></div></div>');
 	} else {
 		var t = $('#searchResultTable').DataTable();
 		console.log(t);
@@ -226,25 +230,6 @@ function refreshDataTable() {
 
 	}
 	
-	
-							
-	if (isVisible && !$("#myCollections").is(':visible')) {
-		var myCollection = $("#returnToSearchMyCollection").val();
-		if (myCollection && myCollection == "true") {
-			$("div.toolbar")
-					.prepend(
-							'<div id="assetsEditDiv">'
-									+ '<label><input type="checkbox" checked="true" id="myCollections" style="transform: translateY(1.5px);">'
-									+ '&nbsp;&nbsp;Assets I Can Edit</label></div>');
-		} else {
-			$("div.toolbar").prepend(
-					'<div id="assetsEditDiv" >'
-							+ '<label><input type="checkbox" id="myCollections" style="transform: translateY(1.5px);">'
-							+ '&nbsp;&nbsp;Assets I Can Edit</label></div>');
-		}
-
-	}
-
 }
 
 function dataTableInit(isVisible) {
@@ -298,17 +283,7 @@ function dataTableInit(isVisible) {
 		},
 
 		"drawCallback" : function() {			
-			
-			$("#myCollections").on('change', function() {
-				if ($(this).is(':checked')) {
-					$(this).prop('checked', true);
-					$("#returnToSearchMyCollection").val("true");
-				} else {
-					$(this).prop('checked', false);
-					$("#returnToSearchMyCollection").val("false");
-				}
-				populateSearchCriteria('displayAllResults');
-			});
+
 
 			$("#searchResultTable thead").remove();
 			if (isVisible) {
