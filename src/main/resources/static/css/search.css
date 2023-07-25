@@ -652,8 +652,8 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
 	transform: translateY(-3px);
 }
 .editCollectionImg,.collectionAccessGrpImg {
-	width: 17px;
-    transform: translateY(-4px);
+	width: 16px;
+    transform: translateY(-3px);
 }
 
 /* ms-card css */

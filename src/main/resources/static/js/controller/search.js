@@ -561,12 +561,12 @@ function renderDataSetName(data, type, row) {
 		   		+ "<div class='overlap-group2-1'>"
 		     	+ " <div class='frame-14'>"
 		     	+ " <div class='atom-modeling-pipeli poppins-medium-congress-blue-25px'>"
-		         + " <span class='poppins-medium-congress-blue-25px'>" + row.dataSetName + "</span>"
-		         + "&nbsp;&nbsp;"
-		         + "<button type='button' class='share-link-copy-button' data-toggle='tooltip' data-placement='bottom' "
+		        + " <span class='poppins-medium-congress-blue-25px'>" + row.dataSetName + "</span>"
+		        + "&nbsp;&nbsp;"
+		         + editDataSetHtml
+		         + "&nbsp;<button type='button' class='share-link-copy-button' data-toggle='tooltip' data-placement='bottom' "
 			     + " title='Shareable asset link: copy to clipboard in a new tab' data-clipboard-text='" + row.dataSetdmeDataId + "'>"
-			     + "<img src='images/Asset_link.svg' width='17' alt='Copy to clipboard'/></button>"
-			     + editDataSetHtml
+			     + "<img src='images/copy_to_clipboard.svg' width='20' alt='Copy to clipboard'/></button>"
 		         + " </div>"
 		         + " </div>"
 		         + " </div>"
