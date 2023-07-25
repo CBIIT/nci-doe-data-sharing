@@ -209,7 +209,9 @@ function refreshDataTable() {
 				 + '<div class="controls controls-row mt-4">'
 				 + '<button id="downloadSelected" type="button"'
 				 + 'class="btn btn-primary float-right mb-2 mr-2" disabled>'
-				 + 'DOWNLOAD SELECTED <br />ASSETS</button></div></div>');
+				 + 'DOWNLOAD <br />SELECTED ASSETS <img class="arrow_right_download_selected"' 
+				 + 'src="/images/white_right_arrow.svg"/>'
+				 + '</button></div></div>');
 	} else {
 		var t = $('#searchResultTable').DataTable();
 		console.log(t);
