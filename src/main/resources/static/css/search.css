@@ -565,6 +565,15 @@ label.showMorefields {
     border-top: 1px solid #409CC6;
     padding-left: 17px;
 }
+
+#show_search_count {
+	color: var(--midnight-blue);
+    font-family: var(--font-family-inter);
+    font-size: var(--font-size-xl);
+    font-weight: 300;
+    letter-spacing: 0.19px;
+    margin-left: 2.3rem;
+}
     
 #assetsEditDiv label{
  	color: #004187;

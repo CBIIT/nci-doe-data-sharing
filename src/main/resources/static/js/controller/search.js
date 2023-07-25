@@ -212,7 +212,7 @@ function refreshDataTable() {
 	if (!$.fn.DataTable.isDataTable('#searchResultTable')) {
 		dataTableInit(isVisible);
 		$("div.toolbar").prepend(
-					'<div id="sortingDiv" >'
+					'<div id="show_search_count"></div><div id="sortingDiv" >'
 							+ '<span id="ascSpan"><img src="images/search_ascending.svg"/></span>&nbsp;&nbsp;'
 							+ '<span id="descSpan"><img src="images/search_descending.svg"/></span>'
 							+ '</div>');
@@ -232,6 +232,12 @@ function refreshDataTable() {
 	
 }
 
+// Function to get the total search results count
+ function getTotalSearchResultsCount() {
+ 		var dataTable = $('#searchResultTable').DataTable();
+        return dataTable.rows({ search: 'applied' }).data().length;
+ }
+      
 function dataTableInit(isVisible) {
 	$('#searchResultTable').DataTable({
 		"paging" : true,
@@ -284,7 +290,7 @@ function dataTableInit(isVisible) {
 
 		"drawCallback" : function() {			
 
-
+			var table = $('#searchResultTable').DataTable();
 			$("#searchResultTable thead").remove();
 			if (isVisible) {
 				$("#downloadSelected").show();
@@ -299,16 +305,15 @@ function dataTableInit(isVisible) {
 			
 			 		  
 			 $("#descSpan").click(function() {
-			   var table = $('#searchResultTable').DataTable();
 				    table.order([[0, 'desc']]).draw();
 				    table.ajax.reload(null, true);
 			  });
   
-			 $('#ascSpan').on('click', function () {
-				var table = $('#searchResultTable').DataTable();
+			 $('#ascSpan').on('click', function () {				
 				    table.order([[0, 'asc']]).draw();
 				    table.ajax.reload(null, true);
 			  });
+			  $("#show_search_count").html("Showing " + getTotalSearchResultsCount() + " Results");
 
 			$(".editCollectionMetadata").click(function() {
 				$("#searchFragmentDiv").hide();
