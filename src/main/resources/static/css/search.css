@@ -19,8 +19,14 @@
 	margin-top: -4px;
 }
 
-.selectIndividualCheckbox {
-	margin-left: 6px;
+input[type="checkbox"].selectCheckboxForIns {
+	height: 19px;
+    width: 19px;
+}
+
+input[type="checkbox"].filteritem {
+	height: 16px;
+    width: 16px;
 }
 
 #advancedSearch {
@@ -249,12 +255,15 @@ div.divTableBody div.divTableContent:nth-child(even) {
 #attributeVal {
 	margin-top: 10px; 
 	border-radius: 65px; 
-	height: 42px;
+	height: 62px;
 	font-size: 13px; 
 	font-weight: 550; 
 	padding-left: 35px;
-	width:40%;
-	
+	background-color: var(--white);
+    border: 1.25px solid;
+    border-color: #5d92b9;
+    width: 650px;
+	margin-left: 1rem;
 }
 
 .search_title {
@@ -266,6 +275,7 @@ div.divTableBody div.divTableContent:nth-child(even) {
     font-size: 32px;
     font-weight: 500;
     font-style: normal;
+    margin-left: 5rem;
 }
 
 .css-17rpx5x, .css-17rpx5xLess {
@@ -283,10 +293,13 @@ div.divTableBody div.divTableContent:nth-child(even) {
 }
 
 #attributeVal::placeholder {
-	font-family: 'inter_regular';
-	font-size: 18px;
-	transform: translateY(2px);
-    color: #1C4794;
+  transform: translateY(2px);
+  color: var(--congress-blue-3);
+  font-family: var(--font-family-inter);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  line-height: 21.3px;
 
 }
 
@@ -312,8 +325,7 @@ div.dataDivCollapse{
 	max-height: 256px; 
 	overflow-y: auto; 
 	margin-bottom: 10px; 
-	margin-left: 17px; 
-	font-family: 'inter_regular';
+	margin-left: 2.2rem;
 	overflow-x: hidden;
 }
 
@@ -357,15 +369,10 @@ div.dataDivCollapse :nth-child(4) > label >img {
     background-color: #7C7C7C;
 }
 
-input[type="checkbox"]:checked {
-    background-color: #000;
-  }
+
 input.filteritem:checked {
     transform: translateY(4px);
     box-sizing: border-box;
-    height: 15px;
-    width: 15px;
-    background-color: #000;
 }
 
 /*input.filteritem:checked + div {
@@ -398,42 +405,17 @@ input.filteritem:checked {
 	
 }
 #clearFilters{
-	float: right; 
-    margin-top: 8px;
-    margin-right: 16px;
-}
-
-#sidebarExpand {
-	margin-left: -1rem;
-    margin-top: -1rem;
-    float: right;
-    margin-right: 0px;
-    width: 43px;
-    height: 42px;
-    background: #518EE2;
-    border-radius: 0px 6px 0px 0px;
-}
-#sidebarExpand i {
-	color: #fff;
-    font-size: 37px;
-    position: relative;
-    left: 0.8rem;
-}
-
-
-#sidebarCollapse {
 	float: right;
     margin-top: 0px;
     margin-right: 0px;
-    width: 43px;
-    height: 42px;
-    background: #518EE2;
+    background-color: #518ee1;
     border-radius: 0px 6px 0px 0px;
+    width: 53px;
+    height: 42px;
 }
-
-#sidebarCollapse img {
-    position: absolute;
-    right: 31px;
+#clearFilters img {
+	position: absolute;
+    right: 27px;
     top: 0.7rem;
 }
 
@@ -461,14 +443,11 @@ input.filteritem:checked {
 }
 
 label.attrName {
-	color: #353941; 
 	margin-bottom: 5px; 
 	margin-top: -8px; 
-	margin-left: 9px; 
-	font-weight: 400; 
-	font-size: 18px; 
+	margin-left: 9px;
 	width: 65%; 
-	font-family: 'inter_medium';
+	letter-spacing: 0.19px;
 }
 
 .search_filter_div {
@@ -535,12 +514,12 @@ label.showMorefields {
 #searchBtn{
     position: absolute;
     top: 3.25rem;
-    right:25rem;
+    right:18rem;
 }
 
 #searchBtn img{
-	height: 27px;
-	width: 27px;
+	height: 31px;
+	width: 31px;
 }
 
 #resetBtn {
@@ -574,6 +553,11 @@ label.showMorefields {
     letter-spacing: 0.19px;
     margin-left: 2.3rem;
 }
+
+#sortingDiv {
+	margin-left: 2rem;
+}
+
     
 #assetsEditDiv label{
  	color: #004187;
@@ -678,7 +662,6 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
   gap: 21px;
 }
 .line_divider {
-  margin-left: 0.5rem;
   width: 100%;
 }
 
@@ -753,7 +736,7 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
   align-items: center;
   display: flex;
   gap: 4px;
-  margin-left: 18px;
+  margin-left: 4px;
   margin-top: 1rem;
 }
 
@@ -763,14 +746,14 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
 }
 
 .overlap-group {
-  margin-left: 18px;
+  margin-left: 4px;
   position: relative;
 }
 .program-container {
   	align-items: center;
     display: flex;
     gap: 4px;
-    margin-left: 18px;
+    margin-left: 4px;
     margin-top: 10px;
     margin-bottom: 12px;
 } 

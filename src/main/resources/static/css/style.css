@@ -286,13 +286,7 @@
   font-weight: 300;
   font-style: normal;
 }
-.inter-medium-wedgewood-16px {
-  color: var(--wedgewood);
-  font-family: var(--font-family-inter-medium);
-  font-size: var(--font-size-m);
-  font-weight: 500;
-  font-style: normal;
-}
+
 .inter-bold-tuna-19px {
   color: var(--tuna);
   font-family: var(--font-family-inter);
@@ -445,13 +439,7 @@
   font-weight: 600;
   font-style: normal;
 }
-.inter-bold-tuna-19px {
-  color: var(--tuna);
-  font-family: var(--font-family-inter-bold);
-  font-size: 19px;
-  font-weight: 700;
-  font-style: normal;
-}
+
 .opensans-bold-white-16px {
   color: var(--white);
   font-family: var(--font-family-open_sans);

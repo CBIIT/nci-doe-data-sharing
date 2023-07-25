@@ -140,6 +140,10 @@ table#dataSetMetaData tr:nth-child(odd) td {
 	border-bottom: 8px solid rgb(197, 197, 197) !important;
 }
 
+.selectIndividualCheckbox {
+	margin-left: 6px;
+}
+
 table#dataSetTable tr:nth-child(even) td, table#generatePredTable tr:nth-child(even) td{
 	background-color: #E0F0F4 !important;
 	color: var(--deep-sapphire);

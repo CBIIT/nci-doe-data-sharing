@@ -94,19 +94,6 @@ $(document).ready(function() {
 		}
 	});
 	
-	$("#sidebarCollapse").click(function() {
-		$("#filterSectionDiv").hide();
-		$("#searchResultsDiv").removeClass('col-md-9');
-		$("#searchResultsDiv").addClass('col-md-12');
-		$("#sidebarExpand").show();
-	});
-	
-	$("#sidebarExpand").click(function() {
-		$("#filterSectionDiv").show();
-		$("#searchResultsDiv").addClass('col-md-9');
-		$("#searchResultsDiv").removeClass('col-md-12');
-		$("#sidebarExpand").hide();
-	});
 });
 
 function populateSearchCriteria(searchType) {
@@ -492,7 +479,7 @@ function renderDataSetName(data, type, row) {
 					+ row.dataSetPath
 					+ "'>"
 					+ "<img class='editCollectionImg' src='images/Search_EditMetaData.svg' data-toggle='tooltip' title='Edit Asset Metadata' th:src='@{/images/Search_EditMetaData.svg}' "
-					+ "alt='edit collection'></span>";
+					+ "alt='edit collection'></span>&nbsp;";
 
 			if (row.dataSetPermissionRole == 'Owner') {
 				editDataSetHtml += "&nbsp;<span class='editAccessGroupPermissions' collection_name = '"
@@ -500,7 +487,7 @@ function renderDataSetName(data, type, row) {
 						+ " selectedCollection = 'Asset' " + "metadata_path  = '" + row.dataSetPath + "'>"
 						+ "<img class='collectionAccessGrpImg' src='images/Search_AccessGroups.svg' data-toggle='tooltip' "
 						+ "title='Edit Asset Access Permissions' " + "th:src='@{/images/Search_AccessGroups.svg}' "
-						+ "alt='Edit Asset Access Permissions'></span>";
+						+ "alt='Edit Asset Access Permissions'></span>&nbsp;";
 			}
 		}
 		
@@ -564,7 +551,7 @@ function renderDataSetName(data, type, row) {
 		        + " <span class='poppins-medium-congress-blue-25px'>" + row.dataSetName + "</span>"
 		        + "&nbsp;&nbsp;"
 		         + editDataSetHtml
-		         + "&nbsp;<button type='button' class='share-link-copy-button' data-toggle='tooltip' data-placement='bottom' "
+		         + "<button type='button' class='share-link-copy-button' data-toggle='tooltip' data-placement='bottom' "
 			     + " title='Shareable asset link: copy to clipboard in a new tab' data-clipboard-text='" + row.dataSetdmeDataId + "'>"
 			     + "<img src='images/copy_to_clipboard.svg' width='20' alt='Copy to clipboard'/></button>"
 		         + " </div>"
