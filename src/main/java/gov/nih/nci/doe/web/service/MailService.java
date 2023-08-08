@@ -1,6 +1,7 @@
 package gov.nih.nci.doe.web.service;
 
-import gov.nih.nci.doe.web.model.SiteFeedback;
+import org.springframework.web.multipart.MultipartFile;
+
 import gov.nih.nci.doe.web.model.ContactUs;
 
 public interface MailService {
@@ -20,6 +21,6 @@ public interface MailService {
 
 	public void sendContactUsEmail(ContactUs contactUs);
 
-	public void sendSiteFeedbackEmail(SiteFeedback feedback);
+	public void sendNotificationEmail(MultipartFile file, String message, String webServerName, String loggedOnUser);
 
 }

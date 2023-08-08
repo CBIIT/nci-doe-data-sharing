@@ -7,9 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=11; IE=10; IE=9; IE=8; IE=7; IE=EDGE"/>
     <meta http-equiv="cache-control" content="no-cache" />
     <title>Title</title>
-     <link rel="canonical" href="https://modac.cancer.gov/siteFeedback" />
+     <link rel="canonical" href="https://modac.cancer.gov/emailNotifications" />
 </head>
-<link rel="stylesheet" href="css/siteFeedback.css" th:href="@{/css/siteFeedback.css}"/>
+<link rel="stylesheet" href="css/siteFeedback.css" th:href="@{/css/notification.css}"/>
 <body>
         
  <a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>       
@@ -30,7 +30,7 @@
      <div role="main" id="content">
         <div class="card-body tab-content text-left" id="pills-tabContent">
 
-            <div th:replace="fragments/siteFeedback :: siteFeedback">Site Feedback</div>
+            <div th:replace="fragments/notificationFragment :: notificationFragment">Email Notification Fragment</div>
              <div id="spinner" class="spinner" style="display: none;">
                 <img id="img-spinner" th:src="@{/images/giphy.gif}" alt="Loading"/>
              </div>
@@ -77,7 +77,7 @@
 <script src="js/jquery.are-you-sure-1.9.0.js" th:src="@{/js/jquery.are-you-sure-1.9.0.js}"></script>
 <script src="js/controller/common.js" th:src="@{/js/controller/common.js}"></script>
 <script src="js/controller/doe.js" th:src="@{/js/controller/doe.js}"></script>
-<script src="js/controller/contactUs.js" th:src="@{/js/controller/siteFeedback.js}"></script>
+<script src="js/controller/notification.js" th:src="@{/js/controller/notification.js}"></script>
 <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
 </body>
 </html>

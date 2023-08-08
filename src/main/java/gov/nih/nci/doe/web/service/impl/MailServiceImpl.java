@@ -11,6 +11,7 @@ import javax.mail.internet.InternetAddress;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.VelocityException;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,11 +21,12 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import gov.nih.nci.doe.web.service.MailService;
 import gov.nih.nci.doe.web.model.ContactUs;
 import gov.nih.nci.doe.web.domain.MailTemplate;
-import gov.nih.nci.doe.web.model.SiteFeedback;
+import gov.nih.nci.doe.web.repository.EmailNotificationRepository;
 import gov.nih.nci.doe.web.repository.MailTemplateRepository;
 
 @Component
@@ -40,6 +42,9 @@ public class MailServiceImpl implements MailService {
 
 	@Autowired
 	private MailTemplateRepository templateDAO;
+
+	@Autowired
+	EmailNotificationRepository emailNotificationRepository;
 
 	@Value("${mail.override}")
 	private boolean override;
@@ -243,16 +248,22 @@ public class MailServiceImpl implements MailService {
 	}
 
 	@Override
-	public void sendSiteFeedbackEmail(SiteFeedback feedback) {
-		log.info("Sending site feedback us email");
+	public void sendNotificationEmail(MultipartFile file, String message, String webServerName, String loggedOnUser) {
+		log.info("Sending notification email");
 		final Map<String, Object> params = new HashMap<String, Object>();
 		final List<String> to = new ArrayList<String>();
-		to.add(supportEmail);
-		params.put(FROM, feedback.getEmailAddress());
+		final List<String> bcc = new ArrayList<String>();
+		List<String> emailList = emailNotificationRepository.getAllEmailAddress();
+		to.add(loggedOnUser);
+		if (!CollectionUtils.isEmpty(bcc)) {
+			bcc.addAll(emailList);
+		}
+
+		params.put(FROM, supportEmail);
 		params.put(TO, to.toArray(new String[0]));
-		params.put("message", feedback.getMessage());
-		params.put("username", feedback.getFirstName() + " " + feedback.getLastName());
-		send("SITE_FEEDBACK_EMAIL", params);
+		params.put("gitHubLink", message);
+		params.put("unsubscribe_link", webServerName + "/emailNotifications/unsubscribe");
+		send("NOTIFICATION_EMAIL", params);
 
 	}
 }
