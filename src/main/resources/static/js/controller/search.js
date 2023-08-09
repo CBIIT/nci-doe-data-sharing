@@ -211,14 +211,12 @@ function refreshDataTable() {
 							+ '<span id="descSpan"><img src="images/search_descending.svg"/></span>'
 							+ '</div>');
 		$("div.toolbar").after (
-				'<div id="assetinfo"></div><div class="col-lg-12 col-md-12 col-sm-12 float-right"'
-				 + 'style="margin-top: -60px;">'
-				 + '<div class="controls controls-row mt-4">'
+				'<div class="col-lg-12 col-md-12 col-sm-12 float-right">'
 				 + '<button id="downloadSelected" type="button"'
 				 + 'class="btn btn-primary float-right mb-2 mr-2" disabled>'
 				 + 'DOWNLOAD <br />SELECTED ASSETS <img class="arrow_right_download_selected"' 
 				 + 'src="/images/white_right_arrow.svg"/>'
-				 + '</button></div></div>');
+				 + '</button></div>');
 	} else {
 		var t = $('#searchResultTable').DataTable();
 		console.log(t);
@@ -744,7 +742,7 @@ function openPopOver($this) {
 
 						if (data.length > 0) {
 
-							var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\"><a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><img src='images/Search.Metadata.Cancel.svg' width='13' style='margin-top: -8px;'/></a>"
+							var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\"><a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><img src='images/close_metadata_popover.svg' width='16' style='margin-top: -8px;'/></a>"
 									+ headerName
 									+ "</div>"
 									+ "<div class='popover-body'> <div class='divTable' style='width: 100%;border: 1px solid #000;'>"
@@ -780,7 +778,7 @@ function openPopOver($this) {
 						} else {
 							table = "<div id=\"a01\" class=\"col-md-12 hidden\">"
 									+ "<div class=\"popover-heading\"> NO USER METADATA &nbsp;&nbsp;"
-									+ "<a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><img src='images/Search.Metadata.Cancel.svg' width='13' style='margin-top: -8px;'/></a> </div>"
+									+ "<a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><img src='images/close_metadata_popover.svg' width='16' style='margin-top: -8px;'/></a> </div>"
 									+ "<div class='popover-body'></div></div>";
 						}
 
@@ -813,7 +811,7 @@ function openDataObjectPopOver($this) {
 	var headerName = "<div class='popoverHeader'><p class='popoverInfoDatObj'>Metadata for " + fileName + "</p></div>";
 
 	var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"><div class=\"popover-heading\"><a class=\"button closeBtn float-right\" href=\"javascript:void(0);\">"
-			+ "<img src='images/Search.Metadata.Cancel.svg' width='13' style='margin-top: -8px;'/></a>"
+			+ "<img src='images/close_metadata_popover.svg' width='16' style='margin-top: -8px;'/></a>"
 			+ headerName
 			+ " </div><div class='popover-body'>";
 

@@ -147,40 +147,43 @@ input[type="checkbox"].filteritem {
 }
 
 .divTableHead {
-	background-color: #00467f;
-	color: #fff;
+	background-color: #3b6eb4;
 	display: table-cell;
 	border: none;
 	padding: 9px;
 	width: 14rem;
 	padding-left: 30px;
-	font-size: 13px;
-	font-family: 'inter_regular';
 	letter-spacing: 1px;
+	color: var(--white);
+    font-family: var(--font-family-open_sans);
+    font-size: var(--font-size-s);
+    font-weight: 400;
+    font-style: normal;
 }
 
 .divTableCell {
-	/* border: 1px solid #898989; */
 	display: table-cell;
 	padding: 10px 28px;
 }
 
 .divAttrName {
-	font-family: 'lato_bold';
-	font-size: 14px;
-	color: #000000;
-	border: 0.9px solid #898989;
+	  color: var(--midnight-blue);
+	  font-family: var(--font-family-open_sans);
+	  font-size: var(--font-size-xs2);
+	  font-weight: 700;
+	  font-style: normal;
 }
 
 .divAttrVal {
-	color: #000000;
-	font-family: 'latoregular';
-	font-size: 15px;
-	border: 0.9px solid #898989;
+	  font-family: var(--font-family-inter);
+	  font-size: var(--font-size-m);
+	  color: var(--deep-sapphire);
+	  font-weight: 400;
 }
 
 div.divTableBody div.divTableContent:nth-child(odd) {
-	background-color: #E0F0F4 !important;
+	
+	background-color: rgba(238, 244, 246, 1) !important;
 	border: 1px solid #898989;
 }
 
@@ -490,6 +493,7 @@ label.showMorefields {
     display: flex;
     justify-content: space-between;
     padding-bottom: 10px;
+    border-bottom: 1px solid #409CC6;
 }
 
 #searchResultTable_length {
@@ -538,12 +542,6 @@ label.showMorefields {
 #assetsEditDiv {
 	margin-top: -0.5rem;
 	margin-right: 2rem;
-}
-
-#assetinfo {
-	padding-top: 10px;
-    border-top: 1px solid #409CC6;
-    padding-left: 17px;
 }
 
 #searchResultsDiv {
@@ -631,7 +629,7 @@ table#searchResultTable.display tbody tr>.sorting_1, table#searchResultTable.ord
 }
 
 #downloadSelected {
-	margin-top: 2.5rem;
+    margin-top: 1rem;
     font-family: var(--font-family-inter);
 	border-radius: 36px;
 	height: 50px;

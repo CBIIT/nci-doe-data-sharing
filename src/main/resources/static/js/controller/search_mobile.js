@@ -194,7 +194,7 @@ function openPopOverMobile($this) {
 
 					if (data.length > 0) {
 
-						var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\"><a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><img src='images/Search.Metadata.Cancel.svg' style='margin-top: -8px;' width='13' /></a>"
+						var ind = "<div id=\"a01\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\"><a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><img src='images/close_metadata_popover.svg' style='margin-top: -8px;' width='13' /></a>"
 								+ headerName
 								+ "</div>"
 								+ "<div class='popover-body'> <div class='divTable' style='width: 100%;border: 1px solid #000;'>"

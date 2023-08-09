@@ -306,11 +306,11 @@ table.dataTable tbody tr.shown+tr>td {
 }
 
 table#userMetaData tr:nth-child(odd) td {
-	background-color: #E0F0F4 !important;
+	background-color: #FBFBFB !important;
 }
 
 table#userMetaData tr:nth-child(even) td {
-	background-color: #E0F0F4 !important;
+	background-color: rgba(238, 244, 246, 1) !important;
 }
 
 .rowAttribute {
