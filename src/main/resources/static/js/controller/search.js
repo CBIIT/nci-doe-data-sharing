@@ -96,9 +96,36 @@ $(document).ready(function() {
 	
 	$("#collapseFilters").click(function() {
 	
+		// Find all filters inside inside the filter section to collapse
+            var buttons = $("#filterSectionDiv").find('.dataTargetCollapse');
+            
+            // Click on each button
+            buttons.each(function() {
+                $(this).parent().css('margin-bottom', '-1px');
+				$(this).parent().parent().find('div.dataDivCollapse').css('display', 'none');
+				$(this).parent().parent().find('.search_filter_div').css('display', 'none');
+				$(this).attr('src', '/images/AccordionUp.png');
+				$(this).parent().parent().find(".css-17rpx5x").hide();
+				$(this).parent().parent().find(".css-17rpx5xLess").hide();
+            });
+	
 	});
 	
 	$("#expandFilters").click(function() {
+	
+	// Find all filters inside inside the filter section to collapse
+            var buttons = $("#filterSectionDiv").find('.dataTargetCollapse');
+            
+            // Click on each button
+            buttons.each(function() {			
+				$(this).parent().css('margin-bottom', '15px');
+				$(this).parent().parent().find('div.dataDivCollapse').css('display', 'block');
+				$(this).parent().parent().find('.search_filter_div').css('display', 'none');
+				$(this).attr('src', '/images/AccordionDown.png');
+				$(this).parent().parent().find('.css-17rpx5x').show();
+				$(this).parent().parent().find('.showMore').show();
+				showFirstFewFields($(this).parent().parent(), 'Less');
+            });
 	
 	});
 });
