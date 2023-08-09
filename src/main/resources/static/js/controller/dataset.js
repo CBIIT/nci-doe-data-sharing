@@ -564,7 +564,9 @@ $('#dataSetTable tbody').on('click', '.editFolderMetadata', function() {
 	$("#assetDetailsFragment").hide();
 	$("#editCollectionFragment").show();
 	$(".backToAssetDetailsBtn").show();
+	$(".backToAssetDetails_editCollection").show();
 	$(".backToSearchBtn").hide();
+	$(".backToSearch_editCollection").hide();
 	var metaDataPath = $(this).attr('metadata_path');
 	var collectionId = $(this).attr('collectionId');
 	var fileName = $(this).attr('data-fileName');
@@ -592,7 +594,9 @@ $('#dataSetTable tbody').on('click', '.editDataFileCollectionMetadata', function
 	$("#assetDetailsFragment").hide();
 	$("#editCollectionFragment").show();
 	$(".backToAssetDetailsBtn").show();
+	$(".backToAssetDetails_editCollection").show();
 	$(".backToSearchBtn").hide();
+	$(".backToSearch_editCollection").hide();
 	var metaDataPath = $(this).attr('metadata_path');
 	var fileName = $(this).attr('data-fileName');
 	var params = {

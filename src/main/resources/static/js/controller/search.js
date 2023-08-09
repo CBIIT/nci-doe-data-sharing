@@ -314,7 +314,9 @@ function dataTableInit(isVisible) {
 				$("#dataSetFragment").hide();
 				$("#editCollectionFragment").show();
 				$(".backToAssetDetailsBtn").hide();
+				$(".backToAssetDetails_editCollection").hide();
 				$(".backToSearchBtn").show();
+				$(".backToSearch_editCollection").show();
 				var metaDataPath = $(this).attr('metadata_path');
 				var permissionsRole = $(this).attr('permissions_role');
 				var collectionId = $(this).attr('collectionId');

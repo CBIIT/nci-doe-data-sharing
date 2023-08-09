@@ -35,7 +35,7 @@
 	align-items: flex-start;
     display: flex;
     gap: 12px;
-    margin-left: 196px;
+    margin-left: 17rem;
 }
 
 .asset-detail_header {
@@ -54,7 +54,7 @@
     font-family: inter_medium;
 }
 
-.backToSearch_assetDetails {
+.backToSearch_assetDetails,.backToSearch_editCollection,.backToAssetDetails_editCollection,.backToUplaodTab_editCollection {
 	display: flex;
     flex-direction: column;
     justify-content: center;
@@ -63,7 +63,7 @@
     color: var(--white);
     cursor: pointer;
     font-family: var(--font-family-inter);
-    font-size: var(--font-size-xxs);
+    font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.12px;
 }
@@ -113,21 +113,95 @@ table#assetDetailsDiv td {
     width: 88%
 }
 
-table#dataSetMetaData thead th {
-	background-color: var(--lapis-lazuli);
+table#userMetaData input[type="text"] {
+	background-color: var(--white);
+    border: 1px solid;
+    border-color: rgba(107, 114, 148, 1);
+    border-radius: 8px;
+    display: inline-flex;
+    height: 37px;
+    width: 485px;
+    color: rgba(8, 58, 80, 1);
+    font-weight: 400;
+    line-height: 19.6px;
+    white-space: nowrap;
+    padding-left: 1rem;
 }
 
-table#dataSetMetaData thead tr th {
+table#userMetaData input[type="text"]:disabled  {
+	width: 70%;
+    color: var(--deep-sapphire);
+    border: none;
+    background-color: transparent;
+}
+
+table#userMetaData textarea {
+	width: 70%;
+	background-color: var(--white);
+    border: 1px solid;
+    border-color: rgba(107, 114, 148, 1);
+    border-radius: 8px;
+    color: rgba(8, 58, 80, 1);
+    font-weight: 400;
+    padding-left: 1rem;
+}
+
+table#dataSetMetaData thead th,table#userMetaData thead th {
+	background-color: var(--lapis-lazuli);
+	border:none;
+}
+
+table#dataSetMetaData thead tr th, table#userMetaData thead tr th {
 	padding-left: 2rem;
 }
 
-table#dataSetMetaData tr:nth-child(even) td {
+table#dataSetMetaData tr:nth-child(even) td,table#userMetaData tr:nth-child(even) td {
 	background-color: rgba(238, 244, 246, 1) !important;
 	padding-left: 2.3rem;
+	border:none;
 }
 
-table#dataSetMetaData tr:nth-child(odd) td {
+
+
+table#dataSetMetaData tr:nth-child(odd) td,table#userMetaData tr:nth-child(odd) td {
 	padding-left: 2.3rem;
+	background-color: var(--white) !important;
+	border:none;
+}
+
+table#dataSetMetaData tr:nth-child(even) td:first-child,table#userMetaData tr:nth-child(even) td:first-child {
+	color: var(--midnight-blue);
+    font-family: var(--font-family-open_sans);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    font-style: normal;
+}
+ 
+ table#dataSetMetaData tr:nth-child(even) td:nth-child(2),table#userMetaData tr:nth-child(even) td:nth-child(2) {
+	color: var(--deep-sapphire);
+    font-family: var(--font-family-inter);
+    font-size: var(--font-size-m);
+    font-weight: 400;
+    font-style: normal;
+}
+
+
+table#dataSetMetaData tr:nth-child(odd) td:first-child,table#userMetaData tr:nth-child(odd) td:first-child {
+	color: var(--midnight-blue);
+    font-family: var(--font-family-open_sans);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    font-style: normal;
+	
+}
+
+table#dataSetMetaData tr:nth-child(odd) td:nth-child(2),table#userMetaData tr:nth-child(odd) td:nth-child(2) {
+	color: var(--deep-sapphire);
+    font-family: var(--font-family-inter);
+    font-size: var(--font-size-m);
+    font-weight: 400;
+    font-style: normal;
+	
 }
 
 #dataSetTable_length, #generatePredTable_length {
@@ -220,7 +294,7 @@ table#dataSetTable thead th, table#generatePredTable thead th{
     transform: translate(25px ,-10px);
 }
 
-.assetDetailsHeader {
+.assetDetailsHeader,.editCollectionHeader {
 	background-image: url(/images/asset_details_background.png);
 	align-items: center;
 	background-size: 100% 100%;
@@ -230,7 +304,7 @@ table#dataSetTable thead th, table#generatePredTable thead th{
 }
 
 
-.backToSearch_AssetDetailsDiv {
+.backToSearch_AssetDetailsDiv,.backToSearchBtn,.backToAssetDetailsBtn,.backBtnEditCollectinToUploadTab {
 	align-items: center;
     display: flex;
     height: 41px;
@@ -242,9 +316,24 @@ table#dataSetTable thead th, table#generatePredTable thead th{
     border-color: var(--white);
 }
 
-.backToSearch_AssetDetailsDiv img {
+.backToSearch_AssetDetailsDiv img, .backToSearch_editCollection img,.backToAssetDetails_editCollection img, .backToUplaodTab_editCollection img {
 	height: 23px;
     width: 16px;
+}
+
+.arrow_right_addMetadata {
+	width: 16px;
+    transform: translate(16px ,-2px);
+}
+
+.arrow_right_updateMetadata {
+	width: 16px;
+    transform: translate(39px ,-2px);
+}
+
+.arrow_right_editPermissions {
+	width: 16px;
+    transform: translate(11px ,-2px);
 }
 
 .asset_attributes_subsection {
@@ -321,4 +410,56 @@ table#dataSetTable thead th, table#generatePredTable thead th{
 #assetHeaderWithPredictions {
 	margin-left: 5rem;
     margin-top: 3rem;
+}
+
+.clearMetadata {
+	margin-left: -27px;
+    cursor: pointer;
+    height: 12px;
+    margin-top: 1px;
+    width: 12px;
+}
+
+#addMetaData,#updateMetaData,#updatePermissions {
+ 
+  background-color: #2c4088 !important;
+  border-radius: 65px;
+  box-shadow: 0px 4px 50px #ffffff8c;
+  font-family: var(--font-family-inter);
+  color: var(--white);
+  font-size: 14px;
+  height: 41px;
+  width: 188px;	
+  font-style: normal;
+}
+
+/* this css is only for select dropdown for search, asset details and edit collection screen */
+#userMetaData tr td .select2-container span.select2-selection.select2-selection--single {
+	background-color: var(--white);
+    border: 1px solid;
+    border-color: rgba(107, 114, 148, 1);
+    border-radius: 8px;
+    color: rgba(8, 58, 80, 1);
+    padding-left: 0.5rem;
+}
+
+#userMetaData tr td .select2-container span.select2-selection.select2-selection--multiple {
+    background-color: var(--white);
+    border: 1px solid !important;
+    border-color: rgba(107, 114, 148, 1) !important;
+    border-radius: 8px !important;
+    color: rgba(8, 58, 80, 1);
+    padding-left: 0.5rem;
+}
+
+#userMetaData tr td .select2-container--default .select2-selection--single .select2-selection__arrow {
+    content: url(/images/editCollection_dropdown_arrow.svg);
+    margin-top: 6px;
+    width: 12px;
+    margin-right: 5px;
+}
+
+#userMetaData tr td .select2-container .select2-selection--single .select2-selection__rendered {
+    font-size: 16px;
+    color: rgba(8, 58, 80, 1);
 }

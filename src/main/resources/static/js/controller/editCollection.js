@@ -13,10 +13,9 @@ function constructCollectionMetData(metadata, metaDataPath, isDataObject, fileNa
 		var attrValModified = attrVal.replace(/"/g, "");
 
 		$("#userMetaData tbody").append(
-				"<tr><td>" + value.displayName + "</td><td><input type='text' "
+				"<tr><td>" + value.displayName  + "</td><td><input type='text' "
 						+ "aria-label='value of meta data' name='zAttrStr_" + value.key + "'" + " style='width:70%;' "
-						+ "value=\"" + attrValModified + "\">" + "&nbsp;&nbsp;<input class='pull-right clearMetadata'"
-						+ "type='button' value='X'></td></tr>");
+						+ "value=\"" + attrValModified + "\">" + "&nbsp;&nbsp;<img class='pull-right clearMetadata' src='/images/close_metadata_popover.svg'></td></tr>");
 
 	});
 }
@@ -74,8 +73,7 @@ function constructEditCollectionMetadata(data, status) {
 													+ "aria-label='value of meta data' name='zAttrStr_"
 													+ value.attrName + "' style='width:70%;'" + "value=\""
 													+ attrValModified
-													+ "\">&nbsp;&nbsp;<input class='pull-right clearMetadata'"
-													+ "type='button' value='X'></td></tr>");
+													+ "\">&nbsp;&nbsp;<img class='pull-right clearMetadata' src='/images/close_metadata_popover.svg'></td></tr>");
 
 								} else {
 									$("#userMetaData tbody").append(
@@ -156,7 +154,7 @@ function addCollectionMetaDataRows() {
 							+ '" name="_addAttrValue'
 							+ rowId
 							+ '" >'
-							+ '&nbsp;&nbsp;<input class="btn btn-primary pull-right" type="button" value="X" onclick="removeCollectionRow(\'addRow'
+							+ '&nbsp;&nbsp;<img class="pull-right clearMetadata" src="/images/close_metadata_popover.svg" onclick="removeCollectionRow(\'addRow'
 							+ rowId + '\')"></td></tr>');
 }
 

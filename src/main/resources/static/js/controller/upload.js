@@ -117,7 +117,9 @@ $(document).ready(
 						$("#uploadSectionDiv").hide();
 						$("#uploadHeader").hide();
 						$(".backToUploadTab").show();
+						$(".backToUplaodTab_editCollection").show();
 						$(".backToSearchBtn").hide();
+						$(".backToSearch_editCollection").hide();
 
 						$("#userMetaData tbody").html("");
 						$("#path").val(selectedPath);
@@ -1575,8 +1577,9 @@ function postSuccessEditCollectionMetadata(data, status) {
 		$("#uploadSectionDiv").hide();
 		$("#uploadHeader").hide();
 		$(".backToUploadTab").show();
+		$(".backToUplaodTab_editCollection").show();
 		$(".backToSearchBtn").hide();
-
+		$(".backToSearch_editCollection").hide();
 		$("#userMetaData tbody").html("");
 		$("#path").val(data.collectionPath);
 		$(".editCollectionSuccess").hide();

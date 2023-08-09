@@ -293,8 +293,9 @@ table.dataTable thead th, table.dataTable tfoot th {
 	background-color: #194F85;
 }
 
-table#userMetaData thead th, table.dataTable tfoot th {
+table.dataTable tfoot th {
 	background-color: var(--lapis-lazuli);
+	border-bottom: none;
 }
 
 table.dataTable tfoot th {
@@ -303,14 +304,6 @@ table.dataTable tfoot th {
 
 table.dataTable tbody tr.shown+tr>td {
 	padding: 0;
-}
-
-table#userMetaData tr:nth-child(odd) td {
-	background-color: var(--white) !important;
-}
-
-table#userMetaData tr:nth-child(even) td {
-	background-color: rgba(238, 244, 246, 1) !important;
 }
 
 .rowAttribute {
@@ -338,8 +331,8 @@ table#userMetaData tr:nth-child(even) td {
 }
 
 
-#updateMetaData, #addMetaData, #addNewMetaDataForSingleDataFile,
-	#updatePermissions, #addUserMetadataForBulkAssets,
+ #addNewMetaDataForSingleDataFile,
+	#addUserMetadataForBulkAssets,
 	#btnUpdateAccessGroup, #btnUpdatePermissions, #btnPredictionAccessGrp {
 	background-color: #E66F05 !important;
 	font-family: 'inter_regular';
@@ -444,12 +437,6 @@ table#manageTasksTable thead .sorting_desc{
 	background-image: url(/images/Sort-down.icon.svg) !important;
 	background-size: 16px 19px;
 }
-
-.clearMetadata {
-	border: transparent;
-	margin-left: -27px;
-}
-
 
 table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after,
 	table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:after,
