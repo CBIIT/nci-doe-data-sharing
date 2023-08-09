@@ -49,8 +49,9 @@
 					<div id="filterSectionSubDiv">
 						<p>Search Filter</p>
 																				
-							<span id="clearFilters"><img alt="clear Icon"
+							<span id="clearFilters" data-toggle="tooltip" title="Clear filters"><img alt="clear Icon"
 							src="/images/side-bar-reset.png"></span>
+							
 							
 					</div>
 					
@@ -73,7 +74,7 @@
 								th:if="${list.key != 'Asset Type' && list.key != 'Is Reference Dataset' && 
 								 list.key != 'Is Model Deployed'}"
 								src="images/Filter.Magnifying.Icon.png"
-								class="searchCheckBoxlist" data-toggle="tooltip" th:title="'Open ' + ${list.key} + ' Search Bar'"
+								class="searchCheckBoxlist" data-toggle="tooltip" title="Open Search Bar"
 								th:src="@{/images/Filter.Magnifying.Icon.png}"
 								style="width: 18px; height: 17px; float: right; margin-right: 12px; margin-top: 8px;" />
 						</p>

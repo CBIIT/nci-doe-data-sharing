@@ -226,10 +226,20 @@ input:checked+.slider:before {
 	border-radius: 50%;
 }
  .tooltip-inner {
-      background-color:#264663;
+     /* background-color:#264663;
       color: #FFFFFF;
       font-family: 'inter_regular';
-      font-size:13px;
+      font-size:13px;*/
+      
+	  align-items: center;
+	  background-color: var(--rhino);
+	  border-radius: 5px;
+	  box-shadow: 0px 3px 4px #00000059;
+	  color: var(--white);
+	  font-family: var(--font-family-inter);
+	  font-size: 13px;
+	  font-weight: 300;
+	  font-style: normal;
     }
 
 #tooltipHtml, #outputTooltipHtml {

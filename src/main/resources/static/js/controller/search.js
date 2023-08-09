@@ -94,6 +94,13 @@ $(document).ready(function() {
 		}
 	});
 	
+	$("#collapseFilters").click(function() {
+	
+	});
+	
+	$("#expandFilters").click(function() {
+	
+	});
 });
 
 function populateSearchCriteria(searchType) {
@@ -554,16 +561,16 @@ function renderDataSetName(data, type, row) {
 		        + "&nbsp;&nbsp;"
 		         + editDataSetHtml
 		         + "<button type='button' class='share-link-copy-button' data-toggle='tooltip' data-placement='bottom' "
-			     + " title='Shareable asset link: copy to clipboard in a new tab' data-clipboard-text='" + row.dataSetdmeDataId + "'>"
+			     + " title='Copy to clipboard' data-clipboard-text='" + row.dataSetdmeDataId + "'>"
 			     + "<img src='images/copy_to_clipboard.svg' width='20' alt='Copy to clipboard'/></button>"
 		         + " </div>"
 		         + " </div>"
 		         + " </div>"
 		         + "<div class='ml-auto'>"
 		         + "<button type='button' class='expand_card_btn'  data-toggle='collapse' href='#collapse" + row.dmeDataId + "'"
-		         + "><img src='images/expand_card.png'" 
+		         + "><img src='images/expand_card.png' data-toggle='tooltip' title= 'Expand and Collapse Card'" 
 		         + "alt='Collapse asset details'></button>"
-		         + "<button type='button' class='view_asset_details_btn dataSetFragment' data-toggle='tooltip' data-placement='bottom' title='View Asset Details'"
+		         + "<button type='button' class='view_asset_details_btn dataSetFragment' data-toggle='tooltip' data-placement='bottom' title='View details of this card'"
 		         + " dme_data_id = '" + row.dmeDataId + "'><img src='images/view_details_arrow.png'" 
 		         + "alt='View Asset Details'></button>"
 		         + "</div>"
