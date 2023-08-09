@@ -127,7 +127,6 @@ table#dataSetMetaData tr:nth-child(even) td {
 }
 
 table#dataSetMetaData tr:nth-child(odd) td {
-	background-color: #FBFBFB !important;
 	padding-left: 2.3rem;
 }
 
@@ -157,7 +156,7 @@ table#dataSetTable tr:nth-child(even) td, table#generatePredTable tr:nth-child(e
 }
 
 table#dataSetTable tr:nth-child(odd) td, table#generatePredTable tr:nth-child(odd) td{
-	background-color: #FBFBFB !important;
+	background-color: var(--white) !important;
 	color: var(--deep-sapphire);
   	font-family: var(--font-family-inter);
   	font-size: var(--font-size-m);
