@@ -21,7 +21,10 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
+import java.io.UnsupportedEncodingException;
+import java.awt.*;
+import java.net.URI;
+import java.net.URLEncoder;
 
 import gov.nih.nci.doe.web.service.MailService;
 import gov.nih.nci.doe.web.model.ContactUs;
@@ -248,22 +251,59 @@ public class MailServiceImpl implements MailService {
 	}
 
 	@Override
-	public void sendNotificationEmail(MultipartFile file, String message, String webServerName, String loggedOnUser) {
+	public void sendNotificationEmail(String webServerName, String loggedOnUser) {
 		log.info("Sending notification email");
-		final Map<String, Object> params = new HashMap<String, Object>();
-		final List<String> to = new ArrayList<String>();
+
+		String to = loggedOnUser;
 		final List<String> bcc = new ArrayList<String>();
 		List<String> emailList = emailNotificationRepository.getAllEmailAddress();
-		to.add(loggedOnUser);
+
 		if (!CollectionUtils.isEmpty(bcc)) {
 			bcc.addAll(emailList);
 		}
 
-		params.put(FROM, supportEmail);
-		params.put(TO, to.toArray(new String[0]));
-		params.put("gitHubLink", message);
-		params.put("unsubscribe_link", webServerName + "/emailNotifications/unsubscribe");
-		send("NOTIFICATION_EMAIL", params);
+		String subject = "Email Subject";
+		String body = "Hello,\n\nThis is the email body.";
+		openOutlookMail(to, bcc, subject, body);
 
+	}
+
+	public static void openOutlookMail(String to, List<String> bccList, String subject, String body) {
+		try {
+			StringBuilder mailtoUrl = new StringBuilder("mailto:");
+
+			mailtoUrl.append(encodeField(to));
+
+			if (bccList != null && !bccList.isEmpty()) {
+				mailtoUrl.append("?bcc=");
+				for (String bcc : bccList) {
+					mailtoUrl.append(encodeField(bcc)).append(",");
+				}
+				mailtoUrl.deleteCharAt(mailtoUrl.length() - 1);
+			}
+
+			if (!subject.isEmpty()) {
+				mailtoUrl.append("&subject=").append(encodeField(subject));
+			}
+
+			if (!body.isEmpty()) {
+				mailtoUrl.append("&body=").append(encodeField(body));
+			}
+
+			Desktop.getDesktop().mail(new URI(mailtoUrl.toString()));
+		} catch (
+
+		Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static String encodeField(String field) {
+		try {
+			return URLEncoder.encode(field, "UTF-8").replace("+", "%20");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return "";
+		}
 	}
 }

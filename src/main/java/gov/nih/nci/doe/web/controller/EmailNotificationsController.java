@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.service.EmailNotificationsService;
@@ -30,32 +28,21 @@ public class EmailNotificationsController extends AbstractDoeController {
 	EmailNotificationsService emailUpdatesService;
 
 	@GetMapping
-	public String getNotificationPage(HttpSession session, HttpServletRequest request) {
-
-		log.info("notification page");
-		return "notification";
-
-	}
-
-	@PostMapping
-	@ResponseBody
-	public String sendNotificationUpdateToUsers(HttpSession session, @RequestHeader HttpHeaders headers,
-			@RequestParam(value = "releaseDoc", required = false) MultipartFile releaseDoc,
-			@RequestParam(value = "message") String message, HttpServletRequest request) throws Exception {
+	public void getNotificationPage(HttpSession session, HttpServletRequest request) throws DoeWebException {
 
 		log.info("send notification email to all the users subscribed");
 
 		try {
 			if (Boolean.TRUE.equals(getIsAdmin())) {
-				mailService.sendNotificationEmail(releaseDoc != null ? releaseDoc : null, message, webServerName,
-						getLoggedOnUserInfo());
-				return "Notification sent to all the users";
+				mailService.sendNotificationEmail(webServerName, getLoggedOnUserInfo());
+
 			}
-			return "Invalid Permissions";
+			throw new DoeWebException("Invalid permissions to send email update notification");
 
 		} catch (Exception e) {
 			throw new DoeWebException("Failed to send notification email to users: " + e.getMessage());
 		}
+
 	}
 
 	@PostMapping(value = "/subscribe")

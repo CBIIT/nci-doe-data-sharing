@@ -279,7 +279,7 @@ public abstract class AbstractDoeController {
 		}
 		return null;
 	}
-	
+
 	@ModelAttribute("lastName")
 	public String getLoggedOnUserLastName() {
 		String emailAddr = getLoggedOnUserInfo();
@@ -287,6 +287,18 @@ public abstract class AbstractDoeController {
 			DoeUsersModel user = authService.getUserInfo(emailAddr);
 			if (user != null) {
 				return user.getLastName();
+			}
+		}
+		return null;
+	}
+
+	@ModelAttribute("organization")
+	public String getLoggedOnUserOrg() {
+		String emailAddr = getLoggedOnUserInfo();
+		if (StringUtils.isNotEmpty(emailAddr)) {
+			DoeUsersModel user = authService.getUserInfo(emailAddr);
+			if (user != null) {
+				return user.getInstitution();
 			}
 		}
 		return null;
