@@ -23,7 +23,7 @@
     margin-top: -8px;
     margin-left: -18px;
     width: 93%;
-    border-top: 2px solid rgb(197, 197, 197) !important;
+    border-top: 1px solid rgb(197, 197, 197) !important;
 }
 
 .assetFilesConditional {
@@ -113,9 +113,14 @@ table#assetDetailsDiv tbody tr {
     border-bottom: 1px solid rgb(197, 197, 197) !important;
 }
 
+table#assetDetailsDiv tbody tr:last-child{
+    border-bottom: none !important;
+}
+
 #dataSetMetaData {
 	margin-top: 6px;
-    width: 88%
+    width: 88%;
+    border-bottom: 1px solid rgb(197, 197, 197) !important;
 }
 
 table#userMetaData input[type="text"] {
@@ -218,7 +223,7 @@ table#dataSetMetaData tr:nth-child(odd) td:nth-child(2),table#userMetaData tr:nt
 #dataSetTable,#generatePredTable {
 	width: 97% !important;
 	border: transparent;
-	border-bottom: 8px solid rgb(197, 197, 197) !important;
+	border-bottom: 1px solid rgb(197, 197, 197) !important;
 }
 
 .selectIndividualCheckbox {
@@ -371,7 +376,6 @@ input[type="checkbox"].selectIndividualCheckbox {
 .asset_attributes_subsection {
 	margin-left: 6rem;
 	display: block;
-	border-bottom: 1px solid rgb(197, 197, 197) !important;
 }
 .assetFilesDiv{
 	 margin-left: 5.5rem;
