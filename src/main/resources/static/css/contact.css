@@ -264,19 +264,29 @@
 }
 
 #btnSubmitEmail {
-	color: var(--white);
     font-family: var(--font-family-inter);
     font-size: 15px;
     font-weight: 500;
     letter-spacing: 0.15px;
     white-space: nowrap;
-    background-color: var(--black) !important;
     border: 1px solid;
     border-color: #b6c8d2;
-    border-radius: 30px;
     height: 54px;
     margin-top: 24px;
     min-width: 295px;
+    border-radius: 30px;
+    color: var(--black);
+    background-color: var(--white) !important;
+}
+
+#btnSubmitEmail:active {
+  background-color: var(--black) !important;
+  color: white;
+  border-color: transparent !important;
+}
+
+#btnSubmitEmail:active img {
+	content: url("/images/white_right_arrow.svg");
 }
 
 .form_div {
@@ -347,8 +357,9 @@ form#contact-us-form label {
 }
 
 .arrow_right_contact_us {
-	width: 16px;
-    transform: translate(20px ,-2px);
+	transform: translate(56px ,-2px);
+    height: 35px;
+    width: 24px;
 }
 
 .select2-container--bootstrap4 .select2-selection--single .select2-selection__arrow {
