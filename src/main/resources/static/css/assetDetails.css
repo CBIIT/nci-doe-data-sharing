@@ -294,6 +294,33 @@ table#dataSetTable thead th, table#generatePredTable thead th{
 #downloadSelectedDataSet:disabled, #downloadSelectedMetadata:disabled {
 	background-color: var(--nobel) !important;
 }
+
+input[type="checkbox"].selectAll {
+    height: 14px;
+    width: 14px;
+    background-color: var(--white);
+  	border: 1px solid;
+  	border-color: var(--chambray);
+  	transform: translateY(2px);
+}
+
+input[type="checkbox"].selectIndividualCheckbox {
+    height: 14px;
+    width: 14px;
+    background-color: var(--white);
+  	border: 1px solid;
+  	border-color: var(--chambray);
+}
+
+
+.clearAssetFilesFilter {
+	position: relative;
+    left: -2rem;
+    height: 18px;
+    top: -0.1rem;
+    width: 18px;
+}
+
 .arrow_right_assets_files {
     width: 16px;
     transform: translate(25px ,-10px);
