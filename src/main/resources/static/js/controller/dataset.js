@@ -728,7 +728,7 @@ $('#dataSetTable tbody')
 																	+ "' data-clipboard-text='"
 																	+ value.path
 																	+ "'>"
-																	+ "<img src='images/asset_files_path_copy.svg' th:src='@{/images/asset_files_path_copy.svg}' "
+																	+ "<img src='images/copy_to_clipboard.svg' th:src='@{/images/copy_to_clipboard.svg}' "
 																	+ "style='width:17px;' alt='copy file path'></button>";
 
 															iconHtml += "<a class='cil_13_no_color button2a' selected_path='"
@@ -959,7 +959,7 @@ function renderInputDatasetName(data, type, row) {
 	html += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;' "
 			+ "class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
 			+ "title='Copy File Path' data-clipboard-text='" + row.inputDatasetPath + "'>"
-			+ "<img src='images/asset_files_path_copy.svg' th:src='@{/images/asset_files_path_copy.svg}' "
+			+ "<img src='images/copy_to_clipboard.svg' th:src='@{/images/copy_to_clipboard.svg}' "
 			+ "style='width:17px;' alt='copy file path'></button>";
 	return html;
 }
@@ -980,7 +980,7 @@ function renderOutcomeName(data, type, row) {
 		html += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;' "
 				+ "class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
 				+ "title='Copy File Path' data-clipboard-text='" + row.outcomeFilePath + "'>"
-				+ "<img src='images/asset_files_path_copy.svg' th:src='@{/images/asset_files_path_copy.svg}' "
+				+ "<img src='images/copy_to_clipboard.svg' th:src='@{/images/copy_to_clipboard.svg}' "
 				+ "style='width:17px;' alt='copy file path'></button>";
 	}
 
@@ -1001,7 +1001,7 @@ function renderPredictionsName(data, type, row) {
 	html += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;' "
 			+ "class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
 			+ "title='Copy File Path' data-clipboard-text='" + row.predictionsPath + "'>"
-			+ "<img src='images/asset_files_path_copy.svg' th:src='@{/images/asset_files_path_copy.svg}' "
+			+ "<img src='images/copy_to_clipboard.svg' th:src='@{/images/copy_to_clipboard.svg}' "
 			+ "style='width:17px;' alt='copy file path'></button>";
 	return html;
 }
@@ -1044,7 +1044,7 @@ function renderDataSetPath(data, type, row) {
 			+ "' data-clipboard-text='"
 			+ row.path
 			+ "'>"
-			+ "<img src='images/asset_files_path_copy.svg' th:src='@{/images/asset_files_path_copy.svg}' "
+			+ "<img src='images/copy_to_clipboard.svg' th:src='@{/images/copy_to_clipboard.svg}' "
 			+ "style='width:17px;' alt='copy file path'></button>";
 
 	html += "<a class='cil_13_no_color button2a' selected_path='" + row.path + "' collection_type= " + collection_type
@@ -1057,7 +1057,7 @@ function renderDataSetPath(data, type, row) {
 }
 
 function renderFileSize(data, type, row) {
-	if (row.fileSize) {
+	if (row.fileSize) {	
 		return row.fileSize;
 	}
 	return "";

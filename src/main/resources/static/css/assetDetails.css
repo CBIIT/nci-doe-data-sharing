@@ -101,11 +101,16 @@ img.infoMetadata {
 	border: none;
     background-color: transparent;
     margin-left: 2rem;
+    width: 90%;
 }
 table#assetDetailsDiv td {
 	border: none;
 	background-color: transparent;
-	padding-top: 2px;
+	padding-top: 1rem;
+}
+
+table#assetDetailsDiv tbody tr {
+    border-bottom: 1px solid rgb(197, 197, 197) !important;
 }
 
 #dataSetMetaData {
@@ -253,7 +258,7 @@ table#dataSetTable thead .sorting_desc,
 
 table#dataSetTable thead .sorting {
 	background-image: url(/images/asset_files_sort_up.svg) !important;
-	background-position: 28% 60%;
+	background-position: 31% 60%;
 }
 table#dataSetTable thead tr th.select-checkbox {
 	background-image: none !important;
