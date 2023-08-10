@@ -58,7 +58,7 @@ function callContactUsFormValidation() {
 				submitHandler : function(form) {
 					var rcres = grecaptcha.getResponse();
 					var valid = true;
-					if ($("#inquiryList").val() && $("#inquiryList").val() == "Select") {
+					if ($("#inquiryList").val() && $("#inquiryList").val() == "Select from these options") {
 						valid = false;
 						$(".errorBlock").show();
 						$(".errorMsg").html("Please select a type of inquiry.");
@@ -96,13 +96,14 @@ function callContactUsFormValidation() {
 
 function postContactUsFunction(data, status) {
 	if (data == 'SUCCESS') {
-		$('#btnSubmitEmail').prop('disabled', false);
+		$('#btnSubmitEmail').hide();
 		$(".errorBlock").hide();
 		$(".successBlock").show();
-		$("#contactusMsg").fadeIn(1000).delay(5000).fadeOut(1000, function() {
+		$("#contactusMsg").fadeIn(1000).delay(1000).fadeOut(1000, function() {
         	location.replace('/');
         });
 	} else {
+		$('#btnSubmitEmail').show();
 		$('#btnSubmitEmail').prop('disabled', false);
 		$(".successBlock").hide();
 		$(".errorBlock").show();

@@ -208,14 +208,32 @@
   	font-size: var(--font-size-m);
   	font-weight: 400;
   	font-style: normal;
+  	padding-left: 2rem;
+}
+
+#contact_us_txtarea::placeholder {
+  color: var(--midnight-blue);
+  font-family: var(--font-family-inter);
+  font-size: var(--font-size-m);
+  font-weight: 400;
+  font-style: normal;
 }
 
 .contact_us_text {
 	border: none;	
+	color: var(--midnight-blue);
+    font-family: var(--font-family-inter);
+    font-size: var(--font-size-m);
+    font-weight: 400;
+    font-style: normal;
+	
 }
 .contact_us_text:focus {
 	border: none;
 	outline: none;	
+}
+.contact_us_text:disabled {
+	background-color: transparent;
 }
 
 .typeofinquiry {
@@ -311,16 +329,14 @@ form#contact-us-form label {
     border-radius: 0px;
 }
 .select2-container .select2-selection--single .select2-selection__rendered {
-	    color: var(--midnight-blue);
+	color: var(--midnight-blue);
 	font-family: var(--font-family-inter);
 	font-size: var(--font-size-m);
 	font-weight: 400;
 	font-style: normal;
+	margin-left: 2.5rem;
 }
-.select2-container--bootstrap4 .select2-selection--single .select2-selection__arrow b {
-    border-color: #000 transparent transparent transparent !important;
-    height: 20px;
-}
+
 
 .errorBlock {
 	padding-left: 0px; 
@@ -333,4 +349,11 @@ form#contact-us-form label {
 .arrow_right_contact_us {
 	width: 16px;
     transform: translate(20px ,-2px);
+}
+
+.select2-container--bootstrap4 .select2-selection--single .select2-selection__arrow {
+    content: url(/images/contact_us_dropdown_select.svg);
+    margin-top: 13px;
+    width: 14px;
+    left: 2rem;
 }
