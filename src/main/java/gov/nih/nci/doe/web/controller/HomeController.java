@@ -207,7 +207,12 @@ public class HomeController extends AbstractDoeController {
 	}
 
 	@GetMapping(value = "/contactUs")
-	public String getContactUs(Model model, HttpSession session, HttpServletRequest request) {
+	public String getContactUs(@RequestParam(value = "typeOfInquiry", required = false) String typeOfInquiry,
+			Model model, HttpSession session, HttpServletRequest request) {
+
+		if (StringUtils.isNotEmpty(typeOfInquiry)) {
+			model.addAttribute("typeOfInquiry", typeOfInquiry);
+		}
 		model.addAttribute("siteKey", siteKey);
 		return "contactUsTab";
 	}

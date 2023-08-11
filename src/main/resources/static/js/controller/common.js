@@ -566,6 +566,15 @@ $(document)
 					$("#btnUpdateAccessGroup").click(function(e) {
 						updateAccessGroupsFunction();
 					});
+					
+					//prepopulate the type of inquiry dropdown when user is trying to unsubscribe
+					var typeOfInquiry= $("#typeOfInquiry").val();
+					if(typeOfInquiry) {
+						
+							var $select = $("#inquiryList");
+							$select.select2().val(typeOfInquiry).trigger('change');
+					}
+				
 
 					$('.asset-attributes').click(function() {
 						if ($(this).hasClass('collapsed')) {

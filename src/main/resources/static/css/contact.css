@@ -368,3 +368,10 @@ form#contact-us-form label {
     width: 14px;
     left: 2rem;
 }
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+	content: url(/images/contact_us_dropdown_select.svg);
+    margin-top: 5px;
+    width: 14px;
+    left: 2rem;
+}

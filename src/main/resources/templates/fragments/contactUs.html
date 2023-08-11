@@ -14,13 +14,14 @@
             <div class="h4-inter-light-size">
                 <div class="frame-32">
                     <h1 class="h4-inter-light-siz valign-text-middle">CONTACT MoDaC</h1>
-                </div>
             </div>
+        </div>
         </div>
 
         <form role="form" id="contact-us-form" class="mx-auto">
             <input type="hidden" id="siteKey" th:value="${siteKey}" />
-
+            <input type="hidden" id="typeOfInquiry" th:value="${typeOfInquiry}" />
+            
 
             <div class="form-row">
                 <div class="form-group col-lg-4 col-md-4 col-sm-4 more_information_div">
@@ -125,14 +126,14 @@
 				           						 ><span class="opensans-bold-midnight-blue-13px"></span>
                                         </div>
                                           <div class="typeofinquiry_selections inter-normal-midnight-blue-16px">
-                                          <select class="simple-select2" id="inquiryList" name="inquiryList" style="width: 100%";>
-											<option>Select from these options</option>
-											<option>I would like permission to upload data/model</option>
-											<option>I would like permission to delete data/model</option>
-											<option>I would like to unsubscribe from MoDaC notifications</option>
-											<option>I have a question on a functionality</option>
-											<option>I would like to report a problem</option>
-											<option>Other</option>
+                                          <select class="simple-select2" id="inquiryList" th:value="${typeOfInquiry}" name="inquiryList" style="width: 100%";>
+											<option value="Select">Select from these options</option>
+											<option value="UploadModel">I would like permission to upload data/model</option>
+											<option value="DeleteModel">I would like permission to delete data/model</option>
+											<option value="unsubscribe">I would like to unsubscribe from MoDaC notifications</option>
+											<option value="I have a question on a functionality">I have a question on a functionality</option>
+											<optio value="problem">I would like to report a problem</option>
+											<option value="Other">Other</option>
 									</select>
 		                                   
                                 </div>

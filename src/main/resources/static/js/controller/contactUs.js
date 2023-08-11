@@ -2,6 +2,7 @@ $(".landing-tab").removeClass('active');
 $("#contact-tab").addClass('active');
 $(".aboutTabNav").addClass('active');
 
+
 $(".contactUsTextbox").keyup(function() {
 	if ($(this).val()) {
 		$(this).parent().find('.TextField-floatingLabel-qefpP').show();
@@ -58,7 +59,7 @@ function callContactUsFormValidation() {
 				submitHandler : function(form) {
 					var rcres = grecaptcha.getResponse();
 					var valid = true;
-					if ($("#inquiryList").val() && $("#inquiryList").val() == "Select from these options") {
+					if ($("#inquiryList").val() && $("#inquiryList").val() == "Select") {
 						valid = false;
 						$(".errorBlock").show();
 						$(".errorMsg").html("Please select a type of inquiry.");
@@ -84,7 +85,7 @@ function callContactUsFormValidation() {
 						contactusForm.lastName = $("#contact_us_lastname").val();
 						contactusForm.org = $("#contact_us_org").val();
 						contactusForm.message = $("#contact_us_txtarea").val();
-						contactusForm.inquiry = $("#inquiryList").val();
+						contactusForm.inquiry = $('#inquiryList option:selected').text();
 						contactusForm.response = rcres;
 						invokeAjax('/contactUs', 'POST', JSON.stringify(contactusForm), postContactUsFunction,
 								postContactUsFailure, null, 'text');
