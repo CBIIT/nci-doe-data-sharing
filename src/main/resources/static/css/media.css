@@ -124,9 +124,6 @@
 		margin-right: 0rem !important;
 		margin-left: 0.5rem !important;
 	}
-	#aboutImgDiv {
-		margin-left: 1rem !important;
-	}
 }
 
 @media ( max-width : 990px) {
@@ -503,11 +500,6 @@
 	}
 }
 
-@media ( max-width : 460px) {
-	.Aboutbuttoncontainer {
-		background-image: url(/images/About.image.responsive.png) !important;
-	}
-}
 
 @media ( max-width :1200px) and (min-width: 992px) {
 	.topNav-item {
@@ -535,11 +527,6 @@
 	}
 }
 
-@media ( max-width : 321px) {
-	.Aboutbuttoncontainer {
-		background-image: url(/images/About_Image_Mobile.png) !important;
-	}
-}
 
 @media ( max-width : 550px) {
 
@@ -554,26 +541,13 @@
 	.col.order-first {
 		margin-left: -0.25rem !important;
 	}
-	.Aboutbuttoncontainer {
-		height: 176px;
-	}
+
 	#aboutMoDaCDescp p {
 		font-size: 16px;
 		letter-spacing: 0.05rem;
 		line-height: 1.5rem;
 	}
-	#aboutImgDiv {
-		margin-left: 1.0rem !important;
-		margin-right: 1.0rem !important;
-		margin-top: 4.3rem !important;
-		height: 45px !important;
-	}
-	#aboutText {
-		margin-left: 0rem !important;
-		font-size: 26px !important;
-		line-height: 2.7rem !important;
-		text-align: center;
-	}
+
 	#dataSetFragment_mobile {
 		display: block !important;
 		padding-top: 6px;
@@ -650,16 +624,7 @@
 	.divTableRow div:first-child {
 		width: 32%;
 	}
-	#aboutImgDiv {
-		margin-left: 0.7rem !important;
-		margin-right: 0.7rem !important;
-		margin-top: 4.3rem !important;
-	}
-	#aboutText {
-		margin-left: 0rem !important;
-		font-size: 26px !important;
-		line-height: 2.7rem !important;
-	}
+	
 }
 
 @media ( min-width : 768px) {
