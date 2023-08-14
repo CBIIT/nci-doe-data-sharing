@@ -2,13 +2,10 @@
 
 .component-2 {
   align-items: flex-start;
-  background: linear-gradient(
-    180deg,
-    rgb(130.9, 82.9, 10.91) 0%,
-    rgba(255, 203.58, 126.44, 0) 100%
-  );
+  background-image: url(/images/contact_modac_background.svg);
   display: flex;
   padding: 45px 438px;
+  background-size: cover;
 }
 
 .h4-inter-light-size {
@@ -17,7 +14,6 @@
   gap: 10px;
   justify-content: center;
   position: relative;
-  width: 564px;
 }
 
 .frame-32 {
@@ -94,6 +90,7 @@
   display: inline-flex;
   flex-direction: column;
   padding: 29px 38px;
+  width: 800px;
 }
 
 

@@ -1,7 +1,7 @@
 .aboutcontainer {
   align-items: flex-start;
   background-image: url(/images/about_background.svg);
-  background-size: 100% 105%;
+  background-size: cover;
   display: flex;
   min-width: 1440px;
   padding: 45px 438px;
