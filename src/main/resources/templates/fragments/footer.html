@@ -68,16 +68,15 @@
 
 					<div class='sign-up'>
 						<div class='sign-up-heading'>Sign up for email updates</div>
-						<form action=''
-							aria-label='Footer subscribe' class='form' accept-charset='UTF-8' method='post'
-							target='_blank' id='signup'>
+						<form
+							aria-label='Footer subscribe' class='form' id='signup'>
 							<div class='form-form-group'>
 								<label class='form-label' for='email'>
 									Enter your email address
 								</label>
-								<input class='form-input width-full' id='email' name='email' type='email' value='' />
+								<input class='form-input width-full' id='signUpEmailAddress' required='true' name='signUpEmailAddress' type='email' />
 							</div>
-							<button class='form-button form-button--accent-warm' type='submit'>
+							<button class='form-button form-button--accent-warm' type='submit' id="signUpBtn">
 								Sign up
 							</button>
 						</form>
