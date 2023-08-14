@@ -70,7 +70,7 @@ function callContactUsFormValidation() {
 						validEmail : "Enter a valid email address."
 					},
 					inquiryList : {
-						validInquiry : "Please select a type of inquiry."
+						validInquiry : "Select a type of inquiry."
 					},
 				},
 				errorPlacement: function(error, element) {

@@ -487,6 +487,7 @@ label.showMorefields {
 	padding-top: 0px;
 }
 
+
 #searchResultTable_wrapper div.toolbar {
     display: flex;
     justify-content: space-between;
@@ -698,7 +699,6 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
 	content: url(/images/collapse_card.png);
 }
 .overlap-group2-1 {
-  height: 27px;
   margin-bottom: 1px;
   position: relative;
 }
@@ -706,7 +706,6 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
 .frame-14 {
   align-items: flex-end;
   display: flex;
-  height: 27px;
   overflow: hidden;
 }
 

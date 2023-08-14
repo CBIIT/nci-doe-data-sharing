@@ -310,6 +310,14 @@ function dataTableInit(isVisible) {
 		},
 
 		"drawCallback" : function() {			
+		
+		 $(".expand_card_btn").click(function() {
+		    if ($(this).hasClass("collapsed")) {
+		      $(this).find('img').attr('data-original-title','Collapse Card');
+		 	} else {
+		 	  $(this).find('img').attr('data-original-title','Expand Card');
+		 	}
+		 });
 
 			var table = $('#searchResultTable').DataTable();
 			$("#searchResultTable thead").remove();
@@ -595,7 +603,7 @@ function renderDataSetName(data, type, row) {
 		         + " </div>"
 		         + "<div class='ml-auto'>"
 		         + "<button type='button' class='expand_card_btn'  data-toggle='collapse' href='#collapse" + row.dmeDataId + "'"
-		         + "><img src='images/expand_card.png' data-toggle='tooltip' title= 'Expand and Collapse Card'" 
+		         + "><img src='images/expand_card.png' data-toggle='tooltip' title= 'Collapse Card'" 
 		         + "alt='Collapse asset details'></button>"
 		         + "<button type='button' class='view_asset_details_btn dataSetFragment' data-toggle='tooltip' data-placement='bottom' title='View details of this card'"
 		         + " dme_data_id = '" + row.dmeDataId + "'><img src='images/view_details_arrow.png'" 
