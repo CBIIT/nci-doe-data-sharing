@@ -39,6 +39,7 @@
 	width: 617px;
 	margin-top: 50px;
 	border: 2.5px solid #214C75;
+	height: fit-content;
 }
 
 #changePswdSubTab {
