@@ -18,7 +18,7 @@ var onloadCallback = function() {
 	});
 };
 
-function checkEmail() {
+function checkEmail() {	
 	var valid = false;
 	var filter = new RegExp(
 			'^[_A-Za-z0-9-!#$%&\'*+/=?^_`{|}~]+(\\.[_A-Za-z0-9-!#$%&\'*+/=?^_`{|}~]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$');
@@ -31,9 +31,18 @@ function checkEmail() {
 	return valid;
 }
 
+function checkInquiryList() {
+	var valid = false;
+	if ($("#inquiryList").val() && $("#inquiryList").val() != "Select") {
+		valid = true;
+	}
+	return valid;
+}
+
 
 function callContactUsFormValidation() {
 	jQuery.validator.addMethod("validEmail", checkEmail);
+	jQuery.validator.addMethod("validInquiry", checkInquiryList);
 	$("#contact-us-form").validate(
 			{
 				rules : {
@@ -46,31 +55,42 @@ function callContactUsFormValidation() {
 					contact_us_org : {
 						required : true
 					},
+					inquiryList : {
+						required : true,
+						validInquiry : true
+					},
 					id_user_email : {
 						required : true,
 						validEmail : true
 					},
+					
 				},
 				messages : {
 					id_user_email : {
 						validEmail : "Enter a valid email address."
 					},
+					inquiryList : {
+						validInquiry : "Please select a type of inquiry."
+					},
+				},
+				errorPlacement: function(error, element) {
+				    if (element.hasClass("select2-hidden-accessible")) {
+				      error.insertAfter(element.next(".select2"));
+				    } else {
+				      error.insertAfter(element);
+				    }
 				},
 				submitHandler : function(form) {
 					var rcres = grecaptcha.getResponse();
 					var valid = true;
-					if ($("#inquiryList").val() && $("#inquiryList").val() == "Select") {
-						valid = false;
-						$(".errorBlock").show();
-						$(".errorMsg").html("Please select a type of inquiry.");
-						$('#btnSubmitEmail').prop('disabled', false);
-						return false;
-					}
 					if(!rcres.length) {
 						valid = false;
 						$(".errorBlock").show();
 						$(".errorMsg").html("Please verify reCAPTCHA");
 						$('#btnSubmitEmail').prop('disabled', false);
+						$('body,html').animate({
+							scrollTop : 0
+						}, 500);
 						return false;
 					}
 					
@@ -100,7 +120,7 @@ function postContactUsFunction(data, status) {
 		$('#btnSubmitEmail').hide();
 		$(".errorBlock").hide();
 		$(".successBlock").show();
-		$("#contactusMsg").fadeIn(1000).delay(1000).fadeOut(1000, function() {
+		$("#contactusMsg").fadeIn(2000).delay(2000).fadeOut(2000, function() {
         	location.replace('/');
         });
 	} else {
