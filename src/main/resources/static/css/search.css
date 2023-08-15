@@ -40,20 +40,11 @@ input[type="checkbox"].filteritem {
 	font-weight: 100;
 }
 
-
-
-.popover {
-	border-radius: 17px;
-}
-
 .popover-header {
 	background-color: transparent !important;
-	font-family: 'latoregular';
 	border-bottom: none;
 	margin-top: 17px;
 	margin-left: 24px;
-	color: #1C3D5D;
-	font-size: 20px;
 }
 
 .popover-body {
@@ -78,7 +69,7 @@ input[type="checkbox"].filteritem {
 
 .popoverSubInfo {	
 	font-family: var(--font-family-inter);
-	margin-top: -1rem;
+	margin-top: -0.5rem;
 	color: var(--midnight-blue);
     font-weight: 400;
     font-size: var(--font-size-m);
@@ -574,6 +565,7 @@ label.showMorefields {
 table#searchResultTable tr {
 	/*display: inline-flex !important;*/
 	background-color: transparent !important;
+	word-break: break-all;
 }
 table#searchResultTable tr td{
   border-top: none !important;

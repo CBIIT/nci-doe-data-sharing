@@ -274,4 +274,5 @@
 	margin-bottom: 110px;
 	background-image: url(/images/landing_background.svg);
 	height: 486px;
+	background-size: cover;
 }
