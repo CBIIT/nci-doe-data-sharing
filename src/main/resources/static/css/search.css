@@ -119,6 +119,17 @@ input[type="checkbox"].filteritem {
 	margin-top: -8px;
 }
 
+#expandFilters {
+    float: right;
+    margin-right: 0.5rem;
+    margin-top: 7px;
+}
+#collapseFilters {
+	float: right;
+    margin-right: 1rem;
+    margin-top: 7px;
+}
+
 .divTable {
 	display: table;
 	width: 100%;
@@ -382,7 +393,7 @@ input.filteritem:checked {
 	background-color: #1953A2; 
 	margin-bottom: 4px; 
 	margin-left: -10px; 
-	height: 42px; 
+	height: 46px; 
 	width: 100%;
 	border-radius: 0px 6px 0px 0px;
 }
@@ -402,7 +413,7 @@ input.filteritem:checked {
     background-color: #518ee1;
     border-radius: 0px 6px 0px 0px;
     width: 53px;
-    height: 42px;
+    height: 46px;
 }
 #clearFilters img {
 	position: absolute;
