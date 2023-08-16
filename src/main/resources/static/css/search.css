@@ -172,7 +172,7 @@ input[type="checkbox"].filteritem {
 .divAttrName {
 	  color: var(--midnight-blue);
 	  font-family: var(--font-family-open_sans);
-	  font-size: var(--font-size-xs2);
+	  font-size: 13px;
 	  font-weight: 700;
 	  font-style: normal;
 }
@@ -187,8 +187,12 @@ input[type="checkbox"].filteritem {
 div.divTableBody div.divTableContent:nth-child(odd) {	
 	background-color: rgba(238, 244, 246, 1) !important;
 }
-div.divTableBody div.divTableContent:last-child {
-	border-bottom: 1px solid rgb(197, 197, 197) !important;
+
+.divTableBody .divTableContent:last-child .divAttrVal {
+  border-bottom: 1px solid rgba(210, 210, 210, 1) !important;
+}
+.divTableBody .divTableContent:last-child .divAttrName {
+  border-bottom: 1px solid rgba(210, 210, 210, 1) !important;
 }
 
 .divDataObjUserMetadata {

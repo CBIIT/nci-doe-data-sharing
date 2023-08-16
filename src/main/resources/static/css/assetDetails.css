@@ -163,6 +163,7 @@ table#dataSetMetaData thead th,table#userMetaData thead th {
 
 table#dataSetMetaData thead tr th, table#userMetaData thead tr th {
 	padding-left: 2rem;
+	font-weight: normal;
 }
 
 table#dataSetMetaData tr:nth-child(even) td,table#userMetaData tr:nth-child(even) td {

@@ -24,7 +24,7 @@
 .h4-inter-light-siz {
     color: var(--white);
     font-family: var(--font-family-inter);
-    font-size: var(--font-size-xxxxl);
+    font-size: 35px;
     font-weight: 300;
     letter-spacing: -0.7px;
     line-height: 37.3px;
@@ -41,12 +41,12 @@
   font-family: var(--font-family-inter);
   font-size: var(--font-size-m);
   font-weight: 400;
-  left: 220px;
   letter-spacing: 0;
   line-height: 24px;
-  width: 1000px;
   margin-top: 4rem;
   padding-bottom: 4rem;
+  padding-left: 13rem;
+  padding-right: 13rem;
 }
 
 

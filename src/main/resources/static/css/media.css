@@ -118,14 +118,6 @@
 	}
 }
 
-
-@media ( max-width : 1500px) {
-	#aboutMoDaCDescp {
-		margin-right: 0rem !important;
-		margin-left: 0.5rem !important;
-	}
-}
-
 @media ( max-width : 990px) {
 	#spinner {
 		text-align: center;
@@ -542,11 +534,6 @@
 		margin-left: -0.25rem !important;
 	}
 
-	#aboutMoDaCDescp p {
-		font-size: 16px;
-		letter-spacing: 0.05rem;
-		line-height: 1.5rem;
-	}
 
 	#dataSetFragment_mobile {
 		display: block !important;
