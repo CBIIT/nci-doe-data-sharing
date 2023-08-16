@@ -131,7 +131,7 @@
   display: flex;
   gap: 12px;
   height: 29px;
-  margin-top: 40px;
+  margin-top: 1.5rem;
   position: relative;
 }
 
@@ -145,7 +145,7 @@
 }
 	
 .contact-form {
-  align-self: flex-start;
+  text-align: left;
   color: #409cc6;
   font-family: var(--font-family-poppins);
   font-size: var(--font-size-xxxl);
@@ -161,7 +161,7 @@
     display: flex;
     flex-direction: column;
     gap: 34px;	
-    margin-top: 4rem;
+    margin-top: 3.3rem;
 }
 
 .frame-6 {
@@ -245,8 +245,14 @@
 
 .for-specific-question {
   margin-left: -1rem;
-  margin-top: 42px;
+  margin-top: 1.5rem;
   white-space: nowrap;
+  text-align: left;
+}
+
+#inquiryList-error {
+	text-align: left;
+    margin-left: 4.2rem;
 }
 
 .contact .group {
@@ -300,6 +306,7 @@
   letter-spacing: 0;
   white-space: nowrap;
   margin-top: -1rem;
+  text-align: center;
 }
 
 #contactusMsg {
