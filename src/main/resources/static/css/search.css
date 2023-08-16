@@ -40,6 +40,10 @@ input[type="checkbox"].filteritem {
 	font-weight: 100;
 }
 
+.popover {
+    min-width:723px;
+}
+
 .popover-header {
 	background-color: transparent !important;
 	border-bottom: none;
@@ -65,6 +69,7 @@ input[type="checkbox"].filteritem {
 	font-weight: 600;
 	margin-left: -12px;
 	margin-top: -19px;
+	width:75%;
 }
 
 .popoverSubInfo {	
@@ -122,10 +127,6 @@ input[type="checkbox"].filteritem {
 	padding: 10px;
 }
 
-.divTableBody {
-	border: 1px solid #898989;
-}
-
 .divTableRow {
 	display: table-row;
 	border-bottom: none;
@@ -174,11 +175,9 @@ input[type="checkbox"].filteritem {
 
 div.divTableBody div.divTableContent:nth-child(odd) {	
 	background-color: rgba(238, 244, 246, 1) !important;
-	border: 1px solid #898989;
 }
-
-div.divTableBody div.divTableContent:nth-child(even) {
-	border: 1px solid #898989;
+div.divTableBody div.divTableContent:last-child {
+	border-bottom: 1px solid rgb(197, 197, 197) !important;
 }
 
 .divDataObjUserMetadata {
@@ -241,7 +240,7 @@ div.divTableBody div.divTableContent:nth-child(even) {
     background-image: url(/images/search_background.png);
     justify-content: center;
     align-items: center;
-    background-size: 100% 100%;
+    background-size: cover;
     box-shadow: inset 0px 15px 20px #00000073;
 }
 #attributeVal {
