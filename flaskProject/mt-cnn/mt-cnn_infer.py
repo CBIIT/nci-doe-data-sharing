@@ -131,7 +131,7 @@ try:
     modelfilename = sys.argv[2]
     pred_name = sys.argv[3]
     upload_from = sys.argv[4]
-    input_file_name = '/mnt/IRODsTest/MoDaC_Inferencing/' + datafilename
+    input_file_name = '/mnt/DMEDataStage/MoDaC_Inferencing/' + datafilename
     output_file = sys.argv[5]
     output_results = []
 
@@ -162,7 +162,7 @@ try:
                 histologyIdtoLabelRev[k] = v
 
         header_list = ["Site", "Histology"]
-        df1 = pd.read_csv('/mnt/IRODsTest/MoDaC_Inferencing/' + output_file, names=header_list)
+        df1 = pd.read_csv('/mnt/DMEDataStage/MoDaC_Inferencing/' + output_file, names=header_list)
         for ind in df1.index:
             site = siteIdtoLabelRev[df1['Site'][ind]]
             ex = str(float(df1['Histology'][ind])).strip()
@@ -242,7 +242,7 @@ try:
     if os.path.isfile(pred_name):
         print('file exists ' + pred_name)
         # place the prediction file on mount location
-        shutil.move(pred_name, '/mnt/IRODsTest/MoDaC_Inferencing/' + pred_name)
+        shutil.move(pred_name, '/mnt/DMEDataStage/MoDaC_Inferencing/' + pred_name)
 
     print("inference completed")
 
@@ -259,5 +259,5 @@ except Exception as e:
     text_file.write(error_msg)
     text_file.close()
     # place the error message file on mount location
-    shutil.move(error_file_name, '/mnt/IRODsTest/MoDaC_Inferencing/' + error_file_name)
+    shutil.move(error_file_name, '/mnt/DMEDataStage/MoDaC_Inferencing/' + error_file_name)
     print("completed error file copy to mount location")
