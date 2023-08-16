@@ -336,11 +336,15 @@ function dataTableInit(isVisible) {
 			 $("#descSpan").click(function() {
 				    table.order([[0, 'desc']]).draw();
 				    table.ajax.reload(null, true);
+				    $(this).find('img').attr('src','/images/search_desc_selected.png');
+				    $(this).parent().find('#ascSpan img').attr('src','/images/search_asc_deselected.png');
 			  });
   
 			 $('#ascSpan').on('click', function () {				
 				    table.order([[0, 'asc']]).draw();
 				    table.ajax.reload(null, true);
+				    $(this).find('img').attr('src','/images/search_ascending.svg');
+				    $(this).parent().find('#descSpan img').attr('src','/images/search_descending.svg');
 			  });
 			  $("#show_search_count").html("Showing " + getTotalSearchResultsCount() + " Results");
 
