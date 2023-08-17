@@ -313,9 +313,9 @@ function dataTableInit(isVisible) {
 		
 		 $(".expand_card_btn").click(function() {
 		    if ($(this).hasClass("collapsed")) {
-		      $(this).find('img').attr('data-original-title','Collapse Card');
+		      $(this).find('img').attr('data-original-title','Collapse card');
 		 	} else {
-		 	  $(this).find('img').attr('data-original-title','Expand Card');
+		 	  $(this).find('img').attr('data-original-title','Expand card');
 		 	}
 		 });
 
@@ -446,10 +446,10 @@ function dataTableInit(isVisible) {
 
 			clipboard.on('success', function(e) {
 				console.log(e);
-				$(e.trigger).tooltip('hide').attr('data-original-title', 'Copied').tooltip('show');
+				$(e.trigger).tooltip('hide').attr('data-original-title', 'Link copied to clipboard').tooltip('show');
 				setTimeout(function() {
 					$(e.trigger).tooltip('hide');
-					$(e.trigger).attr('data-original-title', 'Copy to Clipboard');
+					$(e.trigger).attr('data-original-title', 'Copy asset link');
 				}, 2000);
 
 			});
@@ -526,7 +526,7 @@ function renderDataSetName(data, type, row) {
 					+ " metadata_path  = '"
 					+ row.dataSetPath
 					+ "'>"
-					+ "<img class='editCollectionImg' src='images/Search_EditMetaData.svg' data-toggle='tooltip' title='Edit Asset Metadata' th:src='@{/images/Search_EditMetaData.svg}' "
+					+ "<img class='editCollectionImg' src='images/Search_EditMetaData.svg' data-toggle='tooltip' title='Edit asset metadata' th:src='@{/images/Search_EditMetaData.svg}' "
 					+ "alt='edit collection'></span>&nbsp;";
 
 			if (row.dataSetPermissionRole == 'Owner') {
@@ -534,7 +534,7 @@ function renderDataSetName(data, type, row) {
 						+ row.dataSetName + "' " + "collectionId  = '" + row.dataSetCollectionId + "' "
 						+ " selectedCollection = 'Asset' " + "metadata_path  = '" + row.dataSetPath + "'>"
 						+ "<img class='collectionAccessGrpImg' src='images/Search_AccessGroups.svg' data-toggle='tooltip' "
-						+ "title='Edit Asset Access Permissions' " + "th:src='@{/images/Search_AccessGroups.svg}' "
+						+ "title='Edit asset permissions' " + "th:src='@{/images/Search_AccessGroups.svg}' "
 						+ "alt='Edit Asset Access Permissions'></span>&nbsp;";
 			}
 		}
@@ -544,7 +544,7 @@ function renderDataSetName(data, type, row) {
 			editStudySetHtml = "&nbsp;&nbsp;<span class='editCollectionMetadata' selectedCollection = 'Study' "
 					+ "data-fileName = '" + row.studyName + "' collectionId  = '" + row.studyCollectionId + "' "
 					+ "permissions_role = '" + row.studyPermissionRole + "' metadata_path  = '" + row.studyPath + "'> "
-					+ "<img src='images/Search_EditMetaData.svg' data-toggle='tooltip' title='Edit Study Metadata'"
+					+ "<img src='images/Search_EditMetaData.svg' data-toggle='tooltip' title='Edit study metadata'"
 					+ "th:src='@{/images/Search_EditMetaData.svg}' class='editCollectionImg' alt='edit collection'></span>";
 
 			if (row.studyPermissionRole == 'Owner') {
@@ -558,7 +558,7 @@ function renderDataSetName(data, type, row) {
 						+ "metadata_path  = '"
 						+ row.studyPath
 						+ "'>"
-						+ "<img class='collectionAccessGrpImg' src='images/Search_AccessGroups.svg' data-toggle='tooltip' title='Edit Study Access Permissions' "
+						+ "<img class='collectionAccessGrpImg' src='images/Search_AccessGroups.svg' data-toggle='tooltip' title='Edit study permissions' "
 						+ "th:src='@{/images/Search_AccessGroups.svg}' "
 						+ "alt='Edit Study Access Permissions'</span>";
 			}
@@ -569,7 +569,7 @@ function renderDataSetName(data, type, row) {
 					+ "data-fileName = '" + row.programName + "' collectionId  = '" + row.programCollectionId + "'"
 					+ " permissions_role = '" + row.programPermissionRole + "' " + "metadata_path  = '"
 					+ row.institutePath + "' >"
-					+ "<img src='images/Search_EditMetaData.svg' data-toggle='tooltip' title='Edit Program Metadata' "
+					+ "<img src='images/Search_EditMetaData.svg' data-toggle='tooltip' title='Edit program metadata' "
 					+ "th:src='@{/images/Search_EditMetaData.svg}' "
 					+ "class='editCollectionImg' alt='edit collection'></span>";
 
@@ -584,7 +584,7 @@ function renderDataSetName(data, type, row) {
 						+ "metadata_path  = '"
 						+ row.institutePath
 						+ "'>"
-						+ "<img src='images/Search_AccessGroups.svg' data-toggle='tooltip' title='Edit Program Access Permissions' "
+						+ "<img src='images/Search_AccessGroups.svg' data-toggle='tooltip' title='Edit program permissions' "
 						+ "th:src='@{/images/Search_AccessGroups.svg}' "
 						+ "class='collectionAccessGrpImg' alt='Edit Program Access Permissions'</span>";
 			}
@@ -600,14 +600,14 @@ function renderDataSetName(data, type, row) {
 		        + "&nbsp;&nbsp;"
 		         + editDataSetHtml
 		         + "<button type='button' class='share-link-copy-button' data-toggle='tooltip' data-placement='bottom' "
-			     + " title='Copy to clipboard' data-clipboard-text='" + row.dataSetdmeDataId + "'>"
+			     + " title='Copy asset link' data-clipboard-text='" + row.dataSetdmeDataId + "'>"
 			     + "<img src='images/copy_to_clipboard.svg' width='20' alt='Copy to clipboard'/></button>"
 		         + " </div>"
 		         + " </div>"
 		         + " </div>"
 		         + "<div class='ml-auto'>"
 		         + "<button type='button' class='expand_card_btn'  data-toggle='collapse' href='#collapse" + row.dmeDataId + "'"
-		         + "><img src='images/expand_card.png' data-toggle='tooltip' title= 'Collapse Card'" 
+		         + "><img src='images/expand_card.png' data-toggle='tooltip' title= 'Collapse card'" 
 		         + "alt='Collapse asset details'></button>"
 		         + "<button type='button' class='view_asset_details_btn dataSetFragment' data-toggle='tooltip' data-placement='bottom' title='View details of this card'"
 		         + " dme_data_id = '" + row.dmeDataId + "'><img src='images/view_details_arrow.png'" 
