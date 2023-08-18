@@ -123,6 +123,16 @@ table#assetDetailsDiv tbody tr:last-child{
     border-bottom: 1px solid rgb(197, 197, 197) !important;
 }
 
+#userMetaData {
+	width: 100%;
+    border-bottom: 1px solid rgb(197, 197, 197) !important;
+    margin-bottom: 2.5rem;
+}
+#collectionForm {
+	width: 75%;
+    margin-bottom: 2rem;
+}
+
 table#userMetaData input[type="text"] {
 	background-color: var(--white);
     border: 1px solid;
@@ -178,6 +188,10 @@ table#dataSetMetaData tr:nth-child(odd) td,table#userMetaData tr:nth-child(odd) 
 	padding-left: 2.3rem;
 	background-color: var(--white) !important;
 	border:none;
+}
+
+table#userMetaData tr:nth-child(even) td,table#userMetaData tr:nth-child(odd) td {
+	padding-left: 2rem !important;
 }
 
 table#dataSetMetaData tr:nth-child(even) td:first-child,table#userMetaData tr:nth-child(even) td:first-child {

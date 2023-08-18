@@ -304,7 +304,7 @@
 		padding-bottom: 4rem;
 	}
 	#keyworkSearchDiv {
-		display: none;
+		display: none !important;
 	}
 	table#searchResultMobileTable tr {
 		display: inherit !important;
@@ -479,6 +479,7 @@
 		color: #000000;
 		font-family: 'latoregular';
 		font-size: 16px;
+		margin-left: 14px;
 	}
 	#assetUrlLink {
 		display: none;
@@ -488,7 +489,7 @@
 	}
 	.assetFilesConditional {
 		padding-top: 40px;
-		margin-left: -10px;
+		margin-left: 1rem !important;
 	}
 }
 
@@ -556,7 +557,7 @@
 		display: none;
 	}
 	.asset_attributes_subsection {
-		display: none;
+		    display: none !important;
 	}
 	table#dataSetMetaData tr:nth-child(odd) td {
 		padding-left: 13px;
