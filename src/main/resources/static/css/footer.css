@@ -19,16 +19,16 @@ footer {
   left: 0;
   position: absolute;
   top: 0;
-  width: 1920px;
+  max-width: 1440px;
 }
 
 .overlap-group1-2 {
   align-items: flex-start;
   background-color: var(--biscay);
   display: flex;
-  gap: 296px;
+  /* gap: 296px; */
   height: 224px;
-  min-width: 1920px;
+  max-width: 1440px;
   padding: 16px 50px;
 }
 
@@ -38,7 +38,7 @@ footer {
   flex-direction: column;
   margin-top: 1px;
   min-height: 184px;
-  width: 524px;
+  /* width: 524px; */
 }
 
 .contact-us {
@@ -232,7 +232,7 @@ footer {
 }
 
 .top-footer-container {
-  width: 1440px;
+  max-width: 1440px;
   margin: 0 auto;
 
 }
