@@ -17,31 +17,52 @@
 
 .navbar .navbar-nav .nav-link {
 	font-size: 13px;
-    font-family: 'poppins_medium';
-    color: var(--bright-gray) !important;
-    font-weight: 600;
-  	letter-spacing: 0.46px;
+	font-family: 'poppins_medium';
+	color: var(--bright-gray) !important;
+	font-weight: 600;
+	letter-spacing: 0.46px;
 }
 
 #topNav .navbar-nav li>a {
 	text-transform: none;
-	color: #000;
+	color: #E07C24 !important;
+	text-align: right;
+	font-family: Poppins;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 600;
+	line-height: normal;
+	letter-spacing: 0.42px;
 }
 
 #topNav a.dropdown-item {
-	font-family: Nunito Sans;
-	font-size: 15px;
+	color: #fff;
+	font-family: Poppins;
+	font-size: 20px;
+	font-style: normal;
+	font-weight: 600;
+	line-height: 110%;
+}
+
+#topNav a.dropdown-item:hover {
+	color: #fff !important;
+	text-decoration: underline;
+	text-underline-offset: 0.2em;
 }
 
 .navbar-nav li>a {
 	text-transform: uppercase;
 	color: #333;
 	letter-spacing: -0.25px;
-	transition: background-color .2s, color .2s; &: hover , & : focus { 
-		 background-color : #333;
-	color: #fff;
+	transition: background-color .2s, color .2s;
+
+	&: hover,
+	& : focus {
+		background-color: #333;
+		color: #fff;
+	}
 }
-}
+
 .navbar-light .navbar-nav .nav-link {
 	color: #000;
 	font-weight: bold;
@@ -67,6 +88,7 @@
 	background-repeat: no-repeat;
 	background-size: cover;
 }
+
 #nci-brand {
 	z-index: 1;
 	width: 100%;
@@ -74,13 +96,13 @@
 }
 
 #subTab .nav-item a {
-    color: var(--bright-gray);
-    font-family: var(--font-family-poppins);
-    font-size: var(--font-size-l);
-    font-style: normal;
-    font-weight: 600;
-    margin-top: -9px;
-    padding-bottom: 2px;
+	color: var(--bright-gray);
+	font-family: var(--font-family-poppins);
+	font-size: var(--font-size-l);
+	font-style: normal;
+	font-weight: 600;
+	margin-top: -9px;
+	padding-bottom: 2px;
 }
 
 .dropdown-toggle::after {
@@ -94,11 +116,13 @@
 }
 
 #subNav a:focus {
-	background: #fff;
+	/* background: #fff; */
 }
+
 .navbar .navbar-toggler:focus {
 	outline: none !important;
 }
+
 .pull-right .dropdown-menu:after {
 	left: auto;
 	right: 13px;
@@ -111,12 +135,18 @@
 }
 
 #subNav a.dropdown-item {
-	padding-bottom: 17px;
-	font-family: Nunito Sans;
-	font-size: 15px;
-	padding-top: 17px;
-	letter-spacing: 1px;
 	color: #fff;
+	font-family: Poppins;
+	font-size: 20px;
+	font-style: normal;
+	font-weight: 600;
+	line-height: 110%;
+}
+
+#subNav a.dropdown-item:hover {
+	color: #fff !important;
+	text-decoration: underline;
+	text-underline-offset: 0.2em;
 }
 
 ul#subTab {
@@ -126,19 +156,21 @@ ul#subTab {
 	line-height: 11px;
 	gap: 20px;
 }
+
 #titleText {
- left:160px;
- letter-spacing:-0.9px;
- line-height:45px;
- position:absolute;
- top:193px;
- width:399px;
- font-size:45px;
- font-weight:800;
- font-style:normal;
- font-family: 'inter_medium';
- color:rgba(6,53,137,1);
+	left: 160px;
+	letter-spacing: -0.9px;
+	line-height: 45px;
+	position: absolute;
+	top: 193px;
+	width: 399px;
+	font-size: 45px;
+	font-weight: 800;
+	font-style: normal;
+	font-family: 'inter_medium';
+	color: rgba(6, 53, 137, 1);
 }
+
 .navbar-collapse {
 	z-index: 1010;
 	/*background-color: #326Eb4;
@@ -164,18 +196,20 @@ ul#subTab {
 	background: linear-gradient(#ebf2f9, #b0cce8);
 	padding-left: 25px;
 }
+
 #nci-brand {
 	z-index: 1;
 	width: 100%;
 	height: 46px;
 }
+
 /*-- navlink --*/
 .nav-link u {
 	text-decoration: none;
 }
 
 .nav-link.active {
-    border-color: transparent !important;
+	border-color: transparent !important;
 	color: rgba(40, 89, 218, 1) !important;
 }
 
@@ -184,88 +218,117 @@ ul#subTab {
 }
 
 .nav-link img.rectangle-4 {
-  display:none;
+	display: none;
 }
 
 .nav-link.active img.rectangle-4 {
-  display:block;
+	display: block;
 }
 
 .rectangle-4 {
-    height: 4px;
-    width: 55px;
-    margin-top: 12px;
-    margin-bottom: -3px;
-    position: absolute;
+	height: 4px;
+	width: 55px;
+	margin-top: 12px;
+	margin-bottom: -3px;
+	position: absolute;
 }
 
-.frame-49 { 
+.frame-49 {
 	height: 14px;
-    margin-top: 5px;
-    width: 7px;
-    margin-left: 10px;
-    position: absolute;
+	margin-top: 5px;
+	width: 7px;
+	margin-left: 10px;
+	position: absolute;
 }
+
 .nav-tabs .nav-item.show .nav-link {
 	background-color: transparent !important;
 }
+
 /*.nav-link u:hover {
 	border-bottom: 2px solid #e87b05 !important;
 }*/
 
 /* dropdown css for about*/
 .drop-down {
-  -webkit-backdrop-filter: blur(40px) brightness(100%);
-  align-items: flex-start;
-  backdrop-filter: blur(40px) brightness(100%);
-  background-color: #0d2c7fbf;
-  box-shadow: 0px 4px 20px #00000073;
-  height: 169px;
-  padding: 20px 198px;
-  width: 1440px;
+	-webkit-backdrop-filter: blur(40px) brightness(100%);
+	align-items: flex-start;
+	backdrop-filter: blur(40px) brightness(100%);
+	background-color: #0d2c7fbf;
+	box-shadow: 0px 4px 20px #00000073;
+	height: 169px;
+	padding: 20px 198px;
+	width: 1440px;
 }
 
 .frame-54 {
-  align-items: flex-start;
-  display: flex;
-  gap: 69px;
-  justify-content: center;
-  position: relative;
-  width: fit-content;
+	align-items: flex-start;
+	display: flex;
+	gap: 69px;
+	justify-content: center;
+	position: relative;
+	width: fit-content;
 }
 
 .frame-5 {
-  align-items: flex-start;
-  display: flex;
-  gap: 10px;
-  padding: 10px 35px;
-  position: relative;
-  width: fit-content;
+	align-items: flex-start;
+	display: flex;
+	gap: 10px;
+	padding: 10px 35px;
+	position: relative;
+	width: fit-content;
 }
 
 .api-documentation {
-  letter-spacing: 0;
-  line-height: 22.9px;
-  margin-top: -1px;
-  position: relative;
-  width: fit-content;
+	letter-spacing: 0;
+	line-height: 22.9px;
+	margin-top: -1px;
+	position: relative;
+	width: fit-content;
 }
 
 .about_modac {
-  letter-spacing: 0;
-  line-height: 22.9px;
-  margin-top: -1px;
-  position: relative;
-  text-decoration: underline;
-  white-space: nowrap;
-  width: fit-content;
+	letter-spacing: 0;
+	line-height: 22.9px;
+	margin-top: -1px;
+	position: relative;
+	text-decoration: underline;
+	white-space: nowrap;
+	width: fit-content;
 }
 
 .user-guide {
-  letter-spacing: 0;
-  line-height: 22.9px;
-  margin-top: -1px;
-  position: relative;
-  white-space: nowrap;
-  width: fit-content;
+	letter-spacing: 0;
+	line-height: 22.9px;
+	margin-top: -1px;
+	position: relative;
+	white-space: nowrap;
+	width: fit-content;
+}
+
+.dropdown {
+	position: initial;
+}
+
+.dropdown-container {
+	margin-top: 18px !important;
+	margin-left: -20px;
+	background-color: #1B496E;
+	/* display: flex; */
+	width: 100vw;
+	left: 0;
+	color: #fefefe;
+	padding: 2rem 1rem;
+}
+
+.dropdown-menu.show {
+	display: flex;
+}
+
+.positionabs {
+	position: absolute;
+}
+
+.mt-0 {
+	margin-top: 0 !important;
 }
