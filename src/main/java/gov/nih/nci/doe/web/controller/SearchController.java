@@ -21,7 +21,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.introspect.AnnotationIntrospectorPair;
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -120,7 +126,14 @@ public class SearchController extends AbstractDoeController {
 	@SuppressWarnings("unchecked")
 	private List<DoeSearchResult> processCollectionResults(List<String> systemAttrs, Response restResponse,
 			DoeSearch search) throws IOException {
-		MappingJsonFactory factory = new MappingJsonFactory();
+		
+		ObjectMapper mapper = new ObjectMapper();
+		AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
+				new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()), new JacksonAnnotationIntrospector());
+		mapper.setAnnotationIntrospector(intr);
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		
+		MappingJsonFactory factory = new MappingJsonFactory(mapper);
 		JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 		HpcCollectionListDTO collections = parser.readValueAs(HpcCollectionListDTO.class);
 		String user = getLoggedOnUserInfo();
