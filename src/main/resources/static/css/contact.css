@@ -3,7 +3,6 @@
 .component-2 {
   align-items: flex-start;
   background-image: url(/images/contact_modac_background.svg);
-  display: flex;
   padding: 45px 438px;
   background-size: cover;
 }
@@ -43,7 +42,6 @@
   position: relative;
   text-align: center;
   white-space: nowrap;
-  width: fit-content;
 }
 
 .frame-22 {
