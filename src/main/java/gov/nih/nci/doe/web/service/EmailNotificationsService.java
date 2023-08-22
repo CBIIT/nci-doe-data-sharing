@@ -4,5 +4,4 @@ public interface EmailNotificationsService {
 
 	public String saveEmailUpdateInfo(String emailAddress);
 
-	public String unsubscribeEmailUpdates(String emailAddress);
 }

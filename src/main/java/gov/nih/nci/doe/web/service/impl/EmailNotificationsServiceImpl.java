@@ -39,18 +39,4 @@ public class EmailNotificationsServiceImpl implements EmailNotificationsService 
 		return "You are successfully subscribed to MoDaC notifications";
 	}
 
-	@Override
-	public String unsubscribeEmailUpdates(String emailAddress) {
-		log.info("unsubscribe from email updates for user: " + emailAddress);
-		EmailUpdates emailInfo = emailNotificationRepository.getEmailNotificationRecord(emailAddress);
-		if (emailInfo != null) {
-			emailNotificationRepository.delete(emailInfo);
-		} else {
-			// user is already unsubscribed to MoDaC notifications
-			log.info(emailAddress + " is already unsubscribed to notifications.");
-			return "You are already unsubscribed to MoDaC notifications";
-		}
-		return "You are successfully unsubscribed to MoDaC notifications";
-	}
-
 }

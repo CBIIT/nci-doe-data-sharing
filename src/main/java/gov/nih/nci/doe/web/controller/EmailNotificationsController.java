@@ -1,12 +1,12 @@
 package gov.nih.nci.doe.web.controller;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,19 +27,24 @@ public class EmailNotificationsController extends AbstractDoeController {
 	EmailNotificationsService emailUpdatesService;
 
 	@GetMapping
-	public void getNotificationPage(HttpSession session, HttpServletRequest request) throws DoeWebException {
+	public ResponseEntity<?> openOutlook() throws DoeWebException {
 
-		log.info("send notification email to all the users subscribed");
-
+		log.info("open notification email to all the users subscribed");
 		try {
+
+			// This API can only be used by admins
 			if (Boolean.TRUE.equals(getIsAdmin())) {
+
 				mailService.sendNotificationEmail(webServerName, getLoggedOnUserInfo());
+				return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
 
 			}
-			throw new DoeWebException("Invalid permissions to send email update notification");
+
+			return new ResponseEntity<>("Invalid Permissions.", HttpStatus.OK);
 
 		} catch (Exception e) {
 			throw new DoeWebException("Failed to send notification email to users: " + e.getMessage());
+
 		}
 
 	}

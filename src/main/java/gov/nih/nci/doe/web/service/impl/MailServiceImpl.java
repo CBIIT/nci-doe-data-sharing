@@ -11,7 +11,6 @@ import javax.mail.internet.InternetAddress;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.VelocityException;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +27,7 @@ import java.net.URLEncoder;
 
 import gov.nih.nci.doe.web.service.MailService;
 import gov.nih.nci.doe.web.model.ContactUs;
+import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.domain.MailTemplate;
 import gov.nih.nci.doe.web.repository.EmailNotificationRepository;
 import gov.nih.nci.doe.web.repository.MailTemplateRepository;
@@ -251,56 +251,66 @@ public class MailServiceImpl implements MailService {
 	}
 
 	@Override
-	public void sendNotificationEmail(String webServerName, String loggedOnUser) {
+	public void sendNotificationEmail(String webServerName, String loggedOnUser) throws DoeWebException {
 		log.info("Sending notification email");
-
-		String to = loggedOnUser;
-		final List<String> bcc = new ArrayList<String>();
-		List<String> emailList = emailNotificationRepository.getAllEmailAddress();
-
-		if (!CollectionUtils.isEmpty(bcc)) {
-			bcc.addAll(emailList);
-		}
-
-		String subject = "Email Subject";
-		String body = "Hello,\n\nThis is the email body.";
-		openOutlookMail(to, bcc, subject, body);
-
-	}
-
-	public static void openOutlookMail(String to, List<String> bccList, String subject, String body) {
 		try {
+
 			StringBuilder mailtoUrl = new StringBuilder("mailto:");
 
-			mailtoUrl.append(encodeField(to));
+			// get the sender list from email_updates_t table
+			List<String> bccList = emailNotificationRepository.getAllEmailAddress();
+
+			// get the mail template for the notification in mail_template table
+			MailTemplate template = templateDAO.findMailTemplateTByShortIdentifier("NOTIFICATION_EMAIL");
+
+			mailtoUrl.append(encodeField(loggedOnUser, false));
 
 			if (bccList != null && !bccList.isEmpty()) {
 				mailtoUrl.append("?bcc=");
 				for (String bcc : bccList) {
-					mailtoUrl.append(encodeField(bcc)).append(",");
+					mailtoUrl.append(encodeField(bcc, false)).append(",");
 				}
+
 				mailtoUrl.deleteCharAt(mailtoUrl.length() - 1);
 			}
 
-			if (!subject.isEmpty()) {
-				mailtoUrl.append("&subject=").append(encodeField(subject));
+			if (!template.getEmailSubject().isEmpty()) {
+				mailtoUrl.append("&subject=").append(encodeField(template.getEmailSubject(), false));
 			}
 
-			if (!body.isEmpty()) {
-				mailtoUrl.append("&body=").append(encodeField(body));
+			if (!template.getEmailBody().isEmpty()) {
+				String emailTemplate = template.getEmailBody();
+
+				// Replace placeholders with dynamic values
+				String personalizedTemplate = emailTemplate
+						.replace("${gitHubLink}", "https://github.com/CBIIT/nci-doe-data-sharing/tree/master/doc")
+						.replace("${unsubscribe_link}", webServerName + "/contactUs?typeOfInquiry=unsubscribe");
+
+				mailtoUrl.append("&body=").append(encodeField(personalizedTemplate, true));
+				mailtoUrl.append("&x-apple-msg-load=1");
+
+			}
+			Desktop desktop = Desktop.getDesktop();
+			if (desktop.isSupported(Desktop.Action.MAIL)) {
+
+				URI mailto = new URI(mailtoUrl.toString());
+				desktop.mail(mailto);
 			}
 
-			Desktop.getDesktop().mail(new URI(mailtoUrl.toString()));
-		} catch (
-
-		Exception e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new DoeWebException("Error in drafting notification email: " + e.getMessage());
 		}
+
 	}
 
-	public static String encodeField(String field) {
+	public static String encodeField(String field, boolean isHtml) {
 		try {
-			return URLEncoder.encode(field, "UTF-8").replace("+", "%20");
+			if (isHtml) {
+				return URLEncoder.encode(field, "UTF-8").replace("+", "%20");
+			} else {
+				return URLEncoder.encode(field, "UTF-8").replace("+", "%20");
+			}
+
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return "";
