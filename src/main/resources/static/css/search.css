@@ -122,12 +122,12 @@ input[type="checkbox"].filteritem {
 #expandFilters {
     float: right;
     margin-right: 0.5rem;
-    margin-top: 7px;
+    margin-top: 8px;
 }
 #collapseFilters {
 	float: right;
     margin-right: 1rem;
-    margin-top: 7px;
+    margin-top: 8px;
 }
 
 .divTable {
@@ -312,7 +312,6 @@ div.divTableBody div.divTableContent:nth-child(odd) {
 .filterComponentDiv {
 	border: 1px solid #fff; 
 	margin-bottom: -1px; 
-	background-color: #fff; 
 	margin-left: -5px; 
 	margin-right: 8px;
 	background: #EAEBEB;
@@ -336,13 +335,13 @@ div.dataDivCollapse{
 }
 
 div.dataDivCollapse :not(:first-child) {
-    margin-top: -9px;
-    margin-bottom: 0px;
+    margin-top: -10px;
+    margin-bottom: -3px;
 }
 
 div.dataDivCollapse :first-child {
 	margin-bottom: 0px;
-	margin-top: 6px;
+	margin-top: 2px;
 }
 
 div.dataDivCollapse :last-child {
@@ -403,8 +402,8 @@ input.filteritem:checked {
 }
 #filterSectionSubDiv p {
 	color: #fff; 
-	font-family: 'inter_regular'; 
-	font-size: 22px; 
+	font-family: 'inter_light'; 
+	font-size: 23px; 
 	margin-left: 35px; 
 	padding-top: 3px; 
 	float: left;
@@ -452,8 +451,16 @@ label.attrName {
 	margin-bottom: 5px; 
 	margin-top: -8px; 
 	margin-left: 9px;
-	width: 65%; 
+	width: 77%; 
 	letter-spacing: 0.19px;
+}
+
+img.searchCheckBoxlist {
+	width: 18px;
+	height: 17px; 
+	float: right; 
+	margin-right: 12px; 
+	margin-top: -28px;
 }
 
 .search_filter_div {
@@ -489,7 +496,6 @@ label.attrName {
 label.showMorefields {
 	font-size:15px;
 	color: #4584A1;
-	padding-top: 0px;
 }
 
 
