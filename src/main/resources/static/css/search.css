@@ -659,8 +659,12 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
 	color: #f39530 !important;
 	transform: translateY(-3px);
 }
-.editCollectionImg,.collectionAccessGrpImg {
+.editCollectionImg {
 	width: 16px;
+    transform: translateY(-3px);
+}
+.collectionAccessGrpImg {
+	width: 13.3px;
     transform: translateY(-3px);
 }
 
