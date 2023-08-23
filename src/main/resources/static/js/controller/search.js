@@ -609,7 +609,7 @@ function renderDataSetName(data, type, row) {
 		         + "<button type='button' class='expand_card_btn'  data-toggle='collapse' href='#collapse" + row.dmeDataId + "'"
 		         + "><img src='images/expand_card.png' data-toggle='tooltip' title= 'Collapse card'" 
 		         + "alt='Collapse asset details'></button>"
-		         + "<button type='button' class='view_asset_details_btn dataSetFragment' data-toggle='tooltip' data-placement='bottom' title='View details of this card'"
+		         + "<button type='button' class='view_asset_details_btn dataSetFragment' data-toggle='tooltip' data-placement='bottom' title='View asset details'"
 		         + " dme_data_id = '" + row.dmeDataId + "'><img src='images/view_details_arrow.png'" 
 		         + "alt='View Asset Details'></button>"
 		         + "</div>"
