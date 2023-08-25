@@ -527,9 +527,9 @@ label.showMorefields {
 	letter-spacing: 1px;
  }
 #searchBtn{
-    position: absolute;
-    top: 3.25rem;
-    right:21rem;
+    position: relative;
+    top: 0.25rem;
+    right: 4rem;
 }
 
 #searchBtn img{
@@ -538,9 +538,9 @@ label.showMorefields {
 }
 
 #resetBtn {
-	position: absolute;
-	top: 3.25rem;
-    right: 25rem;
+	position: relative;
+    top: 0.25rem;
+    right: 6rem;
 }
 
 #searchResultTable_info {
