@@ -81,6 +81,7 @@
 
 .logoImg {
 	width: 401px;
+	padding: 2rem 1rem 1rem;
 }
 
 /* NCI Logo */
@@ -157,18 +158,34 @@ ul#subTab {
 	gap: 20px;
 }
 
+.mobiletitlecontainer {
+	border-top: 12px solid #e87b05;
+	border-bottom: 12px solid #e87b05;
+	margin-top: 82px;
+	margin-bottom: 82px;
+	margin-left: 24px;
+	padding: 1rem 0px;
+    max-width: 90vw;
+	background: rgba(255, 255, 255, 0.51);
+    background-blend-mode: hard-light;
+}
+
 #titleText {
+	text-align: left;
 	left: 160px;
 	letter-spacing: -0.9px;
 	line-height: 45px;
-	position: absolute;
+	/* position: absolute; */
 	top: 193px;
-	width: 399px;
-	font-size: 45px;
-	font-weight: 800;
-	font-style: normal;
-	font-family: 'inter_medium';
-	color: rgba(6, 53, 137, 1);
+
+	color: #063589;
+font-variant-numeric: lining-nums tabular-nums;
+font-family: Inter;
+font-size: 3rem;
+font-style: normal;
+font-weight: 700;
+line-height: 3rem; /* 45px */
+letter-spacing: 0px;
 }
 
 .navbar-collapse {

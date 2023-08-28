@@ -141,7 +141,7 @@
 		right: 0px !important;
 	}
 	#attributeVallanding {
-		border-radius: 24px;
+		border-radius: 32px  !important;
 		height: 45px;
 		border: 2.51px solid #E0730F;
 		background-color: #FFFFFF;
@@ -149,6 +149,12 @@
 		margin-right: -9px;
 		width: -webkit-fill-available;
 		padding-left: 20px;
+		margin: 0 auto !important;
+		height: 62px !important;
+		width: 90% !important;
+	}
+	#landingSearch{
+		top: 1rem !important;
 	}
 	#attributeVallanding::placeholder {
 		font-size: 22px;
@@ -338,8 +344,9 @@
 	.mobileContainer {
 		display: block !important;
 		margin: 0px auto;
-		margin-left: 15px !important;
+		/* margin-left: 4px !important; */
 		margin-top: -0.5rem !important;
+		/* margin-right: 4px !important; */
 	}
 	.buttoncontainer {
 		background-image: url(/images/modac.hero1.png);
@@ -593,6 +600,10 @@
 		color: #000000;
 		line-height: 17px;
 		overflow-wrap: anywhere;
+	}
+	#titleText {
+		font-size: 2rem !important;
+		line-height: 2rem !important;
 	}
 }
 
