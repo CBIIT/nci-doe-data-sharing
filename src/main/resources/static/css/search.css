@@ -451,16 +451,17 @@ label.attrName {
 	margin-bottom: 5px; 
 	margin-top: -8px; 
 	margin-left: 9px;
-	width: 77%; 
+	width: 60%; 
 	letter-spacing: 0.19px;
 }
 
 img.searchCheckBoxlist {
-	width: 18px;
-	height: 17px; 
-	float: right; 
-	margin-right: 12px; 
-	margin-top: -28px;
+    width: 18px;
+    height: 17px;
+    float: right;
+    margin-right: 12px;
+    margin-top: 0.5rem;
+    position: relative;
 }
 
 .search_filter_div {
