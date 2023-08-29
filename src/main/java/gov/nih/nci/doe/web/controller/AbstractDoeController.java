@@ -44,7 +44,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.introspect.AnnotationIntrospectorPair;
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
 
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.domain.LookUp;
@@ -939,7 +945,14 @@ public abstract class AbstractDoeController {
 					session.setAttribute("compoundQuery", compoundQuery);
 				}
 
-				MappingJsonFactory factory = new MappingJsonFactory();
+				ObjectMapper mapper = new ObjectMapper();
+				AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
+						new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
+						new JacksonAnnotationIntrospector());
+				mapper.setAnnotationIntrospector(intr);
+				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+				MappingJsonFactory factory = new MappingJsonFactory(mapper);
 				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 				HpcCollectionListDTO collections = parser.readValueAs(HpcCollectionListDTO.class);
 				HpcCollectionDTO collection = collections.getCollections().get(0);
@@ -1094,7 +1107,13 @@ public abstract class AbstractDoeController {
 					compoundCollectionSearchServiceURL, compoundQuery);
 
 			if (restResponse.getStatus() == 200) {
-				MappingJsonFactory factory = new MappingJsonFactory();
+				ObjectMapper mapper = new ObjectMapper();
+				AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
+						new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
+						new JacksonAnnotationIntrospector());
+				mapper.setAnnotationIntrospector(intr);
+				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+				MappingJsonFactory factory = new MappingJsonFactory(mapper);
 				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 				HpcCollectionListDTO collections = parser.readValueAs(HpcCollectionListDTO.class);
 				List<HpcCollectionDTO> results = collections.getCollections();
@@ -1213,7 +1232,14 @@ public abstract class AbstractDoeController {
 
 			if (restResponse.getStatus() == 200) {
 
-				MappingJsonFactory factory = new MappingJsonFactory();
+				ObjectMapper mapper = new ObjectMapper();
+				AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
+						new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
+						new JacksonAnnotationIntrospector());
+				mapper.setAnnotationIntrospector(intr);
+				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+				MappingJsonFactory factory = new MappingJsonFactory(mapper);
 				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 				HpcCollectionListDTO collections = parser.readValueAs(HpcCollectionListDTO.class);
 				List<HpcCollectionDTO> results = collections.getCollections();
