@@ -192,6 +192,7 @@ table#dataSetMetaData tr:nth-child(odd) td,table#userMetaData tr:nth-child(odd) 
 
 table#userMetaData tr:nth-child(even) td,table#userMetaData tr:nth-child(odd) td {
 	padding-left: 2rem !important;
+	text-transform: uppercase;
 }
 
 table#dataSetMetaData tr:nth-child(even) td:first-child,table#userMetaData tr:nth-child(even) td:first-child {
