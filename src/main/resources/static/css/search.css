@@ -262,8 +262,8 @@ div.divTableBody div.divTableContent:nth-child(odd) {
 	margin-top: 10px; 
 	border-radius: 65px; 
 	height: 62px;
-	font-size: 13px; 
-	font-weight: 550; 
+	font-size: 18px;
+    font-weight: 400;
 	padding-left: 35px;
 	background-color: var(--white);
     border: 1.25px solid;
@@ -278,8 +278,8 @@ div.divTableBody div.divTableContent:nth-child(odd) {
     margin-top: 18px;
     margin-right: 12px;
     color: var(--white);
-    font-size: 32px;
-    font-weight: 500;
+    font-size: 38px;
+    font-weight: 600;
     font-style: normal;
     margin-left: 5rem;
 }
@@ -300,10 +300,10 @@ div.divTableBody div.divTableContent:nth-child(odd) {
 
 #attributeVal::placeholder {
   transform: translateY(2px);
-  color: var(--congress-blue-3);
+  color:#1C4794;
   font-family: var(--font-family-inter);
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 400;
   letter-spacing: 0.2px;
   line-height: 21.3px;
 
