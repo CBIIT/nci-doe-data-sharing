@@ -124,7 +124,7 @@ input[type="checkbox"].filteritem {
     margin-right: 0.5rem;
     margin-top: 8px;
 }
-#collapseFilters {
+#expand_collapse_filters {
 	float: right;
     margin-right: 1rem;
     margin-top: 8px;

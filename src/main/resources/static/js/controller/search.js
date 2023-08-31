@@ -94,10 +94,14 @@ $(document).ready(function() {
 		}
 	});
 	
-	$("#collapseFilters").click(function() {
+	$("#expand_collapse_filters").click(function() {
 	
+		var title = $(this).attr('data-original-title');
 		// Find all filters inside inside the filter section to collapse
             var buttons = $("#filterSectionDiv").find('.dataTargetCollapse');
+		
+		if(title  == 'Collapse all filters') {
+
             
             // Click on each button
             buttons.each(function() {
@@ -108,13 +112,10 @@ $(document).ready(function() {
 				$(this).parent().parent().find(".css-17rpx5x").hide();
 				$(this).parent().parent().find(".css-17rpx5xLess").hide();
             });
-	
-	});
-	
-	$("#expandFilters").click(function() {
-	
-	// Find all filters inside inside the filter section to collapse
-            var buttons = $("#filterSectionDiv").find('.dataTargetCollapse');
+            $(this).attr('data-original-title','Expand all filters');
+            $(this).find('img').attr('src','/images/expand_filters.png');
+		} else {
+			
             
             // Click on each button
             buttons.each(function() {			
@@ -126,8 +127,13 @@ $(document).ready(function() {
 				$(this).parent().parent().find('.showMore').show();
 				showFirstFewFields($(this).parent().parent(), 'Less');
             });
+             $(this).attr('data-original-title','Collapse all filters');
+            $(this).find('img').attr('src','/images/collapse_filters.png');
+		}
+		
 	
 	});
+	
 });
 
 function populateSearchCriteria(searchType) {
