@@ -126,7 +126,7 @@ input[type="checkbox"].filteritem {
 }
 #expand_collapse_filters {
 	float: right;
-    margin-right: 1rem;
+    margin-right: 0.5rem;
     margin-top: 8px;
 }
 
@@ -313,7 +313,6 @@ div.divTableBody div.divTableContent:nth-child(odd) {
 	border: 1px solid #fff; 
 	margin-bottom: -1px; 
 	margin-left: -5px; 
-	margin-right: 8px;
 	background: #EAEBEB;
 }
 .filterComponentDiv p {
@@ -365,6 +364,21 @@ div.dataDivCollapse :nth-child(4) > label >img {
     background-color: #81ACDF; /* Replace with your desired color */
   }
 
+/* Customize the scrollbar track */
+  div#filterSectionDiv::-webkit-scrollbar-track {
+    background-color: #626184; /* Replace with your desired color */
+  }
+
+  /* Customize the scrollbar thumb */
+  div#filterSectionDiv::-webkit-scrollbar-thumb {
+    background-color: #626184; /* Replace with your desired color */
+  }
+  div#filterSectionDiv::-webkit-scrollbar {
+	 width:7px;
+    height:349px;
+  }
+     
+  
 .filteritem {
 	transform: translateY(3px);
     box-sizing: border-box;
@@ -389,7 +403,7 @@ input.filteritem:checked {
 	margin-right: 1rem; 
 	margin-top: -14px; 
 	overflow: auto; 
-	height: fit-content; 
+	height: 500px; 
 	overflow-x: hidden;
 }
 #filterSectionSubDiv {
@@ -397,7 +411,6 @@ input.filteritem:checked {
 	margin-bottom: 4px; 
 	margin-left: -10px; 
 	height: 46px; 
-	width: 100%;
 	border-radius: 0px 6px 0px 0px;
 }
 #filterSectionSubDiv p {
@@ -420,7 +433,7 @@ input.filteritem:checked {
 }
 #clearFilters img {
 	position: absolute;
-    right: 27px;
+    right: 21px;
     top: 0.7rem;
 }
 
@@ -590,6 +603,7 @@ table#searchResultTable tr {
 }
 table#searchResultTable tr td{
   border-top: none !important;
+  padding-bottom: 0px;
 }
 
 
