@@ -165,9 +165,9 @@ ul#subTab {
 	margin-bottom: 82px;
 	margin-left: 24px;
 	padding: 1rem 0px;
-    max-width: 90vw;
+	max-width: 90vw;
 	background: rgba(255, 255, 255, 0.51);
-    background-blend-mode: hard-light;
+	background-blend-mode: hard-light;
 }
 
 #titleText {
@@ -179,13 +179,14 @@ ul#subTab {
 	top: 193px;
 
 	color: #063589;
-font-variant-numeric: lining-nums tabular-nums;
-font-family: Inter;
-font-size: 3rem;
-font-style: normal;
-font-weight: 700;
-line-height: 3rem; /* 45px */
-letter-spacing: 0px;
+	font-variant-numeric: lining-nums tabular-nums;
+	font-family: Inter;
+	font-size: 3rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: 3rem;
+	/* 45px */
+	letter-spacing: 0px;
 }
 
 .navbar-collapse {
@@ -348,4 +349,53 @@ letter-spacing: 0px;
 
 .mt-0 {
 	margin-top: 0 !important;
+}
+
+.banner-header-text::before {
+	display: flex;
+	margin-right: units(1.5)
+}
+
+.banner-header-text::before {
+	background-image: url(/images/usa-flag.png);
+	content: "";
+	display: block;
+	background-size: 16px 11px;
+	max-width: 16px;
+	height: 11px;
+}
+
+.banner-header {
+	margin-left: auto;
+	margin-right: auto;
+	padding: 0.5rem 1.5rem;
+}
+
+.banner-inner {
+	align-items: center;
+	display: flex;
+	justify-content: space-between;
+	min-height: 1.89rem;
+	padding: 0;
+}
+
+.banner {
+	background-color: #f0f0f0;
+	font-family: Open Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+	font-size: 1.01rem;
+	line-height: 1.6;
+}
+
+.banner-header-text {
+	font-size: .76rem;
+	line-height: 1.2;
+	margin-bottom: 0;
+	margin-top: 0;
+}
+
+.banner-header-text,
+.banner-header-text:before {
+	display: flex;
+	margin-right: 0.75rem;
+	width: 100%;
 }

@@ -1,38 +1,43 @@
-
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
-<meta charset="UTF-8">
-<!--DAP code-->
-<script
-	src="//assets.adobedtm.com/6a4249cd0a2c/30a3fab3e7df/launch-1ee667035a97.min.js"
-	async></script>
+	<meta charset="UTF-8">
+	<!--DAP code-->
+	<script src="//assets.adobedtm.com/6a4249cd0a2c/30a3fab3e7df/launch-1ee667035a97.min.js" async></script>
 
-<!-- Google Analytics -->
-<script async
-	src="https://www.googletagmanager.com/gtag/js?id=UA-173457937-1"></script>
-<script>
-	window.dataLayer = window.dataLayer || [];
-	function gtag() {
-		dataLayer.push(arguments);
-	}
-	gtag('js', new Date());
+	<!-- Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-173457937-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() {
+			dataLayer.push(arguments);
+		}
+		gtag('js', new Date());
 
-	gtag('config', 'UA-173457937-1');
-</script>
-<!-- End Google Analytics -->
+		gtag('config', 'UA-173457937-1');
+	</script>
+	<!-- End Google Analytics -->
 
 </head>
-<body>
-	<div id="brand" class="col-md-12 col-sm-12 pl-0 pr-0" role="navigation"
-		th:fragment="public-header" aria-label="brand div">
 
+<body>
+	<div id="brand" class="col-md-12 col-sm-12 pl-0 pr-0" role="navigation" th:fragment="public-header"
+		aria-label="brand div">
+		<!--Banner-->
+		<section id="banner" class="banner" aria-label="Official government website">
+			<header class="banner-header">
+				<div class="banner-inner">
+					<div class="banner-header-text">
+						An official website of the United States government
+					</div>
+				</div>
+			</header>
+		</section>
 		<!--logo image-->
 		<div class="col order-first" style="margin-left: -0.5rem;">
-			<a th:href="@{/}" aria-label="image link"> <img
-				src="images/nci_modac_logo.svg" th:src="@{/images/nci_modac_logo.svg}"
-				class="logoImg" alt="National Cancer Institute"></a>
+			<a th:href="@{/}" aria-label="image link"> <img src="images/nci_modac_logo.svg"
+					th:src="@{/images/nci_modac_logo.svg}" class="logoImg" alt="National Cancer Institute"></a>
 		</div>
 
 		<div th:if="${downtimeMessage!= null}" class="col-md-12"
@@ -43,95 +48,81 @@
 		<nav id="nci-brand" class="navbar navbar-expand-lg bg-default ml-auto">
 
 			<!--on small media collapse icon-->
-			<button class="col-md-10 col-sm-6 navbar-toggler mobile-nav-toggle"
-				type="button" data-toggle="collapse"
-				data-target="#mobile-navigation" aria-controls="mobile-navigation"
-				aria-expanded="false" aria-label="Toggle navigation">
-				<span style="float: left"><i
-					class="fas fa-bars toggleNavBarIcon"></i><i
-					style="display: none; font-size: 1.25rem; color: #2F3C5A;"
-					class="fas fa-times closeNavBarIcon"></i></span>
+			<button class="col-md-10 col-sm-6 navbar-toggler mobile-nav-toggle" type="button" data-toggle="collapse"
+				data-target="#mobile-navigation" aria-controls="mobile-navigation" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span style="float: left"><i class="fas fa-bars toggleNavBarIcon"></i><i
+						style="display: none; font-size: 1.25rem; color: #2F3C5A;"
+						class="fas fa-times closeNavBarIcon"></i></span>
 			</button>
-			<ul id="mobile-navigation"
-				class="sc-dtLLSn dpehyt mobile-navigation collapse"
-				data-visible="false">
-				<li class="sc-dkQUaI hQrVZb"><a class="active landing-tab"
-					aria-current="page" th:href="@{/}">Home</a></li>
-				<li class="sc-dkQUaI hQrVZb"><a class="search-tab"
-					th:href="@{/searchTab}">Search</a></li>
-				<li class="sc-dkQUaI hQrVZb" data-toggle="collapse"
-					data-target="#aboutSubNav"><a aria-expanded="true"
-					class="sc-WZYut jLeSfx">About&nbsp;</a></li>
+			<ul id="mobile-navigation" class="sc-dtLLSn dpehyt mobile-navigation collapse" data-visible="false">
+				<li class="sc-dkQUaI hQrVZb"><a class="active landing-tab" aria-current="page" th:href="@{/}">Home</a>
+				</li>
+				<li class="sc-dkQUaI hQrVZb"><a class="search-tab" th:href="@{/searchTab}">Search</a></li>
+				<li class="sc-dkQUaI hQrVZb" data-toggle="collapse" data-target="#aboutSubNav"><a aria-expanded="true"
+						class="sc-WZYut jLeSfx">About&nbsp;</a></li>
 				<ul data-visible="true" class="sc-ikXwFM hZHGfK" id="aboutSubNav">
 					<li class="sc-dkQUaI hQrVZb hQrVZb_subTab"><a class="aboutMobileTabNav"
-						th:href="@{/aboutTab}">&nbsp;<i class="fas fa-greater-than"></i>&nbsp;&nbsp;About
+							th:href="@{/aboutTab}">&nbsp;<i class="fas fa-greater-than"></i>&nbsp;&nbsp;About
 							MoDaC
-					</a></li>
+						</a></li>
 					<li class="sc-dkQUaI hQrVZb hQrVZb_subTab"><a id="api-docs" target="_blank"
-						th:href="@{/swagger-ui/index.html}">&nbsp;<i
-							class="fas fa-greater-than"></i>&nbsp;&nbsp;API Documentation
-					</a></li>
+							th:href="@{/swagger-ui/index.html}">&nbsp;<i class="fas fa-greater-than"></i>&nbsp;&nbsp;API
+							Documentation
+						</a></li>
 					<li class="sc-dkQUaI hQrVZb hQrVZb_subTab"><a target="_blank"
-						href="https://wiki.nci.nih.gov/display/MoDaCdoc">&nbsp;<i
-							class="fas fa-greater-than"></i>&nbsp;&nbsp;User Guide
-					</a></li>
-					<li class="sc-dkQUaI hQrVZb hQrVZb_subTab"><a id="contact-tab"
-						th:href="@{/contactUs}">&nbsp;<i class="fas fa-greater-than"></i>&nbsp;&nbsp;Contact
-					</a></li>
+							href="https://wiki.nci.nih.gov/display/MoDaCdoc">&nbsp;<i
+								class="fas fa-greater-than"></i>&nbsp;&nbsp;User Guide
+						</a></li>
+					<li class="sc-dkQUaI hQrVZb hQrVZb_subTab"><a id="contact-tab" th:href="@{/contactUs}">&nbsp;<i
+								class="fas fa-greater-than"></i>&nbsp;&nbsp;Contact
+						</a></li>
 				</ul>
 			</ul>
 
-			<div id="globalNav"
-				class="col-md-9 navbar-collapse collapse navbar-collapse col order-last bordered"
+			<div id="globalNav" class="col-md-9 navbar-collapse collapse navbar-collapse col order-last bordered"
 				style="z-index: 101010; max-height: 15%;">
-				<div id="subNav" class="card-header"
-					style="height: 46px; margin-left: -32px;">
-					<ul class="nav nav-tabs card-header-tabs" id="subTab"
-						role="tablist">
+				<div id="subNav" class="card-header" style="height: 46px; margin-left: -32px;">
+					<ul class="nav nav-tabs card-header-tabs" id="subTab" role="tablist">
 						<li class="nav-item" role="tab">
-						<a
-							class="nav-link active landing-tab" th:href="@{/}" role="tab">
-							<u>Home</u>
-							<img class="rectangle-4" th:src="@{/images/rectangle-4-1.png}" alt="Rectangle 4" />
-							</a>						
-							</li>
-
-						<li class="nav-item" role="tab"><a
-							class="nav-link search-tab" th:href="@{/searchTab}" role="tab"><u>Search</u>
-							<img class="rectangle-4" th:src="@{/images/rectangle-4-1.png}" alt="Rectangle 4" />
+							<a class="nav-link active landing-tab" th:href="@{/}" role="tab">
+								<u>Home</u>
+								<img class="rectangle-4" th:src="@{/images/rectangle-4-1.png}" alt="Rectangle 4" />
 							</a>
 						</li>
 
-						<li class="nav-item dropdown" role="tab"><a
-							class="nav-link dropdown-toggle aboutTabNav" href="#"
-							role="button" aria-label="Help" data-toggle="dropdown"
-							aria-haspopup="true" aria-expanded="false"> <u>About</u>
-							<img class="rectangle-4" th:src="@{/images/rectangle-4-1.png}" alt="Rectangle 4" />
-							<img class="frame-49" th:src="@{/images/bottom-arrow.png}"  alt="Frame 49" />
-						</a>
+						<li class="nav-item" role="tab"><a class="nav-link search-tab" th:href="@{/searchTab}"
+								role="tab"><u>Search</u>
+								<img class="rectangle-4" th:src="@{/images/rectangle-4-1.png}" alt="Rectangle 4" />
+							</a>
+						</li>
+
+						<li class="nav-item dropdown" role="tab"><a class="nav-link dropdown-toggle aboutTabNav"
+								href="#" role="button" aria-label="Help" data-toggle="dropdown" aria-haspopup="true"
+								aria-expanded="false"> <u>About</u>
+								<img class="rectangle-4" th:src="@{/images/rectangle-4-1.png}" alt="Rectangle 4" />
+								<img class="frame-49" th:src="@{/images/bottom-arrow.png}" alt="Frame 49" />
+							</a>
 							<div class="dropdown-menu dropdown-container">
 								<a class="dropdown-item" id="about-tab" th:href="@{/aboutTab}">About
-									MoDaC</a> <a th:if="${showApiDocs}" class="dropdown-item"
-									id="api-docs" target="_blank"
-									th:href="@{/swagger-ui/index.html}">API Documentation</a> <a
+									MoDaC</a> <a th:if="${showApiDocs}" class="dropdown-item" id="api-docs"
+									target="_blank" th:href="@{/swagger-ui/index.html}">API Documentation</a> <a
 									class="dropdown-item" target="_blank"
-									href="https://wiki.nci.nih.gov/display/MoDaCdoc"
-									rel="noopener noreferrer">User Guide</a> <a
-									class="dropdown-item" th:href="@{/contactUs}">Contact</a>
-							</div></li>
+									href="https://wiki.nci.nih.gov/display/MoDaCdoc" rel="noopener noreferrer">User
+									Guide</a> <a class="dropdown-item" th:href="@{/contactUs}">Contact</a>
+							</div>
+						</li>
 
 					</ul>
 				</div>
 			</div>
 			<!--top right navigation-->
-			<div id="topNav"
-				class="collapse navbar-collapse justify-content-end col order-last bordered">
-				<ul class="navbar-nav text-white justify-content-end" role="tablist"
-					style="margin-top: 5px;">
+			<div id="topNav" class="collapse navbar-collapse justify-content-end col order-last bordered">
+				<ul class="navbar-nav text-white justify-content-end" role="tablist" style="margin-top: 5px;">
 
 					<li class="nav-item" role="tab" th:if="${loggedOnUser == null}">
-						<a class="nav-link" id="login-tab"
-						th:href="@{/loginTab}" role="tab">LOGIN &nbsp;|&nbsp; REGISTER</a>
+						<a class="nav-link" id="login-tab" th:href="@{/loginTab}" role="tab">LOGIN &nbsp;|&nbsp;
+							REGISTER</a>
 					</li>
 
 				</ul>
@@ -139,4 +130,5 @@
 		</nav>
 	</div>
 </body>
+
 </html>

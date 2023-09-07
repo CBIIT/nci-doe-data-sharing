@@ -115,13 +115,6 @@ footer {
   width: 518px;
 }
 
-.group-66 {
-  height: 29px;
-  margin-left: 2px;
-  margin-top: 15px;
-  width: 205px;
-}
-
 .follow-us {
   letter-spacing: 0;
   line-height: normal;
@@ -354,4 +347,40 @@ footer {
   margin-left: 20px;
   font-size: 1.01rem;
   line-height: 1.6;
+}
+
+.grid-row.grid-gap-1 {
+  margin-left: -0.25rem;
+  margin-right: -0.25rem;
+  margin-top: 1rem;
+}
+
+.grid-row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.grid-col-auto {
+  flex: 0 1 auto;
+}
+
+.grid-row.grid-gap-1>* {
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+
+ .social-link {
+  background: transparent;
+  height: auto;
+  padding: 0 0.5rem 0 0;
+  width: auto;
+}
+
+.social-link .usa-icon {
+  fill: #face00;
+  color: #face00;
+  height: 40px;
+  width: 40px;
+  margin-left: -3px;
+  margin-right: -3px;
 }
