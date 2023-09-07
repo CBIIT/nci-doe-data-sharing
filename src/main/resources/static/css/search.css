@@ -220,6 +220,15 @@ div.divTableBody div.divTableContent:nth-child(odd) {
 	border-bottom: none;
 }
 
+.asset_type_count {
+	float: right;
+    font-family: 'Poppins';
+    font-weight: 600;
+    font-size: 15px;
+    color: #5B5D5F !important;
+    transform: translateY(-8px);
+}
+
 .popoverMobileAttrName, .popoverMobileAttrVal {
 	color: #194F85;
 	font-family: 'inter_bold';
@@ -532,21 +541,22 @@ label.showMorefields {
  	color: #004187;
 }
 
-#searchResultTable_length label{
-	 color: #004187;
-	 font-family: 'Poppins';
+#searchResultTable_length label {
+	color: #004187;
+	font-family: 'Poppins';
 	font-style: normal;
 	font-weight: 300;
 	font-size: 12px;
 	letter-spacing: 1px;
  }
-#searchBtn{
+ 
+#searchBtn {
     position: relative;
     top: 0.25rem;
     right: 4rem;
 }
 
-#searchBtn img{
+#searchBtn img {
 	height: 31px;
 	width: 31px;
 }

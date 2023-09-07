@@ -920,7 +920,8 @@ function filterNext($this, attributeTypeName) {
 		dataType : 'text',
 		data : d,
 		success : function(data, status) {
-			var list = JSON.parse(data);
+			var filterlist = JSON.parse(data);
+			var list = filterlist.attrValues;
 			var len = list.length;
 
 			$this.parent().find('.filterGroupDiv').each(function(e) {
@@ -928,6 +929,11 @@ function filterNext($this, attributeTypeName) {
 				if (list.indexOf(val) != -1) {
 					$(this).show();
 					$(this).find('.showMorefields').show();
+					if(val == 'Dataset') {
+						$(this).find(".asset_type_count").text(filterlist.datasetCount);
+					} else if (val == 'Model') {
+						$(this).find(".asset_type_count").text(filterlist.modelCount);
+					}
 				} else {
 					$(this).hide();
 					$(this).find('.filteritem').prop("checked", false);
@@ -1003,7 +1009,8 @@ function filterPrev($this, attributeTypeName) {
 			$("#dimmer").show();
 		},
 		success : function(data, status) {
-			var list = JSON.parse(data);
+			var filterlist = JSON.parse(data);
+			var list = filterlist.attrValues;
 			var len = list.length;
 
 			$this.parent().find('.filterGroupDiv').each(function(e) {
@@ -1011,6 +1018,11 @@ function filterPrev($this, attributeTypeName) {
 				if (list.indexOf(val) != -1) {
 					$(this).show();
 					$(this).find('.showMorefields').show();
+					if(val == 'Dataset') {
+						$(this).find(".asset_type_count").text(filterlist.datasetCount);
+					} else if (val == 'Model') {
+						$(this).find(".asset_type_count").text(filterlist.modelCount);
+					}
 				} else {
 					$(this).hide();
 					$(this).find('.filteritem').prop("checked", false);

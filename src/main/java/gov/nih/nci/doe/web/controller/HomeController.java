@@ -30,6 +30,7 @@ import gov.nih.nci.doe.web.domain.InferencingTask;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.model.PermissionsModel;
+import gov.nih.nci.doe.web.model.SearchList;
 import gov.nih.nci.doe.web.service.DoeAuthorizationService;
 
 /**
@@ -408,7 +409,7 @@ public class HomeController extends AbstractDoeController {
 			@RequestHeader HttpHeaders headers, DoeSearch search) throws DoeWebException {
 
 		log.info("get filtered list" + search);
-		List<String> list = constructFilterCriteria(session, search, retrieveParent);
+		SearchList list = constructFilterCriteria(session, search, retrieveParent);
 
 		return new ResponseEntity<>(list, HttpStatus.OK);
 

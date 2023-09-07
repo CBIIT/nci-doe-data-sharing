@@ -68,22 +68,22 @@
 
 					<div th:each="list : ${browseList}" class="filterComponentDiv">
 						<p class="attributeLabel">
-							<label class="attrName inter-bold-tuna-19px" th:text="${list.key}"></label> <img
+							<label class="attrName inter-bold-tuna-19px" th:text="${list.attributeName}"></label> <img
 								src="images/AccordionDown.png" class="dataTargetCollapse"
 								alt="accordian Icon" th:src="@{/images/AccordionDown.png}"
 								style="width: 12px; float: left; margin-top: 15px; margin-left: 30px;" />
 
 							<img alt="search checkbox Icon"
-								th:if="${list.key != 'Asset Type' && list.key != 'Is Reference Dataset' && 
-								 list.key != 'Is Model Deployed'}"
+								th:if="${list.attributeName != 'Asset Type' && list.attributeName != 'Is Reference Dataset' && 
+								 list.attributeName != 'Is Model Deployed'}"
 								src="images/Filter.Magnifying.Icon.png"
 								class="searchCheckBoxlist" data-toggle="tooltip" title="Search for filter"
 								th:src="@{/images/Filter.Magnifying.Icon.png}"/>
 						</p>
-                   <div class="search_filter_div" th:if="${list.key != 'Asset Type' && list.key != 'Is Reference Dataset' &&
-                                list.key != 'Is Model Deployed'}">
+                   <div class="search_filter_div" th:if="${list.attributeName != 'Asset Type' && list.attributeName != 'Is Reference Dataset' &&
+                                list.attributeName != 'Is Model Deployed'}">
 						<input type="text"						
-							class="filterSearchBox" th:placeholder="'Search ' + ${list.key}">
+							class="filterSearchBox" th:placeholder="'Search ' + ${list.attributeName}">
 							
 							<img alt="cancel Icon" class="cancel_fiter_icon"
 							src="/images/cancel_search_filter_icon.png">
@@ -91,7 +91,7 @@
   					
 						<div class="dataDivCollapse">
 							<div class="form-group col-lg-12 col-md-12 filterGroupDiv"
-								th:id="${list.key}" th:each="attr: ${list.value}">
+								th:id="${list.attributeName}" th:each="attr: ${list.attrValues}">
 
 								<input type="hidden" th:value="${attrStat.index}" /> <input
 									type="hidden" class="filterSize" th:value="${attrStat.size}" />
@@ -99,8 +99,11 @@
 									class="filteritem" th:value="${attr}" />&nbsp;&nbsp;
 									<div th:text="${attr}" class="inter-medium-wedgewood-16px"
 										style="margin-left: 25px; margin-top: -21px;letter-spacing: 0.16px;"></div>
-										<img alt="line Icon" src="/images/line.png">
+									<span class="asset_type_count" th:if="${list.attributeName == 'Asset Type' && attr == 'Dataset'}" th:text="${list.datasetCount}"></span>
+									<span class="asset_type_count" th:if="${list.attributeName == 'Asset Type' && attr == 'Model'}" th:text="${list.modelCount}"></span>
+									<img alt="line Icon" src="/images/line.png">
 								</label>
+								
 							</div>
 
 						</div>
