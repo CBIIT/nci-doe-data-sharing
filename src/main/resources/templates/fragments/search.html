@@ -99,8 +99,20 @@
 									class="filteritem" th:value="${attr}" />&nbsp;&nbsp;
 									<div th:text="${attr}" class="inter-medium-wedgewood-16px"
 										style="margin-left: 25px; margin-top: -21px;letter-spacing: 0.16px;"></div>
-									<span class="asset_type_count" th:if="${list.attributeName == 'Asset Type' && attr == 'Dataset'}" th:text="${list.datasetCount}"></span>
-									<span class="asset_type_count" th:if="${list.attributeName == 'Asset Type' && attr == 'Model'}" th:text="${list.modelCount}"></span>
+										
+									<span class="asset_type_count" th:if="${list.attributeName == 'Asset Type' && attr == 'Dataset'}" 
+										th:text="${list.datasetCount}"></span>
+									<span class="asset_type_count" th:if="${list.attributeName == 'Asset Type' && attr == 'Model'}"
+										 th:text="${list.modelCount}"></span>
+									<span class="asset_type_count" th:if="${list.attributeName == 'Is Reference Dataset' && attr == 'Yes'}" 
+										th:text="${list.referenceDatasetCount}"></span>
+									<span class="asset_type_count" th:if="${list.attributeName == 'Is Reference Dataset' && attr == 'No'}"
+										 th:text="${list.nonReferenceDatasetCount}"></span>
+									<span class="asset_type_count" th:if="${list.attributeName == 'Is Model Deployed' && attr == 'Yes'}" 
+										th:text="${list.modelDeployedCount}"></span>
+									<span class="asset_type_count" th:if="${list.attributeName == 'Is Model Deployed' && attr == 'No'}"
+										 th:text="${list.modelNotDeployedCount}"></span>
+									 
 									<img alt="line Icon" src="/images/line.png">
 								</label>
 								

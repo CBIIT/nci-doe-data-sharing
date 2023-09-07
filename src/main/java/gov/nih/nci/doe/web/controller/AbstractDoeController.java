@@ -1124,6 +1124,10 @@ public abstract class AbstractDoeController {
 		Set<String> list = new HashSet<>();
 		AtomicInteger datasetCount = new AtomicInteger(0);
 		AtomicInteger modelCount = new AtomicInteger(0);
+		AtomicInteger referenceDatasetCount = new AtomicInteger(0);
+		AtomicInteger nonReferenceDatasetCount = new AtomicInteger(0);
+		AtomicInteger modelDeployedCount = new AtomicInteger(0);
+		AtomicInteger modelNotDeployedCount = new AtomicInteger(0);
 		String authToken = (String) session.getAttribute("hpcUserToken");
 		log.info("authToken: " + authToken);
 
@@ -1173,6 +1177,31 @@ public abstract class AbstractDoeController {
 										modelCount.incrementAndGet();
 									}
 								}
+
+								// This is filter the assets of metadata is_reference_dataset and get the count
+								// for
+								// each of them
+								if (attributeName.equalsIgnoreCase("is_reference_dataset")) {
+									if (f.getAttribute().equalsIgnoreCase("is_reference_dataset")
+											&& f.getValue().equalsIgnoreCase("Yes")) {
+										referenceDatasetCount.incrementAndGet();
+									} else if (f.getAttribute().equalsIgnoreCase("is_reference_dataset")
+											&& f.getValue().equalsIgnoreCase("No")) {
+										nonReferenceDatasetCount.incrementAndGet();
+									}
+								}
+
+								// This is filter the assets of metadata is_model_deployed and get the count for
+								// each of them
+								if (attributeName.equalsIgnoreCase("is_model_deployed")) {
+									if (f.getAttribute().equalsIgnoreCase("is_model_deployed")
+											&& f.getValue().equalsIgnoreCase("Yes")) {
+										modelDeployedCount.incrementAndGet();
+									} else if (f.getAttribute().equalsIgnoreCase("is_model_deployed")
+											&& f.getValue().equalsIgnoreCase("No")) {
+										modelNotDeployedCount.incrementAndGet();
+									}
+								}
 							});
 				}
 
@@ -1189,6 +1218,10 @@ public abstract class AbstractDoeController {
 		searchList.setAttrValues(sortedList);
 		searchList.setDatasetCount(datasetCount.get());
 		searchList.setModelCount(modelCount.get());
+		searchList.setReferenceDatasetCount(referenceDatasetCount.get());
+		searchList.setNonReferenceDatasetCount(nonReferenceDatasetCount.get());
+		searchList.setModelDeployedCount(modelDeployedCount.get());
+		searchList.setModelNotDeployedCount(modelNotDeployedCount.get());
 		searchList.setAttributeName(StringUtils.isNotEmpty(displayName) ? displayName : attributeName);
 		return searchList;
 	}

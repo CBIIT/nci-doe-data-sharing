@@ -65,7 +65,7 @@ $(document).ready(function() {
 				})
 			}
 		}
-		populateSearchCriteria(null);
+		populateSearchCriteria();
 	} else if ($("#keyWord").val()) {
 		if (screen.width > 990) {
 			$("#attributeVal").val($("#keyWord").val());
@@ -75,9 +75,9 @@ $(document).ready(function() {
 			$("#resetBtnMobile").show();
 		}
 
-		populateSearchCriteria(null);
+		populateSearchCriteria();
 	} else if (screen.width > 990) {
-		populateSearchCriteria(null);
+		populateSearchCriteria();
 
 	}
 	showFirstFewFields();
@@ -87,7 +87,7 @@ $(document).ready(function() {
 		if (keycode == '13') {
 			if ($("#searchBtn").is(':visible')) {
 				event.preventDefault();
-				populateSearchCriteria('displayAllResults');
+				populateSearchCriteria();
 			} else if ($("#searchMobileBtn").is(':visible')) {
 				$("#searchMobileBtn").click();
 			}

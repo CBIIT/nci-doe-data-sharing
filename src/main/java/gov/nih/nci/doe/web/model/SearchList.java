@@ -5,14 +5,13 @@ import java.util.List;
 public class SearchList {
 
 	private String attributeName;
-
-	private Integer attrCount;
-
 	private List<String> attrValues;
-
 	private Integer datasetCount;
-
 	private Integer modelCount;
+	private Integer referenceDatasetCount;
+	private Integer nonReferenceDatasetCount;
+	private Integer modelDeployedCount;
+	private Integer modelNotDeployedCount;
 
 	public Integer getDatasetCount() {
 		return datasetCount;
@@ -46,12 +45,36 @@ public class SearchList {
 		this.attrValues = attrValues;
 	}
 
-	public Integer getAttrCount() {
-		return attrCount;
+	public Integer getReferenceDatasetCount() {
+		return referenceDatasetCount;
 	}
 
-	public void setAttrCount(Integer attrCount) {
-		this.attrCount = attrCount;
+	public void setReferenceDatasetCount(Integer referenceDatasetCount) {
+		this.referenceDatasetCount = referenceDatasetCount;
+	}
+
+	public Integer getNonReferenceDatasetCount() {
+		return nonReferenceDatasetCount;
+	}
+
+	public void setNonReferenceDatasetCount(Integer nonReferenceDatasetCount) {
+		this.nonReferenceDatasetCount = nonReferenceDatasetCount;
+	}
+
+	public Integer getModelDeployedCount() {
+		return modelDeployedCount;
+	}
+
+	public void setModelDeployedCount(Integer modelDeployedCount) {
+		this.modelDeployedCount = modelDeployedCount;
+	}
+
+	public Integer getModelNotDeployedCount() {
+		return modelNotDeployedCount;
+	}
+
+	public void setModelNotDeployedCount(Integer modelNotDeployedCount) {
+		this.modelNotDeployedCount = modelNotDeployedCount;
 	}
 
 }

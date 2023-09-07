@@ -85,20 +85,20 @@ $(document)
 
 					$("#searchBtn").click(function(e) {
 						e.preventDefault();
-						populateSearchCriteria('simpleSearch');
+						populateSearchCriteria();
 					});
 					$("#searchMobileBtn").click(function(e) {
 						e.preventDefault();
 						$("#mobileKeyworkSearchDiv").hide();
 						$("#filterSectionDiv").hide();
-						populateSearchCriteria('simpleSearch');
+						populateSearchCriteria();
 					});
 					
 					$("#searchFiltersMobilebtn").click(function(e) {
 						e.preventDefault();
 						$("#mobileKeyworkSearchDiv").hide();
 						$("#filterSectionDiv").hide();
-						populateSearchCriteria('simpleSearch');
+						populateSearchCriteria();
 					});
 					
 
@@ -416,7 +416,7 @@ $(document)
 					$("#resetBtn").click(function(e) {
 						$("#attributeVal").val("");
 						$("#resetBtn").hide();
-						populateSearchCriteria('simpleSearch');
+						populateSearchCriteria();
 					});
 					
 					$("#resetBtnMobile").click(function(e) {
@@ -821,7 +821,7 @@ $(document).on('click', '#clearFilters', function() {
 		$(this).find('span').css('color', '#212529');
 	});
 	showFirstFewFields();
-	populateSearchCriteria('simpleSearch');
+	populateSearchCriteria();
 });
 
 $(document).on('click', '#cancelFiltersMobile', function() {
@@ -848,7 +848,7 @@ $(document).on('change', '.filteritem', function() {
 	}
 	var attrName = $(this).parent().parent().attr('id');
 
-	populateSearchCriteria('simpleSearch');
+	populateSearchCriteria();
 	
 	// based on child selection, search at parent level and check the
 	// parent checkbox
@@ -929,11 +929,7 @@ function filterNext($this, attributeTypeName) {
 				if (list.indexOf(val) != -1) {
 					$(this).show();
 					$(this).find('.showMorefields').show();
-					if(val == 'Dataset') {
-						$(this).find(".asset_type_count").text(filterlist.datasetCount);
-					} else if (val == 'Model') {
-						$(this).find(".asset_type_count").text(filterlist.modelCount);
-					}
+					resetSearchFilterCount(val, $(this),filterlist);
 				} else {
 					$(this).hide();
 					$(this).find('.filteritem').prop("checked", false);
@@ -1018,11 +1014,8 @@ function filterPrev($this, attributeTypeName) {
 				if (list.indexOf(val) != -1) {
 					$(this).show();
 					$(this).find('.showMorefields').show();
-					if(val == 'Dataset') {
-						$(this).find(".asset_type_count").text(filterlist.datasetCount);
-					} else if (val == 'Model') {
-						$(this).find(".asset_type_count").text(filterlist.modelCount);
-					}
+					resetSearchFilterCount(val, $(this),filterlist);
+					
 				} else {
 					$(this).hide();
 					$(this).find('.filteritem').prop("checked", false);
@@ -1047,6 +1040,25 @@ function filterPrev($this, attributeTypeName) {
 		}
 	});
 }
+
+function resetSearchFilterCount(val, $this, filterlist) {
+
+		var attrName = $this.attr('id');
+		if(val == 'Dataset') {
+			$this.find(".asset_type_count").text(filterlist.datasetCount);
+		} else if (val == 'Model') {
+			$this.find(".asset_type_count").text(filterlist.modelCount);
+		} else if(attrName == 'Is Reference Dataset' && val == 'Yes') {
+			$this.find(".asset_type_count").text(filterlist.referenceDatasetCount);
+		} else if(attrName == 'Is Reference Dataset' && val == 'No') {
+			$this.find(".asset_type_count").text(filterlist.nonReferenceDatasetCount);
+		} else if(attrName == 'Is Model Deployed' && val == 'Yes') {
+			$this.find(".asset_type_count").text(filterlist.modelDeployedCount);
+		} else if(attrName == 'Is Model Deployed' && val == 'No') {
+			$this.find(".asset_type_count").text(filterlist.modelNotDeployedCount);
+		}
+}
+
 
 function showFirstFewFields($this, oper) {
 	if ($this) {
