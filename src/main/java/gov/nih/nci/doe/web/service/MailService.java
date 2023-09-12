@@ -20,6 +20,6 @@ public interface MailService {
 
 	public void sendContactUsEmail(ContactUs contactUs);
 
-	public void sendNotificationEmail(String webServerName, String loggedOnUser) throws DoeWebException;
+	public String sendNotificationEmail(String webServerName, String loggedOnUser) throws DoeWebException;
 
 }

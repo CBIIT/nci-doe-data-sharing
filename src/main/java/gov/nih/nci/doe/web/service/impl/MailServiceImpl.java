@@ -21,8 +21,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import java.io.UnsupportedEncodingException;
-import java.awt.*;
-import java.net.URI;
 import java.net.URLEncoder;
 
 import gov.nih.nci.doe.web.service.MailService;
@@ -251,7 +249,7 @@ public class MailServiceImpl implements MailService {
 	}
 
 	@Override
-	public void sendNotificationEmail(String webServerName, String loggedOnUser) throws DoeWebException {
+	public String sendNotificationEmail(String webServerName, String loggedOnUser) throws DoeWebException {
 		log.info("Sending notification email");
 		try {
 
@@ -290,12 +288,8 @@ public class MailServiceImpl implements MailService {
 				mailtoUrl.append("&x-apple-msg-load=1");
 
 			}
-			Desktop desktop = Desktop.getDesktop();
-			if (desktop.isSupported(Desktop.Action.MAIL)) {
-
-				URI mailto = new URI(mailtoUrl.toString());
-				desktop.mail(mailto);
-			}
+			
+			return mailtoUrl.toString();
 
 		} catch (Exception e) {
 			throw new DoeWebException("Error in drafting notification email: " + e.getMessage());

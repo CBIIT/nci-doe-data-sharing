@@ -40,6 +40,14 @@ $(document).ready(function () {
 		
 	
  	});
+ 	
+ 	// open default mail when calling emailNotifications API
+ 	var mailUrl = $("#mailUrl").val();
+ 	if(mailUrl) {
+        // Open the user's default email client
+        window.location.href = mailUrl;
+ 	}
+ 	
 });
 
 function postSuccessEmailUpdatesFunction(data, status) {
