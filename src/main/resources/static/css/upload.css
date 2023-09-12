@@ -91,15 +91,7 @@ table#newMetaDataTable thead tr th {
 	color: #000;
 	/* flex: 1; */
 }
-#btnRegister {
-	background-color: #245D93 !important;
-	font-size: 15px;
-	border-radius: 12px;
-	height: 38px;
-	width: 154px;
-	font-family: 'latoregular';
-	margin-left: 83px;
-}
+
 #driveUploadAuthlink,#cloudUploadAuthlink {
 	background-color: #E66F05 !important;
 	color: #fff !important;
