@@ -602,7 +602,7 @@ function renderDataSetName(data, type, row) {
 		   		+ "<div class='overlap-group2-1'>"
 		     	+ " <div class='frame-14'>"
 		     	+ " <div class='atom-modeling-pipeli poppins-medium-congress-blue-25px'>"
-		        + " <span class='poppins-medium-congress-blue-25px'>" + row.dataSetName + "</span>"
+		        + " <a class='poppins-medium-congress-blue-25px dataSetFragment' dme_data_id = '" + row.dmeDataId + "'>" + row.dataSetName + "</span>"
 		        + "&nbsp;&nbsp;"
 		         + editDataSetHtml
 		         + "<button type='button' class='share-link-copy-button' data-toggle='tooltip' data-placement='bottom' "
