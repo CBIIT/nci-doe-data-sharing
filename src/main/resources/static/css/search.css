@@ -412,7 +412,7 @@ input.filteritem:checked {
 	margin-right: 1rem; 
 	margin-top: -14px; 
 	overflow: auto; 
-	height: 650px; 
+	height: 950px; 
 	overflow-x: hidden;
 }
 #filterSectionSubDiv {
