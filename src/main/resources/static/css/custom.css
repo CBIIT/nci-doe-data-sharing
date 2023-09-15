@@ -1111,24 +1111,25 @@ h3.table-title {
 }
 
 #return-to-top {
-	position: fixed;
-	bottom: 20px;
-	right: 20px;
-	background: #00467f;
-	width: 50px;
-	height: 50px;
-	display: block;
-	text-decoration: none;
-	-webkit-border-radius: 35px;
-	-moz-border-radius: 35px;
-	border-radius: 35px;
-	display: none;
-	-webkit-transition: all 0.3s linear;
-	-moz-transition: all 0.3s ease;
-	-ms-transition: all 0.3s ease;
-	-o-transition: all 0.3s ease;
-	transition: all 0.3s ease;
-	z-index: 1010;
+background: #007bbd;
+    border-top-left-radius: 100%;
+    color: #fff;
+    display: block;
+    font-size: .76rem;
+    font-weight: 600;
+    height: 75px;
+    line-height: 1.2;
+    padding: 35px 6px 0 16px;
+    text-align: center;
+    text-decoration: none;
+    width: 75px;
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    z-index: 1100;
+	text-align: center;
+    font-family:  var(--font-family-open_sans);
+	text-transform: uppercase;
 }
 
 #return-to-top i {

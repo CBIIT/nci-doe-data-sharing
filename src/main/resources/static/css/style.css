@@ -489,3 +489,7 @@
   font-weight: 500;
   font-style: normal;
 }
+
+html {
+  font-size: 14px;
+}

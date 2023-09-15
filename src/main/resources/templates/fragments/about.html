@@ -1,24 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<meta charset="UTF-8">
-<title>Title</title>
+	<meta charset="UTF-8">
+	<title>Title</title>
 </head>
+
 <body>
-	<div class="tab-pane fade show active M-4" th:fragment="about"
-		id="aboutTab" role="tabpanel">
-		
-		<div class="aboutcontainer">
-            <div class="h4-inter-light-size">
-                <div class="frame-32">
-                    <h1 class="h4-inter-light-siz valign-text-middle">About Predictive Oncology Model &amp;
-                     Data Clearinghouse</h1>
-                </div>
-            </div>
-        </div>
-        
-		
-		<div class="col-md-12" id="aboutMoDaCDescp">
+	<div class="tab-pane fade show active M-4" th:fragment="about" id="aboutTab" role="tabpanel">
+
+		<div class="row justify-content-center align-items-center aboutcontainerHero">
+			<div class="aboutcontainerHeroText">About Predictive Oncology Model &amp;
+				Data Clearinghouse</div>
+		</div>
+
+
+
+		<div class="aboutBody">
 
 			<p class="inter-normal-midnight-blue-16px">
 				The Predictive Oncology Model and Data Clearinghouse (MoDaC) is a
@@ -27,8 +25,7 @@
 				of predictive oncology datasets and mathematical models (such as
 				machine learning and deep learning models) developed within NCI and
 				in collaborative programs, including the NCI-DOE collaboration
-				projects and the <a target="_blank"
-					href="https://datascience.cancer.gov/collaborations/atom">
+				projects and the <a target="_blank" href="https://datascience.cancer.gov/collaborations/atom">
 					Accelerating Therapeutics for Opportunities in Medicine (ATOM)
 					Consortium</a>. Annotated datasets and models stored in the repository
 				are publicly available and can be searched against their metadata
@@ -36,7 +33,7 @@
 			</p>
 
 			<p class="inter-normal-midnight-blue-16px">
-			An account is not needed to perform searches of the repository
+				An account is not needed to perform searches of the repository
 				and view the metadata associated with a collection. Users who create
 				an account can download data. Downloads can be performed
 				asynchronously to a Globus endpoint or to an AWS S3 bucket, or
@@ -44,18 +41,18 @@
 				of their asynchronous downloads at any point during the transfer.</p>
 
 			<p class="inter-normal-midnight-blue-16px">
-			MoDaC allows users to associate a Document Object Identifier
+				MoDaC allows users to associate a Document Object Identifier
 				with a stored asset and provides a shareable link for citations.</p>
 
 			<p class="inter-normal-midnight-blue-16px">
 				MoDaC provides support for evaluating MoDaC models deployed to the
 				NCI on-premises environment. Users can evaluate these models through
 				the MoDaC web interface or programmatically using the MoDaC REST API
-				suite. For more information on this capability, <a
-					th:href="@{/contactUs}">contact us</a>.
+				suite. For more information on this capability, <a th:href="@{/contactUs}">contact us</a>.
 			</p>
 
 		</div>
 	</div>
 </body>
+
 </html>

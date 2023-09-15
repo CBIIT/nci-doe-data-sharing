@@ -1,10 +1,26 @@
 @import url("https://fonts.googleapis.com/css?family=Inter:300,700,400,500|Poppins:500,600|Open+Sans:700");
 
-.component-2 {
-  align-items: flex-start;
-  background-image: url(/images/contact_modac_background.svg);
-  padding: 45px 438px;
+
+.aboutcontainerHero {
+  height: 148px;
+  flex-shrink: 0;
+  /* background-image: url(/images/contact_modac_background.svg); */
+  background: linear-gradient(90deg, #83530B 5.56%, rgba(255, 204, 126, 0.00) 90.42%), #B66D29;
+  background-blend-mode: luminosity, normal;
   background-size: cover;
+}
+
+.aboutcontainerHeroText {
+  color: #FFF;
+  text-align: center;
+  font-family: Inter;
+  font-size: 2rem;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 106.523%;
+  letter-spacing: -0.7px;
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
 .h4-inter-light-size {

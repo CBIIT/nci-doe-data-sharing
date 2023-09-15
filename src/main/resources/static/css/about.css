@@ -1,59 +1,41 @@
-.aboutcontainer {
-  align-items: flex-start;
-  background-image: url(/images/about_background.svg);
-  background-size: cover;
-  display: flex;
-  min-width: 1440px;
-  padding: 45px 438px;
+.aboutcontainerHero {
   height: 148px;
-}
-.valign-text-middle {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-.h4-inter-light-size {
-    align-items: flex-start;
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    position: relative;
-    width: 564px;
+  flex-shrink: 0;
+  background-image: url(/images/about_background.svg);
+  background-blend-mode: luminosity, normal;
+  background-size: cover;
 }
 
-.h4-inter-light-siz {
-    color: var(--white);
-    font-family: var(--font-family-inter);
-    font-size: 35px;
-    font-weight: 300;
-    letter-spacing: -0.7px;
-    line-height: 37.3px;
-    margin-top: -1px;
-    position: relative;
-    text-align: center;
-    white-space: nowrap;
-    width: fit-content;
+.aboutcontainerHeroText {
+  color: #FFF;
+  text-align: center;
+  font-family: Inter;
+  font-size: 2rem;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 106.523%;
+  letter-spacing: -0.7px;
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
-
-#aboutMoDaCDescp {
+.aboutBody {
   color: transparent;
   font-family: var(--font-family-inter);
   font-size: var(--font-size-m);
   font-weight: 400;
   letter-spacing: 0;
   line-height: 24px;
-  margin-top: 4rem;
-  padding-bottom: 4rem;
-  padding-left: 13rem;
-  padding-right: 13rem;
+  padding: 4rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 
-#aboutMoDaCDescp a{
+.aboutBody a {
   color: var(--green-blue);
   font-family: var(--font-family-inter);
   font-size: var(--font-size-m);
   font-weight: 500;
-  font-style: normal; 
+  font-style: normal;
 }
