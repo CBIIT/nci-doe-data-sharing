@@ -1,80 +1,88 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<meta charset="UTF-8">
-<title>Title</title>
+	<meta charset="UTF-8">
+	<title>Title</title>
 </head>
 
 <body>
 	<div id="dataSetFragment" th:fragment="dataSetFragment">
 		<div class="form-row pt-2 pb-2 mb-2" id="assetDetailsFragment">
 
-			<input type="hidden" th:value="${assetPath}" id="assetPath" /> <input
-				type="hidden" th:value="${accessGrp}" id="assetAccessGrp" /> <input
-				type="hidden" th:value="${assetPermission}" id="assetPermission" />
-			<input type="hidden" th:value="${asset_Identifier}"
-				id="assetIdentifier" /> <input type="hidden"
-				th:value="${isExternalDataSetSupported}"
-				id="isExternalDataSetSupported" /> <input type="hidden"
-				th:value="${resultFileName}" id="resultFileName" /> <input
-				type="hidden" th:value="${applicableModelName}"
-				id="applicableModelName" />
+			<input type="hidden" th:value="${assetPath}" id="assetPath" /> <input type="hidden" th:value="${accessGrp}"
+				id="assetAccessGrp" /> <input type="hidden" th:value="${assetPermission}" id="assetPermission" />
+			<input type="hidden" th:value="${asset_Identifier}" id="assetIdentifier" /> <input type="hidden"
+				th:value="${isExternalDataSetSupported}" id="isExternalDataSetSupported" /> <input type="hidden"
+				th:value="${resultFileName}" id="resultFileName" /> <input type="hidden"
+				th:value="${applicableModelName}" id="applicableModelName" />
 
 			<div class="col-lg-12 col-md-12 col-sm-12 assetDetailsHeader">
-			
-			<div class="controls controls-row mt-4" style="display: inline-flex">
-				<div th:if="${returnToSearch eq true}" id="backtoSearch" class="backToSearch_AssetDetailsDiv">
-    				<img src="/images/back_to_search_arrrow.png" alt="back to search" data-original-title="Back to Search Results"></div>
-                    <span th:if="${returnToSearch eq true}" class="backToSearch_assetDetails">BACK TO <br/> SEARCH RESULTS</span>
-				<div class="group-103">
-                  <h1 class="asset-detail_header">Asset Detail:</h1>
-                    <div class="assetName inter-medium-white-32px" th:text="${assetName}"></div>
-                </div>
-			 </div>
+
+				<div class="controls controls-row mt-4 d-flex w-100">
+					<div class="d-flex col-lg-4 col-md-4 col-sm-12">
+						<div th:if="${returnToSearch eq true}" id="backtoSearch" class="backToSearch_AssetDetailsDiv">
+							<img src="/images/back_to_search_arrrow.png" alt="back to search"
+								data-original-title="Back to Search Results">
+						</div>
+						<span th:if="${returnToSearch eq true}" class="backToSearch_assetDetails">BACK TO <br /> SEARCH
+							RESULTS</span>
+					</div>
+					<div class="group-103 col-lg-8 col-md-8 col-sm-8">
+						<h1 class="asset-detail_header">Asset Detail:</h1>
+						<div class="assetName inter-medium-white-32px" th:text="${assetName}"></div>
+					</div>
+				</div>
+
 			</div>
-			
-			<div th:replace="fragments/dataSetFragment_mobile :: dataSetFragment_mobile"></div>
 
-			<div class="form-row col-lg-12 col-md-12 col-sm-12 poppins-semi-bold-blue-bayoux-23px"
-				id="assetDetailsSubSection">
-				<div class="overview-container">
-                   <div class="overview">Overview</div>            
-                 </div>
+			<div class="h-100 d-flex justify-content-center align-items-center test">
+				<h1 class="asset-detail_header">Asset Detail:</h1>
+				<div class="assetName inter-medium-white-32px" th:text="${assetName}"></div>
+			</div>
 
-					<table id="assetDetailsDiv"
-						class="table display dt-responsive wrap">
+
+			<div class="maxWidth1200">
+				<div th:replace="fragments/dataSetFragment_mobile :: dataSetFragment_mobile"></div>
+
+				<div class="form-row col-lg-12 col-md-12 col-sm-12 poppins-semi-bold-blue-bayoux-23px"
+					id="assetDetailsSubSection">
+					<div class="overview-container">
+						<div class="overview">Overview</div>
+					</div>
+
+					<table id="assetDetailsDiv" class="table display dt-responsive wrap">
 						<tbody>
-						  <tr>
+							<tr>
 								<td class="opensans-bold-midnight-blue-13px">ASSET LINK:</td>
-								<td class="inter-semi-bold-green-blue-16px"><span
-									th:text="${assetLink}" id="assetUrlLink"></span>
-									<button type="button" class="share-assetLink-copy-button"
-										data-toggle="tooltip" data-placement="bottom"
-										th:data-clipboard-text="${assetLink}"
+								<td class="inter-semi-bold-green-blue-16px"><span th:text="${assetLink}"
+										id="assetUrlLink"></span>
+									<button type="button" class="share-assetLink-copy-button" data-toggle="tooltip"
+										data-placement="bottom" th:data-clipboard-text="${assetLink}"
 										data-original-title="Copy asset link">
-										<img src="images/copy_to_clipboard.svg" width="20"
-											alt="Copy to clipboard">
-									</button></td>
-									
+										<img src="images/copy_to_clipboard.svg" width="20" alt="Copy to clipboard">
+									</button>
+								</td>
+
 							</tr>
 							<tr>
 								<td class="opensans-bold-midnight-blue-13px">PROGRAM NAME:</td>
 								<td class="inter-normal-deep-sapphire-16px" id="selectedProgramName"
 									th:text="${progName}"></td>
 							</tr>
-							
+
 							<tr>
 								<td class="opensans-bold-midnight-blue-13px">STUDY NAME:</td>
 								<td class="inter-normal-deep-sapphire-16px" id="selectedStudyName"
 									th:text="${studyName}"></td>
 							</tr>
-							
+
 							<tr>
 								<td class="opensans-bold-midnight-blue-13px">ASSET NAME:</td>
 								<td class="inter-normal-deep-sapphire-16px" id="selectedDataSetName"
 									th:text="${assetName}"></td>
 							</tr>
-							
+
 							<tr>
 								<td class="opensans-bold-midnight-blue-13px">ASSET PATH:</td>
 								<td class="inter-normal-deep-sapphire-16px" id="selectedAssetPath"
@@ -82,178 +90,165 @@
 							</tr>
 						</tbody>
 					</table>
-			
-			</div>
 
-			<div
-				class="form-row col-lg-12 col-md-12 col-sm-12 poppins-semi-bold-blue-bayoux-23px asset_attributes_subsection">
-				<div class="asset-attributes-container">
-              		<div class="asset-attributes asset">Asset Attributes</div>
-            	</div>
-
-				<table id="dataSetMetaData" class="table display dt-responsive wrap">
-					<thead class="opensans-normal-white-15px">
-						<tr>
-							<th aria-sort="none" class="sortable" data-sort="text"
-								role="columnheader" scope="col" style="width: 26%;">&nbsp;&nbsp;ATTRIBUTE</th>
-							<th aria-sort="none" class="sortable" data-sort="text"
-								role="columnheader" scope="col">VALUE</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="metadata : ${assetMetadata}">
-							<td class="opensans-bold-midnight-blue-13px"
-								th:text="${#strings.toUpperCase(metadata.displayName)}"></td>
-							<td class="inter-normal-deep-sapphire-16px"
-								th:if="${#strings.startsWith(metadata.value, 'https') OR #strings.startsWith(metadata.value, 'http')}">
-								<a target="_blank" th:href="${metadata.value}"><span
-									th:text="${metadata.value}"></span></a>
-							</td>
-							<td class="inter-normal-deep-sapphire-16px"
-								th:unless="${#strings.startsWith(metadata.value, 'https') OR #strings.startsWith(metadata.value, 'http')}"
-								th:text="${metadata.value}"></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-
- 			
-			<div th:if="${showGeneratePredTab eq true}"
-				class="form-row col-lg-12 col-md-12 col-sm-12" id="assetHeaderWithPredictions">
-				<div class="form-group col-lg-3 col-md-3 col-sm-3"
-					id="assetFilesTab">
-					<p>Asset
-						Files</p>
 				</div>
 
-				<div class="form-group col-lg-3 col-md-3 col-sm-3"
-					id="generatePredictionsTab">
-					<p>Predictions</p>
-				</div>
-				<div class="form-group col-lg-2 col-md-2 col-sm-2"></div>
+				<div
+					class="form-row col-lg-12 col-md-12 col-sm-12 poppins-semi-bold-blue-bayoux-23px asset_attributes_subsection">
+					<div class="asset-attributes-container">
+						<div class="asset-attributes asset">Asset Attributes</div>
+					</div>
 
-				<div class="form-group col-lg-3 col-md-3 col-sm-3"
-					style="float: right;"
-					th:if="${loggedOnUser != null and assetType == 'Dataset' and isReferenceDataset == 'Yes'}">
+					<table id="dataSetMetaData" class="table display dt-responsive wrap">
+						<thead class="opensans-normal-white-15px">
+							<tr>
+								<th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col"
+									style="width: 26%;">&nbsp;&nbsp;ATTRIBUTE</th>
+								<th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col">
+									VALUE</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="metadata : ${assetMetadata}">
+								<td class="opensans-bold-midnight-blue-13px"
+									th:text="${#strings.toUpperCase(metadata.displayName)}"></td>
+								<td class="inter-normal-deep-sapphire-16px"
+									th:if="${#strings.startsWith(metadata.value, 'https') OR #strings.startsWith(metadata.value, 'http')}">
+									<a target="_blank" th:href="${metadata.value}"><span
+											th:text="${metadata.value}"></span></a>
+								</td>
+								<td class="inter-normal-deep-sapphire-16px"
+									th:unless="${#strings.startsWith(metadata.value, 'https') OR #strings.startsWith(metadata.value, 'http')}"
+									th:text="${metadata.value}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+
+				<div th:if="${showGeneratePredTab eq true}" class="form-row col-lg-12 col-md-12 col-sm-12"
+					id="assetHeaderWithPredictions">
+					<div class="form-group col-lg-3 col-md-3 col-sm-3" id="assetFilesTab">
+						<p>Asset
+							Files</p>
+					</div>
+
+					<div class="form-group col-lg-3 col-md-3 col-sm-3" id="generatePredictionsTab">
+						<p>Predictions</p>
+					</div>
+					<div class="form-group col-lg-2 col-md-2 col-sm-2"></div>
+
+					<div class="form-group col-lg-3 col-md-3 col-sm-3" style="float: right;"
+						th:if="${loggedOnUser != null and assetType == 'Dataset' and isReferenceDataset == 'Yes'}">
+						<button id="performModelAnalysis" type="button"
+							class="btn btn-primary float-right mb-2 mr-2">PERFORM <br />
+							MODEL ANALYSIS</button>
+					</div>
+
+
+					<div class="form-group col-lg-3 col-md-3 col-sm-3" style="float: right;"
+						th:if="${loggedOnUser != null and assetType == 'Model' and showGeneratePredictions eq true}">
+						<button id="openInferModal" type="button" class="btn btn-primary float-right mb-2 mr-2">GENERATE
+							PREDICTIONS</button>
+					</div>
+				</div>
+				<div th:if="${showGeneratePredTab ne true}"
+					class="assetFilesConditional poppins-semi-bold-blue-bayoux-23px">
+					<p class="assetFilesheader">Asset Files</p>
+				</div>
+
+				<div th:if="${showGeneratePredTab ne true and isReferenceDataset == 'Yes' and loggedOnUser != null and assetType == 'Dataset'}"
+					class="form-group col-lg-12 col-md-12 col-sm-12" style="float: right; margin-left: -4rem;">
 					<button id="performModelAnalysis" type="button"
-						class="btn btn-primary float-right mb-2 mr-2">PERFORM <br/>
+						class="btn btn-primary float-right mb-2 mr-2">PERFORM
 						MODEL ANALYSIS</button>
 				</div>
 
-
-				<div class="form-group col-lg-3 col-md-3 col-sm-3"
-					style="float: right;"
-					th:if="${loggedOnUser != null and assetType == 'Model' and showGeneratePredictions eq true}">
-					<button id="openInferModal" type="button"
-						class="btn btn-primary float-right mb-2 mr-2">GENERATE
+				<div th:if="${showGeneratePredTab ne true and loggedOnUser != null and assetType == 'Model' and showGeneratePredictions eq true}"
+					class="form-group col-lg-12 col-md-12 col-sm-12" style="float: right; margin-left: -4rem;">
+					<button id="openInferModal" type="button" class="btn btn-primary float-right mb-2 mr-2">GENERATE
 						PREDICTIONS</button>
 				</div>
-			</div>
-			<div th:if="${showGeneratePredTab ne true}"
-				class="assetFilesConditional poppins-semi-bold-blue-bayoux-23px">
-				<p class="assetFilesheader">Asset Files</p>
-			</div>
 
-			<div
-				th:if="${showGeneratePredTab ne true and isReferenceDataset == 'Yes' and loggedOnUser != null and assetType == 'Dataset'}"
-				class="form-group col-lg-12 col-md-12 col-sm-12"
-				style="float: right; margin-left: -4rem;">
-				<button id="performModelAnalysis" type="button"
-					class="btn btn-primary float-right mb-2 mr-2">PERFORM
-					MODEL ANALYSIS</button>
-			</div>
+				<div class="col-lg-12 col-md-12 col-sm-12 assetFilesmobileMsg" style="display: none;">To access asset
+					files, log in to MoDaC
+					from a desktop device.</div>
+				<div class="col-lg-12 col-md-12 col-sm-12 assetFilesDiv">
+					<div class="col-lg-12 col-md-12 col-sm-12 float-right assetFilesBtns">
+						<div class="controls controls-row mt-4">
+							<p th:if="${loggedOnUser == null}" class="infoDownload inter-normal-midnight-blue-16px">
+								To download files, please <a th:href="@{/loginTab}">login.</a>
+							</p>
 
-			<div
-				th:if="${showGeneratePredTab ne true and loggedOnUser != null and assetType == 'Model' and showGeneratePredictions eq true}"
-				class="form-group col-lg-12 col-md-12 col-sm-12"
-				style="float: right; margin-left: -4rem;">
-				<button id="openInferModal" type="button"
-					class="btn btn-primary float-right mb-2 mr-2">GENERATE
-					PREDICTIONS</button>
-			</div>
-
-			<div class="col-lg-12 col-md-12 col-sm-12 assetFilesmobileMsg"
-				style="display: none;">To access asset files, log in to MoDaC
-				from a desktop device.</div>
-			<div class="col-lg-12 col-md-12 col-sm-12 assetFilesDiv">
-				<div class="col-lg-12 col-md-12 col-sm-12 float-right assetFilesBtns">
-					<div class="controls controls-row mt-4">
-						<p th:if="${loggedOnUser == null}" class="infoDownload inter-normal-midnight-blue-16px">
-								To download files, please <a
-								th:href="@{/loginTab}">login.</a>
-						</p>
-
-						<button id="downloadSelectedMetadata" type="button"
-							class="btn btn-primary float-right mb-2 mr-2" disabled>DOWNLOAD <br/>
-							SELECTED METADATA <img class="arrow_right_assets_files"
-							 th:src='@{/images/white_right_arrow.svg}'/></button>
-						<button id="downloadSelectedDataSet" type="button"
-							class="btn btn-primary float-right mb-2 mr-2" disabled>
-							DOWNLOAD <br />SELECTED FILES <img class="arrow_right_assets_files" 
-							th:src='@{/images/white_right_arrow.svg}'/>
-						</button>
+							<button id="downloadSelectedMetadata" type="button"
+								class="btn btn-primary float-right mb-2 mr-2" disabled>DOWNLOAD <br />
+								SELECTED METADATA <img class="arrow_right_assets_files"
+									th:src='@{/images/white_right_arrow.svg}' /></button>
+							<button id="downloadSelectedDataSet" type="button"
+								class="btn btn-primary float-right mb-2 mr-2" disabled>
+								DOWNLOAD <br />SELECTED FILES <img class="arrow_right_assets_files"
+									th:src='@{/images/white_right_arrow.svg}' />
+							</button>
+						</div>
 					</div>
+					<table id="dataSetTable" class="table display dt-responsive wrap" role="grid"
+						aria-label="data set table">
+						<thead>
+							<tr>
+								<th aria-sort="none" class="sortable" aria-label="select all checkbox"
+									role="columnheader" scope="colgroup"><label
+										style="color: var(--white);font-family: var(--font-family-open_sans);font-size: 12px;font-weight: 400;"
+										class="select-checkbox-label"> <input type="checkbox"
+											class="selectAll">&nbsp;&nbsp;Batch Select
+									</label></th>
+								<th aria-sort="none" class="sortable" data-sort="text" role="columnheader"
+									scope="colgroup" style="padding-left: 10px;">FILE/COLLECTION</th>
+								<th aria-sort="none" class="sortable" data-sort="text" role="columnheader"
+									scope="colgroup" style="padding-left: 10px;">FILE
+									SIZE</th>
+								<th aria-sort="none" class="sortable" data-sort="text" role="columnheader"
+									scope="colgroup">ACTIONS</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+
+
+					<table id="generatePredTable" class="table display dt-responsive wrap" role="grid"
+						style="display: none;" aria-label="data set table">
+						<thead>
+							<tr>
+								<th aria-sort="none" class="sortable" aria-label="select all checkbox"
+									role="columnheader" scope="colgroup"><label
+										style="color: rgba(255, 255, 255, 0.66) !important;"
+										class="select-checkbox-label"> <input type="checkbox"
+											class="selectAll">&nbsp;&nbsp;Batch Select
+									</label></th>
+								<th aria-sort="none" class="sortable" data-sort="text" role="columnheader"
+									scope="colgroup">INPUT DATASET FILENAME</th>
+								<th aria-sort="none" class="sortable" data-sort="text" role="columnheader"
+									scope="colgroup">PREDICTION FILENAME</th>
+								<th aria-sort="none" class="sortable" data-sort="text" role="columnheader"
+									scope="colgroup">OUTCOME FILENAME</th>
+								<th aria-sort="none" class="sortable" data-sort="text" role="columnheader"
+									scope="colgroup">TASK ID</th>
+								<th aria-sort="none" class="sortable" data-sort="text" role="columnheader"
+									scope="colgroup">SHARED BY</th>
+								<th aria-sort="none" class="sortable" data-sort="text" role="columnheader"
+									scope="colgroup">COMPLETED DATE</th>
+								<th aria-sort="none" class="sortable" data-sort="text" role="columnheader"
+									scope="colgroup">ACTIONS</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
 				</div>
-				<table id="dataSetTable" class="table display dt-responsive wrap"
-					role="grid" aria-label="data set table">
-					<thead>
-						<tr>
-							<th aria-sort="none" class="sortable"
-								aria-label="select all checkbox" role="columnheader"
-								scope="colgroup"><label
-								style="color: var(--white);font-family: var(--font-family-open_sans);font-size: 12px;font-weight: 400;"
-								class="select-checkbox-label"> <input type="checkbox"
-									class="selectAll">&nbsp;&nbsp;Batch Select
-							</label></th>
-							<th aria-sort="none" class="sortable" data-sort="text"
-								role="columnheader" scope="colgroup" style="padding-left: 10px;">FILE/COLLECTION</th>
-							<th aria-sort="none" class="sortable" data-sort="text"
-								role="columnheader" scope="colgroup" style="padding-left: 10px;">FILE
-								SIZE</th>
-							<th aria-sort="none" class="sortable" data-sort="text"
-								role="columnheader" scope="colgroup">ACTIONS</th>
-						</tr>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
-
-
-				<table id="generatePredTable"
-					class="table display dt-responsive wrap" role="grid"
-					style="display: none;" aria-label="data set table">
-					<thead>
-						<tr>
-							<th aria-sort="none" class="sortable"
-								aria-label="select all checkbox" role="columnheader"
-								scope="colgroup"><label
-								style="color: rgba(255, 255, 255, 0.66) !important;"
-								class="select-checkbox-label"> <input type="checkbox"
-									class="selectAll">&nbsp;&nbsp;Batch Select
-							</label></th>
-							<th aria-sort="none" class="sortable" data-sort="text"
-								role="columnheader" scope="colgroup">INPUT DATASET FILENAME</th>
-							<th aria-sort="none" class="sortable" data-sort="text"
-								role="columnheader" scope="colgroup">PREDICTION FILENAME</th>
-							<th aria-sort="none" class="sortable" data-sort="text"
-								role="columnheader" scope="colgroup">OUTCOME FILENAME</th>
-							<th aria-sort="none" class="sortable" data-sort="text"
-								role="columnheader" scope="colgroup">TASK ID</th>
-							<th aria-sort="none" class="sortable" data-sort="text"
-								role="columnheader" scope="colgroup">SHARED BY</th>
-							<th aria-sort="none" class="sortable" data-sort="text"
-								role="columnheader" scope="colgroup">COMPLETED DATE</th>
-							<th aria-sort="none" class="sortable" data-sort="text"
-								role="columnheader" scope="colgroup">ACTIONS</th>
-						</tr>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
 			</div>
 		</div>
-		<div
-			th:replace="fragments/editCollectionFragment :: editCollectionFragment"></div>
+		<div th:replace="fragments/editCollectionFragment :: editCollectionFragment"></div>
 	</div>
 </body>
+
 </html>
