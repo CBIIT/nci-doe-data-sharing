@@ -65,7 +65,6 @@
 							src="/images/Filter.Right_Arrow.Submit.svg"></span>
 					</div>
 
-
 					<div th:each="list : ${browseList}" class="filterComponentDiv">
 						<p class="attributeLabel">
 							<label class="attrName inter-bold-tuna-19px" th:text="${list.attributeName}"></label> <img
@@ -100,18 +99,34 @@
 									<div th:text="${attr}" class="inter-medium-wedgewood-16px"
 										style="margin-left: 25px; margin-top: -21px;letter-spacing: 0.16px;"></div>
 										
-									<span class="asset_type_count" th:if="${list.attributeName == 'Asset Type' && attr == 'Dataset'}" 
+									<span class="asset_type_count" id="datasetCount" th:if="${list.attributeName == 'Asset Type' && attr == 'Dataset'}" 
 										th:text="${list.datasetCount}"></span>
-									<span class="asset_type_count" th:if="${list.attributeName == 'Asset Type' && attr == 'Model'}"
+										<input type="hidden" id="intialDatasetCount" th:value="${list.datasetCount}"
+										 th:if="${list.attributeName == 'Asset Type' && attr == 'Dataset'}" />
+									<span class="asset_type_count" id="modelCount" th:if="${list.attributeName == 'Asset Type' && attr == 'Model'}"
 										 th:text="${list.modelCount}"></span>
-									<span class="asset_type_count" th:if="${list.attributeName == 'Is Reference Dataset' && attr == 'Yes'}" 
+										 <input type="hidden" id="initialModelCount" th:value="${list.modelCount}"
+										th:if="${list.attributeName == 'Asset Type' && attr == 'Model'}" />
+										 
+									<span class="asset_type_count" id="refDatasetCount" th:if="${list.attributeName == 'Is Reference Dataset' && attr == 'Yes'}" 
 										th:text="${list.referenceDatasetCount}"></span>
-									<span class="asset_type_count" th:if="${list.attributeName == 'Is Reference Dataset' && attr == 'No'}"
+										<input type="hidden" id="initialRefDatasetCount" th:value="${list.referenceDatasetCount}"
+										 th:if="${list.attributeName == 'Is Reference Dataset' && attr == 'Yes'}"/>
+										 
+									<span class="asset_type_count" id="nonrefDatasetCount" th:if="${list.attributeName == 'Is Reference Dataset' && attr == 'No'}"
 										 th:text="${list.nonReferenceDatasetCount}"></span>
-									<span class="asset_type_count" th:if="${list.attributeName == 'Is Model Deployed' && attr == 'Yes'}" 
+										 <input type="hidden" id="initialNonrefDatasetCount" th:value="${list.nonReferenceDatasetCount}"
+										 th:if="${list.attributeName == 'Is Reference Dataset' && attr == 'No'}" />
+										 
+									<span class="asset_type_count" id="modelDeployedCount" th:if="${list.attributeName == 'Is Model Deployed' && attr == 'Yes'}" 
 										th:text="${list.modelDeployedCount}"></span>
-									<span class="asset_type_count" th:if="${list.attributeName == 'Is Model Deployed' && attr == 'No'}"
+										<input type="hidden" id="initialmodelDeployedCount" th:value="${list.modelDeployedCount}"
+										 th:if="${list.attributeName == 'Is Model Deployed' && attr == 'Yes'}"/>
+										 
+									<span class="asset_type_count" id="modelNotDeployedCount" th:if="${list.attributeName == 'Is Model Deployed' && attr == 'No'}"
 										 th:text="${list.modelNotDeployedCount}"></span>
+										 <input type="hidden" id="initialModelNotDeployedCount" th:value="${list.modelNotDeployedCount}"
+										  th:if="${list.attributeName == 'Is Model Deployed' && attr == 'No'}" />
 									 
 									<img alt="line Icon" src="/images/line.png">
 								</label>

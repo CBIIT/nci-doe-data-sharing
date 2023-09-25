@@ -822,6 +822,7 @@ $(document).on('click', '#clearFilters', function() {
 	});
 	showFirstFewFields();
 	populateSearchCriteria();
+	resetSearchFilterCountsOnRefresh();
 });
 
 $(document).on('click', '#cancelFiltersMobile', function() {
@@ -1043,6 +1044,8 @@ function filterPrev($this, attributeTypeName) {
 
 function resetSearchFilterCount(val, $this, filterlist) {
 
+		// evaluating and displaying the new counts on click of any checkbox filters
+		
 		var attrName = $this.attr('id');
 		if(val == 'Dataset') {
 			$this.find(".asset_type_count").text(filterlist.datasetCount);
@@ -1057,6 +1060,20 @@ function resetSearchFilterCount(val, $this, filterlist) {
 		} else if(attrName == 'Is Model Deployed' && val == 'No') {
 			$this.find(".asset_type_count").text(filterlist.modelNotDeployedCount);
 		}
+}
+
+function resetSearchFilterCountsOnRefresh() {
+
+	//on click of clear filters icon, replacing the counts with the 
+	//initial counts stored in hidden variable
+	 
+   $("#datasetCount").text($("#intialDatasetCount").val());
+   $("#modelCount").text($("#initialModelCount").val());
+   $("#refDatasetCount").text($("#initialRefDatasetCount").val());
+   $("#nonrefDatasetCount").text($("#initialNonrefDatasetCount").val());
+   $("#modelDeployedCount").text($("#initialmodelDeployedCount").val());
+   $("#modelNotDeployedCount").text($("#initialModelNotDeployedCount").val());
+   
 }
 
 
