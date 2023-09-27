@@ -150,6 +150,7 @@ public class HomeController extends AbstractDoeController {
 	@GetMapping(value = "/loginTab")
 	public String getLoginTab(Model model, @RequestParam(value = "token", required = false) String token,
 			@RequestParam(value = "email", required = false) String email,
+			@RequestParam(value = "redirectMsg", required = false) Boolean redirectMsg,
 			@RequestParam(value = "error", required = false) String error, HttpServletRequest request)
 			throws DoeWebException {
 
@@ -159,6 +160,8 @@ public class HomeController extends AbstractDoeController {
 				if ("SUCCESS".equalsIgnoreCase(status)) {
 					model.addAttribute("successMsg", "Thank you for registering. You may now log in.");
 				}
+			} else if (redirectMsg != null) {
+				model.addAttribute("redirectMsg", true);
 			}
 
 			if (null != error) {

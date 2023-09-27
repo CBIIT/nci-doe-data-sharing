@@ -52,7 +52,13 @@ $(document).ready(function () {
 
 function postSuccessEmailUpdatesFunction(data, status) {
 	$("#signUpEmailAddress").val("");
-	return bootbox.alert(data);
+	
+	if(data && data == 'Register to MoDaC') {
+		location.replace("/loginTab?redirectMsg=true");
+	} else {
+		return bootbox.alert(data);
+	}
+	
 }
 
 function postFailureEmailUpdatesFunction(url, params, status, error, data) {
