@@ -22,11 +22,6 @@ $(document).ready(function () {
 	  }
 
 	});
-	
-	var redirectMsg = $("#redirectMsg").val();
-	if(redirectMsg) {
-	  $("#register-tab").click();
-	}
 });
  
 function validateUserLogin() {
