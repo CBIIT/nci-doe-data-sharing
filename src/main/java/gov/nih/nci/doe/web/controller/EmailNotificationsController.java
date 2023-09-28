@@ -63,7 +63,7 @@ public class EmailNotificationsController extends AbstractDoeController {
 			if (StringUtils.isNotEmpty(emailAddress) && authService.doesUsernameExist(emailAddress)) {
 				message = emailUpdatesService.saveEmailUpdateInfo(emailAddress);
 			} else {
-				message = "Register to MoDaC to receive notifications.";
+				message = "To receive notifications, <a href='/loginTab?redirectMsg=true'> create a MoDaC account</a>.";
 			}
 			return message;
 
