@@ -130,7 +130,7 @@ input[type="checkbox"].filteritem {
 }
 #expand_collapse_filters {
 	float: right;
-    margin-right: 0.5rem;
+    margin-right: 0.7rem;
     margin-top: 8px;
 }
 
@@ -305,7 +305,7 @@ div.divTableBody div.divTableContent:nth-child(odd) {
 .css-17rpx5x, .css-17rpx5xLess {
 	float: right;
 	cursor: pointer;
-	margin-top: -1.5rem;
+	margin-top: -2rem;
 }
 
 .css-17rpx5x a, .css-17rpx5xLess a {
@@ -328,8 +328,7 @@ div.divTableBody div.divTableContent:nth-child(odd) {
 }
 
 .filterComponentDiv {
-	border: 1px solid #fff; 
-	margin-bottom: -1px; 
+	margin-bottom: 0.5rem;
 	margin-left: -5px; 
 	background: #EAEBEB;
 }
@@ -344,21 +343,19 @@ div.divTableBody div.divTableContent:nth-child(odd) {
 div.dataDivCollapse{
 	padding-top: 5px; 
 	margin-top: -10px; 
-	max-height: 256px; 
+	max-height: 327px; 
 	overflow-y: auto; 
-	margin-bottom: 10px; 
+	margin-bottom: 18px; 
 	margin-left: 2.2rem;
 	overflow-x: hidden;
 }
 
 div.dataDivCollapse :not(:first-child) {
-    margin-top: -10px;
-    margin-bottom: -3px;
+    margin-top: -5px;
 }
 
 div.dataDivCollapse :first-child {
-	margin-bottom: 0px;
-	margin-top: 2px;
+	margin-top: -6px;
 }
 
 div.dataDivCollapse :last-child {
@@ -416,9 +413,15 @@ input.filteritem:checked {
 	 color: #006DD9;
 }*/
 
-#filterSectionDiv{
-	margin-left: -1rem; 
-	margin-right: 1rem; 
+#searchCriteriaDiv {
+	background: #EAEBEB;
+    margin-left: -2rem;
+    margin-right: 1rem;
+    padding-right: 0rem;
+}
+
+
+#filterSectionDiv{ 
 	margin-top: -14px; 
 	overflow: auto; 
 	height: 950px; 
@@ -450,9 +453,11 @@ input.filteritem:checked {
     height: 46px;
 }
 #clearFilters img {
-	position: absolute;
-    right: 21px;
+	position: relative;
+    right: -12px;
     top: 0.7rem;
+    width: 24px;
+    height: 22px;
 }
 
 .cil_12_no_color {
@@ -490,7 +495,7 @@ img.searchCheckBoxlist {
     width: 18px;
     height: 17px;
     float: right;
-    margin-right: 12px;
+    margin-right: 15px;
     margin-top: 0.5rem;
     position: relative;
 }
@@ -528,6 +533,7 @@ img.searchCheckBoxlist {
 label.showMorefields {
 	font-size:15px;
 	color: #4584A1;
+	border-bottom: 1px solid #D0D0D0 !important;
 }
 
 

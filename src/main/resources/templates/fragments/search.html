@@ -45,7 +45,8 @@
 				</div>
 			</div>
 			<div class="form-row" id="searchSubSectionDiv">
-				<div class="form-group col-lg-3 col-md-8" id="filterSectionDiv">
+				<div class="form-group col-lg-3 col-md-8" id="searchCriteriaDiv">
+				<div id="filterSectionDiv">
 					<div id="filterSectionSubDiv">
 						<p>Search Filter</p>
 																				
@@ -97,7 +98,7 @@
 								<label class="showMorefields"> <input type="checkbox"
 									class="filteritem" th:value="${attr}" />&nbsp;&nbsp;
 									<div th:text="${attr}" class="inter-medium-wedgewood-16px"
-										style="margin-left: 25px; margin-top: -21px;letter-spacing: 0.16px;"></div>
+										style="margin-left: 25px; margin-top: -24px;letter-spacing: 0.16px;margin-bottom: -7px;"></div>
 										
 									<span class="asset_type_count" id="datasetCount" th:if="${list.attributeName == 'Asset Type' && attr == 'Dataset'}" 
 										th:text="${list.datasetCount}"></span>
@@ -128,7 +129,7 @@
 										 <input type="hidden" id="initialModelNotDeployedCount" th:value="${list.modelNotDeployedCount}"
 										  th:if="${list.attributeName == 'Is Model Deployed' && attr == 'No'}" />
 									 
-									<img alt="line Icon" src="/images/line.png">
+								
 								</label>
 								
 							</div>
@@ -144,6 +145,7 @@
 								..</a>
 						</div>
 					</div>
+				</div>
 				</div>
 							
 				<div class="form-group col-md-9 col-sm-12 mb-4"
