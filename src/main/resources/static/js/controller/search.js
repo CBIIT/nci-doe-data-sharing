@@ -1,12 +1,15 @@
 $(document).ready(function() {
+
 	if (screen.width > 990) {
 		$("#mobileKeyworkSearchDiv").hide();
 	} else {
 		$("#filterSectionDiv").removeClass('col-lg-3 col-md-8');
 		$("#mobileKeyworkSearchDiv").show();
 	}
+	
 	$(".landing-tab").removeClass('active');
 	$(".search-tab").addClass('active');
+	
 	if ($(".backToStatusTabLink").is(':visible')) {
 		$(".search-tab").removeClass('active');
 		$("#manageTasks-tab").addClass('active');
@@ -94,6 +97,91 @@ $(document).ready(function() {
 		}
 	});
 	
+	$(document).on('click', '.dataTargetCollapse', function() {
+		if ($(this).parent().parent().find('div.dataDivCollapse').is(":visible")) {
+			$(this).parent().css('margin-bottom', '-1px');
+			$(this).parent().parent().find('div.dataDivCollapse').css('display', 'none');
+			$(this).parent().parent().find('.search_filter_div').css('display', 'none');
+			$(this).attr('src', '/images/AccordionUp.png');
+			$(this).parent().parent().find(".css-17rpx5x").hide();
+			$(this).parent().parent().find(".css-17rpx5xLess").hide();
+		} else {
+			$(this).parent().css('margin-bottom', '15px');
+			$(this).parent().parent().find('div.dataDivCollapse').css('display', 'block');
+			$(this).parent().parent().find('.search_filter_div').css('display', 'none');
+			$(this).attr('src', '/images/AccordionDown.png');
+			$(this).parent().parent().find('.css-17rpx5x').show();
+			$(this).parent().parent().find('.showMore').show();
+			showFirstFewFields($(this).parent().parent(), 'Less');
+		}
+	});
+
+	$(document).on('click', '.searchCheckBoxlist', function() {
+		if ($(this).parent().parent().find('.search_filter_div').is(":visible")) {
+			$(this).parent().parent().find('.search_filter_div').css('display', 'none');
+		} else {
+			$(this).parent().parent().find('.search_filter_div').css('display', 'flex');
+		}
+	});
+
+	$(document).on('click', '.cancel_fiter_icon', function() {
+			$(this).parent().find('.filterSearchBox').val("").trigger('keyup');
+	});
+	
+	$(document).on('keyup', '.filterSearchBox', function() {
+		var query = $(this).val().toLowerCase();
+		$(this).parent().parent().find('.filteritem').each(function(i, elem) {
+			var x = $(this).val().toLowerCase();
+			if (x.indexOf(query) != -1) {
+				$(this).parent().parent().show();
+	
+			} else {
+				$(this).parent().parent().hide();
+			}
+		});
+		
+		showFirstFewFields($(this).parent(),'searchFilter');
+	});
+	
+	$(document).on('click', '#clearFilters', function() {
+		$(".filterGroupDiv").each(function(e) {
+			$(this).show();
+			$(this).find('.showMorefields').show();
+			$(this).find('.filteritem').prop('checked', false);
+			$(this).find('span').css('color', '#212529');
+		});
+		showFirstFewFields();
+		populateSearchCriteria();
+		resetSearchFilterCountsOnRefresh();
+	});
+	
+	$(document).on('click', '#cancelFiltersMobile', function() {
+		$(".filterGroupDiv").each(function(e) {
+			$(this).show();
+			$(this).find('.showMorefields').show();
+			$(this).find('.filteritem').prop('checked', false);
+			$(this).find('span').css('color', '#212529');
+		});
+		showFirstFewFields();
+	});
+	
+	
+	$(document).on('click', '.showMore', function() {
+
+	$(this).parent().hide();
+	$(this).parent().parent().find(".css-17rpx5xLess").show();
+	showFirstFewFields($(this).parent().parent(), 'More');
+	});
+	
+	$(document).on('click', '.showLess', function() {
+	
+		$(this).parent().hide();
+		$(this).parent().parent().find(".css-17rpx5x").show();
+		$(this).parent().parent().find(".showMore").show();
+		showFirstFewFields($(this).parent().parent(), 'Less');
+	});
+
+	// function when clicking on expand and collpase button for search sidebar
 	$("#expand_collapse_filters").click(function() {
 	
 		var title = $(this).attr('data-original-title');
@@ -134,6 +222,31 @@ $(document).ready(function() {
 	
 	});
 	
+	//Funtion when clicking on checkboxes for search sidebar filters
+	
+	$(document).on('change', '.filteritem', function() {
+
+	if ($(this).is(':checked')) {
+		$(this).parent().find('span').css('color', '#2E76ED');
+	} else {
+		$(this).parent().find('span').css('color', '#212529');
+	}
+	var attrName = $(this).parent().parent().attr('id');
+
+	populateSearchCriteria();
+	
+	// based on child selection, search at parent level and check the
+	// parent checkbox
+	$(this).closest('.filterComponentDiv').prevAll().find('.attributeLabel').each(function(e) {
+		filterPrev($(this), attrName);
+	});
+
+	// always filter the metadata on the children level
+	// do not remove parent based on child selection
+	$(this).closest('.filterComponentDiv').nextAll().find('.attributeLabel').each(function(e) {
+		filterNext($(this), attrName);
+	});	
+   });
 });
 
 function populateSearchCriteria(searchType) {
@@ -650,6 +763,167 @@ function renderDataSetName(data, type, row) {
 
 
 
+function filterNext($this, attributeTypeName) {
+
+	var attributeName = $this.find('label').text();
+
+	var rowId = 1;
+	var d = {};
+	var attrNames = [];
+	var attrValues = [];
+	var isExcludeParentMetadata = [];
+	var rowIds = [];
+	var operators = [];
+
+	// filter a list based on the parent level selection
+	$this.closest('.filterComponentDiv').prevAll().find(".filteritem:checked").each(function() {
+		var attrName = $(this).parent().parent().attr('id');
+		var attrVal = $(this).val();
+		if (attrName != attributeName) {
+			attrNames.push(attrName);
+			attrValues.push(attrVal);
+			rowIds.push(rowId);
+			isExcludeParentMetadata.push(false);
+			operators.push("EQUAL");
+			rowId = rowId + 1;
+		}
+	});
+
+	d.attrName = attrNames.join();
+	d.attrValuesString = attrValues.join('@@');
+	d.isExcludeParentMetadata = isExcludeParentMetadata.join();
+	d.rowId = rowIds.join();
+	d.operator = operators.join();
+	d.searchName = attributeName;
+
+	$.ajax({
+		url : '/getFilterList',
+		type : 'GET',
+		contentType : 'application/json',
+		dataType : 'text',
+		data : d,
+		success : function(data, status) {
+			var filterlist = JSON.parse(data);
+			var list = filterlist.attrValues;
+			var len = list.length;
+
+			$this.parent().find('.filterGroupDiv').each(function(e) {
+				var val = $(this).find('.filteritem').val();
+				if (list.indexOf(val) != -1) {
+					$(this).show();
+					$(this).find('.showMorefields').show();
+					resetSearchFilterCount(val, $(this),filterlist);
+				} else {
+					$(this).hide();
+					$(this).find('.filteritem').prop("checked", false);
+					$(this).find('span').css('color', '#212529');
+				}
+			});
+
+			if (len && len > 4) {
+				$this.parent().find('.css-17rpx5x').show();
+				$this.parent().find('.showMore').show();
+				$this.parent().find('.css-17rpx5xLess').hide();
+				showFirstFewFields($this.parent(), 'Less');
+			} else {
+				$this.parent().find('.css-17rpx5xLess').hide();
+				$this.parent().find('.css-17rpx5x').hide();
+			}
+
+		},
+		error : function(data, status, error) {
+			console.log("===> status: ", status);
+			console.log("===> error: ", error);
+			console.log("===> data: ", data);
+		}
+});
+}
+
+function filterPrev($this, attributeTypeName) {
+	var attributeName = $this.find('label').text();
+
+	var rowId = 1;
+	var d = {};
+	var attrNames = [];
+	var attrValues = [];
+	var isExcludeParentMetadata = [];
+	var rowIds = [];
+	var operators = [];
+	var url;
+
+	// filter a list based on the parent level selection
+	$this.closest('.filterComponentDiv').nextAll().find(".filteritem:checked").each(function() {
+		var attrName = $(this).parent().parent().attr('id');
+		var attrVal = $(this).val();
+		if (attrName != attributeName) {
+			attrNames.push(attrName);
+			attrValues.push(attrVal);
+			rowIds.push(rowId);
+			isExcludeParentMetadata.push(false);
+			operators.push("EQUAL");
+			rowId = rowId + 1;
+		}
+	});
+
+	d.attrName = attrNames.join();
+	d.attrValuesString = attrValues.join('@@');
+	d.isExcludeParentMetadata = isExcludeParentMetadata.join();
+	d.rowId = rowIds.join();
+	d.operator = operators.join();
+	d.searchName = attributeName;
+	if(attributeName == 'Program Name' || attributeName == 'Study Name') {
+		url = '/getFilterList?retrieveParent=true';
+	} else  {
+		url = '/getFilterList';
+	}
+
+	$.ajax({
+		url : url,
+		type : 'GET',
+		contentType : 'application/json',
+		dataType : 'text',
+		data : d,
+		beforeSend : function() {
+			$("#spinner").show();
+			$("#dimmer").show();
+		},
+		success : function(data, status) {
+			var filterlist = JSON.parse(data);
+			var list = filterlist.attrValues;
+			var len = list.length;
+
+			$this.parent().find('.filterGroupDiv').each(function(e) {
+				var val = $(this).find('.filteritem').val();
+				if (list.indexOf(val) != -1) {
+					$(this).show();
+					$(this).find('.showMorefields').show();
+					resetSearchFilterCount(val, $(this),filterlist);
+					
+				} else {
+					$(this).hide();
+					$(this).find('.filteritem').prop("checked", false);
+					$(this).find('span').css('color', '#212529');
+				}
+			});
+
+			if (len && len > 4) {
+				$this.parent().find('.css-17rpx5x').show();
+				$this.parent().find('.showMore').show();
+				$this.parent().find('.css-17rpx5xLess').hide();
+				showFirstFewFields($this.parent(), 'Less');
+			} else {
+				$this.parent().find('.css-17rpx5xLess').hide();
+				$this.parent().find('.css-17rpx5x').hide();
+			}
+		},
+		error : function(data, status, error) {
+			console.log("===> status: ", status);
+			console.log("===> error: ", error);
+			console.log("===> data: ", data);
+		}
+	});
+}
+
 function display(value) {
 	if (value == "async") {
 		$("#AsyncDiv").show();
@@ -741,6 +1015,102 @@ function initializePopover() {
 			return $(title).children(".popover-heading").html();
 		}
 	});
+}
+
+
+function resetSearchFilterCount(val, $this, filterlist) {
+
+		// evaluating and displaying the new counts on click of any checkbox filters
+		
+		var attrName = $this.attr('id');
+		if(val == 'Dataset') {
+			$this.find(".asset_type_count").text(filterlist.datasetCount);
+		} else if (val == 'Model') {
+			$this.find(".asset_type_count").text(filterlist.modelCount);
+		} else if(attrName == 'Is Reference Dataset' && val == 'Yes') {
+			$this.find(".asset_type_count").text(filterlist.referenceDatasetCount);
+		} else if(attrName == 'Is Reference Dataset' && val == 'No') {
+			$this.find(".asset_type_count").text(filterlist.nonReferenceDatasetCount);
+		} else if(attrName == 'Is Model Deployed' && val == 'Yes') {
+			$this.find(".asset_type_count").text(filterlist.modelDeployedCount);
+		} else if(attrName == 'Is Model Deployed' && val == 'No') {
+			$this.find(".asset_type_count").text(filterlist.modelNotDeployedCount);
+		}
+}
+
+
+function resetSearchFilterCountsOnRefresh() {
+
+	//on click of clear filters icon, replacing the counts with the 
+	//initial counts stored in hidden variable
+	 
+   $("#datasetCount").text($("#intialDatasetCount").val());
+   $("#modelCount").text($("#initialModelCount").val());
+   $("#refDatasetCount").text($("#initialRefDatasetCount").val());
+   $("#nonrefDatasetCount").text($("#initialNonrefDatasetCount").val());
+   $("#modelDeployedCount").text($("#initialmodelDeployedCount").val());
+   $("#modelNotDeployedCount").text($("#initialModelNotDeployedCount").val());
+   
+}
+
+
+function showFirstFewFields($this, oper) {
+	if ($this) {
+		if (oper == 'More') {
+			$this.find('.filterGroupDiv:visible').each(function(index) {
+				$(this).find('.showMorefields').show();
+
+			});
+		} else if (oper == 'Less') {
+			var len = $this.find('.filterGroupDiv:visible').length;
+			if (len > 4) {
+				var modifiedSize = len - 4;
+				$this.find('.filterGroupDiv:visible').each(function(index) {
+					if (index > 3) {
+						$(this).find('.showMorefields').hide();
+					} else {
+						$(this).find('.showMorefields').show();
+					}
+				});
+				$this.find(".showMore").html(modifiedSize + " More Items " + '<i class="fas fa-angle-right"></i>');
+			} else {
+				$this.find('.css-17rpx5x').hide();				
+			}
+		} else if( oper =='searchFilter') {
+			var len = $this.find('.filterGroupDiv:visible').length;
+			if (len > 4) {
+				var modifiedSize = len - 4;
+				$this.find('.css-17rpx5x').show();
+				$this.find(".showMore").html(modifiedSize + " More Items " + '<i class="fas fa-angle-right"></i>');
+			} else {
+				$this.find('.css-17rpx5x').hide();				
+			}
+		}
+
+	} else {
+		$(".dataDivCollapse").each(function(e) {
+			var len = $(this).find('.filterGroupDiv:visible').length;
+			var modifiedSize = len - 4;
+			if (len > 4) {
+				$(this).parent().find('.showMore').html(modifiedSize + " More Items " + '<i class="fas fa-angle-right"></i>');
+				$(this).parent().find('.showMore').show();
+				$(this).parent().find('.css-17rpx5x').show();
+				$(this).parent().find('.css-17rpx5xLess').hide();
+				$(this).find('.filterGroupDiv:visible').each(function(index) {
+					if (index > 3) {
+						$(this).find(".showMorefields").hide();
+					} else {
+						$(this).find(".showMorefields").show();
+					}
+
+				});
+			} else {
+				$(this).parent().find('.css-17rpx5x').hide();
+				$(this).parent().find('.css-17rpx5xLess').hide();
+			}
+
+		});
+	}
 }
 
 function displayPopover() {
