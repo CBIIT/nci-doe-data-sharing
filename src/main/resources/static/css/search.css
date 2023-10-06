@@ -131,7 +131,7 @@ input[type="checkbox"].filteritem {
 #expand_collapse_filters {
 	float: right;
     margin-right: 0.7rem;
-    margin-top: 8px;
+    margin-top: 10px;
 }
 
 .divTable {
@@ -548,7 +548,7 @@ label.showMorefields {
 	float: right;
 	text-align: right;
     margin-left: auto;
-	margin-top: -0.7rem;
+	margin-top: -0.9rem;
 }
 
 #searchResultTable_length select {
@@ -561,7 +561,7 @@ label.showMorefields {
 	font-family: 'Poppins';
 	font-style: normal;
 	font-weight: 300;
-	font-size: 12px;
+	font-size: 14px;
 	letter-spacing: 1px;
  }
  
@@ -584,8 +584,9 @@ label.showMorefields {
 
 #searchResultTable_info {
 	font-family: 'Poppins';
-	font-size: 12px;
+	font-size: 14px;
 	color: #004187;
+	margin-top: -0.5rem;
 }
 
 #assetsEditDiv {
