@@ -42,7 +42,7 @@ public class ContactUsController extends AbstractDoeController {
 						if (StringUtils.isNotEmpty(emailAddress)
 								&& Boolean.FALSE.equals(authService.doesUsernameExist(emailAddress))) {
 							return new ResponseEntity<>(
-									"User should be registered to unsusbscribe from MoDaC notifications.",
+									"User should be registered to unsubscribe from MoDaC notifications.",
 									HttpStatus.OK);
 						}
 
