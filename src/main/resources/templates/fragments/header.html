@@ -30,7 +30,7 @@
 			</header>
 		</section>
   <!--logo image-->
-    <div class="col order-first" style="margin-left:-0.5rem;">
+    <div class="col order-first logo-container">
         <a th:href="@{/}" aria-label="image link">
         <img src="images/nci_modac_logo.svg" th:src="@{/images/nci_modac_logo.svg}" class="logoImg" alt="National Cancer Institute"></a>
     </div>
@@ -99,7 +99,7 @@
                 </div>
     <!--top right navigation-->
     <div id="topNav" class="positionabs collapse navbar-collapse justify-content-end col order-last bordered">
-        <ul class="navbar-nav card-header-tabs text-white justify-content-end" role="tablist" style="margin-top: -2px; margin-right: 1rem;">
+        <ul class="navbar-nav card-header-tabs text-white justify-content-end" role="tablist" style="margin-top: -2px; padding-right: 52px;">
                 
                 <li th:if= "${loggedOnUser != null}" class="nav-item dropdown" role="tab">
                     <a class="nav-link dropdown-toggle" href="#" role="button" aria-label="Help"

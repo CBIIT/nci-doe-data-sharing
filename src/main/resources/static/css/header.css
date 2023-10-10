@@ -1,7 +1,11 @@
 #globalNav.card {
 	border-radius: 0px
 }
-
+.logo-container {
+	max-width: 1440px;
+    margin: 0 auto;
+	padding-left: 30px;
+}
 #globalNav .navbar-nav li.active>a {
 	background-color: #616A70 !important;
 	font-weight: 600;
@@ -25,7 +29,7 @@
 
 #topNav .navbar-nav li>a {
 	text-transform: none;
-	color: #E07C24 !important;
+    color: #E07C24 !important;
 	text-align: right;
 	font-family: Poppins;
 	font-size: 14px;
@@ -219,6 +223,9 @@ ul#subTab {
 	z-index: 1;
 	width: 100%;
 	height: 46px;
+	padding-left: 38px;
+	max-width: 1440px;
+    margin: 0 auto;
 }
 
 /*-- navlink --*/
@@ -330,13 +337,14 @@ ul#subTab {
 
 .dropdown-container {
 	margin-top: 18px !important;
-	margin-left: -20px;
+	margin-left: -32px;
 	background-color: #1B496E;
 	/* display: flex; */
 	width: 100vw;
 	left: 0;
 	color: #fefefe;
 	padding: 2rem 1rem;
+    max-width: 1440px;
 }
 
 .dropdown-menu.show {
@@ -366,9 +374,10 @@ ul#subTab {
 }
 
 .banner-header {
-	margin-left: auto;
-	margin-right: auto;
+	max-width:1440px;
+	margin: 0 auto;
 	padding: 0.5rem 1.5rem;
+	padding-left: 50px;
 }
 
 .banner-inner {

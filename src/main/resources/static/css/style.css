@@ -136,6 +136,7 @@
   font-size: 40px;
   font-weight: 800;
   font-style: normal;
+  line-height: 1;
 }
 .poppins-normal-white-18-7px {
   color: var(--white);

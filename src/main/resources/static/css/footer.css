@@ -29,7 +29,7 @@ footer {
   /* gap: 296px; */
   height: 224px;
   max-width: 1440px;
-  padding: 16px 50px;
+  padding: 16px 52px;
 }
 
 .frame-46 {
@@ -140,7 +140,7 @@ footer {
   height: 224px;
   margin-bottom: 0;
   position: relative;
-  width: 1400px;
+  width: 1440px;
 }
 
 .flex-container-2 {
@@ -230,6 +230,10 @@ footer {
 
 }
 
+.footer-email{
+  padding-right: 52px;
+}
+
 .top-footer-content {
   align-items: flex-start;
   display: flex;
@@ -279,13 +283,13 @@ footer {
 }
 
 .top-footer-leftcontainer {
-  padding: 2em;
+  padding: 37px;
   height: 320px;
 }
 
 .sign-up {
-  padding-bottom: 2rem;
-  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  padding-top: 37px;
 }
 
 .sign-up-heading {

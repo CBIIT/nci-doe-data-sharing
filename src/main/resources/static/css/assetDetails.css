@@ -425,6 +425,7 @@ input[type="checkbox"].selectIndividualCheckbox {
 .arrow_right_editPermissions {
     width: 16px;
     transform: translate(11px, -2px);
+    margin-right: 16px;
 }
 
 .asset_attributes_subsection {
@@ -527,7 +528,7 @@ input[type="checkbox"].selectIndividualCheckbox {
     color: var(--white);
     font-size: 14px;
     height: 41px;
-    width: 188px;
+    width: 192px;
     font-style: normal;
 }
 
