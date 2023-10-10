@@ -51,7 +51,7 @@
 .assetName {
     letter-spacing: -0.32px;
     line-height: 34.1px;
-    white-space: nowrap;
+    /* white-space: nowrap; */
     font-family: inter_medium;
 }
 
@@ -61,7 +61,7 @@
 .backToUplaodTab_editCollection {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    /* justify-content: center; */
     margin-left: 16px;
     white-space: nowrap;
     color: var(--white);
