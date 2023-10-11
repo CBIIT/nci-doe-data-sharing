@@ -336,7 +336,7 @@ div.divTableBody div.divTableContent:nth-child(odd) {
 	background-color: #BED2E1; 
 	color: #353941; 
 	width: 100%; 
-	margin-left: 0px; 
+	margin-left: 10px; 
 	margin-top: -1px; 
 }
 
@@ -346,7 +346,7 @@ div.dataDivCollapse{
 	max-height: 327px; 
 	overflow-y: auto; 
 	margin-bottom: 18px; 
-	margin-left: 2.2rem;
+	margin-left: 3.2rem;
 	overflow-x: hidden;
 }
 
@@ -430,7 +430,6 @@ input.filteritem:checked {
 #filterSectionSubDiv {
 	background-color: #1953A2; 
 	margin-bottom: 4px; 
-	margin-left: -10px; 
 	height: 46px; 
 	border-radius: 0px 6px 0px 0px;
 }
@@ -438,9 +437,9 @@ input.filteritem:checked {
 	color: #fff; 
 	font-family: 'inter_light'; 
 	font-size: 23px; 
-	margin-left: 35px; 
-	padding-top: 3px; 
 	float: left;
+	padding-left: 2.5rem;
+	transform: translateY(4px);
 	
 }
 #clearFilters{
@@ -495,7 +494,7 @@ img.searchCheckBoxlist {
     width: 18px;
     height: 17px;
     float: right;
-    margin-right: 15px;
+    margin-right: 25px;
     margin-top: 0.5rem;
     position: relative;
 }
