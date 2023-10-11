@@ -267,7 +267,6 @@ div.divTableBody div.divTableContent:nth-child(odd) {
     height: 125px;
     margin-top: 10px;
     margin-bottom: 16px;
-    margin-left: -15px;
     display: inline-flex;
     flex-wrap: wrap;
     background-image: url(/images/search_background.png);
@@ -279,7 +278,7 @@ div.divTableBody div.divTableContent:nth-child(odd) {
 #attributeVal {
 	margin-top: 10px; 
 	border-radius: 65px; 
-	height: 62px;
+	height: 69px;
 	font-size: 18px;
     font-weight: 400;
 	padding-left: 35px;
@@ -317,7 +316,7 @@ div.divTableBody div.divTableContent:nth-child(odd) {
 }
 
 #attributeVal::placeholder {
-  transform: translateY(2px);
+  transform: translateY(1px);
   color:#1C4794;
   font-family: var(--font-family-inter);
   font-size: 18px;
@@ -336,7 +335,7 @@ div.divTableBody div.divTableContent:nth-child(odd) {
 	background-color: #BED2E1; 
 	color: #353941; 
 	width: 100%; 
-	margin-left: 10px; 
+	margin-left: 2rem; 
 	margin-top: -1px; 
 }
 
@@ -346,7 +345,7 @@ div.dataDivCollapse{
 	max-height: 327px; 
 	overflow-y: auto; 
 	margin-bottom: 18px; 
-	margin-left: 3.2rem;
+	margin-left: 4.4rem;
 	overflow-x: hidden;
 }
 
@@ -438,7 +437,7 @@ input.filteritem:checked {
 	font-family: 'inter_light'; 
 	font-size: 23px; 
 	float: left;
-	padding-left: 2.5rem;
+	padding-left: 3.8rem;
 	transform: translateY(4px);
 	
 }
@@ -494,8 +493,8 @@ img.searchCheckBoxlist {
     width: 18px;
     height: 17px;
     float: right;
-    margin-right: 25px;
-    margin-top: 0.5rem;
+    margin-right: 40px;
+    margin-top: 0.7rem;
     position: relative;
 }
 
@@ -541,6 +540,7 @@ label.showMorefields {
     justify-content: space-between;
     padding-bottom: 10px;
     border-bottom: 1px solid #409CC6;
+    padding-right: 1rem !important;
 }
 
 #searchResultTable_length {
@@ -553,6 +553,7 @@ label.showMorefields {
 #searchResultTable_length select {
  	border:none;
  	color: #004187;
+ 	font-weight: 300;
 }
 
 #searchResultTable_length label {
@@ -586,6 +587,7 @@ label.showMorefields {
 	font-size: 14px;
 	color: #004187;
 	margin-top: -0.5rem;
+	font-weight: 300;
 }
 
 #assetsEditDiv {
@@ -593,15 +595,10 @@ label.showMorefields {
 	margin-right: 2rem;
 }
 
-#searchResultsDiv {
-	margin-left: -1rem;
-}
-
-
 #show_search_count {
 	color: var(--midnight-blue);
     font-family: var(--font-family-inter);
-    font-size: var(--font-size-xl);
+    font-size: 19px;
     font-weight: 300;
     letter-spacing: 0.19px;
     margin-left: 2.1rem;
@@ -676,17 +673,17 @@ table#searchResultTable.display tbody tr>.sorting_1, table#searchResultTable.ord
 
 .arrow_right_download_selected {
     width: 16px;
-    transform: translate(49px ,-10px);
+    transform: translate(36px ,-8px);
 }
 
 #downloadSelected {
     margin-top: 1rem;
     font-family: var(--font-family-inter);
-	height: 50px;
-	width: 213px;
+	height: 41px;
+	width: 193px;
 	font-size: 10px;
 	font-weight: 600;
-	line-height: 17px;
+	line-height: 11px;
 	background-color: #2c4088 !important;
     border-radius: 65px;
     box-shadow: 0px 4px 50px #ffffff8c;
@@ -721,8 +718,8 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
 .ms-card-expanded-1 {
   align-items: flex-start;
   flex-direction: column;
-  padding: 15px 14px;
-  margin-bottom: 10px;
+  padding: 15px 5px;
+  margin-bottom: 5px;
 }
 
 .flex-row-9 {
@@ -812,6 +809,14 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
   line-height: normal;
 }
 
+.study_prog_name_class {
+	font-family: var(--font-family-inter);
+    font-size: 16px;
+    font-weight: 600;
+    font-style: normal;
+    color: #0C5EB7;
+}
+
 .overlap-group {
   margin-left: 4px;
   position: relative;
@@ -831,6 +836,7 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
 
 #editCollectionFragment {
 	font-size: 13px;
+	margin-left: -1rem;
 }
 #ascSpan, #descSpan {
 	cursor:pointer;
