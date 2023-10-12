@@ -136,13 +136,12 @@ table#assetDetailsDiv tbody tr:last-child {
 }
 
 #userMetaData {
-    width: 100%;
+    width: 913px;
     border-bottom: 1px solid #D2D2D2 !important;
     margin-bottom: 2.5rem;
 }
 
 #collectionForm {
-    width: 75%;
     margin-bottom: 2rem;
 }
 
@@ -187,7 +186,7 @@ table#userMetaData thead th {
 
 table#dataSetMetaData thead tr th,
 table#userMetaData thead tr th {
-    padding: 0.2rem 2rem;
+    padding: 0.2rem 2.2rem;
     font-weight: normal;
 }
 
@@ -209,7 +208,7 @@ table#userMetaData tr:nth-child(odd) td {
 
 table#userMetaData tr:nth-child(even) td,
 table#userMetaData tr:nth-child(odd) td {
-    padding-left: 2rem !important;
+    padding-left: 2.2rem !important;
     text-transform: uppercase;
 }
 
@@ -529,7 +528,7 @@ input[type="checkbox"].selectIndividualCheckbox {
     color: var(--white);
     font-size: 14px;
     height: 41px;
-    width: 192px;
+    width: 193px;
     font-style: normal;
 }
 
