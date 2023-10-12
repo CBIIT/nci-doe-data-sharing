@@ -264,7 +264,7 @@ div.divTableBody div.divTableContent:nth-child(odd) {
 }
 
 #keyworkSearchDiv {
-    height: 125px;
+    height: 148px;
     margin-top: 10px;
     margin-bottom: 16px;
     display: inline-flex;
@@ -321,10 +321,16 @@ div.divTableBody div.divTableContent:nth-child(odd) {
   font-family: var(--font-family-inter);
   font-size: 18px;
   font-weight: 400;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.5px;
   line-height: 21.3px;
 
 }
+
+.buttons_container {
+	display: flex;
+    gap: 10px;
+}
+
 
 .filterComponentDiv {
 	margin-bottom: 0.5rem;
@@ -683,12 +689,13 @@ table#searchResultTable.display tbody tr>.sorting_1, table#searchResultTable.ord
 	width: 193px;
 	font-size: 10px;
 	font-weight: 600;
-	line-height: 11px;
+	line-height: 6px;
 	background-color: #2c4088 !important;
     border-radius: 65px;
     box-shadow: 0px 4px 50px #ffffff8c;
     padding-left: 2rem;
     text-align: left;
+    padding-top: 9px;
 }
 button.share-link-copy-button, button.share-assetLink-copy-button {
 	border: none;

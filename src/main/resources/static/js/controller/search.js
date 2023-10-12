@@ -724,7 +724,7 @@ function renderDataSetName(data, type, row) {
 		         + " </div>"
 		         + " </div>"
 		         + " </div>"
-		         + "<div class='ml-auto'>"
+		         + "<div class='ml-auto buttons_container'>"
 		         + "<button type='button' class='expand_card_btn'  data-toggle='collapse' href='#collapse" + row.dmeDataId + "'"
 		         + "><img src='images/expand_card.png' data-toggle='tooltip' title= 'Collapse card'" 
 		         + "alt='Collapse asset details'></button>"
