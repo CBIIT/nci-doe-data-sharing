@@ -359,7 +359,7 @@ function refreshDataTable() {
 		$("div.toolbar").after (
 				'<div class="col-lg-12 col-md-12 col-sm-12 float-right">'
 				 + '<button id="downloadSelected" type="button"'
-				 + 'class="btn btn-primary float-right mb-2 mr-2" disabled>'
+				 + 'class="btn btn-primary float-right" disabled>'
 				 + 'DOWNLOAD <br />SELECTED ASSETS <img class="arrow_right_download_selected"' 
 				 + 'src="/images/white_right_arrow.svg"/>'
 				 + '</button></div>');
@@ -743,7 +743,7 @@ function renderDataSetName(data, type, row) {
                  + "<a class='button2a' style='text-decoration:underline;' collection_name = '" + row.studyName +"' selected_path = '" + row.studyPath + "' collection_type='Study' tabindex='0'"
 				 + " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
 				 + "data-popover-content='#a01'>"
-                 + "<span class='inter-medium-green-blue-15px'>" + row.studyName + " </span></a>"
+                 + "<span class='study_prog_name_class'>" + row.studyName + " </span></a>"
                  + editStudySetHtml
                  + "</div></div>"
                  + "<div class='program-container'>"
@@ -752,7 +752,7 @@ function renderDataSetName(data, type, row) {
                  + "<a class='button2a' style='text-decoration:underline;' collection_name = '" + row.programName + "' selected_path = '" + row.institutePath + "' collection_type='Program' tabindex='0'"
 				 + "data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
 				 + "data-popover-content='#a01'>"
-                 + "<span class='inter-medium-green-blue-15px'>" + row.programName + " </span></a>"
+                 + "<span class='study_prog_name_class'>" + row.programName + " </span></a>"
                  + editProgramSetHtml
                  + "</div></div>"  
                  + "</div>"            

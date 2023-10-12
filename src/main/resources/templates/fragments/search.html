@@ -6,7 +6,7 @@
 </head>
 <body>
 	<div id="searchTab" role="tabpanel" th:fragment="search">
-		<div id="searchFragmentDiv" class="col-md-12 col-sm-12">
+		<div id="searchFragmentDiv">
 			<div class="form-row">
 				<input type="hidden" th:value="${dmeDataId}" id="dmeDataId" /> <input
 					type="hidden" th:value="${doi}" id="doi" /> <input type="hidden"
@@ -48,7 +48,7 @@
 				<div class="form-group col-lg-3 col-md-8" id="searchCriteriaDiv">
 				<div id="filterSectionDiv">
 					<div id="filterSectionSubDiv">
-						<p>Search Filter</p>
+						<p>Filter</p>
 																				
 							<span id="clearFilters" data-toggle="tooltip" title="Clear filters"><img alt="clear Icon"
 							src="/images/side-bar-reset.png"></span>
