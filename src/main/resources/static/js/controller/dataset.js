@@ -37,8 +37,14 @@ $(document).on('change', '#isPublicAccessForPrediction', function() {
 });
 
 function filter() {
-	$("#filterSearchBox").keyup(function() {
+	$("#filterSearchBox").keyup(function() {		
 		var filterVal = $(this).val().trim().toLowerCase();
+		if(filterVal) {
+			$(".clearAssetFilesFilter").show();
+		} else  {
+			$(".clearAssetFilesFilter").hide();
+		}
+		
 		$("#dataSetTable tbody tr").each(function() {
 			var fileName = $(this).find('td').eq(1).text().trim().toLowerCase();
 			if (fileName.indexOf(filterVal) != -1) {
@@ -377,6 +383,7 @@ function dataTableInitDataSet(isVisible) {
 			$(".clearAssetFilesFilter").click(function() {
 				$(this).parent().find("#filterSearchBox").val("");
 				$(this).parent().find("#filterSearchBox").trigger('keyup');
+				$(this).hide();
 			});
 			
 			filter();

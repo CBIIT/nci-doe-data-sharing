@@ -370,6 +370,7 @@ input[type="checkbox"].selectIndividualCheckbox {
     height: 18px;
     top: -0.1rem;
     width: 18px;
+    display: none;
 }
 
 .arrow_right_assets_files {
