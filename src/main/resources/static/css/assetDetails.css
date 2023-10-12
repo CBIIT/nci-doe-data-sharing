@@ -434,6 +434,7 @@ input[type="checkbox"].selectIndividualCheckbox {
 }
 
 .assetFilesDiv {
+    position: inherit;
     margin-left: 5.5rem;
 }
 
@@ -563,8 +564,8 @@ input[type="checkbox"].selectIndividualCheckbox {
     color: rgba(8, 58, 80, 1);
 }
 
-.maxWidth1200 {
-    max-width: '1200px';
+.maxWidth1440 {
+    max-width: 1440px;
     margin: 0 auto;
 }
 

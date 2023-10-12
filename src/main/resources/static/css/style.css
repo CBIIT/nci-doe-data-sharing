@@ -49,7 +49,7 @@
   --font-size-xl: 17px;
   --font-size-xl: 18.7px;
   --font-size-xxl: 22.9px;
-  --font-size-xxxl: 23px;
+  --font-size-xxxl: 25px;
   --font-size-xxxxl: 45px;
 
   --font-family-inter: "Inter";
@@ -133,10 +133,11 @@
 .inter-extra-bold-smalt-40px {
   color: var(--smalt);
   font-family: var(--font-family-inter);
-  font-size: 40px;
+  font-size: 45px;
   font-weight: 800;
   font-style: normal;
   line-height: 1;
+  margin-block-end: 0px;
 }
 .poppins-normal-white-18-7px {
   color: var(--white);

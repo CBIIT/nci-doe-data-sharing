@@ -77,11 +77,11 @@
 }
 
 .arrow-on-dark {
-  height: 28px;
+  height: 34px;
   left: 237px;
   position: absolute;
   top: 14px;
-  width: 24px;
+  width: 28px;
 }
 
 
@@ -94,7 +94,7 @@
 .a-data-repository-an {
   left: 0;
   letter-spacing: -0.9px;
-  line-height: 45px;
+  line-height: 40px;
   position: absolute;
   top: 0;
   width: 319px;
@@ -131,6 +131,7 @@
   letter-spacing: 0;
   line-height: 24.5px;
   min-height: 75px;
+  margin-top: 6px;
 }
 
 .ms {
@@ -226,7 +227,7 @@
   /* justify-content: center; */
   align-items: center;
   /* box-shadow: 0px 4px 50px #ffffff8c; */
-  height: 100px;
+  height: 80px;
   max-width: 650px;
   margin: 0 auto;
   text-align: center;

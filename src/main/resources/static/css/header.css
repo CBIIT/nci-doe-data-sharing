@@ -29,7 +29,7 @@
 
 #topNav .navbar-nav li>a {
 	text-transform: none;
-    color: #E07C24 !important;
+    color: #2461D6 !important;
 	text-align: right;
 	font-family: Poppins;
 	font-size: 14px;
@@ -92,6 +92,9 @@
 #brand {
 	background-repeat: no-repeat;
 	background-size: cover;
+	/* box-shadow: 0 3px 8px 0 rgba(0,0,0,0.1); */
+	box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1);
+
 }
 
 #nci-brand {
