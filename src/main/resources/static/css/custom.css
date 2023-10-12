@@ -1061,7 +1061,7 @@ h3.table-title {
 
 .modal-body {
 	max-height: 800px;
-	overflow: auto;
+	/*overflow: auto;*/
 }
 
 .jumbotron {
