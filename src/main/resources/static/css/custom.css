@@ -958,10 +958,13 @@ table {
 	margin-bottom: 10px;
 }
 
+.paginate_button:not(:disabled):hover {
+	background:#d3d3d3 !important;
+	 
+}
+
 .dataTables_wrapper .dataTables_paginate .paginate_button {
-	padding: 0px;
-	!
-	important;
+	padding: 0px;!important;
 }
 
 .pagination {
