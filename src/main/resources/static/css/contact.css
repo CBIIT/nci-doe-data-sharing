@@ -6,7 +6,6 @@
   flex-shrink: 0;
   /* background-image: url(/images/contact_modac_background.svg); */
   background: linear-gradient(90deg, #83530B 5.56%, rgba(255, 204, 126, 0.00) 90.42%), #B66D29;
-  background-blend-mode: luminosity, normal;
   background-size: cover;
 }
 
@@ -103,7 +102,7 @@
   box-shadow: 0px 4px 20px #45454573;
   display: inline-flex;
   flex-direction: column;
-  padding: 29px 38px;
+  padding: 30px 38px 60px 38px;
   width: 800px;
 }
 
@@ -327,7 +326,7 @@
 .let-us-know-how-we-can-assist-you {
   letter-spacing: 0;
   white-space: nowrap;
-  margin-top: -2rem;
+  margin-top: -1rem;
   text-align: center;
 }
 
@@ -403,4 +402,12 @@ form#contact-us-form label {
   margin-top: 5px;
   width: 14px;
   left: 2rem;
+}
+/* Hiding search box */
+input.select2-search__field {
+  display: none;
+}
+
+.select2-results {
+  padding: 4px 56px 12px 56px;
 }

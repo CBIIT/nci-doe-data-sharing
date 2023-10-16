@@ -2,7 +2,6 @@
   height: 148px;
   flex-shrink: 0;
   background-image: url(/images/about_background.svg);
-  background-blend-mode: luminosity, normal;
   background-size: cover;
 }
 

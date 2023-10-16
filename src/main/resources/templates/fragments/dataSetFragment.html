@@ -103,7 +103,7 @@
 						<thead class="opensans-normal-white-15px">
 							<tr>
 								<th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col"
-									style="width: 26%;">&nbsp;&nbsp;ATTRIBUTE</th>
+									style="width: 250px;">&nbsp;&nbsp;ATTRIBUTE</th>
 								<th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col">
 									VALUE</th>
 							</tr>
@@ -158,14 +158,14 @@
 				</div>
 
 				<div th:if="${showGeneratePredTab ne true and isReferenceDataset == 'Yes' and loggedOnUser != null and assetType == 'Dataset'}"
-					class="form-group col-lg-12 col-md-12 col-sm-12" style="float: right; margin-left: -4rem;">
+					class="form-group col-lg-12 col-md-12 col-sm-12" style="float: right; margin-right: 4rem;">
 					<button id="performModelAnalysis" type="button"
 						class="btn btn-primary float-right mb-2 mr-2">PERFORM
 						MODEL ANALYSIS</button>
 				</div>
 
 				<div th:if="${showGeneratePredTab ne true and loggedOnUser != null and assetType == 'Model' and showGeneratePredictions eq true}"
-					class="form-group col-lg-12 col-md-12 col-sm-12" style="float: right; margin-left: -4rem;">
+					class="form-group col-lg-12 col-md-12 col-sm-12" style="float: right; margin-right: 4rem;">
 					<button id="openInferModal" type="button" class="btn btn-primary float-right mb-2 mr-2">GENERATE
 						PREDICTIONS</button>
 				</div>
@@ -197,7 +197,7 @@
 							<tr>
 								<th aria-sort="none" class="sortable" aria-label="select all checkbox"
 									role="columnheader" scope="colgroup"><label
-										style="color: var(--white);font-family: var(--font-family-open_sans);font-size: 12px;font-weight: 400;"
+										style="color: var(--white);font-family: var(--font-family-open_sans);font-size: 12px;font-weight: 400;margin-top: -12px;"
 										class="select-checkbox-label"> <input type="checkbox"
 											class="selectAll">&nbsp;&nbsp;Batch Select
 									</label></th>

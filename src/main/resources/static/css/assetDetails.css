@@ -9,7 +9,7 @@
 }
 
 .assetFilesBtns {
-    padding-bottom: 3px;
+    padding-bottom: 8px;
     margin-top: -10px;
     margin-right: 8rem;
 }
@@ -28,8 +28,8 @@
 }
 
 .assetFilesConditional {
-    margin-top: 27px;
-    margin-left: 6rem;
+    margin-top: 4rem;
+    margin-left: 7rem;
 }
 
 .group-103 {
@@ -112,12 +112,14 @@ img.infoMetadata {
     background-color: transparent;
     margin-left: 2rem;
     width: 90%;
+    margin-left: 24px;
 }
 
 table#assetDetailsDiv td {
     border: none;
     background-color: transparent;
     padding-top: 1rem;
+    width: 250px;
 }
 
 table#assetDetailsDiv tbody tr {
@@ -186,7 +188,7 @@ table#userMetaData thead th {
 
 table#dataSetMetaData thead tr th,
 table#userMetaData thead tr th {
-    padding: 0.2rem 2.2rem;
+    padding: 0.2rem 30px;
     font-weight: normal;
 }
 
@@ -293,18 +295,18 @@ table#generatePredTable tr:nth-child(odd) td {
 table#dataSetTable thead .sorting_asc,
 table#inferencingTable thead .sorting_asc {
     background-image: url(/images/asset_files_sort_up.svg) !important;
-    background-position: 28% 60%;
+    background-position: 33% 50%;
 }
 
 table#dataSetTable thead .sorting_desc,
 table#inferencingTable thead .sorting_desc {
     background-image: url(/images/asset_files_sort_down.svg) !important;
-    background-position: 28% 60%;
+    background-position: 33% 50%;
 }
 
 table#dataSetTable thead .sorting {
     background-image: url(/images/asset_files_sort_up.svg) !important;
-    background-position: 31% 60%;
+    background-position: 33% 50%;
 }
 
 table#dataSetTable thead tr th.select-checkbox {
@@ -372,7 +374,13 @@ input[type="checkbox"].selectIndividualCheckbox {
     width: 18px;
     display: none;
 }
-
+.lensfilter {
+    position: absolute;
+    height: 40px;
+    width: 18px;
+    margin-left: 6px;
+    margin-top: 8px;
+}
 .arrow_right_assets_files {
     width: 16px;
     transform: translate(25px, -10px);
@@ -440,7 +448,7 @@ input[type="checkbox"].selectIndividualCheckbox {
 
 #assetDetailsSubSection {
     padding-top: 2rem;
-    padding-left: 6rem;
+    padding-left: 96px;
 }
 
 
@@ -511,10 +519,10 @@ input[type="checkbox"].selectIndividualCheckbox {
 }
 
 .clearMetadata {
-    margin-left: -27px;
+    margin-left: -36px;
     cursor: pointer;
     height: 12px;
-    margin-top: 1px;
+    margin-top: -4px;
     width: 12px;
 }
 
@@ -529,9 +537,10 @@ input[type="checkbox"].selectIndividualCheckbox {
     color: var(--white);
     font-size: 14px;
     height: 41px;
-    width: 193px;
+    width: 208px;
     font-style: normal;
-}
+    text-align: left;
+    padding-left: 28px;
 
 /* this css is only for select dropdown for search, asset details and edit collection screen */
 #userMetaData tr td .select2-container span.select2-selection.select2-selection--single {
@@ -554,9 +563,9 @@ input[type="checkbox"].selectIndividualCheckbox {
 
 #userMetaData tr td .select2-container--default .select2-selection--single .select2-selection__arrow {
     content: url(/images/editCollection_dropdown_arrow.svg);
-    margin-top: 6px;
+    margin-top: 4px;
     width: 12px;
-    margin-right: 5px;
+    margin-right: 12px;
 }
 
 #userMetaData tr td .select2-container .select2-selection--single .select2-selection__rendered {
