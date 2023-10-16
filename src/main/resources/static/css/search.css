@@ -321,7 +321,7 @@ div.divTableBody div.divTableContent:nth-child(odd) {
   font-family: var(--font-family-inter);
   font-size: 18px;
   font-weight: 400;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
   line-height: 21.3px;
 
 }
