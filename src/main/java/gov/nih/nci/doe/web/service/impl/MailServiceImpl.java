@@ -281,6 +281,7 @@ public class MailServiceImpl implements MailService {
 
 				// Replace placeholders with dynamic values
 				String personalizedTemplate = emailTemplate
+						.replace("${modac_link}", webServerName)
 						.replace("${gitHubLink}", "https://github.com/CBIIT/nci-doe-data-sharing/tree/master/doc")
 						.replace("${unsubscribe_link}", webServerName + "/contactUs?typeOfInquiry=unsubscribe");
 
