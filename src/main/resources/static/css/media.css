@@ -427,7 +427,7 @@
 	}
 	.mobile-navigation {
 		position: absolute;
-		top: 46px;
+		top: 160px;
 		left: 0px;
 		display: block;
 		z-index: 1000;

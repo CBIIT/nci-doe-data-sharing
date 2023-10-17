@@ -45,10 +45,10 @@
 			<span th:text="${downtimeMessage}"></span>
 		</div>
 
-		<nav id="nci-brand" class="navbar navbar-expand-lg bg-default ml-auto">
+		<nav id="globalNav" aria-label="Primary navigation" class="nci-header-nav">
 
 			<!--on small media collapse icon-->
-			<button class="col-md-10 col-sm-6 navbar-toggler mobile-nav-toggle" type="button" data-toggle="collapse"
+			<button class="d-none d-sm-block d-md-block d-lg-none col-md-10 col-sm-6 navbar-toggler mobile-nav-toggle" type="button" data-toggle="collapse"
 				data-target="#mobile-navigation" aria-controls="mobile-navigation" aria-expanded="false"
 				aria-label="Toggle navigation">
 				<span style="float: left"><i class="fas fa-bars toggleNavBarIcon"></i><i
@@ -80,54 +80,64 @@
 				</ul>
 			</ul>
 
-			<div id="globalNav" class="col-md-9 navbar-collapse collapse navbar-collapse col order-last bordered"
-				style="z-index: 101010; max-height: 15%;">
-				<div id="subNav" class="card-header" style="height: 46px; margin-left: -32px;">
-					<ul class="nav nav-tabs card-header-tabs" id="subTab" role="tablist">
-						<li class="nav-item" role="tab">
-							<a class="nav-link active landing-tab" th:href="@{/}" role="tab">
-								<u>Home</u>
-								<img class="rectangle-4" th:src="@{/images/rectangle-4-1.png}" alt="Rectangle 4" />
+			<div class="d-none d-lg-block headerinner">
+				<ul class="headerprimary">
+					<li class="headerprimary-item">
+						<button class="usa-button headerprimary-button" aria-expanded="false"
+							data-href="https://www.cancer.gov/about-cancer" aria-controls="menu-829" data-menu-id="829">
+							<a th:href="@{/}" role="tab">
+							<span>Home</span>
+					</a>
+						</button>
+					</li>
+					<li class="headerprimary-item">
+						<button class="usa-button headerprimary-button" aria-expanded="false"
+							data-href="https://www.cancer.gov/types" aria-controls="menu-11868" data-menu-id="11868">
+							<a th:href="@{/searchTab}"
+								role="tab">
+							<span>Search</span>
 							</a>
-						</li>
+						</button>
+					</li>
+					<li class="headerprimary-item dropdown">
+						<button class="btn usa-button headerprimary-button dropdown-toggle" type="button"
+							id="menu1" data-toggle="dropdown">About
+							<img class="frame-49" th:src="@{/images/bottom-arrow.png}" alt="Frame 49" />
 
-						<li class="nav-item" role="tab"><a class="nav-link search-tab" th:href="@{/searchTab}"
-								role="tab"><u>Search</u>
-								<img class="rectangle-4" th:src="@{/images/rectangle-4-1.png}" alt="Rectangle 4" />
-							</a>
-						</li>
+						</button>
+						<ul class="dropdown-menu dropdown-container-new" role="menu" aria-labelledby="menu1">
+							<a class="dropdown-item" id="about-tab" th:href="@{/aboutTab}">About
+								MoDaC</a> <a th:if="${showApiDocs}" class="dropdown-item" id="api-docs" target="_blank"
+								th:href="@{/swagger-ui/index.html}">API Documentation</a>
+							<a class="dropdown-item" target="_blank" href="https://wiki.nci.nih.gov/display/MoDaCdoc"
+								rel="noopener noreferrer">User
+								Guide</a>
+							<a class="dropdown-item" th:href="@{/contactUs}">Contact</a>
+						</ul>
+					</li>
 
-						<li class="nav-item dropdown" role="tab"><a class="nav-link dropdown-toggle aboutTabNav"
-								href="#" role="button" aria-label="Help" data-toggle="dropdown" aria-haspopup="true"
-								aria-expanded="false"> <u>About</u>
-								<img class="rectangle-4" th:src="@{/images/rectangle-4-1.png}" alt="Rectangle 4" />
-								<img class="frame-49" th:src="@{/images/bottom-arrow.png}" alt="Frame 49" />
-							</a>
-							<div class="dropdown-menu dropdown-container">
-								<a class="dropdown-item" id="about-tab" th:href="@{/aboutTab}">About
-									MoDaC</a> <a th:if="${showApiDocs}" class="dropdown-item" id="api-docs"
-									target="_blank" th:href="@{/swagger-ui/index.html}">API Documentation</a> <a
-									class="dropdown-item" target="_blank"
-									href="https://wiki.nci.nih.gov/display/MoDaCdoc" rel="noopener noreferrer">User
-									Guide</a> <a class="dropdown-item" th:href="@{/contactUs}">Contact</a>
-							</div>
-						</li>
+					<!--top right navigation-->
+					<li class="headerprimary-item justify-content-end col order-last bordered">
+						<div id="topNav" class="justify-content-end col order-last bordered">
+							<ul class="navbar-nav text-white justify-content-end" role="tablist">
 
-					</ul>
-				</div>
-			</div>
-			<!--top right navigation-->
-			<div id="topNav" class="collapse navbar-collapse justify-content-end col order-last bordered">
-				<ul class="navbar-nav text-white justify-content-end" role="tablist" style="margin-top: 5px;padding-right: 16px;">
+								<li class="nav-item" role="tab" th:if="${loggedOnUser == null}">
+									<a class="nav-link" id="login-tab" th:href="@{/loginTab}" role="tab">LOGIN
+										&nbsp;|&nbsp;
+										REGISTER</a>
+								</li>
 
-					<li class="nav-item" role="tab" th:if="${loggedOnUser == null}">
-						<a class="nav-link" id="login-tab" th:href="@{/loginTab}" role="tab">LOGIN &nbsp;|&nbsp;
-							REGISTER</a>
+							</ul>
+						</div>
 					</li>
 
 				</ul>
+
+
 			</div>
 		</nav>
+
+
 	</div>
 </body>
 

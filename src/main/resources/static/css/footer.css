@@ -28,8 +28,9 @@ footer {
   display: flex;
   /* gap: 296px; */
   height: 224px;
+  margin: 0 auto;
   max-width: 1440px;
-  padding: 16px 52px;
+  padding: 16px 37px;
 }
 
 .frame-46 {
