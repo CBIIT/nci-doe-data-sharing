@@ -160,7 +160,7 @@ input[type="checkbox"].filteritem {
 	border: none;
 	padding: 5px;
 	width: 14rem;
-	padding-left: 30px;
+	padding-left: 32px;
 	letter-spacing: 1px;
 	color: var(--white);
     font-family: var(--font-family-open_sans);
@@ -171,7 +171,7 @@ input[type="checkbox"].filteritem {
 
 .divTableCell {
 	display: table-cell;
-	padding: 16px 28px;
+	padding: 16px 32px;
 }
 
 .divAttrName {
@@ -180,6 +180,7 @@ input[type="checkbox"].filteritem {
 	  font-size: 13px;
 	  font-weight: 700;
 	  font-style: normal;
+	  width: 38%;
 }
 
 .divAttrVal {
@@ -187,6 +188,7 @@ input[type="checkbox"].filteritem {
 	  font-size: var(--font-size-m);
 	  color: var(--deep-sapphire);
 	  font-weight: 400;
+	  width: 62%;
 }
 
 .divTableRow.divTableContent {
