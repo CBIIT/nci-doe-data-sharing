@@ -261,35 +261,34 @@ public class MailServiceImpl implements MailService {
 			// get the mail template for the notification in mail_template table
 			MailTemplate template = templateDAO.findMailTemplateTByShortIdentifier("NOTIFICATION_EMAIL");
 
-			mailtoUrl.append(encodeField(loggedOnUser, false));
+			mailtoUrl.append(encodeField(loggedOnUser));
 
 			if (bccList != null && !bccList.isEmpty()) {
 				mailtoUrl.append("?bcc=");
 				for (String bcc : bccList) {
-					mailtoUrl.append(encodeField(bcc, false)).append(",");
+					mailtoUrl.append(encodeField(bcc)).append(",");
 				}
 
 				mailtoUrl.deleteCharAt(mailtoUrl.length() - 1);
 			}
 
 			if (!template.getEmailSubject().isEmpty()) {
-				mailtoUrl.append("&subject=").append(encodeField(template.getEmailSubject(), false));
+				mailtoUrl.append("&subject=").append(encodeField(template.getEmailSubject()));
 			}
 
 			if (!template.getEmailBody().isEmpty()) {
 				String emailTemplate = template.getEmailBody();
 
 				// Replace placeholders with dynamic values
-				String personalizedTemplate = emailTemplate
-						.replace("${modac_link}", webServerName)
+				String personalizedTemplate = emailTemplate.replace("${modac_link}", webServerName)
 						.replace("${gitHubLink}", "https://github.com/CBIIT/nci-doe-data-sharing/tree/master/doc")
 						.replace("${unsubscribe_link}", webServerName + "/contactUs?typeOfInquiry=unsubscribe");
 
-				mailtoUrl.append("&body=").append(encodeField(personalizedTemplate, true));
-				mailtoUrl.append("&x-apple-msg-load=1");
+				mailtoUrl.append("&body=").append(encodeField(personalizedTemplate));
+				// mailtoUrl.append("&x-apple-msg-load=1");
 
 			}
-			
+
 			return mailtoUrl.toString();
 
 		} catch (Exception e) {
@@ -298,13 +297,10 @@ public class MailServiceImpl implements MailService {
 
 	}
 
-	public static String encodeField(String field, boolean isHtml) {
+	public static String encodeField(String field) {
 		try {
-			if (isHtml) {
-				return URLEncoder.encode(field, "UTF-8").replace("+", "%20");
-			} else {
-				return URLEncoder.encode(field, "UTF-8").replace("+", "%20");
-			}
+
+			return URLEncoder.encode(field, "UTF-8").replace("+", "%20");
 
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
