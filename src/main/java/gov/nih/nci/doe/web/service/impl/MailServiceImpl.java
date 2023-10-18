@@ -285,7 +285,6 @@ public class MailServiceImpl implements MailService {
 						.replace("${unsubscribe_link}", webServerName + "/contactUs?typeOfInquiry=unsubscribe");
 
 				mailtoUrl.append("&body=").append(encodeField(personalizedTemplate));
-				// mailtoUrl.append("&x-apple-msg-load=1");
 
 			}
 
