@@ -117,7 +117,7 @@
   width: fit-content;
 }
 
-.flex-row {
+.overlap-group2 .flex-row {
   align-self: flex-start;
   display: flex;
   gap: 56px;

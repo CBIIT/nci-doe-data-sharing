@@ -76,7 +76,7 @@ function refreshTaskDatatable(table) {
 	if (isVisible && !$("#filterSearchBox").is(':visible')) {
 		$("div.datasetToolbar").append(
 				'<div style="float: left;margin-top: -10px;margin-bottom: 10px;margin-left: 1.5rem;">'
-						+ '<label><input type="textbox" id="filterSearchBox" placeholder="Filter Files"/><img src="/images/filter_files_clear.png"/ class="clearAssetFilesFilter"> </label><img src="/images/lensIcon.svg" class="lensfilter"></div>');
+						+ '<label><input type="textbox" id="filterSearchBox" placeholder="Filter Files"/><img src="/images/filter_files_clear.png"/ class="clearAssetFilesFilter"> </label></div>');
 	}
 }
 
