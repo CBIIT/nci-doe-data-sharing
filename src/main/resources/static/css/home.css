@@ -320,7 +320,8 @@
   margin: 0 auto;
   max-width: 1200px;
   margin: 0 auto;
-  backdrop-filter: blur(60px);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.00) 27.92%, rgba(255, 255, 255, 0.70) 55.75%);
+  backdrop-filter: blur(15px);
   margin-top: 192px;
 }
 

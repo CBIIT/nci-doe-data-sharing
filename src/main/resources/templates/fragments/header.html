@@ -119,6 +119,8 @@
 
                     </button>
                     <ul class="dropdown-menu dropdown-container-new" role="menu" aria-labelledby="menu1">
+                        <div class="dropdown-container-block">
+
                         <a class="dropdown-item" id="about-tab" th:href="@{/aboutTab}">About
                             MoDaC</a> <a th:if="${showApiDocs}" class="dropdown-item" id="api-docs" target="_blank"
                             th:href="@{/swagger-ui/index.html}">API Documentation</a>
@@ -126,6 +128,7 @@
                             rel="noopener noreferrer">User
                             Guide</a>
                         <a class="dropdown-item" th:href="@{/contactUs}">Contact</a>
+                        </div>
                     </ul>
                 </li>
 
@@ -157,8 +160,11 @@
                                    <i aria-hidden="true" class="fa fa-caret-down pull-right"></i></span>
                                 </a>
                                 <div class="dropdown-menu dropdown-container mt-0" style="float:right">
+                                    <div class="dropdown-container-block">
+
                                     <a class="dropdown-item" th:href="@{/myaccount}" id="myaccountTab">Manage Account</a>
                                     <a class="dropdown-item" th:href="@{/resetPassword}" id="changePswdTab">Change Password</a>
+                                    </div>
                                 </div>
                             </li>
             
