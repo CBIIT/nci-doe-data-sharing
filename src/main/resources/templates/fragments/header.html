@@ -79,7 +79,7 @@
             <ul class="headerprimary">
                 <li class="headerprimary-item">
                     <button class="usa-button headerprimary-button" aria-expanded="false"
-                        data-href="https://www.cancer.gov/about-cancer" aria-controls="menu-829" data-menu-id="829">
+                        data-href="https://modac.cancer.gov" aria-controls="menu-829" data-menu-id="829">
                         <a th:href="@{/}" role="tab">
                         <span>Home</span>
                 </a>
@@ -87,7 +87,7 @@
                 </li>
                 <li class="headerprimary-item">
                     <button class="usa-button headerprimary-button" aria-expanded="false"
-                        data-href="https://www.cancer.gov/types" aria-controls="menu-11868" data-menu-id="11868">
+                        data-href="https://modac.cancer.gov/searchTab" aria-controls="menu-11868" data-menu-id="11868">
                         <a th:href="@{/searchTab}"
                             role="tab">
                         <span>Search</span>
@@ -96,8 +96,8 @@
                 </li>
                 <li class="headerprimary-item" th:if="${loggedOnUser != null && isUploader eq true}">
                     <button class="usa-button headerprimary-button" aria-expanded="false"
-                        data-href="https://www.cancer.gov/types" aria-controls="menu-11868" data-menu-id="11868">
-                        <a th:href="@{/searchTab}"
+                        data-href="https://modac.cancer.gov/addbulk" aria-controls="menu-11868" data-menu-id="11868">
+                        <a th:href="@{/addbulk}"
                             role="tab">
                         <span>Upload</span>
                         </a>
@@ -105,8 +105,8 @@
                 </li>
                 <li class="headerprimary-item"  th:if="${loggedOnUser != null}">
                     <button class="usa-button headerprimary-button" aria-expanded="false"
-                        data-href="https://www.cancer.gov/types" aria-controls="menu-11868" data-menu-id="11868">
-                        <a th:href="@{/searchTab}"
+                        data-href="https://modac.cancer.gov/tasksTab" aria-controls="menu-11868" data-menu-id="11868">
+                        <a th:href="@{/tasksTab}"
                             role="tab">
                         <span>Status</span>
                         </a>
