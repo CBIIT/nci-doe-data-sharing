@@ -25,6 +25,7 @@
     margin-left: -18px;
     width: 93%;
     border-top: 1px solid rgb(197, 197, 197) !important;
+    padding-bottom: 68px;
 }
 
 .assetFilesConditional {
@@ -103,7 +104,7 @@ table.subFolderAssetsDataSetTable {
 }
 
 img.infoMetadata {
-    width: 12px;
+    width: 16px;
     margin-top: -5px;
 }
 
@@ -144,7 +145,7 @@ table#assetDetailsDiv tbody tr:last-child {
 }
 
 #collectionForm {
-    margin-bottom: 2rem;
+    margin-bottom: 62px;
 }
 
 table#userMetaData input[type="text"] {
