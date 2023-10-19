@@ -31,6 +31,7 @@ public class LookUp implements Serializable {
 	private String searchCriteriaDisplay;
 	private Boolean isEditable;
 	private Boolean isVisible;
+	private Boolean isVisibleOnUplaodPage;
 
 	public LookUp() {
 
@@ -127,6 +128,17 @@ public class LookUp implements Serializable {
 
 	public void setIsEditable(Boolean isEditable) {
 		this.isEditable = isEditable;
+	}
+
+	@Basic
+	@Column(name = "IS_VISIBLE_ON_UPLOAD_PAGE", nullable = true, length = 1)
+	@Type(type = "yes_no")
+	public Boolean getIsVisibleOnUplaodPage() {
+		return isVisibleOnUplaodPage;
+	}
+
+	public void setIsVisibleOnUplaodPage(Boolean isVisibleOnUplaodPage) {
+		this.isVisibleOnUplaodPage = isVisibleOnUplaodPage;
 	}
 
 	@Basic

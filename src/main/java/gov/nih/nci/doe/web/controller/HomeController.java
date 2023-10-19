@@ -30,6 +30,7 @@ import gov.nih.nci.doe.web.domain.InferencingTask;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.model.PermissionsModel;
+import gov.nih.nci.doe.web.model.SearchList;
 import gov.nih.nci.doe.web.service.DoeAuthorizationService;
 
 /**
@@ -149,6 +150,7 @@ public class HomeController extends AbstractDoeController {
 	@GetMapping(value = "/loginTab")
 	public String getLoginTab(Model model, @RequestParam(value = "token", required = false) String token,
 			@RequestParam(value = "email", required = false) String email,
+			@RequestParam(value = "redirectMsg", required = false) Boolean redirectMsg,
 			@RequestParam(value = "error", required = false) String error, HttpServletRequest request)
 			throws DoeWebException {
 
@@ -158,6 +160,8 @@ public class HomeController extends AbstractDoeController {
 				if ("SUCCESS".equalsIgnoreCase(status)) {
 					model.addAttribute("successMsg", "Thank you for registering. You may now log in.");
 				}
+			} else if (redirectMsg != null) {
+				model.addAttribute("redirectMsg", true);
 			}
 
 			if (null != error) {
@@ -207,9 +211,20 @@ public class HomeController extends AbstractDoeController {
 	}
 
 	@GetMapping(value = "/contactUs")
-	public String getContactUs(Model model, HttpSession session, HttpServletRequest request) {
+	public String getContactUs(@RequestParam(value = "typeOfInquiry", required = false) String typeOfInquiry,
+			Model model, HttpSession session, HttpServletRequest request) {
+
+		if (StringUtils.isNotEmpty(typeOfInquiry)) {
+			model.addAttribute("typeOfInquiry", typeOfInquiry);
+		}
 		model.addAttribute("siteKey", siteKey);
 		return "contactUsTab";
+	}
+
+	@GetMapping(value = "/siteFeedback")
+	public String getSiteFeedback(Model model, HttpSession session, HttpServletRequest request) {
+		model.addAttribute("siteKey", siteKey);
+		return "siteFeedbackTab";
 	}
 
 	@GetMapping(value = "/aboutTab")
@@ -397,7 +412,7 @@ public class HomeController extends AbstractDoeController {
 			@RequestHeader HttpHeaders headers, DoeSearch search) throws DoeWebException {
 
 		log.info("get filtered list" + search);
-		List<String> list = constructFilterCriteria(session, search, retrieveParent);
+		SearchList list = constructFilterCriteria(session, search, retrieveParent);
 
 		return new ResponseEntity<>(list, HttpStatus.OK);
 

@@ -21,6 +21,7 @@ $(document).ready(function() {
 	$("#btnPredictionAccessGrp").click(function() {
 		updatePredictionAccessGroupsFunction();
 	});
+	
 
 });
 
@@ -36,8 +37,14 @@ $(document).on('change', '#isPublicAccessForPrediction', function() {
 });
 
 function filter() {
-	$("#filterSearchBox").keyup(function() {
+	$("#filterSearchBox").keyup(function() {		
 		var filterVal = $(this).val().trim().toLowerCase();
+		if(filterVal) {
+			$(".clearAssetFilesFilter").show();
+		} else  {
+			$(".clearAssetFilesFilter").hide();
+		}
+		
 		$("#dataSetTable tbody tr").each(function() {
 			var fileName = $(this).find('td').eq(1).text().trim().toLowerCase();
 			if (fileName.indexOf(filterVal) != -1) {
@@ -68,8 +75,8 @@ function refreshTaskDatatable(table) {
 	}
 	if (isVisible && !$("#filterSearchBox").is(':visible')) {
 		$("div.datasetToolbar").append(
-				'<div style="float: right;margin-top: -10px;margin-bottom: 10px;">'
-						+ '<label>Filter: <input type="textbox" id="filterSearchBox"/></label></div>');
+				'<div style="float: left;margin-top: -10px;margin-bottom: 10px;margin-left: 1.5rem;">'
+						+ '<label><input type="textbox" id="filterSearchBox" placeholder="Filter Files"/><img src="/images/filter_files_clear.png"/ class="clearAssetFilesFilter"> </label></div>');
 	}
 }
 
@@ -373,6 +380,12 @@ function dataTableInitDataSet(isVisible) {
 			$("#downloadSelectedDataSet").prop("disabled", true);
 			$("#downloadSelectedMetadata").prop("disabled", true);
 
+			$(".clearAssetFilesFilter").click(function() {
+				$(this).parent().find("#filterSearchBox").val("");
+				$(this).parent().find("#filterSearchBox").trigger('keyup');
+				$(this).hide();
+			});
+			
 			filter();
 			if (isVisible) {
 				$("#downloadSelectedDataSet").show();
@@ -564,7 +577,9 @@ $('#dataSetTable tbody').on('click', '.editFolderMetadata', function() {
 	$("#assetDetailsFragment").hide();
 	$("#editCollectionFragment").show();
 	$(".backToAssetDetailsBtn").show();
+	$(".backToAssetDetails_editCollection").show();
 	$(".backToSearchBtn").hide();
+	$(".backToSearch_editCollection").hide();
 	var metaDataPath = $(this).attr('metadata_path');
 	var collectionId = $(this).attr('collectionId');
 	var fileName = $(this).attr('data-fileName');
@@ -592,7 +607,9 @@ $('#dataSetTable tbody').on('click', '.editDataFileCollectionMetadata', function
 	$("#assetDetailsFragment").hide();
 	$("#editCollectionFragment").show();
 	$(".backToAssetDetailsBtn").show();
+	$(".backToAssetDetails_editCollection").show();
 	$(".backToSearchBtn").hide();
+	$(".backToSearch_editCollection").hide();
 	var metaDataPath = $(this).attr('metadata_path');
 	var fileName = $(this).attr('data-fileName');
 	var params = {
@@ -724,7 +741,7 @@ $('#dataSetTable tbody')
 																	+ "' data-clipboard-text='"
 																	+ value.path
 																	+ "'>"
-																	+ "<img src='images/Copy-FilePath.png' th:src='@{/images/Copy-FilePath.png}' "
+																	+ "<img src='images/copy_to_clipboard.svg' th:src='@{/images/copy_to_clipboard.svg}' "
 																	+ "style='width:17px;' alt='copy file path'></button>";
 
 															iconHtml += "<a class='cil_13_no_color button2a' selected_path='"
@@ -775,12 +792,12 @@ $('#dataSetTable tbody')
 																		+ "style='width:17px;' alt='Download File Metadata'></a>";
 
 																nestedEditPermissionsHtml += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLink' href='javascript:void(0);' "
-																		+ "data-fileName = '" + downdloadFileName + "' data-path = '" + value.path + "'><img src='images/Download.png' data-toggle='tooltip' title='Download File' th:src='@{/images/Download.png}' "
+																		+ "data-fileName = '" + downdloadFileName + "' data-path = '" + value.path + "'><img src='images/download_file.svg' data-toggle='tooltip' title='Download File' th:src='@{/images/download_file.svg}' "
 																		+ "style='width:17px;' alt='download file'></a>";
 															} else {
 																downloadFileTitle = "Download Folder";
 																nestedEditPermissionsHtml += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLinkFolder' href='javascript:void(0);' "
-																		+ "data-fileName = '" + downdloadFileName + "' data-path = '" + value.path + "'><img src='images/Download.png' data-toggle='tooltip' title = '" + downloadFileTitle + "' th:src='@{/images/Download.png}' "
+																		+ "data-fileName = '" + downdloadFileName + "' data-path = '" + value.path + "'><img src='images/download_file.svg' data-toggle='tooltip' title = '" + downloadFileTitle + "' th:src='@{/images/download_file.svg}' "
 																		+ "style='width:17px;' alt='download file'></a>";
 															}
 
@@ -955,7 +972,7 @@ function renderInputDatasetName(data, type, row) {
 	html += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;' "
 			+ "class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
 			+ "title='Copy File Path' data-clipboard-text='" + row.inputDatasetPath + "'>"
-			+ "<img src='images/Copy-FilePath.png' th:src='@{/images/Copy-FilePath.png}' "
+			+ "<img src='images/copy_to_clipboard.svg' th:src='@{/images/copy_to_clipboard.svg}' "
 			+ "style='width:17px;' alt='copy file path'></button>";
 	return html;
 }
@@ -976,7 +993,7 @@ function renderOutcomeName(data, type, row) {
 		html += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;' "
 				+ "class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
 				+ "title='Copy File Path' data-clipboard-text='" + row.outcomeFilePath + "'>"
-				+ "<img src='images/Copy-FilePath.png' th:src='@{/images/Copy-FilePath.png}' "
+				+ "<img src='images/copy_to_clipboard.svg' th:src='@{/images/copy_to_clipboard.svg}' "
 				+ "style='width:17px;' alt='copy file path'></button>";
 	}
 
@@ -997,7 +1014,7 @@ function renderPredictionsName(data, type, row) {
 	html += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;' "
 			+ "class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
 			+ "title='Copy File Path' data-clipboard-text='" + row.predictionsPath + "'>"
-			+ "<img src='images/Copy-FilePath.png' th:src='@{/images/Copy-FilePath.png}' "
+			+ "<img src='images/copy_to_clipboard.svg' th:src='@{/images/copy_to_clipboard.svg}' "
 			+ "style='width:17px;' alt='copy file path'></button>";
 	return html;
 }
@@ -1040,7 +1057,7 @@ function renderDataSetPath(data, type, row) {
 			+ "' data-clipboard-text='"
 			+ row.path
 			+ "'>"
-			+ "<img src='images/Copy-FilePath.png' th:src='@{/images/Copy-FilePath.png}' "
+			+ "<img src='images/copy_to_clipboard.svg' th:src='@{/images/copy_to_clipboard.svg}' "
 			+ "style='width:17px;' alt='copy file path'></button>";
 
 	html += "<a class='cil_13_no_color button2a' selected_path='" + row.path + "' collection_type= " + collection_type
@@ -1053,7 +1070,7 @@ function renderDataSetPath(data, type, row) {
 }
 
 function renderFileSize(data, type, row) {
-	if (row.fileSize) {
+	if (row.fileSize) {	
 		return row.fileSize;
 	}
 	return "";
@@ -1112,15 +1129,15 @@ function renderActions(data, type, row) {
 				+ "style='width:17px;' alt='Download File Metadata'></a>";
 
 		html += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLink' "
-				+ "href='javascript:void(0);' data-fileName = '" + downdloadFileName + "' data-path = '" + path + "'><img src='images/Download.png' data-toggle='tooltip' title='" + downloadFileTitle
-				+ "' th:src='@{/images/Download.png}' " + "style='width:17px;' alt='download file'></a>";
+				+ "href='javascript:void(0);' data-fileName = '" + downdloadFileName + "' data-path = '" + path + "'><img src='images/download_file.svg' data-toggle='tooltip' title='" + downloadFileTitle
+				+ "' th:src='@{/images/download_file.svg}' " + "style='width:17px;' alt='download file'></a>";
 	} else {
 		downloadFileTitle = "Download Folder";
 		html += "<a aria-label='download link' style='border: transparent;' class='btn btn-link btn-sm downloadLinkFolder' "
 				+ "href='javascript:void(0);' "
-				+ "data-fileName = '" + downdloadFileName + "' data-path = '" + row.path + "'><img src='images/Download.png' data-toggle='tooltip' title = '"
+				+ "data-fileName = '" + downdloadFileName + "' data-path = '" + row.path + "'><img src='images/download_file.svg' data-toggle='tooltip' title = '"
 				+ downloadFileTitle
-				+ "' th:src ='@{/images/Download.png}' " + "style ='width:17px;' alt ='download file'></a>";
+				+ "' th:src ='@{/images/download_file.svg}' " + "style ='width:17px;' alt ='download file'></a>";
 	}
 
 	if (accessgroups && accessgroups.indexOf("public") == -1 && row.isFolder == false && permissions &&
@@ -1158,7 +1175,7 @@ function renderGeneratePredActions(data, type, row) {
 			+ "'"
 			+ " outcome_path = '"
 			+ row.outcomeFilePath
-			+ "'><img src='images/Download.png' data-toggle='tooltip' title='Download Model Analysis Files' th:src='@{/images/Download.png}' "
+			+ "'><img src='images/download_file.svg' data-toggle='tooltip' title='Download Model Analysis Files' th:src='@{/images/download_file.svg}' "
 			+ "style='width:17px;' alt='download file'></a>";
 
 	if (row.isOwner == true) {

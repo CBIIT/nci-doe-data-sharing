@@ -126,12 +126,13 @@ public class SearchController extends AbstractDoeController {
 	@SuppressWarnings("unchecked")
 	private List<DoeSearchResult> processCollectionResults(List<String> systemAttrs, Response restResponse,
 			DoeSearch search) throws IOException {
+		
 		ObjectMapper mapper = new ObjectMapper();
 		AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
 				new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()), new JacksonAnnotationIntrospector());
 		mapper.setAnnotationIntrospector(intr);
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
+		
 		MappingJsonFactory factory = new MappingJsonFactory(mapper);
 		JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 		HpcCollectionListDTO collections = parser.readValueAs(HpcCollectionListDTO.class);

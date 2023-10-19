@@ -19,86 +19,167 @@
 </head>
 <body>
  <div id="brand" class="col-md-12 col-sm-12 pl-0 pr-0" role="navigation" th:fragment="header" aria-label="brand div">
-
+    <!--Banner-->
+		<section id="banner" class="banner" aria-label="Official government website">
+			<header class="banner-header">
+				<div class="banner-inner">
+					<div class="banner-header-text">
+						An official website of the United States government
+					</div>
+				</div>
+			</header>
+		</section>
   <!--logo image-->
-    <div class="col order-first" style="margin-left:-2.5rem;">
+    <div class="col order-first logo-container">
         <a th:href="@{/}" aria-label="image link">
-        <img src="images/nci_logo.png" th:src="@{/images/nci_logo_2.svg}" class="logoImg" alt="National Cancer Institute"></a>
+        <img src="images/nci_modac_logo.svg" th:src="@{/images/nci_modac_logo.svg}" class="logoImg" alt="National Cancer Institute"></a>
     </div>
     
     <div th:if= "${downtimeMessage!= null}" class="col-md-12" style="color: red;font-size: 17px;font-weight: bold;text-align: center;">
     <span th:text="${downtimeMessage}"></span>
     </div>
     
-    <nav id="nci-brand" class="navbar navbar-expand-lg bg-default ml-auto">
-     <!--on small media collapse icon-->
-    <button class="col-md-10 col-sm-6 navbar-toggler order-first" type="button" data-toggle="collapse" data-target="#globalNav" aria-controls="globalNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span style="float: left"><i class="fas fa-bars"></i></span>
-    </button>
-<div id="globalNav" class="col-lg-8 col-md-11 navbar-collapse justify-content-end collapse navbar-collapse col order-last bordered" style="z-index:101010;max-height:15%;">
-            <div id="subNav" class="card-header" style="height:45px;">
-        <ul class="nav nav-tabs card-header-tabs" id="subTab" role="tablist" style="margin-right: -37px;">
-            <li class="nav-item" role="tab">
-                <a class="nav-link active landing-tab" th:href="@{/}"role="tab"><u>Home</u></a>
-            </li>
-            
-            
-                
-            <li class="nav-item" role="tab">
-                <a class="nav-link search-tab"  th:href="@{/searchTab}" role="tab"><u>Search</u></a>
-            </li>
-           
-           <li class="nav-item" role="tab" th:if="${loggedOnUser != null && isUploader eq true}">
-                <a class="nav-link" id="upload-tab" th:href="@{/addbulk}" role="tab" ><u>Upload</u></a>
-            </li>
-            
-            <li class="nav-item" role="tab" th:if="${loggedOnUser != null}">
-                <a class="nav-link" id="manageTasks-tab" th:href="@{/tasksTab}" role="tab"><u>Status</u></a>
-            </li>
-            
-            
-             <li class="nav-item dropdown" role="tab">
-                    <a class="nav-link dropdown-toggle aboutTabNav" href="#" role="button" aria-label="Help"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                       <u>About</u>
-                    </a>
-                         <div class="dropdown-menu" style="margin-top:14px !important;margin-left: 33px;background-color: #1D90FF;">
-                        <a class="dropdown-item" id="about-tab" th:href="@{/aboutTab}">About MoDaC</a>
-                        <a th:if= "${showApiDocs}" class="dropdown-item" id="api-docs" 
-                        target="_blank" th:href="@{/swagger-ui/index.html}">API Documentation</a>
-                        <a class="dropdown-item" target="_blank" href="https://wiki.nci.nih.gov/display/MoDaCdoc" rel="noopener noreferrer">User Guide</a>
-                        <a class="dropdown-item" th:href="@{/contactUs}">Contact</a>
-                    </div>
 
-                </li>
- 
-        </ul>
-    </div> 
-                </div>
-    <!--top right navigation-->
-    <div id="topNav" class="collapse navbar-collapse justify-content-end col order-last bordered">
-        <ul class="navbar-nav card-header-tabs text-white justify-content-end" role="tablist" style="margin-top: -2px;">
-                
-                <li th:if= "${loggedOnUser != null}" class="nav-item dropdown" role="tab">
-                    <a class="nav-link dropdown-toggle" style="color: #CC5200;" href="#" role="button" aria-label="Help"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                       <span style="text-transform: uppercase;" th:text="${firstName}">&nbsp;
-                       <i aria-hidden="true" class="fa fa-caret-down pull-right"></i></span>
-                    </a>
-                    <div class="dropdown-menu" style="float:right">
-                        <a class="dropdown-item" th:href="@{/myaccount}" id="myaccountTab">Manage Account</a>
-                        <a class="dropdown-item" th:href="@{/resetPassword}" id="changePswdTab">Change Password</a>
-                    </div>
-                </li>
+    <nav id="globalNav" aria-label="Primary navigation" class="nci-header-nav">
 
-                  <li class="nav-item" role="tab" th:if="${loggedOnUser == null}">
-                <a class="nav-link" id="login-tab" style="color:#CC5200;" th:href="@{/loginTab}" role="tab">Login</a>
-              </li>
-                			    	
-               <li class="nav-item" th:if= "${loggedOnUser != null}" role="tab">
-			    	<a class="nav-link" style="color: #CC5200;" href="#" id="logout">|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LOGOUT</a>
-			    	</li>
+        <!--on small media collapse icon-->
+        <button class="d-none d-sm-block d-md-block d-lg-none col-md-10 col-sm-6 navbar-toggler mobile-nav-toggle" type="button" data-toggle="collapse"
+            data-target="#mobile-navigation" aria-controls="mobile-navigation" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span style="float: left"><i class="fas fa-bars toggleNavBarIcon"></i><i
+                    style="display: none; font-size: 1.25rem; color: #2F3C5A;"
+                    class="fas fa-times closeNavBarIcon"></i></span>
+        </button>
+        <ul id="mobile-navigation" class="sc-dtLLSn dpehyt mobile-navigation collapse" data-visible="false">
+            <li class="sc-dkQUaI hQrVZb"><a class="active landing-tab" aria-current="page" th:href="@{/}">Home</a>
+            </li>
+            <li class="sc-dkQUaI hQrVZb"><a class="search-tab" th:href="@{/searchTab}">Search</a></li>
+            <li class="sc-dkQUaI hQrVZb" data-toggle="collapse" data-target="#aboutSubNav"><a aria-expanded="true"
+                    class="sc-WZYut jLeSfx">About&nbsp;</a></li>
+            <ul data-visible="true" class="sc-ikXwFM hZHGfK" id="aboutSubNav">
+                <li class="sc-dkQUaI hQrVZb hQrVZb_subTab"><a class="aboutMobileTabNav"
+                        th:href="@{/aboutTab}">&nbsp;<i class="fas fa-greater-than"></i>&nbsp;&nbsp;About
+                        Us
+                    </a></li>
+                <li class="sc-dkQUaI hQrVZb hQrVZb_subTab"><a id="api-docs" target="_blank"
+                        th:href="@{/swagger-ui/index.html}">&nbsp;<i class="fas fa-greater-than"></i>&nbsp;&nbsp;API
+                        Documentation
+                    </a></li>
+                <li class="sc-dkQUaI hQrVZb hQrVZb_subTab"><a target="_blank"
+                        href="https://wiki.nci.nih.gov/display/MoDaCdoc">&nbsp;<i
+                            class="fas fa-greater-than"></i>&nbsp;&nbsp;User Guide
+                    </a></li>
+                <li class="sc-dkQUaI hQrVZb hQrVZb_subTab"><a id="contact-tab" th:href="@{/contactUs}">&nbsp;<i
+                            class="fas fa-greater-than"></i>&nbsp;&nbsp;Contact Us
+                    </a></li>
             </ul>
+        </ul>
+
+        <div class="d-none d-lg-block headerinner">
+            <ul class="headerprimary">
+                <li class="headerprimary-item">
+                    <button class="usa-button headerprimary-button" aria-expanded="false"
+                        data-href="https://modac.cancer.gov" aria-controls="menu-829" data-menu-id="829">
+                        <a th:href="@{/}" role="tab">
+                        <span>Home</span>
+                </a>
+                    </button>
+                </li>
+                <li class="headerprimary-item">
+                    <button class="usa-button headerprimary-button" aria-expanded="false"
+                        data-href="https://modac.cancer.gov/searchTab" aria-controls="menu-11868" data-menu-id="11868">
+                        <a th:href="@{/searchTab}"
+                            role="tab">
+                        <span>Search</span>
+                        </a>
+                    </button>
+                </li>
+                <li class="headerprimary-item" th:if="${loggedOnUser != null && isUploader eq true}">
+                    <button class="usa-button headerprimary-button" aria-expanded="false"
+                        data-href="https://modac.cancer.gov/addbulk" aria-controls="menu-11868" data-menu-id="11868">
+                        <a th:href="@{/addbulk}"
+                            role="tab">
+                        <span>Upload</span>
+                        </a>
+                    </button>
+                </li>
+                <li class="headerprimary-item"  th:if="${loggedOnUser != null}">
+                    <button class="usa-button headerprimary-button" aria-expanded="false"
+                        data-href="https://modac.cancer.gov/tasksTab" aria-controls="menu-11868" data-menu-id="11868">
+                        <a th:href="@{/tasksTab}"
+                            role="tab">
+                        <span>Status</span>
+                        </a>
+                    </button>
+                </li>
+                <li class="headerprimary-item dropdown">
+                    <button class="btn usa-button headerprimary-button dropdown-toggle" type="button"
+                        id="menu1" data-toggle="dropdown">About
+                        <img class="frame-49" th:src="@{/images/dropdown.svg}" alt="Frame 49" />
+                    </button>
+                    <ul class="dropdown-menu dropdown-container-new" role="menu" aria-labelledby="menu1">
+                        <div class="dropdown-container-block">
+
+                        <a class="dropdown-item" id="about-tab" th:href="@{/aboutTab}">About
+                            Us</a> <a th:if="${showApiDocs}" class="dropdown-item" id="api-docs" target="_blank"
+                            th:href="@{/swagger-ui/index.html}">API Documentation</a>
+                        <a class="dropdown-item" target="_blank" href="https://wiki.nci.nih.gov/display/MoDaCdoc"
+                            rel="noopener noreferrer">User
+                            Guide</a>
+                        <a class="dropdown-item" th:href="@{/contactUs}">Contact Us</a>
+                        </div>
+                    </ul>
+                </li>
+
+                <!--top right navigation-->
+                <li class="headerprimary-item justify-content-end col order-last bordered">
+                    <div id="topNav" class="justify-content-end col order-last bordered">
+                        <ul class="navbar-nav text-white justify-content-end" role="tablist">
+
+                            <li class="nav-item" role="tab" th:if="${loggedOnUser == null}">
+                                <a class="nav-link" id="login-tab" th:href="@{/loginTab}" role="tab">LOGIN
+                                    &nbsp;|&nbsp;
+                                    REGISTER</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
+
+                <!--top right navigation-->
+                <li class="headerprimary-item justify-content-end col order-last bordered">
+
+                <div id="topNav" class="justify-content-end col order-last bordered">
+                    <ul class="navbar-nav card-header-tabs text-white justify-content-end flex-row" role="tablist" style="margin-top: -2px;">
+                            
+                            <li th:if= "${loggedOnUser != null}" class="nav-item dropdown" role="tab">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" aria-label="Help"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                   <span style="text-transform: uppercase;" th:text="${firstName}">&nbsp;
+                                   <i aria-hidden="true" class="fa fa-caret-down pull-right"></i></span>
+                                </a>
+                                <div class="dropdown-menu dropdown-container mt-0" style="float:right">
+                                    <div class="dropdown-container-block">
+
+                                    <a class="dropdown-item" th:href="@{/myaccount}" id="myaccountTab">Manage Account</a>
+                                    <a class="dropdown-item" th:href="@{/resetPassword}" id="changePswdTab">Change Password</a>
+                                    </div>
+                                </div>
+                            </li>
+            
+                              <li class="nav-item" role="tab" th:if="${loggedOnUser == null}">
+                            <a class="nav-link" id="login-tab" th:href="@{/loginTab}" role="tab">Login</a>
+                          </li>
+                                                
+                           <li class="nav-item" th:if= "${loggedOnUser != null}" role="tab">
+                                <a class="nav-link" href="#" id="logout">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;LOGOUT</a>
+                                </li>
+                        </ul>
+                    </div>
+</li>
+            </ul>
+
+
         </div>
     </nav>
 </div>

@@ -1,0 +1,391 @@
+footer {
+  background: #fff;
+  font-size: 14px;
+}
+
+.list-inline .list-inline-item a {
+  color: #333;
+}
+
+.list-inline .list-inline-item a:hover {
+  color: #00467f;
+}
+
+.frame-55 {
+  align-items: flex-start;
+  background-color: var(--biscay);
+  display: flex;
+  height: 224px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  max-width: 1440px;
+}
+
+.overlap-group1-2 {
+  align-items: flex-start;
+  background-color: var(--biscay);
+  display: flex;
+  /* gap: 296px; */
+  height: 224px;
+  margin: 0 auto;
+  max-width: 1440px;
+  padding: 16px 37px;
+}
+
+.frame-46 {
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+  margin-top: 1px;
+  min-height: 184px;
+  /* width: 524px; */
+}
+
+.contact-us {
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: -1px;
+  min-height: 34px;
+  min-width: 130px;
+  text-align: right;
+}
+
+.text0-2 {
+  line-height: 18px;
+  margin-top: 34px;
+  min-height: 54px;
+  text-align: right;
+  width: 315px;
+}
+
+.text0-3 {
+  letter-spacing: 0;
+  position: relative;
+}
+
+.group-65 {
+  align-items: flex-start;
+  display: flex;
+  gap: 35px;
+  height: 22px;
+  margin-top: 7px;
+}
+
+.site-feedback {
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: -1px;
+  min-height: 22px;
+  min-width: 103px;
+  text-align: right;
+}
+
+.flex-col-4 {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-col-3 {
+  min-height: 166px;
+  width: 518px;
+}
+
+.institute-container {
+  height: 74px;
+  position: relative;
+  width: 518px;
+}
+
+.at-the-national-institutes-of-health {
+  left: 0;
+  letter-spacing: 0;
+  line-height: 40px;
+  position: absolute;
+  top: 27px;
+  white-space: nowrap;
+}
+
+.national-cancer-institute {
+  left: 0;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  top: 0;
+  width: 518px;
+}
+
+.follow-us {
+  letter-spacing: 0;
+  line-height: normal;
+  margin-left: 2px;
+  margin-top: 14px;
+  min-height: 34px;
+}
+
+
+.bottom-footer {
+  align-items: flex-end;
+  background-color: var(--biscay);
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.bottom-footer a {
+  color: #fff;
+}
+
+.frame-container {
+  height: 224px;
+  margin-bottom: 0;
+  position: relative;
+  width: 1440px;
+}
+
+.flex-container-2 {
+  height: 86px;
+}
+
+.flex-container-3 {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: -1px;
+  position: relative;
+  width: 195px;
+}
+
+.text0 {
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+  white-space: nowrap;
+  width: 195px;
+}
+
+.text1 {
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+  width: 195px;
+  line-height: 30px;
+}
+
+.disclaimer_text {
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+  width: 195px;
+  margin-top: 1.3rem;
+  line-height: 30px;
+}
+
+.flex-container {
+  gap: 10px;
+  height: 118px;
+  margin-top: -1px;
+  position: relative;
+  width: 145px;
+}
+
+.flex {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+}
+
+.text0-3 {
+  letter-spacing: 0;
+  position: relative;
+}
+
+.text0-1 {
+  line-height: normal;
+  white-space: nowrap;
+  width: 145px;
+}
+
+.text1-1 {
+  letter-spacing: 0;
+  line-height: 30px;
+  position: relative;
+  width: 145px;
+}
+
+.flex-container-1 {
+  height: 150px;
+  margin-left: 89px;
+}
+
+.top-footer {
+  background-color: #1F4571;
+  color: white;
+}
+
+.top-footer-container {
+  max-width: 1440px;
+  margin: 0 auto;
+
+}
+
+.footer-email{
+  padding-right: 52px;
+}
+
+.top-footer-content {
+  align-items: flex-start;
+  display: flex;
+  min-width: 630px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2em;
+}
+
+.top-footer a {
+  color: #fff;
+}
+
+.primary-content {
+  line-height: 1.2;
+
+}
+
+.primary-link {
+  background: none;
+  border: none;
+  cursor: default;
+  display: flex;
+  text-decoration: none;
+  visibility: visible;
+  width: 100%;
+  font-weight: 700;
+}
+
+.list {
+  font-size: 1.01rem;
+  margin-top: 0.25rem;
+  padding: 0.75rem 0 2rem;
+  line-height: 1.6;
+}
+
+.list--unstyled {
+  list-style-type: none;
+}
+
+.secondary-link-firstchild {
+  padding-top: 0rem;
+}
+
+.secondary-link {
+  padding-top: 1rem;
+}
+
+.top-footer-leftcontainer {
+  padding: 37px;
+  height: 320px;
+}
+
+.sign-up {
+  padding-bottom: 1.5rem;
+  padding-top: 37px;
+}
+
+.sign-up-heading {
+  font-family: 'Poppins';
+  font-size: 1.43rem;
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.form {
+  font-family: 'Open Sans';
+  font-size: 1.01rem;
+  line-height: 1.3;
+}
+
+.form-label {
+  display: block;
+  color: white;
+  font-family: Open Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+  font-size: 1.01rem;
+  font-weight: 400;
+  line-height: 1.3;
+  margin-top: 1.5rem;
+  max-width: 30rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-form-group {
+  margin-top: 1.5rem;
+}
+
+.form-input {
+  margin-top: 0;
+  width: 100%;
+  height: 40px;
+}
+
+.form-button {
+  width: auto;
+  margin-top: 1.25rem;
+  background-color: #face00;
+  color: #1b1b1b;
+  border: 0;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  display: inline-block;
+  font-family: 'Open Sans';
+  font-weight: 600;
+  line-height: 1;
+  margin-right: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  text-align: center;
+  text-decoration: none;
+
+}
+
+.contact-link {
+  margin-left: 20px;
+  font-size: 1.01rem;
+  line-height: 1.6;
+}
+
+.grid-row.grid-gap-1 {
+  margin-left: -0.25rem;
+  margin-right: -0.25rem;
+  margin-top: 1rem;
+}
+
+.grid-row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.grid-col-auto {
+  flex: 0 1 auto;
+}
+
+.grid-row.grid-gap-1>* {
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+
+ .social-link {
+  background: transparent;
+  height: auto;
+  padding: 0 0.5rem 0 0;
+  width: auto;
+}
+
+.social-link .usa-icon {
+  fill: #face00;
+  color: #face00;
+  height: 40px;
+  width: 40px;
+  margin-left: -3px;
+  margin-right: -3px;
+}

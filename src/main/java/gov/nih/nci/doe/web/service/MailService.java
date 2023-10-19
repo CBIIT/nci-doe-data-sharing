@@ -1,5 +1,8 @@
 package gov.nih.nci.doe.web.service;
 
+import gov.nih.nci.doe.web.DoeWebException;
+import gov.nih.nci.doe.web.model.ContactUs;
+
 public interface MailService {
 
 	public static final String TO = "to";
@@ -15,6 +18,8 @@ public interface MailService {
 
 	public void sendErrorEmail(Exception e, String user);
 
-	public void sendContactUsEmail(String name, String email, String message);
+	public void sendContactUsEmail(ContactUs contactUs);
+
+	public String sendNotificationEmail(String webServerName, String loggedOnUser) throws DoeWebException;
 
 }

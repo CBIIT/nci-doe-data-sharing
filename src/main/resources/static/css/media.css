@@ -90,14 +90,6 @@
 	}
 }
 
-@media ( max-width :990px)and(min-width:768px) {
-	.appName {
-		white-space: nowrap;
-		font-size: 16px;
-	}
-	
-}
-
 @media ( min-width : 991px) {
 	.dpehyt {
 		list-style: none;
@@ -126,25 +118,11 @@
 	}
 }
 
-
-@media ( max-width : 1500px) {
-	#aboutMoDaCDescp {
-		margin-right: 0rem !important;
-		margin-left: 0.5rem !important;
-	}
-	#aboutImgDiv {
-		margin-left: 1rem !important;
-	}
-}
-
 @media ( max-width : 990px) {
 	#spinner {
 		text-align: center;
 		left: 5%;
 		right: 5%;
-	}
-	.col.order-first {
-		margin-left: -1rem !important;
 	}
 	form#contact-us-form .contactUsFieldsDiv {
 		margin-left: -2rem !important;
@@ -160,7 +138,7 @@
 		right: 0px !important;
 	}
 	#attributeVallanding {
-		border-radius: 24px;
+		border-radius: 32px  !important;
 		height: 45px;
 		border: 2.51px solid #E0730F;
 		background-color: #FFFFFF;
@@ -168,6 +146,12 @@
 		margin-right: -9px;
 		width: -webkit-fill-available;
 		padding-left: 20px;
+		margin: 0 auto !important;
+		height: 62px !important;
+		width: 90% !important;
+	}
+	#landingSearch{
+		top: 1rem !important;
 	}
 	#attributeVallanding::placeholder {
 		font-size: 22px;
@@ -323,7 +307,7 @@
 		padding-bottom: 4rem;
 	}
 	#keyworkSearchDiv {
-		display: none;
+		display: none !important;
 	}
 	table#searchResultMobileTable tr {
 		display: inherit !important;
@@ -357,8 +341,9 @@
 	.mobileContainer {
 		display: block !important;
 		margin: 0px auto;
-		margin-left: 15px !important;
+		/* margin-left: 4px !important; */
 		margin-top: -0.5rem !important;
+		/* margin-right: 4px !important; */
 	}
 	.buttoncontainer {
 		background-image: url(/images/modac.hero1.png);
@@ -442,7 +427,7 @@
 	}
 	.mobile-navigation {
 		position: absolute;
-		top: 46px;
+		top: 160px;
 		left: 0px;
 		display: block;
 		z-index: 1000;
@@ -498,6 +483,7 @@
 		color: #000000;
 		font-family: 'latoregular';
 		font-size: 16px;
+		margin-left: 14px;
 	}
 	#assetUrlLink {
 		display: none;
@@ -507,34 +493,24 @@
 	}
 	.assetFilesConditional {
 		padding-top: 40px;
-		margin-left: -10px;
+		margin-left: 1rem !important;
 	}
 }
 
-@media ( max-width : 460px) {
-	.Aboutbuttoncontainer {
-		background-image: url(/images/About.image.responsive.png) !important;
-	}
-}
 
 @media ( max-width :1200px) and (min-width: 992px) {
 	.topNav-item {
 		display: none;
 	}
-	#changeUserMenu.dropdown-menu {
-		margin-left: -250px;
-	}
+
 }
 
 @media ( max-width :990px) {
 	.closeBtn {
 		margin-top: -15px !important;
 	}
-	.appName {
-		white-space: nowrap;
-		margin-top: 40px;
-	}
-	#changeUserMenu.dropdown-menu, #userGuideMenu.dropdown-menu, #helpMenu.dropdown-menu
+
+	#userGuideMenu.dropdown-menu, #helpMenu.dropdown-menu
 		{
 		width: 350px;
 		float: right;
@@ -548,11 +524,6 @@
 	}
 }
 
-@media ( max-width : 321px) {
-	.Aboutbuttoncontainer {
-		background-image: url(/images/About_Image_Mobile.png) !important;
-	}
-}
 
 @media ( max-width : 550px) {
 
@@ -563,38 +534,12 @@
 	.logoImg {
 		width: 283px;
 	}
-	.appnameWrapper {
-		margin-top: 20px;
-		margin-left: 0px;
-		z-index: -1;
-	}
-	.appName {
-		justify-content: left;
-		margin-left: -50px;
-	}
+
 	.col.order-first {
 		margin-left: -0.25rem !important;
 	}
-	.Aboutbuttoncontainer {
-		height: 176px;
-	}
-	#aboutMoDaCDescp p {
-		font-size: 16px;
-		letter-spacing: 0.05rem;
-		line-height: 1.5rem;
-	}
-	#aboutImgDiv {
-		margin-left: 1.0rem !important;
-		margin-right: 1.0rem !important;
-		margin-top: 4.3rem !important;
-		height: 45px !important;
-	}
-	#aboutText {
-		margin-left: 0rem !important;
-		font-size: 26px !important;
-		line-height: 2.7rem !important;
-		text-align: center;
-	}
+
+
 	#dataSetFragment_mobile {
 		display: block !important;
 		padding-top: 6px;
@@ -616,7 +561,7 @@
 		display: none;
 	}
 	.asset_attributes_subsection {
-		display: none;
+		    display: none !important;
 	}
 	table#dataSetMetaData tr:nth-child(odd) td {
 		padding-left: 13px;
@@ -653,6 +598,10 @@
 		line-height: 17px;
 		overflow-wrap: anywhere;
 	}
+	#titleText {
+		font-size: 2rem !important;
+		line-height: 2rem !important;
+	}
 }
 
 @media ( max-width : 440px) {
@@ -671,30 +620,10 @@
 	.divTableRow div:first-child {
 		width: 32%;
 	}
-	#aboutImgDiv {
-		margin-left: 0.7rem !important;
-		margin-right: 0.7rem !important;
-		margin-top: 4.3rem !important;
-	}
-	#aboutText {
-		margin-left: 0rem !important;
-		font-size: 26px !important;
-		line-height: 2.7rem !important;
-	}
+	
 }
 
 @media ( min-width : 768px) {
-	.appName {
-		font-size: 18px;
-		/*margin-left: 24px;*/
-		padding-top: 9px;
-		z-index: 999;
-		margin-top: 10px;
-		margin-bottom: 10px;
-		text-shadow: 2px 2px #333;
-		/*text-transform: uppercase;*/
-		white-space: nowrap;
-	}
 	.navbar .navbar-brand {
 		margin-top: 0px;
 	}
@@ -775,11 +704,6 @@
 		margin-left: auto !important;
 		margin-right: auto !important;
 	}
-	
-	#cancelContactUs {
-       margin-left: 0px !important;
-       margin-right: 0px !important;
-    }
     
     #btnSubmitEmail {
     	margin-left: 0px !important;

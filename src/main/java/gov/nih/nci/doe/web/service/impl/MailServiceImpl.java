@@ -20,9 +20,14 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import gov.nih.nci.doe.web.service.MailService;
+import gov.nih.nci.doe.web.model.ContactUs;
+import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.domain.MailTemplate;
+import gov.nih.nci.doe.web.repository.EmailNotificationRepository;
 import gov.nih.nci.doe.web.repository.MailTemplateRepository;
 
 @Component
@@ -38,6 +43,9 @@ public class MailServiceImpl implements MailService {
 
 	@Autowired
 	private MailTemplateRepository templateDAO;
+
+	@Autowired
+	EmailNotificationRepository emailNotificationRepository;
 
 	@Value("${mail.override}")
 	private boolean override;
@@ -226,15 +234,76 @@ public class MailServiceImpl implements MailService {
 	}
 
 	@Override
-	public void sendContactUsEmail(String name, String email, String message) {
+	public void sendContactUsEmail(ContactUs contactUs) {
 		log.info("Sending contact us email");
 		final Map<String, Object> params = new HashMap<String, Object>();
 		final List<String> to = new ArrayList<String>();
 		to.add(supportEmail);
-		params.put(FROM, email);
+		params.put(FROM, contactUs.getEmailAddress());
 		params.put(TO, to.toArray(new String[0]));
-		params.put("message", message);
-		params.put("username", name);
+		params.put("message", contactUs.getMessage());
+		params.put("org", contactUs.getOrg());
+		params.put("inquiry", contactUs.getInquiry());
+		params.put("username", contactUs.getFirstName() + " " + contactUs.getLastName());
 		send("CONTACT_US_EMAIL", params);
+	}
+
+	@Override
+	public String sendNotificationEmail(String webServerName, String loggedOnUser) throws DoeWebException {
+		log.info("Sending notification email");
+		try {
+
+			StringBuilder mailtoUrl = new StringBuilder("mailto:");
+
+			// get the sender list from email_updates_t table
+			List<String> bccList = emailNotificationRepository.getAllEmailAddress();
+
+			// get the mail template for the notification in mail_template table
+			MailTemplate template = templateDAO.findMailTemplateTByShortIdentifier("NOTIFICATION_EMAIL");
+
+			mailtoUrl.append(encodeField(loggedOnUser));
+
+			if (bccList != null && !bccList.isEmpty()) {
+				mailtoUrl.append("?bcc=");
+				for (String bcc : bccList) {
+					mailtoUrl.append(encodeField(bcc)).append(",");
+				}
+
+				mailtoUrl.deleteCharAt(mailtoUrl.length() - 1);
+			}
+
+			if (!template.getEmailSubject().isEmpty()) {
+				mailtoUrl.append("&subject=").append(encodeField(template.getEmailSubject()));
+			}
+
+			if (!template.getEmailBody().isEmpty()) {
+				String emailTemplate = template.getEmailBody();
+
+				// Replace placeholders with dynamic values
+				String personalizedTemplate = emailTemplate.replace("${modac_link}", webServerName)
+						.replace("${gitHubLink}", "https://github.com/CBIIT/nci-doe-data-sharing/tree/master/doc")
+						.replace("${unsubscribe_link}", webServerName + "/contactUs?typeOfInquiry=unsubscribe");
+
+				mailtoUrl.append("&body=").append(encodeField(personalizedTemplate));
+
+			}
+
+			return mailtoUrl.toString();
+
+		} catch (Exception e) {
+			throw new DoeWebException("Error in drafting notification email: " + e.getMessage());
+		}
+
+	}
+
+	public static String encodeField(String field) {
+		try {
+
+			return URLEncoder.encode(field, "UTF-8").replace("+", "%20");
+
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return "";
+		}
 	}
 }

@@ -6,7 +6,7 @@
 </head>
 <body>
 	<div id="searchTab" role="tabpanel" th:fragment="search">
-		<div id="searchFragmentDiv" class="col-md-12 col-sm-12">
+		<div id="searchFragmentDiv">
 			<div class="form-row">
 				<input type="hidden" th:value="${dmeDataId}" id="dmeDataId" /> <input
 					type="hidden" th:value="${doi}" id="doi" /> <input type="hidden"
@@ -17,15 +17,18 @@
 					type="hidden" id="keyWord" th:value="${keyWord}" />
 
 
-				<div class="form-group col-lg-3 col-md-3" id="keyworkSearchDiv">
+				<div class="form-group col-lg-12 col-md-12" id="keyworkSearchDiv">
 
+					<h1 class="search_title">
+                     <span>MoDaC</span>
+					</h1>
 					<input type="text" placeholder="Search MoDaC" id="attributeVal"
 						aria-labelledby="attributeVal" class="form-control keywordSearch">
 					<span id="resetBtn" data-toggle="tooltip" title="Reset"
 						style="display: none;"><img alt="cancel icon"
 						src="/images/cancel-X-grey.svg" style="width: 14px;" /></span> <span
 						data-toggle="tooltip" title="Search" id="searchBtn"> <img
-						src="/images/Filter.Right_Arrow.Submit.svg" alt="search Icon"></span>
+						src="/images/search_icon.svg" alt="search Icon"></span>
 					<br>
 				</div>
 				<div class="form-group col-lg-12 col-md-12"
@@ -42,13 +45,20 @@
 				</div>
 			</div>
 			<div class="form-row" id="searchSubSectionDiv">
-				<div class="form-group col-lg-3 col-md-8" id="filterSectionDiv">
+				<div class="form-group col-lg-3 col-md-8" id="searchCriteriaDiv">
+				<div id="filterSectionDiv">
 					<div id="filterSectionSubDiv">
-						<p>Filters:</p>
-
-						<input type="button" value="CLEAR ALL" id="clearFilters"
-							class="btn btn-sm">
+						<p>Filter</p>
+																				
+							<span id="clearFilters" data-toggle="tooltip" title="Clear filters"><img alt="clear Icon"
+							src="/images/side-bar-reset.png"></span>
+							
+							<span id="expand_collapse_filters" data-toggle="tooltip" title="Collapse all filters"/>
+								<img  src="/images/collapse_filters.png" aria-hidden="true"></span>
+								
+								
 					</div>
+					
 					<div id="mobileFiltersSection" style="display: none;">
 						<span id="cancelFiltersMobile"><img alt="reset icon"
 							src="/images/Filter.Cancel.svg" /></span> <span
@@ -56,39 +66,72 @@
 							src="/images/Filter.Right_Arrow.Submit.svg"></span>
 					</div>
 
-
 					<div th:each="list : ${browseList}" class="filterComponentDiv">
 						<p class="attributeLabel">
-							<label class="attrName" th:text="${list.key}"></label> <img
-								src="images/AccordionDown.svg" class="dataTargetCollapse"
-								alt="accordian Icon" th:src="@{/images/AccordionDown.svg}"
-								style="width: 15px; float: left; margin-top: 12px; margin-left: 12px;" />
+							<label class="attrName inter-bold-tuna-19px" th:text="${list.attributeName}"></label> <img
+								src="images/AccordionDown.png" class="dataTargetCollapse"
+								alt="accordian Icon" th:src="@{/images/AccordionDown.png}"
+								style="width: 12px; float: left; margin-top: 15px; margin-left: 30px;" />
 
 							<img alt="search checkbox Icon"
-								th:if="${list.key != 'Asset Type' && list.key != 'Is Reference Dataset' && 
-								 list.key != 'Is Model Deployed'}"
-								src="images/Filter.Magnifying.Icon.svg"
-								class="searchCheckBoxlist"
-								th:src="@{/images/Filter.Magnifying.Icon.svg}"
-								style="width: 20px; height: 21px; float: right; margin-right: 12px; margin-top: 8px;" />
+								th:if="${list.attributeName != 'Asset Type' && list.attributeName != 'Is Reference Dataset' && 
+								 list.attributeName != 'Is Model Deployed'}"
+								src="images/Filter.Magnifying.Icon.png"
+								class="searchCheckBoxlist" data-toggle="tooltip" title="Search for filter"
+								th:src="@{/images/Filter.Magnifying.Icon.png}"/>
 						</p>
-
-						<input type="text"
-							th:if="${list.key != 'Asset Type' && list.key != 'Is Reference Dataset' &&
-                                list.key != 'Is Model Deployed'}"
-							class="filterSearchBox" placeholder="Search...">
-
+                   <div class="search_filter_div" th:if="${list.attributeName != 'Asset Type' && list.attributeName != 'Is Reference Dataset' &&
+                                list.attributeName != 'Is Model Deployed'}">
+						<input type="text"						
+							class="filterSearchBox" th:placeholder="'Search ' + ${list.attributeName}">
+							
+							<img alt="cancel Icon" class="cancel_fiter_icon"
+							src="/images/cancel_search_filter_icon.png">
+					</div>
+  					
 						<div class="dataDivCollapse">
 							<div class="form-group col-lg-12 col-md-12 filterGroupDiv"
-								th:id="${list.key}" th:each="attr: ${list.value}">
+								th:id="${list.attributeName}" th:each="attr: ${list.attrValues}">
 
 								<input type="hidden" th:value="${attrStat.index}" /> <input
 									type="hidden" class="filterSize" th:value="${attrStat.size}" />
 								<label class="showMorefields"> <input type="checkbox"
 									class="filteritem" th:value="${attr}" />&nbsp;&nbsp;
-									<div th:text="${attr}"
-										style="margin-left: 20px; margin-top: -21px;"></div>
+									<div th:text="${attr}" class="inter-medium-wedgewood-16px"
+										style="margin-left: 25px; margin-top: -24px;letter-spacing: 0.16px;margin-bottom: -7px;"></div>
+										
+									<span class="asset_type_count" id="datasetCount" th:if="${list.attributeName == 'Asset Type' && attr == 'Dataset'}" 
+										th:text="${list.datasetCount}"></span>
+										<input type="hidden" id="intialDatasetCount" th:value="${list.datasetCount}"
+										 th:if="${list.attributeName == 'Asset Type' && attr == 'Dataset'}" />
+									<span class="asset_type_count" id="modelCount" th:if="${list.attributeName == 'Asset Type' && attr == 'Model'}"
+										 th:text="${list.modelCount}"></span>
+										 <input type="hidden" id="initialModelCount" th:value="${list.modelCount}"
+										th:if="${list.attributeName == 'Asset Type' && attr == 'Model'}" />
+										 
+									<span class="asset_type_count" id="refDatasetCount" th:if="${list.attributeName == 'Is Reference Dataset' && attr == 'Yes'}" 
+										th:text="${list.referenceDatasetCount}"></span>
+										<input type="hidden" id="initialRefDatasetCount" th:value="${list.referenceDatasetCount}"
+										 th:if="${list.attributeName == 'Is Reference Dataset' && attr == 'Yes'}"/>
+										 
+									<span class="asset_type_count" id="nonrefDatasetCount" th:if="${list.attributeName == 'Is Reference Dataset' && attr == 'No'}"
+										 th:text="${list.nonReferenceDatasetCount}"></span>
+										 <input type="hidden" id="initialNonrefDatasetCount" th:value="${list.nonReferenceDatasetCount}"
+										 th:if="${list.attributeName == 'Is Reference Dataset' && attr == 'No'}" />
+										 
+									<span class="asset_type_count" id="modelDeployedCount" th:if="${list.attributeName == 'Is Model Deployed' && attr == 'Yes'}" 
+										th:text="${list.modelDeployedCount}"></span>
+										<input type="hidden" id="initialmodelDeployedCount" th:value="${list.modelDeployedCount}"
+										 th:if="${list.attributeName == 'Is Model Deployed' && attr == 'Yes'}"/>
+										 
+									<span class="asset_type_count" id="modelNotDeployedCount" th:if="${list.attributeName == 'Is Model Deployed' && attr == 'No'}"
+										 th:text="${list.modelNotDeployedCount}"></span>
+										 <input type="hidden" id="initialModelNotDeployedCount" th:value="${list.modelNotDeployedCount}"
+										  th:if="${list.attributeName == 'Is Model Deployed' && attr == 'No'}" />
+									 
+								
 								</label>
+								
 							</div>
 
 						</div>
@@ -103,10 +146,10 @@
 						</div>
 					</div>
 				</div>
-
+				</div>
+							
 				<div class="form-group col-md-9 col-sm-12 mb-4"
 					id="searchResultsDiv"
-					style="display: none; margin-top: -55px; background-color: #C6D9EC;">
 					<!-- search results -->
 					<div th:replace="fragments/search_results :: search_results"></div>
 				</div>

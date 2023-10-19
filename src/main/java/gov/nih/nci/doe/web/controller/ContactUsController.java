@@ -37,10 +37,19 @@ public class ContactUsController extends AbstractDoeController {
 			} else {
 				Boolean success = DoeClientUtil.getResponseFromGoogleCaptcha(secretKey, contactUs.getResponse());
 				if (Boolean.TRUE.equals(success)) {
-					mailService.sendContactUsEmail(contactUs.getName(), contactUs.getEmailAddress(),
-							contactUs.getMessage());
+					if (contactUs.getInquiry() != null && contactUs.getInquiry().contains("unsubscribe from MoDaC")) {
+						String emailAddress = contactUs.getEmailAddress();
+						if (StringUtils.isNotEmpty(emailAddress)
+								&& Boolean.FALSE.equals(authService.doesUsernameExist(emailAddress))) {
+							return new ResponseEntity<>(
+									"User should be registered to unsubscribe from MoDaC notifications.",
+									HttpStatus.OK);
+						}
 
-					log.info("successfully reset the password...");
+					}
+					mailService.sendContactUsEmail(contactUs);
+
+					log.info("successfully sending contact us email...");
 					return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
 				} else {
 					return new ResponseEntity<>("Failed to validate captcha.", HttpStatus.OK);

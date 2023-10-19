@@ -225,13 +225,12 @@ public class DoeDownloadController extends AbstractDoeController {
 				} else {
 					taskManagerService.saveTransfer(taskId, "Download", downloadFile.getDownloadType(), name,
 							getLoggedOnUserInfo());
-					String transferType = downloadFile.getSearchType().equals("async") ? "Globus" : "S3";
 					// store the auditing info
 					AuditingModel audit = new AuditingModel();
 					audit.setName(loggedOnUser);
 					audit.setOperation("Download");
 					audit.setStartTime(new Date());
-					audit.setTransferType(transferType);
+					audit.setTransferType(downloadFile.getSearchType());
 					audit.setPath(downloadFile.getDestinationPath());
 					audit.setTaskId(taskId);
 					auditingService.saveAuditInfo(audit);

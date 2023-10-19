@@ -13,12 +13,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
@@ -64,6 +64,7 @@ import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.model.InferencingTaskModel;
 import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.model.PermissionsModel;
+import gov.nih.nci.doe.web.model.SearchList;
 import gov.nih.nci.doe.web.service.AccessGroupsService;
 import gov.nih.nci.doe.web.service.AuditingService;
 import gov.nih.nci.doe.web.service.AuthenticateService;
@@ -281,6 +282,30 @@ public abstract class AbstractDoeController {
 			DoeUsersModel user = authService.getUserInfo(emailAddr);
 			if (user != null) {
 				return user.getFirstName();
+			}
+		}
+		return null;
+	}
+
+	@ModelAttribute("lastName")
+	public String getLoggedOnUserLastName() {
+		String emailAddr = getLoggedOnUserInfo();
+		if (StringUtils.isNotEmpty(emailAddr)) {
+			DoeUsersModel user = authService.getUserInfo(emailAddr);
+			if (user != null) {
+				return user.getLastName();
+			}
+		}
+		return null;
+	}
+
+	@ModelAttribute("organization")
+	public String getLoggedOnUserOrg() {
+		String emailAddr = getLoggedOnUserInfo();
+		if (StringUtils.isNotEmpty(emailAddr)) {
+			DoeUsersModel user = authService.getUserInfo(emailAddr);
+			if (user != null) {
+				return user.getInstitution();
 			}
 		}
 		return null;
@@ -1058,7 +1083,8 @@ public abstract class AbstractDoeController {
 	}
 
 	public void constructSearchCriteriaList(HttpSession session, Model model) throws DoeWebException {
-		Map<String, List<String>> browseList = new LinkedHashMap<String, List<String>>();
+
+		List<SearchList> searchList = new ArrayList<>();
 		List<LookUp> results = lookUpService.getAllDisplayNames();
 
 		for (LookUp val : results) {
@@ -1081,22 +1107,27 @@ public abstract class AbstractDoeController {
 			search.setIsExcludeParentMetadata(isExcludeParentMetadata);
 			search.setDetailed(true);
 
-			Set<String> list = retrieveSearchList(session, search, val.getAttrName(), levelValues[0], null);
-			List<String> sortedList = new ArrayList<String>(list);
-			Collections.sort(sortedList, String.CASE_INSENSITIVE_ORDER);
-
-			browseList.put(val.getDisplayName(), sortedList);
+			SearchList filterList = retrieveSearchList(session, search, val.getAttrName(), levelValues[0], null,
+					val.getDisplayName());
+			searchList.add(filterList);
 
 		}
-		model.addAttribute("browseList", browseList);
+		model.addAttribute("browseList", searchList);
 	}
 
-	public Set<String> retrieveSearchList(HttpSession session, DoeSearch search, String attributeName, String levelName,
-			String retrieveParent) throws DoeWebException {
+	public SearchList retrieveSearchList(HttpSession session, DoeSearch search, String attributeName, String levelName,
+			String retrieveParent, String displayName) throws DoeWebException {
 
-		log.info("retreiev search list for attributeName: " + attributeName + " levelName: " + levelName
+		log.info("retrieve search list for attributeName: " + attributeName + " levelName: " + levelName
 				+ " retrieveParent: " + retrieveParent);
+		SearchList searchList = new SearchList();
 		Set<String> list = new HashSet<>();
+		AtomicInteger datasetCount = new AtomicInteger(0);
+		AtomicInteger modelCount = new AtomicInteger(0);
+		AtomicInteger referenceDatasetCount = new AtomicInteger(0);
+		AtomicInteger nonReferenceDatasetCount = new AtomicInteger(0);
+		AtomicInteger modelDeployedCount = new AtomicInteger(0);
+		AtomicInteger modelNotDeployedCount = new AtomicInteger(0);
 		String authToken = (String) session.getAttribute("hpcUserToken");
 		log.info("authToken: " + authToken);
 
@@ -1132,6 +1163,44 @@ public abstract class AbstractDoeController {
 							.forEach(f -> {
 								if (f.getAttribute().equalsIgnoreCase(attributeName)) {
 									list.add(f.getValue());
+
+								}
+
+								// This is filter the assets of type datasets and model and get the count for
+								// each of them
+								if (attributeName.equalsIgnoreCase("asset_type")) {
+									if (f.getAttribute().equalsIgnoreCase("asset_type")
+											&& f.getValue().equalsIgnoreCase("Dataset")) {
+										datasetCount.incrementAndGet();
+									} else if (f.getAttribute().equalsIgnoreCase("asset_type")
+											&& f.getValue().equalsIgnoreCase("Model")) {
+										modelCount.incrementAndGet();
+									}
+								}
+
+								// This is filter the assets of metadata is_reference_dataset and get the count
+								// for
+								// each of them
+								if (attributeName.equalsIgnoreCase("is_reference_dataset")) {
+									if (f.getAttribute().equalsIgnoreCase("is_reference_dataset")
+											&& f.getValue().equalsIgnoreCase("Yes")) {
+										referenceDatasetCount.incrementAndGet();
+									} else if (f.getAttribute().equalsIgnoreCase("is_reference_dataset")
+											&& f.getValue().equalsIgnoreCase("No")) {
+										nonReferenceDatasetCount.incrementAndGet();
+									}
+								}
+
+								// This is filter the assets of metadata is_model_deployed and get the count for
+								// each of them
+								if (attributeName.equalsIgnoreCase("is_model_deployed")) {
+									if (f.getAttribute().equalsIgnoreCase("is_model_deployed")
+											&& f.getValue().equalsIgnoreCase("Yes")) {
+										modelDeployedCount.incrementAndGet();
+									} else if (f.getAttribute().equalsIgnoreCase("is_model_deployed")
+											&& f.getValue().equalsIgnoreCase("No")) {
+										modelNotDeployedCount.incrementAndGet();
+									}
 								}
 							});
 				}
@@ -1143,10 +1212,21 @@ public abstract class AbstractDoeController {
 			log.error("Failed to get search list");
 			throw new DoeWebException(e);
 		}
-		return list;
+
+		List<String> sortedList = new ArrayList<String>(list);
+		Collections.sort(sortedList, String.CASE_INSENSITIVE_ORDER);
+		searchList.setAttrValues(sortedList);
+		searchList.setDatasetCount(datasetCount.get());
+		searchList.setModelCount(modelCount.get());
+		searchList.setReferenceDatasetCount(referenceDatasetCount.get());
+		searchList.setNonReferenceDatasetCount(nonReferenceDatasetCount.get());
+		searchList.setModelDeployedCount(modelDeployedCount.get());
+		searchList.setModelNotDeployedCount(modelNotDeployedCount.get());
+		searchList.setAttributeName(StringUtils.isNotEmpty(displayName) ? displayName : attributeName);
+		return searchList;
 	}
 
-	public List<String> constructFilterCriteria(HttpSession session, DoeSearch search, String retrieveParent)
+	public SearchList constructFilterCriteria(HttpSession session, DoeSearch search, String retrieveParent)
 			throws DoeWebException {
 
 		log.info("construct filter crietria for : " + search + " and isRetrieveParent: " + retrieveParent);
@@ -1183,12 +1263,9 @@ public abstract class AbstractDoeController {
 
 		search.setDetailed(true);
 
-		Set<String> list = retrieveSearchList(session, search, attrName, level, retrieveParent);
+		SearchList list = retrieveSearchList(session, search, attrName, level, retrieveParent, null);
 
-		List<String> sortedList = new ArrayList<String>(list);
-		Collections.sort(sortedList, String.CASE_INSENSITIVE_ORDER);
-
-		return sortedList;
+		return list;
 	}
 
 	public List<KeyValueBean> getAllApplicableModelPaths(HttpSession session) throws DoeWebException {

@@ -117,7 +117,9 @@ $(document).ready(
 						$("#uploadSectionDiv").hide();
 						$("#uploadHeader").hide();
 						$(".backToUploadTab").show();
+						$(".backToUplaodTab_editCollection").show();
 						$(".backToSearchBtn").hide();
+						$(".backToSearch_editCollection").hide();
 
 						$("#userMetaData tbody").html("");
 						$("#path").val(selectedPath);
@@ -549,7 +551,7 @@ function constructNewCollectionMetaDataSet(data, status) {
 													+ 'style="width:70%;"><input type="hidden" name="zAttrStr_'
 													+ value.attrName + '" value ="' + assetType + '"/> </td></tr>');
 
-						} else if (value.validValues != null) {
+						} else if (value.validValues != null && value.isVisibleOnUplaodPage != false) {
 							$("#newMetaDataTable tbody").append(
 									"<tr><td>" + value.displayName
 											+ "&nbsp;&nbsp;" + infoHtml + "</td><td>"
@@ -577,7 +579,7 @@ function constructNewCollectionMetaDataSet(data, status) {
 								$select.select2().trigger('change');
 							}
 
-						} else if (value.attrValue) {
+						} else if (value.attrValue && value.isVisibleOnUplaodPage != false) {
 							$("#newMetaDataTable tbody").append(
 									'<tr><td>' + value.displayName
 											+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
@@ -594,7 +596,7 @@ function constructNewCollectionMetaDataSet(data, status) {
 												+ value.mandatory + '" placeholder="' + placeholderValue
 												+ '" aria-label="value of meta data" name="zAttrStr_' + value.attrName
 												+ '"' + 'style="width:70%;"></textarea></td></tr>');
-							} else {
+							} else if(value.isVisibleOnUplaodPage != false) {
 								$("#newMetaDataTable tbody").append(
 										'<tr><td>' + value.displayName
 												+ '&nbsp;&nbsp;' + infoHtml + '</td><td>' + '<input type="text" is_mandatory="'
@@ -1575,8 +1577,9 @@ function postSuccessEditCollectionMetadata(data, status) {
 		$("#uploadSectionDiv").hide();
 		$("#uploadHeader").hide();
 		$(".backToUploadTab").show();
+		$(".backToUplaodTab_editCollection").show();
 		$(".backToSearchBtn").hide();
-
+		$(".backToSearch_editCollection").hide();
 		$("#userMetaData tbody").html("");
 		$("#path").val(data.collectionPath);
 		$(".editCollectionSuccess").hide();

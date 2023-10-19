@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>gov.nih.nci.doe</groupId>
 	<artifactId>web-doe</artifactId>
-	<version>1.15.1</version>
+	<version>1.16.0</version>
 	<packaging>war</packaging>
 	<name>DOE Web Application</name>
 	<description>Department Of Energy</description>
@@ -17,7 +17,7 @@
 		<!-- lookup parent from repository -->
 	</parent>
 	<properties>
-		<api.version>2.35.0</api.version>
+		<api.version>2.32.0</api.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<start-class>gov.nih.nci.doe.web.DoeWebApplication</start-class>
 		<java.version>1.8</java.version>

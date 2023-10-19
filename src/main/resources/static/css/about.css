@@ -1,0 +1,40 @@
+.aboutcontainerHero {
+  height: 148px;
+  flex-shrink: 0;
+  background-image: url(/images/about_background.svg);
+  background-size: cover;
+}
+
+.aboutcontainerHeroText {
+  color: #FFF;
+  text-align: center;
+  font-family: Inter;
+  font-size: 2rem;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 106.523%;
+  letter-spacing: -0.7px;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.aboutBody {
+  color: transparent;
+  font-family: var(--font-family-inter);
+  font-size: var(--font-size-m);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 24px;
+  padding: 4rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+
+.aboutBody a {
+  color: var(--green-blue);
+  font-family: var(--font-family-inter);
+  font-size: var(--font-size-m);
+  font-weight: 500;
+  font-style: normal;
+}

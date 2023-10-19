@@ -1,0 +1,185 @@
+@charset "UTF-8";
+/*--===============================================================================
+FONTS, FONT AWESOME, FONT SOURCE SANS PRO 
+==================================================================================---*/
+
+/* font use */
+@font-face {
+	font-family: 'FontAwesome';
+	src: url("../fonts/fontawesome-webfont.eot");
+	src: url("../fonts/fontawesome-webfont?#iefix")
+		format("embedded-opentype"), url("../fonts/fontawesome-webfont.woff")
+		format("woff"), url("../fonts/fontawesome-webfont.ttf")
+		format("truetype"),
+		url("../fonts/fontawesome-webfont.svg#fontawesomeregular")
+		format("svg");
+	font-weight: normal;
+	font-style: normal
+}
+
+@font-face {
+	font-family: 'latoregular';
+	src: url('../webfonts/lato-regular-webfont.woff2') format('woff2'),
+		url('../webfonts/lato-regular-webfont.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'ralewayregular';
+	src: url('../webfonts/raleway-regular-webfont.woff2') format('woff2'),
+		url('../webfonts/raleway-regular-webfont.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'MontserratRegular';
+	src: url('../webfonts/Montserrat-Regular.woff') format('woff2'),
+		url('../webfonts/Montserrat-Regular.woff2') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'nunito_sansbold';
+	src: url('../webfonts/nunitosans-bold-webfont.woff2') format('woff2'),
+		url('../webfonts/nunitosans-bold-webfont.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Nunito Sans';
+	font-style: normal;
+	font-weight: 400;
+	src: url('../webfonts/nunito-sans-v6-latin-regular.woff2')
+		format('woff2'), url('../webfonts/nunito-sans-v6-latin-regular.woff')
+		format('woff');
+}
+
+@font-face {
+	font-family: 'Nunito';
+	font-style: normal;
+	font-weight: 400;
+	src: url('../webfonts/nunito-v14-latin-regular.woff2') format('woff2'),
+		/* Super Modern Browsers */
+       url('../webfonts/nunito-v14-latin-regular.woff') format('woff'),
+		/* Modern Browsers */
+}
+
+/* inter-regular - latin */
+@font-face {
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 400;
+	src: url('../webfonts/inter-v2-latin-regular.woff2') format('woff2'),
+		/* Super Modern Browsers */
+       url('../webfonts/inter-v2-latin-regular.woff') format('woff'),
+		/* Modern Browsers */
+}
+
+/* font use */
+@font-face {
+	font-family: 'gijgo';
+	src: url("../fonts/gijgo-material.eot");
+	src: url("../fonts/gijgo-material?#iefix") format("embedded-opentype"),
+		url("../fonts/gijgo-material.woff") format("woff"),
+		url("../fonts/gijgo-material.ttf") format("truetype"),
+		url("../fonts/gijgo-material.svg") format("svg");
+	font-weight: normal;
+	font-style: normal
+}
+
+@font-face {
+	font-family: "Source Sans Pro";
+	font-style: normal;
+	font-weight: 300;
+	src: url("../fonts/sourcesanspro-light-webfont.eot?#iefix")
+		format("embedded-opentype"), url("../fonts/sourcesanspro-light.ttf")
+		format("truetype");
+}
+
+@font-face {
+	font-family: "Source Sans Pro script=latin rev=1";
+	font-style: normal;
+	font-weight: 400;
+	src: url("../fonts/sourcesanspro-regular-webfont.eot?#iefix")
+		format("embedded-opentype"), url("../fonts/sourcesanspro-regular.ttf")
+		format("truetype");
+}
+
+@font-face {
+	font-family: "Source Sans Pro";
+	font-style: italic;
+	font-weight: 400;
+	src: url("../fonts/sourcesanspro-italic-webfont.eot?#iefix")
+		format("embedded-opentype"), url("../fonts/SourceSansPro-Italic.ttf")
+		format("truetype");
+}
+
+@font-face {
+	font-family: "Source Sans Pro";
+	font-style: normal;
+	font-weight: 700;
+	src: url("../fonts/sourcesanspro-bold-webfont.eot?#iefix")
+		format("embedded-opentype"), url("../fonts/SourceSansPro-Bold.ttf")
+		format("truetype");
+}
+
+@font-face {
+	font-family: "Source Sans Pro semibold";
+	font-style: normal;
+	src: url("../fonts/SourceSansPro-SemiBold-webfont.eot?#iefix")
+		format("embedded-opentype"),
+		url("../fonts/SourceSansPro-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "inter_medium";
+	font-style: normal;
+	src: url("../fonts/Inter-medium.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "inter_regular";
+	font-style: normal;
+	src: url("../fonts/Inter-Regular.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "inter_bold";
+	font-style: normal;
+	src: url("../fonts/Inter-Bold.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "inter_light";
+	font-style: normal;
+	src: url("../fonts/Inter-Light.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "lato_bold";
+	font-style: bold;
+	src: url("../fonts/Lato-Bold.ttf") format("truetype");
+}
+
+
+@font-face {
+	font-family: "poppins_bold";
+	font-style: bold;
+	src: url("../fonts/Poppins-Bold.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "poppins_medium";
+	font-style: bold;
+	src: url("../fonts/Poppins-Medium.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "raleway_medium";
+	font-style: bold;
+	src: url("../webfonts/Raleway-Medium.ttf") format("truetype");
+}

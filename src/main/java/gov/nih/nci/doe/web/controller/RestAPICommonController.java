@@ -396,9 +396,7 @@ public class RestAPICommonController extends AbstractDoeController {
 				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 				HpcDataObjectDownloadResponseDTO dataObject = parser
 						.readValueAs(HpcDataObjectDownloadResponseDTO.class);
-				downloadToUrl(dataObject.getDownloadRequestURL(),
-						dataObject.getDestinationFile() != null ? dataObject.getDestinationFile().getName() : "test",
-						response);
+				downloadToUrl(dataObject.getDownloadRequestURL(), dataObject.getDestinationFile().getName(), response);
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		}
@@ -446,6 +444,8 @@ public class RestAPICommonController extends AbstractDoeController {
 			parentPath = path.substring(0, path.lastIndexOf('/'));
 		}
 
+		String dataObjectName = path.substring(path.lastIndexOf('/') + 1);
+
 		Boolean isPermissions = false;
 		HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, parentPath, true);
 
@@ -471,7 +471,7 @@ public class RestAPICommonController extends AbstractDoeController {
 
 					log.info("response content type is application/octet-stream");
 					response.setContentType("application/octet-stream");
-					response.setHeader("Content-Disposition", "attachment; filename=" + "test");
+					response.setHeader("Content-Disposition", "attachment; filename=" + dataObjectName);
 					// default buffer size is 4k
 					IOUtils.copy((InputStream) restResponse.getEntity(), response.getOutputStream(), bufferSize);
 					return new ResponseEntity<>(HttpStatus.OK);
@@ -479,8 +479,6 @@ public class RestAPICommonController extends AbstractDoeController {
 				} else {
 					HpcDataObjectDownloadResponseDTO downloadDTO = (HpcDataObjectDownloadResponseDTO) DoeClientUtil
 							.getObject(restResponse, HpcDataObjectDownloadResponseDTO.class);
-
-					String dataObjectName = path.substring(path.lastIndexOf('/') + 1);
 
 					try {
 						taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "data_object",

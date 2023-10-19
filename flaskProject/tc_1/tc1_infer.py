@@ -159,7 +159,7 @@ def run(data):
     if os.path.isfile(pred_name):
         print('file exists ' + pred_name)
         # move the predictions to mount location
-        shutil.move(pred_name, '/mnt/IRODsTest/MoDaC_Inferencing/' + pred_name)
+        shutil.move(pred_name, '/mnt/DMEDataStage/MoDaC_Inferencing/' + pred_name)
 
     # remove the preprocessed file
     if os.path.exists(data):
@@ -177,7 +177,7 @@ if __name__ == '__main__':
         print("data filename: " + datafilename)
         print("fname:" + pred_name)
         print("input_type: " + input_type)
-        input_file = '/mnt/IRODsTest/MoDaC_Inferencing/' + datafilename
+        input_file = '/mnt/DMEDataStage/MoDaC_Inferencing/' + datafilename
         file_name, file_extension = os.path.splitext(datafilename)
         manifest_dir_name = 'GDC-DATA_' + file_name.replace(" ", "")
 
@@ -199,7 +199,7 @@ if __name__ == '__main__':
         if output_file is not None and output_file != 'None':
             print("output file is not empty: " + output_file)
             header_list = ["Name"]
-            df1 = pd.read_csv('/mnt/IRODsTest/MoDaC_Inferencing/' + output_file, names=header_list)
+            df1 = pd.read_csv('/mnt/DMEDataStage/MoDaC_Inferencing/' + output_file, names=header_list)
             for ind in df1.index:
                 if df1['Name'][ind] in hm_rev:
                     output_results.append(hm_rev[df1['Name'][ind]])
@@ -229,6 +229,6 @@ if __name__ == '__main__':
         text_file.write(error_msg)
         text_file.close()
         # place the error file on the common mount location
-        shutil.move(error_file_name, '/mnt/IRODsTest/MoDaC_Inferencing/' + error_file_name)
+        shutil.move(error_file_name, '/mnt/DMEDataStage/MoDaC_Inferencing/' + error_file_name)
         shutil.rmtree(manifest_dir_name, ignore_errors=True)
         print("completed error file copy to mount location")
