@@ -28,6 +28,71 @@
     padding-bottom: 68px;
 }
 
+.datasetToolbar {
+	display: flex;
+    justify-content: space-between;
+    padding-right: 1rem !important;
+    padding-top: 12px;
+}
+
+#dataSetTable_length, #generatePredTable_length {
+    margin-top: -11px;
+    float: right;
+    text-align: right;
+    margin-left: auto;
+    font-family: 'inter_regular';
+    font-weight: 500;
+    color: rgba(81, 90, 106, 1);
+    font-size: 12px;
+}
+
+#dataSetTable_length label,#generatePredTable_length label {
+	color: #515A6A;
+    font-variant-numeric: lining-nums tabular-nums;
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 110%;
+    letter-spacing: 0.12px;
+}
+
+#dataSetTable_info {
+	color: #515A6A;
+    font-variant-numeric: lining-nums tabular-nums;
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 110%;
+    letter-spacing: 0.12px;
+    text-transform: uppercase;
+    margin-left: -11px;
+    margin-top: 4px;
+}
+
+#dataSetTable_paginate {
+    margin-left: -14px;
+    margin-top: 4px;
+}
+
+#dataSetTable_length select {
+	color: #515A6A;
+    font-variant-numeric: lining-nums tabular-nums;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 110%;
+    letter-spacing: -0.14px;
+    border-radius: 65px;
+    border: 1px solid var(--grays-gray-3, #8B98AF);
+    background: #FFF;
+    width: 68px;
+    height: 34px;
+    text-align: center;
+}
+
 .assetFilesConditional {
     margin-top: 4rem;
     margin-left: 7rem;
@@ -256,7 +321,7 @@ table#userMetaData tr:nth-child(odd) td:nth-child(2) {
 
 #dataSetTable_length,
 #generatePredTable_length {
-    margin-top: -6px;
+    margin-top: -14px;
     margin-right: 25px;
     float: right;
 }
@@ -379,8 +444,8 @@ input[type="checkbox"].selectIndividualCheckbox {
     position: absolute;
     height: 40px;
     width: 18px;
-    margin-left: 6px;
-    margin-top: 8px;
+    margin-left: -31px;
+    margin-top: -2px;
 }
 .arrow_right_assets_files {
     width: 16px;

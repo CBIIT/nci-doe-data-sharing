@@ -607,9 +607,9 @@ function dataTableInit(isVisible) {
 		},
 		],
 
-		"dom" : '<"toolbar top"lip>rt<"bottom"ip>',
+		"dom" : '<"toolbar top"lip>rt<"bottom">',
 
-		"pagingType" : "simple",
+		"pagingType" : "full_numbers",
 
 		"lengthMenu" : [ [ 10, 25, 50, 100 ], [ 10, 25, 50, 100 ] ],
 
@@ -618,8 +618,8 @@ function dataTableInit(isVisible) {
 			"lengthMenu" : "Results per Page: _MENU_",
 			"zeroRecords" : "Nothing found to display",
 			"paginate" : {
-				next : '<i style="color:#000;font-size:17px;" class="fas fa-caret-right"></i>',
-				previous : '<i style="color:#000;font-size:17px;" class="fas fa-caret-left"></i>'
+				next : '<img src="/images/paginate_right.svg"/>',
+				previous : '<img src="/images/paginate_left.svg"/>'
 			}
 		}
 	});
