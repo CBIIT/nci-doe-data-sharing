@@ -174,13 +174,13 @@
 	}
 	#resetBtnLandingForMobile {
 		position: absolute;
-		top: 2.4rem !important;
-		right: 5rem !important;
+		top: 1.4rem !important;
+    	right: 7rem !important;
 	}
 	#landingSearchMobileButton {
 		position: absolute;
-		right: 13px;
-		top: 37px;
+		right: 35px;
+    	top: 18px;
 	}
 	#landingSearchMobileButton img {
 		width: 60px;
