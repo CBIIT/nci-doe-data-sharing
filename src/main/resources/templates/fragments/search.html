@@ -92,11 +92,10 @@
 						<div class="dataDivCollapse">
 							<div class="form-group col-lg-12 col-md-12 filterGroupDiv"
 								th:id="${list.attributeName}" th:each="attr: ${list.attrValues}">
-
-								<input type="hidden" th:value="${attrStat.index}" /> <input
-									type="hidden" class="filterSize" th:value="${attrStat.size}" />
+								
+								<input type="hidden" class="filterSize" th:value="${attrStat.size}" />
 								<label class="showMorefields"> <input type="checkbox"
-									class="filteritem" th:value="${attr}" />&nbsp;&nbsp;
+									th:class="'filteritem checkbox_'+ ${attrStat.index}" th:value="${attr}" />&nbsp;&nbsp;
 									<div th:text="${attr}" class="inter-medium-wedgewood-16px"
 										style="margin-left: 25px; margin-top: -24px;letter-spacing: 0.16px;margin-bottom: -7px;"></div>
 										

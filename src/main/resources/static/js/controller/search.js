@@ -222,14 +222,31 @@ $(document).ready(function() {
 	
 	});
 	
-	//Funtion when clicking on checkboxes for search sidebar filters
+//Funtion when clicking on checkboxes for search sidebar filters
 	
 	$(document).on('change', '.filteritem', function() {
 
+    
+	// Get the parent div of the clicked checkbox
+    var parentDiv = $(this).closest(".filterGroupDiv");
+    var className =  $(this).attr('class');
+    var substring = "checkbox_";
+    var numberIndex = className.indexOf(substring) + substring.length;
+  	var index = className.substring(numberIndex);
+    
 	if ($(this).is(':checked')) {
-		$(this).parent().find('span').css('color', '#2E76ED');
+		$(this).parent().find('div').css('color', '#2E76ED');
+		
+      	// Move the parent div to the top of the list
+      	$(this).closest('.dataDivCollapse').prepend(parentDiv);
+      	
 	} else {
-		$(this).parent().find('span').css('color', '#212529');
+		$(this).parent().find('div').css('color', '#4584a1');
+		var beforeDiv = $(this).closest('.dataDivCollapse').find('.checkbox_' + (index - 1)).closest('.filterGroupDiv');		
+		 // Move the parent div back to its original position
+         parentDiv.insertAfter(beforeDiv);
+        
+        
 	}
 	var attrName = $(this).parent().parent().attr('id');
 
@@ -816,7 +833,7 @@ function filterNext($this, attributeTypeName) {
 				} else {
 					$(this).hide();
 					$(this).find('.filteritem').prop("checked", false);
-					$(this).find('span').css('color', '#212529');
+					$(this).find('div').css('color', '#4584a1');
 				}
 			});
 
@@ -902,7 +919,7 @@ function filterPrev($this, attributeTypeName) {
 				} else {
 					$(this).hide();
 					$(this).find('.filteritem').prop("checked", false);
-					$(this).find('span').css('color', '#212529');
+					$(this).find('div').css('color', '#4584a1');
 				}
 			});
 
