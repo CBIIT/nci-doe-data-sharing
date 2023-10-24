@@ -376,6 +376,9 @@
 	.mobile-nav-toggle[aria-expanded="false"] .toggleNavBarIcon {
 		display: block !important;
 	}
+	.d-sm-block {
+   	 display: block!important;
+	}
 	.toggleNavBarIcon {
 		font-size: 28px;
 		transform: translateY(-3px);
@@ -427,7 +430,7 @@
 	}
 	.mobile-navigation {
 		position: absolute;
-		top: 160px;
+		top: 148px;
 		left: 0px;
 		display: block;
 		z-index: 1000;
@@ -532,11 +535,11 @@
 		margin-left: -50px !important;
 	}
 	.logoImg {
-		width: 283px;
+		width: 312px !important;
 	}
 
 	.col.order-first {
-		margin-left: -0.25rem !important;
+		margin-left: -2.25rem !important;
 	}
 
 
