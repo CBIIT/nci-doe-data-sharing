@@ -147,12 +147,12 @@ $(document).ready(function() {
 		$(".filterGroupDiv").each(function(e) {
 			$(this).show();
 			$(this).find('.showMorefields').show();
-			$(this).find('.filteritem').prop('checked', false);
-			$(this).find('span').css('color', '#212529');
+			$(this).find('div').css('color', '#4584a1');
 		});
 		showFirstFewFields();
 		populateSearchCriteria();
 		resetSearchFilterCountsOnRefresh();
+		resetPositionsForFilters();
 	});
 	
 	$(document).on('click', '#cancelFiltersMobile', function() {
@@ -160,7 +160,7 @@ $(document).ready(function() {
 			$(this).show();
 			$(this).find('.showMorefields').show();
 			$(this).find('.filteritem').prop('checked', false);
-			$(this).find('span').css('color', '#212529');
+			$(this).find('div').css('color', '#212529');
 		});
 		showFirstFewFields();
 	});
@@ -1070,6 +1070,31 @@ function resetSearchFilterCountsOnRefresh() {
    
 }
 
+function resetPositionsForFilters() {
+	
+	$(".dataDivCollapse").each(function(e) {
+		
+		$(this).find(".filteritem").each(function(e) {
+		
+		// Get the parent div of the clicked checkbox
+	    var parentDiv = $(this).closest(".filterGroupDiv");
+	    var className =  $(this).attr('class');
+	    var substring = "checkbox_";
+	    var numberIndex = className.indexOf(substring) + substring.length;
+	  	var index = className.substring(numberIndex);
+  	
+		if ($(this).is(':checked')) {
+			$(this).prop('checked', false);
+			var beforeDiv = $(this).closest('.dataDivCollapse').find('.checkbox_' + (index - 1)).closest('.filterGroupDiv');		
+			 // Move the parent div back to its original position
+		     parentDiv.insertAfter(beforeDiv);
+  	
+		}
+	  });
+	
+	}); 
+	
+}
 
 function showFirstFewFields($this, oper) {
 	if ($this) {
