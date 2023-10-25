@@ -377,27 +377,39 @@ div.dataDivCollapse :nth-child(4) > label >img {
 }
 
 /* Customize the scrollbar track */
+
   div.dataDivCollapse::-webkit-scrollbar-track {
-    background-color: #81ACDF; /* Replace with your desired color */
+    background-color: #81ACDF; 
+    border-radius: 3px;
   }
 
-  /* Customize the scrollbar thumb */
+  
+  div.dataDivCollapse::-webkit-scrollbar {
+  	width: 7px;
+	height: 126px;
+	flex-shrink: 0;
+  }
+  
   div.dataDivCollapse::-webkit-scrollbar-thumb {
-    background-color: #81ACDF; /* Replace with your desired color */
+    border-radius: 3px;
+	background: #81ACDF;
   }
 
 /* Customize the scrollbar track */
   div#filterSectionDiv::-webkit-scrollbar-track {
-    background-color: #626184; /* Replace with your desired color */
+    border-radius: 3px;
+	background: #626184;
   }
 
   /* Customize the scrollbar thumb */
   div#filterSectionDiv::-webkit-scrollbar-thumb {
-    background-color: #626184; /* Replace with your desired color */
+    border-radius: 3px;
+	background: #626184;
   }
   div#filterSectionDiv::-webkit-scrollbar {
 	 width:7px;
-    height:349px;
+     height:349px;
+     flex-shrink: 0;
   }
      
   
