@@ -154,10 +154,11 @@ $(document).ready(function() {
 			
 			$(this).find('.showMorefields').css(cssProperties);
 		});
+		resetPositionsForFilters();
 		showFirstFewFields();
 		populateSearchCriteria();
 		resetSearchFilterCountsOnRefresh();
-		resetPositionsForFilters();
+		
 	});
 	
 	$(document).on('click', '#cancelFiltersMobile', function() {
