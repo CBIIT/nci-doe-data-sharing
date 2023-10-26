@@ -669,8 +669,8 @@ function renderDataSetName(data, type, row) {
 				editDataSetHtml += "&nbsp;<span class='editAccessGroupPermissions' collection_name = '"
 						+ row.dataSetName + "' " + "collectionId  = '" + row.dataSetCollectionId + "' "
 						+ " selectedCollection = 'Asset' " + "metadata_path  = '" + row.dataSetPath + "'>"
-						+ "<img class='collectionAccessGrpImg' src='images/Search_AccessGroups.svg' data-toggle='tooltip' "
-						+ "title='Edit asset permissions' " + "th:src='@{/images/Search_AccessGroups.svg}' "
+						+ "<img class='collectionAccessGrpImg' src='images/Search_AccessGroups.png' data-toggle='tooltip' "
+						+ "title='Edit access group permissions' " + "th:src='@{/images/Search_AccessGroups.png}' "
 						+ "alt='Edit Asset Access Permissions'></span>&nbsp;";
 			}
 		}
@@ -694,9 +694,9 @@ function renderDataSetName(data, type, row) {
 						+ "metadata_path  = '"
 						+ row.studyPath
 						+ "'>"
-						+ "<img class='collectionAccessGrpImg' src='images/Search_AccessGroups.svg' data-toggle='tooltip' title='Edit study permissions' "
-						+ "th:src='@{/images/Search_AccessGroups.svg}' "
-						+ "alt='Edit Study Access Permissions'</span>";
+						+ "<img class='collectionAccessGrpImg' src='images/Search_AccessGroups.png' data-toggle='tooltip' title='Edit study permissions' "
+						+ "th:src='@{/images/Search_AccessGroups.png}' "
+						+ "alt='Edit access group permissions'</span>";
 			}
 		}
 
@@ -720,9 +720,9 @@ function renderDataSetName(data, type, row) {
 						+ "metadata_path  = '"
 						+ row.institutePath
 						+ "'>"
-						+ "<img src='images/Search_AccessGroups.svg' data-toggle='tooltip' title='Edit program permissions' "
-						+ "th:src='@{/images/Search_AccessGroups.svg}' "
-						+ "class='collectionAccessGrpImg' alt='Edit Program Access Permissions'</span>";
+						+ "<img src='images/Search_AccessGroups.png' data-toggle='tooltip' title='Edit program permissions' "
+						+ "th:src='@{/images/Search_AccessGroups.png}' "
+						+ "class='collectionAccessGrpImg' alt='Edit access group permissions'</span>";
 			}
 	   }
     }
