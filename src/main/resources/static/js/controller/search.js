@@ -147,6 +147,12 @@ $(document).ready(function() {
 		$(".filterGroupDiv").each(function(e) {
 			$(this).show();
 			$(this).find('.showMorefields').show();
+			
+			var cssProperties = {
+			    'background': 'transparent',
+			};
+			
+			$(this).find('.showMorefields').css(cssProperties);
 		});
 		showFirstFewFields();
 		populateSearchCriteria();
@@ -157,8 +163,14 @@ $(document).ready(function() {
 	$(document).on('click', '#cancelFiltersMobile', function() {
 		$(".filterGroupDiv").each(function(e) {
 			$(this).show();
-			$(this).find('.showMorefields').show();
 			$(this).find('.filteritem').prop('checked', false);
+			
+			$(this).find('.showMorefields').show();
+			var cssProperties = {
+			    'background': 'transparent',
+			};
+			
+			$(this).find('.showMorefields').css(cssProperties);
 			$(this).find('div').css('color', '#212529');
 		});
 		showFirstFewFields();
@@ -188,7 +200,6 @@ $(document).ready(function() {
             var buttons = $("#filterSectionDiv").find('.dataTargetCollapse');
 		
 		if(title  == 'Collapse all filters') {
-
             
             // Click on each button
             buttons.each(function() {
@@ -202,8 +213,7 @@ $(document).ready(function() {
             $(this).attr('data-original-title','Expand all filters');
             $(this).find('img').attr('src','/images/expand_filters.png');
 		} else {
-			
-            
+			          
             // Click on each button
             buttons.each(function() {			
 				$(this).parent().css('margin-bottom', '15px');
@@ -224,45 +234,44 @@ $(document).ready(function() {
 //Funtion when clicking on checkboxes for search sidebar filters
 	
 	$(document).on('change', '.filteritem', function() {
-
     
-	// Get the parent div of the clicked checkbox
-    var parentDiv = $(this).closest(".filterGroupDiv");
-    var className =  $(this).attr('class');
-    var substring = "checkbox_";
-    var numberIndex = className.indexOf(substring) + substring.length;
-  	var index = className.substring(numberIndex);
+		// Get the parent div of the clicked checkbox
+	    var parentDiv = $(this).closest(".filterGroupDiv");
+	    var className =  $(this).attr('class');
+	    var substring = "checkbox_";
+	    var numberIndex = className.indexOf(substring) + substring.length;
+	  	var index = className.substring(numberIndex);
     
-	if ($(this).is(':checked')) {
-
-		
-      	// Move the parent div to the top of the list
-      	$(this).closest('.dataDivCollapse').prepend(parentDiv);
+		if ($(this).is(':checked')) {
+			
+	      	// Move the parent div to the top of the list
+	      	$(this).closest('.dataDivCollapse').prepend(parentDiv);			
+	      	$(this).closest('label.showMorefields').css('background','#F0F4FF');
       	
-	} else {
+		} else {
+			$(this).closest('label.showMorefields').css('background','transparent');
+			var beforeDiv = $(this).closest('.dataDivCollapse').find('.checkbox_' + (index - 1)).closest('.filterGroupDiv');		
+			// Move the parent div back to its original position
+	        parentDiv.insertAfter(beforeDiv);      
+	    }
+	    
+	   var attrName = $(this).parent().parent().attr('id');
 
-		var beforeDiv = $(this).closest('.dataDivCollapse').find('.checkbox_' + (index - 1)).closest('.filterGroupDiv');		
-		 // Move the parent div back to its original position
-         parentDiv.insertAfter(beforeDiv);
-        
-        
-	}
-	var attrName = $(this).parent().parent().attr('id');
-
-	populateSearchCriteria();
+	   populateSearchCriteria();
 	
-	// based on child selection, search at parent level and check the
-	// parent checkbox
-	$(this).closest('.filterComponentDiv').prevAll().find('.attributeLabel').each(function(e) {
-		filterPrev($(this), attrName);
-	});
+	  // based on child selection, search at parent level and check the
+	  // parent checkbox
+	  
+	   $(this).closest('.filterComponentDiv').prevAll().find('.attributeLabel').each(function(e) {
+		 filterPrev($(this), attrName);
+	   });
 
-	// always filter the metadata on the children level
-	// do not remove parent based on child selection
-	$(this).closest('.filterComponentDiv').nextAll().find('.attributeLabel').each(function(e) {
-		filterNext($(this), attrName);
-	});	
-   });
+	   // always filter the metadata on the children level
+	   // do not remove parent based on child selection
+	   $(this).closest('.filterComponentDiv').nextAll().find('.attributeLabel').each(function(e) {
+		 filterNext($(this), attrName);
+	   });	
+    });
 });
 
 function populateSearchCriteria(searchType) {
@@ -373,12 +382,16 @@ function refreshDataTable() {
 							+ '<span id="descSpan"><img src="images/search_descending.svg"/></span>'
 							+ '</div>');
 		$("div.toolbar").after (
-				'<div class="col-lg-12 col-md-12 col-sm-12 float-right">'
+				'<div class="col-lg-12 col-md-12 col-sm-12 float-right" style="display:inline-flex;">'
+				 + '<div class="col-lg-9 col-md-9 col-sm-9"><div id="informational_text">'
+				 + 'Select the asset or assets you want to download.'
+				 + '(This option is not available for large assets: 1 TB or larger.) Click Download Selected Assets.'
+				 + '</div></div><div class="col-lg-3 col-md-3 col-sm-3 downloadSelectedDiv" style="padding-right:0px;">'
 				 + '<button id="downloadSelected" type="button"'
 				 + 'class="btn btn-primary float-right" disabled>'
 				 + 'DOWNLOAD <br />SELECTED ASSETS <img class="arrow_right_download_selected"' 
 				 + 'src="/images/white_right_arrow.svg"/>'
-				 + '</button></div>');
+				 + '</button></div></div>');
 	} else {
 		var t = $('#searchResultTable').DataTable();
 		console.log(t);
@@ -457,9 +470,21 @@ function dataTableInit(isVisible) {
 			var table = $('#searchResultTable').DataTable();
 			$("#searchResultTable thead").remove();
 			if (isVisible) {
-				$("#downloadSelected").show();
+				$(".downloadSelectedDiv").show();
+							
 			} else {
-				$("#downloadSelected").hide();
+				$(".downloadSelectedDiv").hide();
+				$("#informational_text").hide();
+			}
+			
+			// display the informational text on the search results only 
+			// when user is logged in and there is an option to download asset
+			
+			if(isVisible && ($("input:checkbox.selectCheckboxForIns").is(":visible") || 
+							 $("input.selectRadioForDataSet").is(":visible"))) {
+				$("#informational_text").show();
+			} else  {
+				$("#informational_text").hide();
 			}
 
 			$(".dataSetFragment").click(function() {
@@ -640,7 +665,7 @@ function renderDataSetName(data, type, row) {
 				checkboxHtml += "<input aria-label='checkbox' type='checkbox' id=" + row.dataSetPath + " "
 						+ "class='selectCheckboxForIns'/>";
 			} else {
-				checkboxHtml += "<input aria-label='radio' type='radio' id=" + row.dataSetPath
+				checkboxHtml += "<input aria-label='radio' type='radio' name = 'selectRadioForDataSet' id=" + row.dataSetPath
 						+ " class='selectRadioForDataSet'/>";
 			}
 		} else {
@@ -828,9 +853,15 @@ function filterNext($this, attributeTypeName) {
 				if (list.indexOf(val) != -1) {
 					$(this).show();
 					$(this).find('.showMorefields').show();
+					if($(this).find('.filteritem').is(':checked')) {
+						$(this).find('.showMorefields').css('background','#f0f4ff');
+					} else  {
+						$(this).find('.showMorefields').css('background','transparent');
+					}
 					resetSearchFilterCount(val, $(this),filterlist);
 				} else {
 					$(this).hide();
+					$(this).find('.showMorefields').css('background','transparent');
 					$(this).find('.filteritem').prop("checked", false);
 				}
 			});
@@ -908,14 +939,21 @@ function filterPrev($this, attributeTypeName) {
 			var len = list.length;
 
 			$this.parent().find('.filterGroupDiv').each(function(e) {
-				var val = $(this).find('.filteritem').val();
+				var val = $(this).find('.filteritem').val();				
 				if (list.indexOf(val) != -1) {
 					$(this).show();
 					$(this).find('.showMorefields').show();
+					
+					if($(this).find('.filteritem').is(':checked')) {
+						$(this).find('.showMorefields').css('background','#f0f4ff');
+					} else  {
+						$(this).find('.showMorefields').css('background','transparent');
+					}
 					resetSearchFilterCount(val, $(this),filterlist);
 					
 				} else {
 					$(this).hide();
+					$(this).find('.showMorefields').css('background','transparent');
 					$(this).find('.filteritem').prop("checked", false);
 				}
 			});

@@ -376,7 +376,7 @@ div.dataDivCollapse{
 }
 
 div.dataDivCollapse :not(:first-child) {
-    margin-top: -5px;
+    margin-top: -3px;
 }
 
 div.dataDivCollapse :first-child {
@@ -481,6 +481,18 @@ div.dataDivCollapse :nth-child(4) > label >img {
     height: 22px;
 }
 
+#informational_text {
+	display:none;
+	color: #235172;
+    font-variant-numeric: lining-nums tabular-nums;
+    font-family: Inter;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 300;
+    letter-spacing: 0.19px;
+    padding-top: 13px;
+}
+
 .cil_12_no_color {
 	cursor: pointer;
 	font-family: 'latoregular';
@@ -538,33 +550,26 @@ img.searchCheckBoxlist {
 }
 
 .filterSearchBox {
-	width: 75%;
-	border-radius: 65px;
-	border: 1px solid #707070;
-	font-size: 14px;
-	height: 2rem;
-	padding: 6px 12px;
-	margin-bottom: 17px;
-	font-family: 'inter_regular';
-	margin-top: 12px;
-	margin-left: 1.8rem;
-	padding-left: 8px;
+    font-size: 14px;
+    padding: 6px 12px;
+    margin-bottom: 17px;
+    font-family: 'inter_regular';
+    margin-top: 12px;
+    margin-left: 3.8rem;
+    width: 262px;
+    height: 34px;
+    border-radius: 65px;
+    border: 1px solid var(--grays-gray-3, #8B98AF);
+    background: #FFF;
 }
 
 
 label.showMorefields {
 	font-size:15px;
 	color: #4584A1;
-	border-bottom: 1px solid #D0D0D0 !important;
+	border-bottom: 1px solid #D0D0D0;
 	background:transparent;
-}
-
-label.showMorefields + input[type="checkbox"].filteritem:checked {
-  background: #F0F4FF !important;
-}
-
-input[type="checkbox"].filteritem:checked:parent .showMorefields {
-  background: #F0F4FF !important;
+	padding-left: 8px;
 }
 
 
