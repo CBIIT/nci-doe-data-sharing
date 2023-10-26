@@ -147,7 +147,6 @@ $(document).ready(function() {
 		$(".filterGroupDiv").each(function(e) {
 			$(this).show();
 			$(this).find('.showMorefields').show();
-			$(this).find('div').css('color', '#4584a1');
 		});
 		showFirstFewFields();
 		populateSearchCriteria();
@@ -235,13 +234,13 @@ $(document).ready(function() {
   	var index = className.substring(numberIndex);
     
 	if ($(this).is(':checked')) {
-		$(this).parent().find('div').css('color', '#2E76ED');
+
 		
       	// Move the parent div to the top of the list
       	$(this).closest('.dataDivCollapse').prepend(parentDiv);
       	
 	} else {
-		$(this).parent().find('div').css('color', '#4584a1');
+
 		var beforeDiv = $(this).closest('.dataDivCollapse').find('.checkbox_' + (index - 1)).closest('.filterGroupDiv');		
 		 // Move the parent div back to its original position
          parentDiv.insertAfter(beforeDiv);
@@ -833,7 +832,6 @@ function filterNext($this, attributeTypeName) {
 				} else {
 					$(this).hide();
 					$(this).find('.filteritem').prop("checked", false);
-					$(this).find('div').css('color', '#4584a1');
 				}
 			});
 
@@ -919,7 +917,6 @@ function filterPrev($this, attributeTypeName) {
 				} else {
 					$(this).hide();
 					$(this).find('.filteritem').prop("checked", false);
-					$(this).find('div').css('color', '#4584a1');
 				}
 			});
 

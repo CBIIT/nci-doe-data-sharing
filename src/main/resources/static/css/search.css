@@ -1,6 +1,9 @@
 [class^='select2'] {
 	border-radius: 10px !important;
 }
+:root {
+  accent-color: #353941;
+}
 
 #select2-metadatalist-results {
 	color: #000000;
@@ -27,6 +30,21 @@ input[type="checkbox"].selectCheckboxForIns {
 input[type="checkbox"].filteritem {
 	height: 16px;
     width: 16px;
+}
+
+input.filteritem:checked {
+    transform: translateY(4px);
+    box-sizing: border-box;
+}
+
+
+input[type="checkbox"].filteritem  + div {
+	color: #4584A1;
+}
+
+input[type="checkbox"].filteritem:checked  + div {
+	color: #246381;
+	font-weight: 700;
 }
 
 #advancedSearch {
@@ -353,7 +371,7 @@ div.dataDivCollapse{
 	max-height: 327px; 
 	overflow-y: auto; 
 	margin-bottom: 18px; 
-	margin-left: 4.4rem;
+	margin-left: 4rem;
 	overflow-x: hidden;
 }
 
@@ -379,37 +397,32 @@ div.dataDivCollapse :nth-child(4) > label >img {
 /* Customize the scrollbar track */
 
   div.dataDivCollapse::-webkit-scrollbar-track {
-    background-color: #81ACDF; 
-    border-radius: 3px;
-  }
-
-  
-  div.dataDivCollapse::-webkit-scrollbar {
-  	width: 7px;
-	height: 126px;
-	flex-shrink: 0;
+	border-right: 0.35px solid #D0D0D0;
+    border-left: 0.35px solid #D0D0D0;
+    background: #FFF;
   }
   
   div.dataDivCollapse::-webkit-scrollbar-thumb {
-    border-radius: 3px;
 	background: #81ACDF;
+	height: 50%;
+	background-clip: content-box;
+	border-left: 2px solid transparent;
+	border-right: 2px solid transparent;
+	border-radius: 4px;
   }
-
-/* Customize the scrollbar track */
+  
   div#filterSectionDiv::-webkit-scrollbar-track {
-    border-radius: 3px;
-	background: #626184;
+	border-right: 0.5px solid #BED2E1;
+    background: #EFF6FB;
   }
 
-  /* Customize the scrollbar thumb */
   div#filterSectionDiv::-webkit-scrollbar-thumb {
-    border-radius: 3px;
 	background: #626184;
-  }
-  div#filterSectionDiv::-webkit-scrollbar {
-	 width:7px;
-     height:349px;
-     flex-shrink: 0;
+	height: 349px;
+	background-clip: content-box;
+	border-left: 2px solid transparent;
+	border-right: 2px solid transparent;
+	border-radius: 4px;
   }
      
   
@@ -421,16 +434,6 @@ div.dataDivCollapse :nth-child(4) > label >img {
     border: 1px solid #7C7C7C;
     background-color: #7C7C7C;
 }
-
-
-input.filteritem:checked {
-    transform: translateY(4px);
-    box-sizing: border-box;
-}
-
-/*input.filteritem:checked + div {
-	 color: #006DD9;
-}*/
 
 #searchCriteriaDiv {
 	background: #EAEBEB;
@@ -545,6 +548,7 @@ img.searchCheckBoxlist {
 	font-family: 'inter_regular';
 	margin-top: 12px;
 	margin-left: 1.8rem;
+	padding-left: 8px;
 }
 
 
@@ -552,6 +556,15 @@ label.showMorefields {
 	font-size:15px;
 	color: #4584A1;
 	border-bottom: 1px solid #D0D0D0 !important;
+	background:transparent;
+}
+
+label.showMorefields + input[type="checkbox"].filteritem:checked {
+  background: #F0F4FF !important;
+}
+
+input[type="checkbox"].filteritem:checked:parent .showMorefields {
+  background: #F0F4FF !important;
 }
 
 
@@ -722,7 +735,8 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
     transform: translateY(-3px);
 }
 .collectionAccessGrpImg {
-	width: 13.3px;
+	width: 18px;
+    height: 19px;
     transform: translateY(-3px);
 }
 

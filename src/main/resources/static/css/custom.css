@@ -4,12 +4,21 @@
 }
 
 ::-webkit-scrollbar {
-	width: 7px;
+	width: 11px;
 }
-
 /* Handle */
 ::-webkit-scrollbar-thumb {
 	background: #3A84A7;
+	height:349px;
+	background-clip: content-box;
+	border-left: 2px solid transparent;
+	border-right: 2px solid transparent;
+	border-radius: 4px;
+	
+}
+
+::-webkit-scrollbar-track {
+    background: #EFF6FB;
 }
 
 body {
