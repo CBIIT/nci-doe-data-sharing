@@ -93,6 +93,22 @@
     text-align: center;
 }
 
+#dataSetTable_paginate .paginate_button.next.disabled img {
+	content: url('/images/paginate_left_assetFiles.png');
+	transform: rotate(-180deg);
+}
+
+#dataSetTable_paginate .paginate_button.previous img {
+	content: url('/images/pagination_right_assetfiles.png');
+	transform: rotate(-180deg);
+}
+
+#dataSetTable_paginate .paginate_button.previous.disabled img {
+	content: url('/images/pagination_left_assetfiles.png');
+	transform: rotate(0deg);
+}
+
+
 .assetFilesConditional {
     margin-top: 4rem;
     margin-left: 7rem;

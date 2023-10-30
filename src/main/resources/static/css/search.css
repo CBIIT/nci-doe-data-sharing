@@ -938,3 +938,18 @@ a#searchResultTable_previous {
     margin-left: -1px;
     margin-right: -7px;
 }
+
+#searchResultTable_paginate .paginate_button.next.disabled img {
+	content: url('/images/paginate_left.svg');
+	transform: rotate(-180deg);
+}
+
+#searchResultTable_paginate .paginate_button.previous img {
+	content: url('/images/paginate_right.svg');
+	transform: rotate(-180deg);
+}
+
+#searchResultTable_paginate .paginate_button.previous.disabled img {
+	content: url('/images/paginate_left.svg');
+	transform: rotate(0deg);
+}

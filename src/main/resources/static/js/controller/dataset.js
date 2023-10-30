@@ -329,8 +329,8 @@ function generatePredTable(isVisible) {
 					"sLoadingRecords" : "Loading...",
 					"zeroRecords" : "Nothing found to display",
 					"paginate" : {
-						next : '<i style="color:#000;font-size:17px;" class="fas fa-caret-right"></i>',
-						previous : '<i style="color:#000;font-size:17px;" class="fas fa-caret-left"></i>'
+						next : '<img src="/images/pagination_right_assetfiles.png"/>',
+						previous : '<img src="/images/paginate_left_assetFiles.png"/>'
 					}
 				}
 			});
@@ -514,8 +514,8 @@ function dataTableInitDataSet(isVisible) {
 			"sLoadingRecords" : "Loading...",
 			"zeroRecords" : "Nothing found to display",
 			"paginate" : {
-				next : '<i style="color:#000;font-size:17px;" class="fas fa-caret-right"></i>',
-				previous : '<i style="color:#000;font-size:17px;" class="fas fa-caret-left"></i>'
+				next : '<img src="/images/pagination_right_assetfiles.png"/>',
+				previous : '<img src="/images/paginate_left_assetFiles.png"/>'
 			}
 		}
 	});
