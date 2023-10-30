@@ -253,16 +253,16 @@ $(document).ready(function() {
 	
 	  // based on child selection, search at parent level and check the
 	  // parent checkbox
-	  
 	   $(this).closest('.filterComponentDiv').prevAll().find('.attributeLabel').each(function(e) {
 		 filterPrev($(this), attrName);
 	   });
 
-	   // always filter the metadata on the children level
+	    // always filter the metadata on the children level
 	   // do not remove parent based on child selection
 	   $(this).closest('.filterComponentDiv').nextAll().find('.attributeLabel').each(function(e) {
 		 filterNext($(this), attrName);
-	   });	
+	   });
+	   	
     });
 });
 
@@ -874,7 +874,7 @@ function filterNext($this, attributeTypeName) {
 			console.log("===> error: ", error);
 			console.log("===> data: ", data);
 		}
-});
+});	
 }
 
 function filterPrev($this, attributeTypeName) {
@@ -890,7 +890,7 @@ function filterPrev($this, attributeTypeName) {
 	var url;
 
 	// filter a list based on the parent level selection
-	$this.closest('.filterComponentDiv').nextAll().find(".filteritem:checked").each(function() {
+	$(".filteritem:checked").each(function() {
 		var attrName = $(this).parent().parent().attr('id');
 		var attrVal = $(this).val();
 		if (attrName != attributeName) {
