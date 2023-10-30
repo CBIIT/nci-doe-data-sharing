@@ -486,11 +486,13 @@ div.dataDivCollapse :nth-child(4) > label >img {
 	color: #235172;
     font-variant-numeric: lining-nums tabular-nums;
     font-family: Inter;
-    font-size: 15px;
+    font-size: 14px;
     font-style: normal;
     font-weight: 300;
     letter-spacing: 0.19px;
-    padding-top: 13px;
+    padding-top: 15px;
+    font-weight: 300;
+    line-height: 106.523%;
 }
 
 .cil_12_no_color {
@@ -719,7 +721,7 @@ table#searchResultTable.display tbody tr>.sorting_1, table#searchResultTable.ord
 }
 
 #downloadSelected {
-    margin-top: 1rem;
+    margin-top: 0.7rem;
     font-family: var(--font-family-inter);
 	height: 41px;
 	width: 193px;
@@ -732,6 +734,7 @@ table#searchResultTable.display tbody tr>.sorting_1, table#searchResultTable.ord
     padding-left: 2rem;
     text-align: left;
     padding-top: 10px;
+    margin-bottom: 0.2rem;
 }
 button.share-link-copy-button, button.share-assetLink-copy-button {
 	border: none;

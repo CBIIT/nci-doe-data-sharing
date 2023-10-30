@@ -375,10 +375,10 @@ function refreshDataTable() {
 							+ '</div>');
 		$("div.toolbar").after (
 				'<div class="col-lg-12 col-md-12 col-sm-12 float-right" style="display:inline-flex;">'
-				 + '<div class="col-lg-9 col-md-9 col-sm-9"><div id="informational_text">'
-				 + 'Select the asset or assets you want to download.'
-				 + '(This option is not available for large assets: 1 TB or larger.) Click Download Selected Assets.'
-				 + '</div></div><div class="col-lg-3 col-md-3 col-sm-3 downloadSelectedDiv" style="padding-right:0px;">'
+				 + '<div class="col-lg-8 col-md-8 col-sm-8"><div id="informational_text">'
+				 + 'Select the asset(s) you want to download.'
+				 + 'Downloadable assets must be no larger than 1 TB. Click Download Selected Assets.'
+				 + '</div></div><div class="col-lg-4 col-md-4 col-sm-4 downloadSelectedDiv" style="padding-right:0px;">'
 				 + '<button id="downloadSelected" type="button"'
 				 + 'class="btn btn-primary float-right" disabled>'
 				 + 'DOWNLOAD <br />SELECTED ASSETS <img class="arrow_right_download_selected"' 
