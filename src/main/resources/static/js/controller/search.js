@@ -147,12 +147,7 @@ $(document).ready(function() {
 		$(".filterGroupDiv").each(function(e) {
 			$(this).show();
 			$(this).find('.showMorefields').show();
-			
-			var cssProperties = {
-			    'background': 'transparent',
-			};
-			
-			$(this).find('.showMorefields').css(cssProperties);
+			$(this).find('.showMorefields').removeClass('filter_checked');
 		});
 		resetPositionsForFilters();
 		showFirstFewFields();
@@ -167,11 +162,7 @@ $(document).ready(function() {
 			$(this).find('.filteritem').prop('checked', false);
 			
 			$(this).find('.showMorefields').show();
-			var cssProperties = {
-			    'background': 'transparent',
-			};
-			
-			$(this).find('.showMorefields').css(cssProperties);
+			$(this).find('.showMorefields').removeClass('filter_checked');
 			$(this).find('div').css('color', '#212529');
 		});
 		showFirstFewFields();
@@ -247,10 +238,10 @@ $(document).ready(function() {
 			
 	      	// Move the parent div to the top of the list
 	      	$(this).closest('.dataDivCollapse').prepend(parentDiv);			
-	      	$(this).closest('label.showMorefields').css('background','#F0F4FF');
+	      	$(this).closest('label.showMorefields').addClass('filter_checked');
       	
 		} else {
-			$(this).closest('label.showMorefields').css('background','transparent');
+			$(this).closest('label.showMorefields').removeClass('filter_checked');
 			var beforeDiv = $(this).closest('.dataDivCollapse').find('.checkbox_' + (index - 1)).closest('.filterGroupDiv');		
 			// Move the parent div back to its original position
 	        parentDiv.insertAfter(beforeDiv);      
@@ -855,14 +846,14 @@ function filterNext($this, attributeTypeName) {
 					$(this).show();
 					$(this).find('.showMorefields').show();
 					if($(this).find('.filteritem').is(':checked')) {
-						$(this).find('.showMorefields').css('background','#f0f4ff');
+						$(this).find('.showMorefields').addClass('filter_checked');
 					} else  {
-						$(this).find('.showMorefields').css('background','transparent');
+						$(this).find('.showMorefields').removeClass('filter_checked');
 					}
 					resetSearchFilterCount(val, $(this),filterlist);
 				} else {
 					$(this).hide();
-					$(this).find('.showMorefields').css('background','transparent');
+					$(this).find('.showMorefields').removeClass('filter_checked');
 					$(this).find('.filteritem').prop("checked", false);
 				}
 			});
@@ -946,15 +937,15 @@ function filterPrev($this, attributeTypeName) {
 					$(this).find('.showMorefields').show();
 					
 					if($(this).find('.filteritem').is(':checked')) {
-						$(this).find('.showMorefields').css('background','#f0f4ff');
+						$(this).find('.showMorefields').addClass('filter_checked');
 					} else  {
-						$(this).find('.showMorefields').css('background','transparent');
+						$(this).find('.showMorefields').removeClass('filter_checked');
 					}
 					resetSearchFilterCount(val, $(this),filterlist);
 					
 				} else {
 					$(this).hide();
-					$(this).find('.showMorefields').css('background','transparent');
+					$(this).find('.showMorefields').removeClass('filter_checked');
 					$(this).find('.filteritem').prop("checked", false);
 				}
 			});

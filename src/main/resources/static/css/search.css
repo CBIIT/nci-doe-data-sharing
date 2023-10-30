@@ -324,7 +324,7 @@ div.divTableBody div.divTableContent:nth-child(odd) {
 .css-17rpx5x, .css-17rpx5xLess {
 	float: right;
 	cursor: pointer;
-	margin-top: -2rem;
+	margin-top: -1.5rem;
 }
 
 .css-17rpx5x a, .css-17rpx5xLess a {
@@ -353,7 +353,7 @@ div.divTableBody div.divTableContent:nth-child(odd) {
 
 
 .filterComponentDiv {
-	margin-bottom: 0.5rem;
+	margin-bottom: 2rem;
 	margin-left: -5px; 
 	background: #EAEBEB;
 }
@@ -387,9 +387,9 @@ div.dataDivCollapse :last-child {
 	padding-bottom: 6px;
 }
 
-div.dataDivCollapse :nth-child(4) {
+/*div.dataDivCollapse :nth-child(4) {
 	padding-bottom: 12px;
-}
+}*/
 div.dataDivCollapse :nth-child(4) > label >img {
 	display:none;
 }
@@ -570,8 +570,12 @@ label.showMorefields {
 	border-bottom: 1px solid #D0D0D0;
 	background:transparent;
 	padding-left: 8px;
+	background:transparent;
 }
 
+label.filter_checked {
+	background: rgb(240, 244, 255);
+}
 
 #searchResultTable_wrapper div.toolbar {
     display: flex;
