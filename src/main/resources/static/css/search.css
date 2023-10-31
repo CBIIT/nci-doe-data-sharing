@@ -22,7 +22,7 @@
 	margin-top: -4px;
 }
 
-input[type="checkbox"].selectCheckboxForIns {
+input[type="checkbox"].selectAssetCheckBox {
 	height: 19px;
     width: 19px;
 }
@@ -256,6 +256,7 @@ div.divTableBody div.divTableContent:nth-child(odd) {
     font-size: 15px;
     color: #5B5D5F !important;
     transform: translateY(-8px);
+    margin-right: 0.5rem;
 }
 
 .popoverMobileAttrName, .popoverMobileAttrVal {
@@ -481,7 +482,7 @@ div.dataDivCollapse :nth-child(4) > label >img {
     height: 22px;
 }
 
-#informational_text {
+#informational_text,#selected_size_div {
 	display:none;
 	color: #235172;
     font-variant-numeric: lining-nums tabular-nums;

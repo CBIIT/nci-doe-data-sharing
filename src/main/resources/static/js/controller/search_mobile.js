@@ -29,7 +29,6 @@ function dataTableInitForMobile() {
 				d.isExcludeParentMetadata = search_criteria_json.isExcludeParentMetadata;
 				d.iskeyWordSearch = search_criteria_json.iskeyWordSearch;
 				d.operator = search_criteria_json.operator;
-				d.isShowMyCollection = search_criteria_json.isShowMyCollection;
 			},
 			"dataSrc" : function(data) {
 				return data;
