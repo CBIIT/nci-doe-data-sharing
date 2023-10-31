@@ -367,8 +367,7 @@ function refreshDataTable() {
          '<div class="col-lg-8 col-md-8 col-sm-8"><div id="informational_text">' +
          'Select the asset(s) you want to download.' +
          'Downloadable assets must be no larger than 1 TB. Click Download Selected Assets.' +
-         '</div><div id="selected_size_div" style="display: block;">Total Selected Size: ' +
-         '<span id="selected_size">0 B</span> </div></div>' +
+         '</div></div>' +
          '<div class="col-lg-4 col-md-4 col-sm-4 downloadSelectedDiv" style="padding-right:0px;">' +
          '<button id="downloadSelected" type="button"' +
          'class="btn btn-primary float-right" disabled>' +
@@ -575,7 +574,7 @@ function dataTableInit(isVisible) {
                $("#downloadSelected").prop("disabled", true);
             }
 
-            calculateTotalSize(table);
+            //calculateTotalSize(table);
 
          });
 
@@ -587,7 +586,7 @@ function dataTableInit(isVisible) {
             } else {
                $("#downloadSelected").prop("disabled", true);
             }
-            calculateTotalSize(table);
+            //calculateTotalSize(table);
 
          });
 
@@ -770,9 +769,9 @@ function renderDataSetName(data, type, row) {
       "<div class='overlap-group'><div class='asset-description opensans-bold-midnight-blue-13px'>" +
       "<span class='opensans-bold-midnight-blue-13px'>ASSET DESCRIPTION:   </span>" +
       "<span class='inter-normal-congress-blue-16px'>" + row.dataSetDescription + "</span></div></div>" +
-      "<div class='overlap-group'><div class='asset-size opensans-bold-midnight-blue-13px'>" +
+      /*"<div class='overlap-group'><div class='asset-size opensans-bold-midnight-blue-13px'>" +
       "<span class='opensans-bold-midnight-blue-13px'>ASSET SIZE:   </span>" +
-      "<span class='inter-normal-congress-blue-16px'>" + row.displayAssetSize + "</span></div></div>" +
+      "<span class='inter-normal-congress-blue-16px'>" + row.displayAssetSize + "</span></div></div>" +*/
       "<div class='study-container'><div class='study opensans-bold-midnight-blue-13px'>" +
       "<span class='opensans-bold-midnight-blue-13px'>STUDY:   </span>" +
       "<a class='button2a' style='text-decoration:underline;' collection_name = '" + row.studyName + "' selected_path = '" + row.studyPath + "' collection_type='Study' tabindex='0'" +
