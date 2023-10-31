@@ -144,62 +144,54 @@ public class SearchController extends AbstractDoeController {
 
 		for (HpcCollectionDTO result : searchResults) {
 
-			String absolutePath = result.getCollection().getAbsolutePath();
+			String dataSetPermissionRole = getPermissionRole(user, result.getCollection().getCollectionId(),
+					loggedOnUserPermissions);
+			List<HpcMetadataEntry> selfMetadatEntries = result.getMetadataEntries().getSelfMetadataEntries();
+			String assetType = getAttributeValue("asset_type", selfMetadatEntries, "Asset");
 
-			if (StringUtils.isNotEmpty(absolutePath)) {
+			DoeSearchResult returnResult = new DoeSearchResult();
+			String collectionSize = getAttributeValue("collection_size", selfMetadatEntries, "Asset");
 
-				String dataSetPermissionRole = getPermissionRole(user, result.getCollection().getCollectionId(),
-						loggedOnUserPermissions);
-				List<HpcMetadataEntry> selfMetadatEntries = result.getMetadataEntries().getSelfMetadataEntries();
-				String assetType = getAttributeValue("asset_type", selfMetadatEntries, "Asset");
+			String studyPath = result.getCollection().getCollectionParentName();
+			String programPath = studyPath.substring(0, studyPath.lastIndexOf('/'));
+			Integer studyCollectionId = getCollectionId(result.getMetadataEntries().getParentMetadataEntries(),
+					"Study");
+			Integer programCollectionId = getCollectionId(result.getMetadataEntries().getParentMetadataEntries(),
+					"Program");
 
-				DoeSearchResult returnResult = new DoeSearchResult();
-				String collectionSize = getAttributeValue("collection_size", selfMetadatEntries, "Asset");
+			returnResult.setIsBulkAsset(
+					(collectionSize != null && Long.valueOf(collectionSize) > Long.valueOf(bulkCollectionSize))
+							? Boolean.TRUE
+							: Boolean.FALSE);
 
-				String studyPath = result.getCollection().getCollectionParentName();
-				String programPath = studyPath.substring(0, studyPath.lastIndexOf('/'));
-				Integer studyCollectionId = getCollectionId(result.getMetadataEntries().getParentMetadataEntries(),
-						"Study");
-				Integer programCollectionId = getCollectionId(result.getMetadataEntries().getParentMetadataEntries(),
-						"Program");
+			returnResult
+					.setDisplayAssetSize(collectionSize != null ? MiscUtil.addHumanReadableSize(collectionSize) : "0");
+			returnResult.setCollectionSize(collectionSize != null ? Long.valueOf(collectionSize) : 0);
+			returnResult.setDataSetPath(result.getCollection().getCollectionName());
+			returnResult.setDataSetCollectionId(result.getCollection().getCollectionId());
+			returnResult.setStudyCollectionId(studyCollectionId);
+			returnResult.setProgramCollectionId(programCollectionId);
 
-				returnResult.setIsBulkAsset(
-						(collectionSize != null && Long.valueOf(collectionSize) > Long.valueOf(bulkCollectionSize))
-								? Boolean.TRUE
-								: Boolean.FALSE);
+			returnResult.setDataSetPermissionRole(dataSetPermissionRole);
 
-				returnResult.setDisplayAssetSize(
-						collectionSize != null ? MiscUtil.addHumanReadableSize(collectionSize) : "0");
-				returnResult.setCollectionSize(collectionSize != null ? Long.valueOf(collectionSize) : 0);
-				returnResult.setDataSetPath(result.getCollection().getCollectionName());
-				returnResult.setDataSetCollectionId(result.getCollection().getCollectionId());
-				returnResult.setStudyCollectionId(studyCollectionId);
-				returnResult.setProgramCollectionId(programCollectionId);
+			returnResult.setStudyPermissionRole(getPermissionRole(user, studyCollectionId, loggedOnUserPermissions));
+			returnResult
+					.setProgramPermissionRole(getPermissionRole(user, programCollectionId, loggedOnUserPermissions));
 
-				returnResult.setDataSetPermissionRole(dataSetPermissionRole);
-
-				returnResult
-						.setStudyPermissionRole(getPermissionRole(user, studyCollectionId, loggedOnUserPermissions));
-				returnResult.setProgramPermissionRole(
-						getPermissionRole(user, programCollectionId, loggedOnUserPermissions));
-
-				returnResult.setDataSetName(getAttributeValue("asset_name", selfMetadatEntries, "Asset"));
-				returnResult.setDataSetDescription(getAttributeValue("description", selfMetadatEntries, "Asset"));
-				returnResult.setStudyPath(studyPath);
-				returnResult.setInstitutePath(programPath);
-				returnResult.setProgramName(getAttributeValue("program_name",
-						result.getMetadataEntries().getParentMetadataEntries(), "Program"));
-				returnResult.setStudyName(getAttributeValue("study_name",
-						result.getMetadataEntries().getParentMetadataEntries(), "Study"));
-				returnResult.setDataSetdmeDataId(webServerName + "/searchTab?dme_data_id="
-						+ getAttributeValue("dme_data_id", selfMetadatEntries, "Asset"));
-				returnResult.setAssetType(assetType);
-				returnResult.setDmeDataId(getAttributeValue("dme_data_id", selfMetadatEntries, "Asset"));
-				returnResult
-						.setIsReferenceDataset(getAttributeValue("is_reference_dataset", selfMetadatEntries, "Asset"));
-				returnResults.add(returnResult);
-
-			}
+			returnResult.setDataSetName(getAttributeValue("asset_name", selfMetadatEntries, "Asset"));
+			returnResult.setDataSetDescription(getAttributeValue("description", selfMetadatEntries, "Asset"));
+			returnResult.setStudyPath(studyPath);
+			returnResult.setInstitutePath(programPath);
+			returnResult.setProgramName(getAttributeValue("program_name",
+					result.getMetadataEntries().getParentMetadataEntries(), "Program"));
+			returnResult.setStudyName(
+					getAttributeValue("study_name", result.getMetadataEntries().getParentMetadataEntries(), "Study"));
+			returnResult.setDataSetdmeDataId(webServerName + "/searchTab?dme_data_id="
+					+ getAttributeValue("dme_data_id", selfMetadatEntries, "Asset"));
+			returnResult.setAssetType(assetType);
+			returnResult.setDmeDataId(getAttributeValue("dme_data_id", selfMetadatEntries, "Asset"));
+			returnResult.setIsReferenceDataset(getAttributeValue("is_reference_dataset", selfMetadatEntries, "Asset"));
+			returnResults.add(returnResult);
 
 		}
 
