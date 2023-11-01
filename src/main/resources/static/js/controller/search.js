@@ -359,7 +359,7 @@ function refreshDataTable() {
       dataTableInit(isVisible);
       $("div.toolbar").prepend(
          '<div id="show_search_count"></div><div id="sortingDiv" >' +
-         '<span id="ascSpan"><img src="images/search_ascending.svg"/></span>  ' +
+         '<span id="ascSpan"><img src="images/search_ascending.svg"/></span>&nbsp;&nbsp;' +
          '<span id="descSpan"><img src="images/search_descending.svg"/></span>' +
          '</div>');
       $("div.toolbar").after(
@@ -664,7 +664,7 @@ function renderDataSetName(data, type, row) {
       }
 
       if (row.dataSetPermissionRole && row.dataSetPermissionRole != 'No Permissions') {
-         editDataSetHtml = " <span class='editCollectionMetadata' selectedCollection = 'Asset' " +
+         editDataSetHtml = "&nbsp;<span class='editCollectionMetadata' selectedCollection = 'Asset' " +
             "data-fileName = '" +
             row.dataSetName +
             "' collectionId  = '" +
@@ -677,28 +677,28 @@ function renderDataSetName(data, type, row) {
             row.dataSetPath +
             "'>" +
             "<img class='editCollectionImg' src='images/Search_EditMetaData.svg' data-toggle='tooltip' title='Edit asset metadata' th:src='@{/images/Search_EditMetaData.svg}' " +
-            "alt='edit collection'></span> ";
+            "alt='edit collection'></span>&nbsp;";
 
          if (row.dataSetPermissionRole == 'Owner') {
-            editDataSetHtml += " <span class='editAccessGroupPermissions' collection_name = '" +
+            editDataSetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collection_name = '" +
                row.dataSetName + "' " + "collectionId  = '" + row.dataSetCollectionId + "' " +
                " selectedCollection = 'Asset' " + "metadata_path  = '" + row.dataSetPath + "'>" +
                "<img class='collectionAccessGrpImg' src='images/Search_AccessGroups.png' data-toggle='tooltip' " +
                "title='Edit access group permissions' " + "th:src='@{/images/Search_AccessGroups.png}' " +
-               "alt='Edit Asset Access Permissions'></span> ";
+               "alt='Edit Asset Access Permissions'></span>&nbsp;";
          }
       }
 
 
       if (row.studyPermissionRole && row.studyPermissionRole != 'No Permissions') {
-         editStudySetHtml = "  <span class='editCollectionMetadata' selectedCollection = 'Study' " +
+         editStudySetHtml = "&nbsp;&nbsp;<span class='editCollectionMetadata' selectedCollection = 'Study' " +
             "data-fileName = '" + row.studyName + "' collectionId  = '" + row.studyCollectionId + "' " +
             "permissions_role = '" + row.studyPermissionRole + "' metadata_path  = '" + row.studyPath + "'> " +
             "<img src='images/Search_EditMetaData.svg' data-toggle='tooltip' title='Edit study metadata'" +
             "th:src='@{/images/Search_EditMetaData.svg}' class='editCollectionImg' alt='edit collection'></span>";
 
          if (row.studyPermissionRole == 'Owner') {
-            editStudySetHtml += "  <span class='editAccessGroupPermissions' collection_name ='" +
+            editStudySetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collection_name ='" +
                row.studyName +
                "'" +
                " collectionId  = '" +
@@ -715,7 +715,7 @@ function renderDataSetName(data, type, row) {
       }
 
       if (row.programPermissionRole && row.programPermissionRole != 'No Permissions') {
-         editProgramSetHtml = "  <span class='editCollectionMetadata' selectedCollection = 'Program' " +
+         editProgramSetHtml = "&nbsp;&nbsp;<span class='editCollectionMetadata' selectedCollection = 'Program' " +
             "data-fileName = '" + row.programName + "' collectionId  = '" + row.programCollectionId + "'" +
             " permissions_role = '" + row.programPermissionRole + "' " + "metadata_path  = '" +
             row.institutePath + "' >" +
@@ -724,7 +724,7 @@ function renderDataSetName(data, type, row) {
             "class='editCollectionImg' alt='edit collection'></span>";
 
          if (row.programPermissionRole == 'Owner') {
-            editProgramSetHtml += "  <span class='editAccessGroupPermissions' " +
+            editProgramSetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' " +
                "collection_name ='" +
                row.programName +
                "' collectionId  = '" +
@@ -747,7 +747,7 @@ function renderDataSetName(data, type, row) {
       " <div class='frame-14'>" +
       " <div class='atom-modeling-pipeli poppins-medium-congress-blue-25px'>" +
       " <a class='poppins-medium-congress-blue-25px dataSetFragment' dme_data_id = '" + row.dmeDataId + "'>" + row.dataSetName + "</a>" +
-      "  " +
+      " &nbsp;&nbsp;" +
       editDataSetHtml +
       "<button type='button' class='share-link-copy-button' data-toggle='tooltip' data-placement='bottom' " +
       " title='Copy asset link' data-clipboard-text='" + row.dataSetdmeDataId + "'>" +
@@ -767,13 +767,13 @@ function renderDataSetName(data, type, row) {
       "<div id='collapse" + row.dmeDataId + "' class='col-lg-12 col-md-12 col-sm-12'>" +
       " <img src='images/search_line.png' class='line_divider' alt='asset name divider'/>" +
       "<div class='overlap-group'><div class='asset-description opensans-bold-midnight-blue-13px'>" +
-      "<span class='opensans-bold-midnight-blue-13px'>ASSET DESCRIPTION:   </span>" +
+      "<span class='opensans-bold-midnight-blue-13px'>ASSET DESCRIPTION: &nbsp;&nbsp;</span>" +
       "<span class='inter-normal-congress-blue-16px'>" + row.dataSetDescription + "</span></div></div>" +
       /*"<div class='overlap-group'><div class='asset-size opensans-bold-midnight-blue-13px'>" +
-      "<span class='opensans-bold-midnight-blue-13px'>ASSET SIZE:   </span>" +
+      "<span class='opensans-bold-midnight-blue-13px'>ASSET SIZE: &nbsp;&nbsp;</span>" +
       "<span class='inter-normal-congress-blue-16px'>" + row.displayAssetSize + "</span></div></div>" +*/
       "<div class='study-container'><div class='study opensans-bold-midnight-blue-13px'>" +
-      "<span class='opensans-bold-midnight-blue-13px'>STUDY:   </span>" +
+      "<span class='opensans-bold-midnight-blue-13px'>STUDY: &nbsp;&nbsp;</span>" +
       "<a class='button2a' style='text-decoration:underline;' collection_name = '" + row.studyName + "' selected_path = '" + row.studyPath + "' collection_type='Study' tabindex='0'" +
       " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
       "data-popover-content='#a01'>" +
@@ -782,7 +782,7 @@ function renderDataSetName(data, type, row) {
       "</div></div>" +
       "<div class='program-container'>" +
       "<div class='program opensans-bold-midnight-blue-13px'>" +
-      "<span class='opensans-bold-midnight-blue-13px'>PROGRAM:   </span>" +
+      "<span class='opensans-bold-midnight-blue-13px'>PROGRAM: &nbsp;&nbsp;</span>" +
       "<a class='button2a' style='text-decoration:underline;' collection_name = '" + row.programName + "' selected_path = '" + row.institutePath + "' collection_type='Program' tabindex='0'" +
       "data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
       "data-popover-content='#a01'>" +
@@ -1258,7 +1258,7 @@ function openPopOver($this) {
                   table = ind + content + "</div> </div></div> </div>";
                } else {
                   table = "<div id=\"a01\" class=\"col-md-12 hidden\">" +
-                     "<div class=\"popover-heading\"> NO USER METADATA   " +
+                     "<div class=\"popover-heading\"> NO USER METADATA &nbsp;&nbsp;" +
                      "<a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><img src='images/close_metadata_popover.svg' width='16' style='margin-top: -8px;'/></a> </div>" +
                      "<div class='popover-body'></div></div>";
                }

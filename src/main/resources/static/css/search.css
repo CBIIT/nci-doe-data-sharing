@@ -33,7 +33,7 @@ input[type="checkbox"].filteritem {
 }
 
 input.filteritem:checked {
-    transform: translateY(4px);
+    transform: translateY(2px);
     box-sizing: border-box;
 }
 
@@ -579,14 +579,17 @@ img.searchCheckBoxlist {
     background: #FFF;
 }
 
+div.filterGroupDiv {
+	padding-right:0px;
+}
 
 label.showMorefields {
 	font-size:15px;
 	color: #4584A1;
 	border-bottom: 1px solid #D0D0D0;
 	background:transparent;
-	padding-left: 8px;
-	background:transparent;
+	padding-left: 6px;
+	width:98%;
 }
 
 label.filter_checked {
