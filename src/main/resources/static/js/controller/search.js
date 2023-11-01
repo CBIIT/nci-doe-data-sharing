@@ -680,7 +680,7 @@ function renderDataSetName(data, type, row) {
             "alt='edit collection'></span>&nbsp;";
 
          if (row.dataSetPermissionRole == 'Owner') {
-            editDataSetHtml += "&nbsp;&nbsp;<span class='editAccessGroupPermissions' collection_name = '" +
+            editDataSetHtml += "&nbsp;<span class='editAccessGroupPermissions' collection_name = '" +
                row.dataSetName + "' " + "collectionId  = '" + row.dataSetCollectionId + "' " +
                " selectedCollection = 'Asset' " + "metadata_path  = '" + row.dataSetPath + "'>" +
                "<img class='collectionAccessGrpImg' src='images/Search_AccessGroups.png' data-toggle='tooltip' " +
