@@ -88,6 +88,9 @@
 	.iWqacH {
 		width: 100%;
 	}
+	.landingSearchDiv {
+       margin-left: 8vw !important;
+	}
 }
 
 @media ( min-width : 991px) {
