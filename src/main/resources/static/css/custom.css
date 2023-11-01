@@ -3,10 +3,18 @@
 	cursor: pointer;
 }
 
+/* Scrollbar for firefox only */
+ html,body {
+    scrollbar-color: #3A84A7 #EFF6FB;
+    scrollbar-width:auto;
+}
+
+
+/* Scrollbar css for Edge, Chrome and Safari */
 ::-webkit-scrollbar {
 	width: 11px;
 }
-/* Handle */
+
 ::-webkit-scrollbar-thumb {
 	background: #3A84A7;
 	height:349px;

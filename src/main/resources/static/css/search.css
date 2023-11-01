@@ -397,6 +397,19 @@ div.dataDivCollapse :nth-child(4) > label >img {
 
 /* Customize the scrollbar track */
 
+/* scrollbar css for firefox only */
+  div.dataDivCollapse {
+    scrollbar-color: #81ACDF #FFF;
+    scrollbar-width:auto;
+  }
+  
+  div#filterSectionDiv {
+  	scrollbar-color: #626184 #EFF6FB;
+    scrollbar-width:auto;
+  }
+  
+  /* scrollbar css for Edge, Safari and Chrome */
+
   div.dataDivCollapse::-webkit-scrollbar-track {
 	border-right: 0.35px solid #D0D0D0;
     border-left: 0.35px solid #D0D0D0;
