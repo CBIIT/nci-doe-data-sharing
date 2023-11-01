@@ -204,10 +204,7 @@
 	#filterSectionDiv>.filterComponentDiv ~ .filterComponentDiv {
 		margin-top: 0rem;
 	}
-	.filterComponentDiv {
-		margin-left: 18px;
-		margin-right: 17px;
-	}
+
 	label.attrName {
 		font-size: 17px;
 	}
@@ -240,25 +237,25 @@
 	}
 	#searchMobileBtn {
 		position: absolute;
-		top: 0rem !important;
-		right: -1.5rem !important;
-		height: 5rem !important;
-		width: 6rem !important;
-		border-radius: 0px !important;
-		background-color: #E66F05;
-		text-align: center;
+	    top: 0rem;
+	    right: -0.5rem !important;
+	    height: 5.6rem !important;
+	    width: 6rem !important;
+	    border-radius: 0px !important;
+	    background-color: #E66F05;
+	    text-align: center;
 	}
 	#searchMobileBtn img {
 		width: 32px !important;
-		transform: translate(19px, 15.5px);
+		transform: translate(25px, 15.5px);
 	}
 	#searchMobileBtn span {
 		position: relative;
-		top: 2.5rem;
-		left: -1.2rem;
-		font-size: 12px;
-		color: #fff;
-		font-family: 'inter_medium';
+	    top: 3rem;
+	    left: -1.2rem;
+	    font-size: 12px;
+	    color: #fff;
+	    font-family: 'inter_medium';
 	}
 	.cil_14_bold_no_color_mobile {
 		color: #2E76ED;
