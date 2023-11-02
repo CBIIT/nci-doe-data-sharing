@@ -793,6 +793,7 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
 }
 .line_divider {
   width: 100%;
+  margin-top: -12px;
 }
 
 .expand_card_btn {
@@ -819,6 +820,7 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
 .overlap-group2-1 {
   margin-bottom: 1px;
   position: relative;
+  margin-top: 8px;
 }
 
 .frame-14 {
@@ -827,10 +829,10 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
   overflow: hidden;
 }
 
-.atom-modeling-pipeli {
+.datasetDiv {
   letter-spacing: 0;
   line-height: 25px;
-  margin-bottom: -7px;
+  /*margin-bottom: -7px;*/
   min-height: 35px;
 }
 

@@ -745,7 +745,7 @@ function renderDataSetName(data, type, row) {
       checkboxHtml +
       "<div class='overlap-group2-1'>" +
       " <div class='frame-14'>" +
-      " <div class='atom-modeling-pipeli poppins-medium-congress-blue-25px'>" +
+      " <div class='datasetDiv poppins-medium-congress-blue-25px'>" +
       " <a class='poppins-medium-congress-blue-25px dataSetFragment' dme_data_id = '" + row.dmeDataId + "'>" + row.dataSetName + "</a>" +
       " &nbsp;&nbsp;" +
       editDataSetHtml +
