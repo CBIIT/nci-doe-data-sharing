@@ -46,7 +46,6 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
-import io.micrometer.core.instrument.util.StringUtils;
 
 /**
  *
@@ -95,7 +94,6 @@ public class SearchController extends AbstractDoeController {
 				return null;
 			}
 
-			// ucBuilder.queryParam("returnParent", Boolean.TRUE);
 			final String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
 
 			WebClient client = DoeClientUtil.getWebClient(requestURL);

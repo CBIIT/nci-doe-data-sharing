@@ -27,6 +27,11 @@ input[type="checkbox"].selectAssetCheckBox {
     width: 19px;
 }
 
+input[type="radio"].selectRadioForDataSet {
+	height: 16px;
+    width: 16px;
+}
+
 input[type="checkbox"].filteritem {
 	height: 16px;
     width: 16px;

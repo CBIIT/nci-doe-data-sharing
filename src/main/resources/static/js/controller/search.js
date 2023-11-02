@@ -367,7 +367,8 @@ function refreshDataTable() {
          '<div class="col-lg-8 col-md-8 col-sm-8"><div id="informational_text">' +
          'Select the asset(s) you want to download. ' +
          'Downloadable assets must be no larger than 1 TB. Click Download Selected Assets.' +
-         '</div></div>' +
+         '</div><div id="selected_size_div" style="display: block;">Total Selected Size: ' +
+         '<span id="selected_size">0 B</span> </div></div>' +
          '<div class="col-lg-4 col-md-4 col-sm-4 downloadSelectedDiv" style="padding-right:0px;">' +
          '<button id="downloadSelected" type="button"' +
          'class="btn btn-primary float-right" disabled>' +
@@ -567,26 +568,31 @@ function dataTableInit(isVisible) {
          $(".selectAssetCheckBox").click(function (e) {
 
             var table = $(e.target).closest('table').attr('id');
-            var len = $('#' + table).find("input[type=checkbox]:checked").length;
+            var selectedCheckboxes = $('#' + table).DataTable().rows({ selected: true }).nodes().
+   			to$().find("input[type=checkbox]:checked");
+            var len = selectedCheckboxes.length;
             if (len >= 1) {
                $("#downloadSelected").prop("disabled", false);
             } else {
                $("#downloadSelected").prop("disabled", true);
             }
 
-            //calculateTotalSize(table);
+            calculateTotalSize(table);
 
          });
 
          $(".selectRadioForDataSet").click(function (e) {
+
             var table = $(e.target).closest('table').attr('id');
-            var len = $('#' + table).find("input[type=radio]:checked").length;
+            var selectedRadioboxes = $('#' + table).DataTable().rows({ selected: true }).nodes().
+   			to$().find("input[type=radio]:checked");
+            var len = selectedRadioboxes.length;
             if (len >= 1) {
                $("#downloadSelected").prop("disabled", false);
             } else {
                $("#downloadSelected").prop("disabled", true);
             }
-            //calculateTotalSize(table);
+            calculateTotalSize(table);
 
          });
 
@@ -655,7 +661,7 @@ function renderDataSetName(data, type, row) {
             checkboxHtml += "<input aria-label='checkbox' type='checkbox' id=" + row.dataSetPath + " " +
                "data-size = " + row.collectionSize + " class='selectAssetCheckBox'/>";
          } else {
-            checkboxHtml += "<input aria-label='radio' type='radio' name = 'selectRadioForDataSet' id=" + row.dataSetPath +
+            checkboxHtml += "<input aria-label='radio' type='radio' name = 'selectRadioForDataSet' id=" + row.dataSetPath + " " +
                "data-size = " + row.collectionSize + "  class='selectRadioForDataSet'/>";
          }
       } else {
@@ -769,9 +775,9 @@ function renderDataSetName(data, type, row) {
       "<div class='overlap-group'><div class='asset-description opensans-bold-midnight-blue-13px'>" +
       "<span class='opensans-bold-midnight-blue-13px'>ASSET DESCRIPTION: &nbsp;&nbsp;</span>" +
       "<span class='inter-normal-congress-blue-16px'>" + row.dataSetDescription + "</span></div></div>" +
-      /*"<div class='overlap-group'><div class='asset-size opensans-bold-midnight-blue-13px'>" +
+      "<div class='overlap-group'><div class='asset-size opensans-bold-midnight-blue-13px'>" +
       "<span class='opensans-bold-midnight-blue-13px'>ASSET SIZE: &nbsp;&nbsp;</span>" +
-      "<span class='inter-normal-congress-blue-16px'>" + row.displayAssetSize + "</span></div></div>" +*/
+      "<span class='inter-normal-congress-blue-16px'>" + row.displayAssetSize + "</span></div></div>" +
       "<div class='study-container'><div class='study opensans-bold-midnight-blue-13px'>" +
       "<span class='opensans-bold-midnight-blue-13px'>STUDY: &nbsp;&nbsp;</span>" +
       "<a class='button2a' style='text-decoration:underline;' collection_name = '" + row.studyName + "' selected_path = '" + row.studyPath + "' collection_type='Study' tabindex='0'" +
@@ -1391,11 +1397,12 @@ function openDataObjectPopOver($this) {
       });
 }
 
-
 function calculateTotalSize(table) {
 
    var totalSize = 0;
-   $('#' + table).find("input[type=checkbox]:checked").each(function () {
+   var rows = $('#' + table).DataTable().rows({ selected: true }).nodes().to$();
+  
+   rows.find("input[type=checkbox]:checked, input[type=radio]:checked").each(function () {
       var size = parseInt($(this).attr('data-size'));
       totalSize += size;
    });
@@ -1404,9 +1411,9 @@ function calculateTotalSize(table) {
 
    if (totalSize > 1099511627776) {
       // Get all the unchecked checkboxes in the table.
-      $('#' + table).find("input[type=checkbox]:not(:checked)").attr('disabled', true);
+      rows.find("input[type=checkbox]:not(:checked), input[type=radio]:not:checked").attr('disabled', true);
    } else {
-      $('#' + table).find("input[type=checkbox]").attr('disabled', false);
+      rows.find("input[type=checkbox], input[type=radio]").attr('disabled', false);
    }
 }
 
@@ -1423,11 +1430,7 @@ function addHumanReadableSize(value) {
    var exponent = Math.floor(Math.log(bytes) / Math.log(base));
    var unit = ["B", "KB", "MB", "GB", "TB"][exponent];
 
-   var humanReadableSize = (bytes / Math.pow(base, exponent)).toFixed(3) + " " + unit;
-   if (value.indexOf(".") !== -1) {
-      return humanReadableSize + " (" + value + ")";
-   }
-
+   var humanReadableSize = (bytes / Math.pow(base, exponent)).toFixed(1) + " " + unit;
    return humanReadableSize;
 }
 
