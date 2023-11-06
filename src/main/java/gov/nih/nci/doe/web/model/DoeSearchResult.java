@@ -21,24 +21,7 @@ public class DoeSearchResult {
 	private String dmeDataId;
 	private Boolean isBulkAsset;
 	private String isReferenceDataset;
-	private String displayAssetSize;
-	private Long collectionSize;
 
-	public String getDisplayAssetSize() {
-		return displayAssetSize;
-	}
-
-	public void setDisplayAssetSize(String displayAssetSize) {
-		this.displayAssetSize = displayAssetSize;
-	}
-
-	public Long getCollectionSize() {
-		return collectionSize;
-	}
-
-	public void setCollectionSize(Long collectionSize) {
-		this.collectionSize = collectionSize;
-	}
 
 	public String getIsReferenceDataset() {
 		return isReferenceDataset;
