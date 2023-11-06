@@ -627,7 +627,7 @@ a.dropdown-item:hover {
 	justify-content: normal;
 }
 
-.headerprimary-button:hover:after {
+.active-nav:after {
 	background-color: #007bbd;
 	border-radius: 0;
 	bottom: 0;
