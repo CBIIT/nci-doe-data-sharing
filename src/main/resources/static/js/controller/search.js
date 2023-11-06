@@ -7,17 +7,6 @@ $(document).ready(function () {
       $("#mobileKeyworkSearchDiv").show();
    }
 
-   $(".landing-tab").removeClass('active');
-   $(".search-tab").addClass('active');
-
-   if ($(".backToStatusTabLink").is(':visible')) {
-      $(".search-tab").removeClass('active');
-      $("#manageTasks-tab").addClass('active');
-   } else {
-      $(".search-tab").addClass('active');
-      $("#manageTasks-tab").removeClass('active');
-   }
-
    $('.dt-responsive tbody').on('click', 'td', function () {
       initializeToolTips();
 

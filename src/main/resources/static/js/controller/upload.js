@@ -1,7 +1,5 @@
 $(document).ready(
 		function() {
-			$(".landing-tab").removeClass('active');
-			$("#upload-tab").addClass('active');
 			loadUploadTab();
 
 			$('body').tooltip({
