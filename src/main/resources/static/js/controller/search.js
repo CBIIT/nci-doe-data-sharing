@@ -7,6 +7,14 @@ $(document).ready(function () {
       $("#mobileKeyworkSearchDiv").show();
    }
 
+   // $("#home").removeClass('active-nav');
+   // $("#search").addClass('active-nav');
+
+   if ($(".backToStatusTabLink").is(':visible')) {
+      $("#search").removeClass('active-nav');
+      $("#status").addClass('active-nav');
+   }
+
    $('.dt-responsive tbody').on('click', 'td', function () {
       initializeToolTips();
 

@@ -1,3 +1,5 @@
+$("#about").addClass('active-nav');
+
 $(".contactUsTextbox").keyup(function() {
 	if ($(this).val()) {
 		$(this).parent().find('.TextField-floatingLabel-qefpP').show();

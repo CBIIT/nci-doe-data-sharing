@@ -637,6 +637,7 @@ a.dropdown-item:hover {
 	left: 1rem;
 	position: absolute;
 	right: 1rem;
+	color: #007bbd;
 }
 
 .headerprimary-button:hover {
