@@ -195,7 +195,7 @@ table#assetBulkMetadataTable thead tr th {
 }
 
 #uploadHeader {
-	margin-top: 84px; 
+	/* margin-top: 84px;  */
 	padding-bottom: -16px; 
 	height: 50px; 
 	width: 430px; 
@@ -213,7 +213,7 @@ table#assetBulkMetadataTable thead tr th {
 #uploadSectionDiv {
 	border: 1px solid #AD5A00; 
 	background-color:#FFFFFF; 
-	margin-bottom: 84px !important;
+	/* margin-bottom: 84px !important; */
 }
 
 #uploadSubFragmentTab {

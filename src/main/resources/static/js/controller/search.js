@@ -14,6 +14,10 @@ $(document).ready(function () {
       $("#search").removeClass('active-nav');
       $("#status").addClass('active-nav');
    }
+   else {
+      $("#status").removeClass('active-nav');
+      $("#search").addClass('active-nav');
+   }
 
    $('.dt-responsive tbody').on('click', 'td', function () {
       initializeToolTips();

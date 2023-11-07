@@ -6,6 +6,8 @@ $(document).ready(function() {
 	} else {
 	  refreshTaskDatatable('manageTasksTable');
 	}	
+	$("#search").removeClass('active-nav');
+
 });
 
 $("#modelAnalysisStatus").click(function(e) {
