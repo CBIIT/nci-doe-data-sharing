@@ -7,17 +7,13 @@
 <body>
 	<div id="uploadTab" role="tabpanel"
 		th:fragment="uploadFragment" style="max-width: 1440px; margin: 0 auto;">
-		<div class="col-md-4 col-sm-4" id="uploadHeader"
-			style="margin-top: 84px; padding-bottom: -16px; height: 50px; width: 430px; background-color: #E66F05; color: #fff;">
-			<p
-				style="font-size: 20px; font-family: latoregular; font-size: 25px; padding-top: 5px;">Upload
+		<div class="col-md-4 col-sm-4" id="uploadHeader">
+			<p >Upload
 				Data</p>
 		</div>
 
-		<div id="uploadSectionDiv" class="form-row jumbotron pt-2 pb-2 mb-2"
-			style="border: 1px solid #AD5A00; background-color:#FFFFFF; margin-bottom: 84px !important;">
-			<div class="form-row col-md-12 col-sm-12" id="uploadSubFragmentTab"
-				style="margin-top: 20px; margin-left: 100px;">
+		<div id="uploadSectionDiv" class="form-row jumbotron pt-2 pb-2 mb-2">
+			<div class="form-row col-md-12 col-sm-12" id="uploadSubFragmentTab">
 
 				<input type="hidden" th:value="${basePathSelected}" id="basePath" />
 				<input type="hidden" th:value="${datafilePath}" id="datafilePath" />
@@ -52,8 +48,7 @@
 										onclick="showSelect('Program')" value="Select Program">&nbsp;&nbsp;
 										Select Program</label>
 								</div>
-								<div id="showSelectProgramDiv"
-									style="display: none; margin-top: 10px; margin-left: 40px;">
+								<div id="showSelectProgramDiv">
 									<select class="simple-select2" id="instituteList"
 										name="instituteList" style="width: 100%"
 										onchange="retrieveCollections('instituteList', this.options[this.selectedIndex],'onChange');">
@@ -102,8 +97,7 @@
 										onclick="showSelect('Study')" value="Select Study">&nbsp;&nbsp;
 										Select Study</label>
 								</div>
-								<div id="showSelectStudyDiv"
-									style="display: none; margin-top: 10px; margin-left: 40px;">
+								<div id="showSelectStudyDiv">
 									<select class="simple-select2" id="studyList" aria-labelledby="studyList" name="studyList"
 										style="width: 100%"
 										onchange="retrieveCollections('studyList', this.options[this.selectedIndex],'onChange');">
@@ -173,8 +167,7 @@
 										onclick="showSelect('Asset')" value="Select Asset">&nbsp;&nbsp;
 										Select Asset</label>
 								</div>
-								<div id="showSelectAssetDiv"
-									style="display: none; margin-top: 10px; margin-left: 40px;">
+								<div id="showSelectAssetDiv">
 									<select class="simple-select2" id="dataList" aria-labelledby="dataList" name="dataList"
 										style="width: 100%"
 										onchange="retrieveCollections('dataList', this.options[this.selectedIndex],'onChange');">
