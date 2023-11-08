@@ -78,7 +78,7 @@
         <div class="d-none d-lg-block headerinner">
             <ul class="headerprimary">
                 <li class="headerprimary-item">
-                    <button class="usa-button headerprimary-button" aria-expanded="false"
+                    <button id="home" class="usa-button headerprimary-button" aria-expanded="false"
                         data-href="https://modac.cancer.gov" aria-controls="menu-829" data-menu-id="829">
                         <a th:href="@{/}" role="tab">
                         <span>Home</span>
@@ -86,7 +86,7 @@
                     </button>
                 </li>
                 <li class="headerprimary-item">
-                    <button class="usa-button headerprimary-button" aria-expanded="false"
+                    <button id="search" class="usa-button headerprimary-button" aria-expanded="false"
                         data-href="https://modac.cancer.gov/searchTab" aria-controls="menu-11868" data-menu-id="11868">
                         <a th:href="@{/searchTab}"
                             role="tab">
@@ -95,7 +95,7 @@
                     </button>
                 </li>
                 <li class="headerprimary-item" th:if="${loggedOnUser != null && isUploader eq true}">
-                    <button class="usa-button headerprimary-button" aria-expanded="false"
+                    <button id="upload" class="usa-button headerprimary-button" aria-expanded="false"
                         data-href="https://modac.cancer.gov/addbulk" aria-controls="menu-11868" data-menu-id="11868">
                         <a th:href="@{/addbulk}"
                             role="tab">
@@ -104,7 +104,7 @@
                     </button>
                 </li>
                 <li class="headerprimary-item"  th:if="${loggedOnUser != null}">
-                    <button class="usa-button headerprimary-button" aria-expanded="false"
+                    <button id="status" class="usa-button headerprimary-button" aria-expanded="false"
                         data-href="https://modac.cancer.gov/tasksTab" aria-controls="menu-11868" data-menu-id="11868">
                         <a th:href="@{/tasksTab}"
                             role="tab">
@@ -114,8 +114,10 @@
                 </li>
                 <li class="headerprimary-item dropdown">
                     <button class="btn usa-button headerprimary-button dropdown-toggle" type="button"
-                        id="menu1" data-toggle="dropdown">About
-                        <img class="frame-49" th:src="@{/images/dropdown.svg}" alt="Frame 49" />
+                        id="about" data-toggle="dropdown">About
+                        <img class="dropdown-icon" th:src="@{/images/dropdown.svg}" alt="Frame 49" />
+                        <img class="dropup-icon" th:src="@{/images/dropup.svg}" alt="Frame 49" />
+
                     </button>
                     <ul class="dropdown-menu dropdown-container-new" role="menu" aria-labelledby="menu1">
                         <div class="dropdown-container-block">

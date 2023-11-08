@@ -1,7 +1,4 @@
-$(".landing-tab").removeClass('active');
-$("#contact-tab").addClass('active');
-$(".aboutTabNav").addClass('active');
-
+$("#about").addClass('active-nav');
 
 $(".contactUsTextbox").keyup(function() {
 	if ($(this).val()) {

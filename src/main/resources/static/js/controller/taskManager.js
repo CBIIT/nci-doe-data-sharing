@@ -1,15 +1,13 @@
 $(document).ready(function() {
-	$.fn.dataTable.moment("MM/DD/YYYY HH:mm:ss");
-	$(".landing-tab").removeClass('active');
-	$(".search-tab").removeClass('active');
-	
+	$.fn.dataTable.moment("MM/DD/YYYY HH:mm:ss");	
 	var redirectToPredTab = $("#redirectToPredTab").val();
 	if(redirectToPredTab) {
 	  $("#modelAnalysisStatus").click();
 	} else {
-	  $("#manageTasks-tab").addClass('active');
 	  refreshTaskDatatable('manageTasksTable');
 	}	
+	$("#search").removeClass('active-nav');
+
 });
 
 $("#modelAnalysisStatus").click(function(e) {

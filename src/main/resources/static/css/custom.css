@@ -3,13 +3,30 @@
 	cursor: pointer;
 }
 
-::-webkit-scrollbar {
-	width: 7px;
+/* Scrollbar for firefox only */
+ html,body {
+    scrollbar-color: #3A84A7 #EFF6FB;
+    scrollbar-width:auto;
 }
 
-/* Handle */
+
+/* Scrollbar css for Edge, Chrome and Safari */
+::-webkit-scrollbar {
+	width: 11px;
+}
+
 ::-webkit-scrollbar-thumb {
 	background: #3A84A7;
+	height:349px;
+	background-clip: content-box;
+	border-left: 2px solid transparent;
+	border-right: 2px solid transparent;
+	border-radius: 4px;
+	
+}
+
+::-webkit-scrollbar-track {
+    background: #EFF6FB;
 }
 
 body {
@@ -958,22 +975,8 @@ table {
 	margin-bottom: 10px;
 }
 
-.paginate_button:not(:disabled):hover {
-	background:#d3d3d3 !important;
-	 
-}
-
-.dataTables_wrapper .dataTables_paginate .paginate_button {
-	padding: 0px;!important;
-}
-
 .pagination {
 	float: right !important;
-}
-
-.dataTables_wrapper .dataTables_paginate .paginate_button.current {
-	color: #000 !important;
-	background: #f8f9fa;
 }
 
 .dataTables_paginate {

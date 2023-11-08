@@ -88,6 +88,9 @@
 	.iWqacH {
 		width: 100%;
 	}
+	.landingSearchDiv {
+       margin-left: 8vw !important;
+	}
 }
 
 @media ( min-width : 991px) {
@@ -174,13 +177,13 @@
 	}
 	#resetBtnLandingForMobile {
 		position: absolute;
-		top: 2.4rem !important;
-		right: 5rem !important;
+		top: 1.4rem !important;
+    	right: 7rem !important;
 	}
 	#landingSearchMobileButton {
 		position: absolute;
-		right: 13px;
-		top: 37px;
+		right: 35px;
+    	top: 18px;
 	}
 	#landingSearchMobileButton img {
 		width: 60px;
@@ -201,10 +204,7 @@
 	#filterSectionDiv>.filterComponentDiv ~ .filterComponentDiv {
 		margin-top: 0rem;
 	}
-	.filterComponentDiv {
-		margin-left: 18px;
-		margin-right: 17px;
-	}
+
 	label.attrName {
 		font-size: 17px;
 	}
@@ -237,25 +237,25 @@
 	}
 	#searchMobileBtn {
 		position: absolute;
-		top: 0rem !important;
-		right: -1.5rem !important;
-		height: 5rem !important;
-		width: 6rem !important;
-		border-radius: 0px !important;
-		background-color: #E66F05;
-		text-align: center;
+	    top: 0rem;
+	    right: -0.5rem !important;
+	    height: 5.6rem !important;
+	    width: 6rem !important;
+	    border-radius: 0px !important;
+	    background-color: #E66F05;
+	    text-align: center;
 	}
 	#searchMobileBtn img {
 		width: 32px !important;
-		transform: translate(19px, 15.5px);
+		transform: translate(25px, 15.5px);
 	}
 	#searchMobileBtn span {
 		position: relative;
-		top: 2.5rem;
-		left: -1.2rem;
-		font-size: 12px;
-		color: #fff;
-		font-family: 'inter_medium';
+	    top: 3rem;
+	    left: -1.2rem;
+	    font-size: 12px;
+	    color: #fff;
+	    font-family: 'inter_medium';
 	}
 	.cil_14_bold_no_color_mobile {
 		color: #2E76ED;
@@ -376,6 +376,9 @@
 	.mobile-nav-toggle[aria-expanded="false"] .toggleNavBarIcon {
 		display: block !important;
 	}
+	.d-sm-block {
+   	 display: block!important;
+	}
 	.toggleNavBarIcon {
 		font-size: 28px;
 		transform: translateY(-3px);
@@ -427,7 +430,7 @@
 	}
 	.mobile-navigation {
 		position: absolute;
-		top: 160px;
+		top: 148px;
 		left: 0px;
 		display: block;
 		z-index: 1000;
@@ -532,11 +535,11 @@
 		margin-left: -50px !important;
 	}
 	.logoImg {
-		width: 283px;
+		width: 312px !important;
 	}
 
 	.col.order-first {
-		margin-left: -0.25rem !important;
+		margin-left: -2.25rem !important;
 	}
 
 

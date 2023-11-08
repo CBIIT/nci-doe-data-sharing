@@ -193,3 +193,36 @@ table#assetBulkMetadataTable thead tr th {
 	font-family: 'inter_regular';
 	padding-left: 14px;
 }
+
+#uploadHeader {
+	/* margin-top: 84px;  */
+	padding-bottom: -16px; 
+	height: 50px; 
+	width: 430px; 
+	background-color: #E66F05; 
+	color: #fff;
+}
+
+#uploadHeader p {
+	font-size: 20px; 
+	font-family: latoregular;
+	font-size: 25px; 
+	padding-top: 5px;
+}
+
+#uploadSectionDiv {
+	border: 1px solid #AD5A00; 
+	background-color:#FFFFFF; 
+	/* margin-bottom: 84px !important; */
+}
+
+#uploadSubFragmentTab {
+	margin-top: 20px; 
+	margin-left: 100px;
+}
+
+#showSelectProgramDiv, #showSelectStudyDiv, #showSelectAssetDiv {
+	display: none; 
+	margin-top: 10px; 
+	margin-left: 40px;
+}

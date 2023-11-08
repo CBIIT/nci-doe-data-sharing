@@ -14,6 +14,18 @@ $(document)
 								}			 
 							}
 						});
+
+                    // Start To activate css for active navigation link
+					var current = location.pathname;
+					$('li button a').each(function(){
+						var $this = $(this);
+						// if the current path is like this link, make it active
+						if($this.attr('href') == current){
+							$this.parent().addClass('active-nav');
+						}
+					})
+					// End To activate css for active navigation link
+
 					// Auto-lowercase Email Username (Usernames are always
 					// stored in lowercase)
 					$('#username').blur(function() {
@@ -122,15 +134,13 @@ $(document)
 					$("#downloadSelected").click(
 							function(e) {
 								var selectedPaths = [];
-								$("#searchResultTable tbody input[type=checkbox]:checked").each(function() {
+								var selectedCheckboxes = $('#searchResultTable').DataTable().
+								rows({ selected: true }).nodes().to$().find("input[type=checkbox]:checked, input[type=radio]:checked");
+								
+								selectedCheckboxes.each(function() {
 									selectedPaths.push($(this).attr('id'));
 								});
-								if (selectedPaths.length == 0) {
-									$("#searchResultTable tbody input[type=radio]:checked").each(function() {
-										selectedPaths.push($(this).attr('id'));
-									});
-								}
-
+								
 								if (selectedPaths.length == 1) {
 									location.replace('/downloadTab?selectedPaths=' + selectedPaths
 											+ '&&downloadAsyncType=collection&&returnToSearch=true');

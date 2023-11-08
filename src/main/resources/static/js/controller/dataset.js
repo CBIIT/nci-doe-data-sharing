@@ -41,8 +41,10 @@ function filter() {
 		var filterVal = $(this).val().trim().toLowerCase();
 		if(filterVal) {
 			$(".clearAssetFilesFilter").show();
+			$(".lensfilter").hide();
 		} else  {
 			$(".clearAssetFilesFilter").hide();
+			$(".lensfilter").show();
 		}
 		
 		$("#dataSetTable tbody tr").each(function() {
@@ -74,9 +76,9 @@ function refreshTaskDatatable(table) {
 		t.ajax.reload(null, false);
 	}
 	if (isVisible && !$("#filterSearchBox").is(':visible')) {
-		$("div.datasetToolbar").append(
+		$("div.datasetToolbar").prepend(
 				'<div style="float: left;margin-top: -10px;margin-bottom: 10px;margin-left: 1.5rem;">'
-						+ '<label><input type="textbox" id="filterSearchBox" placeholder="Filter Files"/><img src="/images/filter_files_clear.png"/ class="clearAssetFilesFilter"> </label></div>');
+						+ '<label><input type="textbox" id="filterSearchBox" placeholder="Filter Files"/><img src="/images/filter_files_clear.png"/ class="clearAssetFilesFilter"> <img src="/images/lensIcon.svg" class="lensfilter"></label></div>');
 	}
 }
 
@@ -316,7 +318,7 @@ function generatePredTable(isVisible) {
 					"targets" : [ -2 ]
 				} ],
 
-				"dom" : '<"top"lip>rt<"bottom"ip>',
+				"dom" : '<"top"lip>rt<"bottom">',
 				"pagingType" : "simple",
 
 				"lengthMenu" : [ [ 10, 25, 50, 100 ], [ 10, 25, 50, 100 ] ],
@@ -327,8 +329,8 @@ function generatePredTable(isVisible) {
 					"sLoadingRecords" : "Loading...",
 					"zeroRecords" : "Nothing found to display",
 					"paginate" : {
-						next : '<i style="color:#000;font-size:17px;" class="fas fa-caret-right"></i>',
-						previous : '<i style="color:#000;font-size:17px;" class="fas fa-caret-left"></i>'
+						next : '<img src="/images/pagination_right_assetfiles.png"/>',
+						previous : '<img src="/images/paginate_left_assetFiles.png"/>'
 					}
 				}
 			});
@@ -382,6 +384,7 @@ function dataTableInitDataSet(isVisible) {
 
 			$(".clearAssetFilesFilter").click(function() {
 				$(this).parent().find("#filterSearchBox").val("");
+				$(this).parent().find(".lensfilter").show;
 				$(this).parent().find("#filterSearchBox").trigger('keyup');
 				$(this).hide();
 			});
@@ -500,7 +503,7 @@ function dataTableInitDataSet(isVisible) {
 			className : "td_class_7"
 		} ],
 
-		"dom" : '<"datasetToolbar top"lip>rt<"bottom"ip>',
+		"dom" : '<"datasetToolbar top"lip>rt<"bottom">',
 		"pagingType" : "simple",
 
 		"lengthMenu" : [ [ 10, 25, 50, 100 ], [ 10, 25, 50, 100 ] ],
@@ -511,8 +514,8 @@ function dataTableInitDataSet(isVisible) {
 			"sLoadingRecords" : "Loading...",
 			"zeroRecords" : "Nothing found to display",
 			"paginate" : {
-				next : '<i style="color:#000;font-size:17px;" class="fas fa-caret-right"></i>',
-				previous : '<i style="color:#000;font-size:17px;" class="fas fa-caret-left"></i>'
+				next : '<img src="/images/pagination_right_assetfiles.png"/>',
+				previous : '<img src="/images/paginate_left_assetFiles.png"/>'
 			}
 		}
 	});

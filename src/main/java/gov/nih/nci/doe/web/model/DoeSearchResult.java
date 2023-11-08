@@ -22,6 +22,7 @@ public class DoeSearchResult {
 	private Boolean isBulkAsset;
 	private String isReferenceDataset;
 
+
 	public String getIsReferenceDataset() {
 		return isReferenceDataset;
 	}

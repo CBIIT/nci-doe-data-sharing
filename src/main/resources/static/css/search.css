@@ -1,6 +1,9 @@
 [class^='select2'] {
 	border-radius: 10px !important;
 }
+:root {
+  accent-color: #353941;
+}
 
 #select2-metadatalist-results {
 	color: #000000;
@@ -19,14 +22,34 @@
 	margin-top: -4px;
 }
 
-input[type="checkbox"].selectCheckboxForIns {
+input[type="checkbox"].selectAssetCheckBox {
 	height: 19px;
     width: 19px;
+}
+
+input[type="radio"].selectRadioForDataSet {
+	height: 16px;
+    width: 16px;
 }
 
 input[type="checkbox"].filteritem {
 	height: 16px;
     width: 16px;
+}
+
+input.filteritem:checked {
+    transform: translateY(2px);
+    box-sizing: border-box;
+}
+
+
+input[type="checkbox"].filteritem  + div {
+	color: #4584A1;
+}
+
+input[type="checkbox"].filteritem:checked  + div {
+	color: #246381;
+	font-weight: 700;
 }
 
 #advancedSearch {
@@ -238,6 +261,7 @@ div.divTableBody div.divTableContent:nth-child(odd) {
     font-size: 15px;
     color: #5B5D5F !important;
     transform: translateY(-8px);
+    margin-right: 0.5rem;
 }
 
 .popoverMobileAttrName, .popoverMobileAttrVal {
@@ -306,7 +330,7 @@ div.divTableBody div.divTableContent:nth-child(odd) {
 .css-17rpx5x, .css-17rpx5xLess {
 	float: right;
 	cursor: pointer;
-	margin-top: -2rem;
+	margin-top: -1.5rem;
 }
 
 .css-17rpx5x a, .css-17rpx5xLess a {
@@ -335,7 +359,7 @@ div.divTableBody div.divTableContent:nth-child(odd) {
 
 
 .filterComponentDiv {
-	margin-bottom: 0.5rem;
+	margin-bottom: 2rem;
 	margin-left: -5px; 
 	background: #EAEBEB;
 }
@@ -353,12 +377,12 @@ div.dataDivCollapse{
 	max-height: 327px; 
 	overflow-y: auto; 
 	margin-bottom: 18px; 
-	margin-left: 4.4rem;
+	margin-left: 4rem;
 	overflow-x: hidden;
 }
 
 div.dataDivCollapse :not(:first-child) {
-    margin-top: -5px;
+    margin-top: -3px;
 }
 
 div.dataDivCollapse :first-child {
@@ -369,35 +393,55 @@ div.dataDivCollapse :last-child {
 	padding-bottom: 6px;
 }
 
-div.dataDivCollapse :nth-child(4) {
+/*div.dataDivCollapse :nth-child(4) {
 	padding-bottom: 12px;
-}
+}*/
 div.dataDivCollapse :nth-child(4) > label >img {
 	display:none;
 }
 
 /* Customize the scrollbar track */
+
+/* scrollbar css for firefox only */
+  div.dataDivCollapse {
+    scrollbar-color: #81ACDF #FFF;
+    scrollbar-width:auto;
+  }
+  
+  div#filterSectionDiv {
+  	scrollbar-color: #626184 #EFF6FB;
+    scrollbar-width:auto;
+  }
+  
+  /* scrollbar css for Edge, Safari and Chrome */
+
   div.dataDivCollapse::-webkit-scrollbar-track {
-    background-color: #81ACDF; /* Replace with your desired color */
+	border-right: 0.35px solid #D0D0D0;
+    border-left: 0.35px solid #D0D0D0;
+    background: #FFF;
   }
-
-  /* Customize the scrollbar thumb */
+  
   div.dataDivCollapse::-webkit-scrollbar-thumb {
-    background-color: #81ACDF; /* Replace with your desired color */
+	background: #81ACDF;
+	height: 50%;
+	background-clip: content-box;
+	border-left: 2px solid transparent;
+	border-right: 2px solid transparent;
+	border-radius: 4px;
   }
-
-/* Customize the scrollbar track */
+  
   div#filterSectionDiv::-webkit-scrollbar-track {
-    background-color: #626184; /* Replace with your desired color */
+	border-right: 0.5px solid #BED2E1;
+    background: #EFF6FB;
   }
 
-  /* Customize the scrollbar thumb */
   div#filterSectionDiv::-webkit-scrollbar-thumb {
-    background-color: #626184; /* Replace with your desired color */
-  }
-  div#filterSectionDiv::-webkit-scrollbar {
-	 width:7px;
-    height:349px;
+	background: #626184;
+	height: 349px;
+	background-clip: content-box;
+	border-left: 2px solid transparent;
+	border-right: 2px solid transparent;
+	border-radius: 4px;
   }
      
   
@@ -409,16 +453,6 @@ div.dataDivCollapse :nth-child(4) > label >img {
     border: 1px solid #7C7C7C;
     background-color: #7C7C7C;
 }
-
-
-input.filteritem:checked {
-    transform: translateY(4px);
-    box-sizing: border-box;
-}
-
-/*input.filteritem:checked + div {
-	 color: #006DD9;
-}*/
 
 #searchCriteriaDiv {
 	background: #EAEBEB;
@@ -464,6 +498,20 @@ input.filteritem:checked {
     top: 0.7rem;
     width: 24px;
     height: 22px;
+}
+
+#informational_text,#selected_size_div {
+	display:none;
+	color: #235172;
+    font-variant-numeric: lining-nums tabular-nums;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    letter-spacing: 0.19px;
+    padding-top: 15px;
+    font-weight: 300;
+    line-height: 106.523%;
 }
 
 .cil_12_no_color {
@@ -523,25 +571,35 @@ img.searchCheckBoxlist {
 }
 
 .filterSearchBox {
-	width: 75%;
-	border-radius: 65px;
-	border: 1px solid #707070;
-	font-size: 14px;
-	height: 2rem;
-	padding: 6px 12px;
-	margin-bottom: 17px;
-	font-family: 'inter_regular';
-	margin-top: 12px;
-	margin-left: 1.8rem;
+    font-size: 14px;
+    padding: 6px 12px;
+    margin-bottom: 17px;
+    font-family: 'inter_regular';
+    margin-top: 12px;
+    margin-left: 3.8rem;
+    width: 262px;
+    height: 34px;
+    border-radius: 65px;
+    border: 1px solid var(--grays-gray-3, #8B98AF);
+    background: #FFF;
 }
 
+div.filterGroupDiv {
+	padding-right:0px;
+}
 
 label.showMorefields {
 	font-size:15px;
 	color: #4584A1;
-	border-bottom: 1px solid #D0D0D0 !important;
+	border-bottom: 1px solid #D0D0D0;
+	background:transparent;
+	padding-left: 6px;
+	width:98%;
 }
 
+label.filter_checked {
+	background: rgb(240, 244, 255);
+}
 
 #searchResultTable_wrapper div.toolbar {
     display: flex;
@@ -685,7 +743,7 @@ table#searchResultTable.display tbody tr>.sorting_1, table#searchResultTable.ord
 }
 
 #downloadSelected {
-    margin-top: 1rem;
+    margin-top: 0.7rem;
     font-family: var(--font-family-inter);
 	height: 41px;
 	width: 193px;
@@ -698,6 +756,7 @@ table#searchResultTable.display tbody tr>.sorting_1, table#searchResultTable.ord
     padding-left: 2rem;
     text-align: left;
     padding-top: 10px;
+    margin-bottom: 0.2rem;
 }
 button.share-link-copy-button, button.share-assetLink-copy-button {
 	border: none;
@@ -710,7 +769,8 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
     transform: translateY(-3px);
 }
 .collectionAccessGrpImg {
-	width: 13.3px;
+	width: 18px;
+    height: 19px;
     transform: translateY(-3px);
 }
 
@@ -738,6 +798,7 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
 }
 .line_divider {
   width: 100%;
+  margin-top: -12px;
 }
 
 .expand_card_btn {
@@ -764,6 +825,7 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
 .overlap-group2-1 {
   margin-bottom: 1px;
   position: relative;
+  margin-top: 8px;
 }
 
 .frame-14 {
@@ -772,10 +834,10 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
   overflow: hidden;
 }
 
-.atom-modeling-pipeli {
+.datasetDiv {
   letter-spacing: 0;
   line-height: 25px;
-  margin-bottom: -7px;
+  /*margin-bottom: -7px;*/
   min-height: 35px;
 }
 
@@ -851,4 +913,74 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
 }
 #ascSpan, #descSpan {
 	cursor:pointer;
+}
+
+/*datatable pagination */
+#searchResultTable_paginate.paging_full_numbers {
+	border: 1px solid rgba(153, 161, 183, 1);
+	height: 32px;
+}
+#searchResultTable_first,#searchResultTable_last {
+    display:none;
+}
+.dataTables_wrapper #searchResultTable_paginate .paginate_button {
+	border:none !important;
+	background:transparent!important;
+	font-size: 14px;
+	font-weight:300;
+	font-family:'Poppins';
+	margin-top: -20px;
+	color: rgba(0, 65, 135, 1) !important;
+	
+}
+
+#searchResultTable_paginate .paginate_button::after {
+    content: url(/images/line_divder_search_pagination.svg);
+    display: inline-block;
+    width: 1px;
+    height: 20px;
+    margin: 0 10px;
+    transform: translateY(10px);
+}
+
+#searchResultTable_paginate #searchResultTable_next::after {
+  display: none;
+}
+
+a#searchResultTable_next {
+    margin-left: -10px;
+    margin-right:-5px;
+}
+
+a#searchResultTable_previous {
+    margin-right: -14px;
+    margin-left:-5px;
+}
+
+.dataTables_wrapper #searchResultTable_paginate .paginate_button.current, .dataTables_wrapper #searchResultTable_paginate .paginate_button:hover {
+	color: rgba(0, 65, 135, 1) !important;
+	border:none !important;
+}
+.paginate_button.disabled {
+	color: rgba(153, 161, 183, 1) !important;
+}
+.dataTables_wrapper #searchResultTable_paginate span>a.paginate_button {
+	padding: 5px;
+    margin-left: -1px;
+    margin-right: -7px;
+}
+
+#searchResultTable_paginate .paginate_button.next.disabled img {
+	content: url('/images/paginate_left.svg');
+	transform: rotate(-180deg);
+}
+
+#searchResultTable_paginate .paginate_button.previous img {
+	content: url('/images/paginate_right.svg');
+	transform: rotate(-180deg);
+}
+
+#searchResultTable_paginate .paginate_button.previous.disabled img {
+	content: url('/images/paginate_left.svg');
+	transform: rotate(0deg);
 }
