@@ -865,6 +865,7 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
 
 .asset-description {
   line-height: normal;
+  word-break: break-word;
 }
 
 .study-container {
