@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 
-import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -88,17 +86,8 @@ public class SearchController extends AbstractDoeController {
 			compoundQuery.setDetailedResponse(true);
 			log.info("search compund query" + compoundQuery);
 
-			UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(compoundCollectionSearchServiceURL);
-
-			if (ucBuilder == null) {
-				return null;
-			}
-
-			final String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
-
-			WebClient client = DoeClientUtil.getWebClient(requestURL);
-			client.header("Authorization", "Bearer " + authToken);
-			Response restResponse = client.invoke("POST", compoundQuery);
+			Response restResponse = DoeClientUtil.getCollectionSearchQuery(authToken,
+					compoundCollectionSearchServiceURL, compoundQuery);
 
 			if (restResponse.getStatus() == 200) {
 				session.setAttribute("compoundQuery", compoundQuery);
@@ -126,6 +115,7 @@ public class SearchController extends AbstractDoeController {
 	private List<DoeSearchResult> processCollectionResults(List<String> systemAttrs, Response restResponse,
 			DoeSearch search) throws IOException {
 
+		log.info("process collection results for rendering the search results table");
 		ObjectMapper mapper = new ObjectMapper();
 		AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
 				new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()), new JacksonAnnotationIntrospector());
@@ -141,54 +131,52 @@ public class SearchController extends AbstractDoeController {
 		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(user).getBody();
 
 		for (HpcCollectionDTO result : searchResults) {
-
-			String dataSetPermissionRole = getPermissionRole(user, result.getCollection().getCollectionId(),
-					loggedOnUserPermissions);
-			List<HpcMetadataEntry> selfMetadatEntries = result.getMetadataEntries().getSelfMetadataEntries();
-			String assetType = getAttributeValue("asset_type", selfMetadatEntries, "Asset");
-
 			DoeSearchResult returnResult = new DoeSearchResult();
-			String collectionSize = getAttributeValue("collection_size", selfMetadatEntries, "Asset");
+
+			List<HpcMetadataEntry> selfMetadatEntries = result.getMetadataEntries().getSelfMetadataEntries();
+			List<HpcMetadataEntry> parentMetadatEntries = result.getMetadataEntries().getParentMetadataEntries();
+
+			/* setting parent metadata values */
 
 			String studyPath = result.getCollection().getCollectionParentName();
 			String programPath = studyPath.substring(0, studyPath.lastIndexOf('/'));
-			Integer studyCollectionId = getCollectionId(result.getMetadataEntries().getParentMetadataEntries(),
-					"Study");
-			Integer programCollectionId = getCollectionId(result.getMetadataEntries().getParentMetadataEntries(),
-					"Program");
+			Integer studyCollectionId = getCollectionId(parentMetadatEntries, "Study");
+			Integer programCollectionId = getCollectionId(parentMetadatEntries, "Program");
+			returnResult.setProgramName(getAttributeValue("program_name", parentMetadatEntries, "Program"));
+			returnResult.setStudyName(getAttributeValue("study_name", parentMetadatEntries, "Study"));
+			returnResult.setStudyCollectionId(studyCollectionId);
+			returnResult.setProgramCollectionId(programCollectionId);
 
+			/* setting asset metadata values */
+			String collectionSize = getAttributeValue("collection_size", selfMetadatEntries, "Asset");
 			returnResult.setIsBulkAsset(
 					(collectionSize != null && Long.valueOf(collectionSize) > Long.valueOf(bulkCollectionSize))
 							? Boolean.TRUE
 							: Boolean.FALSE);
 
+			String assetType = getAttributeValue("asset_type", selfMetadatEntries, "Asset");
 			returnResult
 					.setDisplayAssetSize(collectionSize != null ? MiscUtil.addHumanReadableSize(collectionSize) : "0");
 			returnResult.setCollectionSize(collectionSize != null ? Long.valueOf(collectionSize) : 0);
 			returnResult.setDataSetPath(result.getCollection().getCollectionName());
 			returnResult.setDataSetCollectionId(result.getCollection().getCollectionId());
-			returnResult.setStudyCollectionId(studyCollectionId);
-			returnResult.setProgramCollectionId(programCollectionId);
-
-			returnResult.setDataSetPermissionRole(dataSetPermissionRole);
-
-			returnResult.setStudyPermissionRole(getPermissionRole(user, studyCollectionId, loggedOnUserPermissions));
-			returnResult
-					.setProgramPermissionRole(getPermissionRole(user, programCollectionId, loggedOnUserPermissions));
-
 			returnResult.setDataSetName(getAttributeValue("asset_name", selfMetadatEntries, "Asset"));
 			returnResult.setDataSetDescription(getAttributeValue("description", selfMetadatEntries, "Asset"));
 			returnResult.setStudyPath(studyPath);
 			returnResult.setInstitutePath(programPath);
-			returnResult.setProgramName(getAttributeValue("program_name",
-					result.getMetadataEntries().getParentMetadataEntries(), "Program"));
-			returnResult.setStudyName(
-					getAttributeValue("study_name", result.getMetadataEntries().getParentMetadataEntries(), "Study"));
+
 			returnResult.setDataSetdmeDataId(webServerName + "/searchTab?dme_data_id="
 					+ getAttributeValue("dme_data_id", selfMetadatEntries, "Asset"));
 			returnResult.setAssetType(assetType);
 			returnResult.setDmeDataId(getAttributeValue("dme_data_id", selfMetadatEntries, "Asset"));
-			returnResult.setIsReferenceDataset(getAttributeValue("is_reference_dataset", selfMetadatEntries, "Asset"));
+
+			/* setting edit permissions role from MoDaC DB */
+			returnResult.setDataSetPermissionRole(
+					getPermissionRole(user, result.getCollection().getCollectionId(), loggedOnUserPermissions));
+
+			returnResult.setStudyPermissionRole(getPermissionRole(user, studyCollectionId, loggedOnUserPermissions));
+			returnResult
+					.setProgramPermissionRole(getPermissionRole(user, programCollectionId, loggedOnUserPermissions));
 			returnResults.add(returnResult);
 
 		}
