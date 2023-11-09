@@ -659,10 +659,10 @@ function renderDataSetName(data, type, row) {
 
       if (row.isBulkAsset == false) {
          if (isUploader && isUploader == true) {
-            checkboxHtml += "<input aria-label='checkbox' type='checkbox' id=" + row.dataSetPath + " " +
+            checkboxHtml += "<input aria-label='checkbox' data-toggle= 'tooltip' type='checkbox' id=" + row.dataSetPath + " " +
                "data-size = " + row.collectionSize + " class='selectAssetCheckBox'/>";
          } else {
-            checkboxHtml += "<input aria-label='radio' type='radio' name = 'selectRadioForDataSet' id=" + row.dataSetPath + " " +
+            checkboxHtml += "<input aria-label='radio' data-toggle= 'tooltip' type='radio' name = 'selectRadioForDataSet' id=" + row.dataSetPath + " " +
                "data-size = " + row.collectionSize + "  class='selectRadioForDataSet'/>";
          }
       } else {
@@ -1412,9 +1412,10 @@ function calculateTotalSize(table) {
 
    if (totalSize > 1099511627776) {
       // Get all the unchecked checkboxes in the table.
-      rows.find("input[type=checkbox]:not(:checked), input[type=radio]:not:checked").attr('disabled', true);
+      rows.find("input[type=checkbox]:not(:checked), input[type=radio]:not(:checked)").attr('disabled', true).
+      attr('data-original-title', 'You have selected 1 TB of data for download. Clear another check box to make this one available.');
    } else {
-      rows.find("input[type=checkbox], input[type=radio]").attr('disabled', false);
+      rows.find("input[type=checkbox], input[type=radio]").attr('disabled', false).removeAttr('data-original-title');
    }
 }
 
