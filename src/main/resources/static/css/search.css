@@ -691,7 +691,7 @@ table#searchResultTable tr {
 }
 table#searchResultTable tr td{
   border-top: none !important;
-  padding-bottom: 0px;
+  padding-bottom: 5px;
 }
 
 

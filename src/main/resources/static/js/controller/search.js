@@ -367,7 +367,7 @@ function refreshDataTable() {
          '<div class="col-lg-12 col-md-12 col-sm-12 float-right" style="display:inline-flex;">' +
          '<div class="col-lg-8 col-md-8 col-sm-8"><div id="informational_text">' +
          'Select the asset(s) you want to download. ' +
-         'Downloadable assets must be no larger than 1 TB. Click Download Selected Assets.' +
+         'The total selected size of the downloadable assets must be no larger than 1 TB. Click Download Selected Assets.' +
          '</div><div id="selected_size_div" style="display: block;">Total Selected Size: ' +
          '<span id="selected_size">0 B</span> </div></div>' +
          '<div class="col-lg-4 col-md-4 col-sm-4 downloadSelectedDiv" style="padding-right:0px;">' +
