@@ -687,7 +687,7 @@ label.filter_checked {
 table#searchResultTable tr {
 	/*display: inline-flex !important;*/
 	background-color: transparent !important;
-	word-break: break-all;
+	word-break: break-word;
 }
 table#searchResultTable tr td{
   border-top: none !important;
@@ -864,8 +864,7 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
 
 
 .asset-description {
-  line-height: normal;
-  word-break: break-word;
+  line-height: normal;	
 }
 
 .study-container {
