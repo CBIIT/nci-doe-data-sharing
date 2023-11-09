@@ -14,6 +14,18 @@ $(document)
 								}			 
 							}
 						});
+
+                    // Start To activate css for active navigation link
+					var current = location.pathname;
+					$('li button a').each(function(){
+						var $this = $(this);
+						// if the current path is like this link, make it active
+						if($this.attr('href') == current){
+							$this.parent().addClass('active-nav');
+						}
+					})
+					// End To activate css for active navigation link
+
 					// Auto-lowercase Email Username (Usernames are always
 					// stored in lowercase)
 					$('#username').blur(function() {
