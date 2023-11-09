@@ -365,7 +365,11 @@ function refreshDataTable() {
          '</div>');
       $("div.toolbar").after(
          '<div class="col-lg-12 col-md-12 col-sm-12 float-right" style="display:inline-flex;">' +
-         '<div class="col-lg-8 col-md-8 col-sm-8"></div>' +
+         '<div class="col-lg-8 col-md-8 col-sm-8"><div id="informational_text">' +
+         'Select the asset(s) you want to download. ' +
+         'Downloadable assets must be no larger than 1 TB. Click Download Selected Assets.' +
+         '</div><div id="selected_size_div" style="display: block;">Total Selected Size: ' +
+         '<span id="selected_size">0 B</span> </div></div>' +
          '<div class="col-lg-4 col-md-4 col-sm-4 downloadSelectedDiv" style="padding-right:0px;">' +
          '<button id="downloadSelected" type="button"' +
          'class="btn btn-primary float-right" disabled>' +
@@ -449,6 +453,20 @@ function dataTableInit(isVisible) {
 
          } else {
             $(".downloadSelectedDiv").hide();
+            $("#informational_text").hide();
+            $("#selected_size_div").hide();
+         }
+
+         // display the informational text on the search results only 
+         // when user is logged in and there is an option to download asset
+
+         if (isVisible && ($("input:checkbox.selectAssetCheckBox").is(":visible") ||
+               $("input.selectRadioForDataSet").is(":visible"))) {
+            $("#informational_text").show();
+            $("#selected_size_div").show();
+         } else {
+            $("#informational_text").hide();
+            $("#selected_size_div").hide();
          }
 
          $(".dataSetFragment").click(function () {
@@ -560,6 +578,8 @@ function dataTableInit(isVisible) {
                $("#downloadSelected").prop("disabled", true);
             }
 
+            calculateTotalSize(table);
+
          });
 
          $(".selectRadioForDataSet").click(function (e) {
@@ -573,6 +593,7 @@ function dataTableInit(isVisible) {
             } else {
                $("#downloadSelected").prop("disabled", true);
             }
+            calculateTotalSize(table);
 
          });
 
@@ -755,9 +776,9 @@ function renderDataSetName(data, type, row) {
       "<div class='overlap-group'><div class='asset-description opensans-bold-midnight-blue-13px'>" +
       "<span class='opensans-bold-midnight-blue-13px'>ASSET DESCRIPTION: &nbsp;&nbsp;</span>" +
       "<span class='inter-normal-congress-blue-16px'>" + row.dataSetDescription + "</span></div></div>" +
-      /*"<div class='overlap-group'><div class='asset-size opensans-bold-midnight-blue-13px'>" +
+      "<div class='overlap-group'><div class='asset-size opensans-bold-midnight-blue-13px'>" +
       "<span class='opensans-bold-midnight-blue-13px'>ASSET SIZE: &nbsp;&nbsp;</span>" +
-      "<span class='inter-normal-congress-blue-16px'>" + row.displayAssetSize + "</span></div></div>" +*/
+      "<span class='inter-normal-congress-blue-16px'>" + row.displayAssetSize + "</span></div></div>" +
       "<div class='study-container'><div class='study opensans-bold-midnight-blue-13px'>" +
       "<span class='opensans-bold-midnight-blue-13px'>STUDY: &nbsp;&nbsp;</span>" +
       "<a class='button2a' style='text-decoration:underline;' collection_name = '" + row.studyName + "' selected_path = '" + row.studyPath + "' collection_type='Study' tabindex='0'" +
@@ -1375,6 +1396,43 @@ function openDataObjectPopOver($this) {
          }
 
       });
+}
+
+function calculateTotalSize(table) {
+
+   var totalSize = 0;
+   var rows = $('#' + table).DataTable().rows({ selected: true }).nodes().to$();
+  
+   rows.find("input[type=checkbox]:checked, input[type=radio]:checked").each(function () {
+      var size = parseInt($(this).attr('data-size'));
+      totalSize += size;
+   });
+
+   $("#selected_size").html(addHumanReadableSize(totalSize.toString()));
+
+   if (totalSize > 1099511627776) {
+      // Get all the unchecked checkboxes in the table.
+      rows.find("input[type=checkbox]:not(:checked), input[type=radio]:not:checked").attr('disabled', true);
+   } else {
+      rows.find("input[type=checkbox], input[type=radio]").attr('disabled', false);
+   }
+}
+
+function addHumanReadableSize(value) {
+   var base = 1000;
+   var bytes = parseFloat(value);
+
+   // When using the smallest unit no decimal point is needed, because it's
+   // the exact number.
+   if (bytes < base) {
+      return bytes + " " + ["B", "KB", "MB", "GB", "TB"][0];
+   }
+
+   var exponent = Math.floor(Math.log(bytes) / Math.log(base));
+   var unit = ["B", "KB", "MB", "GB", "TB"][exponent];
+
+   var humanReadableSize = (bytes / Math.pow(base, exponent)).toFixed(1) + " " + unit;
+   return humanReadableSize;
 }
 
 // Function to get the total search results count

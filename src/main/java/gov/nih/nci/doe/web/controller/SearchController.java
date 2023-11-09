@@ -40,6 +40,7 @@ import gov.nih.nci.doe.web.model.DoeSearchResult;
 import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.doe.web.util.HibernateProxyTypeAdapter;
+import gov.nih.nci.doe.web.util.MiscUtil;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
@@ -160,6 +161,10 @@ public class SearchController extends AbstractDoeController {
 					(collectionSize != null && Long.valueOf(collectionSize) > Long.valueOf(bulkCollectionSize))
 							? Boolean.TRUE
 							: Boolean.FALSE);
+
+			returnResult
+					.setDisplayAssetSize(collectionSize != null ? MiscUtil.addHumanReadableSize(collectionSize) : "0");
+			returnResult.setCollectionSize(collectionSize != null ? Long.valueOf(collectionSize) : 0);
 			returnResult.setDataSetPath(result.getCollection().getCollectionName());
 			returnResult.setDataSetCollectionId(result.getCollection().getCollectionId());
 			returnResult.setStudyCollectionId(studyCollectionId);
