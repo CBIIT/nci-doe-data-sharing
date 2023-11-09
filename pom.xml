@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>gov.nih.nci.doe</groupId>
 	<artifactId>web-doe</artifactId>
-	<version>2.1.0</version>
+	<version>2.2.0</version>
 	<packaging>war</packaging>
 	<name>DOE Web Application</name>
 	<description>Department Of Energy</description>
