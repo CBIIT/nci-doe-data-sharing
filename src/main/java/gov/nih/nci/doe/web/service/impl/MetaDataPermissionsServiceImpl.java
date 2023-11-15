@@ -122,4 +122,11 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 			metaDataPermissionsRepository.delete(permissionListIterator.next());
 		}
 	}
+
+	@Override
+	public List<MetaDataPermissions> getAllMetadataPermissionsForLoggedOnUser(String emailAddress,
+			List<String> groupList) {
+		log.info("get all permissions for logged on user with user name " + emailAddress);
+		return metaDataPermissionsRepository.getAllMetadataPermissionsForLoggedOnUser(emailAddress, groupList);
+	}
 }

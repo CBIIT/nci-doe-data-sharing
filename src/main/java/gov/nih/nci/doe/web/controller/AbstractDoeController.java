@@ -425,6 +425,26 @@ public abstract class AbstractDoeController {
 		return "No Permissions";
 	}
 
+	public String getPermissionRoleForUser(Integer collectionId, List<MetaDataPermissions> permissionList) {
+
+		log.info("get permission role for collectionId: " + collectionId);
+
+		if (!CollectionUtils.isEmpty(permissionList)) {
+
+			Boolean isOwner = permissionList.stream().anyMatch(o -> (o.getCollectionId() != null
+					&& collectionId.equals(o.getCollectionId()) && o.getUser() != null));
+			Boolean isGroupUser = permissionList.stream().anyMatch(o -> (o.getCollectionId() != null
+					&& collectionId.equals(o.getCollectionId()) && o.getGroup() != null));
+			if (Boolean.TRUE.equals(isOwner)) {
+				return "Owner";
+			} else if (Boolean.TRUE.equals(isGroupUser)) {
+				return "Group User";
+			}
+		}
+
+		return "No Permissions";
+	}
+
 	public String getPermissionRoleByCollectionPath(String user, String collectionPath,
 			List<KeyValueBean> loggedOnUserPermissions) {
 		log.info("get permission role for user :" + user + " collectionPath: " + collectionPath);
@@ -562,6 +582,26 @@ public abstract class AbstractDoeController {
 		}
 
 		return new ResponseEntity<>(keyValueBeanResults, null, HttpStatus.OK);
+	}
+
+	public List<String> getLoggedOnUserGroups(String loggedOnUser) {
+
+		log.info("get meta data permissions list");
+		if (StringUtils.isEmpty(loggedOnUser)) {
+			loggedOnUser = getLoggedOnUserInfo();
+		}
+		List<String> grpList = new ArrayList<>();
+
+		if (!StringUtils.isEmpty(loggedOnUser)) {
+			DoeUsersModel user = authenticateService.getUserInfo(loggedOnUser);
+
+			if (user != null && !StringUtils.isEmpty(user.getProgramName())) {
+				grpList = Arrays.asList(user.getProgramName().split(","));
+
+			}
+		}
+
+		return grpList;
 	}
 
 	public String updatePredictionAccess(String path, String collectionId, String[] selectedPredictionAccess,

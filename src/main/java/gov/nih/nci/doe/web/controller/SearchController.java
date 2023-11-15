@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.ResponseEntity;
@@ -33,16 +34,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import gov.nih.nci.doe.web.DoeWebException;
+import gov.nih.nci.doe.web.domain.MetaDataPermissions;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.DoeSearchResult;
-import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.doe.web.util.HibernateProxyTypeAdapter;
 import gov.nih.nci.doe.web.util.MiscUtil;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 import gov.nih.nci.hpc.dto.datasearch.HpcCompoundMetadataQueryDTO;
 
 /**
@@ -66,18 +66,6 @@ public class SearchController extends AbstractDoeController {
 
 		log.info("Search controller");
 		String authToken = (String) session.getAttribute("hpcUserToken");
-		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
-		if (modelDTO == null) {
-			modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL);
-			session.setAttribute("userDOCModel", modelDTO);
-		}
-
-		List<String> systemAttrs = modelDTO.getCollectionSystemGeneratedMetadataAttributeNames();
-		List<String> dataObjectsystemAttrs = modelDTO.getDataObjectSystemGeneratedMetadataAttributeNames();
-		systemAttrs.addAll(dataObjectsystemAttrs);
-		systemAttrs.add("collection_type");
-		systemAttrs.add("access_group");
-		session.setAttribute("systemAttrs", systemAttrs);
 
 		List<DoeSearchResult> results = new ArrayList<>();
 
@@ -97,7 +85,7 @@ public class SearchController extends AbstractDoeController {
 				String searchQuery = gson.toJson(search);
 				session.setAttribute("searchQuery", searchQuery);
 				log.info("Search query" + search);
-				results = processCollectionResults(systemAttrs, restResponse, search);
+				results = processCollectionResults(restResponse, search);
 				return new ResponseEntity<>(results, HttpStatus.OK);
 
 			} else if (restResponse.getStatus() == 204) {
@@ -111,9 +99,7 @@ public class SearchController extends AbstractDoeController {
 
 	}
 
-	@SuppressWarnings("unchecked")
-	private List<DoeSearchResult> processCollectionResults(List<String> systemAttrs, Response restResponse,
-			DoeSearch search) throws IOException {
+	private List<DoeSearchResult> processCollectionResults(Response restResponse, DoeSearch search) throws IOException {
 
 		log.info("process collection results for rendering the search results table");
 		ObjectMapper mapper = new ObjectMapper();
@@ -128,7 +114,14 @@ public class SearchController extends AbstractDoeController {
 		String user = getLoggedOnUserInfo();
 		List<HpcCollectionDTO> searchResults = collections.getCollections();
 		List<DoeSearchResult> returnResults = new ArrayList<DoeSearchResult>();
-		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(user).getBody();
+		List<MetaDataPermissions> permissionList = new ArrayList<MetaDataPermissions>();
+
+		if (StringUtils.isNotEmpty(user)) {
+			List<String> loggedOnUsergrpList = getLoggedOnUserGroups(user);
+
+			permissionList = metaDataPermissionService.getAllMetadataPermissionsForLoggedOnUser(user,
+					loggedOnUsergrpList);
+		}
 
 		for (HpcCollectionDTO result : searchResults) {
 			DoeSearchResult returnResult = new DoeSearchResult();
@@ -172,11 +165,10 @@ public class SearchController extends AbstractDoeController {
 
 			/* setting edit permissions role from MoDaC DB */
 			returnResult.setDataSetPermissionRole(
-					getPermissionRole(user, result.getCollection().getCollectionId(), loggedOnUserPermissions));
+					getPermissionRoleForUser(result.getCollection().getCollectionId(), permissionList));
 
-			returnResult.setStudyPermissionRole(getPermissionRole(user, studyCollectionId, loggedOnUserPermissions));
-			returnResult
-					.setProgramPermissionRole(getPermissionRole(user, programCollectionId, loggedOnUserPermissions));
+			returnResult.setStudyPermissionRole(getPermissionRoleForUser(studyCollectionId, permissionList));
+			returnResult.setProgramPermissionRole(getPermissionRoleForUser(programCollectionId, permissionList));
 			returnResults.add(returnResult);
 
 		}
