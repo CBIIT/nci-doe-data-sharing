@@ -6,17 +6,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import gov.nih.nci.doe.web.domain.DoeUsers;
 import gov.nih.nci.doe.web.domain.Group;
+import gov.nih.nci.doe.web.model.CollectionPermissions;
 import gov.nih.nci.doe.web.domain.MetaDataPermissions;
 import gov.nih.nci.doe.web.repository.DoeUserRepository;
 import gov.nih.nci.doe.web.repository.GroupRepository;
 import gov.nih.nci.doe.web.repository.MetaDataPermissionsRepository;
 import gov.nih.nci.doe.web.service.MetaDataPermissionsService;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -124,9 +128,38 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 	}
 
 	@Override
-	public List<MetaDataPermissions> getAllMetadataPermissionsForLoggedOnUser(String emailAddress,
+	public HashMap<Integer, CollectionPermissions> getAllMetadataPermissionsForLoggedOnUser(String emailAddress,
 			List<String> groupList) {
 		log.info("get all permissions for logged on user with user name " + emailAddress);
-		return metaDataPermissionsRepository.getAllMetadataPermissionsForLoggedOnUser(emailAddress, groupList);
+		List<MetaDataPermissions> list = metaDataPermissionsRepository
+				.getAllMetadataPermissionsForLoggedOnUser(emailAddress, groupList);
+		HashMap<Integer, CollectionPermissions> permissionSet = new HashMap<Integer, CollectionPermissions>();
+		list.stream().forEach((g -> {
+
+			Integer collectionId = g.getCollectionId();
+
+			CollectionPermissions permissions;
+			if (permissionSet.containsKey(collectionId)) {
+				permissions = permissionSet.get(collectionId);
+			} else {
+				permissions = new CollectionPermissions();
+			}
+			if (g.getUser() != null) {
+				permissions.setOwner(g.getUser().getEmailAddrr());
+			} else if (g.getGroup() != null) {
+				List<String> grpList;
+				if (CollectionUtils.isEmpty(permissions.getGrpList())) {
+					grpList = new ArrayList<String>();
+				} else {
+					grpList = permissions.getGrpList();
+				}
+				grpList.add(g.getGroup().getGroupName());
+				permissions.setGrpList(grpList);
+			}
+			permissionSet.put(collectionId, permissions);
+
+		}));
+
+		return permissionSet;
 	}
 }

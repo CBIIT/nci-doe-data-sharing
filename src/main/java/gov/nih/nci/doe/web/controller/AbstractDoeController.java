@@ -58,6 +58,7 @@ import gov.nih.nci.doe.web.domain.MetaDataPermissions;
 import gov.nih.nci.doe.web.domain.ModelInfo;
 import gov.nih.nci.doe.web.domain.PredictionAccess;
 import gov.nih.nci.doe.web.model.AuditingModel;
+import gov.nih.nci.doe.web.model.CollectionPermissions;
 import gov.nih.nci.doe.web.model.DoeResponse;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
@@ -425,20 +426,19 @@ public abstract class AbstractDoeController {
 		return "No Permissions";
 	}
 
-	public String getPermissionRoleForUser(Integer collectionId, List<MetaDataPermissions> permissionList) {
+	public String getPermissionRoleForUser(Integer collectionId,
+			HashMap<Integer, CollectionPermissions> permissionMap) {
 
 		log.info("get permission role for collectionId: " + collectionId);
 
-		if (!CollectionUtils.isEmpty(permissionList)) {
-
-			Boolean isOwner = permissionList.stream().anyMatch(o -> (o.getCollectionId() != null
-					&& collectionId.equals(o.getCollectionId()) && o.getUser() != null));
-			Boolean isGroupUser = permissionList.stream().anyMatch(o -> (o.getCollectionId() != null
-					&& collectionId.equals(o.getCollectionId()) && o.getGroup() != null));
-			if (Boolean.TRUE.equals(isOwner)) {
-				return "Owner";
-			} else if (Boolean.TRUE.equals(isGroupUser)) {
-				return "Group User";
+		if (!permissionMap.isEmpty()) {
+			if (permissionMap.containsKey(collectionId)) {
+				CollectionPermissions permissions = permissionMap.get(collectionId);
+				if (StringUtils.isNotEmpty(permissions.getOwner())) {
+					return "Owner";
+				} else if (CollectionUtils.isNotEmpty(permissions.getGrpList())) {
+					return "Group User";
+				}
 			}
 		}
 

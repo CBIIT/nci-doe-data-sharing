@@ -1,8 +1,10 @@
 package gov.nih.nci.doe.web.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import gov.nih.nci.doe.web.domain.MetaDataPermissions;
+import gov.nih.nci.doe.web.model.CollectionPermissions;
 
 public interface MetaDataPermissionsService {
 
@@ -16,7 +18,8 @@ public interface MetaDataPermissionsService {
 
 	public List<MetaDataPermissions> getAllGroupMetaDataPermissionsByCollectionId(Integer collectionId);
 
-	public List<MetaDataPermissions> getAllMetadataPermissionsForLoggedOnUser(String user, List<String> groupList);
+	public HashMap<Integer, CollectionPermissions> getAllMetadataPermissionsForLoggedOnUser(String user,
+			List<String> groupList);
 
 	public MetaDataPermissions getMetaDataPermissionsOwnerByCollectionId(Integer collectionId);
 

@@ -3,6 +3,7 @@ package gov.nih.nci.doe.web.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +35,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import gov.nih.nci.doe.web.DoeWebException;
-import gov.nih.nci.doe.web.domain.MetaDataPermissions;
+import gov.nih.nci.doe.web.model.CollectionPermissions;
 import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.DoeSearchResult;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
@@ -114,12 +115,12 @@ public class SearchController extends AbstractDoeController {
 		String user = getLoggedOnUserInfo();
 		List<HpcCollectionDTO> searchResults = collections.getCollections();
 		List<DoeSearchResult> returnResults = new ArrayList<DoeSearchResult>();
-		List<MetaDataPermissions> permissionList = new ArrayList<MetaDataPermissions>();
+		HashMap<Integer, CollectionPermissions> permissionMap = new HashMap<Integer, CollectionPermissions>();
 
 		if (StringUtils.isNotEmpty(user)) {
 			List<String> loggedOnUsergrpList = getLoggedOnUserGroups(user);
 
-			permissionList = metaDataPermissionService.getAllMetadataPermissionsForLoggedOnUser(user,
+			permissionMap = metaDataPermissionService.getAllMetadataPermissionsForLoggedOnUser(user,
 					loggedOnUsergrpList);
 		}
 
@@ -165,10 +166,10 @@ public class SearchController extends AbstractDoeController {
 
 			/* setting edit permissions role from MoDaC DB */
 			returnResult.setDataSetPermissionRole(
-					getPermissionRoleForUser(result.getCollection().getCollectionId(), permissionList));
+					getPermissionRoleForUser(result.getCollection().getCollectionId(), permissionMap));
 
-			returnResult.setStudyPermissionRole(getPermissionRoleForUser(studyCollectionId, permissionList));
-			returnResult.setProgramPermissionRole(getPermissionRoleForUser(programCollectionId, permissionList));
+			returnResult.setStudyPermissionRole(getPermissionRoleForUser(studyCollectionId, permissionMap));
+			returnResult.setProgramPermissionRole(getPermissionRoleForUser(programCollectionId, permissionMap));
 			returnResults.add(returnResult);
 
 		}
