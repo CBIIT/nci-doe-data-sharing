@@ -202,8 +202,8 @@ public class PerformInferencingController extends AbstractDoeController {
 					throw new DoeWebException("Exception in evaluating task: " + e);
 				}
 			}
-			return "Evaluate task(s) submitted. Your task id(s): <a href='/tasksTab?isPred=true'>" + String.join(",", taskIdList)
-					+ "</a>";
+			return "Evaluate task(s) submitted. Your task id(s): <a href='/tasksTab?isPred=true'>"
+					+ String.join(",", taskIdList) + "</a>";
 		}
 
 		return "Exception in evaluating task";

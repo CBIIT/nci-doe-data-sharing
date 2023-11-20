@@ -43,6 +43,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
@@ -55,8 +56,6 @@ import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.domain.LookUp;
 import gov.nih.nci.doe.web.domain.MetaDataPermissions;
-import gov.nih.nci.doe.web.domain.ModelInfo;
-import gov.nih.nci.doe.web.domain.PredictionAccess;
 import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.CollectionPermissions;
 import gov.nih.nci.doe.web.model.DoeResponse;
@@ -79,7 +78,6 @@ import gov.nih.nci.doe.web.service.PredictionAccessService;
 import gov.nih.nci.doe.web.service.TaskManagerService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.doe.web.util.MiscUtil;
-import gov.nih.nci.doe.web.util.LambdaUtils;
 import gov.nih.nci.hpc.domain.datamanagement.HpcCollectionListingEntry;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQuery;
 import gov.nih.nci.hpc.domain.metadata.HpcCompoundMetadataQueryOperator;
@@ -604,36 +602,6 @@ public abstract class AbstractDoeController {
 		return grpList;
 	}
 
-	public String updatePredictionAccess(String path, String collectionId, String[] selectedPredictionAccess,
-			String isPublic) throws DoeWebException {
-
-		log.info("get prediction access list for path: " + path + " for user: " + getLoggedOnUserInfo());
-
-		try {
-
-			List<String> newPredictionAccessList = selectedPredictionAccess == null ? new ArrayList<String>()
-					: Arrays.asList(selectedPredictionAccess);
-
-			List<String> existingPredictionAccessList = predictionAccessService
-					.getAllPredictionAccessGroupsByCollectionPath(path);
-
-			// get the added and deleted groups
-			List<String> deletedgroups = existingPredictionAccessList.stream()
-					.filter(e -> !newPredictionAccessList.contains(e)).filter(value -> value != null)
-					.collect(Collectors.toList());
-
-			List<String> addedGroups = newPredictionAccessList.stream()
-					.filter(e -> !existingPredictionAccessList.contains(e)).collect(Collectors.toList());
-
-			predictionAccessService.updatePredictionAccess(path, Integer.valueOf(collectionId), addedGroups,
-					deletedgroups, StringUtils.isNotEmpty(isPublic) ? Boolean.valueOf(isPublic) : null);
-
-			return "SUCCESS";
-		} catch (Exception e) {
-			throw new DoeWebException("Failed to save prediction access " + e.getMessage());
-		}
-	}
-
 	public String saveMetaDataPermissionsList(String collectionId, String path, String[] selectedPermissions)
 			throws DoeWebException {
 
@@ -784,10 +752,10 @@ public abstract class AbstractDoeController {
 		return new ResponseEntity<>(entryList, HttpStatus.OK);
 	}
 
-	public HpcCompoundMetadataQueryDTO constructCriteria(DoeSearch search, String levelName) {
+	public HpcCompoundMetadataQueryDTO constructCriteria(DoeSearch search) {
 		HpcCompoundMetadataQueryDTO dto = new HpcCompoundMetadataQueryDTO();
 		dto.setTotalCount(true);
-		HpcCompoundMetadataQuery query = buildSimpleSearch(search, levelName);
+		HpcCompoundMetadataQuery query = buildSimpleSearch(search);
 		dto.setCompoundQuery(query);
 		dto.setDetailedResponse(search.isDetailed());
 		dto.setCompoundQueryType(HpcCompoundMetadataQueryType.COLLECTION);
@@ -797,9 +765,9 @@ public abstract class AbstractDoeController {
 	}
 
 	@SuppressWarnings("unchecked")
-	private HpcCompoundMetadataQuery buildSimpleSearch(DoeSearch search, String levelName) {
+	private HpcCompoundMetadataQuery buildSimpleSearch(DoeSearch search) {
 
-		log.info("build simple search at levelName: " + levelName + "and search criteria: " + search);
+		log.info("build simple search criteria: " + search);
 		HpcCompoundMetadataQuery query = new HpcCompoundMetadataQuery();
 		query.setOperator(HpcCompoundMetadataQueryOperator.AND);
 		Map<String, HpcMetadataQuery> queriesMap = getQueries(search);
@@ -842,7 +810,7 @@ public abstract class AbstractDoeController {
 		// perform OR operation of public access and logged on users access groups
 		HpcMetadataQuery q = new HpcMetadataQuery();
 		HpcMetadataQueryLevelFilter levelFilter = new HpcMetadataQueryLevelFilter();
-		levelFilter.setLabel(levelName);
+		levelFilter.setLabel("Asset");
 		levelFilter.setOperator(HpcMetadataQueryOperator.EQUAL);
 		q.setLevelFilter(levelFilter);
 		q.setAttribute("access_group");
@@ -853,7 +821,7 @@ public abstract class AbstractDoeController {
 		for (KeyValueBean x : loggedOnUserPermissions) {
 			HpcMetadataQuery q1 = new HpcMetadataQuery();
 			HpcMetadataQueryLevelFilter levelFilter1 = new HpcMetadataQueryLevelFilter();
-			levelFilter1.setLabel(levelName);
+			levelFilter1.setLabel("Asset");
 			levelFilter1.setOperator(HpcMetadataQueryOperator.EQUAL);
 			q1.setAttribute("access_group");
 			q1.setValue("%" + x.getValue() + "%");
@@ -941,225 +909,96 @@ public abstract class AbstractDoeController {
 		return queries;
 	}
 
-	@SuppressWarnings("unchecked")
-	public String getAssetDetails(HttpSession session, String dmeDataId, String returnToSearch, String assetIdentifier,
-			Model model) throws DoeWebException {
+	public SearchList constructFilterCriteria(HttpSession session, DoeSearch search)
+			throws DoeWebException, IOException {
 
-		log.info("get Asset detials for dmeDataId: " + dmeDataId + " is returnToSearch: " + returnToSearch
-				+ " and assetIdentifier is : " + assetIdentifier);
+		log.info("construct filter crietria for : " + search);
+		// List<SearchList> searchList = new ArrayList<>();
 		String authToken = (String) session.getAttribute("hpcUserToken");
-		log.info("authToken: " + authToken);
-		String user = getLoggedOnUserInfo();
-		log.info("asset details for user: " + user);
-		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(user).getBody();
-		DoeSearch search = new DoeSearch();
+		search.setDetailed(true);
 
-		if (StringUtils.isNotEmpty(dmeDataId)) {
-			String[] attrNames = { "collection_type", "dme_data_id" };
-			String[] attrValues = { "Asset", dmeDataId };
-			search.setAttrName(attrNames);
-			search.setAttrValue(attrValues);
-		} else if (StringUtils.isNotEmpty(assetIdentifier)) {
+		HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search);
+		Response restResponse = DoeClientUtil.getCollectionSearchQuery(authToken, compoundCollectionSearchServiceURL,
+				compoundQuery);
 
-			String[] attrNames = { "collection_type", "asset_identifier" };
-			String[] attrValues = { "Asset", assetIdentifier };
-			search.setAttrName(attrNames);
-			search.setAttrValue(attrValues);
-		}
-		String[] levelValues = { "Asset", "Asset" };
-		boolean[] isExcludeParentMetadata = { false, false };
-		String[] rowIds = { "1", "2" };
-		String[] operators = { "LIKE", "LIKE" };
-		boolean[] iskeyWordSearch = { true, false };
+		if (restResponse.getStatus() == 200) {
+			ObjectMapper mapper = new ObjectMapper();
+			AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
+					new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()), new JacksonAnnotationIntrospector());
+			mapper.setAnnotationIntrospector(intr);
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			MappingJsonFactory factory = new MappingJsonFactory(mapper);
+			JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+			HpcCollectionListDTO collections = parser.readValueAs(HpcCollectionListDTO.class);
+			List<HpcCollectionDTO> searchFilterResults = collections.getCollections();
 
-		search.setLevel(levelValues);
-		search.setIsExcludeParentMetadata(isExcludeParentMetadata);
-		search.setRowId(rowIds);
-		search.setOperator(operators);
-		search.setIskeyWordSearch(iskeyWordSearch);
+			LookUp value = lookUpService.getLookUpByDisplayName(search.getSearchName());
+			if (value != null) {
+				SearchList filterList = retrieveSearchFilterLists(session, searchFilterResults, value.getAttrName(),
+						value.getLevelName(), value.getDisplayName());
+				return filterList;
 
-		List<String> systemAttrs = (List<String>) session.getAttribute("systemAttrs");
-		if (CollectionUtils.isEmpty(systemAttrs)) {
-			HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
-			if (modelDTO == null) {
-				modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL);
-				session.setAttribute("userDOCModel", modelDTO);
 			}
 
-			systemAttrs = modelDTO.getCollectionSystemGeneratedMetadataAttributeNames();
-			List<String> dataObjectsystemAttrs = modelDTO.getDataObjectSystemGeneratedMetadataAttributeNames();
-			systemAttrs.addAll(dataObjectsystemAttrs);
-			systemAttrs.add("collection_type");
-			systemAttrs.add("access_group");
-			session.setAttribute("systemAttrs", systemAttrs);
 		}
-
-		try {
-			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search, "Asset");
-			compoundQuery.setDetailedResponse(true);
-			log.info("search compund query" + compoundQuery);
-
-			Response restResponse = DoeClientUtil.getCollectionSearchQuery(authToken,
-					compoundCollectionSearchServiceURL, compoundQuery);
-
-			if (restResponse.getStatus() == 200) {
-				HpcCompoundMetadataQueryDTO compoundQuerySession = (HpcCompoundMetadataQueryDTO) session
-						.getAttribute("compoundQuery");
-
-				if (compoundQuerySession == null) {
-					session.setAttribute("compoundQuery", compoundQuery);
-				}
-
-				ObjectMapper mapper = new ObjectMapper();
-				AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
-						new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
-						new JacksonAnnotationIntrospector());
-				mapper.setAnnotationIntrospector(intr);
-				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-				MappingJsonFactory factory = new MappingJsonFactory(mapper);
-				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-				HpcCollectionListDTO collections = parser.readValueAs(HpcCollectionListDTO.class);
-				HpcCollectionDTO collection = collections.getCollections().get(0);
-
-				String studyName = getAttributeValue("study_name",
-						collection.getMetadataEntries().getParentMetadataEntries(), "Study");
-
-				String progName = getAttributeValue("program_name",
-						collection.getMetadataEntries().getParentMetadataEntries(), "Program");
-
-				String assetPermission = getPermissionRole(user, collection.getCollection().getCollectionId(),
-						loggedOnUserPermissions);
-
-				String accessGrp = getAttributeValue("access_group",
-						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
-
-				String assetName = getAttributeValue("asset_name",
-						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
-
-				String asset_Identifier = getAttributeValue("asset_identifier",
-						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
-
-				String dme_Data_Id = getAttributeValue("dme_data_id",
-						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
-
-				String assetType = getAttributeValue("asset_type",
-						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
-
-				String isReferenceDataset = getAttributeValue("is_reference_dataset",
-						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
-
-				String isModelDeployed = getAttributeValue("is_model_deployed",
-						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
-
-				String resultFileName = getAttributeValue("outcome_file_name",
-						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
-
-				String applicableModelName = getAttributeValue("applicable_model_paths",
-						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
-
-				// display all self metadata with is_visible not false in Look up table
-				List<KeyValueBean> selfMetadata = getUserMetadata(
-						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset", systemAttrs, Boolean.TRUE);
-
-				if (StringUtils.isNotEmpty(returnToSearch)) {
-					model.addAttribute("returnToSearch", true);
-				}
-
-				model.addAttribute("assetType", assetType);
-				model.addAttribute("dme_Data_Id", dme_Data_Id);
-				model.addAttribute("asset_Identifier", asset_Identifier);
-				model.addAttribute("accessGrp", accessGrp);
-				model.addAttribute("assetName", assetName);
-				model.addAttribute("assetMetadata", selfMetadata);
-				model.addAttribute("studyName", studyName);
-				model.addAttribute("progName", progName);
-				model.addAttribute("isReferenceDataset", isReferenceDataset);
-				model.addAttribute("resultFileName", resultFileName);
-				model.addAttribute("applicableModelName", applicableModelName);
-
-				model.addAttribute("assetPath", collection.getCollection().getCollectionName());
-				model.addAttribute("assetPermission", assetPermission);
-				model.addAttribute("assetLink", webServerName + "/assetDetails?dme_data_id=" + dme_Data_Id);
-
-				ModelInfo modelInfo = modelInfoService.getModelInfo(collection.getCollection().getCollectionName());
-				if (Boolean.TRUE.equals(getIsUploader())
-						&& ((isModelDeployed != null && isModelDeployed.equalsIgnoreCase("Yes"))
-								|| "Yes".equalsIgnoreCase(isReferenceDataset))) {
-
-					// show generate predictions button
-					model.addAttribute("showGeneratePredictions",
-							isModelDeployed != null && isModelDeployed.equalsIgnoreCase("Yes") ? true : false);
-					model.addAttribute("isExternalDataSetSupported",
-							modelInfo != null ? modelInfo.getIsExternalDatasetSupported() : false);
-
-					// check if there are any predictions avaiable for logged on user
-
-					List<String> grpsList = LambdaUtils.map(loggedOnUserPermissions, KeyValueBean::getKey);
-					List<PredictionAccess> predictionResults = predictionAccessService
-							.getAllPredictionsForUserByAssetPath(user, grpsList,
-									collection.getCollection().getCollectionName());
-
-					if (CollectionUtils.isNotEmpty(predictionResults)) {
-
-						model.addAttribute("showGeneratePredTab", true);
-
-					}
-
-				}
-
-			} else {
-				if (StringUtils.isEmpty(user)) {
-					return "redirect:/loginTab";
-				} else {
-					throw new DoeWebException("Not Authorized", HttpServletResponse.SC_UNAUTHORIZED);
-				}
-			}
-		} catch (Exception e) {
-			throw new DoeWebException(e.getMessage());
-		}
-		return "assetDetails";
+		return null;
 
 	}
 
-	public void constructSearchCriteriaList(HttpSession session, Model model) throws DoeWebException {
+	public void constructAllSearchCriteriaList(HttpSession session, Model model)
+			throws DoeWebException, JsonParseException, IOException {
+
+		log.info("contruct search filter items");
 
 		List<SearchList> searchList = new ArrayList<>();
 		List<LookUp> results = lookUpService.getAllDisplayNames();
+		DoeSearch search = new DoeSearch();
+		String authToken = (String) session.getAttribute("hpcUserToken");
+		String[] attrNames = { "collection_type" };
+		String[] attrValues = { "Asset" };
+		String[] levelValues = { "Asset" };
 
-		for (LookUp val : results) {
-			DoeSearch search = new DoeSearch();
+		String[] rowIds = { "1" };
+		String[] operators = { "EQUAL" };
+		boolean[] isExcludeParentMetadata = { true };
+		search.setLevel(levelValues);
+		search.setAttrName(attrNames);
+		search.setAttrValue(attrValues);
+		search.setRowId(rowIds);
+		search.setOperator(operators);
+		search.setIsExcludeParentMetadata(isExcludeParentMetadata);
+		search.setDetailed(true);
 
-			String[] attrNames = { "collection_type" };
-			String[] attrValues = new String[3];
-			attrValues[0] = val.getLevelName();
-			String[] levelValues = new String[3];
-			levelValues[0] = val.getLevelName();
+		HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search);
+		Response restResponse = DoeClientUtil.getCollectionSearchQuery(authToken, compoundCollectionSearchServiceURL,
+				compoundQuery);
 
-			String[] rowIds = { "1" };
-			String[] operators = { "EQUAL" };
-			boolean[] isExcludeParentMetadata = { true };
-			search.setLevel(levelValues);
-			search.setAttrName(attrNames);
-			search.setAttrValue(attrValues);
-			search.setRowId(rowIds);
-			search.setOperator(operators);
-			search.setIsExcludeParentMetadata(isExcludeParentMetadata);
-			search.setDetailed(true);
+		if (restResponse.getStatus() == 200) {
+			ObjectMapper mapper = new ObjectMapper();
+			AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
+					new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()), new JacksonAnnotationIntrospector());
+			mapper.setAnnotationIntrospector(intr);
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			MappingJsonFactory factory = new MappingJsonFactory(mapper);
+			JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+			HpcCollectionListDTO collections = parser.readValueAs(HpcCollectionListDTO.class);
+			List<HpcCollectionDTO> searchFilterResults = collections.getCollections();
+			for (LookUp val : results) {
 
-			SearchList filterList = retrieveSearchList(session, search, val.getAttrName(), levelValues[0], null,
-					val.getDisplayName());
-			searchList.add(filterList);
+				SearchList filterList = retrieveSearchFilterLists(session, searchFilterResults, val.getAttrName(),
+						val.getLevelName(), val.getDisplayName());
+				searchList.add(filterList);
 
+			}
+			model.addAttribute("browseList", searchList);
 		}
-		model.addAttribute("browseList", searchList);
+
 	}
 
-	public SearchList retrieveSearchList(HttpSession session, DoeSearch search, String attributeName, String levelName,
-			String retrieveParent, String displayName) throws DoeWebException {
+	public SearchList retrieveSearchFilterLists(HttpSession session, List<HpcCollectionDTO> results,
+			String attributeName, String levelName, String displayName) throws DoeWebException {
 
-		log.info("retrieve search list for attributeName: " + attributeName + " levelName: " + levelName
-				+ " retrieveParent: " + retrieveParent);
+		log.info("retrieve search list for attributeName: " + attributeName + " levelName: " + levelName);
 		SearchList searchList = new SearchList();
 		Set<String> list = new HashSet<>();
 		AtomicInteger datasetCount = new AtomicInteger(0);
@@ -1168,86 +1007,63 @@ public abstract class AbstractDoeController {
 		AtomicInteger nonReferenceDatasetCount = new AtomicInteger(0);
 		AtomicInteger modelDeployedCount = new AtomicInteger(0);
 		AtomicInteger modelNotDeployedCount = new AtomicInteger(0);
-		String authToken = (String) session.getAttribute("hpcUserToken");
-		log.info("authToken: " + authToken);
 
 		try {
-			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search, levelName);
 
-			Response restResponse = DoeClientUtil.getCollectionSearchQuery(authToken,
-					compoundCollectionSearchServiceURL, compoundQuery);
+			if (levelName.equalsIgnoreCase("Program") || levelName.equalsIgnoreCase("Study")) {
 
-			if (restResponse.getStatus() == 200) {
-				ObjectMapper mapper = new ObjectMapper();
-				AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
-						new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()),
-						new JacksonAnnotationIntrospector());
-				mapper.setAnnotationIntrospector(intr);
-				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-				MappingJsonFactory factory = new MappingJsonFactory(mapper);
-				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
-				HpcCollectionListDTO collections = parser.readValueAs(HpcCollectionListDTO.class);
-				List<HpcCollectionDTO> results = collections.getCollections();
+				results.stream().flatMap(g -> g.getMetadataEntries().getParentMetadataEntries().stream()).forEach(f -> {
+					if (f.getAttribute().equalsIgnoreCase(attributeName)) {
+						list.add(f.getValue());
+					}
+				});
 
-				if (StringUtils.isNotEmpty(retrieveParent)) {
+			} else {
+				results.stream().flatMap(g -> g.getMetadataEntries().getSelfMetadataEntries().stream()).forEach(f -> {
+					if (f.getAttribute().equalsIgnoreCase(attributeName)) {
+						list.add(f.getValue());
 
-					results.stream().flatMap(g -> g.getMetadataEntries().getParentMetadataEntries().stream())
-							.forEach(f -> {
-								if (f.getAttribute().equalsIgnoreCase(attributeName)) {
-									list.add(f.getValue());
-								}
-							});
+					}
 
-				} else {
-					results.stream().flatMap(g -> g.getMetadataEntries().getSelfMetadataEntries().stream())
-							.forEach(f -> {
-								if (f.getAttribute().equalsIgnoreCase(attributeName)) {
-									list.add(f.getValue());
+					// This is filter the assets of type datasets and model and get the count for
+					// each of them
+					if (attributeName.equalsIgnoreCase("asset_type")) {
+						if (f.getAttribute().equalsIgnoreCase("asset_type")
+								&& f.getValue().equalsIgnoreCase("Dataset")) {
+							datasetCount.incrementAndGet();
+						} else if (f.getAttribute().equalsIgnoreCase("asset_type")
+								&& f.getValue().equalsIgnoreCase("Model")) {
+							modelCount.incrementAndGet();
+						}
+					}
 
-								}
+					// This is filter the assets of metadata is_reference_dataset and get the count
+					// for
+					// each of them
+					if (attributeName.equalsIgnoreCase("is_reference_dataset")) {
+						if (f.getAttribute().equalsIgnoreCase("is_reference_dataset")
+								&& f.getValue().equalsIgnoreCase("Yes")) {
+							referenceDatasetCount.incrementAndGet();
+						} else if (f.getAttribute().equalsIgnoreCase("is_reference_dataset")
+								&& f.getValue().equalsIgnoreCase("No")) {
+							nonReferenceDatasetCount.incrementAndGet();
+						}
+					}
 
-								// This is filter the assets of type datasets and model and get the count for
-								// each of them
-								if (attributeName.equalsIgnoreCase("asset_type")) {
-									if (f.getAttribute().equalsIgnoreCase("asset_type")
-											&& f.getValue().equalsIgnoreCase("Dataset")) {
-										datasetCount.incrementAndGet();
-									} else if (f.getAttribute().equalsIgnoreCase("asset_type")
-											&& f.getValue().equalsIgnoreCase("Model")) {
-										modelCount.incrementAndGet();
-									}
-								}
-
-								// This is filter the assets of metadata is_reference_dataset and get the count
-								// for
-								// each of them
-								if (attributeName.equalsIgnoreCase("is_reference_dataset")) {
-									if (f.getAttribute().equalsIgnoreCase("is_reference_dataset")
-											&& f.getValue().equalsIgnoreCase("Yes")) {
-										referenceDatasetCount.incrementAndGet();
-									} else if (f.getAttribute().equalsIgnoreCase("is_reference_dataset")
-											&& f.getValue().equalsIgnoreCase("No")) {
-										nonReferenceDatasetCount.incrementAndGet();
-									}
-								}
-
-								// This is filter the assets of metadata is_model_deployed and get the count for
-								// each of them
-								if (attributeName.equalsIgnoreCase("is_model_deployed")) {
-									if (f.getAttribute().equalsIgnoreCase("is_model_deployed")
-											&& f.getValue().equalsIgnoreCase("Yes")) {
-										modelDeployedCount.incrementAndGet();
-									} else if (f.getAttribute().equalsIgnoreCase("is_model_deployed")
-											&& f.getValue().equalsIgnoreCase("No")) {
-										modelNotDeployedCount.incrementAndGet();
-									}
-								}
-							});
-				}
-
-			} else if (restResponse.getStatus() == 204) {
-				// no content, return empty list
+					// This is filter the assets of metadata is_model_deployed and get the count for
+					// each of them
+					if (attributeName.equalsIgnoreCase("is_model_deployed")) {
+						if (f.getAttribute().equalsIgnoreCase("is_model_deployed")
+								&& f.getValue().equalsIgnoreCase("Yes")) {
+							modelDeployedCount.incrementAndGet();
+						} else if (f.getAttribute().equalsIgnoreCase("is_model_deployed")
+								&& f.getValue().equalsIgnoreCase("No")) {
+							modelNotDeployedCount.incrementAndGet();
+						}
+					}
+				});
 			}
+
 		} catch (Exception e) {
 			log.error("Failed to get search list");
 			throw new DoeWebException(e);
@@ -1266,79 +1082,10 @@ public abstract class AbstractDoeController {
 		return searchList;
 	}
 
-	public SearchList constructFilterCriteria(HttpSession session, DoeSearch search, String retrieveParent)
-			throws DoeWebException {
-
-		log.info("construct filter crietria for : " + search + " and isRetrieveParent: " + retrieveParent);
-		String level = null;
-		String attrName = null;
-		LookUp value = lookUpService.getLookUpByDisplayName(search.getSearchName());
-		if (value != null) {
-			level = value.getLevelName();
-			attrName = value.getAttrName();
-		}
-
-		int len = search.getRowId().length;
-
-		String[] newRowId = Arrays.copyOf(search.getRowId(), len + 1);
-		String[] newAttrNames = Arrays.copyOf(search.getAttrName(), len + 1);
-		String[] newAttrValues = Arrays.copyOf(search.getAttrValue(), len + 1);
-		String[] newLevelValues = new String[len + 1];
-		boolean[] newIsExcludeParentMetadata = Arrays.copyOf(search.getIsExcludeParentMetadata(), len + 1);
-		String[] newOperators = Arrays.copyOf(search.getOperator(), len + 1);
-
-		newRowId[len] = String.valueOf(len + 1);
-		newAttrNames[len] = "collection_type";
-		newAttrValues[len] = level;
-		newLevelValues[len] = level;
-		newOperators[len] = "EQUAL";
-		newIsExcludeParentMetadata[len] = false;
-
-		search.setRowId(newRowId);
-		search.setAttrName(newAttrNames);
-		search.setAttrValue(newAttrValues);
-		search.setLevel(newLevelValues);
-		search.setIsExcludeParentMetadata(newIsExcludeParentMetadata);
-		search.setOperator(newOperators);
-
-		search.setDetailed(true);
-
-		SearchList list = retrieveSearchList(session, search, attrName, level, retrieveParent, null);
-
-		return list;
-	}
-
-	public List<KeyValueBean> getAllApplicableModelPaths(HttpSession session) throws DoeWebException {
-		/*
-		 * get all model paths with is_model_deployed metadata attr true
-		 */
-
-		log.info("get all models with model deployed true");
-		DoeSearch search = new DoeSearch();
-		String[] attrNames = { "collection_type", "asset_type", "is_model_deployed" };
-		String[] attrValues = { "Asset", "Model", "Yes" };
-		String[] levelValues = { "Asset", "Asset", "Asset" };
-		boolean[] isExcludeParentMetadata = { false, false, false };
-		String[] rowIds = { "1", "2", "3" };
-		String[] operators = { "EQUAL", "EQUAL", "EQUAL" };
-		boolean[] iskeyWordSearch = { true, false };
-
-		search.setAttrName(attrNames);
-		search.setAttrValue(attrValues);
-		search.setLevel(levelValues);
-		search.setIsExcludeParentMetadata(isExcludeParentMetadata);
-		search.setRowId(rowIds);
-		search.setOperator(operators);
-		search.setIskeyWordSearch(iskeyWordSearch);
-
-		return getPathsForSearch(search, session);
-
-	}
-
 	public List<KeyValueBean> getPathsForSearch(DoeSearch search, HttpSession session) throws DoeWebException {
 		log.info("get paths by filtering from the required search criteria");
 
-		HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search, "Asset");
+		HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search);
 		compoundQuery.setDetailedResponse(true);
 		log.info("search compund query" + compoundQuery);
 		String authToken = (String) session.getAttribute("hpcUserToken");
@@ -1537,5 +1284,4 @@ public abstract class AbstractDoeController {
 		inference.setIsReferenceAsset(Boolean.TRUE);
 		return taskId;
 	}
-
 }

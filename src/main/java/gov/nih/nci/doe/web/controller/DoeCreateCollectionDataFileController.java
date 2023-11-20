@@ -25,6 +25,7 @@ import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.domain.LookUp;
 import gov.nih.nci.doe.web.model.DoeCollectionModel;
 import gov.nih.nci.doe.web.model.DoeMetadataAttrEntry;
+import gov.nih.nci.doe.web.model.DoeSearch;
 import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.service.DoeAuthorizationService;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
@@ -749,4 +750,30 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		return false;
 	}
 
+	public List<KeyValueBean> getAllApplicableModelPaths(HttpSession session) throws DoeWebException {
+		/*
+		 * get all model paths with is_model_deployed metadata attr true
+		 */
+
+		log.info("get all models with model deployed true");
+		DoeSearch search = new DoeSearch();
+		String[] attrNames = { "collection_type", "asset_type", "is_model_deployed" };
+		String[] attrValues = { "Asset", "Model", "Yes" };
+		String[] levelValues = { "Asset", "Asset", "Asset" };
+		boolean[] isExcludeParentMetadata = { false, false, false };
+		String[] rowIds = { "1", "2", "3" };
+		String[] operators = { "EQUAL", "EQUAL", "EQUAL" };
+		//boolean[] iskeyWordSearch = { true, false };
+
+		search.setAttrName(attrNames);
+		search.setAttrValue(attrValues);
+		search.setLevel(levelValues);
+		search.setIsExcludeParentMetadata(isExcludeParentMetadata);
+		search.setRowId(rowIds);
+		search.setOperator(operators);
+		//search.setIskeyWordSearch(iskeyWordSearch);
+
+		return getPathsForSearch(search, session);
+
+	}
 }
