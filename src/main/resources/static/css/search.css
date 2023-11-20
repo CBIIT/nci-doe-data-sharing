@@ -892,7 +892,7 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
   display: flex;
   gap: 4px;
   margin-left: 4px;
-  margin-top: 12px;
+  margin-top: 10px;
 }
 
 .study {
@@ -917,7 +917,7 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
 .asset-size-div {
   margin-left: 4px;
   position: relative;
-  margin-top: 12px;
+  margin-top: 10px;
 }
 
 .program-container {
@@ -925,7 +925,7 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
     display: flex;
     gap: 4px;
     margin-left: 4px;
-    margin-top: 16px;
+    margin-top: 14px;
     margin-bottom: 12px;
 } 
 
