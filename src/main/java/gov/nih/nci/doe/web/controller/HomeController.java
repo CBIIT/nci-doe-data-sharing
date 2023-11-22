@@ -1,5 +1,6 @@
 package gov.nih.nci.doe.web.controller;
 
+import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -103,27 +104,32 @@ public class HomeController extends AbstractDoeController {
 			@RequestParam(value = "keyWord", required = false) String keyWord) throws DoeWebException {
 
 		log.info("Search tab");
-		if (StringUtils.isNotEmpty(dmeDataId)) {
-			model.addAttribute("dmeDataId", dmeDataId);
-		}
+		try {
+			if (StringUtils.isNotEmpty(dmeDataId)) {
+				model.addAttribute("dmeDataId", dmeDataId);
+			}
 
-		if (StringUtils.isNotEmpty(doi)) {
-			model.addAttribute("doi", doi);
-		}
+			if (StringUtils.isNotEmpty(doi)) {
+				model.addAttribute("doi", doi);
+			}
 
-		if (StringUtils.isNotEmpty(returnToSearch)) {
-			String query = (String) session.getAttribute("searchQuery");
-			log.info("searchQuery search tab" + query);
-			model.addAttribute("searchQuery", query);
-			model.addAttribute("returnToSearch", "true");
-		}
+			if (StringUtils.isNotEmpty(returnToSearch)) {
+				String query = (String) session.getAttribute("searchQuery");
+				log.info("searchQuery search tab" + query);
+				model.addAttribute("searchQuery", query);
+				model.addAttribute("returnToSearch", "true");
+			}
 
-		if (StringUtils.isNotEmpty(keyWord)) {
-			model.addAttribute("keyWord", keyWord);
-		}
-		constructSearchCriteriaList(session, model);
+			if (StringUtils.isNotEmpty(keyWord)) {
+				model.addAttribute("keyWord", keyWord);
+			}
+			constructAllSearchCriteriaList(session, model);
 
-		return "searchTab";
+			return "searchTab";
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw new DoeWebException("Failed to render search Tab " + e.getMessage());
+		}
 	}
 
 	@GetMapping(value = "/tasksTab")
@@ -230,17 +236,6 @@ public class HomeController extends AbstractDoeController {
 	@GetMapping(value = "/aboutTab")
 	public String getAboutTab(HttpSession session, HttpServletRequest request) {
 		return "aboutTab";
-	}
-
-	@GetMapping(value = "/assetDetails")
-	public String getAssetDetailsTab(Model model, HttpSession session, HttpServletRequest request,
-			@RequestParam(value = "dme_data_id", required = false) String dmeDataId,
-			@RequestParam(value = "returnToSearch", required = false) String returnToSearch,
-			@RequestParam(value = "assetIdentifier", required = false) String assetIdentifier) throws DoeWebException {
-
-		log.info("get asset details");
-		return getAssetDetails(session, dmeDataId, returnToSearch, assetIdentifier, model);
-
 	}
 
 	@GetMapping(value = "/downloadTab")
@@ -372,17 +367,6 @@ public class HomeController extends AbstractDoeController {
 		return saveMetaDataPermissionsList(collectionId, path, selectedPermissions);
 	}
 
-	@PostMapping(value = "/predictionAccessGroups")
-	@ResponseBody
-	public String savePredictionAccessGroups(HttpSession session, @RequestHeader HttpHeaders headers,
-			@RequestParam(value = "predCollId") String predCollId,
-			@RequestParam(value = "predCollPath") String predCollPath,
-			@RequestParam(value = "selectedGrps[]", required = false) String[] selectedGrps,
-			@RequestParam(value = "isPublic") String isPublic) throws DoeWebException {
-		log.info("save prediction access groups");
-		return updatePredictionAccess(predCollPath, predCollId, selectedGrps, isPublic);
-	}
-
 	@GetMapping(value = "/getPermissionByCollectionId")
 	public ResponseEntity<?> getPermissionsByCollectionId(HttpSession session, @RequestHeader HttpHeaders headers,
 			@RequestParam(value = "collectionId") String collectionId) {
@@ -407,12 +391,11 @@ public class HomeController extends AbstractDoeController {
 	}
 
 	@GetMapping(value = "/getFilterList")
-	public ResponseEntity<?> getFilterList(
-			@RequestParam(value = "retrieveParent", required = false) String retrieveParent, HttpSession session,
-			@RequestHeader HttpHeaders headers, DoeSearch search) throws DoeWebException {
+	public ResponseEntity<?> getFilterList(HttpSession session, @RequestHeader HttpHeaders headers, DoeSearch search)
+			throws DoeWebException, IOException {
 
 		log.info("get filtered list" + search);
-		SearchList list = constructFilterCriteria(session, search, retrieveParent);
+		SearchList list = constructFilterCriteria(session, search);
 
 		return new ResponseEntity<>(list, HttpStatus.OK);
 

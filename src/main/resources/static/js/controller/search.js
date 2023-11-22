@@ -7,9 +7,6 @@ $(document).ready(function () {
       $("#mobileKeyworkSearchDiv").show();
    }
 
-   // $("#home").removeClass('active-nav');
-   // $("#search").addClass('active-nav');
-
    if ($(".backToStatusTabLink").is(':visible')) {
       $("#search").removeClass('active-nav');
       $("#status").addClass('active-nav');
@@ -39,6 +36,7 @@ $(document).ready(function () {
          var attrVal = list.attrValuesString.split('@@');
          var iskeyWordSearch = list.iskeyWordSearch[i];
          if (iskeyWordSearch == true) {
+         //when keyword is entered on search page
             var attrval = attrVal[i];
             var newAttrVal = attrval.replaceAll('%', '');
 
@@ -57,8 +55,7 @@ $(document).ready(function () {
                if ($(this).text() == attrName) {
                   $(this).parent().parent().find(".filteritem").each(function () {
                      if ($(this).val() == attrVal) {
-                        $(this).prop("checked", true);
-                        $(this).trigger('change');
+                        $(this).prop("checked", true).trigger('change');
                      }
                   })
                }
@@ -67,6 +64,8 @@ $(document).ready(function () {
       }
       populateSearchCriteria();
    } else if ($("#keyWord").val()) {
+   
+      // when keyword is entered on landing page
       if (screen.width > 990) {
          $("#attributeVal").val($("#keyWord").val());
          $("#resetBtn").show();
@@ -220,43 +219,8 @@ $(document).ready(function () {
 
 
    });
-
-   // Funtion when clicking on checkboxes for search sidebar filters
-
-   $(document).on('change', '.filteritem', function () {
-
-      // Get the parent div of the clicked checkbox
-      var parentDiv = $(this).closest(".filterGroupDiv");
-
-      if ($(this).is(':checked')) {
-
-         // Move the parent div to the top of the list
-         $(this).closest('.dataDivCollapse').prepend(parentDiv);
-         $(this).closest('label.showMorefields').addClass('filter_checked');
-
-      } else {
-         // place the unchecked filter item to its original position
-         resetFilterItemToOriginalPosition($(this), parentDiv);
-      }
-
-      var attrName = $(this).parent().parent().attr('id');
-
-      populateSearchCriteria();
-
-      // based on child selection, search at parent level and check the
-      // parent checkbox
-
-      $(this).closest('.filterComponentDiv').prevAll().find('.attributeLabel').each(function (e) {
-         filterPrev($(this), attrName);
-      });
-
-      // always filter the metadata on the children level
-      // do not remove parent based on child selection
-      $(this).closest('.filterComponentDiv').nextAll().find('.attributeLabel').each(function (e) {
-         filterNext($(this), attrName);
-      });
-   });
-});
+   
+ });
 
 function populateSearchCriteria(searchType) {
 
@@ -365,8 +329,11 @@ function refreshDataTable() {
          '</div>');
       $("div.toolbar").after(
          '<div class="col-lg-12 col-md-12 col-sm-12 float-right" style="display:inline-flex;">' +
-         '<div class="col-lg-8 col-md-8 col-sm-8"></div>' +
-         '<div class="col-lg-4 col-md-4 col-sm-4 downloadSelectedDiv" style="padding-right:0px;">' +
+         '<div class="col-lg-9 col-md-9 col-sm-9"><div id="selected_size_div" style="display: block;">TOTAL SELECTED SIZE: ' +
+         '<span id="selected_size">0 B</span> </div><div id="informational_text">' +
+         'Download up to 1 TB of data per request. Select the desired assets and click Download Selected Assets >' +
+         '</div></div>' +
+         '<div class="col-lg-3 col-md-3 col-sm-3 downloadSelectedDiv" style="padding-right:0px;">' +
          '<button id="downloadSelected" type="button"' +
          'class="btn btn-primary float-right" disabled>' +
          'DOWNLOAD <br />SELECTED ASSETS <img class="arrow_right_download_selected"' +
@@ -449,6 +416,20 @@ function dataTableInit(isVisible) {
 
          } else {
             $(".downloadSelectedDiv").hide();
+            $("#informational_text").hide();
+            $("#selected_size_div").hide();
+         }
+
+         // display the informational text on the search results only 
+         // when user is logged in and there is an option to download asset
+
+         if (isVisible && ($("input:checkbox.selectAssetCheckBox").is(":visible") ||
+               $("input.selectRadioForDataSet").is(":visible"))) {
+            $("#informational_text").show();
+            $("#selected_size_div").show();
+         } else {
+            $("#informational_text").hide();
+            $("#selected_size_div").hide();
          }
 
          $(".dataSetFragment").click(function () {
@@ -560,6 +541,8 @@ function dataTableInit(isVisible) {
                $("#downloadSelected").prop("disabled", true);
             }
 
+            calculateTotalSize(table);
+
          });
 
          $(".selectRadioForDataSet").click(function (e) {
@@ -573,6 +556,7 @@ function dataTableInit(isVisible) {
             } else {
                $("#downloadSelected").prop("disabled", true);
             }
+            calculateTotalSize(table);
 
          });
 
@@ -638,10 +622,10 @@ function renderDataSetName(data, type, row) {
 
       if (row.isBulkAsset == false) {
          if (isUploader && isUploader == true) {
-            checkboxHtml += "<input aria-label='checkbox' type='checkbox' id=" + row.dataSetPath + " " +
+            checkboxHtml += "<input aria-label='checkbox' data-toggle= 'tooltip' type='checkbox' id=" + row.dataSetPath + " " +
                "data-size = " + row.collectionSize + " class='selectAssetCheckBox'/>";
          } else {
-            checkboxHtml += "<input aria-label='radio' type='radio' name = 'selectRadioForDataSet' id=" + row.dataSetPath + " " +
+            checkboxHtml += "<input aria-label='radio' data-toggle= 'tooltip' type='radio' name = 'selectRadioForDataSet' id=" + row.dataSetPath + " " +
                "data-size = " + row.collectionSize + "  class='selectRadioForDataSet'/>";
          }
       } else {
@@ -752,12 +736,12 @@ function renderDataSetName(data, type, row) {
       "</div>" +
       "<div id='collapse" + row.dmeDataId + "' class='col-lg-12 col-md-12 col-sm-12'>" +
       " <img src='images/search_line.png' class='line_divider' alt='asset name divider'/>" +
-      "<div class='overlap-group'><div class='asset-description opensans-bold-midnight-blue-13px'>" +
+      "<div class='asset-description_div'><div class='asset-description opensans-bold-midnight-blue-13px'>" +
       "<span class='opensans-bold-midnight-blue-13px'>ASSET DESCRIPTION: &nbsp;&nbsp;</span>" +
       "<span class='inter-normal-congress-blue-16px'>" + row.dataSetDescription + "</span></div></div>" +
-      /*"<div class='overlap-group'><div class='asset-size opensans-bold-midnight-blue-13px'>" +
+      "<div class='asset-size-div'><div class='asset-size opensans-bold-midnight-blue-13px'>" +
       "<span class='opensans-bold-midnight-blue-13px'>ASSET SIZE: &nbsp;&nbsp;</span>" +
-      "<span class='inter-normal-congress-blue-16px'>" + row.displayAssetSize + "</span></div></div>" +*/
+      "<span class='inter-normal-congress-blue-16px'>" + row.displayAssetSize + "</span></div></div>" +
       "<div class='study-container'><div class='study opensans-bold-midnight-blue-13px'>" +
       "<span class='opensans-bold-midnight-blue-13px'>STUDY: &nbsp;&nbsp;</span>" +
       "<a class='button2a' style='text-decoration:underline;' collection_name = '" + row.studyName + "' selected_path = '" + row.studyPath + "' collection_type='Study' tabindex='0'" +
@@ -782,7 +766,7 @@ function renderDataSetName(data, type, row) {
 }
 
 
-function filterNext($this, attributeTypeName) {
+function filterPrevAndNextElemets($this, attributeTypeName) {
 
    var attributeName = $this.find('label').text();
 
@@ -793,12 +777,14 @@ function filterNext($this, attributeTypeName) {
    var isExcludeParentMetadata = [];
    var rowIds = [];
    var operators = [];
+   var levelValues =[];
 
    // filter a list based on the parent level selection
    $(".filteritem:checked").each(function () {
       var attrName = $(this).parent().parent().attr('id');
       var attrVal = $(this).val();
       if (attrName != attributeName) {
+         levelValues.push("Asset");
          attrNames.push(attrName);
          attrValues.push(attrVal);
          rowIds.push(rowId);
@@ -808,12 +794,20 @@ function filterNext($this, attributeTypeName) {
       }
    });
 
+   attrNames.push("collection_type");
+   attrValues.push("Asset");
+   rowIds.push(rowId);
+   isExcludeParentMetadata.push(false);
+   levelValues.push("Asset");
+   operators.push("EQUAL");
    d.attrName = attrNames.join();
    d.attrValuesString = attrValues.join('@@');
    d.isExcludeParentMetadata = isExcludeParentMetadata.join();
    d.rowId = rowIds.join();
    d.operator = operators.join();
    d.searchName = attributeName;
+   d.level = levelValues.join();
+   
 
    $.ajax({
       url: '/getFilterList',
@@ -854,97 +848,6 @@ function filterNext($this, attributeTypeName) {
             $this.parent().find('.css-17rpx5x').hide();
          }
 
-      },
-      error: function (data, status, error) {
-         console.log("===> status: ", status);
-         console.log("===> error: ", error);
-         console.log("===> data: ", data);
-      }
-   });
-}
-
-function filterPrev($this, attributeTypeName) {
-   var attributeName = $this.find('label').text();
-
-   var rowId = 1;
-   var d = {};
-   var attrNames = [];
-   var attrValues = [];
-   var isExcludeParentMetadata = [];
-   var rowIds = [];
-   var operators = [];
-   var url;
-
-   // filter a list based on the parent level selection
-   $(".filteritem:checked").each(function () {
-      var attrName = $(this).parent().parent().attr('id');
-      var attrVal = $(this).val();
-      if (attrName != attributeName) {
-         attrNames.push(attrName);
-         attrValues.push(attrVal);
-         rowIds.push(rowId);
-         isExcludeParentMetadata.push(false);
-         operators.push("EQUAL");
-         rowId = rowId + 1;
-      }
-   });
-
-   d.attrName = attrNames.join();
-   d.attrValuesString = attrValues.join('@@');
-   d.isExcludeParentMetadata = isExcludeParentMetadata.join();
-   d.rowId = rowIds.join();
-   d.operator = operators.join();
-   d.searchName = attributeName;
-   if (attributeName == 'Program Name' || attributeName == 'Study Name') {
-      url = '/getFilterList?retrieveParent=true';
-   } else {
-      url = '/getFilterList';
-   }
-
-   $.ajax({
-      url: url,
-      type: 'GET',
-      contentType: 'application/json',
-      dataType: 'text',
-      data: d,
-      beforeSend: function () {
-         $("#spinner").show();
-         $("#dimmer").show();
-      },
-      success: function (data, status) {
-         var filterlist = JSON.parse(data);
-         var list = filterlist.attrValues;
-         var len = list.length;
-
-         $this.parent().find('.filterGroupDiv').each(function (e) {
-            var val = $(this).find('.filteritem').val();
-            if (list.indexOf(val) != -1) {
-               $(this).show();
-               $(this).find('.showMorefields').show();
-
-               if ($(this).find('.filteritem').is(':checked')) {
-                  $(this).find('.showMorefields').addClass('filter_checked');
-               } else {
-                  $(this).find('.showMorefields').removeClass('filter_checked');
-               }
-               resetSearchFilterCount(val, $(this), filterlist);
-
-            } else {
-               $(this).hide();
-               $(this).find('.showMorefields').removeClass('filter_checked');
-               $(this).find('.filteritem').prop("checked", false);
-            }
-         });
-
-         if (len && len > 4) {
-            $this.parent().find('.css-17rpx5x').show();
-            $this.parent().find('.showMore').show();
-            $this.parent().find('.css-17rpx5xLess').hide();
-            showFirstFewFields($this.parent(), 'Less');
-         } else {
-            $this.parent().find('.css-17rpx5xLess').hide();
-            $this.parent().find('.css-17rpx5x').hide();
-         }
       },
       error: function (data, status, error) {
          console.log("===> status: ", status);
@@ -1375,6 +1278,44 @@ function openDataObjectPopOver($this) {
          }
 
       });
+}
+
+function calculateTotalSize(table) {
+
+   var totalSize = 0;
+   var rows = $('#' + table).DataTable().rows({ selected: true }).nodes().to$();
+  
+   rows.find("input[type=checkbox]:checked, input[type=radio]:checked").each(function () {
+      var size = parseInt($(this).attr('data-size'));
+      totalSize += size;
+   });
+
+   $("#selected_size").html(addHumanReadableSize(totalSize.toString()));
+
+   if (totalSize > 1099511627776) {
+      // Get all the unchecked checkboxes in the table.
+      rows.find("input[type=checkbox]:not(:checked), input[type=radio]:not(:checked)").attr('disabled', true).
+      attr('data-original-title', 'You have selected 1 TB of data for download. Clear another check box to make this one available.');
+   } else {
+      rows.find("input[type=checkbox], input[type=radio]").attr('disabled', false).removeAttr('data-original-title');
+   }
+}
+
+function addHumanReadableSize(value) {
+   var base = 1000;
+   var bytes = parseFloat(value);
+
+   // When using the smallest unit no decimal point is needed, because it's
+   // the exact number.
+   if (bytes < base) {
+      return bytes + " " + ["B", "KB", "MB", "GB", "TB"][0];
+   }
+
+   var exponent = Math.floor(Math.log(bytes) / Math.log(base));
+   var unit = ["B", "KB", "MB", "GB", "TB"][exponent];
+
+   var humanReadableSize = (bytes / Math.pow(base, exponent)).toFixed(1) + " " + unit;
+   return humanReadableSize;
 }
 
 // Function to get the total search results count

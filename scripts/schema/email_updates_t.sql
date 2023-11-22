@@ -1,4 +1,4 @@
-create table NCI_DOE_DB.EMAIL_UPDATES_T
+create table EMAIL_UPDATES_T
 (
     ID            NUMBER generated as identity,
     EMAIL_ADDRESS VARCHAR2(100) not null,
@@ -6,3 +6,4 @@ create table NCI_DOE_DB.EMAIL_UPDATES_T
 )
 /
 
+GRANT INSERT,UPDATE,DELETE ON EMAIL_UPDATES_T TO MODAC_APP_USER;

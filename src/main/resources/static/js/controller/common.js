@@ -780,3 +780,34 @@ $(document).on('click', '#pickerLink', function() {
 $(document).on('click', '.clearMetadata', function() {
 	$(this).parent().find("input[type='text']").val("");
 });
+
+// Funtion when clicking on checkboxes for search sidebar filters
+
+$(document).on('change', '.filteritem', function () {
+
+	  // Get the parent div of the clicked checkbox
+	  var parentDiv = $(this).closest(".filterGroupDiv");
+	
+	  if ($(this).is(':checked')) {
+	
+	     // Move the parent div to the top of the list
+	     $(this).closest('.dataDivCollapse').prepend(parentDiv);
+	     $(this).closest('label.showMorefields').addClass('filter_checked');
+	
+	  } else {
+	     // place the unchecked filter item to its original position
+	     resetFilterItemToOriginalPosition($(this), parentDiv);
+	  }
+
+  	var attrName = $(this).parent().parent().attr('id');
+
+  	populateSearchCriteria();
+
+	  // based on child selection, search at parent level and check the
+	  // parent checkbox
+
+	 $('.filterComponentDiv').find('.attributeLabel').each(function (e) {
+	  filterPrevAndNextElemets($(this), attrName);
+	 });
+
+   });

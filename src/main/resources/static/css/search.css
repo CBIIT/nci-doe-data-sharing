@@ -500,7 +500,7 @@ div.dataDivCollapse :nth-child(4) > label >img {
     height: 22px;
 }
 
-#informational_text,#selected_size_div {
+#informational_text {
 	display:none;
 	color: #235172;
     font-variant-numeric: lining-nums tabular-nums;
@@ -509,9 +509,29 @@ div.dataDivCollapse :nth-child(4) > label >img {
     font-style: normal;
     font-weight: 300;
     letter-spacing: 0.19px;
-    padding-top: 15px;
+    padding-top: 5px;
     font-weight: 300;
     line-height: 106.523%;
+    padding-bottom: 9px;
+
+}
+
+#selected_size_div {
+	display:none;
+	color: #2C4088;
+    font-variant-numeric: lining-nums tabular-nums;
+    font-family: Inter;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: 0.15px;
+    padding-top: 19px;
+    line-height: 106.523%;
+    
+}
+
+#selected_size_div span {
+	font-size: 17px;
 }
 
 .cil_12_no_color {
@@ -687,11 +707,11 @@ label.filter_checked {
 table#searchResultTable tr {
 	/*display: inline-flex !important;*/
 	background-color: transparent !important;
-	word-break: break-all;
+	word-break: break-word;
 }
 table#searchResultTable tr td{
   border-top: none !important;
-  padding-bottom: 0px;
+  padding-bottom: 5px;
 }
 
 
@@ -743,7 +763,7 @@ table#searchResultTable.display tbody tr>.sorting_1, table#searchResultTable.ord
 }
 
 #downloadSelected {
-    margin-top: 0.7rem;
+    margin-top: 14px;
     font-family: var(--font-family-inter);
 	height: 41px;
 	width: 193px;
@@ -864,7 +884,7 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
 
 
 .asset-description {
-  line-height: normal;
+  line-height: normal;	
 }
 
 .study-container {
@@ -872,7 +892,7 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
   display: flex;
   gap: 4px;
   margin-left: 4px;
-  margin-top: 1rem;
+  margin-top: 10px;
 }
 
 .study {
@@ -889,16 +909,23 @@ button.share-link-copy-button, button.share-assetLink-copy-button {
     color: #0C5EB7;
 }
 
-.overlap-group {
+.asset-description_div {
   margin-left: 4px;
   position: relative;
 }
+
+.asset-size-div {
+  margin-left: 4px;
+  position: relative;
+  margin-top: 10px;
+}
+
 .program-container {
   	align-items: center;
     display: flex;
     gap: 4px;
     margin-left: 4px;
-    margin-top: 10px;
+    margin-top: 14px;
     margin-bottom: 12px;
 } 
 
