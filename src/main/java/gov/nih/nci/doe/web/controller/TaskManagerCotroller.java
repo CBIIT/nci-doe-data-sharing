@@ -88,9 +88,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
 
 			String serviceURL = queryServiceURL + "?page=" + 1 + "&totalCount=true";
 
-			HpcDownloadSummaryDTO downloads = DoeClientUtil.getDownloadSummary(authToken, serviceURL);
-
-			HpcDownloadSummaryDTO downloadsWithReadToken = DoeClientUtil.getDownloadSummary(readToken, serviceURL);
+			HpcDownloadSummaryDTO downloads = DoeClientUtil.getDownloadSummary(readToken, serviceURL);
 
 			final MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>();
 			paramsMap.set("totalCount", Boolean.TRUE.toString());
@@ -103,11 +101,6 @@ public class TaskManagerCotroller extends AbstractDoeController {
 			if (downloads != null) {
 				downloadResults.addAll(downloads.getActiveTasks());
 				downloadResults.addAll(downloads.getCompletedTasks());
-			}
-
-			if (downloadsWithReadToken != null) {
-				downloadResults.addAll(downloadsWithReadToken.getActiveTasks());
-				downloadResults.addAll(downloadsWithReadToken.getCompletedTasks());
 			}
 
 			List<HpcBulkDataObjectRegistrationTaskDTO> uploadResults = new ArrayList<HpcBulkDataObjectRegistrationTaskDTO>();
