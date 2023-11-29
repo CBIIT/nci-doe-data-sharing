@@ -73,7 +73,7 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 			throws Exception {
 
 		HttpSession session = request.getSession();
-		String userToken = (String) session.getAttribute("hpcUserToken");
+		String readAccessToken = (String) session.getAttribute("hpcUserToken");
 		String writeAccessToken = (String) session.getAttribute("writeAccessUserToken");
 		String requestUri = request.getRequestURI();
 		final String authorization = request.getHeader("Authorization");
@@ -162,7 +162,7 @@ public class DoeUserInterceptor extends HandlerInterceptorAdapter {
 				}
 			}
 
-			if (StringUtils.isBlank(userToken)) {
+			if (StringUtils.isBlank(readAccessToken)) {
 				try {
 					String authToken = DoeClientUtil.getAuthenticationToken(readOnlyUserName, readOnlyUserPassword,
 							authenticateURL);

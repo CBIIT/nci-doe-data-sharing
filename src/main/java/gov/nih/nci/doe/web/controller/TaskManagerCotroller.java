@@ -24,11 +24,10 @@ import gov.nih.nci.doe.web.model.TaskManagerDto;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.doe.web.util.LambdaUtils;
 import gov.nih.nci.hpc.domain.datatransfer.HpcDataTransferType;
+import gov.nih.nci.hpc.domain.datatransfer.HpcDataTransferUploadMethod;
 import gov.nih.nci.hpc.domain.datatransfer.HpcUserDownloadRequest;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDownloadSummaryDTO;
-import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationStatusDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationTaskDTO;
-import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcRegistrationSummaryDTO;
 
 import java.text.SimpleDateFormat;
@@ -88,9 +87,10 @@ public class TaskManagerCotroller extends AbstractDoeController {
 			List<String> taskIds = LambdaUtils.map(results, TaskManager::getTaskId);
 
 			String serviceURL = queryServiceURL + "?page=" + 1 + "&totalCount=true";
+
 			HpcDownloadSummaryDTO downloads = DoeClientUtil.getDownloadSummary(authToken, serviceURL);
 
-			HpcDownloadSummaryDTO downloads1 = DoeClientUtil.getDownloadSummary(readToken, serviceURL);
+			HpcDownloadSummaryDTO downloadsWithReadToken = DoeClientUtil.getDownloadSummary(readToken, serviceURL);
 
 			final MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>();
 			paramsMap.set("totalCount", Boolean.TRUE.toString());
@@ -105,9 +105,9 @@ public class TaskManagerCotroller extends AbstractDoeController {
 				downloadResults.addAll(downloads.getCompletedTasks());
 			}
 
-			if (downloads1 != null) {
-				downloadResults.addAll(downloads1.getActiveTasks());
-				downloadResults.addAll(downloads1.getCompletedTasks());
+			if (downloadsWithReadToken != null) {
+				downloadResults.addAll(downloadsWithReadToken.getActiveTasks());
+				downloadResults.addAll(downloadsWithReadToken.getCompletedTasks());
 			}
 
 			List<HpcBulkDataObjectRegistrationTaskDTO> uploadResults = new ArrayList<HpcBulkDataObjectRegistrationTaskDTO>();
@@ -266,7 +266,6 @@ public class TaskManagerCotroller extends AbstractDoeController {
 	private void retryUploadFunc(HttpSession session, HpcBulkDataObjectRegistrationTaskDTO upload, TaskManagerDto t,
 			TaskManager task) throws DoeWebException {
 
-		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		List<String> message = new ArrayList<String>();
 
 		upload.getFailedItems().stream().forEach(x -> {
@@ -275,26 +274,10 @@ public class TaskManagerCotroller extends AbstractDoeController {
 			}
 		});
 
-		HpcBulkDataObjectRegistrationStatusDTO uploadTask = DoeClientUtil.getDataObjectRegistrationTask(authToken,
-				registrationServiceUrl, upload.getTaskId());
-
 		Boolean retry = false;
-		if (uploadTask != null && uploadTask.getTask() != null) {
-			List<HpcDataObjectRegistrationItemDTO> failedRequests = uploadTask.getTask().getFailedItemsRequest();
-			if (failedRequests != null && !failedRequests.isEmpty())
-				retry = true;
-
-			for (HpcDataObjectRegistrationItemDTO dto : failedRequests) {
-				// Retry is not available for S3 based bulk requests
-				if (dto.getGlobusUploadSource() == null) {
-					retry = false;
-					break;
-				}
-			}
-			if (CollectionUtils.isEmpty(message) && StringUtils.isNotEmpty(uploadTask.getTask().getMessage())) {
-				message.add(StringEscapeUtils.escapeHtml((uploadTask.getTask().getMessage().replaceAll("[\']", ""))));
-			}
-
+		if (upload != null && upload.getUploadMethod() != null
+				&& upload.getUploadMethod().equals(HpcDataTransferUploadMethod.GLOBUS)) {
+			retry = Boolean.TRUE;
 		}
 
 		String filteredMessage = CollectionUtils.isNotEmpty(message) ? String.join(",", message) : "";
