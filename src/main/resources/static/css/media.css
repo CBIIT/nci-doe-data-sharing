@@ -164,7 +164,6 @@
     	background-position: 100%;
     	background-repeat: no-repeat;
     	display: block;
-    	margin-right: 24px;
 	}	
 	.mobile-nav-toggle[aria-expanded="true"] {
 		align-self: flex-end;
@@ -173,9 +172,7 @@
     	cursor: pointer;
     	padding: 0;
 	}
-	.nci-header-mobilenav__list-node {
-		border-bottom: 1px solid #e6e6e2;
-	}
+
 	.nci-header-mobilenav__list-msg {
 		background-color: transparent;
     	padding: 1.5rem 1rem;
@@ -531,10 +528,9 @@
 		line-height: 42px;
 		text-align: left;
 		text-decoration: none;
-		border-top: 1px solid var(--utility-colors-gray, #F0F0F0);
-		border-bottom: 1px solid var(--utility-colors-gray, #F0F0F0);
 		background: var(--utility-colors-white, #FFF);
 		padding-left: 15px;
+		margin-right: 24px;
 	}
 	.hZHGfK {
 		list-style: none;
@@ -553,6 +549,8 @@
     	font-size: 16px;
     	font-style: normal;
     	font-weight: 400;
+        border-top: 1px solid var(--utility-colors-gray, #F0F0F0);
+		border-bottom: 1px solid var(--utility-colors-gray, #F0F0F0);
 	}
 	.hQrVZb_subTab a {
 		font-size: 16px;
