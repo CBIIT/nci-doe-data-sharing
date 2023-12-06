@@ -46,39 +46,53 @@
 		</div>
 
 		<nav id="globalNav" aria-label="Primary navigation" class="nci-header-nav">
-
-			<!--on small media collapse icon-->
-			<button class="d-none d-sm-block d-md-block d-lg-none col-md-10 col-sm-6 navbar-toggler mobile-nav-toggle" type="button" data-toggle="collapse"
+			
+			<button class="d-none d-sm-block d-md-block d-lg-none col-md-10 col-sm-6 navbar-toggler mobile-nav-toggle" 
+			    id="menuBtn" type="button" data-toggle="collapse"
 				data-target="#mobile-navigation" aria-controls="mobile-navigation" aria-expanded="false"
 				aria-label="Toggle navigation">
-				<span style="float: left"><i class="fas fa-bars toggleNavBarIcon"></i><i
-						style="display: none; font-size: 1.25rem; color: #2F3C5A;"
-						class="fas fa-times closeNavBarIcon"></i></span>
+				<span><i class="fas fa-bars toggleNavBarIcon"></i></span>
 			</button>
+			
+			<div class="mobileNav" id="mobileNav">
+			<!--on small media collapse icon-->
+			<button class="d-none d-sm-block d-md-block d-lg-none col-md-10 col-sm-6 navbar-toggler mobile-nav-toggle" 
+			    id="closeMenuBtn" type="button" data-toggle="collapse"
+				data-target="#mobile-navigation" aria-controls="mobile-navigation" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span><i class="fas fa-times closeNavBarIcon"></i></span>
+			</button>
+			
 			<ul id="mobile-navigation" class="sc-dtLLSn dpehyt mobile-navigation collapse" data-visible="false">
 				<li class="sc-dkQUaI hQrVZb"><a class="active landing-tab" aria-current="page" th:href="@{/}">Home</a>
 				</li>
 				<li class="sc-dkQUaI hQrVZb"><a class="search-tab" th:href="@{/searchTab}">Search</a></li>
-				<li class="sc-dkQUaI hQrVZb" data-toggle="collapse" data-target="#aboutSubNav"><a aria-expanded="true"
-						class="sc-WZYut jLeSfx">About&nbsp;</a></li>
-				<ul data-visible="true" class="sc-ikXwFM hZHGfK" id="aboutSubNav">
+				<li class="sc-dkQUaI hQrVZb" id="aboutMenuMobile">
+				<a aria-expanded="true" class="sc-WZYut jLeSfx">About&nbsp;</a></li>
+			</ul>
+			
+			<!--Sub navbar when clicked on about us -->
+				<ul data-visible="true" class="sc-ikXwFM hZHGfK" id="aboutSubNav" style="display:none;">
+					<li class="nci-header-mobilenav__list-node" id="backToMainMenu">
+						<button class="nci-header-mobilenav__list-msg">
+						<img th:src="@{/images/arrow_narbar_mobile.png}" alt="back button" /> Main Menu</button>
+					</li>
+					<li class="sc-dkQUaI hQrVZb" id="aboutSubMenu"><a class="aboutMobileTabNav"
+							th:href="@{/aboutTab}">About
+						</a></li>
 					<li class="sc-dkQUaI hQrVZb hQrVZb_subTab"><a class="aboutMobileTabNav"
-							th:href="@{/aboutTab}">&nbsp;<i class="fas fa-greater-than"></i>&nbsp;&nbsp;About
-							Us
+							th:href="@{/aboutTab}">About Us
 						</a></li>
 					<li class="sc-dkQUaI hQrVZb hQrVZb_subTab"><a id="api-docs" target="_blank"
-							th:href="@{/swagger-ui/index.html}">&nbsp;<i class="fas fa-greater-than"></i>&nbsp;&nbsp;API
-							Documentation
+							th:href="@{/swagger-ui/index.html}">API Documentation
 						</a></li>
 					<li class="sc-dkQUaI hQrVZb hQrVZb_subTab"><a target="_blank"
-							href="https://wiki.nci.nih.gov/display/MoDaCdoc">&nbsp;<i
-								class="fas fa-greater-than"></i>&nbsp;&nbsp;User Guide
+							href="https://wiki.nci.nih.gov/display/MoDaCdoc">User Guide
 						</a></li>
-					<li class="sc-dkQUaI hQrVZb hQrVZb_subTab"><a id="contact-tab" th:href="@{/contactUs}">&nbsp;<i
-								class="fas fa-greater-than"></i>&nbsp;&nbsp;Contact Us
+					<li class="sc-dkQUaI hQrVZb hQrVZb_subTab"><a id="contact-tab" th:href="@{/contactUs}">Contact Us
 						</a></li>
 				</ul>
-			</ul>
+				</div>
 
 			<div class="d-none d-lg-block headerinner">
 				<ul class="headerprimary">
