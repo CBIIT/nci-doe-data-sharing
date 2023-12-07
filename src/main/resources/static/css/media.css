@@ -532,6 +532,12 @@
 		padding-left: 15px;
 		margin-right: 24px;
 	}
+	
+	.hQrVZb a.hover,.hQrVZb a:hover {
+	    background: #F7F7F7;
+	    color: #5d5d52;
+		cursor: pointer;
+	}
 	.hZHGfK {
 		list-style: none;
 		margin-bottom: 0px;
