@@ -13,10 +13,17 @@ $(document).ready(function () {
 	
 	$("#menuBtn").click(function (e) {
 		$(".mobileNav").css('display', 'flex');
+		
+		if($(".hQrVZb_subTab a").hasClass('active')) {
+			$("#mobile-navigation").hide();
+			$("#aboutSubNav").show();
+		}
 	});
 	
 	$("#closeMenuBtn").click(function (e) {
 		$(".mobileNav").css('display', 'none');
 	});
+	
+	
 
 });

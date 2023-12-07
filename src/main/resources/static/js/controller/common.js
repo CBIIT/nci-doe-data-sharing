@@ -2,6 +2,11 @@ $(document)
 		.ready(
 				function() {
 					console.log("initialize dirty checking");
+					
+					//for mobile only
+						$(".landing-tab").addClass('active');
+					//
+					
 					$('form.dirty-check').areYouSure();
 
 					 $(document).keypress(function(event){	

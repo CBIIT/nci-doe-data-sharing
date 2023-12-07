@@ -15,6 +15,11 @@ $(document).ready(function () {
       $("#status").removeClass('active-nav');
       $("#search").addClass('active-nav');
    }
+   
+   //for mobile only
+   $(".landing-tab").removeClass('active');
+   $(".search-tab").addClass('active');   
+   //
 
    $('.dt-responsive tbody').on('click', 'td', function () {
       initializeToolTips();
