@@ -2,51 +2,9 @@
 	font-size: 13px;
 }
 
-.lkkECO {
-	padding: 2rem 0px 0px;
-}
-
-.krkYvd.krkYvd a {
-	color: #fff;
-	margin: 0px 1rem;
-	text-decoration: none;
-}
-
-.krkYvd {
-	font-size: 13px;
-	padding: 0.3125rem 0px;
-	text-align: center;
-	font-family: 'inter_light';
-	padding-bottom: 2rem;
-	letter-spacing: 0.5px;
-}
-
 .col-12 {
 	flex: 0 0 auto;
 	width: 100%;
-}
-
-.iONckA {
-	font-size: 14px;
-	line-height: 13px;
-	color: #fff;
-	font-family: 'raleway_medium';
-}
-
-.illmTA {
-	padding-left: 0px;
-	list-style: none;
-	font-size: 13px;
-	padding-top: 0.5rem;
-}
-
-.hyACbC {
-	line-height: 2.0;
-}
-
-.hyACbC.hyACbC a {
-	color: #fff;
-	text-decoration: none;
 }
 
 .pb-3 {
@@ -57,37 +15,7 @@
 	margin-bottom: 0.5rem !important;
 }
 
-.iWqacH {
-	color: white;
-	font-size: 16px;
-	font-weight: 400;
-	text-decoration: none;
-	position: relative;
-	margin: 0px 1.5rem;
-}
-
-.cBoHoo {
-	background-color: #11314A;
-	bottom: 0px;
-	width: 100%;
-}
-
-.erAkNO h1 {
-	font-size: 22px;
-	text-align: left;
-}
-
-.erAkNO h1 span {
-	font-size: 14px;
-	display: block;
-	line-height: 1.5rem;
-	font-family: 'poppins_medium';
-}
-
 @media ( min-width : 1200px) {
-	.iWqacH {
-		width: 100%;
-	}
 	.landingSearchDiv {
        margin-left: 8vw !important;
 	}
@@ -107,18 +35,11 @@
 	.footer_policies {
 		margin-left: -4rem;
 	}
-	.irmCui {
-		width: 100%;
-		display: flex;
-	}
+
 	.footer_subsection {
 		margin-left: -1.5rem;
 	}
-	.QgNfY {
-		position: absolute;
-		font-size: 0.6875rem;
-		top: 230px;
-	}
+
 }
 
 @media ( max-width : 990px) {
@@ -463,51 +384,19 @@
 		color: #2F3C5A;
 		float:right;
 	}
-	.krkYvd span {
-		display: none;
-	}
-	.krkYvd {
-		display: grid;
-		font-size: 10px;
-	}
-	.illmTA {
-		padding-top: 0.25rem;
-	}
-	.iWqacH {
-		margin: 0px 0.5rem;
-	}
+	
 	.footer_subsection {
 		margin: -0.5rem;
 		margin-top: 1rem;
 		padding-bottom: 1rem;
 	}
-	.irmCui {
-		display: grid;
-		text-align: center;
+	text-align: center;
 	}
-	.irmCui .col-6 {
-		width: 100%;
-		max-width: 100%;
-	}
+
 	.footer_nci {
 		margin-top: 0.5rem;
 	}
-	.erAkNO {
-		padding-bottom: 35px;
-	}
-	.erAkNO h1 {
-		text-align: center;
-		font-size: 18px;
-	}
-	.erAkNO h1 span {
-		font-size: 12px;
-	}
-	.QgNfY {
-		position: relative;
-		top: 0px;
-		padding-bottom: 15px;
-		text-align: center;
-	}
+
 	.mobile-navigation {
 		position: absolute;
 		top: 99px;
