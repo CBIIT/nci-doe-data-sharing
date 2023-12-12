@@ -791,7 +791,7 @@ footer {
 		display:none;
 	}
 	.usa_footer_desktop {
-	    diplay:block;
+	    display:block !important;
 	}
 }
 
