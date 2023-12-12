@@ -9,84 +9,87 @@
 	<div id="footer" class="col-md-12 col-sm-12 p-0 usa-footer--nci-big" th:fragment="footer"
 		style="margin-top: 10px; height: fit-content;">
 
-		<div class="top-footer opensans-normal-white-16-2px">
-			<div class="row top-footer-container">
-				<div class="col-8">
-					<div class="row top-footer-leftcontainer">
-						<div class="col-4">
-							<section class="primary-content">
-								<div class="primary-link">More Information</div>
-								<ul class="list list--unstyled">
-									<li class="secondary-link-firstchild">
-										<a aria-label="About Us" th:href="@{/aboutTab}">About Us </a>
-									</li>
-									<li class="secondary-link">
-										<a aria-label="MoDaC User Guide" target="_blank"
-											href="https://wiki.nci.nih.gov/display/MoDaCdoc">MoDaC
-											User Guide</a>
-									</li>
-									<li class="secondary-link">
-										<a th:href="@{/contactUs}"> Contact Us </a>
-									</li>
-								</ul>
-							</section>
-						</div>
-
-						<div class="col-4">
-							<section class="primary-content">
-								<div class="primary-link">Policies</div>
-								<ul class="list list--unstyled">
-									<li class="secondary-link-firstchild">
-										<a href="https://www.cancer.gov/policies/accessibility" target="_blank"
-											rel="noopener noreferrer">Accessibility</a>
-									</li>
-									<li class="secondary-link">
-										<a href="https://www.cancer.gov/policies/foia" target="_blank"
-											rel="noopener noreferrer">FOIA</a>
-									</li>
-									<li class="secondary-link">
-										<a href="https://www.cancer.gov/policies/privacy-security" target="_blank"
-											rel="noopener noreferrer">Privacy &amp;
-											Security</a>
-									</li>
-									<li class="secondary-link">
-										<a href="https://www.cancer.gov/policies/disclaimer" target="_blank"
-											rel="noopener noreferrer">Disclaimers</a>
-									</li>
-									<li class="secondary-link">
-										<a href="https://www.hhs.gov/vulnerability-disclosure-policy/index.html"
-											target="_blank" rel="noopener noreferrer">Vulnerability Disclosure
-										</a>
-									</li>
-								</ul>
-							</section>
-						</div>
-					</div>
-
-				</div>
-				<div class="col-4 footer-email">
-
-					<div class='sign-up'>
-						<div class='sign-up-heading'>Sign up for email updates</div>
-						<form aria-label='Footer subscribe' class='form' id='signup'>
-							<div class='form-form-group'>
-								<label class='form-label' for='email'>
-									Enter your email address
-								</label>
-								
-							<input class="form-input width-full" type="email" 
-							id="signUpEmailAddress" name="signUpEmailAddress" required>
-							
-							</div>
-							<button class='form-button form-button--accent-warm' type='submit' id="signUpBtn">
-								Sign up
-							</button>
-						</form>
-					</div>
-
-				</div>
-			</div>
-		</div>
+	<!-- MoDaC footer -->
+  <div class="usa-footer__primary-section">
+    <div class="grid-container">
+      <div class="grid-row grid-gap">
+        <div class="tablet:grid-col-8">
+          <nav class="usa-footer__nav" aria-label="Footer navigation">
+            <div class="grid-row grid-gap-4">
+              <div class="mobile-lg:grid-col-6 desktop:grid-col-4">
+                <section class="usa-footer__primary-content usa-footer__primary-content--collapsible">
+                	
+                  
+                  <button class="usa-footer__primary-link usa-footer__nci-collapse-header" aria-controls="about" 
+                  aria-expanded="false">More Information</button>
+                  
+                  <div class="usa-footer__primary-link usa_footer_desktop" style="display:none;">More Information</div>
+                  <ul class="usa-list usa-list--unstyled hidden" id="about" aria-label="About" aria-hidden="false">
+                    <li class="usa-footer__secondary-link">
+                      <a aria-label="About Us" th:href="@{/aboutTab}">About Us</a>
+                    </li>
+                    <li class="usa-footer__secondary-link">
+                      <a aria-label="MoDaC User Guide"  href="https://wiki.nci.nih.gov/display/MoDaCdoc" target="_blank">MoDaC User Guide</a>
+                    </li>
+                    <li class="usa-footer__secondary-link">
+                      <a aria-label="Contact Us"  th:href="@{/contactUs}">Contact Us</a>
+                    </li>
+                  </ul>
+                </section>
+              </div>
+              <div class="mobile-lg:grid-col-6 desktop:grid-col-4">
+                <section class="usa-footer__primary-content usa-footer__primary-content--collapsible">
+                
+                	<button class="usa-footer__primary-link usa-footer__nci-collapse-header" 
+                  	aria-controls="resources" aria-expanded="false">Policies</button>
+                  
+                  <div class="usa-footer__primary-link usa_footer_desktop" style="display:none;">Policies</div>                  
+                  
+                  <ul class="usa-list usa-list--unstyled hidden" id="policies" aria-label="Policies">
+                    <li class="usa-footer__secondary-link">
+                      <a href="https://www.cancer.gov/policies/accessibility" target="_blank" rel="noopener noreferrer">Accessibility</a>
+                    </li>
+                    <li class="usa-footer__secondary-link">
+                      <a href="https://www.cancer.gov/policies/foia" target="_blank" rel="noopener noreferrer">FOIA</a>
+                    </li>
+                    <li class="usa-footer__secondary-link">
+                      <a href="https://www.cancer.gov/policies/privacy-security" target="_blank" rel="noopener noreferrer">Privacy &amp; Security</a>
+                    </li>
+                    <li class="usa-footer__secondary-link">
+                      <a href="https://www.cancer.gov/policies/disclaimer" rel="noopener noreferrer" target="_blank">Disclaimers</a>
+                    </li>
+                    <li class="usa-footer__secondary-link">
+                      <a href="https://www.hhs.gov/vulnerability-disclosure-policy/index.html" rel="noopener noreferrer" 
+                      target="_blank">
+                      Vulnerability Disclosure</a>
+                    </li>
+                  </ul>
+                </section>
+              </div>
+            </div>
+          </nav>
+        </div>
+        <div class="tablet:grid-col-4">
+          <div class="usa-sign-up">
+            <div class="usa-sign-up__heading">Sign up for email updates</div>
+            <form aria-label="Footer subscribe" 
+            class="usa-form" id="signup">
+              <input type="hidden" name="category_id" id="category_id" value="">
+              <div class="usa-form-group">
+                <label class="usa-label" for="email" style="color:#fff;">
+                  Enter your email address
+                </label>
+                <input class="form-input width-full" type="email" id="signUpEmailAddress" name="signUpEmailAddress" required>
+              </div>
+              <button class="usa-button usa-button--accent-warm" type="submit" id="signUpBtn">
+                Sign up
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 		<!-- secondary footer nci -->
 		

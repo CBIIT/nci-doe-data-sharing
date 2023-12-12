@@ -48,6 +48,16 @@ $(document).ready(function () {
         window.location.href = mailUrl;
  	}
  	
+ 	$(".usa-footer__nci-collapse-header").click(function(e) {
+ 	
+ 		if($(this).parent().find(".usa-list").hasClass("hidden")) {
+ 			$(this).parent().find(".usa-list").removeClass("hidden");
+ 		} else  {
+ 			$(this).parent().find(".usa-list").addClass("hidden");
+ 		}
+ 		
+ 	});
+ 	
 });
 
 function postSuccessEmailUpdatesFunction(data, status) {
