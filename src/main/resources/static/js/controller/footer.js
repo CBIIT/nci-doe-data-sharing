@@ -52,8 +52,10 @@ $(document).ready(function () {
  	
  		if($(this).parent().find(".usa-list").hasClass("hidden")) {
  			$(this).parent().find(".usa-list").removeClass("hidden");
+ 			$(this).addClass("expanded");
  		} else  {
  			$(this).parent().find(".usa-list").addClass("hidden");
+ 			$(this).removeClass("expanded");
  		}
  		
  	});

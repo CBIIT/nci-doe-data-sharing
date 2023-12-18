@@ -677,6 +677,13 @@ footer {
 	transform: rotate(-90deg) translate(-6px,-2px);
 }
 
+.usa-footer--nci-big .usa-footer__primary-content--collapsible button.usa-footer__primary-link.expanded:before {
+    margin-left: -.25rem;
+    width: 19px;
+	height: 8px;
+	transform: rotate(360deg) translate(-1px, 6px);
+}
+
 .usa-footer--nci-big .usa-footer__primary-link,.usa-footer--nci-big .usa-footer__primary-link:focus,.usa-footer--nci-big .usa-footer__primary-link:hover,.usa-footer--nci-big .usa-footer__primary-link:link,.usa-footer--nci-big .usa-footer__primary-link:visited,.usa-footer--nci-big .usa-footer__primary-section,.usa-footer--nci-big .usa-footer__primary-section:focus,.usa-footer--nci-big .usa-footer__primary-section:hover,.usa-footer--nci-big .usa-footer__primary-section:link,.usa-footer--nci-big .usa-footer__primary-section:visited,.usa-footer--nci-big .usa-footer__secondary-link a,.usa-footer--nci-big .usa-footer__secondary-link a:focus,.usa-footer--nci-big .usa-footer__secondary-link a:hover,.usa-footer--nci-big .usa-footer__secondary-link a:link,.usa-footer--nci-big .usa-footer__secondary-link a:visited,.usa-footer--nci-big .usa-footer__secondary-section,.usa-footer--nci-big .usa-footer__secondary-section:focus,.usa-footer--nci-big .usa-footer__secondary-section:hover,.usa-footer--nci-big .usa-footer__secondary-section:link,.usa-footer--nci-big .usa-footer__secondary-section:visited,.usa-footer--nci-big .usa-footer__secondary-section a,.usa-footer--nci-big .usa-footer__secondary-section a:focus,.usa-footer--nci-big .usa-footer__secondary-section a:hover,.usa-footer--nci-big .usa-footer__secondary-section a:link,.usa-footer--nci-big .usa-footer__secondary-section a:visited {
     color: #fff
 }
