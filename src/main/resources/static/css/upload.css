@@ -201,6 +201,7 @@ table#assetBulkMetadataTable thead tr th {
 	width: 430px; 
 	background-color: #E66F05; 
 	color: #fff;
+	padding-left: 44px;
 }
 
 #uploadHeader p {
