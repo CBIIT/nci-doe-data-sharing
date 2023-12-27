@@ -6,13 +6,13 @@
 </head>
 <body>
 	<div id="uploadTab" role="tabpanel"
-		th:fragment="uploadFragment" style="margin: 84px 0px">
-		<div class="col-md-4 col-sm-4" id="uploadHeader">
+		th:fragment="uploadFragment">
+		<div class="col-md-4 col-sm-4" id="uploadHeader" style="margin: 84px 84px 0px 84px">
 			<p >Upload
 				Data</p>
 		</div>
 
-		<div id="uploadSectionDiv" class="form-row jumbotron pt-2 pb-2 mb-2">
+		<div id="uploadSectionDiv" class="form-row jumbotron pt-2 pb-2 mb-2" style="margin: 0px 84px 84px 84px">
 			<div class="form-row col-md-12 col-sm-12" id="uploadSubFragmentTab">
 
 				<input type="hidden" th:value="${basePathSelected}" id="basePath" />
