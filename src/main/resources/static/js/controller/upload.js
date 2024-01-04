@@ -593,6 +593,7 @@ function constructNewCollectionMetaDataSet(data, status) {
 											+ value.attrValue + '" name="zAttrStr_' + value.attrName + '"'
 											+ 'style="width:70%;"></td></tr>');
 						} else if (value.attrName.indexOf("_identifier") != -1) {
+							var placeholderValue = value.mandatory == true ? 'Required' : "";
 								$("#newMetaDataTable tbody").append(
 										'<tr><td>' + value.displayName
 												+ '&nbsp;&nbsp;' + infoHtml + '</td><td>' + '<input type="text" is_mandatory="'
