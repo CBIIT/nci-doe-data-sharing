@@ -654,7 +654,8 @@ public class RestAPICommonController extends AbstractDoeController {
 				parentPath = path;
 			}
 			if (!parentPath.isEmpty()) {
-				if (!parentPath.equalsIgnoreCase(basePath)) {
+				String basePathTrimmed = basePath.substring(basePath.indexOf('/') + 1, basePath.length());
+				if (!parentPath.equalsIgnoreCase(basePathTrimmed)) {
 					HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
 							parentPath, true);
 					Boolean isValidPermissions = hasCollectionPermissions(doeLogin, parentPath, parentCollectionDto);
