@@ -669,6 +669,7 @@ public class RestAPICommonController extends AbstractDoeController {
 
 			Integer responseStatus = DoeClientUtil.updateCollection(authToken, serviceURL, collectionRegistration,
 					path);
+			log.info("response Status : " + responseStatus);
 			if (responseStatus == 200 || responseStatus == 201) {
 
 				HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL, path, false);

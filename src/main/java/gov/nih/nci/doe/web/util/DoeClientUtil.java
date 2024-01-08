@@ -488,6 +488,7 @@ public class DoeClientUtil {
 			client.header("Authorization", "Bearer " + token);
 
 			Response restResponse = client.invoke("PUT", collectionDTO);
+			log.info("response Status : " + restResponse);
 			if (restResponse.getStatus() == 200 || restResponse.getStatus() == 201) {
 				return restResponse.getStatus();
 			} else {
