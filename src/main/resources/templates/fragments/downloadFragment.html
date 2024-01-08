@@ -26,7 +26,7 @@
 			</div>
 
 			<div class="controls controls-row mt-4"
-				th:if="${returnToSearch eq 'false' and returnToStatus eq null}">
+				th:if="${returnToSearch eq 'false' and (returnToStatus == null or returnToStatus == '')}">
 				<a class="float-left mb-2 mr-2 backtoAssetFromDwnldBtn"> <img
 					src="images/BackSearch-icon.png" data-toggle="tooltip"
 					title="Back to Asset Details"
