@@ -136,27 +136,6 @@ $(document)
 						location.replace('/searchTab?keyWord='+txt);
 					});
 					
-					$("#downloadSelected").click(
-							function(e) {
-								var selectedPaths = [];
-								var selectedCheckboxes = $('#searchResultTable').DataTable().
-								rows({ selected: true }).nodes().to$().find("input[type=checkbox]:checked, input[type=radio]:checked");
-								
-								selectedCheckboxes.each(function() {
-									selectedPaths.push($(this).attr('id'));
-								});
-								
-								if (selectedPaths.length == 1) {
-									location.replace('/downloadTab?selectedPaths=' + selectedPaths
-											+ '&&downloadAsyncType=collection&&returnToSearch=true');
-								} else {
-									$("#downloadType").val("collectionfiles");
-									location.replace('/downloadTab?selectedPaths=' + selectedPaths
-											+ '&&downloadAsyncType=collectionfiles&&returnToSearch=true');
-								}
-
-							});
-
 					var selectedPathsString = $("#selectedPathsString").val();
 					var downloadType = $("#downloadType").val();
 					var downloadFileName = $("#downloadFileName").val();
