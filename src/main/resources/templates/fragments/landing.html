@@ -10,119 +10,51 @@
 	<div class="tab-pane fade show active M-4" th:fragment="landing" id="landingTab" role="tabpanel">
 		<div class="row" id="landingDiv">
 			<input type="hidden" id="uploader" value="${isUploader}" />
-			<div class="col-md-12 buttoncontainer">
-				<div class="container">
-					<!-- <div class="row justify-content-center globalContainer">
 
 
-						<div class="ms">
-							<div class="overlap-group1">
-								<div class="col-md-12 landingSearchDiv">
+			<!-- hero banner section -->
+			<div class="col-md-12">
+				<div class="hero-banner">
+					<div class="hero-container">
+						<div class="hero-banner-strip">
+							<div class="hero-title">
+								<h1 class="inter-extra-bold-smalt-40px">Predictive<br /> Oncology Model<br /> and
+									Data<br />
+									Clearinghouse</h1>
+							</div>
+							<div class="hero-search">
+								<div class="hero-search-block">
+
 									<input type="text" id="attributeVallanding" aria-labelledby="attributeVallanding"
 										placeholder="SEARCH MODAC" class="form-control keywordSearch"> <span
-										id="resetBtnLanding" style="display: none;"><img alt="cancel Icon"
-											src="/images/landing_search_cancel.png" /></span> <span id="landingSearch">
+										id="resetBtnLandingForMobile" style="display: none;"><img alt="cancel Icon"
+											src="images/landing_search_cancel.png" /></span>
+									<span id="landingSearchMobileButton">
 										<img alt="submit Icon" src="/images/landing_search.svg"></span>
 								</div>
+								<a class="aboutbuttonLink" href="/aboutTab">
+									<div class="aboutbutton" id="navigateToaboutTab">
+										<div class="aboutText">
+											About Modac
+										</div>
+										<img class="aboutArrow" src="https://modac.cancer.gov/images/arrow-on-dark.png"
+											alt="Arrow on Dark" />
+									</div>
+								</a>
 							</div>
 						</div>
-						<h1 class="predictive-oncology inter-extra-bold-smalt-40px">
-							<span class="inter-extra-bold-smalt-45px">Predictive Oncology Model and Data
-								Clearinghouse</span>
-						</h1>
-						<div class="ms-1 ms-3"></div>
-						<div class="ms-2 ms-3"></div>
-					</div> -->
-					<div class="max-width-100v globalContainer">
-						<div class="d-flex">
-							<h1 class="inter-extra-bold-smalt-40px">
-								Predictive
-							</h1>
-							<div class="orange-bar"></div>
-						</div>
-						<div class="d-flex">
-							<div>
-								<h1 class="inter-extra-bold-smalt-40px">
-									Oncology&nbsp;Model
-								</h1>
-								<h1 class="inter-extra-bold-smalt-40px">
-									and Data
-								</h1>
-							</div>
-							<div class="col-md-12 landingSearchDiv">
-								<input type="text" id="attributeVallanding" aria-labelledby="attributeVallanding"
-									placeholder="SEARCH MODAC" class="form-control keywordSearch"> <span
-									id="resetBtnLanding" style="display: none;"><img alt="cancel Icon"
-										src="/images/landing_search_cancel.png" /></span> <span id="landingSearch">
-									<img alt="submit Icon" src="/images/landing_search.svg"></span>
-							</div>
-							
-						</div>
-						<div class="d-flex">
-							<h1 class="inter-extra-bold-smalt-40px">
-								Clearinghouse
-							</h1>
-							<div class="orange-bar"></div>
-						</div>
-					</div>
-
-					<div class="row justify-content-center mobileContainer" style="display: none;">
-						<div class="mobiletitlecontainer">
-							<div class="col-md-12 subbuttoncontainer">
-								<h1 aria-hidden="true" id="titleText">Predictive</h1>
-							</div>
-							<div class="col-md-12 subbuttoncontainer">
-								<h1 aria-hidden="true" id="titleText">Oncology Model</h1>
-							</div>
-							<div class="col-md-12 subbuttoncontainer">
-								<h1 aria-hidden="true" id="titleText">and Data</h1>
-							</div>
-							<div class="col-md-12 subbuttoncontainer">
-								<h1 aria-hidden="true" id="titleText">Clearinghouse</h1>
-							</div>
-						</div>
-
-
-						<input type="hidden" th:value="${mailUrl}" id="mailUrl" />
-
-						<!-- <input type="text" placeholder="Search MoDaC" id="attributeVallanding"
-								aria-labelledby="attributeVallanding" class="form-control keywordSearch"> <span
-								id="resetBtnLandingForMobile" style="display: none;"><img alt="reset icon"
-									src="/images/landing_search_cancel.png" /></span> <span
-								id="landingSearchMobileButton">
-								<img alt="arrow Icon" src="/images/Filter.Right_Arrow.Submit.svg">
-							</span> -->
-
-						<div class="col-md-12 landingSearchDivMobile">
-							<input type="text" id="attributeVallanding" aria-labelledby="attributeVallanding"
-								placeholder="SEARCH MODAC" class="form-control keywordSearch"> <span
-								id="resetBtnLandingForMobile" style="display: none;"><img alt="cancel Icon"
-									src="/images/landing_search_cancel.png" /></span> <span id="landingSearchMobileButton">
-								<img alt="submit Icon" src="/images/landing_search.svg"></span>
-
-
-						</div>
-						<a th:href="@{/aboutTab}">
-
-						<div class="aboutbutton" id="navigateToaboutTab">
-							<div class="aboutText">
-								About Modac
-							</div>
-							<img class="aboutArrow" th:src="@{/images/arrow-on-dark.png}" alt="Arrow on Dark" />
-						</div>
-						</a>
-
 					</div>
 				</div>
 			</div>
+			<!-- hero banner section -->
 
-			<div class="col-md-12 form-row">
+			<div class="container">
 
-				<div class="group-131">
-					<div class="flex-col-2 flex-col-4">
+				<div class="row landing-section-2">
+					<div class="col-sm-12 col-md col-lg-8 pd-md-100">
 						<p class="welcome-to-predicti poppins-semi-bold-mango-tango-23px">
-							<span class="poppins-semi-bold-mango-tango-23px">Welcome to<br/>
-								 Predictive Oncology Model<br/>
+							<span class="poppins-semi-bold-mango-tango-23px">Welcome to<br />
+								Predictive Oncology Model<br />
 								and Data Clearinghouse (MoDaC)</span>
 						</p>
 						<div class="pub-1"></div>
@@ -135,8 +67,8 @@
 								as machine learning and deep learning models) developed within NCI and in collaborative
 								programs, including the NCI-DOE
 								collaboration projects and the </span>
-							<span class="span1"><a style="color:#0b5eb6;text-decoration: underline;" target="_blank" rel="noopener noreferrer"
-									href="https://datascience.cancer.gov/collaborations/atom">
+							<span class="span1"><a style="color:#0b5eb6;text-decoration: underline;" target="_blank"
+									rel="noopener noreferrer" href="https://datascience.cancer.gov/collaborations/atom">
 									Accelerating Therapeutics for Opportunities in Medicine (ATOM)
 									Consortium</a></span>
 							<span class="inter-normal-midnight-blue-16px">.
@@ -145,21 +77,21 @@
 								downloaded.</span>
 						</p>
 					</div>
-					<div class="overlap-group3 globalContainer">
+					<div class="col-md-6 col-lg-4 verlap-group3 globalContainer">
 						<p class="a-data-repository-an inter-extra-bold-smalt-40px">
 							A Data Repository and Model Clearinghouse
 						</p>
 						<a th:href="@{/aboutTab}">
 
-						<div class="overlap-group1-1" id="navigateToaboutTab">
-							<div class="overlap-group-1">
+							<div class="overlap-group1-1" id="navigateToaboutTab">
+								<div class="overlap-group-1">
 
-								<img class="learn-more-about-mo-da-c" th:src="@{/images/learn-more--about-modac.png}"
-									alt="Learn more About MoDaC" />
+									<img class="learn-more-about-mo-da-c"
+										th:src="@{/images/learn-more--about-modac.png}" alt="Learn more About MoDaC" />
+								</div>
+								<img class="arrow-on-dark" th:src="@{/images/arrow-on-dark.png}" alt="Arrow on Dark" />
 							</div>
-							<img class="arrow-on-dark" th:src="@{/images/arrow-on-dark.png}" alt="Arrow on Dark" />
-						</div>
-					</a>
+						</a>
 
 					</div>
 				</div>
