@@ -428,6 +428,7 @@
 
 .hero-search-block #resetBtnLanding {
   position: absolute;
+	top: 1.4rem !important;
   right: 60px !important;
 }
 

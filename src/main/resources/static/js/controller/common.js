@@ -132,8 +132,8 @@ $(document)
 					});
 					
 					$("#landingSearchMobileButton").click(function(e) {
-						var txt = $(".mobileContainer").find("#attributeVallanding").val();
-						location.replace('/searchTab?keyWord='+txt);
+						// var txt = $(".mobileContainer").find("#attributeVallanding").val();
+						location.replace('/searchTab?keyWord='+$("#attributeVallanding").val());
 					});
 					
 					var selectedPathsString = $("#selectedPathsString").val();
