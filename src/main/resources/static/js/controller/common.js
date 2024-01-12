@@ -29,6 +29,13 @@ $(document)
 							$this.parent().addClass('active-nav');
 						}
 					})
+					$('li a').each(function(){
+						var $this = $(this);
+						// if the current path is like this link, make it active
+						if($this.attr('href') == current){
+							$this.children(":first").addClass('active-nav');
+						}
+					})
 					// End To activate css for active navigation link
 
 					// Auto-lowercase Email Username (Usernames are always
