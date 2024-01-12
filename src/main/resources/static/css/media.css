@@ -65,10 +65,11 @@
 	}
 	
 	.banner-header {
-		margin-left: auto !important;;
-	    margin-right: auto !important;;
-	    max-width: 87.5rem !important;;
-	    padding: 0.5rem 1rem !important;;
+		margin-left: auto !important;
+	    margin-right: auto !important;
+	    max-width: 87.5rem !important;
+	    padding: 0.5rem 1rem !important;
+	    display: flex;
 	
 	}
 	.logo-container {
@@ -414,7 +415,7 @@
 	.hQrVZb {
 		display: grid;
 		position: relative;
-		line-height: 42px;
+		line-height: 36px;
 		text-align: left;
 		text-decoration: none;
 		background: var(--utility-colors-white, #FFF);
