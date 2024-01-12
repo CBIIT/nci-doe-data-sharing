@@ -239,16 +239,6 @@
   width: 30px;
 }
 
-#resetBtnLanding {
-  position: relative;
-  top: -0.2rem;
-  left: -6rem;
-}
-
-#resetBtnLanding img {
-  width: 24px;
-}
-
 #navigateToaboutTab {
   cursor: pointer;
 }
@@ -436,7 +426,7 @@
   }
 }
 
-.hero-search-block #resetBtnLandingForMobile {
+.hero-search-block #resetBtnLanding {
   position: absolute;
   right: 60px !important;
 }
