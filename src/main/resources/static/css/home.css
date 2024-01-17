@@ -2,6 +2,7 @@
   background-color: var(--mango-tango);
   height: 6px;
   width: 67px;
+  margin-top: 36px;
 }
 
 .landingSubText {
@@ -351,8 +352,8 @@
     padding: 15px 0;
     border-top: 12px solid var(--mango-tango);
     border-bottom: 12px solid var(--mango-tango);
-    margin-left: 10px;
-    margin-right: 10px;
+    margin-left: 25px;
+    margin-right: 25px;
   }
 }
 
@@ -450,6 +451,14 @@
   }
 }
 
+.lock-text-sec2 {
+  color: var(--midnight-blue);
+  font-family: var(--font-family-inter);
+  font-size: var(--font-size-m);
+  font-weight: 300;
+  font-style: normal;
+}
+
 @media (max-width: 990px) {
   .hero-banner {
     padding-top: 80px;
@@ -463,6 +472,9 @@
   .aboutbuttonLink {
     display: block;
   }
+  .lock-text-sec2 {
+    font-size: 18px;
+  }
 }
 
 @media (min-width: 990px) {
@@ -473,7 +485,7 @@
 
 
 .landing-section-2 {
-  margin:32px
+  margin:43px
 }
 
 @media (min-width: 990px) {
