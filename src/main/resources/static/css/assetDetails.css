@@ -475,7 +475,7 @@ input[type="checkbox"].selectIndividualCheckbox {
     background-size: cover;
     display: flex;
     height: 141px;
-    padding: 45px 95px !important;
+    /* padding: 45px 95px !important; */
 }
 
 
@@ -623,7 +623,7 @@ input[type="checkbox"].selectIndividualCheckbox {
     font-style: normal;
     text-align: left;
     padding-left: 28px;
-
+}
 /* this css is only for select dropdown for search, asset details and edit collection screen */
 #userMetaData tr td .select2-container span.select2-selection.select2-selection--single {
     background-color: var(--white);

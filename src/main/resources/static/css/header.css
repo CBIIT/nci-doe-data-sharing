@@ -478,7 +478,7 @@ headerprimary>li {
 	font-weight: 600;
 	line-height: 1;
 	margin: 0;
-	padding: 1rem;
+	padding: 1rem 20px;
 	position: relative;
 	text-align: left;
 	text-decoration: underline;
@@ -513,9 +513,9 @@ headerprimary>li {
 	&[aria-expanded='true'] {
 		background: #004971 !important;
 		color: #fefefe;
-		border-top: 4px solid #007BBD;
-		border-left: 4px solid #007BBD;
-		border-right: 4px solid #007BBD;
+		border-top: 4px solid #5786FF;
+		border-left: 4px solid #5786FF;
+		border-right: 4px solid #5786FF;
 		&:hover {
 			color: #fff;
 
@@ -543,9 +543,10 @@ headerprimary>li {
     content: "";
     display: block;
     height: 0.25rem;
-    left: 1rem;
+    left: 20px;
     position: absolute;
-    right: 1rem;
+    right: 20px;
+	margin: 0;
 }
 
 ul.headerprimary {
@@ -594,8 +595,16 @@ a.dropdown-item {
 	font-family: Poppins;
 	font-size: 20px;
 	font-style: normal;
-	font-weight: 600;
+	font-weight: 500;
 	line-height: 110%;
+	display: block;
+	width: auto;
+	padding: 0.25rem 100px 0.25rem 0px;
+    clear: both;
+    text-align: inherit;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
 }
 
 a.dropdown-item:hover {
@@ -621,7 +630,7 @@ a.dropdown-item:hover {
 	display: flex;
 	max-width: 1440px;
 	margin: 0 auto;
-	padding: 0 32px;
+	padding: 0 52px;
 	/* align-items: center; */
 	/* flex-direction: row; */
 	justify-content: normal;
@@ -634,13 +643,21 @@ a.dropdown-item:hover {
 	content: "";
 	display: block;
 	height: 0.25rem;
-	left: 1rem;
+	left: 20px;
 	position: absolute;
-	right: 1rem;
+	right: 20px;
 	color: #007bbd;
 }
 
 .headerprimary-button:hover {
 	color: #007bbd;
 	text-decoration: none;
+}
+.header-anchor-link {
+	text-decoration: none;
+
+}
+.header-anchor-link:hover {
+	text-decoration: none;
+
 }

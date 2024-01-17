@@ -47,73 +47,86 @@
 
 		<nav id="globalNav" aria-label="Primary navigation" class="nci-header-nav">
 
-			<!--on small media collapse icon-->
-			<button class="d-none d-sm-block d-md-block d-lg-none col-md-10 col-sm-6 navbar-toggler mobile-nav-toggle" type="button" data-toggle="collapse"
-				data-target="#mobile-navigation" aria-controls="mobile-navigation" aria-expanded="false"
-				aria-label="Toggle navigation">
-				<span style="float: left"><i class="fas fa-bars toggleNavBarIcon"></i><i
-						style="display: none; font-size: 1.25rem; color: #2F3C5A;"
-						class="fas fa-times closeNavBarIcon"></i></span>
+			<button class="d-none d-sm-block d-md-block d-lg-none col-md-10 col-sm-6 navbar-toggler mobile-nav-toggle"
+				id="menuBtn" type="button" data-toggle="collapse" data-target="#mobile-navigation"
+				aria-controls="mobile-navigation" aria-expanded="false" aria-label="Toggle navigation">
+				<span><i class="fas fa-bars toggleNavBarIcon"></i></span>
 			</button>
-			<ul id="mobile-navigation" class="sc-dtLLSn dpehyt mobile-navigation collapse" data-visible="false">
-				<li class="sc-dkQUaI hQrVZb"><a class="active landing-tab" aria-current="page" th:href="@{/}">Home</a>
-				</li>
-				<li class="sc-dkQUaI hQrVZb"><a class="search-tab" th:href="@{/searchTab}">Search</a></li>
-				<li class="sc-dkQUaI hQrVZb" data-toggle="collapse" data-target="#aboutSubNav"><a aria-expanded="true"
-						class="sc-WZYut jLeSfx">About&nbsp;</a></li>
-				<ul data-visible="true" class="sc-ikXwFM hZHGfK" id="aboutSubNav">
-					<li class="sc-dkQUaI hQrVZb hQrVZb_subTab"><a class="aboutMobileTabNav"
-							th:href="@{/aboutTab}">&nbsp;<i class="fas fa-greater-than"></i>&nbsp;&nbsp;About
+
+			<div class="mobileNav" id="mobileNav">
+				<!--on small media collapse icon-->
+				<button
+					class="d-none d-sm-block d-md-block d-lg-none col-md-10 col-sm-6 navbar-toggler mobile-nav-toggle"
+					id="closeMenuBtn" type="button" data-toggle="collapse" data-target="#mobile-navigation"
+					aria-controls="mobile-navigation" aria-expanded="false" aria-label="Toggle navigation">
+					<span><i class="fas fa-times closeNavBarIcon"></i></span>
+				</button>
+
+				<ul id="mobile-navigation" class="sc-dtLLSn dpehyt mobile-navigation collapse" data-visible="false">
+					<li class="sc-dkQUaI hQrVZb"><a class="landing-tab" aria-current="page" th:href="@{/}">Home</a>
+					</li>
+					<li class="sc-dkQUaI hQrVZb"><a class="search-tab" th:href="@{/searchTab}">Search</a></li>
+					<li class="sc-dkQUaI hQrVZb" id="aboutMenuMobile">
+						<a aria-expanded="true" class="sc-WZYut jLeSfx">About&nbsp;</a>
+					</li>
+				</ul>
+
+				<!--Sub navbar when clicked on about us -->
+				<ul data-visible="true" class="sc-ikXwFM hZHGfK" id="aboutSubNav" style="display:none;">
+					<li class="nci-header-mobilenav__list-node" id="backToMainMenu">
+						<button class="nci-header-mobilenav__list-msg">
+							<img th:src="@{/images/arrow_narbar_mobile.png}" alt="back button" /> Main Menu</button>
+					</li>
+					<li class="sc-dkQUaI hQrVZb" id="aboutSubMenu"><a>About
+						</a></li>
+					<li class="sc-dkQUaI hQrVZb hQrVZb_subTab"><a class="aboutMobileTabNav" th:href="@{/aboutTab}">About
 							Us
 						</a></li>
 					<li class="sc-dkQUaI hQrVZb hQrVZb_subTab"><a id="api-docs" target="_blank"
-							th:href="@{/swagger-ui/index.html}">&nbsp;<i class="fas fa-greater-than"></i>&nbsp;&nbsp;API
-							Documentation
+							th:href="@{/swagger-ui/index.html}">API Documentation
 						</a></li>
 					<li class="sc-dkQUaI hQrVZb hQrVZb_subTab"><a target="_blank"
-							href="https://wiki.nci.nih.gov/display/MoDaCdoc">&nbsp;<i
-								class="fas fa-greater-than"></i>&nbsp;&nbsp;User Guide
+							href="https://wiki.nci.nih.gov/display/MoDaCdoc">User Guide
 						</a></li>
-					<li class="sc-dkQUaI hQrVZb hQrVZb_subTab"><a id="contact-tab" th:href="@{/contactUs}">&nbsp;<i
-								class="fas fa-greater-than"></i>&nbsp;&nbsp;Contact Us
+					<li class="sc-dkQUaI hQrVZb hQrVZb_subTab"><a id="contact-tab" th:href="@{/contactUs}">Contact Us
 						</a></li>
 				</ul>
-			</ul>
+			</div>
 
 			<div class="d-none d-lg-block headerinner">
 				<ul class="headerprimary">
 					<li class="headerprimary-item">
-						<button id="home" class="usa-button headerprimary-button" aria-expanded="false"
-							data-href="https://modac.cancer.gov" aria-controls="menu-829" data-menu-id="829">
-							<a th:href="@{/}" role="tab">
-							<span>Home</span>
-					</a>
-						</button>
+						<a class="header-anchor-link" th:href="@{/}" role="tab">
+							<button id="home" class="usa-button headerprimary-button" aria-expanded="false"
+								data-href="https://modac.cancer.gov" aria-controls="menu-829" data-menu-id="829">
+								<span>Home</span>
+							</button>
+						</a>
 					</li>
 					<li class="headerprimary-item">
-						<button id="search" class="usa-button headerprimary-button" aria-expanded="false"
-							data-href="https://modac.cancer.gov" aria-controls="menu-11868" data-menu-id="11868">
-							<a th:href="@{/searchTab}"
-								role="tab">
-							<span>Search</span>
-							</a>
-						</button>
+						<a class="header-anchor-link" th:href="@{/searchTab}" role="tab">
+
+							<button id="search" class="usa-button headerprimary-button" aria-expanded="false"
+								data-href="https://modac.cancer.gov" aria-controls="menu-11868" data-menu-id="11868">
+								<span>Search</span>
+							</button>
+						</a>
 					</li>
 					<li class="headerprimary-item dropdown">
-						<button class="btn usa-button headerprimary-button dropdown-toggle" type="button"
-							id="about" data-toggle="dropdown">About
+						<button class="btn usa-button headerprimary-button dropdown-toggle" type="button" id="about"
+							data-toggle="dropdown">About
 							<img class="dropdown-icon" th:src="@{/images/dropdown.svg}" alt="Frame 49" />
 							<img class="dropup-icon" th:src="@{/images/dropup.svg}" alt="Frame 49" />
 						</button>
 						<ul class="dropdown-menu dropdown-container-new" role="menu" aria-labelledby="menu1">
 							<div class="dropdown-container-block">
-							<a class="dropdown-item" id="about-tab" th:href="@{/aboutTab}">About
-								Us</a> <a th:if="${showApiDocs}" class="dropdown-item" id="api-docs" target="_blank"
-								th:href="@{/swagger-ui/index.html}">API Documentation</a>
-							<a class="dropdown-item" target="_blank" href="https://wiki.nci.nih.gov/display/MoDaCdoc"
-								rel="noopener noreferrer">User
-								Guide</a>
-							<a class="dropdown-item" th:href="@{/contactUs}">Contact Us</a>
+								<a class="dropdown-item" id="about-tab" th:href="@{/aboutTab}">About
+									Us</a> <a th:if="${showApiDocs}" class="dropdown-item" id="api-docs" target="_blank"
+									th:href="@{/swagger-ui/index.html}">API Documentation</a>
+								<a class="dropdown-item" target="_blank"
+									href="https://wiki.nci.nih.gov/display/MoDaCdoc" rel="noopener noreferrer">User
+									Guide</a>
+								<a class="dropdown-item" th:href="@{/contactUs}">Contact Us</a>
 							</div>
 						</ul>
 					</li>
@@ -121,7 +134,8 @@
 					<!--top right navigation-->
 					<li class="headerprimary-item justify-content-end col order-last bordered">
 						<div id="topNav" class="justify-content-end col order-last bordered">
-							<ul class="navbar-nav card-header-tabs text-white justify-content-end flex-row" role="tablist" style="margin-top: -4px;">
+							<ul class="navbar-nav card-header-tabs text-white justify-content-end flex-row"
+								role="tablist" style="margin-top: -4px;">
 
 								<li class="nav-item" role="tab" th:if="${loggedOnUser == null}">
 									<a class="nav-link" id="login-tab" th:href="@{/loginTab}" role="tab">LOGIN

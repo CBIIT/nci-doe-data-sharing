@@ -2,51 +2,9 @@
 	font-size: 13px;
 }
 
-.lkkECO {
-	padding: 2rem 0px 0px;
-}
-
-.krkYvd.krkYvd a {
-	color: #fff;
-	margin: 0px 1rem;
-	text-decoration: none;
-}
-
-.krkYvd {
-	font-size: 13px;
-	padding: 0.3125rem 0px;
-	text-align: center;
-	font-family: 'inter_light';
-	padding-bottom: 2rem;
-	letter-spacing: 0.5px;
-}
-
 .col-12 {
 	flex: 0 0 auto;
 	width: 100%;
-}
-
-.iONckA {
-	font-size: 14px;
-	line-height: 13px;
-	color: #fff;
-	font-family: 'raleway_medium';
-}
-
-.illmTA {
-	padding-left: 0px;
-	list-style: none;
-	font-size: 13px;
-	padding-top: 0.5rem;
-}
-
-.hyACbC {
-	line-height: 2.0;
-}
-
-.hyACbC.hyACbC a {
-	color: #fff;
-	text-decoration: none;
 }
 
 .pb-3 {
@@ -57,37 +15,7 @@
 	margin-bottom: 0.5rem !important;
 }
 
-.iWqacH {
-	color: white;
-	font-size: 16px;
-	font-weight: 400;
-	text-decoration: none;
-	position: relative;
-	margin: 0px 1.5rem;
-}
-
-.cBoHoo {
-	background-color: #11314A;
-	bottom: 0px;
-	width: 100%;
-}
-
-.erAkNO h1 {
-	font-size: 22px;
-	text-align: left;
-}
-
-.erAkNO h1 span {
-	font-size: 14px;
-	display: block;
-	line-height: 1.5rem;
-	font-family: 'poppins_medium';
-}
-
 @media ( min-width : 1200px) {
-	.iWqacH {
-		width: 100%;
-	}
 	.landingSearchDiv {
        margin-left: 8vw !important;
 	}
@@ -107,21 +35,88 @@
 	.footer_policies {
 		margin-left: -4rem;
 	}
-	.irmCui {
-		width: 100%;
-		display: flex;
-	}
+
 	.footer_subsection {
 		margin-left: -1.5rem;
 	}
-	.QgNfY {
-		position: absolute;
-		font-size: 0.6875rem;
-		top: 230px;
-	}
+
 }
 
 @media ( max-width : 990px) {
+
+	.mobileNav {
+		background: #fff;
+    	border-right: 0;
+   		bottom: 0;
+	    flex-direction: column;
+	    left: 0;
+	    overflow-y: auto;
+	    padding: 1rem;
+	    position: absolute;
+	    top: 0;
+	    width: 20rem;
+	    z-index: 500;
+	    height: 100vh;
+	    width: 320px;
+	    display:none;
+	}
+	#aboutSubMenu {
+	    padding-left: 3px;
+	}
+	
+	.banner-header {
+		margin-left: auto !important;
+	    margin-right: auto !important;
+	    max-width: 87.5rem !important;
+	    padding: 0.5rem 1rem !important;
+	    display: flex;
+	
+	}
+	.logo-container {
+		margin-left: -2.2rem !important;
+	}
+	.fa-bars:before {
+    	content: url(/images/Menu_btn.png);
+	}
+	.fa-times:before {
+		content: url(/images/cancel_mobile_navbar_icon.png);
+	}
+	#aboutMenuMobile {
+		background-image: url(/images/arrow_narbar_mobile.png),linear-gradient(transparent,transparent);
+    	background-position: 100%;
+    	background-repeat: no-repeat;
+    	display: block;
+	}	
+	.mobile-nav-toggle[aria-expanded="true"] {
+		align-self: flex-end;
+    	border: 0;
+    	box-shadow: none;
+    	cursor: pointer;
+    	padding: 0;
+	}
+
+	.nci-header-mobilenav__list-msg {
+		background-color: transparent;
+    	padding: 1.5rem 1rem;
+    	border: none;
+    	cursor: pointer;
+    	line-height: 1.3;
+    	text-align: left;
+    	text-decoration: none;
+    	width: 100%;
+    	color: #007bbd;
+    	font-family: Open Sans;
+		font-size: 16px;
+		font-style: normal;
+		font-weight: 600;
+		line-height: 16px;
+		padding-left: 2px;
+    	
+	}
+	.nci-header-mobilenav__list-msg img {
+		transform: rotate(-180deg);
+		padding-left: 10px;
+	}
 	#spinner {
 		text-align: center;
 		left: 5%;
@@ -382,55 +377,30 @@
 	.toggleNavBarIcon {
 		font-size: 28px;
 		transform: translateY(-3px);
+		float: left;
 	}
-	.krkYvd span {
+	.closeNavBarIcon {
 		display: none;
+		font-size: 1.25rem; 
+		color: #2F3C5A;
+		float:right;
 	}
-	.krkYvd {
-		display: grid;
-		font-size: 10px;
-	}
-	.illmTA {
-		padding-top: 0.25rem;
-	}
-	.iWqacH {
-		margin: 0px 0.5rem;
-	}
+	
 	.footer_subsection {
 		margin: -0.5rem;
 		margin-top: 1rem;
 		padding-bottom: 1rem;
 	}
-	.irmCui {
-		display: grid;
-		text-align: center;
+	text-align: center;
 	}
-	.irmCui .col-6 {
-		width: 100%;
-		max-width: 100%;
-	}
+
 	.footer_nci {
 		margin-top: 0.5rem;
 	}
-	.erAkNO {
-		padding-bottom: 35px;
-	}
-	.erAkNO h1 {
-		text-align: center;
-		font-size: 18px;
-	}
-	.erAkNO h1 span {
-		font-size: 12px;
-	}
-	.QgNfY {
-		position: relative;
-		top: 0px;
-		padding-bottom: 15px;
-		text-align: center;
-	}
+
 	.mobile-navigation {
 		position: absolute;
-		top: 148px;
+		top: 99px;
 		left: 0px;
 		display: block;
 		z-index: 1000;
@@ -445,13 +415,18 @@
 	.hQrVZb {
 		display: grid;
 		position: relative;
-		line-height: 42px;
+		line-height: 36px;
 		text-align: left;
-		font-size: 18px;
-		font-family: Nunito Sans;
 		text-decoration: none;
-		border-bottom: 1.5px solid #5A8AE0;
-		background-color: #1C4794;
+		background: var(--utility-colors-white, #FFF);
+		padding-left: 15px;
+		margin-right: 24px;
+	}
+	
+	.hQrVZb a.hover,.hQrVZb a:hover {
+	    background: #F7F7F7;
+	    color: #5d5d52;
+		cursor: pointer;
 	}
 	.hZHGfK {
 		list-style: none;
@@ -459,44 +434,30 @@
 		padding: 0px;
 		width: 100%;
 		transition: all 250ms ease-in 0s;
-		background: rgb(229, 254, 255);
-		max-height: 155px;
 	}
 	.hQrVZb a {
 		display: block;
 		text-decoration: none;
 		padding-left: 1.75rem;
-		color: #fff !important;
 		cursor: pointer;
+		color: var(--secondary-colors-slate, #3D4551);
+    	font-family: Open Sans;
+    	font-size: 16px;
+    	font-style: normal;
+    	font-weight: 400;
+        border-top: 1px solid var(--utility-colors-gray, #F0F0F0);
+		border-bottom: 1px solid var(--utility-colors-gray, #F0F0F0);
 	}
 	.hQrVZb_subTab a {
-		padding-left: 2.2rem;
 		font-size: 16px;
 	}
 	.hQrVZb a.active {
-		background-color: #FFFFFF;
-		color: #0C375E !important;
-		font-family: 'nunito_sansbold';
-	}
-}
-
-@media ( max-width : 768px) {
-	.assetFilesmobileMsg {
-		display: block !important;
-		color: #000000;
-		font-family: 'latoregular';
-		font-size: 16px;
-		margin-left: 14px;
-	}
-	#assetUrlLink {
-		display: none;
-	}
-	.assetFilesDiv {
-		display: none;
-	}
-	.assetFilesConditional {
-		padding-top: 40px;
-		margin-left: 1rem !important;
+		color: #2461D6;
+		font-family: Poppins;
+		font-size: 14px;
+		font-style: normal;
+		font-weight: 600;
+		text-transform: uppercase;
 	}
 }
 
@@ -527,6 +488,28 @@
 	}
 }
 
+
+@media ( max-width : 768px) {
+
+	.assetFilesmobileMsg {
+		display: block !important;
+		color: #000000;
+		font-family: 'latoregular';
+		font-size: 16px;
+		margin-left: 14px;
+	}
+	
+	#assetUrlLink {
+		display: none;
+	}
+	.assetFilesDiv {
+		display: none;
+	}
+	.assetFilesConditional {
+		padding-top: 40px;
+		margin-left: 1rem !important;
+	}
+}
 
 @media ( max-width : 550px) {
 

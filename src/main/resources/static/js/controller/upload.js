@@ -100,7 +100,14 @@ $(document).ready(
 
 			});
 			
+			$(document).on('keyup', '.identifier_validation', function() {
+			    var identifierVal = $(this).val();
+			    var pattern = /^[A-Za-z0-9_-]*$/;
 			
+			    if (!pattern.test(identifierVal)) {
+			        $(this).val(identifierVal.replace(/[^A-Za-z0-9_-]/g, ''));
+			    }
+			});
 			
 			$(document).on(
 					'click',
@@ -585,7 +592,16 @@ function constructNewCollectionMetaDataSet(data, status) {
 											+ '" placeholder="Required" aria-label="value of meta data" value="'
 											+ value.attrValue + '" name="zAttrStr_' + value.attrName + '"'
 											+ 'style="width:70%;"></td></tr>');
-						} else {
+						} else if (value.attrName.indexOf("_identifier") != -1) {
+							var placeholderValue = value.mandatory == true ? 'Required' : "";
+								$("#newMetaDataTable tbody").append(
+										'<tr><td>' + value.displayName
+												+ '&nbsp;&nbsp;' + infoHtml + '</td><td>' + '<input type="text" is_mandatory="'
+												+ value.mandatory + '" class="identifier_validation" pattern = "[A-Za-z0-9_-]*" placeholder= "' + placeholderValue
+												+ '" aria-label="value of meta data" name="zAttrStr_' + value.attrName
+												+ '"' + 'style="width:70%;"></td></tr>');
+						}
+						else {
 							var placeholderValue = value.mandatory == true ? 'Required' : "";
 							if (value.attrName.indexOf("description") != -1) {
 								$("#newMetaDataTable tbody").append(

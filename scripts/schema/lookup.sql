@@ -20,4 +20,4 @@ create table NCI_DOE_DB.LOOKUP_T
 comment on column NCI_DOE_DB.LOOKUP_T.IS_VISIBLE is 'This column is only for display purpose on asset details page. If value is ''N'', do not display on asset details page. '
 /
 
-
+GRANT INSERT,UPDATE,SELECT ON LOOKUP_T TO MODAC_APP_USER;
