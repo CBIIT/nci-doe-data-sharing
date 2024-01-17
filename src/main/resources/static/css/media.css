@@ -461,27 +461,6 @@
 	}
 }
 
-@media ( max-width : 768px) {
-
-	.assetFilesmobileMsg {
-		display: block !important;
-		color: #000000;
-		font-family: 'latoregular';
-		font-size: 16px;
-		margin-left: 14px;
-	}
-	#assetUrlLink {
-		display: none;
-	}
-	.assetFilesDiv {
-		display: none;
-	}
-	.assetFilesConditional {
-		padding-top: 40px;
-		margin-left: 1rem !important;
-	}
-}
-
 
 @media ( max-width :1200px) and (min-width: 992px) {
 	.topNav-item {
@@ -509,6 +488,28 @@
 	}
 }
 
+
+@media ( max-width : 768px) {
+
+	.assetFilesmobileMsg {
+		display: block !important;
+		color: #000000;
+		font-family: 'latoregular';
+		font-size: 16px;
+		margin-left: 14px;
+	}
+	
+	#assetUrlLink {
+		display: none;
+	}
+	.assetFilesDiv {
+		display: none;
+	}
+	.assetFilesConditional {
+		padding-top: 40px;
+		margin-left: 1rem !important;
+	}
+}
 
 @media ( max-width : 550px) {
 
