@@ -198,11 +198,6 @@
 			<version>2.0.1</version>
 		</dependency>
 		<dependency>
-			<groupId>gov.nih.nci.hpc</groupId>
-			<artifactId>hpc-client</artifactId>
-			<version>${api.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 		</dependency>
