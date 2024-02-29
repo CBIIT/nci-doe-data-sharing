@@ -563,8 +563,8 @@
 		margin-right: 1px !important;
 	}
 	#backtoSearch  img {
-		content: url('/images/Asset-Detail.Back_Arrow.Mobile.svg') !important;
-		width: 55px !important;
+		/* content: url('/images/Asset-Detail.Back_Arrow.Mobile.svg') !important;
+		width: 55px !important; */
 	}
 	#assetDetailsSubSection {
 		display: none;
