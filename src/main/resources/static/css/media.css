@@ -558,7 +558,7 @@
 		margin-bottom: -5px;
 	}
 	#backtoSearch {
-		margin-left: 10px !important;
+		/* margin-left: 10px !important; */
 		margin-top: -6px;
 		margin-right: 1px !important;
 	}
