@@ -430,12 +430,26 @@ table#generatePredTable thead th {
     width: 191px;
     color: var(--white);
     font-family: var(--font-family-inter);
-    font-size: 10px;
-    font-weight: 600;
     font-style: normal;
     border-color: transparent;
-    text-align: left;
     padding-left: 2rem;
+    font-size: 13px;
+    line-height: 15px;
+    font-weight: 600;
+    background-color: #B4B4B4;
+    text-transform: uppercase;
+    display: flex;
+    vertical-align: middle;
+    align-items: center;
+    max-width: 220px;
+    min-width: 220px;
+    box-shadow: 0px 4px 50px 0px #FFFFFF8C;
+    text-align: left;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 65px;
+    letter-spacing: 0.01em;
+    min-height: 42px;
 }
 
 #downloadSelectedDataSet:disabled,
@@ -477,8 +491,8 @@ input[type="checkbox"].selectIndividualCheckbox {
     margin-top: -2px;
 }
 .arrow_right_assets_files {
-    width: 16px;
-    transform: translate(25px, -10px);
+    /* width: 16px;
+    transform: translate(25px, -10px); */
 }
 
 .assetDetailsHeader,
@@ -678,3 +692,38 @@ td {
     height: 55px;
     padding-top: 18px !important;
 }
+
+.customBtn {
+    font-family: var(--font-family-inter);
+    font-size: 13px;
+    line-height: 15px;
+    font-weight: 600;
+    background-color: #B4B4B4;
+    color: var(--white);
+    text-transform: uppercase;
+    display: flex;
+    vertical-align: middle;
+    align-items: center;
+    max-width: 220px;
+    min-width: 220px;
+    box-shadow: 0px 4px 50px 0px #FFFFFF8C;
+    text-align: left;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 65px;
+    letter-spacing: 0.01em;
+    min-height: 42px;
+  }
+  .customBtn.primary {
+    background-color: #2C4088;
+  }
+  .customBtn:hover {
+    color: #fff;
+  }
+  .customBtn span:nth-child(2) {
+    margin-left: auto;
+    padding-left: 20px;
+  }
+  .customBtn img {
+    max-width: 15px;
+  }
