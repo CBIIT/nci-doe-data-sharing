@@ -575,8 +575,10 @@ function constructNewCollectionMetaDataSet(data, status) {
 								$select.append($('<option></option>').attr('value', 'Select').text('Select'));
 							}
 							for (var i = 0; i < value.validValues.length; i++) {
-								$select.append($('<option></option>').attr('value', value.validValues[i].key).text(
+							  if ($select.find("option[value='" + value.validValues[i].key + "']").length == 0) {
+								 $select.append($('<option></option>').attr('value', value.validValues[i].key).text(
 										value.validValues[i].value));
+								}
 							}
 							if (value.defaultValue) {
 								$select.select2().val(value.defaultValue).trigger('change');
@@ -1166,8 +1168,10 @@ function constructAssetTypeBulkDiv(data, status) {
 							}
 
 							for (var i = 0; i < value.validValues.length; i++) {
-								$select.append($('<option></option>').attr('value', value.validValues[i].key).text(
+							  if ($select.find("option[value='" + value.validValues[i].key + "']").length == 0) {
+								 $select.append($('<option></option>').attr('value', value.validValues[i].key).text(
 										value.validValues[i].value));
+							  }
 							}
 
 							if (value.defaultValue) {
