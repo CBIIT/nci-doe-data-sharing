@@ -1134,6 +1134,13 @@ function constructAssetTypeBulkDiv(data, status) {
 					function(key, value) {
 
 						var placeholderValue = value.mandatory == true ? 'Required' : "";
+						var infoHtml = "";
+						if(value.description) {
+						infoHtml = '<i class="fas fa-question-circle" data-toggle="tooltip"'
+														+ 'data-placement="right" title="'
+														+ value.description
+														+ '"></i>';
+						}
 
 						if (value.validValues != null && value.attrName != 'asset_type') {
 
