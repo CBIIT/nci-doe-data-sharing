@@ -190,7 +190,7 @@ public class AssetDetailsController extends AbstractDoeController {
 				model.addAttribute("assetType", assetType);
 				model.addAttribute("dme_Data_Id", dme_Data_Id);
 				model.addAttribute("asset_Identifier", asset_Identifier);
-				model.addAttribute("accessGrp", accessGrpList != null ? String.join(",", accessGrpList) : "public");
+				model.addAttribute("accessGrp", CollectionUtils.isNotEmpty(accessGrpList) ? String.join(",", accessGrpList) : "public");
 				model.addAttribute("assetName", assetName);
 				model.addAttribute("assetMetadata", selfMetadata);
 				model.addAttribute("studyName", studyName);
