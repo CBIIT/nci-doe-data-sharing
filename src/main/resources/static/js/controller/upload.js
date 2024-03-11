@@ -561,7 +561,7 @@ function constructNewCollectionMetaDataSet(data, status) {
 									"<tr><td>" + value.displayName
 											+ "&nbsp;&nbsp;" + infoHtml + "</td><td>"
 											+ "<select class='simple-select2' is_mandatory='" + value.mandatory
-											+ "' onChange='onChangeForMetadata(registerCollectionForm,"
+											+ "' onChange='onChangeForMetadata(registerCollectionForm, true, "
 											+ value.controllerAttribute + ",newMetaDataTable, " + value.attrName
 											+ ");' style='width:70%;' id='" + value.attrName + "' name='zAttrStr_"
 											+ value.attrName + "' value='" + value.attrValue + "'></select></td></tr>");
@@ -1153,7 +1153,7 @@ function constructAssetTypeBulkDiv(data, status) {
 													+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
 													+ '<select class="simple-select2" is_mandatory="'
 													+ value.mandatory
-													+ '" style="width:99%;" onChange="onChangeForMetadata(registerBulkAssetForm,'
+													+ '" style="width:99%;" onChange="onChangeForMetadata(registerBulkAssetForm, true,'
 													+ value.controllerAttribute + ',assetBulkMetadataTable, '
 													+ value.attrName + ');"' + 'id="' + value.attrName
 													+ '" name="zAttrStr_' + value.attrName + '" value="'

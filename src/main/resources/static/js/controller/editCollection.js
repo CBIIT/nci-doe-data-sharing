@@ -107,7 +107,7 @@ function constructEditCollectionMetadata(data, status) {
 										"<tr><td>" + value.displayName
 												+ "&nbsp;&nbsp;" + infoHtml + "</td><td>" + "<select id='"
 												+ value.attrName + "' is_mandatory='" + value.mandatory
-												+ "' onChange='onChangeForMetadata(collectionForm, "
+												+ "' onChange='onChangeForMetadata(collectionForm, false, "
 												+ value.controllerAttribute + ",userMetaData, " + value.attrName
 												+ ");'" + "class='simple-select2' style='width:70%;' name='zAttrStr_"
 												+ value.attrName + "' " + "value=\"" + attrVal

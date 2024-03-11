@@ -475,6 +475,7 @@ function dataTableInit(isVisible) {
             var collectionId = $(this).attr('collectionId');
             var fileName = $(this).attr('data-fileName');
             var selectedCollection = $(this).attr('selectedCollection');
+            var assetType = $(this).attr('assetType'); 
 
             $("#userMetaData tbody").html("");
             $("#path").val(metaDataPath);
@@ -485,6 +486,7 @@ function dataTableInit(isVisible) {
             $("#collectionId").val(collectionId);
             $("#isDataObject").val(false);
             $("#editUserMetadataFileName").html(fileName);
+            $("#assetType").val(assetType);
 
             if (permissionsRole && permissionsRole == 'Owner') {
                $("#updatePermissions").show();
@@ -663,7 +665,7 @@ function renderDataSetName(data, type, row) {
       }
 
       if (row.dataSetPermissionRole && row.dataSetPermissionRole != 'No Permissions') {
-         editDataSetHtml = "&nbsp;<span class='editCollectionMetadata' selectedCollection = 'Asset' " +
+         editDataSetHtml = "&nbsp;<span class='editCollectionMetadata' assetType = '" + row.assetType + "' selectedCollection = 'Asset' " +
             "data-fileName = '" +
             row.dataSetName +
             "' collectionId  = '" +
