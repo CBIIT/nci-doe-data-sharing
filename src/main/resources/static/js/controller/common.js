@@ -615,7 +615,7 @@ function onChangeForMetadata(form, isUploadPage, isValid, table, selectId) {
 		controllerAttributeList.push(metadataAttr);
 		controllerAttributeList.push("asset_type");
 		controllerValueList.push(value);
-		controllerValueList.push(asset_type);
+		controllerValueList.push(assetType);
 		if(value != 'Select') {
 			var params= {selectedPath:path , collectionType:'Asset',controllerValue:controllerValueList.join(),refresh:false,controllerAttribute:controllerAttributeList.join()};
 			
