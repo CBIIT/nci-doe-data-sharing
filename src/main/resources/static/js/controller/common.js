@@ -605,6 +605,10 @@ $(document)
 function onChangeForMetadata(form, isUploadPage, isValid, table, selectId) {
 	if(isValid == true) {
 	    var assetType = $("#assetType").val();
+	    
+	    if(!assetType) {
+	     assetType = $("#assetTypeSelect").val();
+	    }
 		var value = selectId.value;
 		var metadataAttr = selectId.id;
 		var tableId  = table.id;
