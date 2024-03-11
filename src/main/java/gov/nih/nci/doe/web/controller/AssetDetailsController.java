@@ -151,8 +151,9 @@ public class AssetDetailsController extends AbstractDoeController {
 				String assetPermission = getPermissionRole(user, collection.getCollection().getCollectionId(),
 						loggedOnUserPermissions);
 
-				String accessGrp = getAttributeValue("access_group",
-						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
+				/* get the latest access group from MoDaC database instead of the materialized view */
+				List<String> accessGrpList = accessGroupsService
+						.getGroupsByCollectionPath(collection.getCollection().getCollectionName());
 
 				String assetName = getAttributeValue("asset_name",
 						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
@@ -189,7 +190,7 @@ public class AssetDetailsController extends AbstractDoeController {
 				model.addAttribute("assetType", assetType);
 				model.addAttribute("dme_Data_Id", dme_Data_Id);
 				model.addAttribute("asset_Identifier", asset_Identifier);
-				model.addAttribute("accessGrp", accessGrp);
+				model.addAttribute("accessGrp", accessGrpList != null ? String.join(",", accessGrpList) : "public");
 				model.addAttribute("assetName", assetName);
 				model.addAttribute("assetMetadata", selfMetadata);
 				model.addAttribute("studyName", studyName);
