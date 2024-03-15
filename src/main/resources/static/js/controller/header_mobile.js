@@ -13,6 +13,8 @@ $(document).ready(function () {
 	
 	$("#menuBtn").click(function (e) {
 		$(".mobileNav").css('display', 'flex');
+		$(".mobilenav__overlay").css('display', 'block');
+		$("#content").css('background-color','rgba(0,0,0,.2)');
 		
 		if($(".hQrVZb_subTab a").hasClass('active')) {
 			$("#mobile-navigation").hide();
@@ -22,6 +24,8 @@ $(document).ready(function () {
 	
 	$("#closeMenuBtn").click(function (e) {
 		$(".mobileNav").css('display', 'none');
+		$(".mobilenav__overlay").css('display', 'none');
+		$("#content").css('background-color','#fff');
 	});
 	
 	

@@ -188,6 +188,7 @@
   font-size: var(--font-size-xxxl);
   font-weight: 600;
   font-style: normal;
+  line-height: 2rem;
 }
 .poppins-semi-bold-bright-gray-13px {
   color: var(--bright-gray);

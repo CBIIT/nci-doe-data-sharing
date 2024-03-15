@@ -674,7 +674,7 @@ public abstract class AbstractDoeController {
 			try {
 				AuditingModel audit = new AuditingModel();
 				audit.setName(loggedOnUser);
-				audit.setOperation("Edit Meta Data");
+				audit.setOperation("Edit Access Group metadata");
 				audit.setStartTime(new Date());
 				audit.setPath(permissionGroups.getPath());
 				auditingService.saveAuditInfo(audit);

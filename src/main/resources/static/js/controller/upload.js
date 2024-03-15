@@ -561,7 +561,7 @@ function constructNewCollectionMetaDataSet(data, status) {
 									"<tr><td>" + value.displayName
 											+ "&nbsp;&nbsp;" + infoHtml + "</td><td>"
 											+ "<select class='simple-select2' is_mandatory='" + value.mandatory
-											+ "' onChange='onChangeForMetadata(registerCollectionForm,"
+											+ "' onChange='onChangeForMetadata(registerCollectionForm, true, "
 											+ value.controllerAttribute + ",newMetaDataTable, " + value.attrName
 											+ ");' style='width:70%;' id='" + value.attrName + "' name='zAttrStr_"
 											+ value.attrName + "' value='" + value.attrValue + "'></select></td></tr>");
@@ -575,8 +575,10 @@ function constructNewCollectionMetaDataSet(data, status) {
 								$select.append($('<option></option>').attr('value', 'Select').text('Select'));
 							}
 							for (var i = 0; i < value.validValues.length; i++) {
-								$select.append($('<option></option>').attr('value', value.validValues[i].key).text(
+							  if ($select.find("option[value='" + value.validValues[i].key + "']").length == 0) {
+								 $select.append($('<option></option>').attr('value', value.validValues[i].key).text(
 										value.validValues[i].value));
+								}
 							}
 							if (value.defaultValue) {
 								$select.select2().val(value.defaultValue).trigger('change');
@@ -1134,6 +1136,13 @@ function constructAssetTypeBulkDiv(data, status) {
 					function(key, value) {
 
 						var placeholderValue = value.mandatory == true ? 'Required' : "";
+						var infoHtml = "";
+						if(value.description) {
+						infoHtml = '<i class="fas fa-question-circle" data-toggle="tooltip"'
+														+ 'data-placement="right" title="'
+														+ value.description
+														+ '"></i>';
+						}
 
 						if (value.validValues != null && value.attrName != 'asset_type') {
 
@@ -1144,7 +1153,7 @@ function constructAssetTypeBulkDiv(data, status) {
 													+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
 													+ '<select class="simple-select2" is_mandatory="'
 													+ value.mandatory
-													+ '" style="width:99%;" onChange="onChangeForMetadata(registerBulkAssetForm,'
+													+ '" style="width:99%;" onChange="onChangeForMetadata(registerBulkAssetForm, true,'
 													+ value.controllerAttribute + ',assetBulkMetadataTable, '
 													+ value.attrName + ');"' + 'id="' + value.attrName
 													+ '" name="zAttrStr_' + value.attrName + '" value="'
@@ -1159,8 +1168,10 @@ function constructAssetTypeBulkDiv(data, status) {
 							}
 
 							for (var i = 0; i < value.validValues.length; i++) {
-								$select.append($('<option></option>').attr('value', value.validValues[i].key).text(
+							  if ($select.find("option[value='" + value.validValues[i].key + "']").length == 0) {
+								 $select.append($('<option></option>').attr('value', value.validValues[i].key).text(
 										value.validValues[i].value));
+							  }
 							}
 
 							if (value.defaultValue) {

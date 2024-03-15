@@ -601,9 +601,14 @@ $(document)
 				});
 
 
-/* function on change of reference dataset value */
-function onChangeForMetadata(form,isValid, table,selectId) {
+/* function on change of metadata with select dropdown values */
+function onChangeForMetadata(form, isUploadPage, isValid, table, selectId) {
 	if(isValid == true) {
+	    var assetType = $("#assetType").val();
+	    
+	    if(!assetType) {
+	     assetType = $("#assetTypeSelect").val();
+	    }
 		var value = selectId.value;
 		var metadataAttr = selectId.id;
 		var tableId  = table.id;
@@ -614,7 +619,7 @@ function onChangeForMetadata(form,isValid, table,selectId) {
 		controllerAttributeList.push(metadataAttr);
 		controllerAttributeList.push("asset_type");
 		controllerValueList.push(value);
-		controllerValueList.push("Dataset");
+		controllerValueList.push(assetType);
 		if(value != 'Select') {
 			var params= {selectedPath:path , collectionType:'Asset',controllerValue:controllerValueList.join(),refresh:false,controllerAttribute:controllerAttributeList.join()};
 			
@@ -629,7 +634,7 @@ function onChangeForMetadata(form,isValid, table,selectId) {
 				success: function(msg) {
 				   $("#spinner").hide();
 				   $("#dimmer").hide();
-				   postSuccessOnChangeIsReferenceDataset(form,msg,tableId);
+				   postSuccessOnChangeIsReferenceDataset(form, msg, tableId, isUploadPage);
 				},
 				error: function(e) {
 					console.log('ERROR: ', e);
@@ -641,7 +646,7 @@ function onChangeForMetadata(form,isValid, table,selectId) {
 	}
 	
 }
-function postSuccessOnChangeIsReferenceDataset(form,data, tableId) {
+function postSuccessOnChangeIsReferenceDataset(form, data, tableId, isUploadPage) {
 
 	var displayNames = [];
 	var found = false;
@@ -686,6 +691,8 @@ function postSuccessOnChangeIsReferenceDataset(form,data, tableId) {
 					var width = 'width:70%;';
 				}
 				
+			if ((isUploadPage && value.isVisibleOnUplaodPage != false) || !isUploadPage ) {
+			
 				if(value.attrName  == 'applicable_model_paths') {
 					   
 				$("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;' + infoHtml + '</td><td>'+
@@ -716,6 +723,7 @@ function postSuccessOnChangeIsReferenceDataset(form,data, tableId) {
 			    	} else {
 			    		$select.select2().trigger('change');
 			    	}
+			  }
   	
 		   } else if(value.isVisible != true && value.attrName.indexOf("access_group") == -1) {
 					   			   

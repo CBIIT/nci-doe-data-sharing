@@ -19,7 +19,7 @@
 
 			<div class="col-lg-12 col-md-12 col-sm-12 assetDetailsHeader">
 
-				<div class="controls controls-row mt-4 d-flex w-100" style="max-width: 1440px;margin: 0 auto;padding-left: 32px;">
+				<div class="controls controls-row mt-4 d-flex w-100 pb-4 row" style="max-width: 1440px;margin: 0 auto;padding-left: 32px;">
 					<div class="d-flex col-lg-4 col-md-4 col-sm-12">
 						<div th:if="${returnToSearch eq true}" id="backtoSearch" class="backToSearch_AssetDetailsDiv">
 							<img src="/images/back_to_search_arrrow.png" alt="back to search"
@@ -160,13 +160,13 @@
 				<div th:if="${showGeneratePredTab ne true and isReferenceDataset == 'Yes' and loggedOnUser != null and assetType == 'Dataset'}"
 					class="form-group col-lg-12 col-md-12 col-sm-12" style="float: right; margin-right: 4rem;">
 					<button id="performModelAnalysis" type="button"
-						class="btn btn-primary float-right mb-2 mr-2">PERFORM
+						class="customBtn btn btn-primary float-right mb-2 mr-2">PERFORM
 						MODEL ANALYSIS</button>
 				</div>
 
 				<div th:if="${showGeneratePredTab ne true and loggedOnUser != null and assetType == 'Model' and showGeneratePredictions eq true}"
 					class="form-group col-lg-12 col-md-12 col-sm-12" style="float: right; margin-right: 4rem;">
-					<button id="openInferModal" type="button" class="btn btn-primary float-right mb-2 mr-2">GENERATE
+					<button id="openInferModal" type="button" class="customBtn btn btn-primary float-right mb-2 mr-2">GENERATE
 						PREDICTIONS</button>
 				</div>
 
@@ -181,13 +181,18 @@
 							</p>
 
 							<button id="downloadSelectedMetadata" type="button"
-								class="btn btn-primary float-right mb-2 mr-2" disabled>DOWNLOAD <br />
-								SELECTED METADATA <img class="arrow_right_assets_files"
-									th:src='@{/images/white_right_arrow.svg}' /></button>
-							<button id="downloadSelectedDataSet" type="button"
-								class="btn btn-primary float-right mb-2 mr-2" disabled>
-								DOWNLOAD <br />SELECTED FILES <img class="arrow_right_assets_files"
+								class="customBtn btn btn-primary float-right mb-2 mr-2" disabled>
+								<span>DOWNLOAD <br />
+								SELECTED METADATA</span>
+								 <span><img class=""
 									th:src='@{/images/white_right_arrow.svg}' />
+								</span>
+								</button>
+									
+							<button id="downloadSelectedDataSet" type="button"
+								class="customBtn btn btn-primary float-right mb-2 mr-2" disabled>
+								<span>DOWNLOAD <br />SELECTED FILES </span><span><img class="arrow_right_assets_files"
+									th:src='@{/images/white_right_arrow.svg}' /></span>
 							</button>
 						</div>
 					</div>

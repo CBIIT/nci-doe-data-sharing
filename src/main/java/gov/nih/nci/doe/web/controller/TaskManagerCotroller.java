@@ -277,12 +277,16 @@ public class TaskManagerCotroller extends AbstractDoeController {
 
 		if (Boolean.TRUE.equals(retry)) {
 
+			String taskName = (task.getTaskName() != null || !StringUtils.isEmpty(task.getTaskName()))
+					? task.getTaskName()
+					: "";
+
 			t.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<span class='button4a' error_msg = '" + filteredMessage
 					+ "' data-container='body' data-toggle='popover'"
 					+ "data-placement='right' data-trigger='click' data-popover-content='#a02'><img style='width:12px;'"
 					+ "src='images/Status.info-tooltip.png' alt='failed message'></span>"
 					+ "<strong><a style='border: none;background-color: #F39530;height: 23px;width: 37px;border-radius: 11px;float: right;margin-right: 10px;' class='btn btn-link btn-sm' aria-label='Retry Upload' href='#'"
-					+ "onclick='retryUpload(\"" + upload.getTaskId() + "\" ,\"" + task.getTaskName() + "\")'>"
+					+ "onclick='retryUpload(\"" + upload.getTaskId() + "\" ,\"" + taskName + "\")'>"
 					+ "<img style='height: 13px;width: 13px;margin-top: -14px;' data-toggle='tooltip' title='Retry Upload' src='images/Status.refresh_icon-01.png' th:src='@{/images/Status.refresh_icon-01.png}' alt='Status refresh'></a></strong>");
 		} else {
 			t.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<span class='button4a' error_msg = '" + filteredMessage

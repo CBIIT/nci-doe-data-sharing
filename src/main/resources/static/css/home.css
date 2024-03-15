@@ -2,7 +2,7 @@
   background-color: var(--mango-tango);
   height: 6px;
   width: 67px;
-  margin-top: 36px;
+  margin-top: 43px;
 }
 
 .landingSubText {
@@ -94,7 +94,7 @@
 .the-predictive-oncol {
   letter-spacing: 0;
   line-height: 24px;
-  margin-top: 25px;
+  margin-top: 57px;
 }
 
 .span1 {
@@ -485,7 +485,7 @@
 
 
 .landing-section-2 {
-  margin:43px
+  margin: 24px;
 }
 
 @media (min-width: 990px) {
