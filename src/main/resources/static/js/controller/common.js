@@ -177,7 +177,17 @@ $(document)
 							&& (downloadType == 'data_object' || downloadType == 'datafiles')) {
 
 						if (downloadFileName && downloadFileName != "null" && downloadType == 'data_object') {
-							$("#syncRadioSet").show();
+						
+						    var fileSize = $("#fileSize").val();
+						    
+						    /* show sync download if file size is less than 2GB */
+						    
+						    if(fileSize && fileSize < 2147483648) {
+						    	$("#syncRadioSet").show();
+						    } else  {
+						     	$("#syncRadioSet").hide();
+						    }
+							
 							$(".selectedFilesListDisplay").append("<p>" + selectedPathsString + "</p>");
 							$(".selectedFilesDiv").show();
 							$("#destinationPathId").val(selectedPathsString);

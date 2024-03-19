@@ -568,12 +568,13 @@ $('#dataSetTable tbody').on('keypress', '.button2a', function(e) {
 $('#dataSetTable tbody').on('click', '.downloadLink', function() {
 	var path = $(this).attr('data-path');
 	var fileName = $(this).attr('data-fileName');
-	downloadFunction(path, fileName);
+	var fileSize = $(this).closest('tr').find('td').eq(2).find('input[type="hidden"]').val().trim();
+	downloadFunction(path, fileName, fileSize);
 });
 
 $('#dataSetTable tbody').on('click', '.downloadLinkFolder', function() {
 	var path = $(this).attr('data-path');
-	downloadFunction(path, null);
+	downloadFunction(path, null, null);
 });
 
 $('#dataSetTable tbody').on('click', '.editFolderMetadata', function() {
@@ -707,6 +708,7 @@ $('#dataSetTable tbody')
 															var copyPathTitle = "Copy File Path";
 															var collection_type = "";
 															var fileSize = "";
+															var fileSizeHtml = ""
 
 															if (value.isFolder == false) {
 																selectHtml = "<input type='checkbox' id='"
@@ -720,6 +722,7 @@ $('#dataSetTable tbody')
 																		+ "</span>";
 																collection_type = "DataObject";
 																fileSize = value.fileSize;
+																fileSizeHtml = "<input type='hidden' class='fileSizeInBytes' value= '" + value.fileSizeInBytes+ "'/> " + fileSize + "";
 															}
 															if (value.isFolder == true) {
 																iconHtml += "<a class='detail-control detail-control-sub-folder' style='margin-left:"
@@ -832,7 +835,7 @@ $('#dataSetTable tbody')
 																		+ "<td style='background-color: #d3d3d347 !important;width:40%'>"
 																		+ iconHtml
 																		+ "</td><td style='background-color: #d3d3d347 !important;width:20%;'>"
-																		+ fileSize
+																		+ fileSizeHtml
 																		+ "</td>"
 																		+ "<td style = 'background-color: #d3d3d347 !important;width:25%;' > "
 																		+ nestedEditPermissionsHtml + "</td > <tr>";
@@ -1074,7 +1077,7 @@ function renderDataSetPath(data, type, row) {
 
 function renderFileSize(data, type, row) {
 	if (row.fileSize) {	
-		return row.fileSize;
+		return "<input type='hidden' class='fileSizeInBytes' value= '" + row.fileSizeInBytes+ "'/> " + row.fileSize + " ";
 	}
 	return "";
 
@@ -1432,7 +1435,7 @@ function onClickOfModelAnlysisBulkDownloadBtn($this) {
 
 }
 
-function downloadFunction(path, fileName) {
+function downloadFunction(path, fileName, fileSize) {
 
 	var assetIdentifier = $("#assetIdentifier").val();
 	if (!fileName) {
@@ -1440,7 +1443,7 @@ function downloadFunction(path, fileName) {
 				+ '&&downloadAsyncType=collection&&returnToSearch=false');
 	} else {
 		location.replace('/downloadTab?selectedPaths=' + path + '&&fileName=' + fileName + '&&assetIdentifier='
-				+ assetIdentifier + '&&downloadAsyncType=data_object&&returnToSearch=false');
+				+ assetIdentifier + '&&fileSize=' + fileSize +'&&downloadAsyncType=data_object&&returnToSearch=false');
 	}
 
 }
@@ -1449,11 +1452,13 @@ function onClickOfBulkDownloadBtn(tableName) {
 	var selectedPaths = [];
 	var assetIdentifier = $("#assetIdentifier").val();
 	var fileName;
-
+	var fileSize;
+	
 	var len = $("#" + tableName + " tbody input[type=checkbox].selectIndividualCheckbox:checked").length;
 	$("#" + tableName + " tbody input[type=checkbox].selectIndividualCheckbox:checked").each(function() {
 		if (len == 1) {
 			fileName = $(this).closest('tr').find('td').eq(1).text().trim();
+			fileSize = $(this).closest('tr').find('td').eq(2).find('input[type="hidden"]').val().trim();
 		}
 		selectedPaths.push($(this).attr('id'));
 	});
@@ -1461,7 +1466,7 @@ function onClickOfBulkDownloadBtn(tableName) {
 	if (selectedPaths.length == 1) {
 
 		location.replace('/downloadTab?selectedPaths=' + selectedPaths + '&&fileName=' + fileName
-				+ '&&assetIdentifier=' + assetIdentifier + '&&downloadAsyncType=data_object&&returnToSearch=false');
+				+ '&&assetIdentifier=' + assetIdentifier + '&&fileSize=' + fileSize +'&&downloadAsyncType=data_object&&returnToSearch=false');
 	} else {
 		location.replace('/downloadTab?selectedPaths=' + selectedPaths + '&&assetIdentifier=' + assetIdentifier
 				+ '&&downloadAsyncType=datafiles&&returnToSearch=false');
