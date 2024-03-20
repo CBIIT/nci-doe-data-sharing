@@ -1144,7 +1144,7 @@ function constructAssetTypeBulkDiv(data, status) {
 														+ '"></i>';
 						}
 
-						if (value.validValues != null && value.attrName != 'asset_type') {
+						if (value.validValues != null && value.attrName != 'asset_type' && value.isVisibleOnUplaodPage != false) {
 
 							$("#assetBulkMetadataTable tbody")
 									.append(
@@ -1181,7 +1181,7 @@ function constructAssetTypeBulkDiv(data, status) {
 							}
 
 						} else if (value.attrName && value.attrName != 'asset_name' && value.attrName != 'asset_type'
-								&& value.attrName != 'asset_identifier' && value.attrName != 'access_group') {
+								&& value.attrName != 'asset_identifier' && value.attrName != 'access_group' && value.isVisibleOnUplaodPage != false) {
 							if (value.attrName == 'description') {
 								$("#assetBulkMetadataTable tbody")
 										.append(
