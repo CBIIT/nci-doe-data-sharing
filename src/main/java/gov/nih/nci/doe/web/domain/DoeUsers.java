@@ -26,6 +26,7 @@ public class DoeUsers {
 	private Date lastChangedDate;
 	private Boolean isAdmin;
 	private Boolean isDeletePrivilege;
+	private Boolean isReviewCommiteeMember;
 
 	@Transient
 	private List<String> progNamesList;
@@ -203,6 +204,17 @@ public class DoeUsers {
 
 	public void setIsDeletePrivilege(Boolean isDeletePrivilege) {
 		this.isDeletePrivilege = isDeletePrivilege;
+	}
+		
+	@Basic
+	@Column(name = "IS_REVIEW_COMMITTEE_MEMBER", nullable = true, length = 1)
+	@Type(type = "yes_no")
+	public Boolean getIsReviewCommiteeMember() {
+		return isReviewCommiteeMember;
+	}
+
+	public void setIsReviewCommiteeMember(Boolean isReviewCommiteeMember) {
+		this.isReviewCommiteeMember = isReviewCommiteeMember;
 	}
 
 	@Basic

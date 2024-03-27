@@ -693,7 +693,14 @@ function postSuccessOnChangeIsReferenceDataset(form, data, tableId, isUploadPage
 											+ '"></i>';
 			}  
 			
-			if(value.isVisible != true && value.validValues != null && value.attrName !='asset_type') {
+			// check if metadata is visible only for review commitee member
+			var isShow = false;
+			
+			if((value.isVisibleForReviewCommiteeMember == true && isReviewCommiteeMember) || (value.isVisibleForReviewCommiteeMember != true)) {
+			  isShow = true;
+			}
+			
+			if(isShow == true && value.isVisible != true && value.validValues != null && value.attrName !='asset_type') {
 				   
 				if(tableId == 'assetBulkMetadataTable') {
 					var width = 'width:99%;';
@@ -735,7 +742,7 @@ function postSuccessOnChangeIsReferenceDataset(form, data, tableId, isUploadPage
 			    	}
 			  }
   	
-		   } else if(value.isVisible != true && value.attrName.indexOf("access_group") == -1) {
+		   } else if(isShow == true && value.isVisible != true && value.attrName.indexOf("access_group") == -1) {
 					   			   
 			    var placeholder = value.mandatory == true ? 'Required' : "";
 			    var attrVal = value.attrValue != null ? value.attrValue : "";

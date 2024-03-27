@@ -508,6 +508,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 						entry.setDisplayOrder(val.getDisplayOrder());
 						entry.setIsVisible(val.getIsVisible());
 						entry.setIsVisibleOnUplaodPage(val.getIsVisibleOnUplaodPage());
+						entry.setIsVisibleForReviewCommiteeMember(val.getIsVisibleForReviewCommiteeMember());
 					} else {
 						entry.setDisplayName(rule.getAttribute());
 						entry.setIsEditable(true);
@@ -534,6 +535,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 						x.setDisplayOrder(lookUpVal.getDisplayOrder());
 						x.setIsVisible(lookUpVal.getIsVisible());
 						x.setIsVisibleOnUplaodPage(lookUpVal.getIsVisibleOnUplaodPage());
+						x.setIsVisibleForReviewCommiteeMember(lookUpVal.getIsVisibleForReviewCommiteeMember());
 					} else {
 						x.setDisplayName(x.getAttrName());
 						x.setIsEditable(true);
@@ -763,7 +765,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		boolean[] isExcludeParentMetadata = { false, false, false };
 		String[] rowIds = { "1", "2", "3" };
 		String[] operators = { "EQUAL", "EQUAL", "EQUAL" };
-		//boolean[] iskeyWordSearch = { true, false };
+		// boolean[] iskeyWordSearch = { true, false };
 
 		search.setAttrName(attrNames);
 		search.setAttrValue(attrValues);
@@ -771,7 +773,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		search.setIsExcludeParentMetadata(isExcludeParentMetadata);
 		search.setRowId(rowIds);
 		search.setOperator(operators);
-		//search.setIskeyWordSearch(iskeyWordSearch);
+		// search.setIskeyWordSearch(iskeyWordSearch);
 
 		return getPathsForSearch(search, session);
 

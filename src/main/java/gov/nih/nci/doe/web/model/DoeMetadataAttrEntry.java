@@ -17,6 +17,15 @@ public class DoeMetadataAttrEntry {
 	private Boolean controllerAttribute;
 	private Boolean isVisible;
 	private Boolean isVisibleOnUplaodPage;
+	private Boolean isVisibleForReviewCommiteeMember;
+
+	public Boolean getIsVisibleForReviewCommiteeMember() {
+		return isVisibleForReviewCommiteeMember;
+	}
+
+	public void setIsVisibleForReviewCommiteeMember(Boolean isVisibleForReviewCommiteeMember) {
+		this.isVisibleForReviewCommiteeMember = isVisibleForReviewCommiteeMember;
+	}
 
 	public Boolean getIsVisibleOnUplaodPage() {
 		return isVisibleOnUplaodPage;

@@ -10,6 +10,15 @@ public class DoeUsersModel {
 	private String programName;
 	private Boolean isAdmin;
 	private Boolean isDeletePrivilege;
+	private Boolean isReviewCommiteeMember;
+
+	public Boolean getIsReviewCommiteeMember() {
+		return isReviewCommiteeMember;
+	}
+
+	public void setIsReviewCommiteeMember(Boolean isReviewCommiteeMember) {
+		this.isReviewCommiteeMember = isReviewCommiteeMember;
+	}
 
 	public Boolean getIsDeletePrivilege() {
 		return isDeletePrivilege;

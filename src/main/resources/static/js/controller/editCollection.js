@@ -38,6 +38,16 @@ function constructEditCollectionMetadata(data, status) {
 														+ value.description
 														+ '"></i>';
 						}
+						
+						// check if metadata is visible only for review commitee member
+						var isShow = false;
+						
+						if((value.isVisibleForReviewCommiteeMember == true && isReviewCommiteeMember) || (value.isVisibleForReviewCommiteeMember != true)) {
+						  isShow = true;
+						}
+						
+					  if(isShow) {
+			
 						if (value.isEditable == false && value.isVisible != true && value.attrName.indexOf("access_group") == -1) {
 							$("#userMetaData tbody").append(
 									"<tr><td>" + value.displayName + "&nbsp;&nbsp;" + infoHtml + "</td><td><input "
@@ -133,6 +143,7 @@ function constructEditCollectionMetadata(data, status) {
 							}
 
 						}
+					   }
 					});
 
 }

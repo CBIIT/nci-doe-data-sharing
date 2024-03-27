@@ -260,6 +260,19 @@ public abstract class AbstractDoeController {
 		return false;
 	}
 
+	@ModelAttribute("isReviewCommitteeMember")
+	public Boolean getIsReviewCommiteeMember() {
+		String emailAddr = getLoggedOnUserInfo();
+		if (!StringUtils.isEmpty(emailAddr)) {
+			DoeUsersModel user = authenticateService.getUserInfo(emailAddr);
+			if (user != null && Boolean.TRUE.equals(user.getIsReviewCommiteeMember())) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	@ModelAttribute("downtimeMessage")
 	public String getDowntimeMessage() {
 
