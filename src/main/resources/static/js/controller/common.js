@@ -622,19 +622,12 @@ function onChangeForMetadata(form, isUploadPage, isValid, table, selectId) {
 		var value = selectId.value;
 		var metadataAttr = selectId.id;
 		var tableId  = table.id;
-		var controllerAttributeList = [];
-		var controllerValueList = [];
-		var path = $("#path").val();
-		
-		controllerAttributeList.push(metadataAttr);
-		controllerAttributeList.push("asset_type");
-		controllerValueList.push(value);
-		controllerValueList.push(assetType);
+
 		if(value != 'Select') {
-			var params= {selectedPath:path , collectionType:'Asset',controllerValue:controllerValueList.join(),refresh:false,controllerAttribute:controllerAttributeList.join()};
+			var params= {collectionType:'Asset',controllerAttribute:metadataAttr};
 			
 			$.ajax({
-				"url": "/addCollection",
+				"url": "/addCollection/getControlAttributesList",
 				"type": "GET",
 				data: params,
 				beforeSend: function() {
@@ -644,7 +637,7 @@ function onChangeForMetadata(form, isUploadPage, isValid, table, selectId) {
 				success: function(msg) {
 				   $("#spinner").hide();
 				   $("#dimmer").hide();
-				   postSuccessOnChangeIsReferenceDataset(form, msg, tableId, isUploadPage);
+				   postSuccessOnChangeIsReferenceDataset(form, msg, tableId, isUploadPage, value);
 				},
 				error: function(e) {
 					console.log('ERROR: ', e);
@@ -656,43 +649,35 @@ function onChangeForMetadata(form, isUploadPage, isValid, table, selectId) {
 	}
 	
 }
-function postSuccessOnChangeIsReferenceDataset(form, data, tableId, isUploadPage) {
+function postSuccessOnChangeIsReferenceDataset(form, data, tableId, isUploadPage, controlAttributeValue) {
 
-	var displayNames = [];
 	var found = false;
-	
-		$("#"+tableId+ " tbody tr").each(function() {
-			var displayName = $(this).find('td').eq(0).text().trim();
-			displayNames.push(displayName);
-			var x = data.filter(function(x){ return x.displayName == displayName });
+    if(data.length != 0) {
+    
+            var controlAttributeNames = []; 	
+		 		
+		 	$("#"+tableId+ " tbody tr").each(function() {
+				var displayName = $(this).find('td').eq(0).text().trim();
+				var val = data.filter(function(x){ return x.displayName == displayName });
+				if(val.length != 0) {
+				 controlAttributeNames.push(val[0]);
+				}
+			});
 			
-			/*
-			 * for asset bulk creation, do not remove the metadata Asset group
-			 * Identifier
-			 */
-			
-			if(x.length == 0 && displayName !='Asset Group Identifier') {
-				/* the removed attributes value should be set to empty */
-				var removedMetadataName = $(this).find('td').eq(1).children().attr('name');
-				$('<input>').attr({type: 'hidden',name: removedMetadataName,value:""}).appendTo(form);
-				$(this).remove();
-			}
-		});
-		
-	  var newElements = data.filter(x => !displayNames.includes(x.displayName));
-	
-	  /* new elements added from new conditional attribute */
-	  if(newElements.length != 0) {
-		  $.each(newElements, function(key, value) {
-			
-			var infoHtml = "";
-			if(value.description) {
-			infoHtml = '<i class="fas fa-question-circle" data-toggle="tooltip"'
-											+ 'data-placement="right" title="'
-											+ value.description
-											+ '"></i>';
-			}  
-			
+		  $.each(data, function(key, value) {
+		  
+				
+		    if(value.controllerAttrValue == controlAttributeValue && controlAttributeNames.length == 0) {
+		    
+		       var infoHtml = "";
+			   if(value.description) {
+					
+				  infoHtml = '<i class="fas fa-question-circle" data-toggle="tooltip"'
+													+ 'data-placement="right" title="'
+													+ value.description
+													+ '"></i>';
+			   }  
+					
 			// check if metadata is visible only for review commitee member
 			var isShow = false;
 			
@@ -700,7 +685,7 @@ function postSuccessOnChangeIsReferenceDataset(form, data, tableId, isUploadPage
 			  isShow = true;
 			}
 			
-			if(isShow == true && value.isVisible != true && value.validValues != null && value.attrName !='asset_type') {
+			if(isShow == true && value.isVisible != true && value.validValues != null) {
 				   
 				if(tableId == 'assetBulkMetadataTable') {
 					var width = 'width:99%;';
@@ -736,32 +721,45 @@ function postSuccessOnChangeIsReferenceDataset(form, data, tableId, isUploadPage
 	               
 		    	  if(value.attrValue != null) {
 			            var attrValModifiedList = value.attrValue.split(',');
-			    		$select.select2().val(attrValModifiedList).trigger('change');
+			    		$select.select2().val(attrValModifiedList);
 			    	} else {
-			    		$select.select2().trigger('change');
+			    		$select.select2();
 			    	}
 			  }
   	
-		   } else if(isShow == true && value.isVisible != true && value.attrName.indexOf("access_group") == -1) {
+		   } else if(isShow == true && value.isVisible != true) {
 					   			   
 			    var placeholder = value.mandatory == true ? 'Required' : "";
 			    var attrVal = value.attrValue != null ? value.attrValue : "";
 			    
-				   if(tableId == 'assetBulkMetadataTable' && value.attrName != 'asset_name' && value.attrName !='asset_type' &&
-					        value.attrName !='asset_identifier') {
+				   if(tableId == 'assetBulkMetadataTable') {
 					   $("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;' + infoHtml + '</td><td>'+
 					        	'<input type="text" is_mandatory="'+value.mandatory+'"  value = "' + attrVal + '" class="bulkAssetTextbox" placeholder="'+placeholder+'" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
 					        	'></td></tr>');
-					} else if(tableId != 'assetBulkMetadataTable') {
+					} else {
 						$("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;' + infoHtml + '</td><td>'+
 					        	'<input type="text" is_mandatory="'+value.mandatory+'" value = "' + attrVal + '" placeholder="'+placeholder+'" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
 					        	'style="width:70%;"></td></tr>');
 					}
-				    
-			   }
-		   
-		 });
-	   }
+			}	    
+			
+		    } else if(value.controllerAttrValue != controlAttributeValue && controlAttributeNames.length != 0) {
+					/* the removed attributes value should be set to empty */
+					$("#"+tableId+ " tbody tr").each(function() {
+						var metadataName = $(this).find('td').eq(0).text().trim();
+						var controlAttributeDisplayNames = Object.values(controlAttributeNames).map(item => item.displayName);
+						var removedMetadataName = $(this).find('td').eq(1).children().attr('name');
+						
+						if ($.inArray(metadataName, controlAttributeDisplayNames) !== -1) {
+							$('<input>').attr({type: 'hidden',name: removedMetadataName,value:""}).appendTo(form);
+							$(this).remove();
+						}
+					});
+				
+		    }
+		  
+       });
+    }
 	
 }
 

@@ -1136,6 +1136,7 @@ public abstract class AbstractDoeController {
 				}));
 
 			}
+			session.setAttribute("validValuesList", datasetList);
 			return datasetList;
 		} catch (Exception e) {
 			log.error("Failed to get model/reference dataset paths");

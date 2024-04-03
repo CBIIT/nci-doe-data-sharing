@@ -192,6 +192,28 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 
 	}
 
+	@GetMapping(value = "/getControlAttributesList")
+	public ResponseEntity<List<DoeMetadataAttrEntry>> getControllerAttributesList(
+			@RequestParam(value = "collectionType") String collectionType,
+			@RequestParam(value = "controllerAttribute") String controllerAttribute, HttpSession session,
+			HttpServletRequest request, HttpServletResponse response) {
+
+		log.info("get control attributes for" + controllerAttribute);
+		List<DoeMetadataAttrEntry> controlAttrList = new ArrayList<DoeMetadataAttrEntry>();
+
+		try {
+			controlAttrList = getControlAttributes(request, session, basePath, collectionType, controllerAttribute);
+
+			return new ResponseEntity<>(controlAttrList, HttpStatus.OK);
+
+		} catch (Exception e) {
+			log.debug(e.getMessage());
+		}
+
+		return new ResponseEntity<>(controlAttrList, HttpStatus.OK);
+
+	}
+
 	/**
 	 * Create collection
 	 * 
@@ -305,6 +327,10 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 					audit.setPath(doeCollection.getPath());
 					auditingService.saveAuditInfo(audit);
 				}
+				
+				//remove the session attribute 
+				
+				session.removeAttribute("validValuesList");
 
 				return "Collection is created!";
 			}

@@ -390,6 +390,97 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		return types;
 	}
 
+	@SuppressWarnings("unchecked")
+	protected List<DoeMetadataAttrEntry> getControlAttributes(HttpServletRequest request, HttpSession session,
+			String basePath, String collectionType, String controllerAttribute) throws DoeWebException {
+
+		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		List<DoeMetadataAttrEntry> controlAttributeEntries = new ArrayList<DoeMetadataAttrEntry>();
+		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
+		if (modelDTO == null) {
+			modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL);
+			session.setAttribute("userDOCModel", modelDTO);
+		}
+		List<HpcMetadataValidationRule> rules = null;
+		HpcDataManagementRulesDTO basePathRules = DoeClientUtil.getBasePathManagementRules(modelDTO, basePath);
+		if (basePathRules != null) {
+			HpcDataHierarchy dataHierarchy = basePathRules.getDataHierarchy();
+			if (dataHierarchy != null) {
+				rules = basePathRules.getCollectionMetadataValidationRules();
+
+			}
+		}
+
+		log.info("base path rules:" + rules);
+
+		List<HpcMetadataValidationRule> controllerAttrRules = rules.stream()
+				.filter(e -> e.getCollectionTypes().contains(collectionType) && (e.getControllerAttribute() != null
+						&& e.getControllerAttribute().equalsIgnoreCase(controllerAttribute)))
+				.collect(Collectors.toList());
+		if (CollectionUtils.isNotEmpty(controllerAttrRules)) {
+
+			for (HpcMetadataValidationRule rule : controllerAttrRules) {
+
+				DoeMetadataAttrEntry entry = new DoeMetadataAttrEntry();
+				entry.setAttrName(rule.getAttribute());
+
+				if (entry.getAttrValue() == null) {
+					entry.setAttrValue(rule.getDefaultValue());
+				}
+				if (rule.getValidValues() != null && !rule.getValidValues().isEmpty()) {
+					List<KeyValueBean> validValues = new ArrayList<KeyValueBean>();
+					rule.getValidValues().stream().forEach(e -> validValues.add(new KeyValueBean(e, e)));
+					entry.setValidValues(validValues);
+				}
+
+				if (rule.getAttribute().equalsIgnoreCase("applicable_model_paths")) {
+
+					/*
+					 * get this info from dme search api
+					 */
+
+					List<KeyValueBean> validValues = (List<KeyValueBean>) session.getAttribute("validValuesList");
+					if (CollectionUtils.isEmpty(validValues)) {
+						validValues = getAllApplicableModelPaths(session);
+					}
+
+					entry.setValidValues(validValues);
+				}
+				entry.setDescription(rule.getDescription());
+
+				if (StringUtils.isNotEmpty(rule.getDefaultValue())) {
+					entry.setMandatory(Boolean.FALSE);
+				} else if (StringUtils.isNotEmpty(rule.getControllerAttribute())) {
+					entry.setMandatory(Boolean.TRUE);
+				} else {
+					entry.setMandatory(rule.getMandatory());
+				}
+
+				entry.setControllerAttrName(rule.getControllerAttribute());
+				entry.setControllerAttrValue(rule.getControllerValue());
+				if (StringUtils.isNotEmpty(rule.getDefaultValue())) {
+					entry.setDefaultValue(rule.getDefaultValue());
+				}
+				LookUp val = lookUpService.getLookUpByLevelAndName(collectionType, rule.getAttribute());
+				if (val != null) {
+					entry.setDisplayName(val.getDisplayName());
+					entry.setIsEditable(val.getIsEditable());
+					entry.setDisplayOrder(val.getDisplayOrder());
+					entry.setIsVisible(val.getIsVisible());
+					entry.setIsVisibleOnUplaodPage(val.getIsVisibleOnUplaodPage());
+					entry.setIsVisibleForReviewCommiteeMember(val.getIsVisibleForReviewCommiteeMember());
+				} else {
+					entry.setDisplayName(rule.getAttribute());
+					entry.setIsEditable(true);
+				}
+				controlAttributeEntries.add(entry);
+			}
+		}
+
+		return controlAttributeEntries;
+	}
+
+	@SuppressWarnings("unchecked")
 	protected List<DoeMetadataAttrEntry> populateFormAttributes(HttpServletRequest request, HttpSession session,
 			String basePath, String collectionType, String[] controllerAttribute, String[] controllerValue,
 			Boolean refresh, List<DoeMetadataAttrEntry> cachedEntries) throws DoeWebException {
@@ -419,7 +510,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				.filter(e -> e.getCollectionTypes().contains(collectionType)).collect(Collectors.toList());
 
 		List<DoeMetadataAttrEntry> metadataEntries = new ArrayList<DoeMetadataAttrEntry>();
-		List<String> attributeNames = new ArrayList<String>();
+
 		log.info("base path rules for collection type:" + collectionType + " are: " + filteredRules);
 
 		if (CollectionUtils.isEmpty(controllerValuesList) && CollectionUtils.isEmpty(controllerAttrList)
@@ -453,69 +544,71 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 
 		if (filteredControllerRules != null && !filteredControllerRules.isEmpty()) {
 			for (HpcMetadataValidationRule rule : filteredControllerRules) {
-				if (!rule.getAttribute().equalsIgnoreCase("collection_type")) {
-					log.info("get HpcMetadataValidationRule:" + rule);
 
-					// find out if this rule is a controller attribute for any other rule
-					HpcMetadataValidationRule isControllerForOtherAttr = filteredRules.stream()
-							.filter(e -> rule.getAttribute().equalsIgnoreCase(e.getControllerAttribute())).findAny()
-							.orElse(null);
+				log.info("get HpcMetadataValidationRule:" + rule);
 
-					DoeMetadataAttrEntry entry = new DoeMetadataAttrEntry();
-					entry.setAttrName(rule.getAttribute());
-					if (isControllerForOtherAttr != null) {
-						entry.setControllerAttribute(Boolean.TRUE);
-					} else {
-						entry.setControllerAttribute(Boolean.FALSE);
-					}
-					attributeNames.add(rule.getAttribute());
-					entry.setAttrValue(getFormAttributeValue(request, "zAttrStr_" + rule.getAttribute(), cachedEntries,
-							"zAttrStr_"));
-					if (entry.getAttrValue() == null) {
-						entry.setAttrValue(rule.getDefaultValue());
-					}
-					if (rule.getValidValues() != null && !rule.getValidValues().isEmpty()) {
-						List<KeyValueBean> validValues = new ArrayList<KeyValueBean>();
-						rule.getValidValues().stream().forEach(e -> validValues.add(new KeyValueBean(e, e)));
-						entry.setValidValues(validValues);
-					}
+				// find out if this rule is a controller attribute for any other rule
+				HpcMetadataValidationRule isControllerForOtherAttr = filteredRules.stream()
+						.filter(e -> rule.getAttribute().equalsIgnoreCase(e.getControllerAttribute())).findAny()
+						.orElse(null);
 
-					if (rule.getAttribute().equalsIgnoreCase("applicable_model_paths")) {
-
-						/*
-						 * get this info from dme search api
-						 */
-						List<KeyValueBean> validValues = getAllApplicableModelPaths(session);
-						entry.setValidValues(validValues);
-					}
-					entry.setDescription(rule.getDescription());
-
-					if (StringUtils.isNotEmpty(rule.getDefaultValue())) {
-						entry.setMandatory(Boolean.FALSE);
-					} else if (StringUtils.isNotEmpty(rule.getControllerAttribute())) {
-						entry.setMandatory(Boolean.TRUE);
-					} else {
-						entry.setMandatory(rule.getMandatory());
-					}
-
-					if (StringUtils.isNotEmpty(rule.getDefaultValue())) {
-						entry.setDefaultValue(rule.getDefaultValue());
-					}
-					LookUp val = lookUpService.getLookUpByLevelAndName(collectionType, rule.getAttribute());
-					if (val != null) {
-						entry.setDisplayName(val.getDisplayName());
-						entry.setIsEditable(val.getIsEditable());
-						entry.setDisplayOrder(val.getDisplayOrder());
-						entry.setIsVisible(val.getIsVisible());
-						entry.setIsVisibleOnUplaodPage(val.getIsVisibleOnUplaodPage());
-						entry.setIsVisibleForReviewCommiteeMember(val.getIsVisibleForReviewCommiteeMember());
-					} else {
-						entry.setDisplayName(rule.getAttribute());
-						entry.setIsEditable(true);
-					}
-					metadataEntries.add(entry);
-
+				DoeMetadataAttrEntry entry = new DoeMetadataAttrEntry();
+				entry.setAttrName(rule.getAttribute());
+				if (isControllerForOtherAttr != null) {
+					entry.setControllerAttribute(Boolean.TRUE);
+				} else {
+					entry.setControllerAttribute(Boolean.FALSE);
 				}
+
+				entry.setAttrValue(
+						getFormAttributeValue(request, "zAttrStr_" + rule.getAttribute(), cachedEntries, "zAttrStr_"));
+				if (entry.getAttrValue() == null) {
+					entry.setAttrValue(rule.getDefaultValue());
+				}
+				if (rule.getValidValues() != null && !rule.getValidValues().isEmpty()) {
+					List<KeyValueBean> validValues = new ArrayList<KeyValueBean>();
+					rule.getValidValues().stream().forEach(e -> validValues.add(new KeyValueBean(e, e)));
+					entry.setValidValues(validValues);
+				}
+
+				if (rule.getAttribute().equalsIgnoreCase("applicable_model_paths")) {
+
+					/*
+					 * get this info from dme search api
+					 */
+					List<KeyValueBean> validValues = (List<KeyValueBean>) session.getAttribute("validValuesList");
+					if (CollectionUtils.isEmpty(validValues)) {
+						validValues = getAllApplicableModelPaths(session);
+					}
+					entry.setValidValues(validValues);
+				}
+				entry.setDescription(rule.getDescription());
+
+				if (StringUtils.isNotEmpty(rule.getDefaultValue())) {
+					entry.setMandatory(Boolean.FALSE);
+				} else if (StringUtils.isNotEmpty(rule.getControllerAttribute())) {
+					entry.setMandatory(Boolean.TRUE);
+				} else {
+					entry.setMandatory(rule.getMandatory());
+				}
+
+				if (StringUtils.isNotEmpty(rule.getDefaultValue())) {
+					entry.setDefaultValue(rule.getDefaultValue());
+				}
+				LookUp val = lookUpService.getLookUpByLevelAndName(collectionType, rule.getAttribute());
+				if (val != null) {
+					entry.setDisplayName(val.getDisplayName());
+					entry.setIsEditable(val.getIsEditable());
+					entry.setDisplayOrder(val.getDisplayOrder());
+					entry.setIsVisible(val.getIsVisible());
+					entry.setIsVisibleOnUplaodPage(val.getIsVisibleOnUplaodPage());
+					entry.setIsVisibleForReviewCommiteeMember(val.getIsVisibleForReviewCommiteeMember());
+				} else {
+					entry.setDisplayName(rule.getAttribute());
+					entry.setIsEditable(true);
+				}
+				metadataEntries.add(entry);
+
 			}
 		}
 		// Handle custom attributes. If refresh, ignore them
@@ -551,7 +644,6 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 								Comparator.nullsLast(Comparator.naturalOrder()))
 						.thenComparing(DoeMetadataAttrEntry::getAttrName));
 
-		session.setAttribute("metadataEntries", metadataEntries);
 		return metadataEntries;
 
 	}
@@ -765,7 +857,6 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		boolean[] isExcludeParentMetadata = { false, false, false };
 		String[] rowIds = { "1", "2", "3" };
 		String[] operators = { "EQUAL", "EQUAL", "EQUAL" };
-		// boolean[] iskeyWordSearch = { true, false };
 
 		search.setAttrName(attrNames);
 		search.setAttrValue(attrValues);
@@ -773,7 +864,6 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		search.setIsExcludeParentMetadata(isExcludeParentMetadata);
 		search.setRowId(rowIds);
 		search.setOperator(operators);
-		// search.setIskeyWordSearch(iskeyWordSearch);
 
 		return getPathsForSearch(search, session);
 

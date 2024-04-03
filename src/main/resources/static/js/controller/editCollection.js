@@ -105,7 +105,7 @@ function constructEditCollectionMetadata(data, status) {
 										.append(
 												'<tr><td>'
 														+ value.displayName
-														+ '&nbsp;&nbsp;" + infoHtml + "</td><td>'
+														+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
 														+ '<select class="simple-select2" multiple="multiple" placeholder="Required" is_mandatory="'
 														+ value.mandatory + '" id="' + value.attrName
 														+ '" name="zAttrStr_' + value.attrName + '" '

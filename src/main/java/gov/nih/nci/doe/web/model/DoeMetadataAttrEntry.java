@@ -18,6 +18,24 @@ public class DoeMetadataAttrEntry {
 	private Boolean isVisible;
 	private Boolean isVisibleOnUplaodPage;
 	private Boolean isVisibleForReviewCommiteeMember;
+	private String controllerAttrName;
+	private String controllerAttrValue;
+
+	public String getControllerAttrName() {
+		return controllerAttrName;
+	}
+
+	public void setControllerAttrName(String controllerAttrName) {
+		this.controllerAttrName = controllerAttrName;
+	}
+
+	public String getControllerAttrValue() {
+		return controllerAttrValue;
+	}
+
+	public void setControllerAttrValue(String controllerAttrValue) {
+		this.controllerAttrValue = controllerAttrValue;
+	}
 
 	public Boolean getIsVisibleForReviewCommiteeMember() {
 		return isVisibleForReviewCommiteeMember;
