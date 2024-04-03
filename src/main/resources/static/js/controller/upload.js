@@ -581,9 +581,9 @@ function constructNewCollectionMetaDataSet(data, status) {
 								}
 							}
 							if (value.defaultValue) {
-								$select.select2().val(value.defaultValue).trigger('change');
+								$select.select2().val(value.defaultValue);
 							} else {
-								$select.select2().trigger('change');
+								$select.select2();
 							}
 
 						} else if (value.attrValue && value.isVisibleOnUplaodPage != false) {
@@ -1175,9 +1175,9 @@ function constructAssetTypeBulkDiv(data, status) {
 							}
 
 							if (value.defaultValue) {
-								$select.select2().val(value.defaultValue).trigger('change');
+								$select.select2().val(value.defaultValue);
 							} else {
-								$select.select2().trigger('change');
+								$select.select2();
 							}
 
 						} else if (value.attrName && value.attrName != 'asset_name' && value.attrName != 'asset_type'
