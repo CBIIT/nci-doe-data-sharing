@@ -395,7 +395,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 		List<DoeMetadataAttrEntry> controlAttributeEntries = new ArrayList<DoeMetadataAttrEntry>();
-		
+
 		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
 		if (modelDTO == null) {
 			modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL);
@@ -418,7 +418,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 						&& e.getControllerAttribute().equalsIgnoreCase(controllerAttribute)))
 				.collect(Collectors.toList());
 
-		controlAttributeEntries = getMetadataEntrues(controllerAttrRules, collectionType, request, session, null);
+		controlAttributeEntries = getMetadataEntries(controllerAttrRules, null, collectionType, request, session, null);
 
 		return controlAttributeEntries;
 	}
@@ -484,7 +484,8 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 						&& (e.getControllerValue() == null || controllerValuesList.contains(e.getControllerValue())))
 				.collect(Collectors.toList());
 
-		metadataEntries = getMetadataEntrues(filteredControllerRules, collectionType, request, session, cachedEntries);
+		metadataEntries = getMetadataEntries(filteredControllerRules, filteredRules, collectionType, request, session,
+				cachedEntries);
 
 		// Handle custom attributes. If refresh, ignore them
 		if (Boolean.FALSE.equals(refresh)) {
@@ -524,9 +525,9 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<DoeMetadataAttrEntry> getMetadataEntrues(List<HpcMetadataValidationRule> metadataRules,
-			String collectionType, HttpServletRequest request, HttpSession session,
-			List<DoeMetadataAttrEntry> cachedEntries) throws DoeWebException {
+	private List<DoeMetadataAttrEntry> getMetadataEntries(List<HpcMetadataValidationRule> metadataRules,
+			List<HpcMetadataValidationRule> filteredRules, String collectionType, HttpServletRequest request,
+			HttpSession session, List<DoeMetadataAttrEntry> cachedEntries) throws DoeWebException {
 
 		List<DoeMetadataAttrEntry> metadataEntries = new ArrayList<DoeMetadataAttrEntry>();
 
@@ -534,20 +535,22 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			for (HpcMetadataValidationRule rule : metadataRules) {
 
 				log.info("get HpcMetadataValidationRule:" + rule);
-
-				// find out if this rule is a controller attribute for any other rule
-				HpcMetadataValidationRule isControllerForOtherAttr = metadataRules.stream()
-						.filter(e -> rule.getAttribute().equalsIgnoreCase(e.getControllerAttribute())).findAny()
-						.orElse(null);
-
 				DoeMetadataAttrEntry entry = new DoeMetadataAttrEntry();
-				entry.setAttrName(rule.getAttribute());
-				if (isControllerForOtherAttr != null) {
-					entry.setControllerAttribute(Boolean.TRUE);
-				} else {
-					entry.setControllerAttribute(Boolean.FALSE);
+
+				if (CollectionUtils.isNotEmpty(filteredRules)) {
+					// find out if this rule is a controller attribute for any other rule
+					HpcMetadataValidationRule isControllerForOtherAttr = filteredRules.stream()
+							.filter(e -> rule.getAttribute().equalsIgnoreCase(e.getControllerAttribute())).findAny()
+							.orElse(null);
+
+					if (isControllerForOtherAttr != null) {
+						entry.setControllerAttribute(Boolean.TRUE);
+					} else {
+						entry.setControllerAttribute(Boolean.FALSE);
+					}
 				}
 
+				entry.setAttrName(rule.getAttribute());
 				entry.setAttrValue(
 						getFormAttributeValue(request, "zAttrStr_" + rule.getAttribute(), cachedEntries, "zAttrStr_"));
 				if (entry.getAttrValue() == null) {
