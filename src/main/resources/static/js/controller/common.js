@@ -182,7 +182,7 @@ $(document)
 						    
 						    /* show sync download if file size is less than 2GB */
 						    
-						    if(fileSize && fileSize < 2147483648) {
+						    if((fileSize && fileSize < 2147483648) || !fileSize) {
 						    	$("#syncRadioSet").show();
 						    } else  {
 						     	$("#syncRadioSet").hide();
