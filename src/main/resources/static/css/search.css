@@ -691,7 +691,8 @@ label.filter_checked {
 }
 
 #sortingDiv {
-	margin-left: 2rem;
+	margin-left: auto;
+    margin-right: auto;
 }
 
     
