@@ -612,6 +612,11 @@ a {
   }
 }
 
+#registerCollectionForm {
+	input.select2-search__field {
+		width: auto !important;
+	}
+}
 /*tabs*/
 .tab-content>.tab-pane {
 	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,e2e1e0+34,e2e1e0+100 */
