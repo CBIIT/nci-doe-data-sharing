@@ -499,6 +499,8 @@ function constructNewCollectionMetaDataSet(data, status) {
 	$("#newMetaDataTable tbody").html("");
 	var parentAccessgrp = $("#parentAccessGroup").val();
 	var assetType = $("#assetType").val();
+	var collectionType = $("#collectionType").val();
+	
 	$
 			.each(
 					data,
@@ -691,8 +693,10 @@ function retrieveCollectionList(data, status) {
 
 	if (collectionType == 'Folder') {
 		displayCollectionType = 'Asset Subcollection';
+		$(".folderDiv").show();
 	} else {
 		displayCollectionType = collectionType;
+		$(".folderDiv").hide();
 	}
 	$("#parentCollectionType").val(parent);
 	$("#parentAccessGroup").val(parentAccessGrp);
@@ -788,6 +792,21 @@ function registerCollection() {
 			collectionName = modifiedName;
 		}
 	});
+	
+	if(collectionType && collectionType == 'Folder') {
+	
+	        var folderName = $("#folder_name").val();
+		    var folderNameModifief = folderName.replace(/ /g, "_");
+			collectionName = folderNameModifief;
+			if(!folderName) {			
+				 validate = false;
+				$(".registerErrorMsg").append("Enter Folder Name");
+				$(".registerMsgErrorBlock").show();
+				$('body,html').animate({
+					scrollTop : 0
+				}, 500);
+			}
+		} 
 
 	$("textarea").each(function() {
 		var ismandatory = $(this).attr('is_mandatory');
