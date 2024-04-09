@@ -58,6 +58,7 @@ import javax.ws.rs.core.Response;
 import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.jaxrs.client.ClientConfiguration;
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -377,12 +378,16 @@ public class DoeClientUtil {
 	}
 
 	public static Response getDataObjectQuery(String token, String compoundDataObjectSearchServiceURL,
-			Boolean returnParent, HpcCompoundMetadataQueryDTO compoundMetadataQuery)
+			Boolean returnParent, HpcCompoundMetadataQueryDTO compoundMetadataQuery, String assetPath)
 			throws MalformedURLException, DoeWebException {
 
 		log.info("get data objects query");
 		try {
 			UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(compoundDataObjectSearchServiceURL);
+
+			if (StringUtils.isNotEmpty(assetPath)) {
+				ucBuilder.path(assetPath);
+			}
 			ucBuilder.queryParam("returnParent", returnParent);
 			String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
 			WebClient client = DoeClientUtil.getWebClient(requestURL);

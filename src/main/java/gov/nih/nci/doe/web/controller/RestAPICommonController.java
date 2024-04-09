@@ -1023,7 +1023,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		compoundMetadataQuery.setDetailedResponse(true);
 
 		Response restResponse = DoeClientUtil.getDataObjectQuery(authToken, compoundDataObjectSearchServiceURL,
-				returnParent, compoundMetadataQuery);
+				returnParent, compoundMetadataQuery, null);
 
 		if (restResponse.getStatus() == 200 || restResponse.getStatus() == 201) {
 			MappingJsonFactory factory = new MappingJsonFactory();

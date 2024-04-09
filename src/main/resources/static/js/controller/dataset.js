@@ -1377,7 +1377,7 @@ function exportDataObjectMetadataResults($this) {
 			selectedPaths.push($(this).attr('id'));
 		});
 	}
-	var assetIdentifier = $("#assetPath").val();
+	var assetPath = $("#assetPath").val();
 	bootbox.confirm({
 		message : "Do you wish to include parent metadata also?",
 		buttons : {
@@ -1392,11 +1392,11 @@ function exportDataObjectMetadataResults($this) {
 		},
 		callback : function(result) {
 			if (result == true) {
-				window.open('/export?assetIdentifier=' + assetIdentifier + '&&isParent=true&&selectedPaths='
+				window.open('/export?assetPath=' + assetPath + '&&isParent=true&&selectedPaths='
 						+ selectedPaths, '_self');
 			} else if (result == false) {
 
-				window.open('/export?assetIdentifier=' + assetIdentifier + '&&isParent=false&&selectedPaths='
+				window.open('/export?assetPath=' + assetPath + '&&isParent=false&&selectedPaths='
 						+ selectedPaths, '_self');
 			}
 		}

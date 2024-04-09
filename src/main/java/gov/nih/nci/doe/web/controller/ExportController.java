@@ -11,7 +11,6 @@ import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
@@ -48,7 +46,7 @@ public class ExportController extends AbstractDoeController {
 
 	@GetMapping
 	public String exportMetadata(HttpSession session, HttpServletResponse response, HttpServletRequest request,
-			@RequestParam(value = "assetIdentifier") String assetIdentifier,
+			@RequestParam(value = "assetPath") String assetPath,
 			@RequestParam(value = "selectedPaths") String selectedPaths,
 			@RequestParam(value = "isParent") String isParent) throws Exception {
 
@@ -83,20 +81,8 @@ public class ExportController extends AbstractDoeController {
 		dataObjectCompoundQuery.setPageSize(500);
 		dataObjectCompoundQuery.setDetailedResponse(true);
 
-		UriComponentsBuilder ucBuilder = UriComponentsBuilder.fromHttpUrl(compoundDataObjectSearchServiceURL);
-
-		if (ucBuilder == null) {
-			return null;
-		}
-
-		ucBuilder.pathSegment(assetIdentifier.substring(1, assetIdentifier.length()));
-
-		final String requestURL = ucBuilder.build().encode().toUri().toURL().toExternalForm();
-
-		WebClient client = DoeClientUtil.getWebClient(requestURL);
-		client.header("Authorization", "Bearer " + authToken);
-
-		Response restResponse = client.invoke("POST", dataObjectCompoundQuery);
+		Response restResponse = DoeClientUtil.getDataObjectQuery(authToken, compoundDataObjectSearchServiceURL, false,
+				dataObjectCompoundQuery, assetPath);
 
 		if (StringUtils.isNotEmpty(selectedPaths)) {
 

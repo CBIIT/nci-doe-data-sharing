@@ -64,17 +64,15 @@ public class DoeBrowseController extends AbstractDoeController {
 		String authToken = (String) session.getAttribute("hpcUserToken");
 		DoeBrowserEntry browserEntry = (DoeBrowserEntry) session.getAttribute("browserEntry");
 		List<KeyValueBean> results = new ArrayList<>();
-		boolean getChildren = false;
 		boolean refresh = false;
 
 		if (!StringUtils.isEmpty(refreshNode)) {
-			getChildren = true;
 			refresh = true;
 		}
 
 		try {
 			if (selectedPath != null) {
-				browserEntry = getTreeNodes(selectedPath.trim(), browserEntry, authToken, getChildren, true, refresh);
+				browserEntry = getTreeNodes(selectedPath.trim(), browserEntry, authToken, true, refresh);
 
 				browserEntry = trimPath(browserEntry, browserEntry.getName());
 				String name = browserEntry.getName().substring(browserEntry.getName().lastIndexOf('/') + 1);
@@ -134,7 +132,7 @@ public class DoeBrowseController extends AbstractDoeController {
 					browserEntry.setFullPath(path);
 
 					browserEntry.setName(path);
-					browserEntry = getTreeNodes(path, browserEntry, authToken, false, true, false);
+					browserEntry = getTreeNodes(path, browserEntry, authToken, true, false);
 					browserEntry = trimPath(browserEntry, browserEntry.getName());
 					session.setAttribute("browserEntry", browserEntry);
 				}
@@ -179,8 +177,8 @@ public class DoeBrowseController extends AbstractDoeController {
 		return null;
 	}
 
-	private DoeBrowserEntry getTreeNodes(String path, DoeBrowserEntry browserEntry, String authToken,
-			boolean getChildren, boolean partial, boolean refresh) throws DoeWebException {
+	private DoeBrowserEntry getTreeNodes(String path, DoeBrowserEntry browserEntry, String authToken, boolean partial,
+			boolean refresh) throws DoeWebException {
 
 		path = path.trim();
 		DoeBrowserEntry selectedEntry = getSelectedEntry(path, browserEntry);
@@ -221,14 +219,11 @@ public class DoeBrowseController extends AbstractDoeController {
 				listChildEntry.setFullPath(listEntry.getPath());
 				listChildEntry.setName(listEntry.getPath());
 				listChildEntry.setPopulated(false);
-				if (getChildren)
-					listChildEntry = getTreeNodes(listEntry.getPath(), listChildEntry, authToken, false, partial,
-							false);
-				else {
-					DoeBrowserEntry emptyEntry = new DoeBrowserEntry();
-					emptyEntry.setName("");
-					listChildEntry.getChildren().add(emptyEntry);
-				}
+
+				DoeBrowserEntry emptyEntry = new DoeBrowserEntry();
+				emptyEntry.setName("");
+				listChildEntry.getChildren().add(emptyEntry);
+
 				selectedEntry.getChildren().add(listChildEntry);
 			}
 
