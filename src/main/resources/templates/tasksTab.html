@@ -17,7 +17,8 @@
 	word-break: break-word;
     height: fit-content;
     width: fit-content;
-	background-color: #FFFFFF;
+	background-color: #264663;
+    color: #FFF !important;
 	box-shadow: 0 0 76px 29px rgba(28, 29, 29, 0.22);
 }
 
@@ -25,13 +26,20 @@
 	background-color: transparent !important;
 	border-bottom: none !important;
 }
+.popover-body {
+	color:#FFF;
+}
+.bs-popover-auto[x-placement^=right]>.arrow::after, .bs-popover-right>.arrow::after {
+	border-right-color: #264663;
+}
 
 .closeBtn {
-	color: #DE7417 !important;
+	/* color: #DE7417 !important; */
+	color:#FFF !important;
+
 }
 
 .divTable {
-	border: 0.95px solid #898989;
 	height: fit-content;
 	width: 569px;
 	margin-top: 10px;
@@ -43,6 +51,25 @@
 	border: none !important;
 	display: table-cell;
 	padding: 5px 10px;
+}
+
+.statusHeroContainer {
+	height: 133px;
+	background: linear-gradient(90deg, #015694 18.75%, #6A78AC 50.93%, #C57908 89.72%);
+    background-size: cover;
+}
+
+.statusHeroText {
+	color: #FFF;
+    text-align: center;
+    font-family: Inter;
+    font-size: 2.75rem;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 106.523%;
+    letter-spacing: -0.38px;
+    padding-left: 2rem;
+    padding-right: 2rem;
 }
 </style>
 <body>
@@ -67,7 +94,11 @@
 
 		<!-- Content -->
 		<div role="main" id="content">
+			<div class="row justify-content-center align-items-center statusHeroContainer">
+				<div class="statusHeroText">Status</div>
+			</div>
 			<div class="card-body tab-content text-left" id="pills-tabContent">
+
 				<div th:replace="fragments/manageTasks :: manageTasks">Tasks
 					tab</div>
 
