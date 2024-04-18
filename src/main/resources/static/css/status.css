@@ -9,6 +9,11 @@ table#inferencingTable th {
 	padding: 6px 14px;
 }
 
+table#manageTasksTable th{
+	padding-right: 3rem;
+}
+
+
 table#manageTasksTable td,
 table#inferencingTable td {
 	color: #152868;
@@ -79,7 +84,7 @@ table#inferencingTable tr.odd td {
 			margin-top: -6px;
 			color: #515A6A !important;
 			font-family: Inter;
-			font-size: 12px;
+			font-size: 13px;
 			font-style: normal;
 			font-weight: 500;
 			letter-spacing: 0.12px;
