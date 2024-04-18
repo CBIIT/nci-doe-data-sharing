@@ -17,7 +17,8 @@
 	word-break: break-word;
     height: fit-content;
     width: fit-content;
-	background-color: #FFFFFF;
+	background-color: #264663;
+    color: #FFF !important;
 	box-shadow: 0 0 76px 29px rgba(28, 29, 29, 0.22);
 }
 
@@ -25,13 +26,20 @@
 	background-color: transparent !important;
 	border-bottom: none !important;
 }
+.popover-body {
+	color:#FFF;
+}
+.bs-popover-auto[x-placement^=right]>.arrow::after, .bs-popover-right>.arrow::after {
+	border-right-color: #264663;
+}
 
 .closeBtn {
-	color: #DE7417 !important;
+	/* color: #DE7417 !important; */
+	color:#FFF !important;
+
 }
 
 .divTable {
-	border: 0.95px solid #898989;
 	height: fit-content;
 	width: 569px;
 	margin-top: 10px;

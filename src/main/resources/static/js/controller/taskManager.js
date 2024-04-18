@@ -175,19 +175,19 @@ function dataTableInitInferenceTaskManager() {
 			"targets" : [ 4, 5 ]
 		} ],
 
-		"dom" : '<"top"lip>rt<"bottom"ip>',
+		"dom" : '<"top"lpi>rt<"bottom"lpi>',
 
 		"pagingType" : "simple",
 
-		"lengthMenu" : [ [ 10, 25, 50, 100 ], [ 10, 25, 50, 100 ] ],
+		"lengthMenu" : [ [ 10, 25, 50, 100 ], [10, 25, 50, 100 ] ],
 
 		"language" : {
 			"lengthMenu" : "ROWS PER PAGE &nbsp;&nbsp; _MENU_",
 			"sLoadingRecords" : "Loading...",
 			"zeroRecords" : "Nothing found to display",
 			"paginate" : {
-				next : '<i style="color:#000;font-size:17px;" class="fas fa-caret-right"></i>',
-				previous : '<i style="color:#000;font-size:17px;" class="fas fa-caret-left"></i>'
+				next : '<img src="/images/pagination_right_assetfiles.png"/>',
+				previous : '<img src="/images/paginate_left_assetFiles.png"/>'
 			},
 		}
 	});
@@ -315,7 +315,7 @@ function dataTableInitTaskManager() {
 			"targets" : [ 2, 3 ]
 		} ],
 
-		"dom" : '<"top"lip>rt<"bottom"ip>',
+		"dom" : '<"top"lpi>rt<"bottom"lpi>',
 
 		"pagingType" : "simple",
 
@@ -326,8 +326,8 @@ function dataTableInitTaskManager() {
 			"sLoadingRecords" : "Loading...",
 			"zeroRecords" : "Nothing found to display",
 			"paginate" : {
-				next : '<i style="color:#000;font-size:17px;" class="fas fa-caret-right"></i>',
-				previous : '<i style="color:#000;font-size:17px;" class="fas fa-caret-left"></i>'
+				next : '<img src="/images/pagination_right_assetfiles.png"/>',
+				previous : '<img src="/images/paginate_left_assetFiles.png"/>'
 			},
 		}
 	});
@@ -398,7 +398,7 @@ function renderTaskName(data, type, row) {
 				+ row.dataSetName
 				+ "' class='button3a' data-container='body' data-toggle='popover'"
 				+ "data-placement='right' data-trigger='click' data-popover-content='#a02'>"
-				+ "<img src='images/Status.info-tooltip.png' th:src='@{/images/Status.info-tooltip.png}' style='width:12px;' alt='Status info'></a></span>";
+				+ "<img src='/images/infoIcon.svg' th:src='@{/images/infoIcon.svg}' style='width:17px;' alt='Status info'></a></span>";
 	}
 
 	return html;
@@ -511,7 +511,7 @@ function openPopOverDisplay($this) {
 	var studyName = $this.attr('study_name');
 	var datasetName = $this.attr('datasetname');
 
-	var ind = "<div id=\"a02\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\">"
+	var ind = "<div id=\"a02\" class=\"col-md-12 hidden\"> <div class=\"popover-heading asset-identifier\">"
 			+ "<a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a> </div>"
 			+ "<div class='popover-body'> <div class='divTable' style='width: 100%;border: 1px solid #000;'>"
 			+ "<div class='divTableBody'>";

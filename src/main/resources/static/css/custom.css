@@ -436,7 +436,7 @@ table.dataTable thead .sorting_asc {
 }
 
 table#manageTasksTable thead .sorting{
-	background-image: url(/images/Sort-up.icon.svg) !important;
+	background-image: url(/images/asset_files_sort_up.svg) !important;
 	background-size: 16px 19px;
 }
 
@@ -446,12 +446,12 @@ table#manageTasksTable thead .sorting, table#manageTasksTable thead .sorting_asc
 }
 
 table#manageTasksTable thead .sorting_asc{
-	background-image: url(/images/Sort-up.icon.svg) !important;
+	background-image: url(/images/asset_files_sort_up.svg) !important;
 	background-size: 16px 19px;
 }
 
 table#manageTasksTable thead .sorting_desc{
-	background-image: url(/images/Sort-down.icon.svg) !important;
+	background-image: url(/images/asset_files_sort_down.svg) !important;
 	background-size: 16px 19px;
 }
 
