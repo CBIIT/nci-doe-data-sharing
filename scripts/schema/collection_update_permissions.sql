@@ -4,7 +4,7 @@ create table COLLECTION_UPDATE_PERMISSIONS_T
     ID              NUMBER not null
         constraint METADATA_PERMISSIONS_T_PK
             primary key,
-    COLLECTION_ID   NUMBER not null,
+    COLLECTION_ID   NUMBER,
     CREATED_DATE    DATE,
     COLLECTION_PATH VARCHAR2(500),
     USER_ID         NUMBER
