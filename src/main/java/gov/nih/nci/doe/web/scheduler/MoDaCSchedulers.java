@@ -28,9 +28,10 @@ import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.controller.AbstractDoeController;
 import gov.nih.nci.doe.web.domain.Auditing;
 import gov.nih.nci.doe.web.domain.InferencingTask;
-
+import gov.nih.nci.doe.web.domain.MetaDataPermissions;
 import gov.nih.nci.doe.web.repository.AuditingRepository;
 import gov.nih.nci.doe.web.repository.InferencingTaskRepository;
+import gov.nih.nci.doe.web.repository.MetaDataPermissionsRepository;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 
 import gov.nih.nci.hpc.domain.datatransfer.HpcFileLocation;
@@ -46,7 +47,7 @@ import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRespon
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationTaskDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcRegistrationSummaryDTO;
 
-public class ManageTasksScheduler extends AbstractDoeController {
+public class MoDaCSchedulers extends AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.download}")
 	private String queryServiceURL;
@@ -67,13 +68,16 @@ public class ManageTasksScheduler extends AbstractDoeController {
 	InferencingTaskRepository inferencingTaskRepository;
 
 	@Autowired
+	private MetaDataPermissionsRepository metaDataPermissionsRepository;
+
+	@Autowired
 	AuditingRepository auditingRepository;
 
 	@Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
 	private String registrationServiceV2URL;
 
 	public void init() {
-		log.info("manage scheduler called");
+		log.info("scheduler called");
 	}
 
 	SimpleDateFormat format = new SimpleDateFormat("MM_dd_yyyy");
@@ -460,6 +464,41 @@ public class ManageTasksScheduler extends AbstractDoeController {
 			}
 
 		}
+	}
+
+	@Scheduled(cron = "${doe.scheduler.collection.permissions}")
+	public void updateCollectionPermissions() throws DoeWebException {
+
+		log.info("collection permissions update scheduler");
+
+		// get all rows with empty collection Id and verify if collection exists
+		List<MetaDataPermissions> collectionPermList = metaDataPermissionsRepository
+				.getAllCollectionsWithEmptyCollectionId();
+		if (CollectionUtils.isNotEmpty(collectionPermList)) {
+			String authToken = DoeClientUtil.getAuthenticationToken(writeAccessUserName, writeAccessUserPassword,
+					authenticateURL);
+			for (MetaDataPermissions collection : collectionPermList) {
+
+				// Validate Collection path
+				try {
+					HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
+							collection.getCollectionPath(), false);
+
+					if (collectionDto != null && collectionDto.getCollections() != null
+							&& CollectionUtils.isNotEmpty(collectionDto.getCollections())) {
+						// colelction exists
+						collection.setCollectionId(
+								collectionDto.getCollections().get(0).getCollection().getCollectionId());
+						metaDataPermissionsRepository.saveAndFlush(collection);
+					}
+				} catch (DoeWebException e) {
+					// collection does not exist
+					log.debug("Error in getting collection" + e.getMessage());
+				}
+			}
+
+		}
+
 	}
 
 	private gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO constructV2BulkRequest(
