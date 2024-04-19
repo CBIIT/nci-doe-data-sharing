@@ -475,10 +475,11 @@ public class MoDaCSchedulers extends AbstractDoeController {
 		List<MetaDataPermissions> collectionPermList = metaDataPermissionsRepository
 				.getAllCollectionsWithEmptyCollectionId();
 		if (CollectionUtils.isNotEmpty(collectionPermList)) {
+			log.info("empty collection Id's exist");
 			String authToken = DoeClientUtil.getAuthenticationToken(writeAccessUserName, writeAccessUserPassword,
 					authenticateURL);
 			for (MetaDataPermissions collection : collectionPermList) {
-
+				log.info("verifying collection Id for path: " + collection.getCollectionPath());
 				// Validate Collection path
 				try {
 					HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
@@ -487,6 +488,7 @@ public class MoDaCSchedulers extends AbstractDoeController {
 					if (collectionDto != null && collectionDto.getCollections() != null
 							&& CollectionUtils.isNotEmpty(collectionDto.getCollections())) {
 						// colelction exists
+						log.info("updating collection Id for path:" + collection.getCollectionPath());
 						collection.setCollectionId(
 								collectionDto.getCollections().get(0).getCollection().getCollectionId());
 						metaDataPermissionsRepository.saveAndFlush(collection);
