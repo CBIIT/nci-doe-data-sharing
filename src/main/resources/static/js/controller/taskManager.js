@@ -67,6 +67,8 @@ function dataTableInitInferenceTaskManager() {
 		"ordering" : true,
 		"info" : true,
 		"pageLength" : 25,
+    "responsive": false,
+
 		"ajax" : {
 			"url" : "/performInferencing",
 			"type" : "GET",
@@ -156,19 +158,19 @@ function dataTableInitInferenceTaskManager() {
 		}, ],
 
 		"columnDefs" : [ {
-			className : "td_class_4",
+			className : "td_class_1",
 			"targets" : [ 0 ]
 		}, {
-			className : "td_class_2",
+			className : "td_class_1",
 			"targets" : [ 1 ]
 		}, {
-			className : "td_class_2",
+			className : "td_class_1",
 			"targets" : [ 2 ]
 		}, {
-			className : "td_class_2",
+			className : "td_class_1",
 			"targets" : [ 3 ]
 		}, {
-			className : "td_class_5",
+			className : "td_class_1",
 			"targets" : [ -1 ]
 		}, {
 			type : "date",
