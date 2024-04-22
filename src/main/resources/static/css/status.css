@@ -51,7 +51,7 @@ table#inferencingTable td {
 #displayAllDiv {
 	float: right;
 	margin-bottom: 10px;
-	margin-right: -27px;
+	margin-right: 28px;
 	color: #000000;
 	font-family: 'latoregular';
 	font-size: 16px;
@@ -168,5 +168,4 @@ table#inferencingTable tr.odd td {
 		background-position: calc(100% - 14px) center;
 		padding-right: 14px;
 	}
-}
 }
