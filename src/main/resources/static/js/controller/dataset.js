@@ -759,8 +759,8 @@ $('#dataSetTable tbody')
 																	+ "'"
 																	+ "tabindex='0'"
 																	+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
-																	+ "data-popover-content='#a01'><img src='images/Status.info-tooltip.png'"
-																	+ "th:src='@{/images/Status.info-tooltip.png}' class='infoMetadata' data-toggle='tooltip'"
+																	+ "data-popover-content='#a01'><img src='images/infoIcon.svg'"
+																	+ "th:src='@{/images/infoIcon.svg}' class='infoMetadata' data-toggle='tooltip'"
 																	+ "title='"
 																	+ metadataInfoTitle
 																	+ "' alt='Status info'></a>";
@@ -972,8 +972,8 @@ function renderInputDatasetName(data, type, row) {
 			+ row.inputDatasetName
 			+ "' tabindex='0'"
 			+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
-			+ "data-popover-content='#a01'><img src='images/Status.info-tooltip.png' class='infoMetadata'"
-			+ " th:src='@{/images/Status.info-tooltip.png}' data-toggle='tooltip' title='File Metadata' alt='Status info'></i></a>";
+			+ "data-popover-content='#a01'><img src='images/infoIcon.svg' class='infoMetadata'"
+			+ " th:src='@{/images/infoIcon.svg}' data-toggle='tooltip' title='File Metadata' alt='Status info'></i></a>";
 
 	html += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;' "
 			+ "class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
@@ -992,8 +992,8 @@ function renderOutcomeName(data, type, row) {
 				+ " selected_path= '" + row.outcomeFilePath + "' collection_type= 'DataObject'" + "file_name = '"
 				+ row.outcomeFileName + "'tabindex='0'"
 				+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
-				+ "data-popover-content='#a01'><img src='images/Status.info-tooltip.png' "
-				+ "th:src='@{/images/Status.info-tooltip.png}' data-toggle='tooltip' class='infoMetadata'"
+				+ "data-popover-content='#a01'><img src='images/infoIcon.svg' "
+				+ "th:src='@{/images/infoIcon.svg}' data-toggle='tooltip' class='infoMetadata'"
 				+ " title='File Metadata' alt='Status info'></a>";
 
 		html += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;' "
@@ -1013,8 +1013,8 @@ function renderPredictionsName(data, type, row) {
 			+ " selected_path= '" + row.predictionsPath + "' collection_type= 'DataObject'" + "file_name = '"
 			+ row.predictionsName + "'tabindex='0'"
 			+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
-			+ "data-popover-content='#a01'><img src='images/Status.info-tooltip.png' "
-			+ "th:src='@{/images/Status.info-tooltip.png}' data-toggle='tooltip' class='infoMetadata' "
+			+ "data-popover-content='#a01'><img src='images/infoIcon.svg' "
+			+ "th:src='@{/images/infoIcon.svg}' data-toggle='tooltip' class='infoMetadata' "
 			+ "title='File Metadata' alt='Status info'></a>";
 
 	html += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;' "
@@ -1069,8 +1069,8 @@ function renderDataSetPath(data, type, row) {
 	html += "<a class='cil_13_no_color button2a' selected_path='" + row.path + "' collection_type= " + collection_type
 			+ " " + "file_name = '" + row.name + "'" + "tabindex='0'"
 			+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
-			+ "data-popover-content='#a01'><img src='images/Status.info-tooltip.png'"
-			+ "th:src='@{/images/Status.info-tooltip.png}' class='infoMetadata' alt='metadata info' "
+			+ "data-popover-content='#a01'><img src='images/infoIcon.svg'"
+			+ "th:src='@{/images/infoIcon.svg}' class='infoMetadata' alt='metadata info' "
 			+ "data-toggle='tooltip' title='" + metadatatitle + "'></a>";
 	return html;
 }

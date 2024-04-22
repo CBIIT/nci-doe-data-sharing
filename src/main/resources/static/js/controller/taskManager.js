@@ -355,8 +355,8 @@ function renderInferStatus(data, type, row) {
 				+ "style='width:17px;' alt='download file'></a>";
 	} else if (data == 'Failed' || data == 'FAILED') {
 		var error_msg = row.errorMessage.replace(/["']/g, "");
-		html += "Failed&nbsp;&nbsp;<img style='width:12px;' data-toggle='tooltip'"
-				+ "src='images/Status.info-tooltip.png' alt='failed message' title= '" + error_msg + "'>";
+		html += "Failed&nbsp;&nbsp;<img style='width:17px;' data-toggle='tooltip'"
+				+ "src='images/infoIcon.svg' alt='failed message' title= '" + error_msg + "'>";
 	} else if (data == 'NOTSTARTED') {
 		html += 'Not Started';
 	} else if (data == 'INPROGRESS') {
