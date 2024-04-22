@@ -540,6 +540,7 @@ div.container.main {
 
 .td_class_1 {
 	width: 10% !important;
+	word-break: break-word;
 }
 
 .td_class_3 {
@@ -548,6 +549,8 @@ div.container.main {
 
 .td_class_4 {
 	width: 25% !important;
+	word-break: break-word;
+
 }
 
 .td_class_2 {
