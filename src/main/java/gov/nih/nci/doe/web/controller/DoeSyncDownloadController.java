@@ -2,6 +2,8 @@ package gov.nih.nci.doe.web.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -26,6 +28,8 @@ import com.fasterxml.jackson.databind.introspect.AnnotationIntrospectorPair;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
+
+import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.DoeDownloadDatafile;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO;
@@ -62,12 +66,21 @@ public class DoeSyncDownloadController extends AbstractDoeController {
 				return null;
 			}
 
+			String loggedOnUser = getLoggedOnUserInfo();
 			HpcDownloadRequestDTO downloadRequest = new HpcDownloadRequestDTO();
 			Response restResponse = DoeClientUtil.syncAndasynchronousDownload(authToken, dataObjectAsyncServiceURL,
 					downloadFile.getDestinationPath(), downloadRequest);
 			log.info("rest response:" + restResponse.getStatus());
 
 			if (restResponse.getStatus() == 200) {
+
+				// store the auditing info
+				AuditingModel audit = new AuditingModel();
+				audit.setName(loggedOnUser);
+				audit.setOperation("Download Single file");
+				audit.setStartTime(new Date());
+				audit.setTransferType("sync");
+				auditingService.saveAuditInfo(audit);
 
 				response.setContentType("application/octet-stream");
 				response.setHeader("Content-Disposition", "attachment; filename=" + downloadFile.getDownloadFileName());

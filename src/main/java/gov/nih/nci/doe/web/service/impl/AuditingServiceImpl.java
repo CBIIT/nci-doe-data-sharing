@@ -31,8 +31,8 @@ public class AuditingServiceImpl implements AuditingService {
 	}
 
 	@Override
-	public List<Auditing> getAllTaskIds() {
-		return auditingRepository.findAllTaksIds();
+	public List<Auditing> getAllTaskIdsInprogress() {
+		return auditingRepository.getAllTaskIdsInprogress();
 	}
 
 
