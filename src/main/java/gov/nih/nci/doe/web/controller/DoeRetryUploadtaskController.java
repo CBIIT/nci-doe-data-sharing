@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,9 +26,6 @@ import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO;
 @EnableAutoConfiguration
 @RequestMapping("/uploadtask")
 public class DoeRetryUploadtaskController extends AbstractDoeController {
-
-	@Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
-	private String registrationServiceURL;
 
 	@Autowired
 	TaskManagerService taskManagerService;

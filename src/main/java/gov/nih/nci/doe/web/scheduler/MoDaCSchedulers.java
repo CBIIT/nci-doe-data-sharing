@@ -30,9 +30,11 @@ import gov.nih.nci.doe.web.controller.AbstractDoeController;
 import gov.nih.nci.doe.web.domain.Auditing;
 import gov.nih.nci.doe.web.domain.InferencingTask;
 import gov.nih.nci.doe.web.domain.MetaDataPermissions;
+import gov.nih.nci.doe.web.domain.TaskManager;
 import gov.nih.nci.doe.web.repository.AuditingRepository;
 import gov.nih.nci.doe.web.repository.InferencingTaskRepository;
 import gov.nih.nci.doe.web.repository.MetaDataPermissionsRepository;
+import gov.nih.nci.doe.web.repository.TaskManagerRepository;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.datatransfer.HpcFileLocation;
 import gov.nih.nci.hpc.domain.datatransfer.HpcUploadSource;
@@ -44,6 +46,7 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDownloadSummaryDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationResponseDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationStatusDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationTaskDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcRegistrationSummaryDTO;
 
@@ -78,6 +81,9 @@ public class MoDaCSchedulers extends AbstractDoeController {
 
 	@Autowired
 	AuditingRepository auditingRepository;
+
+	@Autowired
+	TaskManagerRepository taskManagerRepository;
 
 	@Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
 	private String registrationServiceV2URL;
@@ -508,9 +514,9 @@ public class MoDaCSchedulers extends AbstractDoeController {
 	}
 
 	@Scheduled(cron = "${doe.scheduler.collection.permissions}")
-	public void updateCollectionPermissions() throws DoeWebException {
+	public void updateCollectionPermissionsForBulkAssetUploads() throws DoeWebException {
 
-		log.info("collection permissions update scheduler");
+		log.info("collection permissions update scheduler for tasks created during bulk asset uploads");
 
 		// get all rows with empty collection Id and verify if collection exists
 		List<MetaDataPermissions> collectionPermList = metaDataPermissionsRepository
@@ -521,22 +527,48 @@ public class MoDaCSchedulers extends AbstractDoeController {
 					authenticateURL);
 			for (MetaDataPermissions collection : collectionPermList) {
 				log.info("verifying collection Id for path: " + collection.getCollectionPath());
-				// Validate Collection path
-				try {
-					HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
-							collection.getCollectionPath(), false);
 
-					if (collectionDto != null && collectionDto.getCollections() != null
-							&& CollectionUtils.isNotEmpty(collectionDto.getCollections())) {
-						// colelction exists
-						log.info("updating collection Id for path:" + collection.getCollectionPath());
-						collection.setCollectionId(
-								collectionDto.getCollections().get(0).getCollection().getCollectionId());
-						metaDataPermissionsRepository.saveAndFlush(collection);
+				// find Collection path in task manager table and get task Id
+
+				TaskManager task = taskManagerRepository.findByPath("%" + collection.getCollectionPath() + "%");
+				try {
+					if (task != null) {
+						HpcBulkDataObjectRegistrationStatusDTO status = DoeClientUtil
+								.getRegistrationStatusByTaskId(authToken, registrationServiceURL, task.getTaskId());
+
+						if (status != null && status.getTask() != null && status.getTask().getResult() != null) {
+							/*
+							 * If the task reaches terminal status, then get collection Id by path. Do this
+							 * for both completed and failed status since failed task id can have more than
+							 * one asset paths and some assets might get uploaded even though the task
+							 * failed.
+							 */
+
+							HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
+									collection.getCollectionPath(), false);
+
+							if (collectionDto != null && collectionDto.getCollections() != null
+									&& CollectionUtils.isNotEmpty(collectionDto.getCollections())) {
+								// collection exists
+								log.info("updating collection Id for path:" + collection.getCollectionPath());
+								collection.setCollectionId(
+										collectionDto.getCollections().get(0).getCollection().getCollectionId());
+								metaDataPermissionsRepository.saveAndFlush(collection);
+							} else {
+								// delete the row in collection_permissions table since collection does not
+								// exist
+								metaDataPermissionsRepository.delete(collection);
+							}
+						}
+
 					}
+
 				} catch (DoeWebException e) {
 					// collection does not exist
 					log.debug("Error in getting collection" + e.getMessage());
+					// delete the row in collection_permissions table since collection does not
+					// exist
+					metaDataPermissionsRepository.delete(collection);
 				}
 			}
 

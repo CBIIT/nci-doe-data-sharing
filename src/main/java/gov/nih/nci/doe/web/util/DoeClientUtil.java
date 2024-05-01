@@ -714,6 +714,31 @@ public class DoeClientUtil {
 		}
 	}
 
+	public static HpcBulkDataObjectRegistrationStatusDTO getRegistrationStatusByTaskId(String token, String hpcQueryURL,
+			String taskId) throws DoeWebException {
+		try {
+			WebClient client = DoeClientUtil.getWebClient(UriComponentsBuilder.fromHttpUrl(hpcQueryURL)
+					.pathSegment(taskId).build().encode().toUri().toURL().toExternalForm());
+			client.header("Authorization", "Bearer " + token);
+			Response restResponse = client.get();
+
+			if (restResponse == null || restResponse.getStatus() != 200) {
+				return null;
+			}
+			ObjectMapper mapper = new ObjectMapper();
+			AnnotationIntrospectorPair intr = new AnnotationIntrospectorPair(
+					new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()), new JacksonAnnotationIntrospector());
+			mapper.setAnnotationIntrospector(intr);
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			mapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
+			MappingJsonFactory factory = new MappingJsonFactory(mapper);
+			JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
+			return parser.readValueAs(HpcBulkDataObjectRegistrationStatusDTO.class);
+		} catch (Exception e) {
+			throw new DoeWebException("Failed to get registration tasks list due to: " + e.getMessage());
+		}
+	}
+
 	public static Response syncAndasynchronousDownload(String authToken, String dataObjectAsyncServiceURL, String path,
 			HpcDownloadRequestDTO downloadRequest) throws DoeWebException {
 		try {

@@ -25,7 +25,7 @@ public class TaskManagerServiceImpl implements TaskManagerService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public void saveTransfer(String taskId, String transferType, String downloadType, String name, String userId) {
+	public void saveTransfer(String taskId, String transferType, String type, String name, String userId) {
 		log.info("saving task for user " + userId + " with Task ID: " + taskId + " and transfer type: " + transferType);
 
 		TaskManager task = new TaskManager();
@@ -33,7 +33,7 @@ public class TaskManagerServiceImpl implements TaskManagerService {
 		task.setTaskId(taskId);
 		task.setTaskName(name);
 		task.setUserId(userId);
-		task.setDownloadType(downloadType);
+		task.setType(type);
 		task.setTaskType(transferType);
 		taskManagerRepository.saveAndFlush(task);
 	}

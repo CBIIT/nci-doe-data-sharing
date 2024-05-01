@@ -778,7 +778,7 @@ public class RestAPICommonController extends AbstractDoeController {
 			@RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO bulkDataObjectRegistrationRequest)
 			throws DoeWebException, JsonProcessingException {
 
-		log.info("register bulk data files: " + bulkDataObjectRegistrationRequest);
+		log.info("bulk registration: " + bulkDataObjectRegistrationRequest);
 		log.info("Headers: {}", headers);
 
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
@@ -847,7 +847,7 @@ public class RestAPICommonController extends AbstractDoeController {
 						try {
 
 							// save the task info
-							taskManagerService.saveTransfer(taskId, "Upload", null, null, doeLogin);
+							taskManagerService.saveTransfer(taskId, "Upload", "async", null, doeLogin);
 
 							// store the auditing info
 							AuditingModel audit = new AuditingModel();

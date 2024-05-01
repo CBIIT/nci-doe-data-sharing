@@ -102,6 +102,9 @@ public abstract class AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.v2.dataObject}")
 	public String dataObjectAsyncServiceURL;
+	
+	@Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
+	public String registrationServiceURL;
 
 	@Value("${gov.nih.nci.hpc.server.dataObject}")
 	private String preSigneddataObjectServiceURL;

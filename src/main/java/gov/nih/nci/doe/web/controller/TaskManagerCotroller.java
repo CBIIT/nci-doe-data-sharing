@@ -54,9 +54,6 @@ public class TaskManagerCotroller extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.download}")
 	private String queryServiceURL;
 
-	@Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
-	private String registrationServiceUrl;
-
 	@Value("${gov.nih.nci.hpc.server.dataObject.download}")
 	private String dataObjectDownloadServiceURL;
 
@@ -93,7 +90,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
 			final MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>();
 			paramsMap.set("totalCount", Boolean.TRUE.toString());
 			HpcRegistrationSummaryDTO registrations = DoeClientUtil.getRegistrationSummary(authToken,
-					registrationServiceUrl, paramsMap);
+					registrationServiceURL, paramsMap);
 
 			// get the task end date
 
