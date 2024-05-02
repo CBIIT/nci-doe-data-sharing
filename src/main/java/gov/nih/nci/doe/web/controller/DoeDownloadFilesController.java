@@ -158,7 +158,7 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 				result.setMessage("Download request successful. Task ID: <a href='/tasksTab'>" + taskId + "</a>");
 				if (loggedOnUser != null) {
 					taskManagerService.saveTransfer(taskId, "Download", downloadFile.getSearchType(),
-							name != null ? name : downloadType, getLoggedOnUserInfo());
+							name != null ? name : downloadType, getLoggedOnUserInfo(), downloadFile.getSelectedPaths());
 					// store the auditing info
 					AuditingModel audit = new AuditingModel();
 					audit.setName(loggedOnUser);

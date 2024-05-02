@@ -18,6 +18,9 @@ public interface TaskManagerRepository extends JpaRepository<TaskManager, String
 	@Query("select a from TaskManager a where a.userId =?1 and a.taskName =?2 and a.taskDate <= sysdate and a.taskDate >= (sysdate-1)")
 	public List<TaskManager> getTaskDetails(String userId, String name);
 
-	@Query(value = "SELECT * FROM NCI_DOE_DB.TASK_MANAGER_T a WHERE a.PATH LIKE :path ORDER BY a.TASK_DATE DESC FETCH FIRST 1 ROW ONLY", nativeQuery = true)
+	@Query(value = "SELECT * FROM NCI_DOE_DB.TASK_MANAGER_T a WHERE a.PATH LIKE :path and a.TASK_TYPE ='Upload' ORDER BY a.TASK_DATE DESC FETCH FIRST 1 ROW ONLY", nativeQuery = true)
 	public TaskManager findByPath(@Param("path") String path);
+
+	@Query("select a from TaskManager a where a.taskId =?1 ORDER BY a.taskDate DESC")
+	public List<TaskManager> getAllTasksById(String taskId);
 }

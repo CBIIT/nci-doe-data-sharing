@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,8 +26,9 @@ public class TaskManagerServiceImpl implements TaskManagerService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public void saveTransfer(String taskId, String transferType, String type, String name, String userId) {
-		log.info("saving task for user " + userId + " with Task ID: " + taskId + " and transfer type: " + transferType);
+	public void saveTransfer(String taskId, String transferType, String type, String name, String userId, String path) {
+		log.info("saving task for user " + userId + " with Task ID: " + taskId + " with transfer type: " + transferType
+				+ " and path: " + path);
 
 		TaskManager task = new TaskManager();
 		task.setTaskDate(new Date());
@@ -55,5 +57,15 @@ public class TaskManagerServiceImpl implements TaskManagerService {
 	public List<TaskManager> getAlltasks() {
 		log.info("get all Tasks");
 		return taskManagerRepository.getAllTasks();
+	}
+
+	@Override
+	public TaskManager getLastestTaskById(String taskId) {
+		log.info("get all tasksby Id: " + taskId);
+		List<TaskManager> taskList = taskManagerRepository.getAllTasksById(taskId);
+		if (CollectionUtils.isNotEmpty(taskList)) {
+			return taskList.get(0);
+		}
+		return null;
 	}
 }

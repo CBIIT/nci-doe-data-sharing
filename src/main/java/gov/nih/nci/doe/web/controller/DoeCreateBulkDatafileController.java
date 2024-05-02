@@ -301,7 +301,9 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 
 				clearSessionAttrs(session);
 
-				taskManagerService.saveTransfer(taskId, "Upload", null, name, user);
+				taskManagerService.saveTransfer(taskId, "Upload", null, name, user,
+						CollectionUtils.isNotEmpty(pathsList) ? String.join(",", pathsList)
+								: doeDataFileModel.getPath());
 
 				// store the auditing info
 				AuditingModel audit = new AuditingModel();

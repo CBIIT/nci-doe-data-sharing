@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import gov.nih.nci.doe.web.domain.TaskManager;
 import gov.nih.nci.doe.web.model.AjaxResponseBody;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.datatransfer.HpcDownloadTaskType;
@@ -52,6 +53,8 @@ public class DoeRetryDownloadTaskController extends AbstractDoeController {
 				return "redirect:/loginTab";
 			}
 
+			TaskManager task = taskManagerService.getLastestTaskById(taskId);
+
 			if (taskType.equals(HpcDownloadTaskType.DATA_OBJECT_LIST.name())
 					|| taskType.equals(HpcDownloadTaskType.COLLECTION_LIST.name())) {
 
@@ -63,7 +66,7 @@ public class DoeRetryDownloadTaskController extends AbstractDoeController {
 					if (downloadDTO != null) {
 						log.info("the task id after retry is: " + downloadDTO.getTaskId());
 						taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", taskType, taskName,
-								getLoggedOnUserInfo());
+								getLoggedOnUserInfo(), task != null ? task.getPath() : null);
 						result.setMessage(
 								"Retry bulk download request successful. Task Id: " + downloadDTO.getTaskId());
 					}
@@ -81,8 +84,9 @@ public class DoeRetryDownloadTaskController extends AbstractDoeController {
 					if (downloadDTO != null) {
 						log.info("the task id after retry is: " + downloadDTO.getTaskId());
 						taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", taskType, taskName,
-								getLoggedOnUserInfo());
-						result.setMessage("Retry request successful. Task Id: <a href='/tasksTab'>" + downloadDTO.getTaskId() + "</a>");
+								getLoggedOnUserInfo(), task != null ? task.getPath() : null);
+						result.setMessage("Retry request successful. Task Id: <a href='/tasksTab'>"
+								+ downloadDTO.getTaskId() + "</a>");
 					}
 
 				} catch (Exception e) {
@@ -99,8 +103,9 @@ public class DoeRetryDownloadTaskController extends AbstractDoeController {
 
 						log.info("the task id after retry is: " + downloadDTO.getTaskId());
 						taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", taskType, taskName,
-								getLoggedOnUserInfo());
-						result.setMessage("Retry request successful. Task Id: <a href='/tasksTab'>" + downloadDTO.getTaskId() + "</a>");
+								getLoggedOnUserInfo(), task != null ? task.getPath() : null);
+						result.setMessage("Retry request successful. Task Id: <a href='/tasksTab'>"
+								+ downloadDTO.getTaskId() + "</a>");
 
 					}
 				} catch (Exception e) {

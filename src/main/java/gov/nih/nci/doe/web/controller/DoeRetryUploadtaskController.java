@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.annotation.JsonView;
+
+import gov.nih.nci.doe.web.domain.TaskManager;
 import gov.nih.nci.doe.web.model.AjaxResponseBody;
 import gov.nih.nci.doe.web.model.Views;
 import gov.nih.nci.doe.web.service.TaskManagerService;
@@ -54,6 +56,8 @@ public class DoeRetryUploadtaskController extends AbstractDoeController {
 			HpcBulkDataObjectRegistrationStatusDTO uploadTask = DoeClientUtil.getDataObjectRegistrationTask(authToken,
 					this.registrationServiceURL, taskId);
 
+			TaskManager task = taskManagerService.getLastestTaskById(taskId);
+
 			HpcBulkDataObjectRegistrationRequestDTO registrationDTO = constructBulkRequest(request, session,
 					uploadTask);
 
@@ -66,7 +70,7 @@ public class DoeRetryUploadtaskController extends AbstractDoeController {
 				}
 
 				taskManagerService.saveTransfer(responseDTO.getTaskId(), "Upload", null, taskName,
-						getLoggedOnUserInfo());
+						getLoggedOnUserInfo(), task != null ? task.getPath() : null);
 				return "Your bulk data file registration request has the following task ID: <a href='/tasksTab'>"
 						+ responseDTO.getTaskId() + "</a>";
 			}

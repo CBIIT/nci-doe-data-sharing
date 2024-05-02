@@ -536,7 +536,8 @@ public class MoDaCSchedulers extends AbstractDoeController {
 						HpcBulkDataObjectRegistrationStatusDTO status = DoeClientUtil
 								.getRegistrationStatusByTaskId(authToken, registrationServiceURL, task.getTaskId());
 
-						if (status != null && status.getTask() != null && status.getTask().getResult() != null) {
+						if (status != null && status.getTask() != null
+								&& Boolean.FALSE.equals(status.getInProgress())) {
 							/*
 							 * If the task reaches terminal status, then get collection Id by path. Do this
 							 * for both completed and failed status since failed task id can have more than
