@@ -9,7 +9,7 @@ table#inferencingTable th {
 	padding: 6px 14px;
 }
 
-table#manageTasksTable th{
+table#manageTasksTable th {
 	padding-right: 3rem;
 }
 
@@ -49,12 +49,14 @@ table#inferencingTable td {
 }
 
 #displayAllDiv {
-	float: right;
 	margin-bottom: 10px;
-	margin-right: 28px;
-	color: #000000;
-	font-family: 'latoregular';
+	color: #246381;
+	font-family: Inter;
 	font-size: 16px;
+	font-style: normal;
+	font-weight: 700;
+	letter-spacing: 0.16px;
+	border-bottom: 2px solid #B7B7B7;
 }
 
 table#manageTasksTable tr.even td,
