@@ -12,7 +12,7 @@
 
         <input type="hidden" id="redirectToPredTab" th:value="${redirectToPredTab}" />
         <div class="d-flex col-8" style="margin-left: -17px;margin-bottom: -38px; height: 50px;">
-            <div class="" id="transferTaskStatus" style="width: 300px;background-color: #E66F05;color: #fff;">
+            <div class="" id="transferTaskStatus" style="width: 300px;background-color: #E2682C;color: #fff;">
                 <p style="color: #FFF;
                 font-family: Poppins;
                 font-size: 23px;
@@ -27,7 +27,7 @@
             </div>
 
             <div class="" th:if="${showModelAnalysisTab eq true}" id="modelAnalysisStatus"
-                style="width: 300px;float:right;background-color: #B7B7B7;color: #fff;margin-left: 2px;">
+                style="width: 300px;float:right;background-color: #848484;color: #fff;margin-left: 2px;">
 
                 <p style="color: #FFF;
      font-family: Poppins;
@@ -42,11 +42,13 @@
                 </p>
             </div>
         </div>
-        <hr style="margin-top: 38px;width: 1px solid black;border: 1px solid gray;margin-left: -2px;">
+        <hr style="margin-top: 38px;width: 1px solid black;border: 1px solid #B7B7B7;margin-left: -2px;">
         <div class="form-row" id="displayAllDiv" style="display:none;">
-            <span>Display All Tasks &nbsp;&nbsp;</span>
-            <label class="switch"><input type="checkbox" id="showAll">
-                <span class="slider round"></span></label>
+        <label class="switch"><input type="checkbox" id="showAll">
+              <span class="slider round"></span>
+            </label>
+            <span>&nbsp;&nbsp;Display All Tasks</span>
+
         </div>
 
         <table id="manageTasksTable" class="table table-stripped display dt-responsive wrap" role="grid"
@@ -99,7 +101,7 @@
             <tbody>
             </tbody>
         </table>
-        <hr style="margin-top: 0px;width: 1px solid black;border: 1px solid gray;margin-left: -2px;">
+        <hr style="margin-top: 0px;width: 1px solid black;border: 1px solid #B7B7B7;margin-left: -2px;">
 
     </div>
 </body>

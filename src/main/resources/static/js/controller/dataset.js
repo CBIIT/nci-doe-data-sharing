@@ -21,7 +21,6 @@ $(document).ready(function() {
 	$("#btnPredictionAccessGrp").click(function() {
 		updatePredictionAccessGroupsFunction();
 	});
-	
 
 });
 
@@ -377,8 +376,14 @@ function dataTableInitDataSet(isVisible) {
 			});
 		},
 
-		"drawCallback" : function() {
+		"drawCallback" : function(settings) {
 
+
+			let dataValueFunctionFromAPI = new $.fn.dataTable.Api( settings );
+			// Disable batch select when no data is present
+
+			dataValueFunctionFromAPI.rows( {page:'current'} ).data().length === 0 ? $('input[type="checkbox"].selectAll').prop('disabled', true) : 				$('input[type="checkbox"].selectAll').prop('disabled', false);
+ 
 			$("#downloadSelectedDataSet").prop("disabled", true);
 			$("#downloadSelectedMetadata").prop("disabled", true);
 

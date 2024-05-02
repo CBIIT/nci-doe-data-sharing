@@ -11,16 +11,16 @@ $(document).ready(function() {
 });
 
 $("#modelAnalysisStatus").click(function(e) {
-		$(this).css('background-color', '#E87B05');
-		$("#transferTaskStatus").css('background-color', '#B7B7B7');
+		$(this).css('background-color', '#E2682C');
+		$("#transferTaskStatus").css('background-color', '#848484');
 		$("#manageTasksTable").hide();
 		$("#inferencingTable").show();
 		refreshTaskDatatable('inferencingTable');
 });
 
 $("#transferTaskStatus").click(function(e) {
-		$(this).css('background-color', '#E87B05');
-		$("#modelAnalysisStatus").css('background-color', '#B7B7B7');
+		$(this).css('background-color', '#E2682C');
+		$("#modelAnalysisStatus").css('background-color', '#848484');
 		$("#inferencingTable").hide();
 		$("#manageTasksTable").show();
 		refreshTaskDatatable('manageTasksTable');
@@ -57,6 +57,7 @@ function refreshTaskDatatable(table) {
 		$("#displayAllDiv").show();
 	} else {
 		$("#displayAllDiv").hide();
+
 	}
 }
 
@@ -372,14 +373,14 @@ function renderInferStatus(data, type, row) {
 
 function renderTaskDate(data, type, row) {
 	if (data) {
-		return "&nbsp&nbsp;" + moment(data).format("MM/DD/YYYY HH:mm:ss");
+		return moment(data).format("MM/DD/YYYY HH:mm:ss");
 	}
 	return "";
 }
 
 function renderTaskCompletedDate(data, type, row) {
 	if (data) {
-		return "&nbsp&nbsp;" + moment(data).format("MM/DD/YYYY HH:mm:ss");
+		return moment(data).format("MM/DD/YYYY HH:mm:ss");
 	}
 	return "";
 
@@ -389,8 +390,7 @@ function renderTaskName(data, type, row) {
 	var html = "";
 
 	if (row.taskName) {
-		html += "&nbsp&nbsp;"
-				+ row.taskName
+		html += row.taskName
 				+ "&nbsp;&nbsp;<span prog_name='"
 				+ row.progName
 				+ "' study_name = '"
@@ -408,7 +408,7 @@ function renderTaskName(data, type, row) {
 
 function rendertaskId(data, type, row) {
 
-	return "&nbsp&nbsp;" + row.taskId;
+	return "&nbsp;&nbsp;"+row.taskId;
 }
 
 function retryUpload(taskId, taskName) {
