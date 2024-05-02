@@ -177,17 +177,17 @@ public class TaskManagerCotroller extends AbstractDoeController {
 
 						task.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<span class='button4a' error_msg = \""
 								+ filteredMessage + "\" data-container='body' data-toggle='popover'"
-								+ "data-placement='right' data-trigger='click' data-popover-content='#a02'><img style='width:12px;' src='images/Status.info-tooltip.png' alt='failed message'></span>"
-								+ "<strong><a style='border: none;background-color: #F39530; height: 23px;width: 37px;border-radius: 11px;float: right;margin-right: 10px;' class='btn btn-link btn-sm' aria-label='Retry download' href='#' "
+								+ "data-placement='right' data-trigger='click' data-popover-content='#a02'><img style='width:17px;' src='images/infoIcon.svg' alt='failed message'></span>"
+								+ "<strong><a style='border: none; padding-top:0px; height: 23px;width: 37px;border-radius: 11px;float: right;margin-right: 10px;' class='btn btn-link btn-sm' aria-label='Retry download' href='#' "
 								+ "onclick='retryDownload(\"" + download.getTaskId() + "\" ,\"" + t.getTaskName()
 								+ "\", \"" + download.getType().name() + "\")'>"
-								+ "<img style='height: 13px;width: 13px;margin-top: -14px;' data-toggle='tooltip' title='Retry Download' src='images/Status.refresh_icon-01.png' th:src='@{/images/Status.refresh_icon-01.png}' alt='Status refresh'></a></strong>");
+								+ "<img style='height: 29px;width: 29px;' data-toggle='tooltip' title='Retry Download' src='images/refresh-icon.svg' th:src='@{/images/refresh-icon.svg}' alt='Status refresh'></a></strong>");
 
 					} else {
 						task.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<span class='button4a' error_msg = \""
 								+ filteredMessage + "\" data-container='body' data-toggle='popover'"
-								+ "data-placement='right' data-trigger='click' data-popover-content='#a02'><img style='width:12px;'"
-								+ "src='images/Status.info-tooltip.png'></span>");
+								+ "data-placement='right' data-trigger='click' data-popover-content='#a02'><img style='width:17px;'"
+								+ "src='images/infoIcon.svg'></span>");
 					}
 				}
 
@@ -280,16 +280,16 @@ public class TaskManagerCotroller extends AbstractDoeController {
 
 			t.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<span class='button4a' error_msg = '" + filteredMessage
 					+ "' data-container='body' data-toggle='popover'"
-					+ "data-placement='right' data-trigger='click' data-popover-content='#a02'><img style='width:12px;'"
-					+ "src='images/Status.info-tooltip.png' alt='failed message'></span>"
-					+ "<strong><a style='border: none;background-color: #F39530;height: 23px;width: 37px;border-radius: 11px;float: right;margin-right: 10px;' class='btn btn-link btn-sm' aria-label='Retry Upload' href='#'"
+					+ "data-placement='right' data-trigger='click' data-popover-content='#a02'><img style='width:17px;'"
+					+ "src='images/infoIcon.svg' alt='failed message'></span>"
+					+ "<strong><a style='border: none;padding-top:0px;height: 23px;width: 37px;border-radius: 11px;float: right;margin-right: 10px;' class='btn btn-link btn-sm' aria-label='Retry Upload' href='#'"
 					+ "onclick='retryUpload(\"" + upload.getTaskId() + "\" ,\"" + taskName + "\")'>"
-					+ "<img style='height: 13px;width: 13px;margin-top: -14px;' data-toggle='tooltip' title='Retry Upload' src='images/Status.refresh_icon-01.png' th:src='@{/images/Status.refresh_icon-01.png}' alt='Status refresh'></a></strong>");
+					+ "<img style='height: 29px;width: 29px;' data-toggle='tooltip' title='Retry Upload' src='images/refresh-icon.svg' th:src='@{/images/refresh-icon.svg}' alt='Status refresh'></a></strong>");
 		} else {
 			t.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<span class='button4a' error_msg = '" + filteredMessage
 					+ "' data-container='body' data-toggle='popover'"
-					+ "data-placement='right' data-trigger='click' data-popover-content='#a02'><img style='width:12px;'"
-					+ " src='images/Status.info-tooltip.png' alt='failed message'></span>");
+					+ "data-placement='right' data-trigger='click' data-popover-content='#a02'><img style='width:17px;'"
+					+ " src='images/infoIcon.svg' alt='failed message'></span>");
 		}
 	}
 
