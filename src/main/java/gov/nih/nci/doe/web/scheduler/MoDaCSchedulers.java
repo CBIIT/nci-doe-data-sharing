@@ -530,47 +530,52 @@ public class MoDaCSchedulers extends AbstractDoeController {
 
 				// find Collection path in task manager table and get task Id
 
-				TaskManager task = taskManagerRepository.findByPath("%" + collection.getCollectionPath() + "%");
-				try {
-					if (task != null) {
-						HpcBulkDataObjectRegistrationStatusDTO status = DoeClientUtil
-								.getRegistrationStatusByTaskId(authToken, registrationServiceURL, task.getTaskId());
+				List<TaskManager> taskList = taskManagerRepository
+						.findByPath("%" + collection.getCollectionPath() + "%");
+				if (CollectionUtils.isNotEmpty(taskList)) {
+					TaskManager task = taskList.get(0);
+					try {
+						if (task != null) {
+							HpcBulkDataObjectRegistrationStatusDTO status = DoeClientUtil
+									.getRegistrationStatusByTaskId(authToken, registrationServiceURL, task.getTaskId());
 
-						if (status != null && status.getTask() != null
-								&& Boolean.FALSE.equals(status.getInProgress())) {
-							/*
-							 * If the task reaches terminal status, then get collection Id by path. Do this
-							 * for both completed and failed status since failed task id can have more than
-							 * one asset paths and some assets might get uploaded even though the task
-							 * failed.
-							 */
+							if (status != null && status.getTask() != null
+									&& Boolean.FALSE.equals(status.getInProgress())) {
+								/*
+								 * If the task reaches terminal status, then get collection Id by path. Do this
+								 * for both completed and failed status since failed task id can have more than
+								 * one asset paths and some assets might get uploaded even though the task
+								 * failed.
+								 */
 
-							HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
-									collection.getCollectionPath(), false);
+								HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
+										collection.getCollectionPath(), false);
 
-							if (collectionDto != null && collectionDto.getCollections() != null
-									&& CollectionUtils.isNotEmpty(collectionDto.getCollections())) {
-								// collection exists
-								log.info("updating collection Id for path:" + collection.getCollectionPath());
-								collection.setCollectionId(
-										collectionDto.getCollections().get(0).getCollection().getCollectionId());
-								metaDataPermissionsRepository.saveAndFlush(collection);
-							} else {
-								// delete the row in collection_permissions table since collection does not
-								// exist
-								metaDataPermissionsRepository.delete(collection);
+								if (collectionDto != null && collectionDto.getCollections() != null
+										&& CollectionUtils.isNotEmpty(collectionDto.getCollections())) {
+									// collection exists
+									log.info("updating collection Id for path:" + collection.getCollectionPath());
+									collection.setCollectionId(
+											collectionDto.getCollections().get(0).getCollection().getCollectionId());
+									metaDataPermissionsRepository.saveAndFlush(collection);
+								} else {
+									// delete the row in collection_permissions table since collection does not
+									// exist
+									metaDataPermissionsRepository.delete(collection);
+								}
 							}
+
 						}
 
+					} catch (DoeWebException e) {
+						// collection does not exist
+						log.debug("Error in getting collection" + e.getMessage());
+						// delete the row in collection_permissions table since collection does not
+						// exist
+						metaDataPermissionsRepository.delete(collection);
 					}
-
-				} catch (DoeWebException e) {
-					// collection does not exist
-					log.debug("Error in getting collection" + e.getMessage());
-					// delete the row in collection_permissions table since collection does not
-					// exist
-					metaDataPermissionsRepository.delete(collection);
 				}
+
 			}
 
 		}

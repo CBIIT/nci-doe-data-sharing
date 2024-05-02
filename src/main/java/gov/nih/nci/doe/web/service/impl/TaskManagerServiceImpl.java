@@ -37,6 +37,7 @@ public class TaskManagerServiceImpl implements TaskManagerService {
 		task.setUserId(userId);
 		task.setType(type);
 		task.setTaskType(transferType);
+		task.setPath(path);
 		taskManagerRepository.saveAndFlush(task);
 	}
 
