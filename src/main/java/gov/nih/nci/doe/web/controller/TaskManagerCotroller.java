@@ -282,7 +282,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
 					+ "' data-container='body' data-toggle='popover'"
 					+ "data-placement='right' data-trigger='click' data-popover-content='#a02'><img style='width:17px;'"
 					+ "src='images/infoIcon.svg' alt='failed message'></span>"
-					+ "<strong><a style='border: none;padding-top:0px;height: 23px;width: 37px;border-radius: 11px;float: right;margin-right: 10px;' class='btn btn-link btn-sm' aria-label='Retry Upload' href='#'"
+					+ "<strong><a style='border: none;padding-top:0px;height: 23px;width: 37px;border-radius: 11px;float: right;margin-right: 10px; margin-top:4px;' class='btn btn-link btn-sm' aria-label='Retry Upload' href='#'"
 					+ "onclick='retryUpload(\"" + upload.getTaskId() + "\" ,\"" + taskName + "\")'>"
 					+ "<img style='height: 29px;width: 29px;' data-toggle='tooltip' title='Retry Upload' src='images/refresh-icon.svg' th:src='@{/images/refresh-icon.svg}' alt='Status refresh'></a></strong>");
 		} else {

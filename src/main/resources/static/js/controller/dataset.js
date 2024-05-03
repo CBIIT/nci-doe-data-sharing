@@ -375,6 +375,16 @@ function dataTableInitDataSet(isVisible) {
 				selector : '[data-toggle="tooltip"]'
 			});
 		},
+		initComplete: function () {
+			if($("#dataSetTable td.select-checkbox").find("input").length > 0){
+			
+				 $('input[type="checkbox"].selectAll').prop('disabled', false) ;
+			}
+			else{
+				$('input[type="checkbox"].selectAll').prop('disabled', true) ;
+
+			}
+		},
 
 		"drawCallback" : function(settings) {
 
@@ -382,7 +392,7 @@ function dataTableInitDataSet(isVisible) {
 			let dataValueFunctionFromAPI = new $.fn.dataTable.Api( settings );
 			// Disable batch select when no data is present
 
-			dataValueFunctionFromAPI.rows( {page:'current'} ).data().length === 0 ? $('input[type="checkbox"].selectAll').prop('disabled', true) : 				$('input[type="checkbox"].selectAll').prop('disabled', false);
+			dataValueFunctionFromAPI.rows( {page:'current'} ).data().length === 0 ? $('input[type="checkbox"].selectAll').prop('disabled', true) : $('input[type="checkbox"].selectAll').prop('disabled', false);
  
 			$("#downloadSelectedDataSet").prop("disabled", true);
 			$("#downloadSelectedMetadata").prop("disabled", true);
