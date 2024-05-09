@@ -83,7 +83,7 @@ table#newMetaDataTable thead tr th {
 	font-size: 15px;
 	font-family: 'inter_regular';
 }
-.parentCollectionName {
+.parentCollectionName,#folder_name {
 	/*width: 130%;*/
 	height: 46px;
 	padding-left: 25px;

@@ -10,6 +10,15 @@ public class DoeDatafileSearchResultDetailed {
 	private List<KeyValueBean> systemMetadata;
 	private Boolean isFolder;
 	private Integer collectionId;
+	private Long fileSizeInBytes;
+
+	public Long getFileSizeInBytes() {
+		return fileSizeInBytes;
+	}
+
+	public void setFileSizeInBytes(Long fileSizeInBytes) {
+		this.fileSizeInBytes = fileSizeInBytes;
+	}
 
 	public Integer getCollectionId() {
 		return collectionId;

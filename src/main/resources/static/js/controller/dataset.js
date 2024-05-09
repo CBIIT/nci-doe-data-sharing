@@ -21,7 +21,6 @@ $(document).ready(function() {
 	$("#btnPredictionAccessGrp").click(function() {
 		updatePredictionAccessGroupsFunction();
 	});
-	
 
 });
 
@@ -376,9 +375,25 @@ function dataTableInitDataSet(isVisible) {
 				selector : '[data-toggle="tooltip"]'
 			});
 		},
+		initComplete: function () {
+			if($("#dataSetTable td.select-checkbox").find("input").length > 0){
+			
+				 $('input[type="checkbox"].selectAll').prop('disabled', false) ;
+			}
+			else{
+				$('input[type="checkbox"].selectAll').prop('disabled', true) ;
 
-		"drawCallback" : function() {
+			}
+		},
 
+		"drawCallback" : function(settings) {
+
+
+			let dataValueFunctionFromAPI = new $.fn.dataTable.Api( settings );
+			// Disable batch select when no data is present
+
+			dataValueFunctionFromAPI.rows( {page:'current'} ).data().length === 0 ? $('input[type="checkbox"].selectAll').prop('disabled', true) : $('input[type="checkbox"].selectAll').prop('disabled', false);
+ 
 			$("#downloadSelectedDataSet").prop("disabled", true);
 			$("#downloadSelectedMetadata").prop("disabled", true);
 
@@ -568,12 +583,13 @@ $('#dataSetTable tbody').on('keypress', '.button2a', function(e) {
 $('#dataSetTable tbody').on('click', '.downloadLink', function() {
 	var path = $(this).attr('data-path');
 	var fileName = $(this).attr('data-fileName');
-	downloadFunction(path, fileName);
+	var fileSize = $(this).closest('tr').find('td').eq(2).find('input[type="hidden"]').val().trim();
+	downloadFunction(path, fileName, fileSize);
 });
 
 $('#dataSetTable tbody').on('click', '.downloadLinkFolder', function() {
 	var path = $(this).attr('data-path');
-	downloadFunction(path, null);
+	downloadFunction(path, null, null);
 });
 
 $('#dataSetTable tbody').on('click', '.editFolderMetadata', function() {
@@ -707,6 +723,7 @@ $('#dataSetTable tbody')
 															var copyPathTitle = "Copy File Path";
 															var collection_type = "";
 															var fileSize = "";
+															var fileSizeHtml = ""
 
 															if (value.isFolder == false) {
 																selectHtml = "<input type='checkbox' id='"
@@ -720,6 +737,7 @@ $('#dataSetTable tbody')
 																		+ "</span>";
 																collection_type = "DataObject";
 																fileSize = value.fileSize;
+																fileSizeHtml = "<input type='hidden' class='fileSizeInBytes' value= '" + value.fileSizeInBytes+ "'/> " + fileSize + "";
 															}
 															if (value.isFolder == true) {
 																iconHtml += "<a class='detail-control detail-control-sub-folder' style='margin-left:"
@@ -756,8 +774,8 @@ $('#dataSetTable tbody')
 																	+ "'"
 																	+ "tabindex='0'"
 																	+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
-																	+ "data-popover-content='#a01'><img src='images/Status.info-tooltip.png'"
-																	+ "th:src='@{/images/Status.info-tooltip.png}' class='infoMetadata' data-toggle='tooltip'"
+																	+ "data-popover-content='#a01'><img src='images/infoIcon.svg'"
+																	+ "th:src='@{/images/infoIcon.svg}' class='infoMetadata' data-toggle='tooltip'"
 																	+ "title='"
 																	+ metadataInfoTitle
 																	+ "' alt='Status info'></a>";
@@ -832,7 +850,7 @@ $('#dataSetTable tbody')
 																		+ "<td style='background-color: #d3d3d347 !important;width:40%'>"
 																		+ iconHtml
 																		+ "</td><td style='background-color: #d3d3d347 !important;width:20%;'>"
-																		+ fileSize
+																		+ fileSizeHtml
 																		+ "</td>"
 																		+ "<td style = 'background-color: #d3d3d347 !important;width:25%;' > "
 																		+ nestedEditPermissionsHtml + "</td > <tr>";
@@ -969,8 +987,8 @@ function renderInputDatasetName(data, type, row) {
 			+ row.inputDatasetName
 			+ "' tabindex='0'"
 			+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
-			+ "data-popover-content='#a01'><img src='images/Status.info-tooltip.png' class='infoMetadata'"
-			+ " th:src='@{/images/Status.info-tooltip.png}' data-toggle='tooltip' title='File Metadata' alt='Status info'></i></a>";
+			+ "data-popover-content='#a01'><img src='images/infoIcon.svg' class='infoMetadata'"
+			+ " th:src='@{/images/infoIcon.svg}' data-toggle='tooltip' title='File Metadata' alt='Status info'></i></a>";
 
 	html += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;' "
 			+ "class='btn btn-link btn-sm share_path_copy' data-toggle='tooltip' data-placement='top' "
@@ -989,8 +1007,8 @@ function renderOutcomeName(data, type, row) {
 				+ " selected_path= '" + row.outcomeFilePath + "' collection_type= 'DataObject'" + "file_name = '"
 				+ row.outcomeFileName + "'tabindex='0'"
 				+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
-				+ "data-popover-content='#a01'><img src='images/Status.info-tooltip.png' "
-				+ "th:src='@{/images/Status.info-tooltip.png}' data-toggle='tooltip' class='infoMetadata'"
+				+ "data-popover-content='#a01'><img src='images/infoIcon.svg' "
+				+ "th:src='@{/images/infoIcon.svg}' data-toggle='tooltip' class='infoMetadata'"
 				+ " title='File Metadata' alt='Status info'></a>";
 
 		html += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;' "
@@ -1010,8 +1028,8 @@ function renderPredictionsName(data, type, row) {
 			+ " selected_path= '" + row.predictionsPath + "' collection_type= 'DataObject'" + "file_name = '"
 			+ row.predictionsName + "'tabindex='0'"
 			+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
-			+ "data-popover-content='#a01'><img src='images/Status.info-tooltip.png' "
-			+ "th:src='@{/images/Status.info-tooltip.png}' data-toggle='tooltip' class='infoMetadata' "
+			+ "data-popover-content='#a01'><img src='images/infoIcon.svg' "
+			+ "th:src='@{/images/infoIcon.svg}' data-toggle='tooltip' class='infoMetadata' "
 			+ "title='File Metadata' alt='Status info'></a>";
 
 	html += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;' "
@@ -1066,15 +1084,15 @@ function renderDataSetPath(data, type, row) {
 	html += "<a class='cil_13_no_color button2a' selected_path='" + row.path + "' collection_type= " + collection_type
 			+ " " + "file_name = '" + row.name + "'" + "tabindex='0'"
 			+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
-			+ "data-popover-content='#a01'><img src='images/Status.info-tooltip.png'"
-			+ "th:src='@{/images/Status.info-tooltip.png}' class='infoMetadata' alt='metadata info' "
+			+ "data-popover-content='#a01'><img src='images/infoIcon.svg'"
+			+ "th:src='@{/images/infoIcon.svg}' class='infoMetadata' alt='metadata info' "
 			+ "data-toggle='tooltip' title='" + metadatatitle + "'></a>";
 	return html;
 }
 
 function renderFileSize(data, type, row) {
 	if (row.fileSize) {	
-		return row.fileSize;
+		return "<input type='hidden' class='fileSizeInBytes' value= '" + row.fileSizeInBytes+ "'/> " + row.fileSize + " ";
 	}
 	return "";
 
@@ -1432,7 +1450,7 @@ function onClickOfModelAnlysisBulkDownloadBtn($this) {
 
 }
 
-function downloadFunction(path, fileName) {
+function downloadFunction(path, fileName, fileSize) {
 
 	var assetIdentifier = $("#assetIdentifier").val();
 	if (!fileName) {
@@ -1440,7 +1458,7 @@ function downloadFunction(path, fileName) {
 				+ '&&downloadAsyncType=collection&&returnToSearch=false');
 	} else {
 		location.replace('/downloadTab?selectedPaths=' + path + '&&fileName=' + fileName + '&&assetIdentifier='
-				+ assetIdentifier + '&&downloadAsyncType=data_object&&returnToSearch=false');
+				+ assetIdentifier + '&&fileSize=' + fileSize +'&&downloadAsyncType=data_object&&returnToSearch=false');
 	}
 
 }
@@ -1449,11 +1467,13 @@ function onClickOfBulkDownloadBtn(tableName) {
 	var selectedPaths = [];
 	var assetIdentifier = $("#assetIdentifier").val();
 	var fileName;
-
+	var fileSize;
+	
 	var len = $("#" + tableName + " tbody input[type=checkbox].selectIndividualCheckbox:checked").length;
 	$("#" + tableName + " tbody input[type=checkbox].selectIndividualCheckbox:checked").each(function() {
 		if (len == 1) {
 			fileName = $(this).closest('tr').find('td').eq(1).text().trim();
+			fileSize = $(this).closest('tr').find('td').eq(2).find('input[type="hidden"]').val().trim();
 		}
 		selectedPaths.push($(this).attr('id'));
 	});
@@ -1461,7 +1481,7 @@ function onClickOfBulkDownloadBtn(tableName) {
 	if (selectedPaths.length == 1) {
 
 		location.replace('/downloadTab?selectedPaths=' + selectedPaths + '&&fileName=' + fileName
-				+ '&&assetIdentifier=' + assetIdentifier + '&&downloadAsyncType=data_object&&returnToSearch=false');
+				+ '&&assetIdentifier=' + assetIdentifier + '&&fileSize=' + fileSize +'&&downloadAsyncType=data_object&&returnToSearch=false');
 	} else {
 		location.replace('/downloadTab?selectedPaths=' + selectedPaths + '&&assetIdentifier=' + assetIdentifier
 				+ '&&downloadAsyncType=datafiles&&returnToSearch=false');

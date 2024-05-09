@@ -29,13 +29,14 @@
 }
 
 .datasetToolbar {
-	display: flex;
+    display: flex;
     justify-content: space-between;
     padding-right: 1rem !important;
     padding-top: 12px;
 }
 
-#dataSetTable_length, #generatePredTable_length {
+#dataSetTable_length,
+#generatePredTable_length {
     margin-top: -11px;
     float: right;
     text-align: right;
@@ -46,8 +47,9 @@
     font-size: 12px;
 }
 
-#dataSetTable_length label,#generatePredTable_length label {
-	color: #515A6A;
+#dataSetTable_length label,
+#generatePredTable_length label {
+    color: #515A6A;
     font-variant-numeric: lining-nums tabular-nums;
     font-family: Inter;
     font-size: 12px;
@@ -58,7 +60,7 @@
 }
 
 #dataSetTable_info {
-	color: #515A6A;
+    color: #515A6A;
     font-variant-numeric: lining-nums tabular-nums;
     font-family: Inter;
     font-size: 12px;
@@ -77,7 +79,7 @@
 }
 
 #dataSetTable_length select {
-	color: #515A6A;
+    color: #515A6A;
     font-variant-numeric: lining-nums tabular-nums;
     font-family: Inter;
     font-size: 14px;
@@ -91,21 +93,30 @@
     width: 68px;
     height: 34px;
     text-align: center;
+    text-align: center;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("/images/select-drropdown.svg");
+    background-size: 8px;
+    background-repeat: no-repeat;
+    background-position: calc(100% - 8px) center;
+    background-position: calc(100% - 14px) center;
+    padding-right: 14px;
 }
 
 #dataSetTable_paginate .paginate_button.next.disabled img {
-	content: url('/images/paginate_left_assetFiles.png');
-	transform: rotate(-180deg);
+    content: url('/images/paginate_left_assetFiles.png');
+    transform: rotate(-180deg);
 }
 
 #dataSetTable_paginate .paginate_button.previous img {
-	content: url('/images/pagination_right_assetfiles.png');
-	transform: rotate(-180deg);
+    content: url('/images/pagination_right_assetfiles.png');
+    transform: rotate(-180deg);
 }
 
 #dataSetTable_paginate .paginate_button.previous.disabled img {
-	content: url('/images/pagination_left_assetfiles.png');
-	transform: rotate(0deg);
+    content: url('/images/pagination_left_assetfiles.png');
+    transform: rotate(0deg);
 }
 
 
@@ -137,15 +148,17 @@
     font-family: inter_medium;
 }
 
-@media ( max-width : 550px) {
+@media (max-width : 550px) {
     .asset-detail_header {
-       font-size: 1.5rem;
+        font-size: 1.5rem;
     }
+
     .assetName {
         font-size: 1.5rem;
         overflow-wrap: anywhere;
     }
-    .group-103{
+
+    .group-103 {
         margin-top: 12px;
     }
 }
@@ -483,6 +496,7 @@ input[type="checkbox"].selectIndividualCheckbox {
     width: 18px;
     display: none;
 }
+
 .lensfilter {
     position: absolute;
     height: 40px;
@@ -490,6 +504,7 @@ input[type="checkbox"].selectIndividualCheckbox {
     margin-left: -31px;
     margin-top: -2px;
 }
+
 .arrow_right_assets_files {
     /* width: 16px;
     transform: translate(25px, -10px); */
@@ -652,6 +667,7 @@ input[type="checkbox"].selectIndividualCheckbox {
     text-align: left;
     padding-left: 28px;
 }
+
 /* this css is only for select dropdown for search, asset details and edit collection screen */
 #userMetaData tr td .select2-container span.select2-selection.select2-selection--single {
     background-color: var(--white);
@@ -713,17 +729,21 @@ td {
     border-radius: 65px;
     letter-spacing: 0.01em;
     min-height: 42px;
-  }
-  .customBtn.primary {
+}
+
+.customBtn.primary {
     background-color: #2C4088;
-  }
-  .customBtn:hover {
+}
+
+.customBtn:hover {
     color: #fff;
-  }
-  .customBtn span:nth-child(2) {
+}
+
+.customBtn span:nth-child(2) {
     margin-left: auto;
     padding-left: 20px;
-  }
-  .customBtn img {
+}
+
+.customBtn img {
     max-width: 15px;
-  }
+}

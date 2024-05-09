@@ -11,16 +11,16 @@ $(document).ready(function() {
 });
 
 $("#modelAnalysisStatus").click(function(e) {
-		$(this).css('background-color', '#E87B05');
-		$("#transferTaskStatus").css('background-color', '#B7B7B7');
+		$(this).css('background-color', '#E2682C');
+		$("#transferTaskStatus").css('background-color', '#848484');
 		$("#manageTasksTable").hide();
 		$("#inferencingTable").show();
 		refreshTaskDatatable('inferencingTable');
 });
 
 $("#transferTaskStatus").click(function(e) {
-		$(this).css('background-color', '#E87B05');
-		$("#modelAnalysisStatus").css('background-color', '#B7B7B7');
+		$(this).css('background-color', '#E2682C');
+		$("#modelAnalysisStatus").css('background-color', '#848484');
 		$("#inferencingTable").hide();
 		$("#manageTasksTable").show();
 		refreshTaskDatatable('manageTasksTable');
@@ -57,6 +57,7 @@ function refreshTaskDatatable(table) {
 		$("#displayAllDiv").show();
 	} else {
 		$("#displayAllDiv").hide();
+
 	}
 }
 
@@ -67,6 +68,8 @@ function dataTableInitInferenceTaskManager() {
 		"ordering" : true,
 		"info" : true,
 		"pageLength" : 25,
+    "responsive": false,
+
 		"ajax" : {
 			"url" : "/performInferencing",
 			"type" : "GET",
@@ -156,38 +159,38 @@ function dataTableInitInferenceTaskManager() {
 		}, ],
 
 		"columnDefs" : [ {
-			className : "td_class_4",
+			className : "td_class_1",
 			"targets" : [ 0 ]
 		}, {
-			className : "td_class_2",
+			className : "td_class_1",
 			"targets" : [ 1 ]
 		}, {
-			className : "td_class_2",
+			className : "td_class_1",
 			"targets" : [ 2 ]
 		}, {
-			className : "td_class_2",
+			className : "td_class_1",
 			"targets" : [ 3 ]
 		}, {
-			className : "td_class_5",
+			className : "td_class_1",
 			"targets" : [ -1 ]
 		}, {
 			type : "date",
 			"targets" : [ 4, 5 ]
 		} ],
 
-		"dom" : '<"top"lip>rt<"bottom"ip>',
+		"dom" : '<"top"lpi>rt<"bottom"lpi>',
 
 		"pagingType" : "simple",
 
-		"lengthMenu" : [ [ 10, 25, 50, 100 ], [ 10, 25, 50, 100 ] ],
+		"lengthMenu" : [ [ 10, 25, 50, 100 ], [10, 25, 50, 100 ] ],
 
 		"language" : {
 			"lengthMenu" : "ROWS PER PAGE &nbsp;&nbsp; _MENU_",
 			"sLoadingRecords" : "Loading...",
 			"zeroRecords" : "Nothing found to display",
 			"paginate" : {
-				next : '<i style="color:#000;font-size:17px;" class="fas fa-caret-right"></i>',
-				previous : '<i style="color:#000;font-size:17px;" class="fas fa-caret-left"></i>'
+				next : '<img src="/images/pagination_right_assetfiles.png"/>',
+				previous : '<img src="/images/paginate_left_assetFiles.png"/>'
 			},
 		}
 	});
@@ -315,7 +318,7 @@ function dataTableInitTaskManager() {
 			"targets" : [ 2, 3 ]
 		} ],
 
-		"dom" : '<"top"lip>rt<"bottom"ip>',
+		"dom" : '<"top"lpi>rt<"bottom"lpi>',
 
 		"pagingType" : "simple",
 
@@ -326,8 +329,8 @@ function dataTableInitTaskManager() {
 			"sLoadingRecords" : "Loading...",
 			"zeroRecords" : "Nothing found to display",
 			"paginate" : {
-				next : '<i style="color:#000;font-size:17px;" class="fas fa-caret-right"></i>',
-				previous : '<i style="color:#000;font-size:17px;" class="fas fa-caret-left"></i>'
+				next : '<img src="/images/pagination_right_assetfiles.png"/>',
+				previous : '<img src="/images/paginate_left_assetFiles.png"/>'
 			},
 		}
 	});
@@ -355,8 +358,8 @@ function renderInferStatus(data, type, row) {
 				+ "style='width:17px;' alt='download file'></a>";
 	} else if (data == 'Failed' || data == 'FAILED') {
 		var error_msg = row.errorMessage.replace(/["']/g, "");
-		html += "Failed&nbsp;&nbsp;<img style='width:12px;' data-toggle='tooltip'"
-				+ "src='images/Status.info-tooltip.png' alt='failed message' title= '" + error_msg + "'>";
+		html += "Failed&nbsp;&nbsp;<img style='width:17px;' data-toggle='tooltip'"
+				+ "src='images/infoIcon.svg' alt='failed message' title= '" + error_msg + "'>";
 	} else if (data == 'NOTSTARTED') {
 		html += 'Not Started';
 	} else if (data == 'INPROGRESS') {
@@ -370,14 +373,14 @@ function renderInferStatus(data, type, row) {
 
 function renderTaskDate(data, type, row) {
 	if (data) {
-		return "&nbsp&nbsp;" + moment(data).format("MM/DD/YYYY HH:mm:ss");
+		return moment(data).format("MM/DD/YYYY HH:mm:ss");
 	}
 	return "";
 }
 
 function renderTaskCompletedDate(data, type, row) {
 	if (data) {
-		return "&nbsp&nbsp;" + moment(data).format("MM/DD/YYYY HH:mm:ss");
+		return moment(data).format("MM/DD/YYYY HH:mm:ss");
 	}
 	return "";
 
@@ -387,8 +390,7 @@ function renderTaskName(data, type, row) {
 	var html = "";
 
 	if (row.taskName) {
-		html += "&nbsp&nbsp;"
-				+ row.taskName
+		html += row.taskName
 				+ "&nbsp;&nbsp;<span prog_name='"
 				+ row.progName
 				+ "' study_name = '"
@@ -398,7 +400,7 @@ function renderTaskName(data, type, row) {
 				+ row.dataSetName
 				+ "' class='button3a' data-container='body' data-toggle='popover'"
 				+ "data-placement='right' data-trigger='click' data-popover-content='#a02'>"
-				+ "<img src='images/Status.info-tooltip.png' th:src='@{/images/Status.info-tooltip.png}' style='width:12px;' alt='Status info'></a></span>";
+				+ "<img src='/images/infoIcon.svg' th:src='@{/images/infoIcon.svg}' style='width:17px;' alt='Status info'></a></span>";
 	}
 
 	return html;
@@ -406,7 +408,7 @@ function renderTaskName(data, type, row) {
 
 function rendertaskId(data, type, row) {
 
-	return "&nbsp&nbsp;" + row.taskId;
+	return "&nbsp;&nbsp;"+row.taskId;
 }
 
 function retryUpload(taskId, taskName) {
@@ -511,7 +513,7 @@ function openPopOverDisplay($this) {
 	var studyName = $this.attr('study_name');
 	var datasetName = $this.attr('datasetname');
 
-	var ind = "<div id=\"a02\" class=\"col-md-12 hidden\"> <div class=\"popover-heading\">"
+	var ind = "<div id=\"a02\" class=\"col-md-12 hidden\"> <div class=\"popover-heading asset-identifier\">"
 			+ "<a class=\"button closeBtn float-right\" href=\"javascript:void(0);\"><i class=\"fa fa-times\"></i></a> </div>"
 			+ "<div class='popover-body'> <div class='divTable' style='width: 100%;border: 1px solid #000;'>"
 			+ "<div class='divTableBody'>";

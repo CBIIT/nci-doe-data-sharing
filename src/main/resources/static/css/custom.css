@@ -184,8 +184,9 @@ inline {
 .switch {
 	position: relative;
 	display: inline-block;
-	width: 42px;
-	height: 27px;
+	width: 41px;
+	height: 25px;
+	margin-bottom: 14px;
 }
 
 /* Hide default HTML checkbox */
@@ -203,7 +204,7 @@ inline {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: #ccc;
+	background-color: #C6C6C6;
 	-webkit-transition: .4s;
 	transition: .4s;
 }
@@ -211,27 +212,28 @@ inline {
 .slider:before {
 	position: absolute;
 	content: "";
-	height: 25px;
-	width: 23px;
-	left: 1px;
-	bottom: 1px;
-	background-color: white;
+	height: 19px;
+    width: 19px;
+    left: 3px;
+    bottom: 3px;
+	right: 3px;
+    background-color: #2D54C8;
 	-webkit-transition: .4s;
 	transition: .4s;
 }
 
 input:checked+.slider {
-	background-color: #2196F3;
+	background-color: #C6C6C6;
 }
 
 input:focus+.slider {
-	box-shadow: 0 0 1px #2196F3;
+	box-shadow: 0 0 1px #C6C6C6;
 }
 
 input:checked+.slider:before {
-	-webkit-transform: translateX(18px);
-	-ms-transform: translateX(18px);
-	transform: translateX(18px);
+	-webkit-transform: translateX(16px);
+	-ms-transform: translateX(16px);
+	transform: translateX(16px);
 }
 
 /* Rounded sliders */
@@ -436,7 +438,7 @@ table.dataTable thead .sorting_asc {
 }
 
 table#manageTasksTable thead .sorting{
-	background-image: url(/images/Sort-up.icon.svg) !important;
+	background-image: url(/images/asset_files_sort_up.svg) !important;
 	background-size: 16px 19px;
 }
 
@@ -446,12 +448,12 @@ table#manageTasksTable thead .sorting, table#manageTasksTable thead .sorting_asc
 }
 
 table#manageTasksTable thead .sorting_asc{
-	background-image: url(/images/Sort-up.icon.svg) !important;
+	background-image: url(/images/asset_files_sort_up.svg) !important;
 	background-size: 16px 19px;
 }
 
 table#manageTasksTable thead .sorting_desc{
-	background-image: url(/images/Sort-down.icon.svg) !important;
+	background-image: url(/images/asset_files_sort_down.svg) !important;
 	background-size: 16px 19px;
 }
 
@@ -540,6 +542,7 @@ div.container.main {
 
 .td_class_1 {
 	width: 10% !important;
+	word-break: break-word;
 }
 
 .td_class_3 {
@@ -548,6 +551,8 @@ div.container.main {
 
 .td_class_4 {
 	width: 25% !important;
+	word-break: break-word;
+
 }
 
 .td_class_2 {
@@ -606,7 +611,23 @@ a {
 	{
 	color: #000
 }
+#updateAccessPermissionsModal {
+  input.select2-search__field {
+      width: auto !important;
+  }
+}
 
+#updatePermissionsContent {
+	input.select2-search__field {
+		width: auto !important;
+	}
+  }
+
+#registerCollectionForm {
+	input.select2-search__field {
+		width: auto !important;
+	}
+}
 /*tabs*/
 .tab-content>.tab-pane {
 	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,e2e1e0+34,e2e1e0+100 */

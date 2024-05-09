@@ -14,7 +14,8 @@ public class TaskManager {
 	private String taskType;
 	private String userId;
 	private Date taskDate;
-	private String downloadType;
+	private String type;
+	private String path;
 
 	public boolean equals(Object object) {
 		if (this == object) {
@@ -39,7 +40,7 @@ public class TaskManager {
 		if (taskType != null ? !taskType.equals(that.taskType) : that.taskType != null) {
 			return false;
 		}
-		if (downloadType != null ? !downloadType.equals(that.downloadType) : that.downloadType != null) {
+		if (type != null ? !type.equals(that.type) : that.type != null) {
 			return false;
 		}
 
@@ -110,18 +111,28 @@ public class TaskManager {
 	}
 
 	@Basic
-	@Column(name = "DOWNLOAD_TYPE")
-	public String getDownloadType() {
-		return downloadType;
+	@Column(name = "TYPE")
+	public String getType() {
+		return type;
 	}
 
-	public void setDownloadType(String downloadType) {
-		this.downloadType = downloadType;
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	@Basic
+	@Column(name = "PATH")
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	@Override
 	public String toString() {
 		return "TaskManager{" + ", taskName='" + taskName + '\'' + ", taskType=" + taskType + ", taskDate=" + taskDate
-				+ ", taskId=" + taskId + ", userId=" + userId + ", downloadType=" + downloadType + '}';
+				+ ", taskId=" + taskId + ", userId=" + userId + ", type=" + type + '}';
 	}
 }

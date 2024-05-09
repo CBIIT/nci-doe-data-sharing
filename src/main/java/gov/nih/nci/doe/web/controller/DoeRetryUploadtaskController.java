@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.annotation.JsonView;
+
+import gov.nih.nci.doe.web.domain.TaskManager;
 import gov.nih.nci.doe.web.model.AjaxResponseBody;
 import gov.nih.nci.doe.web.model.Views;
 import gov.nih.nci.doe.web.service.TaskManagerService;
@@ -27,9 +28,6 @@ import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO;
 @EnableAutoConfiguration
 @RequestMapping("/uploadtask")
 public class DoeRetryUploadtaskController extends AbstractDoeController {
-
-	@Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
-	private String registrationServiceURL;
 
 	@Autowired
 	TaskManagerService taskManagerService;
@@ -58,6 +56,8 @@ public class DoeRetryUploadtaskController extends AbstractDoeController {
 			HpcBulkDataObjectRegistrationStatusDTO uploadTask = DoeClientUtil.getDataObjectRegistrationTask(authToken,
 					this.registrationServiceURL, taskId);
 
+			TaskManager task = taskManagerService.getLastestTaskById(taskId);
+
 			HpcBulkDataObjectRegistrationRequestDTO registrationDTO = constructBulkRequest(request, session,
 					uploadTask);
 
@@ -70,7 +70,7 @@ public class DoeRetryUploadtaskController extends AbstractDoeController {
 				}
 
 				taskManagerService.saveTransfer(responseDTO.getTaskId(), "Upload", null, taskName,
-						getLoggedOnUserInfo());
+						getLoggedOnUserInfo(), task != null ? task.getPath() : null);
 				return "Your bulk data file registration request has the following task ID: <a href='/tasksTab'>"
 						+ responseDTO.getTaskId() + "</a>";
 			}

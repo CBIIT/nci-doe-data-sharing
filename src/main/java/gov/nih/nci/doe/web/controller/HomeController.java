@@ -247,7 +247,8 @@ public class HomeController extends AbstractDoeController {
 			@RequestParam(value = "fileName", required = false) String fileName,
 			@RequestParam(value = "returnToSearch", required = false) String returnToSearch,
 			@RequestParam(value = "returnToStatus", required = false) String returnToStatus,
-			@RequestParam(value = "assetIdentifier", required = false) String assetIdentifier) throws DoeWebException {
+			@RequestParam(value = "assetIdentifier", required = false) String assetIdentifier,
+			@RequestParam(value = "fileSize", required = false) String fileSize) throws DoeWebException {
 
 		log.info("get download tab details");
 
@@ -291,15 +292,20 @@ public class HomeController extends AbstractDoeController {
 			session.setAttribute("fileName", fileName);
 		}
 
+		if (StringUtils.isNotEmpty(fileSize)) {
+			model.addAttribute("fileSize", fileSize);
+		}
+
+		selectedPaths = (String) session.getAttribute("selectedPathsString");
+		downloadAsyncType = (String) session.getAttribute("downloadAsyncType");
+		fileName = (String) session.getAttribute("fileName");
+
 		if (code != null) {
 			log.info("return Authorization code from google for download tab" + code);
 			code = request.getParameter("code");
 			if (code != null) {
 				// Return from Google Drive Authorization
-				selectedPaths = (String) session.getAttribute("selectedPathsString");
-				downloadAsyncType = (String) session.getAttribute("downloadAsyncType");
 				String actionType = (String) session.getAttribute("actionType");
-				fileName = (String) session.getAttribute("fileName");
 				final String returnURL = this.webServerName + "/downloadTab";
 				if (actionType != null && actionType.equalsIgnoreCase(DoeAuthorizationService.GOOGLE_DRIVE_TYPE)) {
 					try {
@@ -330,25 +336,19 @@ public class HomeController extends AbstractDoeController {
 						throw new DoeWebException("Failed to redirect to Google for authorization: " + e.getMessage());
 					}
 				}
-
-				model.addAttribute("selectedPathsString", selectedPaths);
-				model.addAttribute("downloadAsyncType", downloadAsyncType);
-				model.addAttribute("fileName", fileName);
 			}
 		} else if (endPointName != null) {
 			// This is return from Globus site
-			selectedPaths = (String) session.getAttribute("selectedPathsString");
-			downloadAsyncType = (String) session.getAttribute("downloadAsyncType");
-			fileName = (String) session.getAttribute("fileName");
 			model.addAttribute("endPointName", endPointName);
 			String endPointLocation = request.getParameter("path");
 			model.addAttribute("endPointLocation", endPointLocation);
 			model.addAttribute("asyncSearchType", "async");
 			model.addAttribute("transferType", "async");
-			model.addAttribute("selectedPathsString", selectedPaths);
-			model.addAttribute("downloadAsyncType", downloadAsyncType);
-			model.addAttribute("fileName", fileName);
 		}
+
+		model.addAttribute("selectedPathsString", selectedPaths);
+		model.addAttribute("downloadAsyncType", downloadAsyncType);
+		model.addAttribute("fileName", fileName);
 		return "downloadTab";
 	}
 

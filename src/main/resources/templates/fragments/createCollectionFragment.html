@@ -58,26 +58,37 @@
                        name="metaDataPermissionsList" style="height:54px !important;width:70% !important">
                       </select>  				 
                      </div>
+                 
 
-                            <div class="form-group col-lg-2 col-md-2 labelEditCollection parentCollectionDiv"
-                            id="parentCollectionNameDiv">
-                            <span id="parentCollectionLabel">Parent Collection Name</span>
-                            
-                            </div>
-                            <div class="form-group col-lg-4 col-md-4 labelEditCollection parentCollectionDiv" 
-                            style="background-color: transparent;margin-top: 0px; margin-left: -16px;display: flex;">
+                    <div class="form-group col-lg-2 col-md-2 labelEditCollection parentCollectionDiv"
+                    id="parentCollectionNameDiv">
+                    <span id="parentCollectionLabel">Parent Collection Name</span>
+                    
+                    </div>
+                    <div class="form-group col-lg-4 col-md-4 labelEditCollection parentCollectionDiv" 
+                    style="background-color: transparent;margin-top: 0px; margin-left: -16px;display: flex;">
+                  
+                       <input type="text" disabled id="parentCollectionName" aria-labelledby="parentCollectionName" class="parentCollectionName"/>
+                    </div>
+                                         
+                     
+                    <div class="form-group col-lg-4 col-md-12" style="display:none;">
+                        <label for="collectionType">Collection Type</label>
+                        <input type="text" id="collectionType" aria-labelledby="collectionType" name="zAttrStr_collection_type">     
+                    </div>
+                     <div class="form-group col-lg-4 col-md-12" style="display:none;">
+                    <label for="collectionPath">Parent Collection Path
+                       <input type="text" disabled id="collectionPath" aria-labelledby="collectionPath" style="width:90%;font-size: 16px;"/></label>
+                    </div>
                           
-                               <input type="text" disabled id="parentCollectionName" aria-labelledby="parentCollectionName" class="parentCollectionName"/>
-                            </div>
-                            <div class="form-group col-lg-4 col-md-12" style="display:none;">
-                                <label for="collectionType">Collection Type</label>
-                                <input type="text" id="collectionType" aria-labelledby="collectionType" name="zAttrStr_collection_type">     
-                            </div>
-                             <div class="form-group col-lg-4 col-md-12" style="display:none;">
-                            <label for="collectionPath">Parent Collection Path
-                               <input type="text" disabled id="collectionPath" aria-labelledby="collectionPath" style="width:90%;font-size: 16px;"/></label>
-                            </div>
-                            
+                   <div class="form-group col-lg-2 col-md-2 labelEditCollection folderDiv" style="display:none;">
+				     FOLDER NAME &nbsp; <i class="fas fa-question-circle" data-toggle="tooltip" 
+				     title="Specify a permanent, unique identifier for the folder. Use only alphanumeric characters, underscore (_), or hyphen (-)."></i></div>
+				     
+                    <div class="form-group col-lg-4 col-md-4 labelEditCollection folderDiv" style="display:none; background-color: transparent;padding-left: 0px !important;
+                     margin-left: -4px;line-height: 28px;color: #000;"> 
+                      	<input type="text" is_mandatory="true" id="folder_name" class="identifier_validation" pattern = "[A-Za-z0-9_-]*" placeholder="Enter Folder Name" aria-label="value of folder name" name="folder_name" style="width:70%;">	 
+                    </div>  
                             
                         </div>
                     </div> 

@@ -245,7 +245,8 @@ public class RestAPICommonController extends AbstractDoeController {
 			HpcBulkDataObjectDownloadResponseDTO downloadDTO = (HpcBulkDataObjectDownloadResponseDTO) DoeClientUtil
 					.getObject(restResponse, HpcBulkDataObjectDownloadResponseDTO.class);
 			try {
-				taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "async", "datafiles", doeLogin);
+				taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "async", "datafiles", doeLogin,
+						null);
 				// store the auditing info
 				AuditingModel audit = new AuditingModel();
 				audit.setName(doeLogin);
@@ -317,7 +318,7 @@ public class RestAPICommonController extends AbstractDoeController {
 						.getObject(restResponse, HpcCollectionDownloadResponseDTO.class);
 				String name = path.substring(path.lastIndexOf('/') + 1);
 				try {
-					taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "async", name, doeLogin);
+					taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "async", name, doeLogin, path);
 					// store the auditing info
 					AuditingModel audit = new AuditingModel();
 					audit.setName(doeLogin);
@@ -482,7 +483,7 @@ public class RestAPICommonController extends AbstractDoeController {
 
 					try {
 						taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", "data_object",
-								dataObjectName, doeLogin);
+								dataObjectName, doeLogin, path);
 						// store the auditing info
 						AuditingModel audit = new AuditingModel();
 						audit.setName(doeLogin);
@@ -778,7 +779,7 @@ public class RestAPICommonController extends AbstractDoeController {
 			@RequestBody @Valid gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO bulkDataObjectRegistrationRequest)
 			throws DoeWebException, JsonProcessingException {
 
-		log.info("register bulk data files: " + bulkDataObjectRegistrationRequest);
+		log.info("bulk registration: " + bulkDataObjectRegistrationRequest);
 		log.info("Headers: {}", headers);
 
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
@@ -844,23 +845,6 @@ public class RestAPICommonController extends AbstractDoeController {
 				if (responseDTO != null) {
 					String taskId = responseDTO.getTaskId();
 					if (StringUtils.isNotEmpty(taskId)) {
-						try {
-
-							// save the task info
-							taskManagerService.saveTransfer(taskId, "Upload", null, null, doeLogin);
-
-							// store the auditing info
-							AuditingModel audit = new AuditingModel();
-							audit.setName(doeLogin);
-							audit.setOperation("Upload");
-							audit.setStartTime(new Date());
-							audit.setTransferType("Bulk Registration");
-							audit.setTaskId(taskId);
-							auditingService.saveAuditInfo(audit);
-
-						} catch (Exception e) {
-							log.error("error in save" + e.getMessage());
-						}
 
 						// get the paths for new collection registration and save in modac
 						List<String> pathsList = new ArrayList<String>();
@@ -881,6 +865,24 @@ public class RestAPICommonController extends AbstractDoeController {
 							}
 						}
 
+						try {
+
+							// save the task info
+							taskManagerService.saveTransfer(taskId, "Upload", "async", null, doeLogin,
+									CollectionUtils.isNotEmpty(pathsList) ? String.join(",", pathsList) : null);
+
+							// store the auditing info
+							AuditingModel audit = new AuditingModel();
+							audit.setName(doeLogin);
+							audit.setOperation("Upload");
+							audit.setStartTime(new Date());
+							audit.setTransferType("Bulk Registration");
+							audit.setTaskId(taskId);
+							auditingService.saveAuditInfo(audit);
+
+						} catch (Exception e) {
+							log.error("error in save" + e.getMessage());
+						}
 						if (CollectionUtils.isNotEmpty(pathsList)) {
 							for (String collectionPath : pathsList) {
 								try {

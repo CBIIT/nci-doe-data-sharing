@@ -499,6 +499,8 @@ function constructNewCollectionMetaDataSet(data, status) {
 	$("#newMetaDataTable tbody").html("");
 	var parentAccessgrp = $("#parentAccessGroup").val();
 	var assetType = $("#assetType").val();
+	var collectionType = $("#collectionType").val();
+	
 	$
 			.each(
 					data,
@@ -581,9 +583,9 @@ function constructNewCollectionMetaDataSet(data, status) {
 								}
 							}
 							if (value.defaultValue) {
-								$select.select2().val(value.defaultValue).trigger('change');
+								$select.select2().val(value.defaultValue);
 							} else {
-								$select.select2().trigger('change');
+								$select.select2();
 							}
 
 						} else if (value.attrValue && value.isVisibleOnUplaodPage != false) {
@@ -691,8 +693,10 @@ function retrieveCollectionList(data, status) {
 
 	if (collectionType == 'Folder') {
 		displayCollectionType = 'Asset Subcollection';
+		$(".folderDiv").show();
 	} else {
 		displayCollectionType = collectionType;
+		$(".folderDiv").hide();
 	}
 	$("#parentCollectionType").val(parent);
 	$("#parentAccessGroup").val(parentAccessGrp);
@@ -788,6 +792,21 @@ function registerCollection() {
 			collectionName = modifiedName;
 		}
 	});
+	
+	if(collectionType && collectionType == 'Folder') {
+	
+	        var folderName = $("#folder_name").val();
+		    var folderNameModifief = folderName.replace(/ /g, "_");
+			collectionName = folderNameModifief;
+			if(!folderName) {			
+				 validate = false;
+				$(".registerErrorMsg").append("Enter Folder Name");
+				$(".registerMsgErrorBlock").show();
+				$('body,html').animate({
+					scrollTop : 0
+				}, 500);
+			}
+		} 
 
 	$("textarea").each(function() {
 		var ismandatory = $(this).attr('is_mandatory');
@@ -1144,7 +1163,7 @@ function constructAssetTypeBulkDiv(data, status) {
 														+ '"></i>';
 						}
 
-						if (value.validValues != null && value.attrName != 'asset_type') {
+						if (value.validValues != null && value.attrName != 'asset_type' && value.isVisibleOnUplaodPage != false) {
 
 							$("#assetBulkMetadataTable tbody")
 									.append(
@@ -1175,13 +1194,13 @@ function constructAssetTypeBulkDiv(data, status) {
 							}
 
 							if (value.defaultValue) {
-								$select.select2().val(value.defaultValue).trigger('change');
+								$select.select2().val(value.defaultValue);
 							} else {
-								$select.select2().trigger('change');
+								$select.select2();
 							}
 
 						} else if (value.attrName && value.attrName != 'asset_name' && value.attrName != 'asset_type'
-								&& value.attrName != 'asset_identifier' && value.attrName != 'access_group') {
+								&& value.attrName != 'asset_identifier' && value.attrName != 'access_group' && value.isVisibleOnUplaodPage != false) {
 							if (value.attrName == 'description') {
 								$("#assetBulkMetadataTable tbody")
 										.append(

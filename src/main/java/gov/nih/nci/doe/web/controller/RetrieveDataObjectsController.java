@@ -158,6 +158,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 				DoeDatafileSearchResultDetailed returnResult = new DoeDatafileSearchResultDetailed();
 				returnResult.setPath(dataObject.getPath());
 				returnResult.setName(name);
+				returnResult.setFileSizeInBytes(dataObject.getDataSize());
 				returnResult.setFileSize(MiscUtil.addHumanReadableSize(String.valueOf(dataObject.getDataSize())));
 				returnResult.setIsFolder(false);
 				returnResults.add(returnResult);

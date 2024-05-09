@@ -285,15 +285,25 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 				}
 
 				if (CollectionUtils.isNotEmpty(pathsList)) {
+
+					// add the collection paths to the permissions table
+					// the collection Id will be null for now
+					// when the scheduler runs, it updates the collection Id when the collection is
+					// created
 					pathsList.stream().forEach(f -> {
-						mailService.sendCollectionRegistationFailure(user, f, null, taskId);
+
+						// save collection permissions in MoDaC DB
+
+						metaDataPermissionService.savePermissionsList(user, null, null, f);
 					});
 
 				}
 
 				clearSessionAttrs(session);
 
-				taskManagerService.saveTransfer(taskId, "Upload", null, name, user);
+				taskManagerService.saveTransfer(taskId, "Upload", null, name, user,
+						CollectionUtils.isNotEmpty(pathsList) ? String.join(",", pathsList)
+								: doeDataFileModel.getPath());
 
 				// store the auditing info
 				AuditingModel audit = new AuditingModel();

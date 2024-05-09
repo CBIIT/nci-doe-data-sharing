@@ -102,6 +102,9 @@ public abstract class AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.v2.dataObject}")
 	public String dataObjectAsyncServiceURL;
+	
+	@Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
+	public String registrationServiceURL;
 
 	@Value("${gov.nih.nci.hpc.server.dataObject}")
 	private String preSigneddataObjectServiceURL;
@@ -253,6 +256,19 @@ public abstract class AbstractDoeController {
 		if (!StringUtils.isEmpty(emailAddr)) {
 			DoeUsersModel user = authenticateService.getUserInfo(emailAddr);
 			if (user != null && Boolean.TRUE.equals(user.getIsDeletePrivilege())) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	@ModelAttribute("isReviewCommitteeMember")
+	public Boolean getIsReviewCommiteeMember() {
+		String emailAddr = getLoggedOnUserInfo();
+		if (!StringUtils.isEmpty(emailAddr)) {
+			DoeUsersModel user = authenticateService.getUserInfo(emailAddr);
+			if (user != null && Boolean.TRUE.equals(user.getIsReviewCommiteeMember())) {
 				return true;
 			}
 		}
@@ -1123,6 +1139,7 @@ public abstract class AbstractDoeController {
 				}));
 
 			}
+			session.setAttribute("validValuesList", datasetList);
 			return datasetList;
 		} catch (Exception e) {
 			log.error("Failed to get model/reference dataset paths");

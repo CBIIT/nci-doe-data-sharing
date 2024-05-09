@@ -21,6 +21,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
@@ -28,11 +29,13 @@ import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.controller.AbstractDoeController;
 import gov.nih.nci.doe.web.domain.Auditing;
 import gov.nih.nci.doe.web.domain.InferencingTask;
-
+import gov.nih.nci.doe.web.domain.MetaDataPermissions;
+import gov.nih.nci.doe.web.domain.TaskManager;
 import gov.nih.nci.doe.web.repository.AuditingRepository;
 import gov.nih.nci.doe.web.repository.InferencingTaskRepository;
+import gov.nih.nci.doe.web.repository.MetaDataPermissionsRepository;
+import gov.nih.nci.doe.web.repository.TaskManagerRepository;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
-
 import gov.nih.nci.hpc.domain.datatransfer.HpcFileLocation;
 import gov.nih.nci.hpc.domain.datatransfer.HpcUploadSource;
 import gov.nih.nci.hpc.domain.datatransfer.HpcUserDownloadRequest;
@@ -43,10 +46,11 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDownloadSummaryDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationResponseDTO;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationStatusDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationTaskDTO;
 import gov.nih.nci.hpc.dto.datamanagement.v2.HpcRegistrationSummaryDTO;
 
-public class ManageTasksScheduler extends AbstractDoeController {
+public class MoDaCSchedulers extends AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.download}")
 	private String queryServiceURL;
@@ -54,8 +58,14 @@ public class ManageTasksScheduler extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.user.authenticate}")
 	private String authenticateURL;
 
+	@Value("${doe.readonly.password}")
+	private String readOnlyUserPassword;
+
 	@Value("${doe.writeaccount.password}")
 	private String writeAccessUserPassword;
+
+	@Value("${doe.readonlyaccount.username}")
+	private String readOnlyUserName;
 
 	@Value("${doe.writeaccount.username}")
 	private String writeAccessUserName;
@@ -67,13 +77,19 @@ public class ManageTasksScheduler extends AbstractDoeController {
 	InferencingTaskRepository inferencingTaskRepository;
 
 	@Autowired
+	private MetaDataPermissionsRepository metaDataPermissionsRepository;
+
+	@Autowired
 	AuditingRepository auditingRepository;
+
+	@Autowired
+	TaskManagerRepository taskManagerRepository;
 
 	@Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
 	private String registrationServiceV2URL;
 
 	public void init() {
-		log.info("manage scheduler called");
+		log.info("scheduler called");
 	}
 
 	SimpleDateFormat format = new SimpleDateFormat("MM_dd_yyyy");
@@ -81,12 +97,14 @@ public class ManageTasksScheduler extends AbstractDoeController {
 	@Scheduled(cron = "${doe.scheduler.cron.auditing}")
 	public void updateAuditingService() throws DoeWebException {
 
-		log.info("auditing service scheduler");
+		log.info("auditing service scheduler to update status for downloads and uploads");
 		String authToken = DoeClientUtil.getAuthenticationToken(writeAccessUserName, writeAccessUserPassword,
+				authenticateURL);
+		String readToken = DoeClientUtil.getAuthenticationToken(readOnlyUserName, readOnlyUserPassword,
 				authenticateURL);
 
 		String serviceURL = queryServiceURL + "?page=" + 1 + "&totalCount=true";
-		HpcDownloadSummaryDTO downloads = DoeClientUtil.getDownloadSummary(authToken, serviceURL);
+		HpcDownloadSummaryDTO downloads = DoeClientUtil.getDownloadSummary(readToken, serviceURL);
 
 		final MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>();
 		paramsMap.set("totalCount", Boolean.TRUE.toString());
@@ -105,55 +123,88 @@ public class ManageTasksScheduler extends AbstractDoeController {
 			uploadResults.addAll(registrations.getCompletedTasks());
 		}
 
-		List<Auditing> auditingTaskIds = auditingService.getAllTaskIds();
+		List<Auditing> auditingTaskIds = auditingService.getAllTaskIdsInprogress();
 
 		if (CollectionUtils.isNotEmpty(auditingTaskIds)) {
 			for (Auditing audit : auditingTaskIds) {
-				if (audit.getOperation().equalsIgnoreCase("Upload")) {
-					HpcBulkDataObjectRegistrationTaskDTO upload = uploadResults.stream()
-							.filter(x -> audit.getTaskId().equals(x.getTaskId())).findAny().orElse(null);
+				try {
 
-					if (upload != null) {
-						audit.setCompletionTime(
-								(upload != null && upload.getCompleted() != null) ? upload.getCompleted().getTime()
-										: null);
-						if (upload.getResult() == null) {
-							audit.setStatus("In progress");
-						} else if (Boolean.TRUE.equals(upload.getResult())) {
-							audit.setStatus("Completed");
-						} else if (Boolean.FALSE.equals(upload.getResult())) {
-							audit.setStatus("Failed");
-							List<String> message = new ArrayList<String>();
-							upload.getFailedItems().stream().forEach(x -> message.add(x.getMessage()));
-							audit.setErrorMsg(message.get(0));
-						}
-						auditingRepository.saveAndFlush(audit);
-					}
-				} else if (audit.getOperation().equalsIgnoreCase("Download")) {
-					HpcUserDownloadRequest download = downloadResults.stream()
-							.filter(x -> audit.getTaskId().equals(x.getTaskId())).findAny().orElse(null);
-					if (download != null) {
-						audit.setCompletionTime((download != null && download.getCompleted() != null)
-								? download.getCompleted().getTime()
-								: null);
-						if (download != null && download.getResult() != null
-								&& download.getResult().value().equals("FAILED")) {
-							List<String> message = new ArrayList<String>();
-							download.getItems().stream().forEach(x -> message.add(x.getMessage()));
-							audit.setStatus("Failed");
-							audit.setErrorMsg(message.get(0));
+					if (audit.getOperation().equalsIgnoreCase("Upload")) {
+						HpcBulkDataObjectRegistrationTaskDTO upload = uploadResults.stream()
+								.filter(x -> audit.getTaskId().equals(x.getTaskId())).findAny().orElse(null);
 
-						} else if (download.getResult() != null && download.getResult().value().equals("COMPLETED")) {
-							audit.setStatus("Completed");
-						} else {
-							audit.setStatus("In Progress");
+						if (upload != null) {
+							audit.setCompletionTime(
+									(upload != null && upload.getCompleted() != null) ? upload.getCompleted().getTime()
+											: null);
+							if (upload.getResult() == null) {
+								audit.setStatus("In progress");
+							} else if (Boolean.TRUE.equals(upload.getResult())) {
+								audit.setStatus("Completed");
+							} else if (Boolean.FALSE.equals(upload.getResult())) {
+								audit.setStatus("Failed");
+
+								List<String> message = new ArrayList<String>();
+
+								upload.getFailedItems().stream().forEach(x -> {
+									if (x.getMessage() != null && !message.contains(x.getMessage())) {
+										message.add(
+												StringEscapeUtils.escapeHtml((x.getMessage().replaceAll("[\']", ""))));
+									}
+								});
+
+								String filteredMessage = CollectionUtils.isNotEmpty(message) ? String.join(",", message)
+										: "";
+								audit.setErrorMsg(filteredMessage);
+							}
+							auditingRepository.saveAndFlush(audit);
 						}
-						auditingRepository.saveAndFlush(audit);
+					} else if (audit.getOperation().equalsIgnoreCase("Download")) {
+						HpcUserDownloadRequest download = downloadResults.stream()
+								.filter(x -> audit.getTaskId().equals(x.getTaskId())).findAny().orElse(null);
+						if (download != null) {
+							audit.setCompletionTime((download != null && download.getCompleted() != null)
+									? download.getCompleted().getTime()
+									: null);
+							if (download != null && download.getResult() != null
+									&& download.getResult().value().equals("FAILED")) {
+
+								audit.setStatus("Failed");
+								List<String> message = new ArrayList<String>();
+
+								download.getItems().stream().forEach(x -> {
+									if (x.getMessage() != null && !message.contains(x.getMessage())) {
+										message.add(x.getMessage().replaceAll("[\']", ""));
+									}
+								});
+
+								if (CollectionUtils.isEmpty(message)) {
+									message.add(download.getResult() != null
+											? download.getResult().value().replaceAll("[\']", "")
+											: null);
+								}
+
+								String filteredMessage = CollectionUtils.isNotEmpty(message)
+										? StringEscapeUtils.escapeHtml(String.join(",", message))
+										: "";
+
+								audit.setErrorMsg(filteredMessage);
+
+							} else if (download.getResult() != null
+									&& download.getResult().value().equals("COMPLETED")) {
+								audit.setStatus("Completed");
+							} else {
+								audit.setStatus("In Progress");
+							}
+							auditingRepository.saveAndFlush(audit);
+						}
 					}
+				} catch (Exception e) {
+					log.error("Failed to update auditing table" + e.getMessage());
 				}
-
 			}
 		}
+
 	}
 
 	@Scheduled(cron = "${doe.scheduler.cron.cleanup}")
@@ -460,6 +511,75 @@ public class ManageTasksScheduler extends AbstractDoeController {
 			}
 
 		}
+	}
+
+	@Scheduled(cron = "${doe.scheduler.collection.permissions}")
+	public void updateCollectionPermissionsForBulkAssetUploads() throws DoeWebException {
+
+		log.info("collection permissions update scheduler for tasks created during bulk asset uploads");
+
+		// get all rows with empty collection Id and verify if collection exists
+		List<MetaDataPermissions> collectionPermList = metaDataPermissionsRepository
+				.getAllCollectionsWithEmptyCollectionId();
+		if (CollectionUtils.isNotEmpty(collectionPermList)) {
+			log.info("empty collection Id's exist");
+			String authToken = DoeClientUtil.getAuthenticationToken(writeAccessUserName, writeAccessUserPassword,
+					authenticateURL);
+			for (MetaDataPermissions collection : collectionPermList) {
+				log.info("verifying collection Id for path: " + collection.getCollectionPath());
+
+				// find Collection path in task manager table and get task Id
+
+				List<TaskManager> taskList = taskManagerRepository
+						.findByPath("%" + collection.getCollectionPath() + "%");
+				if (CollectionUtils.isNotEmpty(taskList)) {
+					TaskManager task = taskList.get(0);
+					try {
+						if (task != null) {
+							HpcBulkDataObjectRegistrationStatusDTO status = DoeClientUtil
+									.getRegistrationStatusByTaskId(authToken, registrationServiceURL, task.getTaskId());
+
+							if (status != null && status.getTask() != null
+									&& Boolean.FALSE.equals(status.getInProgress())) {
+								/*
+								 * If the task reaches terminal status, then get collection Id by path. Do this
+								 * for both completed and failed status since failed task id can have more than
+								 * one asset paths and some assets might get uploaded even though the task
+								 * failed.
+								 */
+
+								HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
+										collection.getCollectionPath(), false);
+
+								if (collectionDto != null && collectionDto.getCollections() != null
+										&& CollectionUtils.isNotEmpty(collectionDto.getCollections())) {
+									// collection exists
+									log.info("updating collection Id for path:" + collection.getCollectionPath());
+									collection.setCollectionId(
+											collectionDto.getCollections().get(0).getCollection().getCollectionId());
+									metaDataPermissionsRepository.saveAndFlush(collection);
+								} else {
+									// delete the row in collection_permissions table since collection does not
+									// exist
+									metaDataPermissionsRepository.delete(collection);
+								}
+							}
+
+						}
+
+					} catch (DoeWebException e) {
+						// collection does not exist
+						log.debug("Error in getting collection" + e.getMessage());
+						// delete the row in collection_permissions table since collection does not
+						// exist
+						metaDataPermissionsRepository.delete(collection);
+					}
+				}
+
+			}
+
+		}
+
 	}
 
 	private gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO constructV2BulkRequest(

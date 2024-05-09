@@ -1,0 +1,7 @@
+alter table USER_T
+    add IS_REVIEW_COMMITTEE_MEMBER CHAR
+/
+
+alter table LOOKUP_T
+    add IS_VISIBLE_FOR_REVIEW_COMMITEE_MEMBER CHAR
+/

@@ -224,7 +224,7 @@ public class DoeDownloadController extends AbstractDoeController {
 					result.setMessage(taskId);
 				} else {
 					taskManagerService.saveTransfer(taskId, "Download", downloadFile.getDownloadType(), name,
-							getLoggedOnUserInfo());
+							getLoggedOnUserInfo(), downloadFile.getDestinationPath());
 					// store the auditing info
 					AuditingModel audit = new AuditingModel();
 					audit.setName(loggedOnUser);

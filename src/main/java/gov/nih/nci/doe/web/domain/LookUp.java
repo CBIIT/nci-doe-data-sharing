@@ -32,6 +32,7 @@ public class LookUp implements Serializable {
 	private Boolean isEditable;
 	private Boolean isVisible;
 	private Boolean isVisibleOnUplaodPage;
+	private Boolean isVisibleForReviewCommiteeMember;
 
 	public LookUp() {
 
@@ -151,5 +152,19 @@ public class LookUp implements Serializable {
 	public void setIsVisible(Boolean isVisible) {
 		this.isVisible = isVisible;
 	}
+
+	
+	@Basic
+	@Column(name = "IS_VISIBLE_FOR_REVIEW_COMMITEE_MEMBER", nullable = true, length = 1)
+	@Type(type = "yes_no")
+	public Boolean getIsVisibleForReviewCommiteeMember() {
+		return isVisibleForReviewCommiteeMember;
+	}
+
+	public void setIsVisibleForReviewCommiteeMember(Boolean isVisibleForReviewCommiteeMember) {
+		this.isVisibleForReviewCommiteeMember = isVisibleForReviewCommiteeMember;
+	}
+	
+	
 
 }

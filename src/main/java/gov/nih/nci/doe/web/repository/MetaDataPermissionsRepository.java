@@ -28,4 +28,7 @@ public interface MetaDataPermissionsRepository extends JpaRepository<MetaDataPer
 	@Query("select a from MetaDataPermissions a left join DoeUsers u on a.user.id = u.id left join Group g on a.group.id = g.id where u.emailAddrr = :emailAddress OR g.groupName IN (:grpList)")
 	List<MetaDataPermissions> getAllMetadataPermissionsForLoggedOnUser(@Param("emailAddress") String emailAddress,
 			@Param("grpList") List<String> grpList);
+
+	@Query("select a from MetaDataPermissions a where a.collectionId IS NULL")
+	List<MetaDataPermissions> getAllCollectionsWithEmptyCollectionId();
 }

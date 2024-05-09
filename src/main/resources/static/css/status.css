@@ -1,31 +1,173 @@
-table#manageTasksTable th, table#inferencingTable th {
+table#manageTasksTable th,
+table#inferencingTable th {
 	color: #FFFFFF;
-	font-family: 'inter_regular';
-	font-size: 13px;
+	font-family: 'Open Sans';
+	font-weight: 400;
+	letter-spacing: 0.3px;
+	font-size: 14px;
 	line-height: 17px;
+	padding: 6px 14px;
 }
-#manageTasksTable_length, #inferencingTable_length {
+
+table#manageTasksTable th {
+	padding-right: 3rem;
+}
+
+
+table#manageTasksTable td,
+table#inferencingTable td {
+	color: #152868;
+	font-family: Inter;
+	font-size: 16px;
+	font-weight: 300;
+	line-height: 24px;
+	padding: 0.5rem 3rem 1rem 1rem;
+}
+
+#manageTasksTable_length,
+#inferencingTable_length,
+.dataTables_length {
 	float: right;
 	color: #000000;
 	font-family: 'latoregular';
 	font-size: 16px;
-	margin-right: 24px;
 	margin-bottom: -7px;
 	margin-top: -20px;
 }
-#manageTasksTable_info, #inferencingTable_info {
+
+#manageTasksTable_info,
+#inferencingTable_info {
 	margin-bottom: 13px;
 	margin-top: -6px;
-}
-#displayAllDiv {
-	float: right;
-	margin-bottom: 10px;
-	margin-right: -27px;
-	color: #000000;
-	font-family: 'latoregular';
-	font-size: 16px;
+	text-transform: uppercase;
+	color: #515A6A;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: 500;
+	letter-spacing: 0.12px;
+	text-transform: uppercase;
 }
 
-table#manageTasksTable tr.odd td, table#inferencingTable tr.odd td {
-    background-color: #E0F0F4 !important;
+#displayAllDiv {
+	margin-bottom: 10px;
+	color: #246381;
+	font-family: Inter;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 700;
+	letter-spacing: 0.16px;
+	border-bottom: 2px solid #B7B7B7;
+}
+
+table#manageTasksTable tr.even td,
+table#inferencingTable tr.even td {
+	background-color: #EEF4F6 !important;
+}
+
+table#manageTasksTable tr.odd td,
+table#inferencingTable tr.odd td {
+	background-color: #FFF !important;
+}
+
+#manageTasksTable_wrapper,
+#inferencingTable_wrapper {
+
+	.top,
+	.bottom {
+		display: inline-flex;
+		float: right;
+	}
+
+	.bottom {
+		margin-top: 8px;
+
+		.dataTables_info {
+			margin-bottom: 13px;
+			margin-top: -6px;
+			color: #515A6A !important;
+			font-family: Inter;
+			font-size: 13px;
+			font-style: normal;
+			font-weight: 500;
+			letter-spacing: 0.12px;
+			text-transform: uppercase;
+		}
+
+		.dataTables_length {
+			label {
+				color: #515A6A;
+				font-family: Inter;
+				font-size: 12px;
+				font-style: normal;
+				font-weight: 500;
+				line-height: 110%;
+				letter-spacing: 0.12px;
+				padding-top: 14px;
+				padding-bottom: 14px;
+			}
+
+			select {
+				color: #515A6A;
+				font-family: Inter;
+				font-size: 14px;
+				font-style: normal;
+				font-weight: 500;
+				line-height: 110%;
+				letter-spacing: -0.14px;
+				border-radius: 65px;
+				border: 1px solid var(--grays-gray-3, #8B98AF);
+				background: #FFF;
+				width: 68px;
+				height: 34px;
+				text-align: center;
+				-webkit-appearance: none;
+				appearance: none;
+				background-image: url("/images/select-drropdown.svg");
+				background-size: 8px;
+				background-repeat: no-repeat;
+				background-position: calc(100% - 8px) center;
+				background-position: calc(100% - 14px) center;
+				padding-right: 14px;
+			}
+		}
+	}
+}
+
+#manageTasksTable_length,
+#inferencingTable_length {
+	label {
+		color: #515A6A;
+		font-family: Inter;
+		font-size: 12px;
+		font-style: normal;
+		font-weight: 500;
+		line-height: 110%;
+		letter-spacing: 0.12px;
+		padding-top: 14px;
+		padding-bottom: 14px;
+	}
+
+	select {
+		color: #515A6A;
+		font-family: Inter;
+		font-size: 14px;
+		font-style: normal;
+		font-weight: 500;
+		line-height: 110%;
+		letter-spacing: -0.14px;
+		border-radius: 65px;
+		border: 1px solid var(--grays-gray-3, #8B98AF);
+		background: #FFF;
+		width: 68px;
+		height: 34px;
+		text-align: center;
+		-webkit-appearance: none;
+		appearance: none;
+		background-image: url("/images/select-drropdown.svg");
+		background-size: 8px;
+		background-repeat: no-repeat;
+		background-position: calc(100% - 8px) center;
+		background-position: calc(100% - 14px) center;
+		padding-right: 14px;
+	}
 }
