@@ -617,6 +617,12 @@ a {
   }
 }
 
+#updatePermissionsContent {
+	input.select2-search__field {
+		width: auto !important;
+	}
+  }
+
 #registerCollectionForm {
 	input.select2-search__field {
 		width: auto !important;
