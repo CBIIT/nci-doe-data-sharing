@@ -74,10 +74,18 @@ function constructEditCollectionMetadata(data, status) {
 												+ value.attrName + "' " + "style='width:70%;'>" + attrValModified
 												+ "</textarea></td></tr>");
 							} else {
+							
+								var inputType = "";
+							    if(value.attrName == 'curation_date') {
+							    	inputType = "date";
+							    } else {
+							    	inputType = "text";
+							    }
+			    
 								if (!isMandatory) {
 									$("#userMetaData tbody").append(
 											"<tr id='" + value.attrName + "'><td>" + value.displayName
-													+ "&nbsp;&nbsp;" + infoHtml + "</td><td><input type='text' "
+													+ "&nbsp;&nbsp;" + infoHtml + "</td><td><input type = '" + inputType + "' "
 													+ "placeholder='" + placeholderValue + "' is_mandatory='"
 													+ isMandatory + "' "
 													+ "aria-label='value of meta data' name='zAttrStr_"
@@ -88,7 +96,7 @@ function constructEditCollectionMetadata(data, status) {
 								} else {
 									$("#userMetaData tbody").append(
 											"<tr><td>" + value.displayName
-													+ "&nbsp;&nbsp;" + infoHtml + "</td><td><input type='text' "
+													+ "&nbsp;&nbsp;" + infoHtml + "</td><td><input type = '" + inputType + "' "
 													+ "placeholder='" + placeholderValue + "' is_mandatory='"
 													+ isMandatory + "' "
 													+ "aria-label='value of meta data' name='zAttrStr_"

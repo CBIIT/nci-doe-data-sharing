@@ -731,14 +731,20 @@ function postSuccessOnChangeIsReferenceDataset(form, data, tableId, isUploadPage
 					   			   
 			    var placeholder = value.mandatory == true ? 'Required' : "";
 			    var attrVal = value.attrValue != null ? value.attrValue : "";
+			    var inputType = "";
+			    if(value.attrName == 'curation_date') {
+			    	inputType = "date";
+			    } else {
+			    	inputType = "text";
+			    }
 			    
 				   if(tableId == 'assetBulkMetadataTable') {
 					   $("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;' + infoHtml + '</td><td>'+
-					        	'<input type="text" is_mandatory="'+value.mandatory+'"  value = "' + attrVal + '" class="bulkAssetTextbox" placeholder="'+placeholder+'" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
+					        	'<input type = "' + inputType + '" is_mandatory = "'+ value.mandatory+'"  value = "' + attrVal + '" class="bulkAssetTextbox" placeholder="'+placeholder+'" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
 					        	'></td></tr>');
 					} else {
 						$("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;' + infoHtml + '</td><td>'+
-					        	'<input type="text" is_mandatory="'+value.mandatory+'" value = "' + attrVal + '" placeholder="'+placeholder+'" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
+					        	'<input type = "' + inputType + '" is_mandatory = "' + value.mandatory+'" value = "' + attrVal + '" placeholder="'+placeholder+'" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
 					        	'style="width:70%;"></td></tr>');
 					}
 			}	    
