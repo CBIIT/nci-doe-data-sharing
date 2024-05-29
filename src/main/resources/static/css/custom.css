@@ -1292,16 +1292,15 @@ th.active .arrow {
 
 
 .labelEditCollection {
-	margin-bottom: 22px;
-	height: 46px;
-	background-color: #194F85;
-	color: #fff;
-	letter-spacing: 0.5px;
-	font-family: 'inter_regular';
-	font-size: 12px;
-	font-weight: 500;
+	margin-bottom: 4px;
+	height: 55px;
+	background-color: #EEF4F6;
+	color: #235172;
+	font-family: 'Open Sans';
+	font-size: 13px;
+	font-weight: 700;
 	line-height: 48px;
-	padding-left: 12px !important;
+	padding-left: 32px !important;
 }
 
 #spinner {

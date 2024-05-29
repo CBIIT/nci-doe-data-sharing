@@ -508,7 +508,7 @@ function constructNewCollectionMetaDataSet(data, status) {
 						var controllerAttribute = value.controllerAttribute;
 						var infoHtml = "";
 						if(value.description) {
-						infoHtml = '<i class="fas fa-question-circle" data-toggle="tooltip"'
+						infoHtml = '<i class="fas fa-info-square" data-toggle="tooltip"'
 														+ 'data-placement="right" title="'
 														+ value.description
 														+ '"></i>';
@@ -524,7 +524,7 @@ function constructNewCollectionMetaDataSet(data, status) {
 														+ '<select class="simple-select2" multiple="multiple" id="accessGroupSelect" name="zAttrStr_'
 														+ value.attrName
 														+ '"'
-														+ 'style="width:70%;"></select> &nbsp;&nbsp;<input type="checkbox" id="publicAccess" checked="false" aria-label="public access" value="public access"/>&nbsp;&nbsp;Public</td></tr>');
+														+ 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"></select> &nbsp;&nbsp;<input type="checkbox" id="publicAccess" checked="false" aria-label="public access" value="public access"/>&nbsp;&nbsp;Public</td></tr>');
 								loadJsonData('/metaDataPermissionsList', $("#accessGroupSelect"), false, null, null,
 										null, "key", "value");
 
@@ -540,11 +540,11 @@ function constructNewCollectionMetaDataSet(data, status) {
 														+ '" value ="'
 														+ parentAccessgrp
 														+ '"'
-														+ 'disabled="disabled" style="width:70%;background-color: #dddddd;"><input type="hidden" name="zAttrStr_'
+														+ 'disabled="disabled" style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;background-color: #dddddd;"><input type="hidden" name="zAttrStr_'
 														+ value.attrName
 														+ '" value ="'
 														+ parentAccessgrp
-														+ '"/> &nbsp;&nbsp;<i class="fas fa-question-circle"><span>Access group inherited from parent.</span></i></td></tr>');
+														+ '"/> &nbsp;&nbsp;<i class="fas fa-info-square"><span>Access group inherited from parent.</span></i></td></tr>');
 							}
 						} else if (value.attrName == 'asset_type') {
 
@@ -555,7 +555,7 @@ function constructNewCollectionMetaDataSet(data, status) {
 													+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
 													+ '<input type="text" disabled="disabled" aria-label="value of meta data" value ="'
 													+ assetType + '" name="zAttrStr_' + value.attrName + '"'
-													+ 'style="width:70%;"><input type="hidden" name="zAttrStr_'
+													+ 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"><input type="hidden" name="zAttrStr_'
 													+ value.attrName + '" value ="' + assetType + '"/> </td></tr>');
 
 						} else if (value.validValues != null && value.isVisibleOnUplaodPage != false) {
@@ -565,7 +565,7 @@ function constructNewCollectionMetaDataSet(data, status) {
 											+ "<select class='simple-select2' is_mandatory='" + value.mandatory
 											+ "' onChange='onChangeForMetadata(registerCollectionForm, true, "
 											+ value.controllerAttribute + ",newMetaDataTable, " + value.attrName
-											+ ");' style='width:70%;' id='" + value.attrName + "' name='zAttrStr_"
+											+ ");' style='width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;' id='" + value.attrName + "' name='zAttrStr_"
 											+ value.attrName + "' value='" + value.attrValue + "'></select></td></tr>");
 
 							var $select = $("#" + value.attrName);
@@ -595,7 +595,7 @@ function constructNewCollectionMetaDataSet(data, status) {
 											+ '<input type="text" is_mandatory="' + value.mandatory
 											+ '" placeholder="Required" aria-label="value of meta data" value="'
 											+ value.attrValue + '" name="zAttrStr_' + value.attrName + '"'
-											+ 'style="width:70%;"></td></tr>');
+											+ 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"></td></tr>');
 						} else if (value.attrName.indexOf("_identifier") != -1) {
 							var placeholderValue = value.mandatory == true ? 'Required' : "";
 								$("#newMetaDataTable tbody").append(
@@ -603,7 +603,7 @@ function constructNewCollectionMetaDataSet(data, status) {
 												+ '&nbsp;&nbsp;' + infoHtml + '</td><td>' + '<input type="text" is_mandatory="'
 												+ value.mandatory + '" class="identifier_validation" pattern = "[A-Za-z0-9_-]*" placeholder= "' + placeholderValue
 												+ '" aria-label="value of meta data" name="zAttrStr_' + value.attrName
-												+ '"' + 'style="width:70%;"></td></tr>');
+												+ '"' + 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"></td></tr>');
 						}
 						else {
 							var placeholderValue = value.mandatory == true ? 'Required' : "";
@@ -613,14 +613,14 @@ function constructNewCollectionMetaDataSet(data, status) {
 												+ '&nbsp;&nbsp;' + infoHtml + '</td><td>' + '<textarea rows="5" is_mandatory="'
 												+ value.mandatory + '" placeholder="' + placeholderValue
 												+ '" aria-label="value of meta data" name="zAttrStr_' + value.attrName
-												+ '"' + 'style="width:70%;"></textarea></td></tr>');
+												+ '"' + 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"></textarea></td></tr>');
 							} else if(value.isVisibleOnUplaodPage != false) {
 								$("#newMetaDataTable tbody").append(
 										'<tr><td>' + value.displayName
 												+ '&nbsp;&nbsp;' + infoHtml + '</td><td>' + '<input type="text" is_mandatory="'
 												+ value.mandatory + '" placeholder="' + placeholderValue
 												+ '" aria-label="value of meta data" name="zAttrStr_' + value.attrName
-												+ '"' + 'style="width:70%;"></td></tr>');
+												+ '"' + 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"></td></tr>');
 							}
 						}
 					});
@@ -633,12 +633,12 @@ function addNewMetaDataCollection(tableName) {
 			.append(
 					'<tr id="addRow'
 							+ rowId
-							+ '"><td><input type="text" placeholder="Required" style="width:70%;" '
+							+ '"><td><input type="text" placeholder="Required" style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;" '
 							+ 'name="_addAttrName'
 							+ rowId
 							+ '" aria-label="add new row" id="_addAttrName'
 							+ rowId
-							+ '"></td><td><input type="text" placeholder="Required" style="width:70%;" id="_addAttrValue'
+							+ '"></td><td><input type="text" placeholder="Required" style="width: 85%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;" id="_addAttrValue'
 							+ rowId
 							+ '" name="_addAttrValue'
 							+ rowId
@@ -701,12 +701,14 @@ function retrieveCollectionList(data, status) {
 	$("#parentCollectionType").val(parent);
 	$("#parentAccessGroup").val(parentAccessGrp);
 	$("#collectionType").val(collectionType);
-	$("#registerCollectionBtn").html("Register " + displayCollectionType);
+	$("#registerCollectionBtn").html("Register "+ "<br>" + displayCollectionType + `<img class="arrowright"
+	src='/images/white_right_arrow.svg' style="width: 16px;
+	transform: translate(64px, -10px);"/>`);
 	$("#collectionMetaDataLabel").text(displayCollectionType + " Metadata");
 	$("#registerModalTitle").html("Register " + displayCollectionType);
 	$("#addNewMetaData")
 			.html(
-					"<img src='images/Uploads.add.png' th:src='@{/images/Uploads.add.png}' class='uploadslogo' alt='add metadata'>&nbsp;Add Metadata");
+					"<img src='images/plus.svg' th:src='@{/images/svg.png}' class='uploadslogo' alt='add metadata'>&nbsp;Add Metadata");
 	var collectionPath = $("#collectionPath").val();
 
 	if (collectionType && collectionPath) {
@@ -739,7 +741,7 @@ function createCollectionDiv(selectTarget, folderPath) {
 		$("#parentCollectionNameDiv").css('margin-left', '0px');
 	} else {
 		$(".permissionsLabel").show();
-		$("#parentCollectionNameDiv").css('margin-left', '-125px');
+		$("#parentCollectionNameDiv").css('margin-left', '0px');
 	}
 	$("#collectionPath").val(selectedIndexPathVal);
 	$("#newMetaDataTable tbody").html("");
@@ -1144,7 +1146,7 @@ function constructAssetTypeBulkDiv(data, status) {
 
 	$("#assetBulkMetadataTable tbody")
 			.append(
-					'<tr><td style="width: 24%;">Asset Group Identifier&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'
+					'<tr><td style="width: 24%;">Asset Group Identifier&nbsp;&nbsp;<i class="fas fa-info-square" data-toggle="tooltip"'
 							+ 'data-placement="right" title="The system uses the Asset Group Identifier to create a unique Asset Identifier for each asset, in the format <group name>_<integer>"></i></td><td>'
 							+ '<input type="text" placeholder="Required" class="bulkAssetTextbox" is_mandatory="true" aria-label="value of meta data"  name="assetGroupIdentifier"'
 							+ '></td></tr>');
@@ -1157,7 +1159,7 @@ function constructAssetTypeBulkDiv(data, status) {
 						var placeholderValue = value.mandatory == true ? 'Required' : "";
 						var infoHtml = "";
 						if(value.description) {
-						infoHtml = '<i class="fas fa-question-circle" data-toggle="tooltip"'
+						infoHtml = '<i class="fas fa-info-square" data-toggle="tooltip"'
 														+ 'data-placement="right" title="'
 														+ value.description
 														+ '"></i>';
@@ -1206,7 +1208,7 @@ function constructAssetTypeBulkDiv(data, status) {
 										.append(
 												'<tr><td>'
 														+ value.displayName
-														+ '&nbsp;&nbsp;<i class="fas fa-question-circle" data-toggle="tooltip"'
+														+ '&nbsp;&nbsp;<i class="fas fa-info-square" data-toggle="tooltip"'
 														+ 'data-placement="right" title="Please note that this description will be applied to all Assets. You may edit the description of each Asset separately after it is uploaded."></i></td><td>'
 														+ '<textarea rows="4" placeholder ="Required" is_mandatory="'
 														+ value.mandatory
