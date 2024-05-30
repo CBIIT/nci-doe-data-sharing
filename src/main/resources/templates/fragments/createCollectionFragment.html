@@ -12,10 +12,11 @@
 
     <div class="col-lg-12 col-md-12 col-sm-12 float-right" style="margin-top: -16px;margin-left: 1.5rem;">
       <div class="controls controls-row mt-4">
-        <a class="float-left mb-2 mr-2 backToUploadTab">
-          <img src="/images/BackSearch-icon.png" th:src="@{/images/BackSearch-icon.png}" data-toggle="tooltip"
-            title="Back to UploadTab" style="width:50px;" alt="back to Upload"> &nbsp;&nbsp;<span
-            class="backToUpload">Back to Upload Tab</span></a>
+        <a class="float-left mb-2 mr-2 backToUploadTab d-flex">
+          <img src="/images/backToUpload.svg" th:src="@{/images/backToUpload.svg}" data-toggle="tooltip"
+            title="Back to UploadTab" style="width:40px;" alt="back to Upload"> &nbsp;&nbsp;<span class="backToUpload"
+            style="width: 120px;font-size: 12px;padding-top: 2px;margin-left: 4px;">
+            BACK TO <br /> UPLOAD TAB</span></a>
       </div>
     </div>
 
@@ -56,52 +57,52 @@
                 Permissions</h4>
             </div>
 
-              <div class="form-group col-lg-6 col-md-6 labelEditCollection permissionsLabel" style="padding: 6px;">
-                SPECIFY WHO CAN EDIT THE COLLECTION&nbsp; <i class="fas fa-info-square" data-toggle="tooltip"
-                  title="Permissions to Edit Metadata and Create Subcollections"></i></div>
+            <div class="form-group col-lg-6 col-md-6 labelEditCollection permissionsLabel" style="padding: 6px;">
+              SPECIFY WHO CAN EDIT THE COLLECTION&nbsp; <i class="fas fa-info-square" data-toggle="tooltip"
+                title="Permissions to Edit Metadata and Create Subcollections"></i></div>
 
-              <div class="form-group col-lg-6 col-md-6 labelEditCollection permissionsLabel" style="background-color: #EEF4F6;
+            <div class="form-group col-lg-6 col-md-6 labelEditCollection permissionsLabel" style="background-color: #EEF4F6;
                      padding: 6px 32px;line-height: 28px;color: #000;">
-                <select class="simple-select2" multiple="multiple" id="metaDataPermissionsList"
-                  name="metaDataPermissionsList" style="width: 95%;">
-                </select>
-              </div>
+              <select class="simple-select2" multiple="multiple" id="metaDataPermissionsList"
+                name="metaDataPermissionsList" style="width: 95%;">
+              </select>
+            </div>
 
 
-              <div class="form-group col-lg-6 col-md-6 labelEditCollection parentCollectionDiv"
-                id="parentCollectionNameDiv">
-                <span id="parentCollectionLabel">Parent Collection Name</span>
+            <div class="form-group col-lg-6 col-md-6 labelEditCollection parentCollectionDiv"
+              id="parentCollectionNameDiv">
+              <span id="parentCollectionLabel">Parent Collection Name</span>
 
-              </div>
-              <div class="form-group col-lg-6 col-md-6 labelEditCollection parentCollectionDiv"
-                style="padding: 6px 32px;display: flex;">
+            </div>
+            <div class="form-group col-lg-6 col-md-6 labelEditCollection parentCollectionDiv"
+              style="padding: 6px 32px;display: flex;">
 
-                <input type="text" disabled id="parentCollectionName" aria-labelledby="parentCollectionName"
-                  class="parentCollectionName" />
-              </div>
+              <input type="text" disabled id="parentCollectionName" aria-labelledby="parentCollectionName"
+                class="parentCollectionName" />
+            </div>
 
 
-              <div class="form-group col-lg-12 col-md-12" style="display:none;">
-                <label for="collectionType">Collection Type</label>
-                <input type="text" id="collectionType" aria-labelledby="collectionType" name="zAttrStr_collection_type">
-              </div>
-              <div class="form-group col-lg-12 col-md-12" style="display:none;">
-                <label for="collectionPath">Parent Collection Path
-                  <input type="text" disabled id="collectionPath" aria-labelledby="collectionPath"
-                    style="width:90%;font-size: 16px;" /></label>
-              </div>
+            <div class="form-group col-lg-12 col-md-12" style="display:none;">
+              <label for="collectionType">Collection Type</label>
+              <input type="text" id="collectionType" aria-labelledby="collectionType" name="zAttrStr_collection_type">
+            </div>
+            <div class="form-group col-lg-12 col-md-12" style="display:none;">
+              <label for="collectionPath">Parent Collection Path
+                <input type="text" disabled id="collectionPath" aria-labelledby="collectionPath"
+                  style="width:90%;font-size: 16px;" /></label>
+            </div>
 
-              <div class="form-group col-lg-6 col-md-6 labelEditCollection folderDiv" style="display:none;">
-                FOLDER NAME &nbsp; <i class="fas fa-info-square" data-toggle="tooltip"
-                  title="Specify a permanent, unique identifier for the folder. Use only alphanumeric characters, underscore (_), or hyphen (-)."></i>
-              </div>
+            <div class="form-group col-lg-6 col-md-6 labelEditCollection folderDiv" style="display:none;">
+              FOLDER NAME &nbsp; <i class="fas fa-info-square" data-toggle="tooltip"
+                title="Specify a permanent, unique identifier for the folder. Use only alphanumeric characters, underscore (_), or hyphen (-)."></i>
+            </div>
 
-              <div class="form-group col-lg-6 col-md-6 labelEditCollection folderDiv" style="display:none; background-color: transparent;padding: 6px 32px;
+            <div class="form-group col-lg-6 col-md-6 labelEditCollection folderDiv" style="display:none; background-color: transparent;padding: 6px 32px;
                      line-height: 28px;color: #000;">
-                <input type="text" is_mandatory="true" id="folder_name" class="identifier_validation"
-                  pattern="[A-Za-z0-9_-]*" placeholder="Enter Folder Name" aria-label="value of folder name"
-                  name="folder_name" style="width:70%;">
-              </div>
+              <input type="text" is_mandatory="true" id="folder_name" class="identifier_validation"
+                pattern="[A-Za-z0-9_-]*" placeholder="Enter Folder Name" aria-label="value of folder name"
+                name="folder_name" style="width:70%;">
+            </div>
 
           </div>
         </div>
@@ -125,16 +126,14 @@
               <tbody>
               </tbody>
             </table>
-            <a href="#" id="addNewMetaData" class="float-right mb-2 mr-2"
-            style="
+            <a href="#" id="addNewMetaData" class="float-right mb-2 mr-2" style="
             margin-top: -10px;
             color: #000;
             /* font-variant-numeric: lining-nums tabular-nums; */
             font-family: Inter;
             font-size: 16px;
             font-style: normal;
-            font-weight: 400;"
-            onclick="addNewMetaDataCollection('newMetaDataTable')">Add Metadata</a>
+            font-weight: 400;" onclick="addNewMetaDataCollection('newMetaDataTable')">Add Metadata</a>
           </div>
 
         </div>
@@ -142,15 +141,13 @@
       <div class="col-lg-12 col-md-12 col-sm-12" style="text-align: center;">
         <div class="controls controls-row mt-4">
           <button id="cancelRegisterBtn" type="button" class="btn btn-primary mb-2 mr-2 backToUploadTab">Cancel
-            <img class="arrowright"
-              th:src='@{/images/white_right_arrow.svg}' style="width: 16px;
-              transform: translate(64px, -2px);"/>
+            <img class="arrowright" th:src='@{/images/white_right_arrow.svg}' style="width: 16px;
+              transform: translate(64px, -2px);" />
           </button>
-          <button id="registerCollectionBtn" type="button" class="btn btn-primary mb-2 mr-2">Register<br/> Program
-            <img class="arrowright"
-            th:src='@{/images/white_right_arrow.svg}' style="width: 16px;
-            transform: translate(64px, -10px);"/>
-            </button>
+          <button id="registerCollectionBtn" type="button" class="btn btn-primary mb-2 mr-2">Register<br /> Program
+            <img class="arrowright" th:src='@{/images/white_right_arrow.svg}' style="width: 16px;
+            transform: translate(64px, -10px);" />
+          </button>
 
         </div>
       </div>
