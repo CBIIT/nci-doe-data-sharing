@@ -90,7 +90,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
 			final MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>();
 			paramsMap.set("totalCount", Boolean.TRUE.toString());
 			HpcRegistrationSummaryDTO registrations = DoeClientUtil.getRegistrationSummary(authToken,
-					registrationServiceURL, paramsMap);
+					bulkRegistrationURL, paramsMap);
 
 			// get the task end date
 

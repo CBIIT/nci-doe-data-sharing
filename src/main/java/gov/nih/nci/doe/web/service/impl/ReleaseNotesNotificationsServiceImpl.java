@@ -8,16 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import gov.nih.nci.doe.web.domain.EmailUpdates;
-import gov.nih.nci.doe.web.repository.EmailNotificationRepository;
-import gov.nih.nci.doe.web.service.EmailNotificationsService;
+import gov.nih.nci.doe.web.repository.ReleaseNotesNotificationRepository;
+import gov.nih.nci.doe.web.service.ReleaseNotesNotificationsService;
 
 @Component
-public class EmailNotificationsServiceImpl implements EmailNotificationsService {
+public class ReleaseNotesNotificationsServiceImpl implements ReleaseNotesNotificationsService {
 
-	private static final Logger log = LoggerFactory.getLogger(EmailNotificationsServiceImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(ReleaseNotesNotificationsServiceImpl.class);
 
 	@Autowired
-	EmailNotificationRepository emailNotificationRepository;
+	ReleaseNotesNotificationRepository emailNotificationRepository;
 
 	@Override
 	public String saveEmailUpdateInfo(String emailAddress) {

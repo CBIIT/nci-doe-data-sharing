@@ -28,6 +28,7 @@ public class InferencingTask {
 	private String actualResultsFileName;
 	private String outcomeFilePath;
 	private Boolean isReferenceAsset;
+	private Boolean isNotified;
 
 	@Transient
 	private String assetIdentifer;
@@ -250,6 +251,17 @@ public class InferencingTask {
 
 	public void setIsReferenceAsset(Boolean isReferenceAsset) {
 		this.isReferenceAsset = isReferenceAsset;
+	}
+
+	@Basic
+	@Column(name = "IS_NOTIFIED", nullable = true, length = 1)
+	@Type(type = "yes_no")
+	public Boolean getIsNotified() {
+		return isNotified;
+	}
+
+	public void setIsNotified(Boolean isNotified) {
+		this.isNotified = isNotified;
 	}
 
 	@Transient

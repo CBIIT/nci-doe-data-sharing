@@ -25,9 +25,12 @@ import java.net.URLEncoder;
 
 import gov.nih.nci.doe.web.service.MailService;
 import gov.nih.nci.doe.web.model.ContactUs;
+import gov.nih.nci.doe.web.model.PredictionTaskNotification;
+import gov.nih.nci.doe.web.model.UploadTaskNotification;
+import gov.nih.nci.doe.web.model.DownloadTaskNotification;
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.domain.MailTemplate;
-import gov.nih.nci.doe.web.repository.EmailNotificationRepository;
+import gov.nih.nci.doe.web.repository.ReleaseNotesNotificationRepository;
 import gov.nih.nci.doe.web.repository.MailTemplateRepository;
 
 @Component
@@ -45,7 +48,7 @@ public class MailServiceImpl implements MailService {
 	private MailTemplateRepository templateDAO;
 
 	@Autowired
-	EmailNotificationRepository emailNotificationRepository;
+	ReleaseNotesNotificationRepository emailNotificationRepository;
 
 	@Value("${mail.override}")
 	private boolean override;
@@ -55,6 +58,9 @@ public class MailServiceImpl implements MailService {
 	private String adminAddress;
 	@Value("${mail.support.email}")
 	private String supportEmail;
+
+	@Value("${mail.notification.email}")
+	private String notificationEmail;
 
 	/**
 	 * Very simple mail sender method using Velocity templates pulled from a
@@ -249,7 +255,7 @@ public class MailServiceImpl implements MailService {
 	}
 
 	@Override
-	public String sendNotificationEmail(String webServerName, String loggedOnUser) throws DoeWebException {
+	public String sendReleaseNotesNotificationEmail(String webServerName, String loggedOnUser) throws DoeWebException {
 		log.info("Sending notification email");
 		try {
 
@@ -259,7 +265,7 @@ public class MailServiceImpl implements MailService {
 			List<String> bccList = emailNotificationRepository.getAllEmailAddress();
 
 			// get the mail template for the notification in mail_template table
-			MailTemplate template = templateDAO.findMailTemplateTByShortIdentifier("NOTIFICATION_EMAIL");
+			MailTemplate template = templateDAO.findMailTemplateTByShortIdentifier("RELEASE_NOTIFICATION_EMAIL");
 
 			mailtoUrl.append(encodeField(loggedOnUser));
 
@@ -296,6 +302,30 @@ public class MailServiceImpl implements MailService {
 
 	}
 
+	@Override
+	public String sendPredictionTaskNotification(PredictionTaskNotification notification) throws DoeWebException {
+		log.info("Sending prediciton task notiifcation email");
+
+		try {
+			final Map<String, Object> params = new HashMap<String, Object>();
+			final List<String> to = new ArrayList<String>();
+			to.add(notification.getUserId());
+			params.put(FROM, notificationEmail);
+			params.put(TO, to.toArray(new String[0]));
+			params.put("dateTime", notification.getCompletedDate());
+			params.put("taskId", notification.getTaskId());
+			params.put("resultPath", notification.getResultPath());
+			params.put("inputDatasetPath", notification.getInputDataset());
+			if (StringUtils.isNotEmpty(notification.getFailureMsg())) {
+				params.put("failureMsg", "Failure Message: " + notification.getFailureMsg());
+			}
+			send("PREDICTION_NOTIFICATION", params);
+			return "SUCCESS";
+		} catch (Exception e) {
+			throw new DoeWebException("Error in sending prediction notification email: " + e.getMessage());
+		}
+	}
+
 	public static String encodeField(String field) {
 		try {
 
@@ -306,4 +336,29 @@ public class MailServiceImpl implements MailService {
 			return "";
 		}
 	}
+
+	@Override
+	public String sendUploadTaskNotification(UploadTaskNotification taskNotification) throws DoeWebException {
+		log.info("Sending task notification email");
+
+		try {
+
+			return "SUCCESS";
+		} catch (Exception e) {
+			throw new DoeWebException("Error in sending task notification email: " + e.getMessage());
+		}
+	}
+
+	@Override
+	public String sendDownloadTaskNotification(DownloadTaskNotification taskNotification) throws DoeWebException {
+		log.info("Sending task notification email");
+
+		try {
+
+			return "SUCCESS";
+		} catch (Exception e) {
+			throw new DoeWebException("Error in sending task notification email: " + e.getMessage());
+		}
+	}
+
 }

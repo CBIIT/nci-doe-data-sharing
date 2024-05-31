@@ -102,9 +102,9 @@ public abstract class AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.v2.dataObject}")
 	public String dataObjectAsyncServiceURL;
-	
+
 	@Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
-	public String registrationServiceURL;
+	public String bulkRegistrationURL;
 
 	@Value("${gov.nih.nci.hpc.server.dataObject}")
 	private String preSigneddataObjectServiceURL;
@@ -131,7 +131,7 @@ public abstract class AbstractDoeController {
 	LookUpService lookUpService;
 
 	@Autowired
-	MailService mailService;
+	public MailService mailService;
 
 	@Autowired
 	AuthenticateService authService;

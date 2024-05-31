@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Type;
+
 @Entity
 @Table(name = "TASK_MANAGER_T")
 public class TaskManager {
@@ -16,6 +18,8 @@ public class TaskManager {
 	private Date taskDate;
 	private String type;
 	private String path;
+	private String status;
+	private Boolean isNotified;
 
 	public boolean equals(Object object) {
 		if (this == object) {
@@ -44,6 +48,15 @@ public class TaskManager {
 			return false;
 		}
 
+		if (path != null ? !path.equals(that.path) : that.path != null) {
+			return false;
+		}
+		if (status != null ? !status.equals(that.status) : that.status != null) {
+			return false;
+		}
+		if (isNotified != null ? !isNotified.equals(that.isNotified) : that.isNotified != null) {
+			return false;
+		}
 		return taskDate != null ? taskDate.equals(that.taskDate) : that.taskDate == null;
 
 	}
@@ -130,9 +143,31 @@ public class TaskManager {
 		this.path = path;
 	}
 
+	@Basic
+	@Column(name = "STATUS")
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	@Basic
+	@Column(name = "IS_NOTIFIED", nullable = true, length = 1)
+	@Type(type = "yes_no")
+	public Boolean getIsNotified() {
+		return isNotified;
+	}
+
+	public void setIsNotified(Boolean isNotified) {
+		this.isNotified = isNotified;
+	}
+
 	@Override
 	public String toString() {
 		return "TaskManager{" + ", taskName='" + taskName + '\'' + ", taskType=" + taskType + ", taskDate=" + taskDate
-				+ ", taskId=" + taskId + ", userId=" + userId + ", type=" + type + '}';
+				+ ", taskId=" + taskId + ", userId=" + userId + ", status=" + status + ", path=" + path
+				+ " ,isNotified=" + isNotified + "type=" + type + '}';
 	}
 }

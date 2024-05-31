@@ -1,5 +1,6 @@
 package gov.nih.nci.doe.web.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -35,4 +36,7 @@ public interface InferencingTaskRepository extends JpaRepository<InferencingTask
 
 	@Query("select a from InferencingTask a where a.startDate >= sysdate() - 1 and a.status IS NOT NULL and a.status not in ('INPROGRESS', 'NOTSTARTED')")
 	List<InferencingTask> getAllCompletedAndFailedTasks();
+
+	@Query("select a from InferencingTask a where ((a.status = 'INPROGRESS' and a.dmeTaskId IS NOT NULL) OR (a.status in ('COMPLETED', 'FAILED') and a.isNotified IS NULL))")
+	List<InferencingTask> getTasksForSendingNotification(Date notificationDate);
 }

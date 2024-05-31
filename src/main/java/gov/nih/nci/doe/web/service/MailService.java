@@ -2,6 +2,9 @@ package gov.nih.nci.doe.web.service;
 
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.ContactUs;
+import gov.nih.nci.doe.web.model.PredictionTaskNotification;
+import gov.nih.nci.doe.web.model.UploadTaskNotification;
+import gov.nih.nci.doe.web.model.DownloadTaskNotification;
 
 public interface MailService {
 
@@ -20,6 +23,12 @@ public interface MailService {
 
 	public void sendContactUsEmail(ContactUs contactUs);
 
-	public String sendNotificationEmail(String webServerName, String loggedOnUser) throws DoeWebException;
+	public String sendUploadTaskNotification(UploadTaskNotification taskNotification) throws DoeWebException;
+
+	public String sendDownloadTaskNotification(DownloadTaskNotification taskNotification) throws DoeWebException;
+
+	public String sendPredictionTaskNotification(PredictionTaskNotification notification) throws DoeWebException;
+
+	public String sendReleaseNotesNotificationEmail(String webServerName, String loggedOnUser) throws DoeWebException;
 
 }

@@ -23,4 +23,8 @@ public interface TaskManagerRepository extends JpaRepository<TaskManager, String
 
 	@Query("select a from TaskManager a where a.taskId =?1 ORDER BY a.taskDate DESC")
 	public List<TaskManager> getAllTasksById(String taskId);
+
+	@Query("select a from TaskManager a where (a.status IS NULL or a.status = 'In progress') OR (a.status in ('Completed', 'Failed') and a.isNotified IS NULL)")
+	public List<TaskManager> getAllInProgressTasks();
+
 }

@@ -1,0 +1,7 @@
+alter table TASK_MANAGER_T
+    add STATUS VARCHAR2(255) INTEGER
+/
+
+alter table TASK_MANAGER_T
+    add IS_NOTIFIED CHAR
+/
