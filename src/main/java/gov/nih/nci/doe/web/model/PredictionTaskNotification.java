@@ -1,14 +1,12 @@
 package gov.nih.nci.doe.web.model;
 
-import java.util.Date;
-
 public class PredictionTaskNotification {
 
 	private String userId;
 	private String status;
 	private String resultPath;
 	private String inputDataset;
-	private Date completedDate;
+	private String completedDate;
 	private String failureMsg;
 	private String taskId;
 	private String displayStatus;
@@ -61,11 +59,11 @@ public class PredictionTaskNotification {
 		this.inputDataset = inputDataset;
 	}
 
-	public Date getCompletedDate() {
+	public String getCompletedDate() {
 		return completedDate;
 	}
 
-	public void setCompletedDate(Date completedDate) {
+	public void setCompletedDate(String completedDate) {
 		this.completedDate = completedDate;
 	}
 

@@ -99,7 +99,7 @@ public class MoDaCSchedulers extends AbstractDoeController {
 		log.info("scheduler called");
 	}
 
-	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+	SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
 
 	@Scheduled(cron = "${doe.scheduler.cron.notifications}")
 	public void updateTaskStatusAndSendNotifications() throws DoeWebException {
@@ -842,7 +842,8 @@ public class MoDaCSchedulers extends AbstractDoeController {
 								t.setStatus("COMPLETED");
 								t.setCompletedDate(dto.getTask().getCompleted().getTime());
 								inferencingTaskRepository.save(t);
-								task.setCompletedDate(t.getCompletedDate());
+								String completedDateFormatted = dateFormat.format(t.getCompletedDate());
+								task.setCompletedDate(completedDateFormatted);
 								task.setStatus(t.getStatus());
 								msg = mailService.sendPredictionTaskNotification(task);
 
@@ -854,7 +855,8 @@ public class MoDaCSchedulers extends AbstractDoeController {
 					throw new DoeWebException(e.getMessage());
 				}
 			} else {
-				task.setCompletedDate(t.getCompletedDate());
+				String completedDateFormatted = dateFormat.format(t.getCompletedDate());
+				task.setCompletedDate(completedDateFormatted);
 				task.setStatus(getDisplayStatusInMailBody(t.getStatus()));
 				task.setDisplayStatus(getDisplayStatusInMailSubject(t.getStatus()));
 				msg = mailService.sendPredictionTaskNotification(task);
