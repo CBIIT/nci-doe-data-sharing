@@ -11,6 +11,15 @@ public class PredictionTaskNotification {
 	private Date completedDate;
 	private String failureMsg;
 	private String taskId;
+	private String displayStatus;
+
+	public String getDisplayStatus() {
+		return displayStatus;
+	}
+
+	public void setDisplayStatus(String displayStatus) {
+		this.displayStatus = displayStatus;
+	}
 
 	public String getTaskId() {
 		return taskId;

@@ -11,6 +11,15 @@ public class DownloadTaskNotification {
 	private String targetPath;
 	private String errorMsg;
 	private String completedDate;
+	private String displayStatus;
+
+	public String getDisplayStatus() {
+		return displayStatus;
+	}
+
+	public void setDisplayStatus(String displayStatus) {
+		this.displayStatus = displayStatus;
+	}
 
 	public String getDownloadType() {
 		return downloadType;

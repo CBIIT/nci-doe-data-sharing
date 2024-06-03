@@ -321,6 +321,7 @@ public class MailServiceImpl implements MailService {
 			params.put("resultPath", notification.getResultPath());
 			params.put("inputDatasetPath", notification.getInputDataset());
 			params.put("status", notification.getStatus());
+			params.put("displayStatus", notification.getDisplayStatus());
 
 			params.put("failureMsg",
 					StringUtils.isNotEmpty(notification.getFailureMsg()) ? "Reason: " + notification.getFailureMsg()
@@ -358,6 +359,7 @@ public class MailServiceImpl implements MailService {
 			params.put("status", taskNotification.getStatus());
 			params.put("registrationItems", taskNotification.getRegistrationItems());
 			params.put("modac_link", webServerName + "/tasksTab");
+			params.put("displayStatus", taskNotification.getDisplayStatus());
 			params.put("failureMsg",
 					StringUtils.isNotEmpty(taskNotification.getErrorMsg()) ? "Reason: " + taskNotification.getErrorMsg()
 							: "");
@@ -388,6 +390,7 @@ public class MailServiceImpl implements MailService {
 			params.put("sourcePath", taskNotification.getSourcePath());
 			params.put("destinationType", taskNotification.getDestinationType());
 			params.put("modac_link", webServerName + "/tasksTab");
+			params.put("displayStatus", taskNotification.getDisplayStatus());
 			params.put("failureMsg",
 					StringUtils.isNotEmpty(taskNotification.getErrorMsg()) ? "Reason: " + taskNotification.getErrorMsg()
 							: "");

@@ -1,7 +1,5 @@
 package gov.nih.nci.doe.web.model;
 
-import java.util.Date;
-
 public class UploadTaskNotification {
 
 	private String userId;
@@ -9,7 +7,16 @@ public class UploadTaskNotification {
 	private String status;
 	private String registrationItems;
 	private String errorMsg;
-	private Date completedDate;
+	private String completedDate;
+	private String displayStatus;
+
+	public String getDisplayStatus() {
+		return displayStatus;
+	}
+
+	public void setDisplayStatus(String displayStatus) {
+		this.displayStatus = displayStatus;
+	}
 
 	public String getStatus() {
 		return status;
@@ -19,11 +26,11 @@ public class UploadTaskNotification {
 		this.status = status;
 	}
 
-	public Date getCompletedDate() {
+	public String getCompletedDate() {
 		return completedDate;
 	}
 
-	public void setCompletedDate(Date completedDate) {
+	public void setCompletedDate(String completedDate) {
 		this.completedDate = completedDate;
 	}
 

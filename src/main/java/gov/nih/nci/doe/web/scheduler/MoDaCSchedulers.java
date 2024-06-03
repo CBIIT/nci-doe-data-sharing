@@ -220,8 +220,13 @@ public class MoDaCSchedulers extends AbstractDoeController {
 			notification.setTaskId(task.getTaskId());
 			notification.setUserId(task.getUserId());
 			notification.setErrorMsg(filteredMessage);
-			notification.setCompletedDate(completedDate);
-			notification.setStatus(task.getStatus());
+			if (completedDate != null) {
+				String completedDateFormatted = dateFormat.format(completedDate);
+				notification.setCompletedDate(completedDateFormatted);
+			}
+
+			notification.setStatus(getDisplayStatusInMailBody(task.getStatus()));
+			notification.setDisplayStatus(getDisplayStatusInMailSubject(task.getStatus()));
 			StringBuilder sourcePathBuilder = new StringBuilder();
 			if (task.getStatus().equalsIgnoreCase("COMPLETED")) {
 				upload.getCompletedItems().forEach(x -> {
@@ -313,7 +318,8 @@ public class MoDaCSchedulers extends AbstractDoeController {
 				notification.setCompletedDate(completedDateFormatted);
 			}
 
-			notification.setStatus(task.getStatus());
+			notification.setStatus(getDisplayStatusInMailBody(task.getStatus()));
+			notification.setDisplayStatus(getDisplayStatusInMailSubject(task.getStatus()));
 			notification.setDestinationType(
 					download.getDestinationType() != null ? download.getDestinationType().toString() : "");
 			String downloadTaskType = "";
@@ -849,7 +855,8 @@ public class MoDaCSchedulers extends AbstractDoeController {
 				}
 			} else {
 				task.setCompletedDate(t.getCompletedDate());
-				task.setStatus(t.getStatus());
+				task.setStatus(getDisplayStatusInMailBody(t.getStatus()));
+				task.setDisplayStatus(getDisplayStatusInMailSubject(t.getStatus()));
 				msg = mailService.sendPredictionTaskNotification(task);
 
 			}
@@ -931,6 +938,46 @@ public class MoDaCSchedulers extends AbstractDoeController {
 
 		dto.getDataObjectRegistrationItems().add(file);
 		return dto;
+	}
+
+	private String getDisplayStatusInMailBody(String taskStatus) {
+		String displayTaskStatus = "";
+		switch (taskStatus.toLowerCase()) {
+		case "completed":
+			displayTaskStatus = "is completed";
+			break;
+		case "failed":
+			displayTaskStatus = "failed";
+			break;
+		case "cancelled":
+			displayTaskStatus = "is cancelled";
+			break;
+		default:
+			displayTaskStatus = "is In Progress";
+			break;
+		}
+
+		return displayTaskStatus;
+	}
+
+	private String getDisplayStatusInMailSubject(String taskStatus) {
+		String displayTaskStatus = "";
+		switch (taskStatus.toLowerCase()) {
+		case "completed":
+			displayTaskStatus = "Completed";
+			break;
+		case "failed":
+			displayTaskStatus = "Failed";
+			break;
+		case "cancelled":
+			displayTaskStatus = "Cancelled";
+			break;
+		default:
+			displayTaskStatus = "In Progress";
+			break;
+		}
+
+		return displayTaskStatus;
 	}
 
 }
