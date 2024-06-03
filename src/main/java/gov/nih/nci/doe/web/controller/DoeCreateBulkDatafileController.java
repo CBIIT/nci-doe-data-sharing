@@ -43,7 +43,6 @@ import gov.nih.nci.hpc.domain.metadata.HpcBulkMetadataEntries;
 import gov.nih.nci.hpc.domain.metadata.HpcBulkMetadataEntry;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
 
 /**
  *
@@ -60,8 +59,6 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	private String serviceURL;
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	private String collectionServiceURL;
-	@Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
-	private String bulkRegistrationURL;
 
 	@Autowired
 	TaskManagerService taskManagerService;
@@ -143,15 +140,18 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	 * @return
 	 * @throws DoeWebException
 	 */
-	@SuppressWarnings("unchecked")
 	@PostMapping
 	@ResponseBody
 	public String createDatafile(@Valid DoeDatafileModel doeDataFileModel,
 			@RequestParam(value = "doeMetadataFile", required = false) MultipartFile doeMetadataFile, Model model,
-			@RequestParam(value = "isFormBulkUpload", required = false) Boolean isFormBulkUpload, HttpSession session,
-			HttpServletRequest request, HttpServletResponse response) throws DoeWebException {
+			@RequestParam(value = "isFormBulkAssetUpload", required = false) Boolean isFormBulkAssetUpload,
+			HttpSession session, HttpServletRequest request, HttpServletResponse response) throws DoeWebException {
 
-		log.info("bulk upload and isFormBulkUpload : " + isFormBulkUpload);
+		log.info("bulk upload and isFormBulkAssetUpload : " + isFormBulkAssetUpload);
+		/*
+		 * when isFormBulkAssetUpload is null, then the upload is for bulk data files/
+		 * sub collections
+		 */
 		String user = getLoggedOnUserInfo();
 		if (StringUtils.isEmpty(user)) {
 			return "Not Authorized";
@@ -204,16 +204,13 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 				registrationDTO = constructV2BulkRequest(request, session, doeDataFileModel.getPath().trim(),
 						assetIdentifierMapping);
 
-				for (HpcDirectoryScanRegistrationItemDTO itemDTO : registrationDTO
-						.getDirectoryScanRegistrationItems()) {
-					itemDTO.setBulkMetadataEntries(entries);
-				}
 			} else {
 				registrationDTO = constructV2BulkRequest(request, session, doeDataFileModel.getPath().trim(), null);
+
 			}
 
-			// when asset upload upload is done by form
-			if (Boolean.TRUE.equals(isFormBulkUpload)) {
+			// when asset upload is done by form
+			if (Boolean.TRUE.equals(isFormBulkAssetUpload)) {
 				formBulkMetadataEntries = constructRequest(request, session, accessGroups,
 						doeDataFileModel.getPath().trim());
 
@@ -221,6 +218,11 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 					for (HpcDirectoryScanRegistrationItemDTO itemDTO : registrationDTO
 							.getDirectoryScanRegistrationItems())
 						itemDTO.setBulkMetadataEntries(formBulkMetadataEntries);
+				}
+			} else {
+				for (HpcDirectoryScanRegistrationItemDTO itemDTO : registrationDTO
+						.getDirectoryScanRegistrationItems()) {
+					itemDTO.setBulkMetadataEntries(entries);
 				}
 			}
 
@@ -249,18 +251,6 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			if (CollectionUtils.isEmpty(registrationDTO.getDataObjectRegistrationItems())
 					&& CollectionUtils.isEmpty(registrationDTO.getDirectoryScanRegistrationItems()))
 				throw new DoeWebException("No input file(s) / folder(s) are selected");
-			Set<String> basePaths = (Set<String>) session.getAttribute("basePaths");
-
-			if (basePaths == null || basePaths.isEmpty()) {
-				HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
-				if (modelDTO == null) {
-					modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL);
-					session.setAttribute("userDOCModel", modelDTO);
-				}
-				String userId = (String) session.getAttribute("hpcUserId");
-				DoeClientUtil.populateBasePaths(session, modelDTO, authToken, userId, serviceURL);
-				basePaths = (Set<String>) session.getAttribute("basePaths");
-			}
 
 			HpcBulkDataObjectRegistrationResponseDTO responseDTO = DoeClientUtil.registerBulkDatafiles(authToken,
 					bulkRegistrationURL, registrationDTO);
@@ -269,8 +259,8 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 
 				String taskId = responseDTO.getTaskId();
 				String name = null;
-				if (isFormBulkUpload == null) {
-					// if isFormBulkUpload is null, the upload is for data files.
+				if (isFormBulkAssetUpload == null) {
+					// if isFormBulkAssetUpload is null, the upload is for data files/ sub folders.
 					name = doeDataFileModel.getPath().substring(doeDataFileModel.getPath().lastIndexOf('/') + 1);
 				}
 

@@ -62,6 +62,9 @@ public class MailServiceImpl implements MailService {
 	@Value("${mail.notification.email}")
 	private String notificationEmail;
 
+	@Value("${gov.nih.nci.hpc.web.server}")
+	String webServerName;
+
 	/**
 	 * Very simple mail sender method using Velocity templates pulled from a
 	 * database. The message template is retrieved from the database using the short
@@ -314,11 +317,14 @@ public class MailServiceImpl implements MailService {
 			params.put(TO, to.toArray(new String[0]));
 			params.put("dateTime", notification.getCompletedDate());
 			params.put("taskId", notification.getTaskId());
+			params.put("modac_link", webServerName + "/tasksTab");
 			params.put("resultPath", notification.getResultPath());
 			params.put("inputDatasetPath", notification.getInputDataset());
-			if (StringUtils.isNotEmpty(notification.getFailureMsg())) {
-				params.put("failureMsg", "Failure Message: " + notification.getFailureMsg());
-			}
+			params.put("status", notification.getStatus());
+
+			params.put("failureMsg",
+					StringUtils.isNotEmpty(notification.getFailureMsg()) ? "Reason: " + notification.getFailureMsg()
+							: "");
 			send("PREDICTION_NOTIFICATION", params);
 			return "SUCCESS";
 		} catch (Exception e) {
@@ -339,25 +345,58 @@ public class MailServiceImpl implements MailService {
 
 	@Override
 	public String sendUploadTaskNotification(UploadTaskNotification taskNotification) throws DoeWebException {
-		log.info("Sending task notification email");
+		log.info("Sending upload task notification email");
 
 		try {
-
+			final Map<String, Object> params = new HashMap<String, Object>();
+			final List<String> to = new ArrayList<String>();
+			to.add(taskNotification.getUserId());
+			params.put(FROM, notificationEmail);
+			params.put(TO, to.toArray(new String[0]));
+			params.put("dateTime", taskNotification.getCompletedDate());
+			params.put("taskId", taskNotification.getTaskId());
+			params.put("status", taskNotification.getStatus());
+			params.put("registrationItems", taskNotification.getRegistrationItems());
+			params.put("modac_link", webServerName + "/tasksTab");
+			params.put("failureMsg",
+					StringUtils.isNotEmpty(taskNotification.getErrorMsg()) ? "Reason: " + taskNotification.getErrorMsg()
+							: "");
+			send("UPLOAD_NOTIFICATION", params);
 			return "SUCCESS";
+
 		} catch (Exception e) {
-			throw new DoeWebException("Error in sending task notification email: " + e.getMessage());
+			throw new DoeWebException("Error in sending upload notification email: " + e.getMessage());
 		}
+
 	}
 
 	@Override
 	public String sendDownloadTaskNotification(DownloadTaskNotification taskNotification) throws DoeWebException {
-		log.info("Sending task notification email");
+		log.info("Sending download task notification email");
 
 		try {
+			final Map<String, Object> params = new HashMap<String, Object>();
+			final List<String> to = new ArrayList<String>();
+			to.add(taskNotification.getUserId());
+			params.put(FROM, notificationEmail);
+			params.put(TO, to.toArray(new String[0]));
+			params.put("dateTime", taskNotification.getCompletedDate());
+			params.put("taskId", taskNotification.getTaskId());
+			params.put("downloadType", taskNotification.getDownloadType());
+			params.put("status", taskNotification.getStatus());
+			params.put("targetPath", taskNotification.getTargetPath());
+			params.put("sourcePath", taskNotification.getSourcePath());
+			params.put("destinationType", taskNotification.getDestinationType());
+			params.put("modac_link", webServerName + "/tasksTab");
+			params.put("failureMsg",
+					StringUtils.isNotEmpty(taskNotification.getErrorMsg()) ? "Reason: " + taskNotification.getErrorMsg()
+							: "");
 
+			send("DOWNLOAD_NOTIFICATION", params);
 			return "SUCCESS";
+
 		} catch (Exception e) {
-			throw new DoeWebException("Error in sending task notification email: " + e.getMessage());
+			throw new DoeWebException("Error in sending download notification email: " + e.getMessage());
 		}
 	}
 

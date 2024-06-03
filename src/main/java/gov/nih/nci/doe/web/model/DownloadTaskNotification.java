@@ -1,19 +1,16 @@
 package gov.nih.nci.doe.web.model;
 
-import java.util.Date;
-
 public class DownloadTaskNotification {
 
 	private String userId;
 	private String taskId;
-	private String taskType;
 	private String downloadType;
 	private String status;
 	private String destinationType;
-	private String sourceType;
+	private String sourcePath;
 	private String targetPath;
 	private String errorMsg;
-	private Date completedDate;
+	private String completedDate;
 
 	public String getDownloadType() {
 		return downloadType;
@@ -31,11 +28,11 @@ public class DownloadTaskNotification {
 		this.status = status;
 	}
 
-	public Date getCompletedDate() {
+	public String getCompletedDate() {
 		return completedDate;
 	}
 
-	public void setCompletedDate(Date completedDate) {
+	public void setCompletedDate(String completedDate) {
 		this.completedDate = completedDate;
 	}
 
@@ -63,14 +60,6 @@ public class DownloadTaskNotification {
 		this.taskId = taskId;
 	}
 
-	public String getTaskType() {
-		return taskType;
-	}
-
-	public void setTaskType(String taskType) {
-		this.taskType = taskType;
-	}
-
 	public String getDestinationType() {
 		return destinationType;
 	}
@@ -79,12 +68,12 @@ public class DownloadTaskNotification {
 		this.destinationType = destinationType;
 	}
 
-	public String getSourceType() {
-		return sourceType;
+	public String getSourcePath() {
+		return sourcePath;
 	}
 
-	public void setSourceType(String sourceType) {
-		this.sourceType = sourceType;
+	public void setSourcePath(String sourcePath) {
+		this.sourcePath = sourcePath;
 	}
 
 	public String getTargetPath() {

@@ -47,7 +47,7 @@
 		<div class="col-lg-12 col-md-12 col-sm-12 float-right"
 			style="font-size: 20px; font-weight: 500; font-family: latoregular; color: #242525; margin-left: 31px; margin-top: 16px;">
 			<p style="font-size: 20px; font-weight: 500; margin-left: -4px;">
-				<span> Upload Files</span>
+				<span> Upload Files/Sub collections</span>
 			</p>
 			<hr
 				style="height: 8px; background-color: #194F85; margin-left: -4px; width: 94.5%;">
@@ -82,7 +82,7 @@
 					<label class="uploadLabels radio-inline"><input
 						type="radio" id="datafileTypeSingle" name="datafileTypeUpload"
 						value="singleData" onchange="displayDataFileSection('singleData')">
-						&nbsp;&nbsp; Select a File</label>
+						&nbsp;&nbsp; Select from Local System</label>
 				</div>
 			</div>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -199,7 +199,7 @@
 								<div class="form-group col-lg-12 col-md-12">
 									<button type="button" class="btn btn-md btn-link"
 										id="primaryGlobusButton">
-										Select Files from <img src="images/Uploads-Globus.icon.png"
+										Select from <img src="images/Uploads-Globus.icon.png"
 											th:src="@{/images/Uploads-Globus.icon.png}"
 											style="width: 20px;" alt="globus"> Globus Endpoint
 									</button>
@@ -232,7 +232,7 @@
 								<div th:if="${authorized != null}" class="col-sm-12 column"
 									id="driveDiv">
 									<a href="javascript:void();" id="pickerUploadLink"> Select
-										Files from Google Drive</a>
+										from Google Drive</a>
 								</div>
 							</div>
 

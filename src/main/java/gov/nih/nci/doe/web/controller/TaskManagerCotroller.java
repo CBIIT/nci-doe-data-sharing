@@ -54,9 +54,6 @@ public class TaskManagerCotroller extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.download}")
 	private String queryServiceURL;
 
-	@Value("${gov.nih.nci.hpc.server.dataObject.download}")
-	private String dataObjectDownloadServiceURL;
-
 	SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 
 	@GetMapping
@@ -115,82 +112,8 @@ public class TaskManagerCotroller extends AbstractDoeController {
 				TaskManagerDto task = new TaskManagerDto();
 				TaskManager t = results.stream().filter(x -> download.getTaskId().equals(x.getTaskId())).findAny()
 						.orElse(null);
-				String path = download.getPath();
 
-				if ((StringUtils.isEmpty(path) || StringUtils.isBlank(path))
-						&& CollectionUtils.isNotEmpty(download.getItems())) {
-					path = download.getItems().get(0).getPath();
-				}
-				if (StringUtils.isNotEmpty(path)) {
-					String[] collectionNames = path.split("/");
-					task.setProgName(collectionNames[2]);
-					task.setStudyName(collectionNames[3]);
-					task.setDataSetName(collectionNames[4]);
-				}
-
-				if (StringUtils.isNotEmpty(task.getDataSetName()) && StringUtils.isNotEmpty(t.getTaskName())) {
-					task.setTaskName("<a href=" + webServerName + "/assetDetails?assetIdentifier="
-							+ task.getDataSetName() + ">" + t.getTaskName() + "</a>");
-				} else {
-					task.setTaskName(t.getTaskName());
-				}
-
-				task.setTaskCreatedDate(t.getTaskDate());
-				task.setTaskId(download.getTaskId());
-				task.setTaskCompletedDate(
-						download.getCompleted() != null ? format.format(download.getCompleted().getTime()) : "");
-
-				task.setUserId(t.getUserId());
-				task.setTaskType("&nbsp;&nbsp;" + t.getTaskType());
-				if (download.getResult() == null) {
-					task.setTransferStatus("&nbsp&nbsp;In Progress");
-				} else if (download.getResult() != null && download.getResult().value().equals("CANCELLED")) {
-					task.setTransferStatus("&nbsp&nbsp;Cancelled");
-
-				} else if (download.getResult() != null && download.getResult().value().equals("COMPLETED")) {
-					task.setTransferStatus("&nbsp&nbsp;Completed");
-				} else {
-					Boolean retry = false;
-					if (download.getDestinationType() != null
-							&& download.getDestinationType().equals(HpcDataTransferType.GLOBUS)) {
-						retry = true;
-					}
-
-					List<String> message = new ArrayList<String>();
-
-					download.getItems().stream().forEach(x -> {
-						if (x.getMessage() != null && !message.contains(x.getMessage())) {
-							message.add(x.getMessage().replaceAll("[\']", ""));
-						}
-					});
-
-					if (CollectionUtils.isEmpty(message)) {
-						message.add(download.getResult() != null ? download.getResult().value().replaceAll("[\']", "")
-								: null);
-					}
-
-					String filteredMessage = CollectionUtils.isNotEmpty(message)
-							? StringEscapeUtils.escapeHtml(String.join(",", message))
-							: "";
-
-					if (Boolean.TRUE.equals(retry)) {
-
-						task.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<span class='button4a' error_msg = \""
-								+ filteredMessage + "\" data-container='body' data-toggle='popover'"
-								+ "data-placement='right' data-trigger='click' data-popover-content='#a02'><img style='width:17px;margin-top:-4px' src='images/infoIcon.svg' alt='failed message'></span>"
-								+ "<strong><a style='border: none; padding-top:0px; height: 23px;width: 37px;border-radius: 11px;float: right;margin-right: 10px;' class='btn btn-link btn-sm' aria-label='Retry download' href='#' "
-								+ "onclick='retryDownload(\"" + download.getTaskId() + "\" ,\"" + t.getTaskName()
-								+ "\", \"" + download.getType().name() + "\")'>"
-								+ "<img style='height: 29px;width: 29px;margin-top: 2px;' data-toggle='tooltip' title='Retry Download' src='images/refresh-icon.svg' th:src='@{/images/refresh-icon.svg}' alt='Status refresh'></a></strong>");
-
-					} else {
-						task.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<span class='button4a' error_msg = \""
-								+ filteredMessage + "\" data-container='body' data-toggle='popover'"
-								+ "data-placement='right' data-trigger='click' data-popover-content='#a02'><img style='width:17px;'"
-								+ "src='images/infoIcon.svg'></span>");
-					}
-				}
-
+				task = updateDownloadTask(task, t, download);
 				taskResults.add(task);
 			}
 
@@ -205,40 +128,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
 				TaskManagerDto task = new TaskManagerDto();
 				TaskManager t = results.stream().filter(x -> upload.getTaskId().equals(x.getTaskId())).findAny()
 						.orElse(null);
-				String path = null;
-				task.setTaskId(upload.getTaskId());
-				task.setTaskCreatedDate(t != null ? t.getTaskDate() : null);
-				task.setTaskCompletedDate(
-						upload.getCompleted() != null ? format.format(upload.getCompleted().getTime()) : "");
-
-				task.setUserId(t != null ? t.getUserId() : "");
-				task.setTaskType(t != null ? "&nbsp;&nbsp;" + t.getTaskType() : "");
-				if (upload.getResult() == null) {
-					task.setTransferStatus("&nbsp&nbsp;In Progress");
-					path = upload.getInProgressItems().get(0).getPath();
-
-				} else if (Boolean.TRUE.equals(upload.getResult())) {
-					task.setTransferStatus("&nbsp&nbsp;Completed");
-					path = upload.getCompletedItems().get(0).getPath();
-				} else if (Boolean.FALSE.equals(upload.getResult())) {
-					retryUploadFunc(session, upload, task, t);
-					path = upload.getFailedItems().get(0).getPath();
-
-				}
-				if (StringUtils.isNotEmpty(path)) {
-					String[] collectionNames = path.split("/");
-					task.setProgName(collectionNames[2]);
-					task.setStudyName(collectionNames[3]);
-					task.setDataSetName(collectionNames[4]);
-				}
-
-				if (StringUtils.isNotEmpty(task.getDataSetName()) && t != null
-						&& StringUtils.isNotEmpty(t.getTaskName())) {
-					task.setTaskName("<a href=" + webServerName + "/assetDetails?assetIdentifier="
-							+ task.getDataSetName() + ">" + t.getTaskName() + "</a>");
-				} else {
-					task.setTaskName(t != null ? t.getTaskName() : "");
-				}
+				task = updateUploadTask(task, t, upload, session);
 
 				uploadTaskResults.add(task);
 			}
@@ -251,6 +141,122 @@ public class TaskManagerCotroller extends AbstractDoeController {
 			throw new DoeWebException("Failed to get tasks " + e.getMessage());
 		}
 
+	}
+
+	private TaskManagerDto updateDownloadTask(TaskManagerDto task, TaskManager t, HpcUserDownloadRequest download) {
+		String path = download.getPath();
+
+		if ((StringUtils.isEmpty(path) || StringUtils.isBlank(path))
+				&& CollectionUtils.isNotEmpty(download.getItems())) {
+			path = download.getItems().get(0).getPath();
+		}
+		if (StringUtils.isNotEmpty(path)) {
+			String[] collectionNames = path.split("/");
+			task.setProgName(collectionNames[2]);
+			task.setStudyName(collectionNames[3]);
+			task.setDataSetName(collectionNames[4]);
+		}
+
+		if (StringUtils.isNotEmpty(task.getDataSetName()) && StringUtils.isNotEmpty(t.getTaskName())) {
+			task.setTaskName("<a href=" + webServerName + "/assetDetails?assetIdentifier=" + task.getDataSetName() + ">"
+					+ t.getTaskName() + "</a>");
+		} else {
+			task.setTaskName(t.getTaskName());
+		}
+
+		task.setTaskCreatedDate(t.getTaskDate());
+		task.setTaskId(download.getTaskId());
+		task.setTaskCompletedDate(
+				download.getCompleted() != null ? format.format(download.getCompleted().getTime()) : "");
+
+		task.setUserId(t.getUserId());
+		task.setTaskType("&nbsp;&nbsp;" + t.getTaskType());
+		if (download.getResult() == null) {
+			task.setTransferStatus("&nbsp&nbsp;In Progress");
+		} else if (download.getResult() != null && download.getResult().value().equals("CANCELLED")) {
+			task.setTransferStatus("&nbsp&nbsp;Cancelled");
+
+		} else if (download.getResult() != null && download.getResult().value().equals("COMPLETED")) {
+			task.setTransferStatus("&nbsp&nbsp;Completed");
+		} else {
+			Boolean retry = false;
+			if (download.getDestinationType() != null
+					&& download.getDestinationType().equals(HpcDataTransferType.GLOBUS)) {
+				retry = true;
+			}
+
+			List<String> message = new ArrayList<String>();
+
+			download.getItems().stream().forEach(x -> {
+				if (x.getMessage() != null && !message.contains(x.getMessage())) {
+					message.add(x.getMessage().replaceAll("[\']", ""));
+				}
+			});
+
+			if (CollectionUtils.isEmpty(message)) {
+				message.add(download.getResult() != null ? download.getResult().value().replaceAll("[\']", "") : null);
+			}
+
+			String filteredMessage = CollectionUtils.isNotEmpty(message)
+					? StringEscapeUtils.escapeHtml(String.join(",", message))
+					: "";
+
+			if (Boolean.TRUE.equals(retry)) {
+
+				task.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<span class='button4a' error_msg = \""
+						+ filteredMessage + "\" data-container='body' data-toggle='popover'"
+						+ "data-placement='right' data-trigger='click' data-popover-content='#a02'><img style='width:17px;margin-top:-4px' src='images/infoIcon.svg' alt='failed message'></span>"
+						+ "<strong><a style='border: none; padding-top:0px; height: 23px;width: 37px;border-radius: 11px;float: right;margin-right: 10px;' class='btn btn-link btn-sm' aria-label='Retry download' href='#' "
+						+ "onclick='retryDownload(\"" + download.getTaskId() + "\" ,\"" + t.getTaskName() + "\", \""
+						+ download.getType().name() + "\")'>"
+						+ "<img style='height: 29px;width: 29px;margin-top: 2px;' data-toggle='tooltip' title='Retry Download' src='images/refresh-icon.svg' th:src='@{/images/refresh-icon.svg}' alt='Status refresh'></a></strong>");
+
+			} else {
+				task.setTransferStatus("&nbsp&nbsp;Failed&nbsp;&nbsp;<span class='button4a' error_msg = \""
+						+ filteredMessage + "\" data-container='body' data-toggle='popover'"
+						+ "data-placement='right' data-trigger='click' data-popover-content='#a02'><img style='width:17px;'"
+						+ "src='images/infoIcon.svg'></span>");
+			}
+		}
+		return task;
+	}
+
+	private TaskManagerDto updateUploadTask(TaskManagerDto task, TaskManager t,
+			HpcBulkDataObjectRegistrationTaskDTO upload, HttpSession session) throws DoeWebException {
+		String path = null;
+		task.setTaskId(upload.getTaskId());
+		task.setTaskCreatedDate(t != null ? t.getTaskDate() : null);
+		task.setTaskCompletedDate(upload.getCompleted() != null ? format.format(upload.getCompleted().getTime()) : "");
+
+		task.setUserId(t != null ? t.getUserId() : "");
+		task.setTaskType(t != null ? "&nbsp;&nbsp;" + t.getTaskType() : "");
+		if (upload.getResult() == null) {
+			task.setTransferStatus("&nbsp&nbsp;In Progress");
+			path = upload.getInProgressItems().get(0).getPath();
+
+		} else if (Boolean.TRUE.equals(upload.getResult())) {
+			task.setTransferStatus("&nbsp&nbsp;Completed");
+			path = upload.getCompletedItems().get(0).getPath();
+		} else if (Boolean.FALSE.equals(upload.getResult())) {
+			retryUploadFunc(session, upload, task, t);
+			path = upload.getFailedItems().get(0).getPath();
+
+		}
+		if (StringUtils.isNotEmpty(path)) {
+			String[] collectionNames = path.split("/");
+			task.setProgName(collectionNames[2]);
+			task.setStudyName(collectionNames[3]);
+			task.setDataSetName(collectionNames[4]);
+		}
+
+		if (StringUtils.isNotEmpty(task.getDataSetName()) && t != null && StringUtils.isNotEmpty(t.getTaskName())) {
+			task.setTaskName("<a href=" + webServerName + "/assetDetails?assetIdentifier=" + task.getDataSetName() + ">"
+					+ t.getTaskName() + "</a>");
+		} else {
+			task.setTaskName(t != null ? t.getTaskName() : "");
+		}
+
+		return task;
 	}
 
 	private void retryUploadFunc(HttpSession session, HpcBulkDataObjectRegistrationTaskDTO upload, TaskManagerDto t,

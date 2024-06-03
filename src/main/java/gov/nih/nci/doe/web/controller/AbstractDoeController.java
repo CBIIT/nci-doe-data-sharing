@@ -111,6 +111,9 @@ public abstract class AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.search.dataobject.compound}")
 	public String compoundDataObjectSearchServiceURL;
+	
+	@Value("${gov.nih.nci.hpc.server.dataObject.download}")
+	public String dataObjectDownloadServiceURL;
 
 	@Value("${doe.search.results.pageSize}")
 	private int pageSize;
