@@ -1,7 +1,6 @@
 $(document).ready(
 		function() {
 			loadUploadTab();
-
 			$('body').tooltip({
 				selector : '[data-toggle="tooltip"]'
 			});
@@ -96,6 +95,14 @@ $(document).ready(
 					$("#accessGroupSelect").next(".select2-container").hide();
 				} else {
 					$("#accessGroupSelect").next(".select2-container").show();
+				}
+
+			});
+			$(document).on('change', '#nonPublicAccess', function() {
+				if ($(this).is(":checked")) {
+					$("#accessGroupSelect").next(".select2-container").show();
+				} else {
+					$("#accessGroupSelect").next(".select2-container").hide();
 				}
 
 			});
@@ -521,12 +528,16 @@ function constructNewCollectionMetaDataSet(data, status) {
 												'<tr><td>'
 														+ value.displayName
 														+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
-														+ '<select class="simple-select2" multiple="multiple" id="accessGroupSelect" name="zAttrStr_'
+														+'<input type="radio" name="accessRaio" id="publicAccess" checked="false" aria-label="public access" value="public access"/>&nbsp;&nbsp;Public&nbsp;&nbsp;<input type="radio" name="accessRaio" id="nonPublicAccess" checked="false" aria-label="public access" value="non public access"/>&nbsp;&nbsp;Non Public'
+														+ '<div><select class="simple-select2" multiple="multiple" id="accessGroupSelect" name="zAttrStr_'
 														+ value.attrName
 														+ '"'
-														+ 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"></select> &nbsp;&nbsp;<input type="checkbox" id="publicAccess" checked="false" aria-label="public access" value="public access"/>&nbsp;&nbsp;Public</td></tr>');
+														+ 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"></select></div>'
+														+'</td></tr>');
 								loadJsonData('/metaDataPermissionsList', $("#accessGroupSelect"), false, null, null,
 										null, "key", "value");
+										$("#publicAccess").prop("checked", true);
+
 
 							} else {
 
@@ -535,7 +546,7 @@ function constructNewCollectionMetaDataSet(data, status) {
 												'<tr><td>'
 														+ value.displayName
 														+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
-														+ '<input type="text" placeholder="Required" aria-label="value of meta data" name="zAttrStr_'
+														+ '<input type="search" placeholder="Required" aria-label="value of meta data" name="zAttrStr_'
 														+ value.attrName
 														+ '" value ="'
 														+ parentAccessgrp
@@ -553,7 +564,7 @@ function constructNewCollectionMetaDataSet(data, status) {
 											'<tr><td>'
 													+ value.displayName
 													+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
-													+ '<input type="text" disabled="disabled" aria-label="value of meta data" value ="'
+													+ '<input type="search" disabled="disabled" aria-label="value of meta data" value ="'
 													+ assetType + '" name="zAttrStr_' + value.attrName + '"'
 													+ 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"><input type="hidden" name="zAttrStr_'
 													+ value.attrName + '" value ="' + assetType + '"/> </td></tr>');
@@ -592,7 +603,7 @@ function constructNewCollectionMetaDataSet(data, status) {
 							$("#newMetaDataTable tbody").append(
 									'<tr><td>' + value.displayName
 											+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
-											+ '<input type="text" is_mandatory="' + value.mandatory
+											+ '<input type="search" is_mandatory="' + value.mandatory
 											+ '" placeholder="Required" aria-label="value of meta data" value="'
 											+ value.attrValue + '" name="zAttrStr_' + value.attrName + '"'
 											+ 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"></td></tr>');
@@ -600,7 +611,7 @@ function constructNewCollectionMetaDataSet(data, status) {
 							var placeholderValue = value.mandatory == true ? 'Required' : "";
 								$("#newMetaDataTable tbody").append(
 										'<tr><td>' + value.displayName
-												+ '&nbsp;&nbsp;' + infoHtml + '</td><td>' + '<input type="text" is_mandatory="'
+												+ '&nbsp;&nbsp;' + infoHtml + '</td><td>' + '<input type="search" is_mandatory="'
 												+ value.mandatory + '" class="identifier_validation" pattern = "[A-Za-z0-9_-]*" placeholder= "' + placeholderValue
 												+ '" aria-label="value of meta data" name="zAttrStr_' + value.attrName
 												+ '"' + 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"></td></tr>');
@@ -617,7 +628,7 @@ function constructNewCollectionMetaDataSet(data, status) {
 							} else if(value.isVisibleOnUplaodPage != false) {
 								$("#newMetaDataTable tbody").append(
 										'<tr><td>' + value.displayName
-												+ '&nbsp;&nbsp;' + infoHtml + '</td><td>' + '<input type="text" is_mandatory="'
+												+ '&nbsp;&nbsp;' + infoHtml + '</td><td>' + '<input type="search" is_mandatory="'
 												+ value.mandatory + '" placeholder="' + placeholderValue
 												+ '" aria-label="value of meta data" name="zAttrStr_' + value.attrName
 												+ '"' + 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"></td></tr>');
@@ -633,12 +644,12 @@ function addNewMetaDataCollection(tableName) {
 			.append(
 					'<tr id="addRow'
 							+ rowId
-							+ '"><td><input type="text" placeholder="Required" style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;" '
+							+ '"><td><input type="search" placeholder="Required" style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;" '
 							+ 'name="_addAttrName'
 							+ rowId
 							+ '" aria-label="add new row" id="_addAttrName'
 							+ rowId
-							+ '"></td><td><input type="text" placeholder="Required" style="width: 85%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;" id="_addAttrValue'
+							+ '"></td><td><input type="search" placeholder="Required" style="width: 85%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;" id="_addAttrValue'
 							+ rowId
 							+ '" name="_addAttrValue'
 							+ rowId
@@ -657,12 +668,12 @@ function addNewMetaDataRowsForDataFile($this) {
 			.append(
 					'&nbsp;&nbsp;<div id="addDataRow'
 							+ rowId
-							+ '"><input type="text" style="width:40%;" '
+							+ '"><input type="search" style="width:40%;" '
 							+ 'name="_addAttrName'
 							+ rowId
 							+ '" aria-label="add new row" id="_addAttrName'
 							+ rowId
-							+ '">&nbsp;<input type="text" style="width:40%;" id="_addAttrValue'
+							+ '">&nbsp;<input type="search" style="width:40%;" id="_addAttrValue'
 							+ rowId
 							+ '" name="_addAttrValue'
 							+ rowId
@@ -782,7 +793,7 @@ function registerCollection() {
 	var validate = true;
 	var usermetaDataEntered = true;
 
-	$('table#newMetaDataTable input[type="text"]').each(function() {
+	$('table#newMetaDataTable input[type="search"]').each(function() {
 		var name = $(this).val();
 		var ismandatory = $(this).attr('is_mandatory');
 		if (!name && ismandatory && ismandatory != "false") {
@@ -1148,7 +1159,7 @@ function constructAssetTypeBulkDiv(data, status) {
 			.append(
 					'<tr><td style="width: 24%;">Asset Group Identifier&nbsp;&nbsp;<i class="fas fa-info-square" data-toggle="tooltip"'
 							+ 'data-placement="right" title="The system uses the Asset Group Identifier to create a unique Asset Identifier for each asset, in the format <group name>_<integer>"></i></td><td>'
-							+ '<input type="text" placeholder="Required" class="bulkAssetTextbox" is_mandatory="true" aria-label="value of meta data"  name="assetGroupIdentifier"'
+							+ '<input type="search" placeholder="Required" class="bulkAssetTextbox" is_mandatory="true" aria-label="value of meta data"  name="assetGroupIdentifier"'
 							+ '></td></tr>');
 
 	$
@@ -1219,7 +1230,7 @@ function constructAssetTypeBulkDiv(data, status) {
 							} else {
 								$("#assetBulkMetadataTable tbody").append(
 										'<tr><td>' + value.displayName
-												+ '&nbsp;&nbsp;' + infoHtml + '</td><td>' + '<input type="text" placeholder="'
+												+ '&nbsp;&nbsp;' + infoHtml + '</td><td>' + '<input type="search" placeholder="'
 												+ placeholderValue + '" class="bulkAssetTextbox" is_mandatory="'
 												+ value.mandatory
 												+ '" aria-label="value of meta data"  name="zAttrStr_' + value.attrName
@@ -1243,7 +1254,7 @@ function registerBulkAssets() {
 	var usermetaDataEntered = true;
 	var isFormBulkUpload;
 
-	$('table#assetBulkMetadataTable input[type="text"]').each(function() {
+	$('table#assetBulkMetadataTable input[type="search"]').each(function() {
 		var name = $(this).val();
 		var ismandatory = $(this).attr('is_mandatory');
 		if (!name && ismandatory && ismandatory != "false") {
@@ -1368,7 +1379,7 @@ function registerBulkDataFile() {
 		var file = $("#doeDataFile").val();
 		var dataFilePath = $("#dataFilePath").val();
 
-		$('table#newMetaDataTableForSingleFile input[type="text"]').each(function() {
+		$('table#newMetaDataTableForSingleFile input[type="search"]').each(function() {
 			var name = $(this).val();
 			if (!name) {
 				usermetaDataEntered = false;
@@ -1434,7 +1445,7 @@ function registerBulkDataFile() {
 		var dataFilePath = $("#bulkDataFilePathCollection").val();
 		var bulkUploadType = $('input[name=datafileTypeUpload]:checked').val();
 		var validate = true;
-		$('form#registerBulkDataForm input[type="text"]').each(function() {
+		$('form#registerBulkDataForm input[type="search"]').each(function() {
 			if ($(this).is(":visible") && !$(this).val()) {
 				validate = false;
 			}

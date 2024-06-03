@@ -310,3 +310,13 @@ table#assetBulkMetadataTable thead tr th {
 		height: 42px;
 	}
 }
+
+input[type=text]::-webkit-search-cancel-button {
+    -webkit-appearance: searchfield-cancel-button;
+}
+
+	span.select2-selection.select2-selection--multiple {
+    border-radius: 8px;
+    border: 1px solid #6B7294 !important;
+    height: 42px;
+}
