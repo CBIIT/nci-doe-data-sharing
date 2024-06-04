@@ -9,7 +9,8 @@ create table TASK_MANAGER_T
     TASK_DATE DATE,
     USER_ID   VARCHAR2(255),
     TYPE      VARCHAR2(255),
-    PATH      VARCHAR2(500)
+    PATH      VARCHAR2(500),
+    IS_NOTIFIED CHAR
 )
 /
 
