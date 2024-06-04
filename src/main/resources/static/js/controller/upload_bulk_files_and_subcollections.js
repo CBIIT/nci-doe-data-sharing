@@ -5,6 +5,10 @@ $(document).ready(
 				appendFileName($(this));
 				$("#registerBulkDataFileBtn").prop("disabled", false);
 			});
+			
+			$("#registerBulkDataFileBtn").click(function(e) {
+				registerBulkDataFile();
+			});
 
 			$("#assetSelectionGlobusButton").click(function(e) {
 				var d = {};
