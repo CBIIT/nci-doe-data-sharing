@@ -263,6 +263,7 @@
 											type="text" class="form-control" th:value="${gcPath}"
 											name="gcPath" id="gcPath"
 											placeholder="Enter Google Cloud Source Path" size="40" />
+											<input type="checkbox" name="gcFile" id="gcFile"> Check this if the source path is a file and not a folder.
 
 									</div>
 								</div>
@@ -279,6 +280,7 @@
 									<label for="s3Path">S3 (Source) Path:</label> <input
 										type="text" class="form-control" name="s3Path" id="s3Path"
 										placeholder="Enter S3 (Source) Path" size="40" />
+										<input type="checkbox" name="s3File" id="s3File"> Check this if the source path is a file and not a folder.
 								</div>
 								<div class="col-sm-12 column">
 									<label for="accessKey">Access Key:</label> <input type="text"

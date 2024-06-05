@@ -269,8 +269,11 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 				if (CollectionUtils.isNotEmpty(registrationDTO.getDirectoryScanRegistrationItems())) {
 					for (HpcDirectoryScanRegistrationItemDTO item : registrationDTO
 							.getDirectoryScanRegistrationItems()) {
-						item.getBulkMetadataEntries().getPathsMetadataEntries().stream()
-								.forEach(e -> pathsList.add(e.getPath()));
+						if (item.getBulkMetadataEntries() != null && CollectionUtils
+								.isNotEmpty(item.getBulkMetadataEntries().getPathsMetadataEntries())) {
+							item.getBulkMetadataEntries().getPathsMetadataEntries().stream()
+									.forEach(e -> pathsList.add(e.getPath()));
+						}
 					}
 				}
 

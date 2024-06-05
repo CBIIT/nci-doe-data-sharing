@@ -34,6 +34,7 @@ import gov.nih.nci.hpc.domain.datamanagement.HpcDataHierarchy;
 import gov.nih.nci.hpc.domain.datamanagement.HpcDirectoryScanPathMap;
 import gov.nih.nci.hpc.domain.datatransfer.HpcFileLocation;
 import gov.nih.nci.hpc.domain.datatransfer.HpcS3Account;
+import gov.nih.nci.hpc.domain.datatransfer.HpcS3ScanDirectory;
 import gov.nih.nci.hpc.domain.datatransfer.HpcScanDirectory;
 import gov.nih.nci.hpc.domain.datatransfer.HpcStreamingUploadSource;
 import gov.nih.nci.hpc.domain.datatransfer.HpcUploadSource;
@@ -71,6 +72,8 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		session.removeAttribute("accessToken");
 		session.removeAttribute("authorized");
 		session.removeAttribute("actionType");
+		session.removeAttribute("refreshTokenDetailsGoogleCloud");
+		session.removeAttribute("authorizedGC");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -201,6 +204,10 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		String gcbucketName = (String) request.getParameter("gcbucketName");
 		String gcPath = (String) request.getParameter("gcPath");
 		gcPath = (gcPath != null ? gcPath.trim() : null);
+		String s3File = (String)request.getParameter("s3File");
+		boolean isS3File = s3File != null && s3File.equals("on");	
+		String gcFile = (String)request.getParameter("gcFile");
+		boolean isGcFile = gcFile != null && gcFile.equals("on");
 
 		if (StringUtils.equals(bulkType, "globus") && globusEndpointFiles != null) {
 			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO> files = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO>();
@@ -253,6 +260,31 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			file.setPath(path + "/" + gcFilePath.getFileName());
 			files.add(file);
 			dto.getDataObjectRegistrationItems().addAll(files);
+		} else if (StringUtils.equals(bulkType, DoeAuthorizationService.GOOGLE_CLOUD_TYPE) && gcPath != null
+				&& !isGcFile) {
+			// Upload Directory/Folder from Google Cloud Storage
+			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO> folders = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO>();
+			gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO folder = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO();
+			HpcFileLocation source = new HpcFileLocation();
+			source.setFileContainerId(gcbucketName);
+			source.setFileId(gcPath);
+			HpcGoogleScanDirectory googleCloudSource = new HpcGoogleScanDirectory();
+			googleCloudSource.setDirectoryLocation(source);
+			googleCloudSource.setAccessToken(refreshTokenDetailsGoogleCloud);
+			folder.setGoogleCloudStorageScanDirectory(googleCloudSource);
+			folder.setBasePath(datafilePath);
+			HpcDirectoryScanPathMap pathDTO = new HpcDirectoryScanPathMap();
+			pathDTO.setFromPath(gcPath);
+			// Extract the last subdirectory. If there are no subdirectories, FromPath and
+			// ToPath will be the same
+			String tempPath = gcPath;
+			if (gcPath.endsWith("/"))
+				tempPath = gcPath.substring(0, gcPath.length() - 1);
+			String gcToPath = tempPath.substring(tempPath.lastIndexOf("/") + 1, tempPath.length());
+			pathDTO.setToPath(gcToPath);
+			folder.setPathMap(pathDTO);
+			folders.add(folder);
+			dto.getDirectoryScanRegistrationItems().addAll(folders);
 		}
 		List<String> include = new ArrayList<String>();
 		if (includeCriteria != null && !includeCriteria.isEmpty()) {
@@ -335,7 +367,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			}
 			dto.getDirectoryScanRegistrationItems().addAll(folders);
 		}
-		if (StringUtils.equals(bulkType, "s3") && s3Path != null) {
+		if (StringUtils.equals(bulkType, "s3") && s3Path != null && isS3File) {
 			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO> files = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO>();
 			gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO file = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO();
 			HpcFileLocation source = new HpcFileLocation();
@@ -355,6 +387,47 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			System.out.println(path + "/" + s3FilePath.getFileName());
 			files.add(file);
 			dto.getDataObjectRegistrationItems().addAll(files);
+		} else if (StringUtils.equals(bulkType, "s3") && s3Path != null) {
+			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO> folders = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO>();
+			gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO folder = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO();
+			HpcFileLocation source = new HpcFileLocation();
+			source.setFileContainerId(bucketName);
+			source.setFileId(s3Path);
+			folder.setBasePath(datafilePath);
+			HpcS3ScanDirectory s3Directory = new HpcS3ScanDirectory();
+			s3Directory.setDirectoryLocation(source);
+			HpcS3Account s3Account = new HpcS3Account();
+			s3Account.setAccessKey(accessKey);
+			s3Account.setSecretKey(secretKey);
+			s3Account.setRegion(region);
+			s3Directory.setAccount(s3Account);
+			folder.setS3ScanDirectory(s3Directory);
+			folders.add(folder);
+			String fromPath = "";
+			String toPath = "";
+			if (s3Path.equals("/")) {
+				fromPath = "/";
+				toPath = "/";
+			} else {
+				Path folderPath = Paths.get(s3Path);
+				String folderName = folderPath.getFileName().toString();
+				fromPath = "/" + s3Path;
+				toPath = "/" + folderName;
+			}
+
+			if (!fromPath.equals(toPath)) {
+				HpcDirectoryScanPathMap pathDTO = new HpcDirectoryScanPathMap();
+				pathDTO.setFromPath(fromPath);
+				pathDTO.setToPath(toPath);
+				folder.setPathMap(pathDTO);
+			}
+			if (include.size() > 0) {
+				folder.getIncludePatterns().addAll(include);
+				folder.setPatternType(HpcPatternType.SIMPLE);
+			}
+
+			dto.getDirectoryScanRegistrationItems().addAll(folders);
+
 		}
 
 		return dto;
