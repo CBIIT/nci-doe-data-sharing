@@ -26,10 +26,20 @@ table#newMetaDataTable tbody tr td {
 
 	input {
 		padding: 10px;
+		
+	}
+	
+	input[type="radio"] {
+		margin-top: 10px;
 	}
 
 	textarea {
 		padding: 8px;
+		min-height: 120px;
+	}
+	#nonPublicAccess {
+		margin-left: 120px;
+
 	}
 }
 
@@ -38,10 +48,11 @@ table#newMetaDataTable tbody td {
 	border-top: none;
 }
 
-table#newMetaDataTable tbody tr td:nth-child(1) {
+table#newMetaDataTable tbody tr td:first-child {
 	text-transform: uppercase;
-	font-weight: 500;
+	font-weight: 600;
 }
+
 
 table#newMetaDataTable tbody tr td:nth-child(2) {
 	padding: 8px 32px !important;
@@ -55,6 +66,7 @@ table#newMetaDataTable thead tr th {
 	font-size: 15px;
 	padding: 2px 32px;
 	font-weight: 100;
+	width: 50%;
 }
 
 .select2-container .select2-selection--single .select2-selection__rendered {
@@ -319,4 +331,8 @@ input[type=text]::-webkit-search-cancel-button {
     border-radius: 8px;
     border: 1px solid #6B7294 !important;
     height: 42px;
+}
+
+.fa-info-square {
+	font-size: 19px;
 }
