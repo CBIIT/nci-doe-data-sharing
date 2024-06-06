@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -140,6 +139,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 	 * @return
 	 * @throws DoeWebException
 	 */
+	@SuppressWarnings("unchecked")
 	@PostMapping
 	@ResponseBody
 	public String createDatafile(@Valid DoeDatafileModel doeDataFileModel,
@@ -159,6 +159,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
 
 		String dataFilePath = request.getParameter("bulkDatafilePath");
+		String bulkType = request.getParameter("uploadType");
 
 		if (dataFilePath != null) {
 			doeDataFileModel.setPath(dataFilePath.trim());
@@ -168,7 +169,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 
 		doeDataFileModel.setPath(doeDataFileModel.getPath().trim());
 		String accessGroups = null;
-		Set<String> pathsList = new HashSet<String>();
+
 		HpcBulkMetadataEntries formBulkMetadataEntries = null;
 		HpcBulkDataObjectRegistrationRequestDTO registrationDTO = null;
 		HpcBulkMetadataEntries entries = null;
@@ -222,7 +223,9 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			} else {
 				for (HpcDirectoryScanRegistrationItemDTO itemDTO : registrationDTO
 						.getDirectoryScanRegistrationItems()) {
-					itemDTO.setBulkMetadataEntries(entries);
+					if (entries != null) {
+						itemDTO.setBulkMetadataEntries(entries);
+					}
 				}
 			}
 
@@ -246,8 +249,6 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 				}
 			}
 
-			String bulkType = request.getParameter("uploadType");
-
 			if (CollectionUtils.isEmpty(registrationDTO.getDataObjectRegistrationItems())
 					&& CollectionUtils.isEmpty(registrationDTO.getDirectoryScanRegistrationItems()))
 				throw new DoeWebException("No input file(s) / folder(s) are selected");
@@ -265,6 +266,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 				}
 
 				// get the paths for new collection registration and save in modac
+				Set<String> pathsList = (Set<String>) session.getAttribute("pathsList");
 
 				if (CollectionUtils.isNotEmpty(registrationDTO.getDirectoryScanRegistrationItems())) {
 					for (HpcDirectoryScanRegistrationItemDTO item : registrationDTO

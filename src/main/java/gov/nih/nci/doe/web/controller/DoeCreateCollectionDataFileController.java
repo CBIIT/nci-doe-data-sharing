@@ -7,8 +7,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -204,9 +206,9 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		String gcbucketName = (String) request.getParameter("gcbucketName");
 		String gcPath = (String) request.getParameter("gcPath");
 		gcPath = (gcPath != null ? gcPath.trim() : null);
-		String s3File = (String)request.getParameter("s3File");
-		boolean isS3File = s3File != null && s3File.equals("on");	
-		String gcFile = (String)request.getParameter("gcFile");
+		String s3File = (String) request.getParameter("s3File");
+		boolean isS3File = s3File != null && s3File.equals("on");
+		String gcFile = (String) request.getParameter("gcFile");
 		boolean isGcFile = gcFile != null && gcFile.equals("on");
 
 		if (StringUtils.equals(bulkType, "globus") && globusEndpointFiles != null) {
@@ -259,6 +261,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			Path gcFilePath = Paths.get(gcPath);
 			file.setPath(path + "/" + gcFilePath.getFileName());
 			files.add(file);
+
 			dto.getDataObjectRegistrationItems().addAll(files);
 		} else if (StringUtils.equals(bulkType, DoeAuthorizationService.GOOGLE_CLOUD_TYPE) && gcPath != null
 				&& !isGcFile) {
@@ -284,7 +287,13 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			pathDTO.setToPath(gcToPath);
 			folder.setPathMap(pathDTO);
 			folders.add(folder);
+
 			dto.getDirectoryScanRegistrationItems().addAll(folders);
+			/* set path for storing in MoDaC */
+			List<String> googleCloudFolderIds = new ArrayList<>();
+			googleCloudFolderIds.add(gcFile);
+			constructPath(path, googleCloudFolderIds, session);
+
 		}
 		List<String> include = new ArrayList<String>();
 		if (includeCriteria != null && !includeCriteria.isEmpty()) {
@@ -336,8 +345,12 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 					folder.setPatternType(HpcPatternType.SIMPLE);
 				}
 				index++;
+
 			}
 			dto.getDirectoryScanRegistrationItems().addAll(folders);
+			/* set path for storing in MoDaC */
+			constructPath(path, globusEndpointFolders, session);
+
 		}
 
 		if (StringUtils.equals(bulkType, DoeAuthorizationService.GOOGLE_DRIVE_TYPE) && googleDriveFolderIds != null) {
@@ -363,9 +376,10 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 					pathDTO.setToPath(toPath);
 					folder.setPathMap(pathDTO);
 				}
-
 			}
 			dto.getDirectoryScanRegistrationItems().addAll(folders);
+			/* set path for storing in MoDaC */
+			constructPath(path, googleDriveFolderIds, session);
 		}
 		if (StringUtils.equals(bulkType, "s3") && s3Path != null && isS3File) {
 			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO> files = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO>();
@@ -394,6 +408,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			source.setFileContainerId(bucketName);
 			source.setFileId(s3Path);
 			folder.setBasePath(datafilePath);
+
 			HpcS3ScanDirectory s3Directory = new HpcS3ScanDirectory();
 			s3Directory.setDirectoryLocation(source);
 			HpcS3Account s3Account = new HpcS3Account();
@@ -428,9 +443,26 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 
 			dto.getDirectoryScanRegistrationItems().addAll(folders);
 
+			List<String> S3FolderIds = new ArrayList<>();
+			S3FolderIds.add(s3Path);
+			/* set path for storing in MoDaC */
+			constructPath(path, S3FolderIds, session);
+
 		}
 
 		return dto;
+
+	}
+
+	private void constructPath(String path, List<String> folderIds, HttpSession session) {
+
+		Set<String> pathsList = new HashSet<String>();
+		for (String folderName : folderIds) {
+			pathsList.add(path + "/" + folderName);
+
+		}
+		session.setAttribute("pathsList", pathsList);
+
 	}
 
 	protected List<String> getCollectionTypes(List<HpcMetadataValidationRule> rules) {

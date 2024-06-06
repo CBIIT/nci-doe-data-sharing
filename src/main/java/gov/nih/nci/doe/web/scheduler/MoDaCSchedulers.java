@@ -648,6 +648,7 @@ public class MoDaCSchedulers extends AbstractDoeController {
 						// delete the row in collection_permissions table since collection does not
 						// exist
 						metaDataPermissionsRepository.delete(collection);
+						log.info("collection deleted" + collection.getCollectionPath());
 					}
 				}
 
@@ -884,45 +885,6 @@ public class MoDaCSchedulers extends AbstractDoeController {
 		return fileLocationStr.toString();
 
 	}
-
-	/**
-	 * Generate a string from a list of registration items.
-	 *
-	 * @param registrationItems The bulk registration items to generate a string
-	 *                          for.
-	 * @return A string representation of the registration items.
-	 */
-//	private String toString(List<HpcBulkDataObjectRegistrationItem> registrationItems) {
-//		StringBuilder registrationItemsStr = new StringBuilder();
-//		registrationItems.forEach(registrationItem -> {
-//			String source = null;
-//			if (registrationItem.getRequest().getLinkSourcePath() != null
-//					|| registrationItem.getRequest().getGlobusUploadSource() != null
-//					|| registrationItem.getRequest().getS3UploadSource() != null
-//					|| registrationItem.getRequest().getGoogleDriveUploadSource() != null) {
-//				if (registrationItem.getRequest().getLinkSourcePath() != null) {
-//					source = "[Link]:" + registrationItem.getRequest().getLinkSourcePath();
-//				} else {
-//					HpcFileLocation sourceLocation = null;
-//					if (registrationItem.getRequest().getGlobusUploadSource() != null) {
-//						sourceLocation = registrationItem.getRequest().getGlobusUploadSource().getSourceLocation();
-//					} else if (registrationItem.getRequest().getS3UploadSource() != null) {
-//						sourceLocation = registrationItem.getRequest().getS3UploadSource().getSourceLocation();
-//					} else {
-//						sourceLocation = registrationItem.getRequest().getGoogleDriveUploadSource().getSourceLocation();
-//					}
-//					source = toString(sourceLocation);
-//				}
-//			}
-//			if (source != null) {
-//				registrationItemsStr.append("<br>&emsp;" + source + " -> " + registrationItem.getTask().getPath());
-//			} else {
-//				registrationItemsStr.append("<br>&emsp;" + registrationItem.getTask().getPath());
-//			}
-//		});
-//
-//		return registrationItemsStr.toString();
-//	}
 
 	private gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO constructV2BulkRequest(
 			String userId, String path, String fileName) {

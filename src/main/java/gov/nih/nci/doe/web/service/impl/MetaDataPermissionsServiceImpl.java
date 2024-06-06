@@ -47,7 +47,7 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 
 		// create a new record for the owner
 		MetaDataPermissions ownerPermission = metaDataPermissionsRepository
-				.getMetaDataPermissionsOwnerByCollectionId(collectionId);
+				.getMetaDataPermissionsOwnerByCollectionPath(collectionPath);
 
 		if (ownerPermission == null) {
 			DoeUsers d = doeUserRepository.getUserInfo(user);

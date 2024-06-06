@@ -216,11 +216,7 @@ function registerBulkDataFile() {
 		} else if (bulkUploadType == 'drive' && (!$("#fileNamesDiv").length || !$("#folderNamesDiv").length)) {
 			$(".uploadBulkDataError").show();
 			$(".uploadBulkDataErrorMsg").html("Select google drive information.")
-		} else if ((bulkUploadType == 'drive' && $("input[name=folderIds]").length)
-				|| (bulkUploadType == 'globus' && $("#folderNamesDiv ul li").length)) {
-			$(".uploadBulkDataError").show();
-			$(".uploadBulkDataErrorMsg").html("Select files only.")
-		} else if (dataFilePath) {
+		}  else if (dataFilePath) {
 			$("#uploadType").val(bulkUploadType);
 			$("#bulkDatafilePath").val(dataFilePath);
 			var data = $('#registerBulkDataForm').serialize();
