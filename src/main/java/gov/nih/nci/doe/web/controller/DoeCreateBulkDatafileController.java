@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -260,23 +262,25 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 
 				String taskId = responseDTO.getTaskId();
 				String name = null;
+				Set<String> pathsList = new HashSet<String>();
 				if (isFormBulkAssetUpload == null) {
 					// if isFormBulkAssetUpload is null, the upload is for data files/ sub folders.
 					name = doeDataFileModel.getPath().substring(doeDataFileModel.getPath().lastIndexOf('/') + 1);
-				}
-
-				// get the paths for new collection registration and save in modac
-				Set<String> pathsList = (Set<String>) session.getAttribute("pathsList");
-
-				if (CollectionUtils.isNotEmpty(registrationDTO.getDirectoryScanRegistrationItems())) {
+					// get the paths for new collection registration and save in modac
+					pathsList = (Set<String>) session.getAttribute("pathsList");
+				} else if (CollectionUtils.isNotEmpty(registrationDTO.getDirectoryScanRegistrationItems())) {
+					// upload is for bulk assets
 					for (HpcDirectoryScanRegistrationItemDTO item : registrationDTO
 							.getDirectoryScanRegistrationItems()) {
 						if (item.getBulkMetadataEntries() != null && CollectionUtils
 								.isNotEmpty(item.getBulkMetadataEntries().getPathsMetadataEntries())) {
-							item.getBulkMetadataEntries().getPathsMetadataEntries().stream()
-									.forEach(e -> pathsList.add(e.getPath()));
+							Set<String> itemPaths = item.getBulkMetadataEntries().getPathsMetadataEntries().stream()
+									.map(e -> e.getPath()).collect(Collectors.toSet());
+							pathsList.addAll(itemPaths);
+
 						}
 					}
+
 				}
 
 				if (CollectionUtils.isNotEmpty(pathsList)) {

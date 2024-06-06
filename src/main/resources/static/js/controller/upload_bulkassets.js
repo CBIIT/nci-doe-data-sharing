@@ -128,7 +128,7 @@ function registerBulkAssets() {
 	data.append('assetType', $("#assetTypeSelect").val())
 	var isValidated = true;
 	var usermetaDataEntered = true;
-	var isFormBulkUpload;
+	var isFormBulkAssetUpload;
 
 	$('table#assetBulkMetadataTable input[type="search"]').each(function() {
 		var name = $(this).val();
@@ -201,14 +201,14 @@ function registerBulkAssets() {
 
 	if (isValidated) {
 		if ($("input[name='assetUploadType']:checked").val() == 'No') {
-			isFormBulkUpload = true;
+			isFormBulkAssetUpload = true;
 		} else if ($("input[name='assetUploadType']:checked").val() == 'Yes') {
-			isFormBulkUpload = false;
+			isFormBulkAssetUpload = false;
 		}
 		$.ajax({
 			type : "POST",
 			enctype : "multipart/form-data",
-			url : "/addbulk?isFormBulkUpload=" + isFormBulkUpload,
+			url : "/addbulk?isFormBulkAssetUpload=" + isFormBulkAssetUpload,
 			data : data,
 			processData : false,
 			contentType : false,
