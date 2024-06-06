@@ -304,7 +304,7 @@ public class DoeClientUtil {
 
 				return parser.readValueAs(HpcCollectionListDTO.class);
 			} else {
-				log.error("Failed to get collection! No READ access!");
+				log.error("Failed to get collection.");
 				String errorMessage = getErrorMessage(restResponse);
 				throw new DoeWebException(errorMessage, restResponse.getStatus());
 			}

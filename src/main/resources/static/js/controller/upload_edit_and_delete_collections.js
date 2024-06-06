@@ -43,33 +43,11 @@ $(document).ready(
 					function() {
 						var path = $(this).attr('coll_path');
 						var name = $(this).attr('coll_name');
-						bootbox.confirm({
-							message : "Are you sure you want to delete " + name + "?",
-							buttons : {
-								confirm : {
-									label : 'Yes',
-									className : 'btn-success'
-								},
-								cancel : {
-									label : 'No',
-									className : 'btn-danger'
-								}
-							},
-							callback : function(result) {
-								if (result == true) {
-									var params = {
-										collPath : path
-									};
-									invokeAjax('/deleteCollection', 'POST', params,
-											postSuccessDeleteCollectionFunction, postFailureDeleteCollectionFunction,
-											'application/x-www-form-urlencoded; charset=UTF-8', 'text');
-								}
-							}
-						});
-					});
-		});
+						deleteFolderCollection(name, path, postSuccessDeleteCollectionFunctionOnUpload);
+			});
+});
 
-function postSuccessDeleteCollectionFunction(data, status) {
+function postSuccessDeleteCollectionFunctionOnUpload(data, status) {
 	if (data != "SUCCESS") {
 		return bootbox.alert(data);
 	} else {

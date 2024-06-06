@@ -637,18 +637,23 @@ public class MoDaCSchedulers extends AbstractDoeController {
 							} else {
 								// delete the row in collection_permissions table since collection does not
 								// exist
-								metaDataPermissionsRepository.delete(collection);
+								metaDataPermissionService
+										.deletePermissionByCollectionPath(collection.getCollectionPath());
 							}
 
 						}
 
 					} catch (DoeWebException e) {
-						// collection does not exist
-						log.debug("Error in getting collection" + e.getMessage());
-						// delete the row in collection_permissions table since collection does not
+
+						log.debug("Error in getting collection: " + e.getMessage());
+						// Delete the row in collection_permissions table since collection does not
 						// exist
-						metaDataPermissionsRepository.delete(collection);
-						log.info("collection deleted" + collection.getCollectionPath());
+						try {
+							metaDataPermissionService.deletePermissionByCollectionPath(collection.getCollectionPath());
+							log.info("Collection deleted: " + collection.getCollectionPath());
+						} catch (Exception ex) {
+							log.error("Unexpected exception while deleting collection: " + ex.getMessage());
+						}
 					}
 				}
 

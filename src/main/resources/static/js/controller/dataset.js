@@ -21,6 +21,7 @@ $(document).ready(function() {
 	$("#btnPredictionAccessGrp").click(function() {
 		updatePredictionAccessGroupsFunction();
 	});
+	
 
 });
 
@@ -375,25 +376,9 @@ function dataTableInitDataSet(isVisible) {
 				selector : '[data-toggle="tooltip"]'
 			});
 		},
-		initComplete: function () {
-			if($("#dataSetTable td.select-checkbox").find("input").length > 0){
-			
-				 $('input[type="checkbox"].selectAll').prop('disabled', false) ;
-			}
-			else{
-				$('input[type="checkbox"].selectAll').prop('disabled', true) ;
 
-			}
-		},
+		"drawCallback" : function() {
 
-		"drawCallback" : function(settings) {
-
-
-			let dataValueFunctionFromAPI = new $.fn.dataTable.Api( settings );
-			// Disable batch select when no data is present
-
-			dataValueFunctionFromAPI.rows( {page:'current'} ).data().length === 0 ? $('input[type="checkbox"].selectAll').prop('disabled', true) : $('input[type="checkbox"].selectAll').prop('disabled', false);
- 
 			$("#downloadSelectedDataSet").prop("disabled", true);
 			$("#downloadSelectedMetadata").prop("disabled", true);
 
@@ -1248,34 +1233,10 @@ $('#dataSetTable tbody').on(
 		function() {
 			var path = $(this).attr('coll_path');
 			var name = $(this).attr('coll_name');
-			bootbox.confirm({
-				message : "Are you sure you want to delete " + name + "?",
-				buttons : {
-					confirm : {
-						label : 'Yes',
-						className : 'btn-success'
-					},
-					cancel : {
-						label : 'No',
-						className : 'btn-danger'
-					}
-				},
-				callback : function(result) {
-					if (result == true) {
-						var params = {
-							collPath : path
-						};
+     deleteFolderCollection(name, path, postSuccessDeleteCollectionFunctionOnAssetDetails);
+});
 
-						invokeAjax('/deleteCollection', 'POST', params, postSuccessDeleteCollectionFunction,
-								postFailureDeleteCollectionFunction,
-								'application/x-www-form-urlencoded; charset=UTF-8', 'text');
-
-					}
-				}
-			});
-		});
-
-function postSuccessDeleteCollectionFunction(data, status) {
+function postSuccessDeleteCollectionFunctionOnAssetDetails(data, status) {
 	if (data && data == 'Not Authorized') {
 		location.replace("/loginTab");
 	} else if (data != "SUCCESS") {
@@ -1368,7 +1329,7 @@ $('#dataSetTable tbody').on(
 							deletepath : path
 						};
 
-						invokeAjax('/delete/datafile', 'POST', params, postSuccessDeleteCollectionFunction,
+						invokeAjax('/delete/datafile', 'POST', params, postSuccessDeleteCollectionFunctionOnAssetDetails,
 								postFailureDeleteCollectionFunction,
 								'application/x-www-form-urlencoded; charset=UTF-8', 'text');
 					}

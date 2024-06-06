@@ -23,6 +23,10 @@ public interface MetaDataPermissionsService {
 
 	public MetaDataPermissions getMetaDataPermissionsOwnerByCollectionId(Integer collectionId);
 
+	public MetaDataPermissions getMetaDataPermissionsOwnerByCollectionPath(String collectionPath);
+
 	public void deleteAllPermissionsByCollectionId(String emailAddress, Integer collectionId);
+
+	public void deletePermissionByCollectionPath(String collectionPath);
 
 }

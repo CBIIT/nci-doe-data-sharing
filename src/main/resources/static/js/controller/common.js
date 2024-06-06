@@ -801,6 +801,37 @@ $(document).on('click', '.clearMetadata', function() {
 	$(this).parent().find("input[type='text']").val("");
 });
 
+
+function deleteFolderCollection(name, path, postSuccessDeleteFunction) {
+
+  				bootbox.confirm({
+				message : "Are you sure you want to delete " + name + "?",
+				buttons : {
+					confirm : {
+						label : 'Yes',
+						className : 'btn-success'
+					},
+					cancel : {
+						label : 'No',
+						className : 'btn-danger'
+					}
+				},
+				callback : function(result) {
+					if (result == true) {
+						var params = {
+							collPath : path,
+							collectionType :'Folder'
+						};
+
+						invokeAjax('/deleteCollection', 'POST', params, postSuccessDeleteFunction,
+								postFailureDeleteCollectionFunction,
+								'application/x-www-form-urlencoded; charset=UTF-8', 'text');
+
+					}
+				}
+			});
+}
+
 // Funtion when clicking on checkboxes for search sidebar filters
 
 $(document).on('change', '.filteritem', function () {
