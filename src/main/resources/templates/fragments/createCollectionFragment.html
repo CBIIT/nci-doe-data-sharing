@@ -97,11 +97,13 @@
                 title="Specify a permanent, unique identifier for the folder. Use only alphanumeric characters, underscore (_), or hyphen (-)."></i>
             </div>
 
-            <div class="form-group col-lg-6 col-md-6 labelEditCollection folderDiv" style="display:none; background-color: transparent;padding: 6px 32px;
+            <div class="form-group col-lg-6 col-md-6 labelEditCollection folderDiv" style="display:none; background-color: #EEF4F6;padding: 6px 32px;
                      line-height: 28px;color: #000;">
               <input type="text" is_mandatory="true" id="folder_name" class="identifier_validation"
                 pattern="[A-Za-z0-9_-]*" placeholder="Enter Folder Name" aria-label="value of folder name"
-                name="folder_name" style="width:70%;">
+                name="folder_name" style="width:70%;border-radius: 8px;
+                border: 1px solid #6B7294 !important;
+                height: 42px;background: white;">
             </div>
 
           </div>
@@ -129,7 +131,7 @@
             <div style="    height: 30px;
             background:#EEF4F6;
             margin-top: -18px;">
-            <a href="#" id="addNewMetaData" class="float-right mb-2 mr-2" style="
+            <a id="addNewMetaData" class="float-right mb-2 mr-2" style="
             color: #000;
             /* font-variant-numeric: lining-nums tabular-nums; */
             font-family: Inter;

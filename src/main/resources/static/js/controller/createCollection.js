@@ -58,7 +58,7 @@ function constructNewCollectionMetaDataSet(data, status) {
 												'<tr><td>'
 														+ value.displayName
 														+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
-														+'<input type="radio" name="accessRadio" id="publicAccess" checked="false" aria-label="public access" value="public access"/>&nbsp;&nbsp;Public&nbsp;&nbsp;<input type="radio" name="accessRadio" id="nonPublicAccess" checked="false" aria-label="public access" value="non public access"/>&nbsp;&nbsp;Non Public'
+														+'<input type="radio" name="accessRadio" id="publicAccess" checked="false" aria-label="public access" value="public access"/>&nbsp;&nbsp;Public&nbsp;&nbsp;<input type="radio" name="accessRadio" id="nonPublicAccess" checked="false" aria-label="public access" value="non public access"/>&nbsp;&nbsp;Non-public. Provide access group.'
 														+ '<div><select class="simple-select2" multiple="multiple" id="accessGroupSelect" name="zAttrStr_'
 														+ value.attrName
 														+ '"'
