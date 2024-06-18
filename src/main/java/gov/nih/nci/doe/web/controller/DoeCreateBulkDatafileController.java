@@ -215,7 +215,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			// when asset upload is done by form
 			if (Boolean.TRUE.equals(isFormBulkAssetUpload)) {
 				formBulkMetadataEntries = constructRequest(request, session, accessGroups,
-						doeDataFileModel.getPath().trim());
+						doeDataFileModel.getPath().trim(), bulkType);
 
 				if (formBulkMetadataEntries != null) {
 					for (HpcDirectoryScanRegistrationItemDTO itemDTO : registrationDTO
@@ -328,92 +328,107 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 
 	@SuppressWarnings("unchecked")
 	private HpcBulkMetadataEntries constructRequest(HttpServletRequest request, HttpSession session, String accessGrp,
-			String collectionPath) throws DoeWebException {
+			String collectionPath, String bulkType) throws DoeWebException {
 
-		log.info("construct request for bulk asset upload through form: " + collectionPath);
+		log.info("construct request for bulk asset upload through form: " + collectionPath + " and bulk type is: "
+				+ bulkType);
 		HpcBulkMetadataEntries entryList = new HpcBulkMetadataEntries();
-		List<HpcBulkMetadataEntry> pathMetadataEntries = new ArrayList<HpcBulkMetadataEntry>();
+
 		List<String> globusEndpointFolders = (List<String>) session.getAttribute("GlobusEndpointFolders");
-		String assetType = request.getParameter("assetType");
-		String collectionType = request.getParameter("collection_type");
+		String s3Path = (String) request.getParameter("s3Path");
+		List<HpcBulkMetadataEntry> pathMetadataEntries = new ArrayList<HpcBulkMetadataEntry>();
 		String assetGroupIdentifier = request.getParameter("assetGroupIdentifier");
 		int index = 1;
-		if (CollectionUtils.isNotEmpty(globusEndpointFolders)) {
+		if ("globus".equalsIgnoreCase(bulkType) && CollectionUtils.isNotEmpty(globusEndpointFolders)) {
 			for (String folderName : globusEndpointFolders) {
 
 				String assetIdentifier = assetGroupIdentifier + "_" + index;
-				Enumeration<String> params = request.getParameterNames();
-				HpcBulkMetadataEntry metadataEntry = new HpcBulkMetadataEntry();
-				metadataEntry.setPath(collectionPath + "/" + assetIdentifier);
-				List<HpcMetadataEntry> entries = new ArrayList<HpcMetadataEntry>();
-
-				if (StringUtils.isNotEmpty(assetType)) {
-					HpcMetadataEntry entryAssetType = new HpcMetadataEntry();
-					entryAssetType.setAttribute("asset_type");
-					entryAssetType.setValue(assetType);
-					entries.add(entryAssetType);
-				}
-
-				if (StringUtils.isNotEmpty(collectionType)) {
-					HpcMetadataEntry entryCollectionType = new HpcMetadataEntry();
-					entryCollectionType.setAttribute("collection_type");
-					entryCollectionType.setValue(collectionType);
-					entries.add(entryCollectionType);
-				}
-				HpcMetadataEntry entry = new HpcMetadataEntry();
-				entry.setAttribute("asset_identifier");
-				entry.setValue(assetIdentifier);
-				entries.add(entry);
-
-				HpcMetadataEntry entryName = new HpcMetadataEntry();
-				entryName.setAttribute("asset_name");
-				entryName.setValue(folderName);
-				entries.add(entryName);
-
-				if (StringUtils.isNotEmpty(accessGrp)) {
-
-					HpcMetadataEntry entryAccessGrp = new HpcMetadataEntry();
-					entryAccessGrp.setAttribute("access_group");
-					entryAccessGrp.setValue(accessGrp);
-					entries.add(entryAccessGrp);
-				}
-
-				while (params.hasMoreElements()) {
-					String paramName = params.nextElement();
-					if (paramName.startsWith("zAttrStr_")) {
-
-						HpcMetadataEntry entry1 = new HpcMetadataEntry();
-						String attrName = paramName.substring("zAttrStr_".length());
-						String[] attrValue = request.getParameterValues(paramName);
-						entry1.setAttribute(attrName);
-						entry1.setValue(attrValue[0].trim());
-						if (StringUtils.isNotEmpty(entry1.getValue())) {
-							entries.add(entry1);
-						}
-
-					} else if (paramName.startsWith("_addAttrName")) {
-						HpcMetadataEntry userEntry = new HpcMetadataEntry();
-						String attrId = paramName.substring("_addAttrName".length());
-						String[] attrName = request.getParameterValues(paramName);
-						String[] attrValue = request.getParameterValues("_addAttrValue" + attrId);
-						if (attrName.length > 0 && !attrName[0].isEmpty())
-							userEntry.setAttribute(attrName[0]);
-						else
-							throw new DoeWebException("Invalid metadata attribute name. Empty value is not valid!");
-						if (attrValue.length > 0 && !attrValue[0].isEmpty())
-							userEntry.setValue(attrValue[0].trim());
-						else
-							throw new DoeWebException("Invalid metadata attribute value. Empty value is not valid!");
-						entries.add(userEntry);
-					}
-				}
-				metadataEntry.getPathMetadataEntries().addAll(entries);
-				pathMetadataEntries.add(metadataEntry);
+				pathMetadataEntries = getAssetMetadataAttributes(pathMetadataEntries, assetIdentifier, request,
+						collectionPath, folderName, accessGrp);
 				index++;
 			}
+		} else if ("S3".equalsIgnoreCase(bulkType) && s3Path != null) {
+			pathMetadataEntries = getAssetMetadataAttributes(pathMetadataEntries, assetGroupIdentifier, request,
+					collectionPath, s3Path, accessGrp);
 		}
 
 		entryList.getPathsMetadataEntries().addAll(pathMetadataEntries);
 		return entryList;
+	}
+
+	private List<HpcBulkMetadataEntry> getAssetMetadataAttributes(List<HpcBulkMetadataEntry> pathMetadataEntries,
+			String assetIdentifier, HttpServletRequest request, String collectionPath, String folderName,
+			String accessGrp) throws DoeWebException {
+
+		String assetType = request.getParameter("assetType");
+		String collectionType = request.getParameter("collection_type");
+		Enumeration<String> params = request.getParameterNames();
+		HpcBulkMetadataEntry metadataEntry = new HpcBulkMetadataEntry();
+		metadataEntry.setPath(collectionPath + "/" + assetIdentifier);
+		List<HpcMetadataEntry> entries = new ArrayList<HpcMetadataEntry>();
+
+		if (StringUtils.isNotEmpty(assetType)) {
+			HpcMetadataEntry entryAssetType = new HpcMetadataEntry();
+			entryAssetType.setAttribute("asset_type");
+			entryAssetType.setValue(assetType);
+			entries.add(entryAssetType);
+		}
+
+		if (StringUtils.isNotEmpty(collectionType)) {
+			HpcMetadataEntry entryCollectionType = new HpcMetadataEntry();
+			entryCollectionType.setAttribute("collection_type");
+			entryCollectionType.setValue(collectionType);
+			entries.add(entryCollectionType);
+		}
+		HpcMetadataEntry entry = new HpcMetadataEntry();
+		entry.setAttribute("asset_identifier");
+		entry.setValue(assetIdentifier);
+		entries.add(entry);
+
+		HpcMetadataEntry entryName = new HpcMetadataEntry();
+		entryName.setAttribute("asset_name");
+		entryName.setValue(folderName);
+		entries.add(entryName);
+
+		if (StringUtils.isNotEmpty(accessGrp)) {
+
+			HpcMetadataEntry entryAccessGrp = new HpcMetadataEntry();
+			entryAccessGrp.setAttribute("access_group");
+			entryAccessGrp.setValue(accessGrp);
+			entries.add(entryAccessGrp);
+		}
+
+		while (params.hasMoreElements()) {
+			String paramName = params.nextElement();
+			if (paramName.startsWith("zAttrStr_")) {
+
+				HpcMetadataEntry entry1 = new HpcMetadataEntry();
+				String attrName = paramName.substring("zAttrStr_".length());
+				String[] attrValue = request.getParameterValues(paramName);
+				entry1.setAttribute(attrName);
+				entry1.setValue(attrValue[0].trim());
+				if (StringUtils.isNotEmpty(entry1.getValue())) {
+					entries.add(entry1);
+				}
+
+			} else if (paramName.startsWith("_addAttrName")) {
+				HpcMetadataEntry userEntry = new HpcMetadataEntry();
+				String attrId = paramName.substring("_addAttrName".length());
+				String[] attrName = request.getParameterValues(paramName);
+				String[] attrValue = request.getParameterValues("_addAttrValue" + attrId);
+				if (attrName.length > 0 && !attrName[0].isEmpty())
+					userEntry.setAttribute(attrName[0]);
+				else
+					throw new DoeWebException("Invalid metadata attribute name. Empty value is not valid!");
+				if (attrValue.length > 0 && !attrValue[0].isEmpty())
+					userEntry.setValue(attrValue[0].trim());
+				else
+					throw new DoeWebException("Invalid metadata attribute value. Empty value is not valid!");
+				entries.add(userEntry);
+			}
+		}
+		metadataEntry.getPathMetadataEntries().addAll(entries);
+		pathMetadataEntries.add(metadataEntry);
+		return pathMetadataEntries;
 	}
 }

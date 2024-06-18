@@ -1,10 +1,15 @@
 $(document).ready(
 		function() {
+		
 			loadUploadTab();
 			$('body').tooltip({
 				selector : '[data-toggle="tooltip"]'
 			});
-
+			
+			$("#bulkAssetGlobusRadiobtn").click(function(e) {
+						resetAssetsSelection();
+		    });
+		    
 			$(".backToUploadTab").click(function(e) {
 				$("#createCollectionFragment").hide();
 				$("#uploadSectionDiv").show();
@@ -45,10 +50,10 @@ function loadUploadTab() {
 			$("#dataSetListDiv").show();
 			$("#deleteStudy").show();
 			$("#editStudy").show();
-			$("#addAsets").show();
+			$("#bulkAssetGlobusRadiobtn").show();
 			if (bulkUploadCollection) {
-				$("#addAsets").click();
-				$("input[name=selectAsset][value='Register Asset']").click();
+			    $("input[name=selectAsset][value='Register Asset']").click();
+				$("#bulkAssetGlobusRadiobtn").click();			
 				$("#registerBulkAssets").prop("disabled", false);
 
 			}
@@ -228,7 +233,7 @@ function resetSelectionsForBackToUploadTab() {
 function resetOnChangeofSelectCollection(selectTarget, selectedValue) {
 	if (selectTarget == 'instituteList') {
 		$("#uploadAndRegisterFiles").hide();
-		$("#addAsets").hide();
+		$("#bulkAssetGlobusRadiobtn").hide();
 		if (selectedValue && selectedValue != 'ANY') {
 			$("#studyListDiv").show();
 			$("#deleteStudy").hide();
@@ -254,7 +259,7 @@ function resetOnChangeofSelectCollection(selectTarget, selectedValue) {
 			$("#dataSetListDiv").show();
 			$("#deleteStudy").show();
 			$("#editStudy").show();
-			$("#addAsets").show();
+			$("#bulkAssetGlobusRadiobtn").show();
 			$("#deleteDataSet").hide();
 			$("#editAsset").hide();
 			$("#showSelectAssetDiv").hide();
@@ -267,7 +272,7 @@ function resetOnChangeofSelectCollection(selectTarget, selectedValue) {
 			$("#dataSetListDiv").hide();
 			$("#deleteStudy").hide();
 			$("#editStudy").hide();
-			$("#addAsets").hide();
+			$("#bulkAssetGlobusRadiobtn").hide();
 		}
 	} else if (selectTarget == 'dataList') {
 		$("#studyListDiv").show();

@@ -118,15 +118,18 @@ function constructAssetTypeBulkDiv(data, status) {
 }
 
 function registerBulkAssets() {
+
 	var studyPath = $("#studyPath").val();
 	$("#registerBulkAssetForm").attr('bulkDatafilePath', studyPath);
-	$("#registerBulkAssetForm").attr('uploadType', 'globus');
+	var uploadType = $('input[name="assetSelection"]:checked').val();
+	$("#registerBulkAssetForm").attr('uploadType', uploadType);
 	var form = $('#registerBulkAssetForm')[0];
 	var data = new FormData(form);
 	data.append('bulkDatafilePath', studyPath);
-	data.append('uploadType', 'globus');
+	data.append('uploadType', uploadType);
 	data.append('assetType', $("#assetTypeSelect").val())
 	var isValidated = true;
+	var errorMsg = "";
 	var usermetaDataEntered = true;
 	var isFormBulkAssetUpload;
 
@@ -163,43 +166,65 @@ function registerBulkAssets() {
 		}
 	});
 
-	if (!$("#assetGlobusEndpointId").length || !$("#assetGlobusEndpointPath").length) {
-		isValidated = false;
-		bootbox.dialog({
-			message : 'Select Assets from Globus.'
-		});
-	} else if (!$("#assetSelectedFolders").length) {
-		isValidated = false;
-		bootbox.dialog({
-			message : 'Select Folders from Globus.'
-		});
-	} else if ($("#assetSelectedFiles").length) {
-		isValidated = false;
-		bootbox.dialog({
-			message : 'Select folders only.'
-		});
-	} else if ($('input[name="assetUploadType"]:checked').length == 0) {
-		isValidated = false;
-		bootbox.dialog({
-			message : 'Select your choice of upload.'
-		});
-	} else if ($("input[name='assetUploadType']:checked").val() == 'No' && $("#assetTypeSelect").val() == 'Select') {
-		isValidated = false;
-		bootbox.dialog({
-			message : 'Select Asset Type.'
-		});
-	} else if ($("input[name='assetUploadType']:checked").val() == 'Yes' && !$("#doeMetadataFile").val()) {
-		isValidated = false;
-		bootbox.dialog({
-			message : 'Upload CSV Metadata file.'
-		});
-	} else if (!usermetaDataEntered) {
-		bootbox.dialog({
-			message : 'Enter values for all required metadata.'
-		});
+    if(uploadType == 'globus') {
+   
+		   	if (!$("#assetGlobusEndpointId").length || !$("#assetGlobusEndpointPath").length) {
+				isValidated = false;
+				errorMsg = "Select Assets from Globus.";
+				
+			} else if (!$("#assetSelectedFolders").length) {
+				isValidated = false;
+				errorMsg = "Select Folders from Globus.";
+				
+			} else if ($("#assetSelectedFiles").length) {
+				isValidated = false;
+				errorMsg = "Select folders only."
+				
+			}
+	
+    } else if(uploadType == 'S3') {
+    
+	       $('form#registerBulkAssetForm input[type="search"]').each(function() {
+				if ($(this).is(":visible") && !$(this).val()) {
+					isValidated = false;
+				}
+			});
+			
+			if(!isValidated) {
+			    errorMsg = "Enter all the required fields."
+			}
+    }
+    
+    /* once all the above validation passes, do the following additional validations */
+    
+    if(isValidated) {
+	    if ($('input[name="assetUploadType"]:checked').length == 0) {
+			isValidated = false;
+			errorMsg = "Select your choice of upload.";
+			
+		} else if ($("input[name='assetUploadType']:checked").val() == 'No' && $("#assetTypeSelect").val() == 'Select') {
+			isValidated = false;
+			errorMsg = "Select Asset Type.";
+			
+		} else if ($("input[name='assetUploadType']:checked").val() == 'Yes' && !$("#doeMetadataFile").val()) {
+			isValidated = false;
+			errorMsg = "Upload CSV Metadata file.";
+			
+		} else if (!usermetaDataEntered) {
+		    errorMsg = "Enter values for all required metadata.";
+		}
 	}
-
-	if (isValidated) {
+	
+	if(errorMsg) {
+	   /* display the error message in a popup */
+	   bootbox.dialog({
+				message : errorMsg
+	   });
+	   
+    } else if (isValidated) {
+        
+        /* all the validations have passed, call the ajax to perform bulk asset upload */
+        
 		if ($("input[name='assetUploadType']:checked").val() == 'No') {
 			isFormBulkAssetUpload = true;
 		} else if ($("input[name='assetUploadType']:checked").val() == 'Yes') {
@@ -258,4 +283,50 @@ function displayAssetTpeSelection(data) {
 		$("#uploadCsvFile").hide();
 		$("#formAssetSelection").show();
 	}
+}
+
+function displayBulkAssetSelection(data) {
+
+  if(data == 'Globus') {
+      $("#assetUploadDiv").addClass('show');
+      $("#globusDetailsDiv").show();
+      $("#S3DetailsDiv").hide();
+      var bulkUploadCollection = $("#bulkUploadCollection").val();
+      var folderLength = $("#assetSelectedFolders ul li").length;
+      if(!bulkUploadCollection) {
+         $("#bulkAssetOptionsDiv").hide();
+         resetAssetBulkUploadChoiceOptions();
+      } else  {
+      	 $("#bulkAssetOptionsDiv").show();
+      	 if(folderLength && folderLength > 1) {
+      	 
+      	      $("#multipleFoldersUploadDiv").show();
+      	      $("#singleFolderUploadDiv").hide();
+      	 } else  {
+      	      $("#multipleFoldersUploadDiv").hide();
+      	      $("#singleFolderUploadDiv").show();
+      	 }
+      	
+      }
+  } else if(data == 'S3') {
+      $("#globusDetailsDiv").hide();
+ 	  $("#assetUploadDiv").addClass('show');
+ 	  $("#registerBulkAssets").prop("disabled", false);
+ 	  $("#S3DetailsDiv").show();
+ 	  $("#bulkAssetOptionsDiv").show();
+ 	  $("#singleFolderUploadDiv").show();
+ 	  $("#multipleFoldersUploadDiv").hide();
+ 	  resetAssetBulkUploadChoiceOptions();
+ 	  
+  } else if(data =='emptyAsset') {
+  	  $("#assetUploadDiv").removeClass('show');
+  }
+}
+
+function resetAssetBulkUploadChoiceOptions() {
+
+	 $('input[name="assetUploadType"]').prop('checked', false);
+	 $("#uploadCsvFile").hide();
+	 $("#formAssetSelection").hide();
+	 $("#assetTypeSelect").val("Select").trigger("change");
 }

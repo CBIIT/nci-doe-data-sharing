@@ -470,10 +470,6 @@ $(document)
 						location.replace("/tasksTab");
 					});
 
-					$("#addAsets").click(function(e) {
-						resetAssetsSelection();
-					});
-
 					$('body').on('click', 'a.button.closeBtn', function() {
 						$(this).closest('div.popover').popover('hide');
 					});

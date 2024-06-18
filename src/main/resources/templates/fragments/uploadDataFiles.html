@@ -229,7 +229,7 @@
 										Authorize MoDaC to Access Your Google Drive</button>
 								</div>
 
-								<div th:if="${authorized != null}" class="col-sm-12 column"
+								<div class="col-sm-12 column"
 									id="driveDiv">
 									<a href="javascript:void();" id="pickerUploadLink"> Select
 										from Google Drive</a>
@@ -272,18 +272,18 @@
 								id="displayS3UploadDiv"
 								style="display: none; background-color: #E0F0F4; padding-bottom: 20px;">
 								<div class="form-group col-lg-12 col-md-12">
-									<label for="bucketName">S3 Bucket:</label> <input type="text"
+									<label for="bucketName">S3 Bucket:</label> <input type="search"
 										class="form-control" name="bucketName" id="bucketName"
 										placeholder="Enter S3 Bucket Name" />
 								</div>
 								<div class="col-sm-12 column">
 									<label for="s3Path">S3 (Source) Path:</label> <input
-										type="text" class="form-control" name="s3Path" id="s3Path"
+										type="search" class="form-control" name="s3Path" id="s3Path"
 										placeholder="Enter S3 (Source) Path" size="40" />
 										<input type="checkbox" name="s3File" id="s3File"> Check this if the source path is a file and not a folder.
 								</div>
 								<div class="col-sm-12 column">
-									<label for="accessKey">Access Key:</label> <input type="text"
+									<label for="accessKey">Access Key:</label> <input type="search"
 										class="form-control" name="accessKey" id="accessKey"
 										placeholder="Enter Access Key" size="40" />
 								</div>
@@ -293,7 +293,7 @@
 										id="secretKey" placeholder="Enter Secret Access Key" size="40" />
 								</div>
 								<div class="col-sm-12 column">
-									<label for="region">Region:</label> <input type="text"
+									<label for="region">Region:</label> <input type="search"
 										class="form-control" name="region" id="region"
 										placeholder="Enter Region (for Example us-east-1)" size="40" />
 								</div>
