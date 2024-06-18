@@ -48,23 +48,30 @@ function downloadPickerCallback(data) {
  * @param {String} path Child path to prepend to.
  */
 function constructPath(fileId, path) {
-	gapi.client.load('drive', 'v2', function() {
+	gapi.client.load('drive', 'v3', function() {
 		var request = gapi.client.drive.files.get({
 			'fileId' : fileId
 		});
 		request.execute(function(resp) {
-			console.log('Folder: ' + resp.title);
-			path = resp.title + '/' + path
-			if (resp.parents[0]) {
-				if (resp.parents[0].isRoot) {
-					console.log('The user selected: ' + path);
-					if(downloadType == "data_object")
-						path = path + downloadFileName;
-					$("#drivePath").val(path);
+			console.log('Folder Name is: ' + resp.name);
+			var folderName = resp.name;
+			request = gapi.client.drive.files.get({
+				'fileId' : fileId,
+				'fields' : 'parents'
+			});
+			request.execute(function(resp) {
+			if (resp) {
+				if (resp.parents) {
+					path = folderName + '/' + path;
+					constructPath(resp.parents[0], path);
 				} else {
-					constructPath(resp.parents[0].id, path)
+					if(downloadType == "data_object") {
+						path = path + downloadFileName;
+					}
+					$("#drivePath").val(path);
 				}
 			}
+			});
 		});
 	});
 }
