@@ -26,17 +26,19 @@ table#newMetaDataTable tbody tr td {
 
 	input {
 		padding: 10px;
-		
+
 	}
-	
+
 	input[type="radio"] {
 		margin-top: 10px;
+		accent-color: #004A8B;
 	}
 
 	textarea {
 		padding: 8px;
 		min-height: 120px;
 	}
+
 	#nonPublicAccess {
 		margin-left: 24px;
 
@@ -55,7 +57,7 @@ table#newMetaDataTable tbody tr td:first-child {
 
 
 table#newMetaDataTable tbody tr td:nth-child(2) {
-	padding: 8px 32px !important;
+	padding: 8px 0px !important;
 }
 
 table#newMetaDataTable thead tr th {
@@ -67,6 +69,10 @@ table#newMetaDataTable thead tr th {
 	padding: 2px 32px;
 	font-weight: 100;
 	width: 50%;
+}
+
+table#newMetaDataTable thead tr th:nth-child(2) {
+	padding: 2px 0px;
 }
 
 .select2-container .select2-selection--single .select2-selection__rendered {
@@ -112,10 +118,11 @@ table#newMetaDataTable thead tr th {
 }
 
 #registerCollectionBtn {
-	margin-top: 14px;
+	margin-top: auto;
 	font-family: var(--font-family-inter);
-	min-height: 41px;
-	min-width: 193px;
+	min-height: 48px;
+	min-width: 220px;
+	max-width: 300px;
 	font-weight: 600;
 	line-height: 5px;
 	background-color: #2c4088 !important;
@@ -123,7 +130,7 @@ table#newMetaDataTable thead tr th {
 	box-shadow: 0px 4px 50px #ffffff8c;
 	padding-left: 2rem;
 	text-align: left;
-	padding-top: 10px;
+	padding-top: 12px;
 	margin-bottom: 0.2rem;
 	color: #FFF;
 	font-size: 14px;
@@ -134,7 +141,7 @@ table#newMetaDataTable thead tr th {
 }
 
 #cancelRegisterBtn {
-	margin-top: 14px;
+	margin-top: auto;
 	font-family: var(--font-family-inter);
 	height: 41px;
 	width: 193px;
@@ -153,6 +160,7 @@ table#newMetaDataTable thead tr th {
 	line-height: 110%;
 	letter-spacing: 0.14px;
 	text-transform: uppercase;
+	min-height: 50px;
 }
 
 .parentCollectionName,
@@ -324,15 +332,33 @@ table#assetBulkMetadataTable thead tr th {
 }
 
 input[type=text]::-webkit-search-cancel-button {
-    -webkit-appearance: searchfield-cancel-button;
+	-webkit-appearance: searchfield-cancel-button;
 }
 
-	span.select2-selection.select2-selection--multiple {
-    border-radius: 8px;
-    border: 1px solid #6B7294 !important;
-    height: 42px;
+span.select2-selection.select2-selection--multiple {
+	border-radius: 8px;
+	border: 1px solid #6B7294 !important;
+	height: 42px;
 }
 
 .fa-info-square {
 	font-size: 19px;
+}
+
+.icon {
+	width: 17px;
+	height: 19px;
+	vertical-align: text-bottom;
+}
+
+.close-button {
+	padding: 5px 6px !important;
+}
+
+label.radio-label {
+	display: inline;
+	color: #000;
+	font-family: "Open Sans";
+	font-style: normal;
+	font-weight: 400;
 }

@@ -45,10 +45,10 @@ function constructNewCollectionMetaDataSet(data, status) {
 						var controllerAttribute = value.controllerAttribute;
 						var infoHtml = "";
 						if(value.description) {
-						infoHtml = '<i class="fas fa-info-square" data-toggle="tooltip"'
+						infoHtml = '<img src="images/infoIcon.svg" class="icon" data-toggle="tooltip"'
 														+ 'data-placement="right" title="'
 														+ value.description
-														+ '"></i>';
+														+ '"></img>';
 						}
 						if (value.attrName == 'access_group') {
 
@@ -58,7 +58,7 @@ function constructNewCollectionMetaDataSet(data, status) {
 												'<tr><td>'
 														+ value.displayName
 														+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
-														+'<input type="radio" name="accessRadio" id="publicAccess" checked="false" aria-label="public access" value="public access"/>&nbsp;&nbsp;Public&nbsp;&nbsp;<input type="radio" name="accessRadio" id="nonPublicAccess" checked="false" aria-label="public access" value="non public access"/>&nbsp;&nbsp;Non-public. Provide access group.'
+														+'<input type="radio" name="accessRadio" id="publicAccess" checked="false" aria-label="public access" value="public access"/><label class="radio-label">&nbsp;&nbsp;Public&nbsp;&nbsp;</label><input type="radio" name="accessRadio" id="nonPublicAccess" checked="false" aria-label="public access" value="non public access"/><label class="radio-label">&nbsp;&nbsp;Non-public. Provide access group.</label>'
 														+ '<div><select class="simple-select2" multiple="multiple" id="accessGroupSelect" name="zAttrStr_'
 														+ value.attrName
 														+ '"'
@@ -85,7 +85,7 @@ function constructNewCollectionMetaDataSet(data, status) {
 														+ value.attrName
 														+ '" value ="'
 														+ parentAccessgrp
-														+ '"/> &nbsp;&nbsp;<i class="fas fa-info-square"><span>Access group inherited from parent.</span></i></td></tr>');
+														+ '"/> &nbsp;&nbsp;<img src="images/infoIcon.svg" class="icon"><span>Access group inherited from parent.</span></img></td></tr>');
 							}
 						} else if (value.attrName == 'asset_type') {
 

@@ -64,7 +64,7 @@ input[type="checkbox"].filteritem:checked  + div {
 }
 
 .popover {
-    min-width:723px;
+    min-width:300px;
 }
 
 .popover-header {
@@ -76,9 +76,9 @@ input[type="checkbox"].filteritem:checked  + div {
 
 .popover-body {
 	padding-top: 0px;
-	padding-bottom: 36px;
+	padding-bottom: 16px;
 	padding-left: 20px;
-	margin-top: -15px;
+	margin-top: 16px;
 }
 
 .popoverHeader {
