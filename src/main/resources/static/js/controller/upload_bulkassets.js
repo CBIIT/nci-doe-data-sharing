@@ -158,6 +158,10 @@ function registerBulkAssets() {
 		}
 	});
 
+    if (!usermetaDataEntered) {
+		    errorMsg = "Enter values for all required metadata.";
+	}
+	
     if(uploadType == 'globus') {
    
 		   	if (!$("#assetGlobusEndpointId").length || !$("#assetGlobusEndpointPath").length) {
@@ -190,7 +194,7 @@ function registerBulkAssets() {
     /* once all the above validation passes, do the following additional validations */
     
     if(isValidated) {
-	    if ($('input[name="assetUploadType"]:checked').length == 0) {
+	    if ($('input[name="assetUploadType"]').is(":visible") && $('input[name="assetUploadType"]:checked').length == 0) {
 			isValidated = false;
 			errorMsg = "Select your choice of upload.";
 			
@@ -198,12 +202,11 @@ function registerBulkAssets() {
 			isValidated = false;
 			errorMsg = "Select Asset Type.";
 			
-		} else if ($("input[name='assetUploadType']:checked").val() == 'Yes' && !$("#doeMetadataFile").val()) {
+		} else if (($("input[name='assetUploadType']:checked").val() == 'Yes' && !$("#doeMetadataFile").val()) ||
+		           ($("#doeMetadataFile").is(":visible") && !$("#doeMetadataFile").val())) {
 			isValidated = false;
 			errorMsg = "Upload CSV Metadata file.";
 			
-		} else if (!usermetaDataEntered) {
-		    errorMsg = "Enter values for all required metadata.";
 		}
 	}
 	
@@ -285,15 +288,18 @@ function displayBulkAssetSelection(data) {
       $("#S3DetailsDiv").hide();
       var bulkUploadCollection = $("#bulkUploadCollection").val();
       var folderLength = $("#assetSelectedFolders ul li").length;
+      resetAssetBulkUploadChoiceOptions();
       if(!bulkUploadCollection) {
          $("#bulkAssetOptionsDiv").hide();
-         resetAssetBulkUploadChoiceOptions();
       } else  {
       	 $("#bulkAssetOptionsDiv").show();
       	 if(folderLength && folderLength > 1) {
       	 
       	      $("#multipleFoldersUploadDiv").hide();
       	      $("#singleFolderUploadDiv").show();
+      	      $("#uploadCsvFile").hide();
+      	      $("#formAssetSelection").hide();
+      	      $("#addMetadataDiv").hide();
       	 } else  {
       	      $("#multipleFoldersUploadDiv").show();
       	      $("#singleFolderUploadDiv").hide();
