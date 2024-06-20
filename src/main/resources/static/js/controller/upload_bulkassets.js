@@ -30,14 +30,6 @@ function retrieveAssetTypeDiv(data) {
 function constructAssetTypeBulkDiv(data, status) {
 	$("#addMetadataDiv").show();
 	$("#assetBulkMetadataTable tbody").html("");
-
-	$("#assetBulkMetadataTable tbody")
-			.append(
-					'<tr><td style="width: 24%;">Asset Group Identifier&nbsp;&nbsp;<i class="fas fa-info-square" data-toggle="tooltip"'
-							+ 'data-placement="right" title="The system uses the Asset Group Identifier to create a unique Asset Identifier for each asset, in the format <group name>_<integer>"></i></td><td>'
-							+ '<input type="search" placeholder="Required" class="bulkAssetTextbox" is_mandatory="true" aria-label="value of meta data"  name="assetGroupIdentifier"'
-							+ '></td></tr>');
-
 	$
 			.each(
 					data,
@@ -89,7 +81,7 @@ function constructAssetTypeBulkDiv(data, status) {
 							}
 
 						} else if (value.attrName && value.attrName != 'asset_name' && value.attrName != 'asset_type'
-								&& value.attrName != 'asset_identifier' && value.attrName != 'access_group' && value.isVisibleOnUplaodPage != false) {
+								 && value.attrName != 'access_group' && value.isVisibleOnUplaodPage != false) {
 							if (value.attrName == 'description') {
 								$("#assetBulkMetadataTable tbody")
 										.append(
@@ -300,11 +292,11 @@ function displayBulkAssetSelection(data) {
       	 $("#bulkAssetOptionsDiv").show();
       	 if(folderLength && folderLength > 1) {
       	 
-      	      $("#multipleFoldersUploadDiv").show();
-      	      $("#singleFolderUploadDiv").hide();
-      	 } else  {
       	      $("#multipleFoldersUploadDiv").hide();
       	      $("#singleFolderUploadDiv").show();
+      	 } else  {
+      	      $("#multipleFoldersUploadDiv").show();
+      	      $("#singleFolderUploadDiv").hide();
       	 }
       	
       }
@@ -314,8 +306,8 @@ function displayBulkAssetSelection(data) {
  	  $("#registerBulkAssets").prop("disabled", false);
  	  $("#S3DetailsDiv").show();
  	  $("#bulkAssetOptionsDiv").show();
- 	  $("#singleFolderUploadDiv").show();
- 	  $("#multipleFoldersUploadDiv").hide();
+ 	  $("#singleFolderUploadDiv").hide();
+ 	  $("#multipleFoldersUploadDiv").show();
  	  resetAssetBulkUploadChoiceOptions();
  	  
   } else if(data =='emptyAsset') {
