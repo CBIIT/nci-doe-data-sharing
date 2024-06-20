@@ -249,6 +249,7 @@ table#assetDetailsDiv tbody tr:last-child {
     width: 913px;
     border-bottom: 1px solid #D2D2D2 !important;
     margin-bottom: 2.5rem;
+    margin:  0 auto;
 }
 
 #collectionForm {

@@ -59,7 +59,7 @@ function constructNewCollectionMetaDataSet(data, status) {
 														+ value.displayName
 														+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
 														+'<input type="radio" name="accessRadio" id="publicAccess" checked="false" aria-label="public access" value="public access"/><label class="radio-label">&nbsp;&nbsp;Public&nbsp;&nbsp;</label><input type="radio" name="accessRadio" id="nonPublicAccess" checked="false" aria-label="public access" value="non public access"/><label class="radio-label">&nbsp;&nbsp;Non-public. Provide access group.</label>'
-														+ '<div><select class="simple-select2" multiple="multiple" id="accessGroupSelect" name="zAttrStr_'
+														+ '<div class="mt-2"><select class="simple-select2" multiple="multiple" id="accessGroupSelect" name="zAttrStr_'
 														+ value.attrName
 														+ '"'
 														+ 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"></select></div>'
@@ -197,6 +197,8 @@ function retrieveCollectionList(data, status) {
 	$("#parentCollectionType").val(parent);
 	$("#parentAccessGroup").val(parentAccessGrp);
 	$("#collectionType").val(collectionType);
+    // Tp get the button stylings
+	$("#registerCollectionBtn").attr( "class", "btn btn-primary mb-2 mr-2 register" + collectionType )
 	$("#registerCollectionBtn").html("Register "+ "<br>" + displayCollectionType + `<img class="arrowright"
 	src='/images/white_right_arrow.svg' style="width: 16px;
 	transform: translate(64px, -10px);"/>`);
