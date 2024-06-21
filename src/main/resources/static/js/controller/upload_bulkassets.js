@@ -223,6 +223,8 @@ function registerBulkAssets() {
 			isFormBulkAssetUpload = true;
 		} else if ($("input[name='assetUploadType']:checked").val() == 'Yes') {
 			isFormBulkAssetUpload = false;
+		} else if(uploadType == 'globus' && $("#doeMetadataFile").is(":visible") && $("#doeMetadataFile").val()) {
+		    isFormBulkAssetUpload = false;
 		}
 		$.ajax({
 			type : "POST",
