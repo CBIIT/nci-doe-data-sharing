@@ -8,18 +8,6 @@
 						
 	<div id="bulkAssetOptionsDiv"
 		th:fragment="bulkAssetMetadataOptions" class="form-group col-lg-12 col-md-12">
-		
-						<div class="form-row col-md-12 col-sm-12" id="singleFolderUploadDiv"
-									style="margin-left: 5px; margin-top: 10px;margin-bottom: 10px; display:none;">
-								<label
-									style="color: #C06400; font-family: 'inter_regular'; font-size: 15px; 
-									font-weight: 500;">
-									Upload bulk metadata file: </label>
-								<label> <input type="file" name="doeMetadataFile"
-								id="doeMetadataFile"
-								accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
-                                application/vnd.ms-excel,.xls, .xlsx" /></label>
-						</div>
 						
 						<div class="form-row col-md-12 col-sm-12" id="multipleFoldersUploadDiv"
 							style="margin-left: 5px; margin-top: 10px;display:none;">
@@ -49,7 +37,10 @@
 						
 						<div class="form-row col-md-12 col-sm-12" id="uploadCsvFile"
 							style="display: none; margin-left: 7px; margin-bottom: 10px;">
-							<label> <input type="file" name="doeMetadataFile"
+							<label
+									style="color: #C06400; font-family: 'inter_regular'; font-size: 15px; 
+									font-weight: 500;">
+									Upload bulk metadata file: <input type="file" name="doeMetadataFile"
 								id="doeMetadataFile"
 								accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
                                 application/vnd.ms-excel,.xls, .xlsx" /></label>

@@ -337,18 +337,16 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 		List<String> globusEndpointFolders = (List<String>) session.getAttribute("GlobusEndpointFolders");
 		String s3Path = (String) request.getParameter("s3Path");
 		List<HpcBulkMetadataEntry> pathMetadataEntries = new ArrayList<HpcBulkMetadataEntry>();
-		String assetGroupIdentifier = request.getParameter("assetGroupIdentifier");
-		int index = 1;
+		String assetIdentifier = request.getParameter("zAttrStr_asset_identifier");
 		if ("globus".equalsIgnoreCase(bulkType) && CollectionUtils.isNotEmpty(globusEndpointFolders)) {
 			for (String folderName : globusEndpointFolders) {
 
-				String assetIdentifier = assetGroupIdentifier + "_" + index;
 				pathMetadataEntries = getAssetMetadataAttributes(pathMetadataEntries, assetIdentifier, request,
 						collectionPath, folderName, accessGrp);
-				index++;
+
 			}
 		} else if ("S3".equalsIgnoreCase(bulkType) && s3Path != null) {
-			pathMetadataEntries = getAssetMetadataAttributes(pathMetadataEntries, assetGroupIdentifier, request,
+			pathMetadataEntries = getAssetMetadataAttributes(pathMetadataEntries, assetIdentifier, request,
 					collectionPath, s3Path, accessGrp);
 		}
 
@@ -380,10 +378,6 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			entryCollectionType.setValue(collectionType);
 			entries.add(entryCollectionType);
 		}
-		HpcMetadataEntry entry = new HpcMetadataEntry();
-		entry.setAttribute("asset_identifier");
-		entry.setValue(assetIdentifier);
-		entries.add(entry);
 
 		HpcMetadataEntry entryName = new HpcMetadataEntry();
 		entryName.setAttribute("asset_name");

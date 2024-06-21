@@ -211,7 +211,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		String gcFile = (String) request.getParameter("gcFile");
 		boolean isGcFile = gcFile != null && gcFile.equals("on");
 
-		if (StringUtils.equals(bulkType, "globus") && globusEndpointFiles != null) {
+		if (StringUtils.equalsAnyIgnoreCase(bulkType, "globus") && globusEndpointFiles != null) {
 			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO> files = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO>();
 			for (String fileName : globusEndpointFiles) {
 				gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO file = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO();
@@ -302,7 +302,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				include.add(tokens.nextToken());
 		}
 
-		if (StringUtils.equals(bulkType, "globus") && globusEndpointFolders != null) {
+		if (StringUtils.equalsAnyIgnoreCase(bulkType, "globus") && globusEndpointFolders != null) {
 			String assetGroupIdentifier = request.getParameter("assetGroupIdentifier");
 			int index = 1;
 			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO> folders = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO>();
@@ -381,7 +381,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			/* set path for storing in MoDaC */
 			constructPath(path, googleDriveFolderIds, session);
 		}
-		if (StringUtils.equals(bulkType, "s3") && s3Path != null && isS3File) {
+		if (StringUtils.equalsAnyIgnoreCase(bulkType, "s3") && s3Path != null && isS3File) {
 			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO> files = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO>();
 			gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO file = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO();
 			HpcFileLocation source = new HpcFileLocation();
@@ -401,7 +401,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			System.out.println(path + "/" + s3FilePath.getFileName());
 			files.add(file);
 			dto.getDataObjectRegistrationItems().addAll(files);
-		} else if (StringUtils.equals(bulkType, "s3") && s3Path != null) {
+		} else if (StringUtils.equalsAnyIgnoreCase(bulkType, "s3") && s3Path != null) {
 			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO> folders = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO>();
 			gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO folder = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO();
 			HpcFileLocation source = new HpcFileLocation();

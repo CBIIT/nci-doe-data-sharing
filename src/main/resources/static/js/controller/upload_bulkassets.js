@@ -202,8 +202,7 @@ function registerBulkAssets() {
 			isValidated = false;
 			errorMsg = "Select Asset Type.";
 			
-		} else if (($("input[name='assetUploadType']:checked").val() == 'Yes' && !$("#doeMetadataFile").val()) ||
-		           ($("#doeMetadataFile").is(":visible") && !$("#doeMetadataFile").val())) {
+		} else if ($("#doeMetadataFile").is(":visible") && !$("#doeMetadataFile").val()) {
 			isValidated = false;
 			errorMsg = "Upload CSV Metadata file.";
 			
@@ -256,7 +255,7 @@ function registerBulkAssets() {
 				$("#dimmer").hide();
 				console.log('ERROR: ', e);
 				bootbox.dialog({
-					message : msg,
+					message : e,
 					onEscape : function() {
 						location.replace("/addbulk");
 					}
@@ -296,13 +295,12 @@ function displayBulkAssetSelection(data) {
       	 if(folderLength && folderLength > 1) {
       	 
       	      $("#multipleFoldersUploadDiv").hide();
-      	      $("#singleFolderUploadDiv").show();
-      	      $("#uploadCsvFile").hide();
+      	      $("#uploadCsvFile").show();
       	      $("#formAssetSelection").hide();
       	      $("#addMetadataDiv").hide();
       	 } else  {
       	      $("#multipleFoldersUploadDiv").show();
-      	      $("#singleFolderUploadDiv").hide();
+      	      $("#uploadCsvFile").hide();
       	 }
       	
       }
@@ -312,7 +310,7 @@ function displayBulkAssetSelection(data) {
  	  $("#registerBulkAssets").prop("disabled", false);
  	  $("#S3DetailsDiv").show();
  	  $("#bulkAssetOptionsDiv").show();
- 	  $("#singleFolderUploadDiv").hide();
+ 	  $("#uploadCsvFile").hide();
  	  $("#multipleFoldersUploadDiv").show();
  	  resetAssetBulkUploadChoiceOptions();
  	  
