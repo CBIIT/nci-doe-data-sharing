@@ -239,6 +239,10 @@ input#includeCriteria:focus {
 	outline: none;
 }
 
+.assetBulkGlobusValues input:focus {
+    outline: none;
+}
+
 .addUserMetadaDiv {
 	margin-top: -42px;
 	float: right;
