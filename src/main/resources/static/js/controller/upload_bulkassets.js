@@ -112,6 +112,9 @@ function constructAssetTypeBulkDiv(data, status) {
 function registerBulkAssets() {
 
 	var studyPath = $("#studyPath").val();
+	if(!studyPath) {
+	 studyPath = $("#studyList").val();
+	}
 	$("#registerBulkAssetForm").attr('bulkDatafilePath', studyPath);
 	var uploadType = $('input[name="assetSelection"]:checked').val();
 	$("#registerBulkAssetForm").attr('uploadType', uploadType);
@@ -180,7 +183,7 @@ function registerBulkAssets() {
 	
     } else if(uploadType == 'S3') {
     
-	       $('form#registerBulkAssetForm input[type="search"]').each(function() {
+	       $('#S3DetailsDiv input[type="search"]').each(function() {
 				if ($(this).is(":visible") && !$(this).val()) {
 					isValidated = false;
 				}
