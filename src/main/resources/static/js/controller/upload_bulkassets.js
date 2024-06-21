@@ -256,8 +256,14 @@ function registerBulkAssets() {
 				$("#spinner").hide();
 				$("#dimmer").hide();
 				console.log('ERROR: ', e);
+				var error = "";
+				if(e && e.responseText) {
+				   error = e.responseText
+				} else {
+				   error = e;
+				}
 				bootbox.dialog({
-					message : e,
+					message : error,
 					onEscape : function() {
 						location.replace("/addbulk");
 					}
