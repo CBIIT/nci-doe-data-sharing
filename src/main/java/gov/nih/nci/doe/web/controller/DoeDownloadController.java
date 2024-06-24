@@ -214,25 +214,25 @@ public class DoeDownloadController extends AbstractDoeController {
 
 			// for collection downloads, set the destination location preference
 
-			if ("collection".equals(downloadFile.getDownloadType())) {
-				if ((downloadFile.getDownloadToDestination() != null
-						&& downloadFile.getDownloadToDestination().equals("downloadToDestination"))
-						|| (downloadFile.getDownloadToDestination() == null)) {
-					log.info("DownloadDestinationType: downloadToDestination");
-					dto.setAppendPathToDownloadDestination(false);
-					dto.setAppendCollectionNameToDownloadDestination(false);
-				} else if (downloadFile.getDownloadToDestination() != null
-						&& downloadFile.getDownloadToDestination().equals("createCollectionFolder")) {
-					log.info(" DownloadDestinationType: createCollectionFolder");
-					dto.setAppendPathToDownloadDestination(false);
-					dto.setAppendCollectionNameToDownloadDestination(true);
-				} else if (downloadFile.getDownloadToDestination() != null
-						&& downloadFile.getDownloadToDestination().equals("createFullPath")) {
-					log.info("DownloadDestinationType: createFullPath");
-					dto.setAppendPathToDownloadDestination(true);
-					dto.setAppendCollectionNameToDownloadDestination(false);
-				}
-			}
+//			if ("collection".equals(downloadFile.getDownloadType())) {
+//				if ((downloadFile.getDownloadToDestination() != null
+//						&& downloadFile.getDownloadToDestination().equals("downloadToDestination"))
+//						|| (downloadFile.getDownloadToDestination() == null)) {
+//					log.info("DownloadDestinationType: downloadToDestination");
+//					dto.setAppendPathToDownloadDestination(false);
+//					dto.setAppendCollectionNameToDownloadDestination(false);
+//				} else if (downloadFile.getDownloadToDestination() != null
+//						&& downloadFile.getDownloadToDestination().equals("createCollectionFolder")) {
+//					log.info(" DownloadDestinationType: createCollectionFolder");
+//					dto.setAppendPathToDownloadDestination(false);
+//					dto.setAppendCollectionNameToDownloadDestination(true);
+//				} else if (downloadFile.getDownloadToDestination() != null
+//						&& downloadFile.getDownloadToDestination().equals("createFullPath")) {
+//					log.info("DownloadDestinationType: createFullPath");
+//					dto.setAppendPathToDownloadDestination(true);
+//					dto.setAppendCollectionNameToDownloadDestination(false);
+//				}
+//			}
 
 			final String downloadTaskType = "collection".equals(downloadFile.getDownloadType())
 					? HpcDownloadTaskType.COLLECTION.name()
