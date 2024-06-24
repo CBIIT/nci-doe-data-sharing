@@ -382,3 +382,9 @@ label.radio-label {
 .registerFolder {
 	min-width: 300px !important;
 }
+
+.metadataIcon {
+	height: 22px;
+	width: 22px;
+	margin-top: -4px;
+}

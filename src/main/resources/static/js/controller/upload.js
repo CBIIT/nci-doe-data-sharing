@@ -124,12 +124,12 @@ function addNewMetaDataCollection(tableName) {
 							+ rowId
 							+ '" aria-label="add new row" id="_addAttrName'
 							+ rowId
-							+ '"></td><td><input type="search" placeholder="Required" style="width: 85%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;margin: 6px 0px !important" id="_addAttrValue'
+							+ '"></td><td><input type="search" placeholder="Required" style="width: 88%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;margin: 6px 0px !important" id="_addAttrValue'
 							+ rowId
 							+ '" name="_addAttrValue'
 							+ rowId
 							+ '" >'
-							+ '&nbsp;&nbsp;<input class="btn btn-primary pull-right close-button" type="button" value="X" onclick="removeCollectionRow(\'addRow'
+							+ '&nbsp;&nbsp;<img src="images/deleteIcon.svg" th:src="@{/images/deleteIcon.png}" class="metadataIcon" alt="delete metadata" onclick="removeCollectionRow(\'addRow'
 							+ rowId + '\')"></td></tr>');
 
 }

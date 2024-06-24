@@ -206,7 +206,7 @@ function retrieveCollectionList(data, status) {
 	$("#registerModalTitle").html("Register " + displayCollectionType);
 	$("#addNewMetaData")
 			.html(
-					"<img src='images/plus.svg' th:src='@{/images/svg.png}' class='uploadslogo' alt='add metadata'>&nbsp;Add Metadata");
+					"<img src='images/addIcon.svg' th:src='@{/images/addIcon.png}' class='metadataIcon' alt='add metadata'>&nbsp;Add Metadata");
 	var collectionPath = $("#collectionPath").val();
 
 	if (collectionType && collectionPath) {
