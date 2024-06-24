@@ -130,6 +130,7 @@ $(document)
 											d.drivePath = $("#drivePath").val();
 											d.googleCloudPath = $("#cloudPath").val();
 											d.googleCloudBucketName = $("#cloudBucketName").val();
+											d.downloadToDestination = $('input[name=downloadToDestination]:checked:visible').val();
 
 											var url;
 											if (selectedFiles) {

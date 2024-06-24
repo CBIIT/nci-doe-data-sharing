@@ -36,8 +36,8 @@ import gov.nih.nci.hpc.domain.datatransfer.HpcFileLocation;
 import gov.nih.nci.hpc.domain.datatransfer.HpcGlobusDownloadDestination;
 import gov.nih.nci.hpc.domain.datatransfer.HpcS3Account;
 import gov.nih.nci.hpc.domain.datatransfer.HpcS3DownloadDestination;
-import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO;
 import gov.nih.nci.hpc.domain.datatransfer.HpcGoogleDownloadDestination;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO;
 
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -211,6 +211,29 @@ public class DoeDownloadController extends AbstractDoeController {
 				googleCloudDestination.setAccessToken(refreshTokenDetailsGoogleCloud);
 				dto.setGoogleCloudStorageDownloadDestination(googleCloudDestination);
 			}
+
+			// for collection downloads, set the destination location preference
+
+			if ("collection".equals(downloadFile.getDownloadType())) {
+				if ((downloadFile.getDownloadToDestination() != null
+						&& downloadFile.getDownloadToDestination().equals("downloadToDestination"))
+						|| (downloadFile.getDownloadToDestination() == null)) {
+					log.info("DownloadDestinationType: downloadToDestination");
+					dto.setAppendPathToDownloadDestination(false);
+					dto.setAppendCollectionNameToDownloadDestination(false);
+				} else if (downloadFile.getDownloadToDestination() != null
+						&& downloadFile.getDownloadToDestination().equals("createCollectionFolder")) {
+					log.info(" DownloadDestinationType: createCollectionFolder");
+					dto.setAppendPathToDownloadDestination(false);
+					dto.setAppendCollectionNameToDownloadDestination(true);
+				} else if (downloadFile.getDownloadToDestination() != null
+						&& downloadFile.getDownloadToDestination().equals("createFullPath")) {
+					log.info("DownloadDestinationType: createFullPath");
+					dto.setAppendPathToDownloadDestination(true);
+					dto.setAppendCollectionNameToDownloadDestination(false);
+				}
+			}
+
 			final String downloadTaskType = "collection".equals(downloadFile.getDownloadType())
 					? HpcDownloadTaskType.COLLECTION.name()
 					: HpcDownloadTaskType.DATA_OBJECT.name();
