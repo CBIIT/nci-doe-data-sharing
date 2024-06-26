@@ -70,7 +70,7 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 	@ResponseBody
 	public AjaxResponseBody download(@RequestBody @Valid DoeDownloadDatafile downloadFile, HttpSession session,
 			HttpServletRequest request, HttpServletResponse response) {
-		log.info("download files: " + downloadFile.getSelectedPaths());
+		log.info("download paths: " + downloadFile.getSelectedPaths());
 		AjaxResponseBody result = new AjaxResponseBody();
 		try {
 			String authToken = null;
@@ -149,6 +149,29 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 				googleCloudDestination.setDestinationLocation(location);
 				googleCloudDestination.setAccessToken(refreshTokenDetailsGoogleCloud);
 				dto.setGoogleCloudStorageDownloadDestination(googleCloudDestination);
+			}
+
+			// for collection downloads, set the destination location preference
+
+			if ("collection".equals(downloadFile.getDownloadType())) {
+				log.info("download to destination: " + downloadFile.getDownloadToDestination());
+				if ((downloadFile.getDownloadToDestination() != null
+						&& downloadFile.getDownloadToDestination().equals("downloadToDestination"))
+						|| (downloadFile.getDownloadToDestination() == null)) {
+
+					dto.setAppendPathToDownloadDestination(false);
+					dto.setAppendCollectionNameToDownloadDestination(false);
+
+				} else if (downloadFile.getDownloadToDestination() != null
+						&& downloadFile.getDownloadToDestination().equals("createCollectionFolder")) {
+					dto.setAppendPathToDownloadDestination(false);
+					dto.setAppendCollectionNameToDownloadDestination(true);
+
+				} else if (downloadFile.getDownloadToDestination() != null
+						&& downloadFile.getDownloadToDestination().equals("createFullPath")) {
+					dto.setAppendPathToDownloadDestination(true);
+					dto.setAppendCollectionNameToDownloadDestination(false);
+				}
 			}
 
 			HpcBulkDataObjectDownloadResponseDTO downloadDTO = null;

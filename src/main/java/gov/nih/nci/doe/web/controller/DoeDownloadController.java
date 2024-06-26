@@ -150,7 +150,7 @@ public class DoeDownloadController extends AbstractDoeController {
 	@ResponseBody
 	public AjaxResponseBody download(@RequestBody @Valid DoeDownloadDatafile downloadFile, HttpSession session,
 			HttpServletRequest request, HttpServletResponse response) {
-		log.info("download file" + downloadFile.getSelectedPaths());
+		log.info("download file: " + downloadFile.getSelectedPaths());
 		AjaxResponseBody result = new AjaxResponseBody();
 		try {
 			String authToken = null;
@@ -211,28 +211,6 @@ public class DoeDownloadController extends AbstractDoeController {
 				googleCloudDestination.setAccessToken(refreshTokenDetailsGoogleCloud);
 				dto.setGoogleCloudStorageDownloadDestination(googleCloudDestination);
 			}
-
-			// for collection downloads, set the destination location preference
-
-//			if ("collection".equals(downloadFile.getDownloadType())) {
-//				if ((downloadFile.getDownloadToDestination() != null
-//						&& downloadFile.getDownloadToDestination().equals("downloadToDestination"))
-//						|| (downloadFile.getDownloadToDestination() == null)) {
-//					log.info("DownloadDestinationType: downloadToDestination");
-//					dto.setAppendPathToDownloadDestination(false);
-//					dto.setAppendCollectionNameToDownloadDestination(false);
-//				} else if (downloadFile.getDownloadToDestination() != null
-//						&& downloadFile.getDownloadToDestination().equals("createCollectionFolder")) {
-//					log.info(" DownloadDestinationType: createCollectionFolder");
-//					dto.setAppendPathToDownloadDestination(false);
-//					dto.setAppendCollectionNameToDownloadDestination(true);
-//				} else if (downloadFile.getDownloadToDestination() != null
-//						&& downloadFile.getDownloadToDestination().equals("createFullPath")) {
-//					log.info("DownloadDestinationType: createFullPath");
-//					dto.setAppendPathToDownloadDestination(true);
-//					dto.setAppendCollectionNameToDownloadDestination(false);
-//				}
-//			}
 
 			final String downloadTaskType = "collection".equals(downloadFile.getDownloadType())
 					? HpcDownloadTaskType.COLLECTION.name()
