@@ -31,9 +31,6 @@ public class DoeRetryDownloadTaskController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.download}")
 	private String dataObjectsDownloadServiceURL;
 
-	@Value("${gov.nih.nci.hpc.server.collection.download}")
-	private String collectionDownloadServiceURL;
-
 
 	@PostMapping
 	@ResponseBody

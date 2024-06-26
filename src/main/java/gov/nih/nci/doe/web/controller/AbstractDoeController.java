@@ -111,7 +111,7 @@ public abstract class AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.search.dataobject.compound}")
 	public String compoundDataObjectSearchServiceURL;
-	
+
 	@Value("${gov.nih.nci.hpc.server.dataObject.download}")
 	public String dataObjectDownloadServiceURL;
 
@@ -147,6 +147,9 @@ public abstract class AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	public String serviceURL;
+
+	@Value("${gov.nih.nci.hpc.server.collection.download}")
+	public String collectionDownloadServiceURL;
 
 	@Value("${doe.show.api-docs:false}")
 	boolean showApiDocs;

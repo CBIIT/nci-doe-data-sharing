@@ -349,8 +349,11 @@ public class MoDaCSchedulers extends AbstractDoeController {
 					targetPath = getFileLocation(destinationLoc);
 				}
 			} else {
+
+				String taskStatusUrl = "Collection".equalsIgnoreCase(downloadTaskType) ? collectionDownloadServiceURL
+						: queryServiceURL;
 				HpcCollectionDownloadStatusDTO dataObjectCollectionListStatusDto = DoeClientUtil
-						.getDataObjectListOrCollectionStatusByTaskId(token, queryServiceURL, task.getTaskId());
+						.getDataObjectListOrCollectionStatusByTaskId(token, taskStatusUrl, task.getTaskId());
 				HpcFileLocation destinationLoc = dataObjectCollectionListStatusDto.getDestinationLocation();
 				targetPath = getFileLocation(destinationLoc);
 			}

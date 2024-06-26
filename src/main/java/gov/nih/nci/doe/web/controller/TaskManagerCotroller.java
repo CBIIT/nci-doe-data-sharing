@@ -48,8 +48,6 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/tasks")
 public class TaskManagerCotroller extends AbstractDoeController {
 
-	@Value("${gov.nih.nci.hpc.server.collection.download}")
-	private String collectionDownloadServiceURL;
 
 	@Value("${gov.nih.nci.hpc.server.download}")
 	private String queryServiceURL;

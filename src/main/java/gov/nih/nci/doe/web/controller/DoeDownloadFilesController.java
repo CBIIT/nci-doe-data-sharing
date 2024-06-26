@@ -151,29 +151,6 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 				dto.setGoogleCloudStorageDownloadDestination(googleCloudDestination);
 			}
 
-			// for collection downloads, set the destination location preference
-
-			if ("collection".equals(downloadFile.getDownloadType())) {
-				log.info("download to destination: " + downloadFile.getDownloadToDestination());
-				if ((downloadFile.getDownloadToDestination() != null
-						&& downloadFile.getDownloadToDestination().equals("downloadToDestination"))
-						|| (downloadFile.getDownloadToDestination() == null)) {
-
-					dto.setAppendPathToDownloadDestination(false);
-					dto.setAppendCollectionNameToDownloadDestination(false);
-
-				} else if (downloadFile.getDownloadToDestination() != null
-						&& downloadFile.getDownloadToDestination().equals("createCollectionFolder")) {
-					dto.setAppendPathToDownloadDestination(false);
-					dto.setAppendCollectionNameToDownloadDestination(true);
-
-				} else if (downloadFile.getDownloadToDestination() != null
-						&& downloadFile.getDownloadToDestination().equals("createFullPath")) {
-					dto.setAppendPathToDownloadDestination(true);
-					dto.setAppendCollectionNameToDownloadDestination(false);
-				}
-			}
-
 			HpcBulkDataObjectDownloadResponseDTO downloadDTO = null;
 			downloadDTO = DoeClientUtil.downloadFiles(authToken, downloadServiceURL, dto);
 			if (downloadDTO != null) {

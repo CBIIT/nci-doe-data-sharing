@@ -133,7 +133,7 @@ $(document)
 											d.downloadToDestination = $('input[name=downloadToDestination]:checked:visible').val();
 
 											var url;
-											if (selectedFiles) {
+											if (d.downloadType == 'datafiles' || d.downloadType == 'collectionfiles') {
 												url = "/downloadfiles/download";
 												d.selectedPaths = selectedFiles;
 											} else {
