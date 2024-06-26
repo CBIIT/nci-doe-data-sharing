@@ -201,7 +201,7 @@ function retrieveCollectionList(data, status) {
 	$("#registerCollectionBtn").attr( "class", "btn btn-primary mb-2 mr-2 register" + collectionType )
 	$("#registerCollectionBtn").html("Register "+ "<br>" + displayCollectionType + `<img class="arrowright"
 	src='/images/white_right_arrow.svg' style="width: 16px;
-	transform: translate(64px, -10px);"/>`);
+	transform: translate(64px, -8px);"/>`);
 	$("#collectionMetaDataLabel").text(displayCollectionType + " Metadata");
 	$("#registerModalTitle").html("Register " + displayCollectionType);
 	$("#addNewMetaData")

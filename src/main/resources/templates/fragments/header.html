@@ -21,6 +21,22 @@
 
 <body>
     <div id="brand" class="col-md-12 col-sm-12 pl-0 pr-0" role="navigation" th:fragment="header" aria-label="brand div">
+        <!-- Alert Banner -->
+
+		<section id="maintenance-banner"
+        th:if="${downtimeMessage!= null}"
+        class="maintenance-alert-banner"
+        aria-label="Maintenance alert">
+        <div class="maintenance-alert">
+            <div class="maintenance-alert-header">
+                Urgent Announcement
+            </div>
+            <div class="maintenance-alert-body">
+                <span th:text="${downtimeMessage}"></span>
+            </div>
+        </div>
+    </section>
+        
         <!--Banner-->
         <section id="banner" class="banner" aria-label="Official government website">
             <header class="banner-header">
@@ -37,12 +53,6 @@
                 <img src="images/nci_modac_logo.svg" th:src="@{/images/nci_modac_logo.svg}" class="logoImg"
                     alt="National Cancer Institute"></a>
         </div>
-
-        <div th:if="${downtimeMessage!= null}" class="col-md-12"
-            style="color: red;font-size: 17px;font-weight: bold;text-align: center;">
-            <span th:text="${downtimeMessage}"></span>
-        </div>
-
 
         <nav id="globalNav" aria-label="Primary navigation" class="nci-header-nav">
 
