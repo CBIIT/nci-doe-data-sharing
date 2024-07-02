@@ -80,7 +80,7 @@ function constructAssetTypeBulkDiv(data, status) {
 								$select.select2();
 							}
 
-						} else if (value.attrName && value.attrName != 'asset_name' && value.attrName != 'asset_type'
+						} else if (value.attrName && value.attrName != 'asset_type'
 								 && value.attrName != 'access_group' && value.isVisibleOnUplaodPage != false) {
 							if (value.attrName == 'description') {
 								$("#assetBulkMetadataTable tbody")

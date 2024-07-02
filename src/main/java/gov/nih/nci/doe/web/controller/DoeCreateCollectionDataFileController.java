@@ -303,8 +303,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		}
 
 		if (StringUtils.equalsAnyIgnoreCase(bulkType, "globus") && globusEndpointFolders != null) {
-			String assetGroupIdentifier = request.getParameter("assetGroupIdentifier");
-			int index = 1;
+			String assetIdentifier_form = request.getParameter("zAttrStr_asset_identifier");
 			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO> folders = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO>();
 			for (String folderName : globusEndpointFolders) {
 				gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO folder = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO();
@@ -315,8 +314,8 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				String fromPath = globusEndpointPath.endsWith("/") ? globusEndpointPath + folderName
 						: globusEndpointPath + "/" + folderName;
 				String toPath = "";
-				if (StringUtils.isNoneEmpty(assetGroupIdentifier)) {
-					toPath = "/" + assetGroupIdentifier + "_" + index;
+				if (StringUtils.isNoneEmpty(assetIdentifier_form)) {
+					toPath = "/" + assetIdentifier_form;
 				} else if (assetIdentifierMapping != null) {
 					String assetIdentifier = assetIdentifierMapping.get(folderName);
 					if (assetIdentifier != null && !assetIdentifier.equals(folderName)) {
@@ -344,7 +343,6 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 					folder.getIncludePatterns().addAll(include);
 					folder.setPatternType(HpcPatternType.SIMPLE);
 				}
-				index++;
 
 			}
 			dto.getDirectoryScanRegistrationItems().addAll(folders);
