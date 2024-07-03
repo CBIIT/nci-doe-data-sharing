@@ -464,7 +464,7 @@ function postSuccessOnChangeIsReferenceDataset(form, data, tableId, isUploadPage
 			    if(value.attrName == 'curation_date') {
 			    	inputType = "date";
 			    } else {
-			    	inputType = "text";
+			    	inputType = "search";
 			    }
 			    
 				   if(tableId == 'assetBulkMetadataTable') {
@@ -472,18 +472,9 @@ function postSuccessOnChangeIsReferenceDataset(form, data, tableId, isUploadPage
 					        	'<input type = "' + inputType + '" is_mandatory = "'+ value.mandatory+'"  value = "' + attrVal + '" class="bulkAssetTextbox" placeholder="'+placeholder+'" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
 					        	'></td></tr>');
 					} else {
-						if(inputType == 'text' && tableId == 'newMetaDataTable'){
-							
-							$("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;' + infoHtml + '</td><td>'+
-					        	'<input type = "search" is_mandatory = "' + value.mandatory+'" value = "' + attrVal + '" placeholder="'+placeholder+'" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
-					        	'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"></td></tr>');
-
-						}
-						else {
 						$("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;' + infoHtml + '</td><td>'+
 					        	'<input type = "' + inputType + '" is_mandatory = "' + value.mandatory+'" value = "' + attrVal + '" placeholder="'+placeholder+'" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
-					        	'style="width:95%;"></td></tr>');
-						}
+					        	'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;""></td></tr>');
 					}
 			}	    
 			
