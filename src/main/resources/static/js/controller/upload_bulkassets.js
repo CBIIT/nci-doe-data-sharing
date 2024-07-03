@@ -80,7 +80,7 @@ function constructAssetTypeBulkDiv(data, status) {
 								$select.select2();
 							}
 
-						} else if (value.attrName && value.attrName != 'asset_name' && value.attrName != 'asset_type'
+						} else if (value.attrName && value.attrName != 'asset_type'
 								 && value.attrName != 'access_group' && value.isVisibleOnUplaodPage != false) {
 							if (value.attrName == 'description') {
 								$("#assetBulkMetadataTable tbody")
@@ -184,7 +184,8 @@ function registerBulkAssets() {
     } else if(uploadType == 'S3') {
     
 	       $('#S3DetailsDiv input[type="search"]').each(function() {
-				if ($(this).is(":visible") && !$(this).val()) {
+	            var ismandatory = $(this).attr('is_mandatory');
+				if ($(this).is(":visible") && !$(this).val() && ismandatory && ismandatory != "false") {
 					isValidated = false;
 				}
 			});

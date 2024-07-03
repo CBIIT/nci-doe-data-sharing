@@ -379,11 +379,6 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			entries.add(entryCollectionType);
 		}
 
-		HpcMetadataEntry entryName = new HpcMetadataEntry();
-		entryName.setAttribute("asset_name");
-		entryName.setValue(folderName);
-		entries.add(entryName);
-
 		if (StringUtils.isNotEmpty(accessGrp)) {
 
 			HpcMetadataEntry entryAccessGrp = new HpcMetadataEntry();
