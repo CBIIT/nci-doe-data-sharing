@@ -418,6 +418,9 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			folders.add(folder);
 			String fromPath = "";
 			String toPath = "";
+
+			String assetIdentifier_form = request.getParameter("zAttrStr_asset_identifier");
+
 			if (s3Path.equals("/")) {
 				fromPath = "/";
 				toPath = "/";
@@ -425,7 +428,20 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				Path folderPath = Paths.get(s3Path);
 				String folderName = folderPath.getFileName().toString();
 				fromPath = "/" + s3Path;
-				toPath = "/" + folderName;
+
+				if (StringUtils.isNoneEmpty(assetIdentifier_form)) {
+					toPath = "/" + assetIdentifier_form;
+				} else if (assetIdentifierMapping != null) {
+					String assetIdentifier = assetIdentifierMapping.get(folderName);
+					if (assetIdentifier != null && !assetIdentifier.equals(folderName)) {
+						toPath = "/" + assetIdentifier;
+					} else {
+						toPath = "/" + folderName;
+					}
+				} else {
+					toPath = "/" + folderName;
+				}
+
 			}
 
 			if (!fromPath.equals(toPath)) {
