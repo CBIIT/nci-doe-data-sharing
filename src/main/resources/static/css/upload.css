@@ -331,7 +331,8 @@ table#assetBulkMetadataTable thead tr th {
 	span.select2-selection.select2-selection--multiple {
 		border-radius: 8px;
 		border: 1px solid #6B7294 !important;
-		height: 42px;
+		min-height: 42px;
+		height: auto;
 		color: #000;
 		font-weight: 400;
 	}
@@ -350,7 +351,8 @@ input[type=text]::-webkit-search-cancel-button {
 span.select2-selection.select2-selection--multiple {
 	border-radius: 8px;
 	border: 1px solid #6B7294 !important;
-	height: 42px;
+	min-height: 42px;
+	height: auto;
 }
 
 .fa-info-square {

@@ -419,7 +419,7 @@ function postSuccessOnChangeIsReferenceDataset(form, data, tableId, isUploadPage
 				if(tableId == 'assetBulkMetadataTable') {
 					var width = 'width:99%;';
 				} else {
-					var width = 'width:70%;';
+					var width = 'width:95%;';
 				}
 				
 			if ((isUploadPage && value.isVisibleOnUplaodPage != false) || !isUploadPage ) {
@@ -472,9 +472,18 @@ function postSuccessOnChangeIsReferenceDataset(form, data, tableId, isUploadPage
 					        	'<input type = "' + inputType + '" is_mandatory = "'+ value.mandatory+'"  value = "' + attrVal + '" class="bulkAssetTextbox" placeholder="'+placeholder+'" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
 					        	'></td></tr>');
 					} else {
+						if(inputType == 'text' && tableId == 'newMetaDataTable'){
+							
+							$("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;' + infoHtml + '</td><td>'+
+					        	'<input type = "search" is_mandatory = "' + value.mandatory+'" value = "' + attrVal + '" placeholder="'+placeholder+'" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
+					        	'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"></td></tr>');
+
+						}
+						else {
 						$("#"+tableId+" tbody").append('<tr><td>' +  value.displayName + '&nbsp;&nbsp;' + infoHtml + '</td><td>'+
 					        	'<input type = "' + inputType + '" is_mandatory = "' + value.mandatory+'" value = "' + attrVal + '" placeholder="'+placeholder+'" aria-label="value of meta data" name="zAttrStr_'+value.attrName+'"' +
-					        	'style="width:70%;"></td></tr>');
+					        	'style="width:95%;"></td></tr>');
+						}
 					}
 			}	    
 			
