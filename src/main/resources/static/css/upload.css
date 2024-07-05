@@ -390,3 +390,14 @@ label.radio-label {
 	width: 22px;
 	margin-top: -4px;
 }
+
+/* This is a temp fix we can fix with js  */
+#userMetaData {
+span.select2.select2-container.select2-container--default {
+    width: 70% !important;
+}
+input[type="search"] {
+	width: 70% !important;
+}
+}
+/* End Temp fix */
