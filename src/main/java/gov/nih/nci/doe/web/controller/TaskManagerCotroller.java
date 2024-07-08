@@ -78,7 +78,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
 
 			List<String> taskIds = LambdaUtils.map(results, TaskManager::getTaskId);
 
-			String serviceURL = queryServiceURL + "?page=" + 1 + "&totalCount=true";
+			String serviceURL = queryServiceURL + "?page=" + 1 + "&totalCount=true&pageSize=1000";
 
 			HpcDownloadSummaryDTO downloads = DoeClientUtil.getDownloadSummary(readToken, serviceURL);
 

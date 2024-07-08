@@ -346,6 +346,12 @@ function updateMetaDataCollection() {
 			validate = false;
 		}
 	});
+	$('form#collectionForm input[type="search"]').each(function() {
+		var ismandatory = $(this).attr('is_mandatory');
+		if (!$(this).val() && ismandatory == "true") {
+			validate = false;
+		}
+	});
 
 	$("textarea:visible").each(function() {
 		var ismandatory = $(this).attr('is_mandatory');
