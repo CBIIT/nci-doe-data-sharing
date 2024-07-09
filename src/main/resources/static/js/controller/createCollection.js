@@ -1,34 +1,34 @@
 $(document).ready(
-		function() {
-		
-			$(document).on('change', '#publicAccess', function() {
-				if ($(this).is(":checked")) {
-					$("#accessGroupSelect").next(".select2-container").hide();
-				} else {
-					$("#accessGroupSelect").next(".select2-container").show();
-				}
+	function () {
 
-			});
-			
-			$(document).on('change', '#nonPublicAccess', function() {
-				if ($(this).is(":checked")) {
-					$("#accessGroupSelect").next(".select2-container").show();
-				} else {
-					$("#accessGroupSelect").next(".select2-container").hide();
-				}
+		$(document).on('change', '#publicAccess', function () {
+			if ($(this).is(":checked")) {
+				$("#accessGroupSelect").next(".select2-container").hide();
+			} else {
+				$("#accessGroupSelect").next(".select2-container").show();
+			}
 
-			});
-			
-			$(document).on('keyup', '.identifier_validation', function() {
-			    var identifierVal = $(this).val();
-			    var pattern = /^[A-Za-z0-9_-]*$/;
-			
-			    if (!pattern.test(identifierVal)) {
-			        $(this).val(identifierVal.replace(/[^A-Za-z0-9_-]/g, ''));
-			    }
-			});
+		});
 
-});
+		$(document).on('change', '#nonPublicAccess', function () {
+			if ($(this).is(":checked")) {
+				$("#accessGroupSelect").next(".select2-container").show();
+			} else {
+				$("#accessGroupSelect").next(".select2-container").hide();
+			}
+
+		});
+
+		$(document).on('keyup', '.identifier_validation', function () {
+			var identifierVal = $(this).val();
+			var pattern = /^[A-Za-z0-9_-]*$/;
+
+			if (!pattern.test(identifierVal)) {
+				$(this).val(identifierVal.replace(/[^A-Za-z0-9_-]/g, ''));
+			}
+		});
+
+	});
 
 
 function constructNewCollectionMetaDataSet(data, status) {
@@ -37,134 +37,134 @@ function constructNewCollectionMetaDataSet(data, status) {
 	var parentAccessgrp = $("#parentAccessGroup").val();
 	var assetType = $("#assetType").val();
 	var collectionType = $("#collectionType").val();
-	
+
 	$
-			.each(
-					data,
-					function(key, value) {
-						var controllerAttribute = value.controllerAttribute;
-						var infoHtml = "";
-						if(value.description) {
-						infoHtml = '<img src="images/infoIcon.svg" class="icon" data-toggle="tooltip"'
-														+ 'data-placement="right" title="'
-														+ value.description
-														+ '"></img>';
+		.each(
+			data,
+			function (key, value) {
+				var controllerAttribute = value.controllerAttribute;
+				var infoHtml = "";
+				if (value.description) {
+					infoHtml = '<img src="images/infoIcon.svg" class="icon" data-toggle="tooltip"'
+						+ 'data-placement="right" title="'
+						+ value.description
+						+ '"></img>';
+				}
+				if (value.attrName == 'access_group') {
+
+					if (!parentAccessgrp || (parentAccessgrp && parentAccessgrp == "public")) {
+						$("#newMetaDataTable tbody")
+							.append(
+								'<tr><td>'
+								+ value.displayName
+								+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
+								+ '<input type="radio" name="accessRadio" id="publicAccess" checked="false" aria-label="public access" value="public access"/><label class="radio-label">&nbsp;&nbsp;Public&nbsp;&nbsp;</label><input type="radio" name="accessRadio" id="nonPublicAccess" checked="false" aria-label="public access" value="non public access"/><label class="radio-label">&nbsp;&nbsp;Non-public. Provide access group.</label>'
+								+ '<div class="mt-2"><select class="simple-select2" multiple="multiple" id="accessGroupSelect" name="zAttrStr_'
+								+ value.attrName
+								+ '"'
+								+ 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"></select></div>'
+								+ '</td></tr>');
+						loadJsonData('/metaDataPermissionsList', $("#accessGroupSelect"), false, null, null,
+							null, "key", "value");
+						$("#publicAccess").prop("checked", true);
+
+
+					} else {
+
+						$("#newMetaDataTable tbody")
+							.append(
+								'<tr><td>'
+								+ value.displayName
+								+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
+								+ '<input type="search" placeholder="Required" aria-label="value of meta data" name="zAttrStr_'
+								+ value.attrName
+								+ '" value ="'
+								+ parentAccessgrp
+								+ '"'
+								+ 'disabled="disabled" style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;background-color: #dddddd;"><input type="hidden" name="zAttrStr_'
+								+ value.attrName
+								+ '" value ="'
+								+ parentAccessgrp
+								+ '"/> &nbsp;&nbsp;<img src="images/infoIcon.svg" class="icon"><span>Access group inherited from parent.</span></img></td></tr>');
+					}
+				} else if (value.attrName == 'asset_type') {
+
+					$("#newMetaDataTable tbody")
+						.append(
+							'<tr><td>'
+							+ value.displayName
+							+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
+							+ '<input type="search" disabled="disabled" aria-label="value of meta data" value ="'
+							+ assetType + '" name="zAttrStr_' + value.attrName + '"'
+							+ 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"><input type="hidden" name="zAttrStr_'
+							+ value.attrName + '" value ="' + assetType + '"/> </td></tr>');
+
+				} else if (value.validValues != null && value.isVisibleOnUplaodPage != false) {
+					$("#newMetaDataTable tbody").append(
+						"<tr><td>" + value.displayName
+						+ "&nbsp;&nbsp;" + infoHtml + "</td><td>"
+						+ "<select class='simple-select2' is_mandatory='" + value.mandatory
+						+ "' onChange='onChangeForMetadata(registerCollectionForm, true, "
+						+ value.controllerAttribute + ",newMetaDataTable, " + value.attrName
+						+ ");' style='width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;' id='" + value.attrName + "' name='zAttrStr_"
+						+ value.attrName + "' value='" + value.attrValue + "'></select></td></tr>");
+
+					var $select = $("#" + value.attrName);
+
+					if (value.attrValue) {
+						$select.append($('<option></option>').attr('value', value.attrValue).text(
+							value.attrValue));
+					} else if (!value.defaultValue) {
+						$select.append($('<option></option>').attr('value', 'Select').text('Select'));
+					}
+					for (var i = 0; i < value.validValues.length; i++) {
+						if ($select.find("option[value='" + value.validValues[i].key + "']").length == 0) {
+							$select.append($('<option></option>').attr('value', value.validValues[i].key).text(
+								value.validValues[i].value));
 						}
-						if (value.attrName == 'access_group') {
+					}
+					if (value.defaultValue) {
+						$select.select2().val(value.defaultValue);
+					} else {
+						$select.select2();
+					}
 
-							if (!parentAccessgrp || (parentAccessgrp && parentAccessgrp == "public")) {
-								$("#newMetaDataTable tbody")
-										.append(
-												'<tr><td>'
-														+ value.displayName
-														+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
-														+'<input type="radio" name="accessRadio" id="publicAccess" checked="false" aria-label="public access" value="public access"/><label class="radio-label">&nbsp;&nbsp;Public&nbsp;&nbsp;</label><input type="radio" name="accessRadio" id="nonPublicAccess" checked="false" aria-label="public access" value="non public access"/><label class="radio-label">&nbsp;&nbsp;Non-public. Provide access group.</label>'
-														+ '<div class="mt-2"><select class="simple-select2" multiple="multiple" id="accessGroupSelect" name="zAttrStr_'
-														+ value.attrName
-														+ '"'
-														+ 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"></select></div>'
-														+'</td></tr>');
-								loadJsonData('/metaDataPermissionsList', $("#accessGroupSelect"), false, null, null,
-										null, "key", "value");
-										$("#publicAccess").prop("checked", true);
-
-
-							} else {
-
-								$("#newMetaDataTable tbody")
-										.append(
-												'<tr><td>'
-														+ value.displayName
-														+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
-														+ '<input type="search" placeholder="Required" aria-label="value of meta data" name="zAttrStr_'
-														+ value.attrName
-														+ '" value ="'
-														+ parentAccessgrp
-														+ '"'
-														+ 'disabled="disabled" style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;background-color: #dddddd;"><input type="hidden" name="zAttrStr_'
-														+ value.attrName
-														+ '" value ="'
-														+ parentAccessgrp
-														+ '"/> &nbsp;&nbsp;<img src="images/infoIcon.svg" class="icon"><span>Access group inherited from parent.</span></img></td></tr>');
-							}
-						} else if (value.attrName == 'asset_type') {
-
-							$("#newMetaDataTable tbody")
-									.append(
-											'<tr><td>'
-													+ value.displayName
-													+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
-													+ '<input type="search" disabled="disabled" aria-label="value of meta data" value ="'
-													+ assetType + '" name="zAttrStr_' + value.attrName + '"'
-													+ 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"><input type="hidden" name="zAttrStr_'
-													+ value.attrName + '" value ="' + assetType + '"/> </td></tr>');
-
-						} else if (value.validValues != null && value.isVisibleOnUplaodPage != false) {
-							$("#newMetaDataTable tbody").append(
-									"<tr><td>" + value.displayName
-											+ "&nbsp;&nbsp;" + infoHtml + "</td><td>"
-											+ "<select class='simple-select2' is_mandatory='" + value.mandatory
-											+ "' onChange='onChangeForMetadata(registerCollectionForm, true, "
-											+ value.controllerAttribute + ",newMetaDataTable, " + value.attrName
-											+ ");' style='width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;' id='" + value.attrName + "' name='zAttrStr_"
-											+ value.attrName + "' value='" + value.attrValue + "'></select></td></tr>");
-
-							var $select = $("#" + value.attrName);
-
-							if (value.attrValue) {
-								$select.append($('<option></option>').attr('value', value.attrValue).text(
-										value.attrValue));
-							} else if (!value.defaultValue) {
-								$select.append($('<option></option>').attr('value', 'Select').text('Select'));
-							}
-							for (var i = 0; i < value.validValues.length; i++) {
-							  if ($select.find("option[value='" + value.validValues[i].key + "']").length == 0) {
-								 $select.append($('<option></option>').attr('value', value.validValues[i].key).text(
-										value.validValues[i].value));
-								}
-							}
-							if (value.defaultValue) {
-								$select.select2().val(value.defaultValue);
-							} else {
-								$select.select2();
-							}
-
-						} else if (value.attrValue && value.isVisibleOnUplaodPage != false) {
-							$("#newMetaDataTable tbody").append(
-									'<tr><td>' + value.displayName
-											+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
-											+ '<input type="search" is_mandatory="' + value.mandatory
-											+ '" placeholder="Required" aria-label="value of meta data" value="'
-											+ value.attrValue + '" name="zAttrStr_' + value.attrName + '"'
-											+ 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"></td></tr>');
-						} else if (value.attrName.indexOf("_identifier") != -1) {
-							var placeholderValue = value.mandatory == true ? 'Required' : "";
-								$("#newMetaDataTable tbody").append(
-										'<tr><td>' + value.displayName
-												+ '&nbsp;&nbsp;' + infoHtml + '</td><td>' + '<input type="search" is_mandatory="'
-												+ value.mandatory + '" class="identifier_validation" pattern = "[A-Za-z0-9_-]*" placeholder= "' + placeholderValue
-												+ '" aria-label="value of meta data" name="zAttrStr_' + value.attrName
-												+ '"' + 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"></td></tr>');
-						}
-						else {
-							var placeholderValue = value.mandatory == true ? 'Required' : "";
-							if (value.attrName.indexOf("description") != -1) {
-								$("#newMetaDataTable tbody").append(
-										'<tr><td>' + value.displayName
-												+ '&nbsp;&nbsp;' + infoHtml + '</td><td>' + '<textarea rows="5" is_mandatory="'
-												+ value.mandatory + '" placeholder="' + placeholderValue
-												+ '" aria-label="value of meta data" name="zAttrStr_' + value.attrName
-												+ '"' + 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"></textarea></td></tr>');
-							} else if(value.isVisibleOnUplaodPage != false) {
-								$("#newMetaDataTable tbody").append(
-										'<tr><td>' + value.displayName
-												+ '&nbsp;&nbsp;' + infoHtml + '</td><td>' + '<input type="search" is_mandatory="'
-												+ value.mandatory + '" placeholder="' + placeholderValue
-												+ '" aria-label="value of meta data" name="zAttrStr_' + value.attrName
-												+ '"' + 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"></td></tr>');
-							}
-						}
-					});
+				} else if (value.attrValue && value.isVisibleOnUplaodPage != false) {
+					$("#newMetaDataTable tbody").append(
+						'<tr><td>' + value.displayName
+						+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
+						+ '<input type="search" is_mandatory="' + value.mandatory
+						+ '" placeholder="Required" aria-label="value of meta data" value="'
+						+ value.attrValue + '" name="zAttrStr_' + value.attrName + '"'
+						+ 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"></td></tr>');
+				} else if (value.attrName.indexOf("_identifier") != -1) {
+					var placeholderValue = value.mandatory == true ? 'Required' : "";
+					$("#newMetaDataTable tbody").append(
+						'<tr><td>' + value.displayName
+						+ '&nbsp;&nbsp;' + infoHtml + '</td><td>' + '<input type="search" is_mandatory="'
+						+ value.mandatory + '" class="identifier_validation" pattern = "[A-Za-z0-9_-]*" placeholder= "' + placeholderValue
+						+ '" aria-label="value of meta data" name="zAttrStr_' + value.attrName
+						+ '"' + 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"></td></tr>');
+				}
+				else {
+					var placeholderValue = value.mandatory == true ? 'Required' : "";
+					if (value.attrName.indexOf("description") != -1) {
+						$("#newMetaDataTable tbody").append(
+							'<tr><td>' + value.displayName
+							+ '&nbsp;&nbsp;' + infoHtml + '</td><td>' + '<textarea rows="5" is_mandatory="'
+							+ value.mandatory + '" placeholder="' + placeholderValue
+							+ '" aria-label="value of meta data" name="zAttrStr_' + value.attrName
+							+ '"' + 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"></textarea></td></tr>');
+					} else if (value.isVisibleOnUplaodPage != false) {
+						$("#newMetaDataTable tbody").append(
+							'<tr><td>' + value.displayName
+							+ '&nbsp;&nbsp;' + infoHtml + '</td><td>' + '<input type="search" is_mandatory="'
+							+ value.mandatory + '" placeholder="' + placeholderValue
+							+ '" aria-label="value of meta data" name="zAttrStr_' + value.attrName
+							+ '"' + 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"></td></tr>');
+					}
+				}
+			});
 }
 
 
@@ -173,7 +173,7 @@ function retrieveCollectionList(data, status) {
 	var collectionType;
 	var parentAccessGrp;
 	var displayCollectionType;
-	$.each(data, function(key, val) {
+	$.each(data, function (key, val) {
 		if (val.key == "parentAccessGroup")
 			parentAccessGrp = val.value;
 	});
@@ -197,24 +197,24 @@ function retrieveCollectionList(data, status) {
 	$("#parentCollectionType").val(parent);
 	$("#parentAccessGroup").val(parentAccessGrp);
 	$("#collectionType").val(collectionType);
-    // Tp get the button stylings
-	$("#registerCollectionBtn").attr( "class", "btn btn-primary mb-2 mr-2 register" + collectionType )
-	$("#registerCollectionBtn").html("Register "+ "<br>" + displayCollectionType + `<img class="arrowright"
+	// Tp get the button stylings
+	$("#registerCollectionBtn").attr("class", "btn btn-primary mb-2 mr-2 register" + collectionType)
+	$("#registerCollectionBtn").html("Register " + "<br>" + displayCollectionType + `<img class="arrowright"
 	src='/images/white_right_arrow.svg' style="width: 16px;
 	transform: translate(64px, -8px);"/>`);
 	$("#collectionMetaDataLabel").text(displayCollectionType + " Metadata");
 	$("#registerModalTitle").html("Register " + displayCollectionType);
 	$("#addNewMetaData")
-			.html(
-					"<img src='images/addIcon.svg' th:src='@{/images/addIcon.png}' class='metadataIcon' alt='add metadata'>&nbsp;Add Metadata");
+		.html(
+			"<img src='images/addIcon.svg' th:src='@{/images/addIcon.png}' class='metadataIcon' alt='add metadata'>&nbsp;Add Metadata");
 	var collectionPath = $("#collectionPath").val();
 
 	if (collectionType && collectionPath) {
 		var params = {
-			selectedPath : collectionPath,
-			collectionType : collectionType,
-			controllerValue : assetType,
-			controllerAttribute : 'asset_type'
+			selectedPath: collectionPath,
+			collectionType: collectionType,
+			controllerValue: assetType,
+			controllerAttribute: 'asset_type'
 		};
 		invokeAjax('/addCollection', 'GET', params, constructNewCollectionMetaDataSet, null, null, null);
 	}
@@ -249,7 +249,7 @@ function createCollectionDiv(selectTarget, folderPath) {
 	$(".registerMsgErrorBlock").hide();
 	$(".registerErrorMsg").html("");
 	var params = {
-		parent : selectedIndexPathVal
+		parent: selectedIndexPathVal
 	};
 	invokeAjax('/addCollection/collectionTypes', 'GET', params, retrieveCollectionList, null, null, null);
 	// loadJson for permissions list
@@ -280,7 +280,7 @@ function registerCollection() {
 	var validate = true;
 	var usermetaDataEntered = true;
 
-	$('table#newMetaDataTable input[type="search"]').each(function() {
+	$('table#newMetaDataTable input[type="search"]').each(function () {
 		var name = $(this).val();
 		var ismandatory = $(this).attr('is_mandatory');
 		if (!name && ismandatory && ismandatory != "false") {
@@ -292,30 +292,30 @@ function registerCollection() {
 			collectionName = modifiedName;
 		}
 	});
-	
-	if(collectionType && collectionType == 'Folder') {
-	
-	        var folderName = $("#folder_name").val();
-		    var folderNameModifief = folderName.replace(/ /g, "_");
-			collectionName = folderNameModifief;
-			if(!folderName) {			
-				 validate = false;
-				$(".registerErrorMsg").append("Enter Folder Name");
-				$(".registerMsgErrorBlock").show();
-				$('body,html').animate({
-					scrollTop : 0
-				}, 500);
-			}
-		} 
 
-	$("textarea").each(function() {
+	if (collectionType && collectionType == 'Folder') {
+
+		var folderName = $("#folder_name").val();
+		var folderNameModifief = folderName.replace(/ /g, "_");
+		collectionName = folderNameModifief;
+		if (!folderName) {
+			validate = false;
+			$(".registerErrorMsg").append("Enter Folder Name");
+			$(".registerMsgErrorBlock").show();
+			$('body,html').animate({
+				scrollTop: 0
+			}, 500);
+		}
+	}
+
+	$("textarea").each(function () {
 		var ismandatory = $(this).attr('is_mandatory');
 		if (!$(this).val() && ismandatory && ismandatory != "false") {
 			usermetaDataEntered = false;
 		}
 	});
 
-	$("table#newMetaDataTable .simple-select2").each(function() {
+	$("table#newMetaDataTable .simple-select2").each(function () {
 		var isMultiSelect = $(this).prop('multiple');
 		var ismandatory = $(this).attr('is_mandatory');
 		var name = $(this).val();
@@ -332,12 +332,25 @@ function registerCollection() {
 
 	});
 
-	if (!usermetaDataEntered) {
+	let accessGroupError = true;
+
+	if ($("#nonPublicAccess").is(":checked")) {
+		if ($("#accessGroupSelect").val().length == 0) {
+			accessGroupError = false;
+		}
+	}
+
+	if (!usermetaDataEntered || !accessGroupError) {
 		validate = false;
-		$(".registerErrorMsg").append("Enter values for all required metadata.");
+		if (!accessGroupError) {
+			$(".registerErrorMsg").append("<div>Select the Non-public access group.</div");
+		}
+		if (!usermetaDataEntered) {
+			$(".registerErrorMsg").append("Enter values for all required metadata.");
+		}
 		$(".registerMsgErrorBlock").show();
 		$('body,html').animate({
-			scrollTop : 0
+			scrollTop: 0
 		}, 500);
 	}
 
@@ -349,14 +362,14 @@ function registerCollection() {
 	if (validate && newCollectionPath) {
 		var data = $('#registerCollectionForm').serialize();
 		$.ajax({
-			type : "POST",
-			url : "/addCollection",
-			data : data,
-			beforeSend : function() {
+			type: "POST",
+			url: "/addCollection",
+			data: data,
+			beforeSend: function () {
 				$("#spinner").show();
 				$("#dimmer").show();
 			},
-			success : function(msg) {
+			success: function (msg) {
 				$("#spinner").hide();
 				$("#dimmer").hide();
 				console.log('SUCCESS: ', msg);
@@ -365,18 +378,18 @@ function registerCollection() {
 				}
 				postSuccessRegisterCollection(msg, collectionType);
 				$('body,html').animate({
-					scrollTop : 0
+					scrollTop: 0
 				}, 500);
 
 			},
-			error : function(e) {
+			error: function (e) {
 				$("#spinner").hide();
 				$("#dimmer").hide();
 				console.log('ERROR: ', e);
 				$(".registerErrorMsg").html(e.responseText);
 				$(".registerMsgErrorBlock").show();
 				$('body,html').animate({
-					scrollTop : 0
+					scrollTop: 0
 				}, 500);
 			}
 		});
@@ -388,23 +401,23 @@ function postSuccessRegisterCollection(data, collectionType) {
 	if (data.indexOf("Collection is created") != -1) {
 		if (collectionType == 'Program') {
 			var params = {
-				selectedPath : $("#basePath").val(),
-				refreshNode : 'true'
+				selectedPath: $("#basePath").val(),
+				refreshNode: 'true'
 			};
 			loadJsonData('/browse/collection', $("#instituteList"), true, params, displaySuccessMsg, null, "key",
-					"value");
+				"value");
 			resetOnChangeofSelectCollection("instituteList", null);
 		} else if (collectionType == 'Study') {
 			var params = {
-				selectedPath : $("#instituteList").val(),
-				refreshNode : 'true'
+				selectedPath: $("#instituteList").val(),
+				refreshNode: 'true'
 			};
 			loadJsonData('/browse/collection', $("#studyList"), true, params, displaySuccessMsg, null, "key", "value");
 			resetOnChangeofSelectCollection("studyList", null);
 		} else if (collectionType == 'Asset') {
 			var params = {
-				selectedPath : $("#studyList").val(),
-				refreshNode : 'true'
+				selectedPath: $("#studyList").val(),
+				refreshNode: 'true'
 			};
 			loadJsonData('/browse/collection', $("#dataList"), true, params, displaySuccessMsg, null, "key", "value");
 			resetAssetsSelection();
