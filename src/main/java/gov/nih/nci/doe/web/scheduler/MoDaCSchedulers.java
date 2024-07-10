@@ -116,7 +116,7 @@ public class MoDaCSchedulers extends AbstractDoeController {
 		// update status for all progress task Ids in task manager table
 		List<TaskManager> taskList = taskManagerRepository.getAllTasksForNotification();
 
-		String serviceURL = queryServiceURL + "?page=" + 1 + "&totalCount=true&pageSize=1000";
+		String serviceURL = queryServiceURL + "?page=" + 1 + "&totalCount=true&pageSize=100";
 		HpcDownloadSummaryDTO downloads = DoeClientUtil.getDownloadSummary(readToken, serviceURL);
 
 		final MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>();
