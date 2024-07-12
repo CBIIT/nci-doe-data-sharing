@@ -70,7 +70,7 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 	@ResponseBody
 	public AjaxResponseBody download(@RequestBody @Valid DoeDownloadDatafile downloadFile, HttpSession session,
 			HttpServletRequest request, HttpServletResponse response) {
-		log.info("download files: " + downloadFile.getSelectedPaths());
+		log.info("download paths: " + downloadFile.getSelectedPaths());
 		AjaxResponseBody result = new AjaxResponseBody();
 		try {
 			String authToken = null;

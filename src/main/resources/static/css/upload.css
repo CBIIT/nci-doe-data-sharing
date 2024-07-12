@@ -1,6 +1,7 @@
 .select2-container--default .select2-selection--single .select2-selection__arrow b {
-    border-color: #E87B05 transparent transparent transparent !important;
+	border-color: #E87B05 transparent transparent transparent !important;
 }
+
 table#newMetaDataTableForSingleFile tbody tr td {
 	background-color: #E0F0F4;
 }
@@ -11,23 +12,67 @@ table#newMetaDataTableForSingleFile thead tr th {
 
 }
 
-.btn-primary{
-   background-color: #194F85!important;
+.btn-primary {
+	background-color: #194F85 !important;
 }
 
 table#newMetaDataTable tbody tr td {
-	background-color: #E0F0F4;
-    font-size: 14px;
-    font-family: 'latoregular';
+	background-color: #EEF4F6;
+	color: #235172;
+	font-family: "Open Sans";
+	font-size: 13px;
+	font-style: normal;
+	padding: 16px 32px !important;
+
+	input {
+		padding: 0 10px;
+
+	}
+
+	input[type="radio"] {
+		margin-top: 10px;
+		accent-color: #004A8B;
+	}
+
+	textarea {
+		padding: 8px;
+		min-height: 120px;
+	}
+
+	#nonPublicAccess {
+		margin-left: 24px;
+
+	}
+}
+
+table#newMetaDataTable tbody td {
+	border-bottom: 4px solid white;
+	border-top: none;
+}
+
+table#newMetaDataTable tbody tr td:first-child {
+	text-transform: uppercase;
+	font-weight: 600;
+}
+
+
+table#newMetaDataTable tbody tr td:nth-child(2) {
+	padding: 8px 0px !important;
 }
 
 table#newMetaDataTable thead tr th {
 	background-color: #194F85;
-    letter-spacing: 0.5px;
-    font-family: 'inter_regular';
-    font-size: 12px;
-    color: #fff;
+	letter-spacing: 0.5px;
+	color: #FFF;
+	font-family: "Open Sans";
+	font-size: 15px;
+	padding: 2px 32px;
+	font-weight: 100;
+	width: 50%;
+}
 
+table#newMetaDataTable thead tr th:nth-child(2) {
+	padding: 2px 0px;
 }
 
 .select2-container .select2-selection--single .select2-selection__rendered {
@@ -35,7 +80,7 @@ table#newMetaDataTable thead tr th {
 	background-color: transparent;
 }
 
-.select2-selection .select2-selection--multiple{
+.select2-selection .select2-selection--multiple {
 	background-color: #F7F7F7;
 }
 
@@ -45,19 +90,23 @@ table#newMetaDataTable thead tr th {
 	font-size: 14px;
 	font-weight: 500;
 }
+
 .assetBulkRadioButtons {
 	height: 19px;
 	width: 22px;
 	transform: translateY(5px);
 }
+
 .registeRadioButtons {
 	transform: scale(1.25);
 }
 
 .uploadslogo {
-	width: 15px;
+	width: 12px;
 }
-#registerBulkAssets, #registerBulkDataFileBtn {
+
+#registerBulkAssets,
+#registerBulkDataFileBtn {
 	margin-top: 5px;
 	background-color: #E66F05;
 	color: #fff;
@@ -67,33 +116,66 @@ table#newMetaDataTable thead tr th {
 	font-size: 15px;
 	letter-spacing: 0.5px;
 }
+
 #registerCollectionBtn {
-	background-color: #E66F05 !important;
-	color: #fff !important;
-	border-radius: 15px;
-	width: fit-content;
-	font-size: 15px;
-	font-family: 'inter_regular';
+	margin-top: auto;
+	font-family: var(--font-family-inter);
+	min-height: 48px;
+	min-width: 200px;
+	max-width: 300px;
+	font-weight: 600;
+	line-height: 5px;
+	background-color: #2c4088 !important;
+	border-radius: 65px;
+	box-shadow: 0px 4px 50px #ffffff8c;
+	padding-left: 2rem;
+	text-align: left;
+	padding-top: 12px;
+	margin-bottom: 0.2rem;
+	color: #FFF;
+	font-size: 14px;
+	font-style: normal;
+	line-height: 60%;
+	letter-spacing: 0.14px;
+	text-transform: uppercase;
 }
+
 #cancelRegisterBtn {
-	background-color: #E66F05!important;
-	color: #fff !important;
-	border-radius: 15px;
-	width: 90px;
-	font-size: 15px;
-	font-family: 'inter_regular';
+	margin-top: auto;
+	font-family: var(--font-family-inter);
+	height: 41px;
+	width: 193px;
+	font-weight: 600;
+	line-height: 5px;
+	background-color: #506FA6 !important;
+	border-radius: 65px;
+	box-shadow: 0px 4px 50px #ffffff8c;
+	padding-left: 2rem;
+	text-align: left;
+	padding-top: 10px;
+	margin-bottom: 0.2rem;
+	color: #FFF;
+	font-size: 14px;
+	font-style: normal;
+	line-height: 110%;
+	letter-spacing: 0.14px;
+	text-transform: uppercase;
+	min-height: 50px;
 }
-.parentCollectionName,#folder_name {
+
+.parentCollectionName,
+#folder_name {
 	/*width: 130%;*/
 	height: 46px;
 	padding-left: 25px;
 	border: none;
-	background-color: #E0F0F4;
+	background-color: transparent;
 	color: #000;
 	/* flex: 1; */
 }
 
-#driveUploadAuthlink,#cloudUploadAuthlink {
+#driveUploadAuthlink,
+#cloudUploadAuthlink {
 	background-color: #E66F05 !important;
 	color: #fff !important;
 	border-radius: 15px;
@@ -113,12 +195,14 @@ table#newMetaDataTable thead tr th {
 	font-weight: 200;
 	font-size: 14px;
 }
+
 .assetGlobusSelectionFields {
 	color: #fff;
 	font-size: 13px;
 	letter-spacing: 0.5px;
 	margin-left: 10px;
 }
+
 .assetBulkGlobusLabels {
 	background-color: #194F85;
 	padding-top: 10px;
@@ -129,16 +213,19 @@ table#newMetaDataTable thead tr th {
 	font-family: 'inter_regular';
 	margin-right: 10px;
 }
+
 .assetBulkGlobusValues {
 	border: 0.95px solid #898989;
 	padding: 10px;
 	color: #000000;
 	font-family: 'inter_regular';
 }
+
 #pickerUploadLink {
 	color: #E87B05;
 	margin-left: 1.1rem;
 }
+
 .bulkAssetTextbox {
 	width: 100%;
 	border-radius: 9px;
@@ -147,20 +234,29 @@ table#newMetaDataTable thead tr th {
 	padding-left: 10px;
 	font-family: 'inter_regular';
 }
+
 input#includeCriteria:focus {
 	outline: none;
 }
+
+.assetBulkGlobusValues input:focus {
+    outline: none;
+}
+
 .addUserMetadaDiv {
 	margin-top: -42px;
 	float: right;
 	padding-left: 0px;
 }
+
 .addDeleteUploadLabels {
 	color: #F39530;
 	font-family: 'inter_regular';
 	font-size: 14px;
 }
-#primaryGlobusButton, #assetSelectionGlobusButton {
+
+#primaryGlobusButton,
+#assetSelectionGlobusButton {
 	background-color: #E66F05;
 	color: #fff !important;
 	border-radius: 15px;
@@ -168,10 +264,12 @@ input#includeCriteria:focus {
 	font-size: 15px;
 	font-family: 'inter_regular';
 }
+
 #collectionMetaDataLabel {
 	color: #1C3D5D;
 	font-family: latoregular;
 }
+
 table#globusDetailsDiv td {
 	border: none;
 	padding-top: 2px;
@@ -196,33 +294,110 @@ table#assetBulkMetadataTable thead tr th {
 
 #uploadHeader {
 	/* margin-top: 84px;  */
-	padding-bottom: -16px; 
-	height: 50px; 
-	width: 430px; 
-	background-color: #E66F05; 
+	padding-bottom: -16px;
+	height: 50px;
+	width: 430px;
+	background-color: #E66F05;
 	color: #fff;
 }
 
 #uploadHeader p {
-	font-size: 20px; 
+	font-size: 20px;
 	font-family: latoregular;
-	font-size: 25px; 
+	font-size: 25px;
 	padding-top: 5px;
 }
 
 #uploadSectionDiv {
-	border: 1px solid #AD5A00; 
-	background-color:#FFFFFF; 
+	border: 1px solid #AD5A00;
+	background-color: #FFFFFF;
 	/* margin-bottom: 84px !important; */
 }
 
 #uploadSubFragmentTab {
-	margin-top: 20px; 
+	margin-top: 20px;
 	margin-left: 100px;
 }
 
-#showSelectProgramDiv, #showSelectStudyDiv, #showSelectAssetDiv {
-	display: none; 
-	margin-top: 10px; 
+#showSelectProgramDiv,
+#showSelectStudyDiv,
+#showSelectAssetDiv {
+	display: none;
+	margin-top: 10px;
 	margin-left: 40px;
 }
+
+.permissionsLabel {
+	span.select2-selection.select2-selection--multiple {
+		border-radius: 8px;
+		border: 1px solid #6B7294 !important;
+		min-height: 42px;
+		height: auto;
+		color: #000;
+		font-weight: 400;
+	}
+}
+td{
+	.select2-container--default .select2-selection--multiple .select2-selection__rendered li {
+		color: black;
+		padding: 5px;
+	}
+}
+
+input[type=text]::-webkit-search-cancel-button {
+	-webkit-appearance: searchfield-cancel-button;
+}
+
+span.select2-selection.select2-selection--multiple {
+	border-radius: 8px;
+	border: 1px solid #6B7294 !important;
+	min-height: 42px;
+	height: auto;
+}
+
+.fa-info-square {
+	font-size: 19px;
+}
+
+.icon {
+	width: 17px;
+	height: 19px;
+	vertical-align: text-bottom;
+}
+
+.close-button {
+	padding: 5px 6px !important;
+}
+
+label.radio-label {
+	display: inline;
+	color: #000;
+	font-family: "Open Sans";
+	font-style: normal;
+	font-weight: 400;
+}
+
+.registerStudy {
+	min-width: 180px !important;
+}
+
+.registerFolder {
+	min-width: 300px !important;
+}
+
+.metadataIcon {
+	height: 22px;
+	width: 22px;
+	margin-top: -4px;
+}
+
+/* This is a temp fix we can fix with js  */
+#userMetaData {
+span.select2.select2-container.select2-container--default {
+    width: 70% !important;
+}
+input[type="search"] {
+	width: 70% !important;
+}
+}
+/* End Temp fix */

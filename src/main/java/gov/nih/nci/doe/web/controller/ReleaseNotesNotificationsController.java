@@ -16,15 +16,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import gov.nih.nci.doe.web.DoeWebException;
-import gov.nih.nci.doe.web.service.EmailNotificationsService;
+import gov.nih.nci.doe.web.service.ReleaseNotesNotificationsService;
 
 @Controller
 @EnableAutoConfiguration
 @RequestMapping("/emailNotifications")
-public class EmailNotificationsController extends AbstractDoeController {
+public class ReleaseNotesNotificationsController extends AbstractDoeController {
 
 	@Autowired
-	EmailNotificationsService emailUpdatesService;
+	ReleaseNotesNotificationsService releaseNotesNotificationService;
 
 	@GetMapping
 	public String openOutlook(Model model, HttpSession session, HttpServletRequest request) throws DoeWebException {
@@ -35,7 +35,7 @@ public class EmailNotificationsController extends AbstractDoeController {
 			// This API can only be used by admins
 			if (Boolean.TRUE.equals(getIsAdmin())) {
 
-				String mailUrl = mailService.sendNotificationEmail(webServerName, getLoggedOnUserInfo());
+				String mailUrl = mailService.sendReleaseNotesNotificationEmail(webServerName, getLoggedOnUserInfo());
 
 				model.addAttribute("mailUrl", mailUrl);
 
@@ -61,7 +61,7 @@ public class EmailNotificationsController extends AbstractDoeController {
 			String message = null;
 			// verify if the email address is a registered user to MoDaC
 			if (StringUtils.isNotEmpty(emailAddress) && authService.doesUsernameExist(emailAddress)) {
-				message = emailUpdatesService.saveEmailUpdateInfo(emailAddress);
+				message = releaseNotesNotificationService.saveEmailUpdateInfo(emailAddress);
 			} else {
 				message = "To receive notifications, <a href='/loginTab?redirectMsg=true'> create a MoDaC account</a>.";
 			}

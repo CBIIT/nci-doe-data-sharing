@@ -47,7 +47,7 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 
 		// create a new record for the owner
 		MetaDataPermissions ownerPermission = metaDataPermissionsRepository
-				.getMetaDataPermissionsOwnerByCollectionId(collectionId);
+				.getMetaDataPermissionsOwnerByCollectionPath(collectionPath);
 
 		if (ownerPermission == null) {
 			DoeUsers d = doeUserRepository.getUserInfo(user);
@@ -117,6 +117,14 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 	}
 
 	@Override
+	public void deletePermissionByCollectionPath(String collectionPath) {
+		log.info("get owner metadata permissions for collectionPath: " + collectionPath);
+		MetaDataPermissions perm = metaDataPermissionsRepository
+				.getMetaDataPermissionsOwnerByCollectionPath(collectionPath);
+		metaDataPermissionsRepository.delete(perm);
+	}
+
+	@Override
 	public void deleteAllPermissionsByCollectionId(String user, Integer collectionId) {
 		log.info("get all permissions by collection Id " + collectionId);
 		List<MetaDataPermissions> permissionsList = metaDataPermissionsRepository
@@ -161,5 +169,13 @@ public class MetaDataPermissionsServiceImpl implements MetaDataPermissionsServic
 		}));
 
 		return permissionSet;
+	}
+
+	@Override
+	public MetaDataPermissions getMetaDataPermissionsOwnerByCollectionPath(String collectionPath) {
+		log.info("get owner metadata permissions for collectionPath: " + collectionPath);
+		MetaDataPermissions perm = metaDataPermissionsRepository
+				.getMetaDataPermissionsOwnerByCollectionPath(collectionPath);
+		return perm;
 	}
 }

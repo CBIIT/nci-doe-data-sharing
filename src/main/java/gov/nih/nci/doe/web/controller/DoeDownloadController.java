@@ -36,8 +36,8 @@ import gov.nih.nci.hpc.domain.datatransfer.HpcFileLocation;
 import gov.nih.nci.hpc.domain.datatransfer.HpcGlobusDownloadDestination;
 import gov.nih.nci.hpc.domain.datatransfer.HpcS3Account;
 import gov.nih.nci.hpc.domain.datatransfer.HpcS3DownloadDestination;
-import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO;
 import gov.nih.nci.hpc.domain.datatransfer.HpcGoogleDownloadDestination;
+import gov.nih.nci.hpc.dto.datamanagement.v2.HpcDownloadRequestDTO;
 
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -150,7 +150,7 @@ public class DoeDownloadController extends AbstractDoeController {
 	@ResponseBody
 	public AjaxResponseBody download(@RequestBody @Valid DoeDownloadDatafile downloadFile, HttpSession session,
 			HttpServletRequest request, HttpServletResponse response) {
-		log.info("download file" + downloadFile.getSelectedPaths());
+		log.info("download paths: " + downloadFile.getDestinationPath());
 		AjaxResponseBody result = new AjaxResponseBody();
 		try {
 			String authToken = null;
@@ -211,6 +211,30 @@ public class DoeDownloadController extends AbstractDoeController {
 				googleCloudDestination.setAccessToken(refreshTokenDetailsGoogleCloud);
 				dto.setGoogleCloudStorageDownloadDestination(googleCloudDestination);
 			}
+
+			// for collection downloads, set the destination location preference
+
+			if ("collection".equals(downloadFile.getDownloadType())) {
+				log.info("download to destination: " + downloadFile.getDownloadToDestination());
+				if ((downloadFile.getDownloadToDestination() != null
+						&& downloadFile.getDownloadToDestination().equalsIgnoreCase("downloadToDestination"))
+						|| (downloadFile.getDownloadToDestination() == null)) {
+
+					dto.setAppendPathToDownloadDestination(false);
+					dto.setAppendCollectionNameToDownloadDestination(false);
+
+				} else if (downloadFile.getDownloadToDestination() != null
+						&& downloadFile.getDownloadToDestination().equalsIgnoreCase("createCollectionFolder")) {
+					dto.setAppendPathToDownloadDestination(false);
+					dto.setAppendCollectionNameToDownloadDestination(true);
+
+				} else if (downloadFile.getDownloadToDestination() != null
+						&& downloadFile.getDownloadToDestination().equalsIgnoreCase("createFullPath")) {
+					dto.setAppendPathToDownloadDestination(true);
+					dto.setAppendCollectionNameToDownloadDestination(false);
+				}
+			}
+
 			final String downloadTaskType = "collection".equals(downloadFile.getDownloadType())
 					? HpcDownloadTaskType.COLLECTION.name()
 					: HpcDownloadTaskType.DATA_OBJECT.name();

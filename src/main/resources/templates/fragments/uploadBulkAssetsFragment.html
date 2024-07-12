@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+
+<body>
+
+	<div id="assetUploadDiv" class="form-row pt-2 pb-2 mb-2 col-lg-12 col-md-12 collapse"
+		th:fragment="uploadBulkAssetsFragment">
+
+		<form class="form-horizontal" id="registerBulkAssetForm" enctype="multipart/form-data" method="POST"
+			style="width: 100%;">
+
+			<div class="form-row" style="margin-left: 100px;">
+
+				<!-- globus end point details div -->
+				<div class="form-group col-lg-12 col-md-12" id="globusDetailsDiv" style="display:none;">
+
+					<div class="form-group col-lg-12 col-md-12" style="margin-top: -3px;">
+
+						<button type="button" class="btn btn-md btn-link" id="assetSelectionGlobusButton">
+							Select Assets from <img src="images/Uploads-Globus.icon.png"
+								th:src="@{/images/Uploads-Globus.icon.png}" style="width: 20px;" alt="globus"> Globus
+							Endpoint
+						</button>
+						<br />
+					</div>
+
+					<div class="col-md-12 col-sm-12" style="margin-left: 3px; margin-top: 21px;">
+						<div class="form-row" th:if="${bulkUploadCollection !=null and endpoint_id != null}">
+							<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+								<span class="assetGlobusSelectionFields">GLOBUS
+									ENDPOINT ID </span>
+							</div>
+							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues">
+								<span id="assetGlobusEndpointId" th:text="${endpoint_id}"
+									style="font-weight: normal; padding-left: 10px;"></span>
+							</div>
+						</div>
+
+						<div class="form-row" style="margin-top: -6px;"
+							th:if="${bulkUploadCollection !=null and endpoint_path != null}">
+							<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+								<span class="assetGlobusSelectionFields">GLOBUS
+									ENDPOINT PATH </span>
+							</div>
+							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues">
+								<span id="assetGlobusEndpointPath" th:text="${endpoint_path}"
+									style="font-weight: normal; padding-left: 10px;"></span>
+							</div>
+						</div>
+
+						<div class="form-row" style="margin-top: -6px;"
+							th:if="${bulkUploadCollection!=null and fileNames != null}">
+							<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+								<span class="assetGlobusSelectionFields">SELECTED
+									FILES</span>
+							</div>
+							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues" id="assetSelectedFiles">
+								<ul>
+									<li th:each="fileName:${fileNames}" th:text="${fileName}"></li>
+								</ul>
+								<input th:if="${fileIds != null}" type="hidden" name="fileIds" th:value="${fileId}"
+									th:each="fileId : ${fileIds}" />
+							</div>
+						</div>
+
+
+						<div class="form-row" style="margin-top: -6px;"
+							th:if="${bulkUploadCollection !=null and folderNames != null}">
+							<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+								<span class="assetGlobusSelectionFields">SELECTED
+									FOLDERS</span>
+							</div>
+							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues" id="assetSelectedFolders">
+								<ul>
+									<li th:each="folderName:${folderNames}" th:text="${folderName}"></li>
+								</ul>
+								<input th:if="${folderIds != null}" type="hidden" name="folderIds"
+									th:value="${folderId}" th:each="folderId : ${folderIds}" />
+							</div>
+						</div>
+
+						<div class="form-row" style="margin-top: -6px;"
+							th:if="${bulkUploadCollection !=null and endpoint_id != null}">
+							<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+								<span class="assetGlobusSelectionFields">INCLUDE
+									CRITERIA&nbsp; <i class="fas fa-question-circle" data-toggle="tooltip"
+										data-placement="right"
+										title="Add list of include patterns to match source files in the selected folders. "></i>
+								</span>
+							</div>
+							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues"
+								style="background-color: #fff;">
+								<input type="text" name="includeCriteria" placeholder="Enter criteria"
+									id="includeCriteria"
+									style="width: 100%; border: none; background-color: transparent; padding-left: 10px;">
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!--end globus end point details-->
+
+				<!-- S3 asset bulk upload div -->
+
+				<div class="form-group col-lg-12 col-md-12" id="S3DetailsDiv" style="display:none;">
+
+					<div class="col-md-12 col-sm-12" style="margin-left: 3px; margin-top: 21px;">
+
+						<div class="form-row">
+							<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+								<span class="assetGlobusSelectionFields">S3 BUCKET</span>
+							</div>
+							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues"
+								style="background-color: #fff;">
+								<input type="search" name="bucketName" is_mandatory="true"
+									placeholder="Enter S3 Bucket Name"
+									style="width: 100%; border: none; background-color: transparent; padding-left: 10px;">
+							</div>
+						</div>
+
+						<div class="form-row" style="margin-top: -6px;">
+							<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+								<span class="assetGlobusSelectionFields"> S3 (SOURCE) PATH</span>
+							</div>
+							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues"
+								style="background-color: #fff;">
+								<input type="search" name="s3Path" is_mandatory="true"
+									placeholder="Enter S3 (Source) Path"
+									style="width: 100%; border: none; background-color: transparent; padding-left: 10px;">
+							</div>
+						</div>
+
+
+						<div class="form-row" style="margin-top: -6px;">
+							<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+								<span class="assetGlobusSelectionFields">ACCESS KEY&nbsp;
+								</span>
+							</div>
+							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues"
+								style="background-color: #fff;">
+								<input type="search" name="accessKey" is_mandatory="true" placeholder="Enter Access Key"
+									style="width: 100%; border: none; background-color: transparent; padding-left: 10px;">
+							</div>
+						</div>
+
+						<div class="form-row" style="margin-top: -6px;">
+							<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+								<span class="assetGlobusSelectionFields">SECRET ACCESS KEY&nbsp;
+								</span>
+							</div>
+							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues"
+								style="background-color: #fff;">
+								<input type="password" name="secretKey" is_mandatory="true"
+									placeholder="Enter Secret Access Key"
+									style="width: 100%; border: none; background-color: transparent; padding-left: 10px;">
+							</div>
+						</div>
+
+						<div class="form-row" style="margin-top: -6px;">
+							<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+								<span class="assetGlobusSelectionFields">REGION&nbsp;
+								</span>
+							</div>
+							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues"
+								style="background-color: #fff;">
+								<input type="search" name="region" is_mandatory="true"
+									placeholder="Enter Region (for Example us-east-1)"
+									style="width: 100%; border: none; background-color: transparent; padding-left: 10px;">
+							</div>
+						</div>
+
+
+						<div class="form-row" style="margin-top: -6px;">
+							<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+								<span class="assetGlobusSelectionFields">INCLUDE
+									CRITERIA&nbsp; <i class="fas fa-question-circle" data-toggle="tooltip"
+										data-placement="right"
+										title="Add list of include patterns to match source files in the selected folders. "></i>
+								</span>
+							</div>
+							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues"
+								style="background-color: #fff;">
+								<input type="search" name="includeCriteria" is_mandatory="false"
+									placeholder="Enter criteria" id="includeCriteria"
+									style="width: 100%; border: none; background-color: transparent; padding-left: 10px;">
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+				<!-- end S3 bulk upload div -->
+				<!-- common part-->
+				<div th:replace="fragments/bulkAssetMetadataOptions :: bulkAssetMetadataOptions"></div>
+
+			</div>
+		</form>
+	</div>
+</body>
+
+</html>

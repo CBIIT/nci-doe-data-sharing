@@ -108,8 +108,37 @@
 							name="selectedFilesList" id="selectedFilesList" />
 					</div>
 				</div>
+				
+			 <div class="form-row col-md-10 col-sm-10 ml-auto" th:if="${downloadAsyncType == 'collection'}">
+			    <label>Destination Hierarchy:</label>
+					<div class="form-group">
+						<div class="pull-left">
+							<label class="radio-inline"><input type="radio"
+								name="downloadToDestination" value="downloadToDestination" checked="checked">
+								&nbsp;&nbsp; Download to Specified Folder &nbsp;&nbsp;</label>
+						</div>
+			        </div>
+			        
+			        <div class="form-group">
+						<div class="pull-left">
+							<label class="radio-inline"><input type="radio"
+								name="downloadToDestination" value="createCollectionFolder">
+								&nbsp;&nbsp; Create Parent Folder &nbsp;&nbsp;</label>
+						</div>
+			        </div>
+			        
+			        <div class="form-group">
+						<div class="pull-left">
+							<label class="radio-inline"><input type="radio"
+								name="downloadToDestination" value="createFullPath">
+								&nbsp;&nbsp; Create Full Path</label>
+						</div>
+			        </div>
+			        
+			</div>
 
-				<div class="form-row col-md-9 col-sm-9 ml-auto">
+				<div class="form-row col-md-10 col-sm-10 ml-auto">
+				<label>Transfer Type:</label>
 					<div class="form-group" id="syncRadioSet">
 						<div class="pull-left">
 							<label class="radio-inline"><input type="radio"
@@ -221,8 +250,8 @@
 								Authorize MoDaC to Access Your Google Drive</a>
 						</div>
 						<div th:if="${authorized != null}" class="alert-success">
-							<i class="fa fa-check">&nbsp;</i>Access Token successfully
-							generated
+							<i class="fa fa-check">&nbsp;</i>Access Token Successfully
+							Generated
 						</div>
 						<br>
 						<div class="col-sm-12 column">
@@ -243,8 +272,8 @@
 								Authorize MoDaC to Access Your Google Cloud</a>
 						</div>
 						<div th:if="${authorizedGC != null}" class="alert-success">
-							<i class="fa fa-check">&nbsp;</i>Access Token successfully
-							generated
+							<i class="fa fa-check">&nbsp;</i>Access Token Successfully
+							Generated
 						</div>
 						<br>
 						<div class="col-sm-12 column">

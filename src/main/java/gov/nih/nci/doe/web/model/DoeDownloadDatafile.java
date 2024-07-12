@@ -17,6 +17,15 @@ public class DoeDownloadDatafile {
 	private String drivePath;
 	private String googleCloudPath;
 	private String googleCloudBucketName;
+	private String downloadToDestination;
+
+	public String getDownloadToDestination() {
+		return downloadToDestination;
+	}
+
+	public void setDownloadToDestination(String downloadToDestination) {
+		this.downloadToDestination = downloadToDestination;
+	}
 
 	public String getGoogleCloudPath() {
 		return googleCloudPath;

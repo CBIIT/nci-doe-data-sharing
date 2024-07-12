@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import gov.nih.nci.doe.web.DoeWebException;
+import gov.nih.nci.doe.web.domain.MetaDataPermissions;
 import gov.nih.nci.doe.web.model.AuditingModel;
 import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
@@ -35,7 +36,8 @@ public class DeleteCollectionController extends AbstractDoeController {
 	@SuppressWarnings("unchecked")
 	@PostMapping
 	@ResponseBody
-	public String deletCollection(@RequestParam(value = "collPath") String collPath, HttpSession session,
+	public String deletCollection(@RequestParam(value = "collPath") String collPath,
+			@RequestParam(value = "collectionType", required = false) String collectionType, HttpSession session,
 			@RequestHeader HttpHeaders headers) throws DoeWebException {
 
 		String authToken = (String) session.getAttribute("writeAccessUserToken");
@@ -59,10 +61,36 @@ public class DeleteCollectionController extends AbstractDoeController {
 			// collection owners and group access users with delete flag can delete
 			// collection
 
-			List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(userInfo)
-					.getBody();
-			String role = getPermissionRole(userInfo, collection.getCollection().getCollectionId(),
-					loggedOnUserPermissions);
+			// when deleting a folder, if cannot find a row in collection permissions table,
+			// check for parent until
+			// the record is found
+			String role = "";
+			if (StringUtils.isNotEmpty(collectionType) && "Folder".equalsIgnoreCase(collectionType)) {
+				MetaDataPermissions perm = metaDataPermissionService
+						.getMetaDataPermissionsOwnerByCollectionPath(collPath);
+
+				String currentPath = collPath;
+				while (perm == null) {
+
+					String parentPath = currentPath.substring(0, currentPath.lastIndexOf('/'));
+					perm = metaDataPermissionService.getMetaDataPermissionsOwnerByCollectionPath(parentPath);
+					if (perm != null) {
+						break; // Exit the loop if perm is not null
+					}
+					currentPath = parentPath;
+
+				}
+
+				if (perm != null && perm.getUser().getEmailAddrr().equalsIgnoreCase(userInfo)) {
+					// loggedOnUser is an owner
+					role = "Owner";
+				}
+			} else {
+				List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(userInfo)
+						.getBody();
+				role = getPermissionRole(userInfo, collection.getCollection().getCollectionId(),
+						loggedOnUserPermissions);
+			}
 			if ("Owner".equalsIgnoreCase(role)
 					|| (Boolean.TRUE.equals(getIsDelete()) && "Group User".equalsIgnoreCase(role))) {
 

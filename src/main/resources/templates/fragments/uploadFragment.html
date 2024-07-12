@@ -82,7 +82,7 @@
 							<div class="form-group col-lg-4 col-md-4"
 								style="margin-left: 70px;">
 								<div class="pull-left" style="margin-left: 15px">
-									<label for="selectStudy" class="uploadLabels radio-inline"><input
+									<label class="uploadLabels radio-inline"><input
 										type="radio" name="selectStudy" class="registeRadioButtons"
 										onclick="createCollectionDiv('instituteList')"
 										value="Register Study">&nbsp;&nbsp; Register Study</label>
@@ -132,7 +132,7 @@
 							<div class="form-group col-lg-4 col-md-4"
 								style="margin-left: 70px;">
 								<div class="pull-left" style="margin-left: 15px">
-									<label for="selectAsset" class="uploadLabels radio-inline"><input
+									<label class="uploadLabels radio-inline"><input
 										type="radio" name="selectAsset" class="registeRadioButtons"
 										onclick="showSelect('subAsset')" value="Register Asset">&nbsp;&nbsp;
 										Register Asset</label>
@@ -143,17 +143,28 @@
 									<div class="form-group col-lg-12 col-md-12">
 										<label for="assetSelection" class="uploadSubLabels radio-inline"><input
 											type="radio" name="assetSelection" data-toggle="modal"
-											data-target="#createAssetModal" data-backdrop="static"
-											data-keyboard="false" value="Register Empty Asset">&nbsp;&nbsp;
+											data-target="#createAssetModal" data-backdrop="static" 
+											data-keyboard="false" value="Register Empty Asset"
+											onchange="displayBulkAssetSelection('emptyAsset')">&nbsp;&nbsp;
 											Register Empty Asset</label>
 									</div>
 									<div class="form-group col-lg-12 col-md-12">
-										<label for="addAsets" class="uploadSubLabels radio-inline"
+										<label for="bulkAssetGlobusRadiobtn" class="uploadSubLabels radio-inline"
 											style="margin-top: -10px;"><input type="radio"
-											name="assetSelection" data-toggle="collapse"
-											data-target="#assetUploadDiv" id="addAsets"
-											value="Register Asset">&nbsp;&nbsp; Upload Asset(s)
+											name="assetSelection" onchange="displayBulkAssetSelection('Globus')"
+											id="bulkAssetGlobusRadiobtn"
+											value="globus">&nbsp;&nbsp; Upload Assets
 											from Globus Endpoint</label>
+
+									</div>
+									
+								<div class="form-group col-lg-12 col-md-12">
+										<label for="bulkAssetS3Radiobtn" class="uploadSubLabels radio-inline"
+											style="margin-top: -10px;"><input type="radio"
+											name="assetSelection" onchange="displayBulkAssetSelection('S3')"
+										    id="bulkAssetS3Radiobtn"
+											value="S3">&nbsp;&nbsp; Upload Assets
+											from AWS S3</label>
 
 									</div>
 								</div>
@@ -189,202 +200,14 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-row pt-2 pb-2 mb-2 col-lg-12 col-md-12 collapse"
-								id="assetUploadDiv">
-								<form class="form-horizontal" id="registerBulkAssetForm"
-									enctype="multipart/form-data" method="POST"
-									style="width: 100%;">
 
-									<div class="form-row" style="margin-left: 100px;">
-										<div class="form-group col-lg-12 col-md-12">
-
-											<div class="form-group col-lg-12 col-md-12"
-												style="margin-top: -3px">
-
-												<button type="button" class="btn btn-md btn-link"
-													id="assetSelectionGlobusButton">
-													Select Assets from <img
-														src="images/Uploads-Globus.icon.png"
-														th:src="@{/images/Uploads-Globus.icon.png}"
-														style="width: 20px;" alt="globus"> Globus Endpoint
-												</button>
-												<br />
-											</div>
-
-											<div class="col-md-12 col-sm-12" id="globusDetailsDiv"
-												style="margin-left: 3px; margin-top: 21px;">
-												<div class="form-row"
-													th:if="${bulkUploadCollection !=null and endpoint_id != null}">
-													<div
-														class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
-														<span class="assetGlobusSelectionFields">GLOBUS
-															ENDPOINT ID </span>
-													</div>
-													<div
-														class="form-group col-lg-6 col-md-6 assetBulkGlobusValues">
-														<span id="assetGlobusEndpointId" th:text="${endpoint_id}"
-															style="font-weight: normal; padding-left: 10px;"></span>
-													</div>
-												</div>
-
-												<div class="form-row" style="margin-top: -6px;"
-													th:if="${bulkUploadCollection !=null and endpoint_path != null}">
-													<div
-														class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
-														<span class="assetGlobusSelectionFields">GLOBUS
-															ENDPOINT PATH </span>
-													</div>
-													<div
-														class="form-group col-lg-6 col-md-6 assetBulkGlobusValues">
-														<span id="assetGlobusEndpointPath"
-															th:text="${endpoint_path}"
-															style="font-weight: normal; padding-left: 10px;"></span>
-													</div>
-												</div>
-
-												<div class="form-row" style="margin-top: -6px;"
-													th:if="${bulkUploadCollection!=null and fileNames != null}">
-													<div
-														class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
-														<span class="assetGlobusSelectionFields">SELECTED
-															FILES</span>
-													</div>
-													<div
-														class="form-group col-lg-6 col-md-6 assetBulkGlobusValues"
-														id="assetSelectedFiles">
-														<ul>
-															<li th:each="fileName:${fileNames}" th:text="${fileName}"></li>
-														</ul>
-														<input th:if="${fileIds != null}" type="hidden"
-															name="fileIds" th:value="${fileId}"
-															th:each="fileId : ${fileIds}" />
-													</div>
-												</div>
-
-
-												<div class="form-row" style="margin-top: -6px;"
-													th:if="${bulkUploadCollection !=null and folderNames != null}">
-													<div
-														class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
-														<span class="assetGlobusSelectionFields">SELECTED
-															FOLDERS</span>
-													</div>
-													<div
-														class="form-group col-lg-6 col-md-6 assetBulkGlobusValues"
-														id="assetSelectedFolders">
-														<ul>
-															<li th:each="folderName:${folderNames}"
-																th:text="${folderName}"></li>
-														</ul>
-														<input th:if="${folderIds != null}" type="hidden"
-															name="folderIds" th:value="${folderId}"
-															th:each="folderId : ${folderIds}" />
-													</div>
-												</div>
-
-												<div class="form-row" style="margin-top: -6px;"
-													th:if="${bulkUploadCollection !=null and endpoint_id != null}">
-													<div
-														class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
-														<span class="assetGlobusSelectionFields">INCLUDE
-															CRITERIA&nbsp; <i class="fas fa-question-circle"
-															data-toggle="tooltip" data-placement="right"
-															title="Add list of include patterns to match source files in the selected folders. "></i>
-														</span>
-													</div>
-													<div
-														class="form-group col-lg-6 col-md-6 assetBulkGlobusValues"
-														style="background-color: #fff;">
-														<input type="text" name="includeCriteria"
-															placeholder="Enter criteria" id="includeCriteria"
-															style="width: 100%; border: none; background-color: transparent; padding-left: 10px;">
-													</div>
-												</div>
-											</div>
-											<div class="form-row col-md-12 col-sm-12"
-												th:if="${bulkUploadCollection != null and endpoint_id != null}"
-												style="margin-left: 5px; margin-top: 10px;">
-												<label
-													style="color: #C06400; font-family: 'inter_regular'; font-size: 15px; font-weight: 500;">
-													Do you want to upload bulk metadata file:</label>
-												<div class="form-group">
-													<div class="pull-left">
-														<label class="uploadAssetLabels radio-inline"><input
-															type="radio" name="assetUploadType"
-															class="assetBulkRadioButtons"
-															onchange="displayAssetTpeSelection('Yes')" value="Yes">
-															&nbsp;Yes</label>
-													</div>
-												</div>
-												&nbsp;&nbsp;&nbsp;&nbsp;
-												<div class="form-group">
-													<div class="pull-left" style="margin-left: 15px">
-														<label class="uploadAssetLabels radio-inline"> <input
-															type="radio" name="assetUploadType"
-															class="assetBulkRadioButtons"
-															onchange="displayAssetTpeSelection('No')" value="No">&nbsp;No
-														</label>
-													</div>
-												</div>
-											</div>
-											<div class="form-row col-md-12 col-sm-12" id="uploadCsvFile"
-												style="display: none; margin-left: 7px; margin-bottom: 10px;">
-												<label> <input type="file" name="doeMetadataFile"
-													id="doeMetadataFile"
-													accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
-					  application/vnd.ms-excel,.xls, .xlsx" /></label>
-											</div>
-											<div class="form-row col-md-12 col-sm-12"
-												id="formAssetSelection" style="display: none;">
-												<div class="form-group col-md-6 col-sm-6">
-													<label
-														style="color: #C06400; font-family: 'inter_regular'; font-size: 15px; font-weight: 500;">Asset
-														Type: <select class="simple-select2" id="assetTypeSelect"
-														name="assetType"
-														style="border: 2px solid #E87B05; color: #C06400; width: 40%"
-														onChange="retrieveAssetTypeDiv(this.options[this.selectedIndex])">
-															<option value="Select">Select</option>
-															<option value="Dataset">Dataset</option>
-															<option value="Model">Model</option>
-													</select>
-													</label>
-												</div>
-												<div class="form-group col-md-12 col-sm-12"
-													id="addMetadataDiv" style="display: none;">
-													<input type="hidden" name="collection_type" value="Asset" />
-													<div class="col-md-3 col-sm-3 addUserMetadaDiv">
-														<button id="addUserMetadataForBulkAssets" type="button"
-															class="btn btn-primary mb-2 mr-2"
-															onclick="addNewMetaDataCollection('assetBulkMetadataTable')">Add
-															Metadata</button>
-													</div>
-
-													<table id="assetBulkMetadataTable"
-														class="table display dt-responsive wrap"
-														style="width: 85%; border: none; border-collapse: separate; border-spacing: 0 1px;">
-														<thead>
-															<tr>
-																<th aria-sort="none" class="sortable" data-sort="text"
-																	role="columnheader" scope="col">ATTRIBUTE</th>
-																<th aria-sort="none" class="sortable" data-sort="text"
-																	role="columnheader" scope="col">VALUE</th>
-															</tr>
-														</thead>
-														<tbody>
-														</tbody>
-													</table>
-												</div>
-											</div>
-											<div class="form-group col-lg-8 col-md-8"
-												style="margin-top: -4px; margin-bottom: 0px; margin-left: 0px;">
-												<input type="button" value="Upload" class="btn"
-													disabled="true" id="registerBulkAssets">
-											</div>
-										</div>
-									</div>
-
-								</form>
-							</div>
+                     <!-- bulk asset upload div -->
+                     
+                     <div
+			          th:replace="fragments/uploadBulkAssetsFragment :: uploadBulkAssetsFragment"></div>
+			
+                     <!-- End bulk asset upload div -->
+                     				
 						</div>
 
 
@@ -397,7 +220,7 @@
 
 								<a href="#" id="addBulkDataFiles" class="addDeleteUploadLabels"
 									data-toggle="tooltip"> <i class="fas fa-upload"></i>&nbsp;&nbsp;
-									Upload Files to Asset
+									Upload to Asset
 								</a>
 							</div>
 

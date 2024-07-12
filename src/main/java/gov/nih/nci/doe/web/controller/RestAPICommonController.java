@@ -115,9 +115,6 @@ public class RestAPICommonController extends AbstractDoeController {
 	@Value("${gov.nih.nci.hpc.server.v2.collection}")
 	private String collectionUrl;
 
-	@Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
-	private String bulkRegistrationURL;
-
 	@Value("${gov.nih.nci.hpc.server.download}")
 	private String queryServiceURL;
 

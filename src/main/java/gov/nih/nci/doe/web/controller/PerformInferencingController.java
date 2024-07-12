@@ -56,9 +56,6 @@ import gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationStatus
 @RequestMapping("/performInferencing")
 public class PerformInferencingController extends AbstractDoeController {
 
-	@Value("${gov.nih.nci.hpc.server.v2.bulkregistration}")
-	private String bulkRegistrationURL;
-
 	@Value("${gov.nih.nci.hpc.server.dataObject}")
 	private String dataObjectServiceURL;
 

@@ -1,0 +1,15 @@
+alter table TASK_MANAGER_T
+    add STATUS VARCHAR2(255)
+/
+
+alter table TASK_MANAGER_T
+    add IS_NOTIFIED CHAR
+/
+
+update TASK_MANAGER_T set IS_NOTIFIED = 'Y' where IS_NOTIFIED IS NULL;
+
+alter table INFERENCING_TASK_T
+    add IS_NOTIFIED CHAR
+/
+update INFERENCING_TASK_T set IS_NOTIFIED = 'Y' where IS_NOTIFIED IS NULL;
+
