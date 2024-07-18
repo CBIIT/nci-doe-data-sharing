@@ -66,7 +66,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		session.removeAttribute("parentCollection");
 		session.removeAttribute("metadataEntries");
 		session.removeAttribute("parent");
-		session.removeAttribute("institutePath");
+		session.removeAttribute("programPath");
 		session.removeAttribute("studyPath");
 		session.removeAttribute("uploadPath");
 		session.removeAttribute("fileIds");
@@ -165,7 +165,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			model.addAttribute("authorizedGC", "true");
 		}
 		model.addAttribute("datafilePath", session.getAttribute("datafilePath"));
-		model.addAttribute("institutePath", session.getAttribute("institutePath"));
+		model.addAttribute("programPath", session.getAttribute("programPath"));
 		model.addAttribute("studyPath", session.getAttribute("studyPath"));
 		model.addAttribute("bulkUploadCollection", session.getAttribute("bulkUploadCollection"));
 		model.addAttribute("uploadPath", session.getAttribute("uploadPath"));
@@ -210,6 +210,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		boolean isS3File = s3File != null && s3File.equals("on");
 		String gcFile = (String) request.getParameter("gcFile");
 		boolean isGcFile = gcFile != null && gcFile.equals("on");
+		String assetIdentifier_form = request.getParameter("zAttrStr_asset_identifier");
 
 		if (StringUtils.equalsAnyIgnoreCase(bulkType, "globus") && globusEndpointFiles != null) {
 			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO> files = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO>();
@@ -277,13 +278,35 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			folder.setGoogleCloudStorageScanDirectory(googleCloudSource);
 			folder.setBasePath(datafilePath);
 			HpcDirectoryScanPathMap pathDTO = new HpcDirectoryScanPathMap();
-			pathDTO.setFromPath(gcPath);
+
 			// Extract the last subdirectory. If there are no subdirectories, FromPath and
 			// ToPath will be the same
 			String tempPath = gcPath;
-			if (gcPath.endsWith("/"))
+			String gcToPath = "";
+
+			if (gcPath.endsWith("/")) {
 				tempPath = gcPath.substring(0, gcPath.length() - 1);
-			String gcToPath = tempPath.substring(tempPath.lastIndexOf("/") + 1, tempPath.length());
+				gcToPath = tempPath.substring(tempPath.lastIndexOf("/") + 1, tempPath.length());
+			} else {
+				Path folderPath = Paths.get(gcPath);
+				String folderName = folderPath.getFileName().toString();
+				gcPath = "/" + gcPath;
+
+				if (StringUtils.isNoneEmpty(assetIdentifier_form)) {
+					gcToPath = "/" + assetIdentifier_form;
+				} else if (assetIdentifierMapping != null) {
+					String assetIdentifier = assetIdentifierMapping.get(folderName);
+					if (assetIdentifier != null && !assetIdentifier.equals(folderName)) {
+						gcToPath = "/" + assetIdentifier;
+					} else {
+						gcToPath = "/" + folderName;
+					}
+				} else {
+					gcToPath = "/" + folderName;
+				}
+
+			}
+			pathDTO.setFromPath(gcPath);
 			pathDTO.setToPath(gcToPath);
 			folder.setPathMap(pathDTO);
 			folders.add(folder);
@@ -303,7 +326,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 		}
 
 		if (StringUtils.equalsAnyIgnoreCase(bulkType, "globus") && globusEndpointFolders != null) {
-			String assetIdentifier_form = request.getParameter("zAttrStr_asset_identifier");
+
 			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO> folders = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO>();
 			for (String folderName : globusEndpointFolders) {
 				gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO folder = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDirectoryScanRegistrationItemDTO();
@@ -360,7 +383,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				Path folderPath = Paths.get(globusEndpointFolders.get(googleDriveFolderIds.indexOf(folderId)));
 				String folderName = folderPath.getFileName().toString();
 				String fromPath = "/" + folderPath.toString();
-				String toPath = "/" + folderName;
+
 				source.setFileId(folderId);
 				folder.setBasePath(datafilePath);
 				HpcGoogleScanDirectory googleDriveDirectory = new HpcGoogleScanDirectory();
@@ -368,6 +391,20 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				googleDriveDirectory.setAccessToken(accessToken);
 				folder.setGoogleDriveScanDirectory(googleDriveDirectory);
 				folders.add(folder);
+				String toPath = "";
+				if (StringUtils.isNoneEmpty(assetIdentifier_form)) {
+					toPath = "/" + assetIdentifier_form;
+				} else if (assetIdentifierMapping != null) {
+					String assetIdentifier = assetIdentifierMapping.get(folderName);
+					if (assetIdentifier != null && !assetIdentifier.equals(folderName)) {
+						toPath = "/" + assetIdentifier;
+					} else {
+						toPath = "/" + folderName;
+					}
+				} else {
+					toPath = "/" + folderName;
+				}
+
 				if (!fromPath.equals(toPath)) {
 					HpcDirectoryScanPathMap pathDTO = new HpcDirectoryScanPathMap();
 					pathDTO.setFromPath(fromPath);
@@ -418,8 +455,6 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 			folders.add(folder);
 			String fromPath = "";
 			String toPath = "";
-
-			String assetIdentifier_form = request.getParameter("zAttrStr_asset_identifier");
 
 			if (s3Path.equals("/")) {
 				fromPath = "/";

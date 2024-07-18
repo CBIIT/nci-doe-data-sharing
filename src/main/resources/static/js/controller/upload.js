@@ -32,13 +32,13 @@ $(document).ready(
 
 function loadUploadTab() {
 
-	var ins = $("#institutePath").val();
+	var program = $("#programPath").val();
 	var stu = $("#studyPath").val();
 	var data = $("#datafilePath").val();
 	var bulkUploadCollection = $("#bulkUploadCollection").val();
 	var uploadPath = $("#uploadPath").val();
 
-	if (ins) {
+	if (program) {
 		$("input[name=selectProgram][value='Select Program']").prop("checked", true);
 		showSelect('Program', 'true');
 		$("#studyListDiv").show();
@@ -46,7 +46,7 @@ function loadUploadTab() {
 		$("#editProgram").show();
 		if (stu) {
 			$("input[name=selectStudy][value='Select Study']").prop("checked", true);
-			showSelect('Study', ins);
+			showSelect('Study', program);
 			$("#dataSetListDiv").show();
 			$("#deleteStudy").show();
 			$("#editStudy").show();
@@ -151,9 +151,9 @@ function showSelect(collection, selection) {
 			$("#institutePath").val("");
 		}
 
-		loadJsonData('/browse', $("#instituteList"), isEmptyOption, null, null, null, "key", "value");
+		loadJsonData('/browse', $("#programList"), isEmptyOption, null, null, null, "key", "value");
 		$("#showSelectProgramDiv").show();
-		resetOnChangeofSelectCollection("instituteList", null);
+		resetOnChangeofSelectCollection("programList", null);
 
 	} else if (collection == 'Study') {
 
@@ -164,7 +164,7 @@ function showSelect(collection, selection) {
 		if (selection) {
 			seclectedValue = selection;
 		} else {
-			seclectedValue = $("#instituteList").val();
+			seclectedValue = $("#programList").val();
 		}
 
 		var params = {
@@ -209,7 +209,7 @@ function showSelect(collection, selection) {
 function resetSelectionsForBackToUploadTab() {
 
 	if ($("input[name=selectProgram]").is(":visible")) {
-		if ($("#instituteList").is(":visible")) {
+		if ($("#programList").is(":visible")) {
 			$("input[name=selectProgram][value='Select Program']").prop("checked", true);
 		} else {
 			$("input[name=selectProgram][value='Select Program']").click();
@@ -231,7 +231,7 @@ function resetSelectionsForBackToUploadTab() {
 }
 
 function resetOnChangeofSelectCollection(selectTarget, selectedValue) {
-	if (selectTarget == 'instituteList') {
+	if (selectTarget == 'programList') {
 		$("#uploadAndRegisterFiles").hide();
 		$("#bulkAssetGlobusRadiobtn").hide();
 		if (selectedValue && selectedValue != 'ANY') {

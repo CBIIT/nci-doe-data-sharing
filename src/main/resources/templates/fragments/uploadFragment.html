@@ -17,7 +17,7 @@
 
 				<input type="hidden" th:value="${basePathSelected}" id="basePath" />
 				<input type="hidden" th:value="${datafilePath}" id="datafilePath" />
-				<input type="hidden" th:value="${institutePath}" id="institutePath" />
+				<input type="hidden" th:value="${programPath}" id="programPath" />
 				<input type="hidden" th:value="${uploadPath}" id="uploadPath" /> <input
 					type="hidden" th:value="${studyPath}" id="studyPath" /> <input
 					type="hidden" id="uploadAsyncType" th:value="${uploadAsyncType}" />
@@ -49,22 +49,22 @@
 										Select Program</label>
 								</div>
 								<div id="showSelectProgramDiv">
-									<select class="simple-select2" id="instituteList"
-										name="instituteList" style="width: 100%"
-										onchange="retrieveCollections('instituteList', this.options[this.selectedIndex],'onChange');">
+									<select class="simple-select2" id="programList"
+										name="programList" style="width: 100%"
+										onchange="retrieveCollections('programList', this.options[this.selectedIndex],'onChange');">
 									</select>
 
 									<div class="col-md-2 col-lg-2 col-sm-2"></div>
 									<div style="padding-top: 10px;">
 										<a href="#" style="display: none;"
 											class="addDeleteUploadLabels" id="deleteProgram"
-											onclick="functionDelete('instituteList','Program')"> <img
+											onclick="functionDelete('programList','Program')"> <img
 											src="images/Uploads.delete.png"
 											th:src="@{/images/Uploads.delete.png}" class="uploadslogo"
 											alt="delete"> Delete Program
 										</a> &nbsp;&nbsp; <a href="#" style="display: none;"
 											class="addDeleteUploadLabels" id="editProgram"
-											onclick="functionEditCollection('instituteList','Program')"> <img
+											onclick="functionEditCollection('programList','Program')"> <img
 											src="images/Search_EditMetaData.svg"
 											th:src="@{/images/Search_EditMetaData.svg}"
 											class="uploadslogo" alt="delete"> Edit Program
@@ -84,7 +84,7 @@
 								<div class="pull-left" style="margin-left: 15px">
 									<label class="uploadLabels radio-inline"><input
 										type="radio" name="selectStudy" class="registeRadioButtons"
-										onclick="createCollectionDiv('instituteList')"
+										onclick="createCollectionDiv('programList')"
 										value="Register Study">&nbsp;&nbsp; Register Study</label>
 								</div>
 							</div>
@@ -263,8 +263,8 @@
 		<div th:replace="fragments/uploadDataFiles :: uploadDataFiles">Upload
 			files</div>
 		<div
-			th:replace="fragments/createCollectionFragment :: createCollectionFragment">Create
-			collection Fragment</div>
+		th:replace="fragments/createCollectionFragment :: createCollectionFragment">Create
+		collection Fragment</div>
 	</div>
 </body>
 </html>

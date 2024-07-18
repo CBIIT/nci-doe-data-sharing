@@ -3,7 +3,7 @@ $(document).ready(
 
 			$("#assetSelectionGlobusButton").click(function(e) {
 				var d = {};
-				d.institutionPath = $("#instituteList").val();
+				d.programPath = $("#programList").val();
 				d.studyPath = $("#studyList").val();
 				d.uploadType = "assetBulkUpload";
 

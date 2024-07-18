@@ -143,7 +143,7 @@ function renderSearchAssetRow(data, type, row) {
 			+ "&nbsp&nbsp;</div>"
 			+ "<div class='col-md-12 top-buffer'>"
 			+ "<span style='color: #747474;' class='cil_12_bold_no_color'>PROGRAM: </span><a class='cil_12_no_color button2a' "
-			+ "selected_path='" + row.institutePath + "' collection_type='Program' tabindex='0'"
+			+ "selected_path='" + row.programPath + "' collection_type='Program' tabindex='0'"
 			+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
 			+ "data-popover-content='#a01'>" + row.programName + "</a>" + "&nbsp&nbsp;</div>";
 

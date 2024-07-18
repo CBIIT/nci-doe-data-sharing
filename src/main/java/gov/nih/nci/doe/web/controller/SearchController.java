@@ -157,7 +157,7 @@ public class SearchController extends AbstractDoeController {
 			returnResult.setDataSetName(getAttributeValue("asset_name", selfMetadatEntries, "Asset"));
 			returnResult.setDataSetDescription(getAttributeValue("description", selfMetadatEntries, "Asset"));
 			returnResult.setStudyPath(studyPath);
-			returnResult.setInstitutePath(programPath);
+			returnResult.setProgramPath(programPath);
 
 			returnResult.setDataSetdmeDataId(webServerName + "/searchTab?dme_data_id="
 					+ getAttributeValue("dme_data_id", selfMetadatEntries, "Asset"));

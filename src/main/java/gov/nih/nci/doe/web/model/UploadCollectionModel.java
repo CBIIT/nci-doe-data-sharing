@@ -4,7 +4,7 @@ import java.util.List;
 
 public class UploadCollectionModel {
 
-	private String institutionPath;
+	private String programPath;
 	private String studyPath;
 	private String dataSetPath;
 	private List<KeyValueBean> dataObjectsList;
@@ -36,12 +36,12 @@ public class UploadCollectionModel {
 		this.action = action;
 	}
 
-	public String getInstitutionPath() {
-		return institutionPath;
+	public String getProgramPath() {
+		return programPath;
 	}
 
-	public void setInstitutionPath(String institutionPath) {
-		this.institutionPath = institutionPath;
+	public void setProgramPath(String programPath) {
+		this.programPath = programPath;
 	}
 
 	public String getStudyPath() {

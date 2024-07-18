@@ -174,11 +174,11 @@ function postSuccessDeleteCollection(data, collectionType) {
 				selectedPath : $("#basePath").val(),
 				refreshNode : 'true'
 			};
-			loadJsonData('/browse/collection', $("#instituteList"), true, params, null, null, "key", "value");
-			retrieveCollections('instituteList', 'ANY', 'deleteAction');
+			loadJsonData('/browse/collection', $("#programList"), true, params, null, null, "key", "value");
+			retrieveCollections('programList', 'ANY', 'deleteAction');
 		} else if (collectionType == 'Study') {
 			var params = {
-				selectedPath : $("#instituteList").val(),
+				selectedPath : $("#programList").val(),
 				refreshNode : 'true'
 			};
 			loadJsonData('/browse/collection', $("#studyList"), true, params, null, null, "key", "value");

@@ -335,21 +335,32 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 		HpcBulkMetadataEntries entryList = new HpcBulkMetadataEntries();
 
 		List<String> globusEndpointFolders = (List<String>) session.getAttribute("GlobusEndpointFolders");
+		List<String> googleDriveFolderIds = (List<String>) session.getAttribute("folderIds");
 		String s3Path = (String) request.getParameter("s3Path");
+		String gcPath = (String) request.getParameter("gcPath");
+		gcPath = (gcPath != null ? gcPath.trim() : null);
 		List<HpcBulkMetadataEntry> pathMetadataEntries = new ArrayList<HpcBulkMetadataEntry>();
 		String assetIdentifier = request.getParameter("zAttrStr_asset_identifier");
+		List<String> folderNames = new ArrayList<String>();
+
 		if ("globus".equalsIgnoreCase(bulkType) && CollectionUtils.isNotEmpty(globusEndpointFolders)) {
-			for (String folderName : globusEndpointFolders) {
+			folderNames = globusEndpointFolders;
+		} else if ("drive".equalsIgnoreCase(bulkType) && CollectionUtils.isNotEmpty(googleDriveFolderIds)) {
 
-				pathMetadataEntries = getAssetMetadataAttributes(pathMetadataEntries, assetIdentifier, request,
-						collectionPath, folderName, accessGrp);
-
-			}
+			folderNames = googleDriveFolderIds;
 		} else if ("S3".equalsIgnoreCase(bulkType) && s3Path != null) {
-			pathMetadataEntries = getAssetMetadataAttributes(pathMetadataEntries, assetIdentifier, request,
-					collectionPath, s3Path, accessGrp);
+			folderNames.add(s3Path);
+
+		} else if ("cloud".equalsIgnoreCase(bulkType) && gcPath != null) {
+			folderNames.add(gcPath);
 		}
 
+		if (CollectionUtils.isNotEmpty(folderNames)) {
+			for (String folderName : folderNames) {
+				pathMetadataEntries = getAssetMetadataAttributes(pathMetadataEntries, assetIdentifier, request,
+						collectionPath, folderName, accessGrp);
+			}
+		}
 		entryList.getPathsMetadataEntries().addAll(pathMetadataEntries);
 		return entryList;
 	}

@@ -719,7 +719,7 @@ function renderDataSetName(data, type, row) {
          editProgramSetHtml = "&nbsp;&nbsp;<span class='editCollectionMetadata' selectedCollection = 'Program' " +
             "data-fileName = '" + row.programName + "' collectionId  = '" + row.programCollectionId + "'" +
             " permissions_role = '" + row.programPermissionRole + "' " + "metadata_path  = '" +
-            row.institutePath + "' >" +
+            row.programPath + "' >" +
             "<img src='images/Search_EditMetaData.svg' data-toggle='tooltip' title='Edit program metadata' " +
             "th:src='@{/images/Search_EditMetaData.svg}' " +
             "class='editCollectionImg' alt='edit collection'></span>";
@@ -733,7 +733,7 @@ function renderDataSetName(data, type, row) {
                "' " +
                "selectedCollection = 'Program'  " +
                "metadata_path  = '" +
-               row.institutePath +
+               row.programPath +
                "'>" +
                "<img src='images/Search_AccessGroups.png' data-toggle='tooltip' title='Edit access group permissions' " +
                "th:src='@{/images/Search_AccessGroups.png}' " +
@@ -784,7 +784,7 @@ function renderDataSetName(data, type, row) {
       "<div class='program-container'>" +
       "<div class='program opensans-bold-midnight-blue-13px'>" +
       "<span class='opensans-bold-midnight-blue-13px'>PROGRAM: &nbsp;&nbsp;</span>" +
-      "<a class='button2a' style='text-decoration:underline;' collection_name = '" + row.programName + "' selected_path = '" + row.institutePath + "' collection_type='Program' tabindex='0'" +
+      "<a class='button2a' style='text-decoration:underline;' collection_name = '" + row.programName + "' selected_path = '" + row.programPath + "' collection_type='Program' tabindex='0'" +
       "data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' " +
       "data-popover-content='#a01'>" +
       "<span class='study_prog_name_class'>" + row.programName + " </span></a>" +

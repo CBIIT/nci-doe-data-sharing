@@ -12,7 +12,7 @@ $(document).ready(
 
 			$("#assetSelectionGlobusButton").click(function(e) {
 				var d = {};
-				d.institutionPath = $("#instituteList").val();
+				d.programPath = $("#programList").val();
 				d.studyPath = $("#studyList").val();
 				d.uploadType = "assetBulkUpload";
 
@@ -23,7 +23,7 @@ $(document).ready(
 			$("#primaryGlobusButton").click(function(e) {
 
 				var d = {};
-				d.institutionPath = $("#instituteList").val();
+				d.programPath = $("#programList").val();
 				d.studyPath = $("#studyList").val();
 				d.dataSetPath = $("#dataList").val();
 				d.uploadPath = $("#bulkDataFilePathCollection").val();
@@ -33,7 +33,7 @@ $(document).ready(
 
 			$("#driveUploadAuthlink").click(function(e) {
 				var d = {};
-				d.institutionPath = $("#instituteList").val();
+				d.programPath = $("#programList").val();
 				d.studyPath = $("#studyList").val();
 				d.dataSetPath = $("#dataList").val();
 				d.uploadPath = $("#bulkDataFilePathCollection").val();
@@ -43,7 +43,7 @@ $(document).ready(
 			
 			$("#cloudUploadAuthlink").click(function(e){
 				var d = {};
-				d.institutionPath = $("#instituteList").val();
+				d.programPath = $("#programList").val();
 				d.studyPath = $("#studyList").val();
 				d.dataSetPath = $("#dataList").val();
 				d.uploadPath = $("#bulkDataFilePathCollection").val();
