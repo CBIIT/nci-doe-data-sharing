@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import gov.nih.nci.doe.web.DoeWebException;
-import gov.nih.nci.doe.web.model.DoeBrowserEntry;
+import gov.nih.nci.doe.web.model.DoeCollectionEntry;
 import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.datamanagement.HpcCollection;
@@ -36,8 +36,8 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 
 @Controller
 @EnableAutoConfiguration
-@RequestMapping("/browse")
-public class DoeBrowseController extends AbstractDoeController {
+@RequestMapping("")
+public class RetrieveMetadataController extends AbstractDoeController {
 
 	@Value("${gov.nih.nci.hpc.server.collection}")
 	private String collectionURL;
@@ -56,13 +56,13 @@ public class DoeBrowseController extends AbstractDoeController {
 
 	}
 
-	@GetMapping(value = "/collection", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> browseCollection(@RequestParam(value = "selectedPath") String selectedPath,
+	@GetMapping(value = "/collectionList", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getCollectionNamesList(@RequestParam(value = "selectedPath") String selectedPath,
 			@RequestParam(required = false) String refreshNode, HttpSession session, HttpServletRequest request,
 			HttpServletResponse response) {
 
 		String authToken = (String) session.getAttribute("hpcUserToken");
-		DoeBrowserEntry browserEntry = (DoeBrowserEntry) session.getAttribute("browserEntry");
+		DoeCollectionEntry browserEntry = (DoeCollectionEntry) session.getAttribute("browserEntry");
 		List<KeyValueBean> results = new ArrayList<>();
 		boolean refresh = false;
 
@@ -77,7 +77,7 @@ public class DoeBrowseController extends AbstractDoeController {
 				browserEntry = trimPath(browserEntry, browserEntry.getName());
 				String name = browserEntry.getName().substring(browserEntry.getName().lastIndexOf('/') + 1);
 				browserEntry.setName(name);
-				List<DoeBrowserEntry> children = browserEntry.getChildren();
+				List<DoeCollectionEntry> children = browserEntry.getChildren();
 
 				children.stream().forEach(e -> {
 					if (e.getFullPath() != null && StringUtils.isNotEmpty(e.getFullPath().trim())) {
@@ -92,23 +92,8 @@ public class DoeBrowseController extends AbstractDoeController {
 		return new ResponseEntity<>(results, HttpStatus.OK);
 	}
 
-	/**
-	 * GET operation on Browse. Invoked under the following conditions: - Builds
-	 * initial tree (/browse?base) - When the refresh screen button is clicked
-	 * (/browse?refresh) - When a bookmark is selected
-	 * (/browse?refresh&path=/some_path/some_collection_or_file) - When the browse
-	 * icon is clicked from the details page
-	 * (/browse?refresh=1&path=/some_path/some_collection)
-	 *
-	 * @param q
-	 * @param model
-	 * @param bindingResult
-	 * @param session
-	 * @param request
-	 * @return
-	 */
-	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> get(HttpSession session, HttpServletRequest request) {
+	@GetMapping(value = "/programList", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getProgamNamesList(HttpSession session, HttpServletRequest request) {
 
 		// Verify User session
 		String authToken = (String) session.getAttribute("hpcUserToken");
@@ -125,9 +110,9 @@ public class DoeBrowseController extends AbstractDoeController {
 			if (path != null) {
 				path = path.trim();
 
-				DoeBrowserEntry browserEntry = (DoeBrowserEntry) session.getAttribute("browserEntry");
+				DoeCollectionEntry browserEntry = (DoeCollectionEntry) session.getAttribute("browserEntry");
 				if (browserEntry == null) {
-					browserEntry = new DoeBrowserEntry();
+					browserEntry = new DoeCollectionEntry();
 
 					browserEntry.setFullPath(path);
 
@@ -138,7 +123,7 @@ public class DoeBrowseController extends AbstractDoeController {
 				}
 
 				if (browserEntry != null) {
-					List<DoeBrowserEntry> children = browserEntry.getChildren();
+					List<DoeCollectionEntry> children = browserEntry.getChildren();
 					children.stream().forEach(e -> results.add(new KeyValueBean(e.getFullPath(), e.getName())));
 				}
 			}
@@ -153,14 +138,14 @@ public class DoeBrowseController extends AbstractDoeController {
 		return new ResponseEntity<>(results, HttpStatus.NO_CONTENT);
 	}
 
-	private DoeBrowserEntry getSelectedEntry(String path, DoeBrowserEntry browserEntry) {
+	private DoeCollectionEntry getSelectedEntry(String path, DoeCollectionEntry browserEntry) {
 		if (browserEntry == null)
 			return null;
 
 		if (browserEntry.getFullPath() != null && browserEntry.getFullPath().equals(path))
 			return browserEntry;
 
-		for (DoeBrowserEntry childEntry : browserEntry.getChildren()) {
+		for (DoeCollectionEntry childEntry : browserEntry.getChildren()) {
 			if (childEntry.getFullPath() != null && childEntry.getFullPath().equals(path))
 				return childEntry;
 			else {
@@ -168,7 +153,7 @@ public class DoeBrowseController extends AbstractDoeController {
 				// happens to be an ancestor of the path we are looking for
 				// Else we proceed to next childEntry
 				if (childEntry.getFullPath() != null && path.contains(childEntry.getFullPath())) {
-					DoeBrowserEntry entry = getSelectedEntry(path, childEntry);
+					DoeCollectionEntry entry = getSelectedEntry(path, childEntry);
 					if (entry != null)
 						return entry;
 				}
@@ -177,11 +162,11 @@ public class DoeBrowseController extends AbstractDoeController {
 		return null;
 	}
 
-	private DoeBrowserEntry getTreeNodes(String path, DoeBrowserEntry browserEntry, String authToken, boolean partial,
+	private DoeCollectionEntry getTreeNodes(String path, DoeCollectionEntry browserEntry, String authToken, boolean partial,
 			boolean refresh) throws DoeWebException {
 
 		path = path.trim();
-		DoeBrowserEntry selectedEntry = getSelectedEntry(path, browserEntry);
+		DoeCollectionEntry selectedEntry = getSelectedEntry(path, browserEntry);
 		if (refresh && selectedEntry != null) {
 			selectedEntry.setPopulated(false);
 		}
@@ -191,7 +176,7 @@ public class DoeBrowseController extends AbstractDoeController {
 		if (selectedEntry != null && selectedEntry.getChildren() != null)
 			selectedEntry.getChildren().clear();
 		if (selectedEntry == null) {
-			selectedEntry = new DoeBrowserEntry();
+			selectedEntry = new DoeCollectionEntry();
 			selectedEntry.setName(path);
 		}
 		// If partial is true or refresh is true, then it means we need to
@@ -215,12 +200,12 @@ public class DoeBrowseController extends AbstractDoeController {
 			selectedEntry.setPopulated(true);
 
 			for (HpcCollectionListingEntry listEntry : collection.getSubCollections()) {
-				DoeBrowserEntry listChildEntry = new DoeBrowserEntry();
+				DoeCollectionEntry listChildEntry = new DoeCollectionEntry();
 				listChildEntry.setFullPath(listEntry.getPath());
 				listChildEntry.setName(listEntry.getPath());
 				listChildEntry.setPopulated(false);
 
-				DoeBrowserEntry emptyEntry = new DoeBrowserEntry();
+				DoeCollectionEntry emptyEntry = new DoeCollectionEntry();
 				emptyEntry.setName("");
 				listChildEntry.getChildren().add(emptyEntry);
 
@@ -228,7 +213,7 @@ public class DoeBrowseController extends AbstractDoeController {
 			}
 
 			if (selectedEntry.getChildren() == null || selectedEntry.getChildren().isEmpty()) {
-				DoeBrowserEntry listChildEntry = new DoeBrowserEntry();
+				DoeCollectionEntry listChildEntry = new DoeCollectionEntry();
 				listChildEntry.setFullPath(" ");
 				listChildEntry.setName(" ");
 				listChildEntry.setPopulated(true);
@@ -239,8 +224,8 @@ public class DoeBrowseController extends AbstractDoeController {
 		return partial ? selectedEntry : browserEntry;
 	}
 
-	private DoeBrowserEntry trimPath(DoeBrowserEntry entry, String parentPath) {
-		for (DoeBrowserEntry child : entry.getChildren()) {
+	private DoeCollectionEntry trimPath(DoeCollectionEntry entry, String parentPath) {
+		for (DoeCollectionEntry child : entry.getChildren()) {
 			String childPath = child.getFullPath();
 			if (childPath == null || childPath.equals(""))
 				continue;

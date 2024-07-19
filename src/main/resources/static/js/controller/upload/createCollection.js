@@ -404,7 +404,7 @@ function postSuccessRegisterCollection(data, collectionType) {
 				selectedPath: $("#basePath").val(),
 				refreshNode: 'true'
 			};
-			loadJsonData('/browse/collection', $("#instituteList"), true, params, displaySuccessMsg, null, "key",
+			loadJsonData('/collectionList', $("#instituteList"), true, params, displaySuccessMsg, null, "key",
 				"value");
 			resetOnChangeofSelectCollection("instituteList", null);
 		} else if (collectionType == 'Study') {
@@ -412,14 +412,14 @@ function postSuccessRegisterCollection(data, collectionType) {
 				selectedPath: $("#instituteList").val(),
 				refreshNode: 'true'
 			};
-			loadJsonData('/browse/collection', $("#studyList"), true, params, displaySuccessMsg, null, "key", "value");
+			loadJsonData('/collectionList', $("#studyList"), true, params, displaySuccessMsg, null, "key", "value");
 			resetOnChangeofSelectCollection("studyList", null);
 		} else if (collectionType == 'Asset') {
 			var params = {
 				selectedPath: $("#studyList").val(),
 				refreshNode: 'true'
 			};
-			loadJsonData('/browse/collection', $("#dataList"), true, params, displaySuccessMsg, null, "key", "value");
+			loadJsonData('/collectionList', $("#dataList"), true, params, displaySuccessMsg, null, "key", "value");
 			resetAssetsSelection();
 			$("#assetUploadDiv").removeClass('show');
 		} else if (collectionType == 'Folder') {

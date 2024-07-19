@@ -3,13 +3,13 @@ package gov.nih.nci.doe.web.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DoeBrowserEntry {
+public class DoeCollectionEntry {
 
 	private String name;
 
 	private String fullPath;
 
-	private List<DoeBrowserEntry> children;
+	private List<DoeCollectionEntry> children;
 
 	private boolean populated;
 
@@ -31,13 +31,13 @@ public class DoeBrowserEntry {
 		this.name = name;
 	}
 
-	public List<DoeBrowserEntry> getChildren() {
+	public List<DoeCollectionEntry> getChildren() {
 		if (children == null)
-			children = new ArrayList<DoeBrowserEntry>();
+			children = new ArrayList<DoeCollectionEntry>();
 		return children;
 	}
 
-	public void setChildren(List<DoeBrowserEntry> children) {
+	public void setChildren(List<DoeCollectionEntry> children) {
 		this.children = children;
 	}
 

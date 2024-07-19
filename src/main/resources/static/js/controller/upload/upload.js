@@ -151,7 +151,7 @@ function showSelect(collection, selection) {
 			$("#institutePath").val("");
 		}
 
-		loadJsonData('/browse', $("#programList"), isEmptyOption, null, null, null, "key", "value");
+		loadJsonData('/programList', $("#programList"), isEmptyOption, null, null, null, "key", "value");
 		$("#showSelectProgramDiv").show();
 		resetOnChangeofSelectCollection("programList", null);
 
@@ -171,7 +171,7 @@ function showSelect(collection, selection) {
 			selectedPath : seclectedValue,
 		};
 
-		loadJsonData('/browse/collection', $("#studyList"), isEmptyOption, params, null, null, "key", "value");
+		loadJsonData('/collectionList', $("#studyList"), isEmptyOption, params, null, null, "key", "value");
 
 		$("#showSelectStudyDiv").show();
 		resetOnChangeofSelectCollection("studyList", null);
@@ -191,7 +191,7 @@ function showSelect(collection, selection) {
 			selectedPath : seclectedValue,
 			refreshNode : 'true'
 		};
-		loadJsonData('/browse/collection', $("#dataList"), isEmptyOption, params, null, null, "key", "value");
+		loadJsonData('/collectionList', $("#dataList"), isEmptyOption, params, null, null, "key", "value");
 		resetAssetsSelection(true);
 		$("#showSelectAssetDiv").show();
 		$("#showSubAssetSelectionDiv").hide();

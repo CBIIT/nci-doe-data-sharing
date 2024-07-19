@@ -174,14 +174,14 @@ function postSuccessDeleteCollection(data, collectionType) {
 				selectedPath : $("#basePath").val(),
 				refreshNode : 'true'
 			};
-			loadJsonData('/browse/collection', $("#programList"), true, params, null, null, "key", "value");
+			loadJsonData('/collectionList', $("#programList"), true, params, null, null, "key", "value");
 			retrieveCollections('programList', 'ANY', 'deleteAction');
 		} else if (collectionType == 'Study') {
 			var params = {
 				selectedPath : $("#programList").val(),
 				refreshNode : 'true'
 			};
-			loadJsonData('/browse/collection', $("#studyList"), true, params, null, null, "key", "value");
+			loadJsonData('/collectionList', $("#studyList"), true, params, null, null, "key", "value");
 			retrieveCollections('studyList', 'ANY', 'deleteAction');
 
 		} else if (collectionType == 'Asset') {
@@ -189,7 +189,7 @@ function postSuccessDeleteCollection(data, collectionType) {
 				selectedPath : $("#studyList").val(),
 				refreshNode : 'true'
 			};
-			loadJsonData('/browse/collection', $("#dataList"), true, params, null, null, "key", "value");
+			loadJsonData('/collectionList', $("#dataList"), true, params, null, null, "key", "value");
 			retrieveCollections('dataList', 'ANY', 'deleteAction');
 		}
 	}

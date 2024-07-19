@@ -935,7 +935,6 @@ public abstract class AbstractDoeController {
 			throws DoeWebException, IOException {
 
 		log.info("construct filter crietria for : " + search);
-		// List<SearchList> searchList = new ArrayList<>();
 		String authToken = (String) session.getAttribute("hpcUserToken");
 		search.setDetailed(true);
 
@@ -1012,7 +1011,7 @@ public abstract class AbstractDoeController {
 				searchList.add(filterList);
 
 			}
-			model.addAttribute("browseList", searchList);
+			model.addAttribute("searchList", searchList);
 		}
 
 	}

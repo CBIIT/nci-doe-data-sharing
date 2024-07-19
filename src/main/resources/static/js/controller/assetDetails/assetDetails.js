@@ -624,7 +624,7 @@ $('#dataSetTable tbody').on('click', '.editDataFileCollectionMetadata', function
 
 	$.ajax({
 		type : "GET",
-		url : '/browse/metaData',
+		url : '/metaData',
 		contentType : 'application/json',
 		data : params,
 		beforeSend : function() {
