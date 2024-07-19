@@ -10,6 +10,18 @@ $(document).ready(
 				invokeAjax('/upload', 'GET', d, postUploadGlobusFunction, postFailureFunction, null, 'text');
 			});
 
+			$('#registerAssetSelect').on('change', function() {
+				var selectedOption = $(this).val();
+				$("#assetType").val(selectedOption);
+				$("#uploadSectionDiv").hide();
+				$("#uploadHeader").hide();
+		
+				$("#registerCollectionForm").show()
+				createCollectionDiv('studyList');
+				$("#registerAssetPicker").show();
+	
+			});
+
 
 });
 
@@ -337,4 +349,13 @@ function resetAssetBulkUploadChoiceOptions() {
 	 $("#uploadCsvFile").hide();
 	 $("#formAssetSelection").hide();
 	 $("#assetTypeSelect").val("Select").trigger("change");
+}
+
+
+function displayEmptyAssetScreen(data) {
+	$("#uploadSectionDiv").hide();
+	$("#uploadHeader").hide();
+	$("#registerCollectionForm").hide();
+	createCollectionDiv('studyList');	
+	$("#registerAssetPicker").show();
 }

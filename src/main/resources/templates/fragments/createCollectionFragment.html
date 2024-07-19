@@ -9,131 +9,169 @@
 <body>
   <div class="form-row jumbotron pt-2 pb-2 mb-2" id="createCollectionFragment" th:fragment="createCollectionFragment"
     style="display:none;font-size:13px;background-color: transparent; margin: 40px auto; max-width: 1200px;">
-<div class="container">
-  <div class="row">
-  <div class="col-sm-2">
-    <div class="col-lg-12 col-md-12 col-sm-12 float-right" style="margin-top: -16px;margin-left: 1.5rem;">
-      <div class="controls controls-row mt-4">
-        <a class="float-left mb-2 mr-2 backToUploadTab d-flex">
-          <img src="/images/backToUpload.svg" th:src="@{/images/backToUpload.svg}" data-toggle="tooltip"
-            title="Back to UploadTab" style="width:40px;" alt="back to Upload"> &nbsp;&nbsp;<span class="backToUpload"
-            style="width: 120px;font-size: 12px;padding-top: 6px;margin-left: 4px; line-height: 14px;">
-            BACK TO <br /> UPLOAD TAB</span></a>
-      </div>
-    </div>
-</div>
-<div class="col-sm-10">
-    <div class="alert alert-success registerMsgBlock" role="alert"
-      style="display:none;margin-bottom:10px;margin-left: 30px;">
-      <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
-        <h6 class="registerMsg"></h6>
-      </div>
-    </div>
-
-    <div class="alert alert-danger registerMsgErrorBlock" role="alert"
-      style="display:none;margin-bottom:10px;margin-left: 30px;">
-      <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
-        <h6 class="registerErrorMsg"></h6>
-      </div>
-    </div>
-
-    <div class="col-lg-12 col-md-12 col-sm-12" style="font-size: 20px;font-weight: 500;
-            font-family: latoregular;color:#242525;
-            margin-left: 18px;">
-      <p style="font-size:24px;font-weight:600;margin-left: -4px;font-family: Inter; color: #46597B;margin-bottom: 0rem;
-            ;">
-        <span id="registerModalTitle"></span>
-      </p>
-    </div>
-
-    <form class="form-horizontal" id="registerCollectionForm" method="POST" style="width: 100%;background-color: #fff!important;
-              padding-bottom: 10px;">
-      <input type="hidden" name="assetType" id="assetType" />
-      <input type="hidden" name="path" id="newCollectionPath" />
-      <input type="hidden" id="parentCollectionType" />
-      <input type="hidden" id="parentAccessGroup" />
-      <div class="col-md-12 col-sm-12">
-        <div class="col-md-12 col-sm-12">
-          <div class="form-row" style="font-size: 65px;">
-            <div class="form-group col-lg-12 col-md-12 permissionsLabel">
-              <h4 style="color: #235172;font-family: Inter;font-size:1rem;margin-left: -4px;font-weight: 400;">
-                Permissions</h4>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-2">
+          <div class="col-lg-12 col-md-12 col-sm-12 float-right" style="margin-top: -16px;margin-left: 1.5rem;">
+            <div class="controls controls-row mt-4">
+              <a class="float-left mb-2 mr-2 backToUploadTab d-flex">
+                <img src="/images/backToUpload.svg" th:src="@{/images/backToUpload.svg}" data-toggle="tooltip"
+                  title="Back to UploadTab" style="width:40px;" alt="back to Upload"> &nbsp;&nbsp;<span
+                  class="backToUpload"
+                  style="width: 120px;font-size: 12px;padding-top: 6px;margin-left: 4px; line-height: 14px;">
+                  BACK TO <br /> UPLOAD TAB</span></a>
             </div>
-
-            <div class="form-group col-lg-6 col-md-6 labelEditCollection permissionsLabel" style="padding: 6px;">
-              SPECIFY WHO CAN EDIT THE COLLECTION&nbsp; <img src="images/infoIcon.svg" class="icon" data-toggle="tooltip"
-                title="Permissions to Edit Metadata and Create Subcollections"></img></div>
-
-            <div class="form-group col-lg-6 col-md-6 labelEditCollection permissionsLabel" style="background-color: #EEF4F6;
-                     padding: 6px 0px !important;line-height: 28px;color: #000;">
-              <select class="simple-select2" multiple="multiple" id="metaDataPermissionsList"
-                name="metaDataPermissionsList" style="width: 95%;">
-              </select>
-            </div>
-
-
-            <div class="form-group col-lg-6 col-md-6 labelEditCollection parentCollectionDiv"
-              id="parentCollectionNameDiv">
-              <span id="parentCollectionLabel">Parent Collection Name</span>
-
-            </div>
-            <div class="form-group col-lg-6 col-md-6 labelEditCollection parentCollectionDiv"
-              style="padding: 6px 0px !important;display: flex;">
-
-              <input type="text" disabled id="parentCollectionName" aria-labelledby="parentCollectionName"
-                class="parentCollectionName" />
-            </div>
-
-
-            <div class="form-group col-lg-12 col-md-12" style="display:none;">
-              <label for="collectionType">Collection Type</label>
-              <input type="text" id="collectionType" aria-labelledby="collectionType" name="zAttrStr_collection_type">
-            </div>
-            <div class="form-group col-lg-12 col-md-12" style="display:none;">
-              <label for="collectionPath">Parent Collection Path
-                <input type="text" disabled id="collectionPath" aria-labelledby="collectionPath"
-                  style="width:90%;font-size: 16px;" /></label>
-            </div>
-
-            <div class="form-group col-lg-6 col-md-6 labelEditCollection folderDiv" style="display:none;">
-              FOLDER NAME &nbsp; <img src="images/infoIcon.svg" class="icon" data-toggle="tooltip"
-                title="Specify a permanent, unique identifier for the folder. Use only alphanumeric characters, underscore (_), or hyphen (-)."></img>
-            </div>
-
-            <div class="form-group col-lg-6 col-md-6 labelEditCollection folderDiv" style="display:none; background-color: #EEF4F6;padding: 6px 0px !important;
-                     line-height: 28px;color: #000;">
-              <input type="text" is_mandatory="true" id="folder_name" class="identifier_validation"
-                pattern="[A-Za-z0-9_-]*" placeholder="Enter Folder Name" aria-label="value of folder name"
-                name="folder_name" style="width:70%;border-radius: 8px;
-                border: 1px solid #6B7294 !important;
-                height: 42px;background: white;">
-            </div>
-
           </div>
         </div>
-
-        <div class="col-md-12 col-sm-12" style="padding: 0px;margin-top: 16px;">
-          <div class="col-lg-12 col-md-12 col-sm-12 float-left">
-            <p style="color: #235172;font-family: Inter;font-size:1rem;font-weight: 400;" id="collectionMetaDataLabel">
-              Collection Metadata</p>
+        <div class="col-sm-10">
+          <div class="alert alert-success registerMsgBlock" role="alert"
+            style="display:none;margin-bottom:10px;margin-left: 30px;">
+            <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
+              <h6 class="registerMsg"></h6>
+            </div>
           </div>
 
-          <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="alert alert-danger registerMsgErrorBlock" role="alert"
+            style="display:none;margin-bottom:10px;margin-left: 30px;">
+            <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
+              <h6 class="registerErrorMsg"></h6>
+            </div>
+          </div>
 
-            <table id="newMetaDataTable" class="table display dt-responsive wrap" style="width:100%;border:none;">
-              <thead>
-                <tr>
-                  <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col">ATTRIBUTE
-                  </th>
-                  <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col">VALUE</th>
-                </tr>
-              </thead>
-              <tbody>
-              </tbody>
-            </table>
-            <div style="height: 38px;
+          <div class="col-lg-12 col-md-12 col-sm-12" style="font-size: 20px;font-weight: 500;
+            font-family: latoregular;color:#242525;
             margin-left: 18px;">
-            <a id="addNewMetaData" class="mb-2 mr-2" style="
+            <p style="font-size:24px;font-weight:600;margin-left: -4px;font-family: Inter; color: #46597B;margin-bottom: 0rem;
+            ;">
+              <span id="registerModalTitle"></span>
+            </p>
+          </div>
+
+          <div id="registerAssetPicker" class="registerAssetContainer" style="display: none;">
+            <div class="d-flex">
+              <div class="flex-fill">
+                <label class="uploadAssetLabels radio-inline">
+                  <input type="radio" name="selectProgram" class="uploadRadioButtons" onclick="" value="Register Asset">
+                  Register Asset
+                </label>
+                <label for="Upload Asset" class="uploadAssetLabels radio-inline"><input type="radio" name="Upload Asset"
+                    class="uploadRadioButtons" onclick="" value="Upload Asset">
+                  Upload Asset</label>
+              </div>
+
+              <div class="flex-fill">
+                <div class="asset-register-dropdown">
+                  <select id="registerAssetSelect">
+                    <option value="" disabled selected>Select Asset Type</option>
+                    <option value="DataSet">DataSet</option>
+                    <option value="Modal">Modal</option>
+                  </select>
+                </div>
+                <div class="asset-register-dropdown">
+                  <select id="uploadAssetSelect">
+                    <option value="" disabled selected>Select Upload Type</option>
+                    <option value="Globus">Globus Endpoint</option>
+                    <option value="AWS">AWS S3</option>
+                  </select>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <form class="form-horizontal" id="registerCollectionForm" method="POST" style="width: 100%;background-color: #fff!important;
+              padding-bottom: 10px;">
+            <input type="hidden" name="assetType" id="assetType" />
+            <input type="hidden" name="path" id="newCollectionPath" />
+            <input type="hidden" id="parentCollectionType" />
+            <input type="hidden" id="parentAccessGroup" />
+            <div class="col-md-12 col-sm-12">
+              <div class="col-md-12 col-sm-12">
+                <div class="form-row" style="font-size: 65px;">
+                  <div class="form-group col-lg-12 col-md-12 permissionsLabel">
+                    <h4 style="color: #235172;font-family: Inter;font-size:1rem;margin-left: -4px;font-weight: 400;">
+                      Permissions</h4>
+                  </div>
+
+                  <div class="form-group col-lg-6 col-md-6 labelEditCollection permissionsLabel" style="padding: 6px;">
+                    SPECIFY WHO CAN EDIT THE COLLECTION&nbsp; <img src="images/infoIcon.svg" class="icon"
+                      data-toggle="tooltip" title="Permissions to Edit Metadata and Create Subcollections"></img></div>
+
+                  <div class="form-group col-lg-6 col-md-6 labelEditCollection permissionsLabel" style="background-color: #EEF4F6;
+                     padding: 6px 0px !important;line-height: 28px;color: #000;">
+                    <select class="simple-select2" multiple="multiple" id="metaDataPermissionsList"
+                      name="metaDataPermissionsList" style="width: 95%;">
+                    </select>
+                  </div>
+
+
+                  <div class="form-group col-lg-6 col-md-6 labelEditCollection parentCollectionDiv"
+                    id="parentCollectionNameDiv">
+                    <span id="parentCollectionLabel">Parent Collection Name</span>
+
+                  </div>
+                  <div class="form-group col-lg-6 col-md-6 labelEditCollection parentCollectionDiv"
+                    style="padding: 6px 0px !important;display: flex;">
+
+                    <input type="text" disabled id="parentCollectionName" aria-labelledby="parentCollectionName"
+                      class="parentCollectionName" />
+                  </div>
+
+
+                  <div class="form-group col-lg-12 col-md-12" style="display:none;">
+                    <label for="collectionType">Collection Type</label>
+                    <input type="text" id="collectionType" aria-labelledby="collectionType"
+                      name="zAttrStr_collection_type">
+                  </div>
+                  <div class="form-group col-lg-12 col-md-12" style="display:none;">
+                    <label for="collectionPath">Parent Collection Path
+                      <input type="text" disabled id="collectionPath" aria-labelledby="collectionPath"
+                        style="width:90%;font-size: 16px;" /></label>
+                  </div>
+
+                  <div class="form-group col-lg-6 col-md-6 labelEditCollection folderDiv" style="display:none;">
+                    FOLDER NAME &nbsp; <img src="images/infoIcon.svg" class="icon" data-toggle="tooltip"
+                      title="Specify a permanent, unique identifier for the folder. Use only alphanumeric characters, underscore (_), or hyphen (-)."></img>
+                  </div>
+
+                  <div class="form-group col-lg-6 col-md-6 labelEditCollection folderDiv" style="display:none; background-color: #EEF4F6;padding: 6px 0px !important;
+                     line-height: 28px;color: #000;">
+                    <input type="text" is_mandatory="true" id="folder_name" class="identifier_validation"
+                      pattern="[A-Za-z0-9_-]*" placeholder="Enter Folder Name" aria-label="value of folder name"
+                      name="folder_name" style="width:70%;border-radius: 8px;
+                border: 1px solid #6B7294 !important;
+                height: 42px;background: white;">
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="col-md-12 col-sm-12" style="padding: 0px;margin-top: 16px;">
+                <div class="col-lg-12 col-md-12 col-sm-12 float-left">
+                  <p style="color: #235172;font-family: Inter;font-size:1rem;font-weight: 400;"
+                    id="collectionMetaDataLabel">
+                    Collection Metadata</p>
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-sm-12">
+
+                  <table id="newMetaDataTable" class="table display dt-responsive wrap" style="width:100%;border:none;">
+                    <thead>
+                      <tr>
+                        <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col">ATTRIBUTE
+                        </th>
+                        <th aria-sort="none" class="sortable" data-sort="text" role="columnheader" scope="col">VALUE
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                  </table>
+                  <div style="height: 38px;
+            margin-left: 18px;">
+                    <a id="addNewMetaData" class="mb-2 mr-2" style="
             color: #000;
             /* font-variant-numeric: lining-nums tabular-nums; */
             font-family: Inter;
@@ -141,31 +179,32 @@
             font-style: normal;
             margin-left: 16px !important;
             font-weight: 100;" onclick="addNewMetaDataCollection('newMetaDataTable')">Add Metadata</a>
+                  </div>
+                </div>
+
+              </div>
             </div>
-          </div>
-
-        </div>
-      </div>
-      <div class="col-lg-12 col-md-12 col-sm-12" style="text-align: center;">
-        <div class="controls controls-row my-5">
-          <button id="cancelRegisterBtn" type="button" class="btn btn-primary mb-2 mr-2 backToUploadTab">Cancel
-            <img class="arrowright" th:src='@{/images/white_right_arrow.svg}' style="width: 16px;
+            <div class="col-lg-12 col-md-12 col-sm-12" style="text-align: center;">
+              <div class="controls controls-row my-5">
+                <button id="cancelRegisterBtn" type="button" class="btn btn-primary mb-2 mr-2 backToUploadTab">Cancel
+                  <img class="arrowright" th:src='@{/images/white_right_arrow.svg}' style="width: 16px;
               transform: translate(64px, -2px);" />
-          </button>
-          <button id="registerCollectionBtn" type="button" class="btn btn-primary mb-2 mr-2">Register<br /> Program
-            <img class="arrowright" th:src='@{/images/white_right_arrow.svg}' style="width: 16px;
+                </button>
+                <button id="registerCollectionBtn" type="button" class="btn btn-primary mb-2 mr-2">Register<br />
+                  Program
+                  <img class="arrowright" th:src='@{/images/white_right_arrow.svg}' style="width: 16px;
             transform: translate(64px, -8px);" />
-          </button>
+                </button>
+
+              </div>
+            </div>
+
+          </form>
 
         </div>
       </div>
-
-    </form>
-
+    </div>
   </div>
-  </div>
-</div>
-</div>
 </body>
 
 </html>

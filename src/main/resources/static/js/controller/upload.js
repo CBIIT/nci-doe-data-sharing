@@ -12,6 +12,7 @@ $(document).ready(
 		    
 			$(".backToUploadTab").click(function(e) {
 				$("#createCollectionFragment").hide();
+				$("#registerAssetPicker").hide();
 				$("#uploadSectionDiv").show();
 				$("#uploadHeader").show();
 				$("#uploadDataFilesTab").hide();

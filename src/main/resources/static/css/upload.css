@@ -401,3 +401,44 @@ input[type="search"] {
 }
 }
 /* End Temp fix */
+
+.registerAssetContainer {
+	padding: 2rem 4rem;
+}
+
+.asset-register-dropdown select{
+	border: 1px solid #3B6EB4;
+    color: #083A50;
+    font-size: 16px;
+    height: 40px;
+    padding: 8px;
+    border-radius: 8px;
+    width: 100%;
+    margin-top: -4px;
+    margin-bottom: 12px;
+}
+.uploadRadioButtons {
+	margin-right: 10px;
+	accent-color: #004A8A !important;
+    transform: scale(1.6) !important;
+}
+
+
+.uploadAssetLabels {
+	font-family: var(--font-family-inter);
+	color: #353941;
+	font-size: 19px;
+	font-weight: 700;
+	padding-top: 0;
+	padding-bottom: 20px;
+	width: auto;
+	display: block;
+  }
+
+  label.radio-label {
+	display: inline;
+	color: #000;
+	font-family: "Open Sans";
+	font-style: normal;
+	font-weight: 400;
+}
