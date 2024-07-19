@@ -54,6 +54,8 @@ $(document)
 							$("#destinationPathId").val(selectedPathsString);
 							$("#drivePath").val(downloadFileName);
 							$("#cloudPath").val(downloadFileName);
+							$("#downloadS3Path").val(downloadFileName);
+							$("#endPointLocation").val(downloadFileName);
 							$("#informationalText")
 									.html(
 											"This page allows you to download the "
