@@ -80,7 +80,7 @@ public class DoeRetryDownloadTaskController extends AbstractDoeController {
 						log.info("the task id after retry is: " + downloadDTO.getTaskId());
 						taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", taskType, taskName,
 								getLoggedOnUserInfo(), task != null ? task.getPath() : null);
-						result.setMessage("Retry request successful. Task Id: <a href='/tasksTab'>"
+						result.setMessage("Retry request successful. Task Id: <a href='/statusTab'>"
 								+ downloadDTO.getTaskId() + "</a>");
 					}
 
@@ -99,7 +99,7 @@ public class DoeRetryDownloadTaskController extends AbstractDoeController {
 						log.info("the task id after retry is: " + downloadDTO.getTaskId());
 						taskManagerService.saveTransfer(downloadDTO.getTaskId(), "Download", taskType, taskName,
 								getLoggedOnUserInfo(), task != null ? task.getPath() : null);
-						result.setMessage("Retry request successful. Task Id: <a href='/tasksTab'>"
+						result.setMessage("Retry request successful. Task Id: <a href='/statusTab'>"
 								+ downloadDTO.getTaskId() + "</a>");
 
 					}

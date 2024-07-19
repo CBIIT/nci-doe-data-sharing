@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+    <div class="M-4 mx-auto" id="contactUsFragment" th:fragment="contactUsFragment">
+
+        <div class="row justify-content-center align-items-center aboutcontainerHero">
+            <div class="aboutcontainerHeroText">Contact MoDaC</div>
+        </div>
+
+        <form role="form" id="contact-us-form" class="mx-auto">
+            <input type="hidden" id="siteKey" th:value="${siteKey}" />
+            <input type="hidden" id="typeOfInquiry" th:value="${typeOfInquiry}" />
+
+
+            <div class="form-row">
+
+                <div class="form-group col-lg-12 col-md-12 col-sm-12 form_div">
+                    <p class="let-us-know-how-we-can-assist-you poppins-semi-bold-calypso-23px">
+                        How can we assist you?</p>
+
+                    <div class="frame-69" style="text-align:center;">
+                        <div class="overlap-group2">
+                            <div class="col-lg-12 col-md-12 col-sm-12 clearfix errorBlock" style="display: none;">
+                                <div class="col-md-12">
+                                    <div class="alert alert-danger" style="text-align: center;">
+                                        <h6 class="errorMsg" style="color: #FF0000"></h6>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="flex-row">
+                                <div class="contact_us_header">
+                                    <!-- <div class="contact-form">Contact Form</div> -->
+                                    <div class="frame-61">
+                                        <div class="first-name opensans-bold-white-13px">
+                                            <span class="opensans-bold-midnight-blue-13px">First Name</span><span class="opensans-bold-midnight-blue-13px">:</span>
+                                            <span class="opensans-bold-tamarillo-13px">*</span>
+                                        </div>
+                                        <div class="contact_us_field_div inter-normal-midnight-blue-16px">
+                                            <input type="text" autocomplete="off" id="contact_us_first_name"
+                                                th:value="${firstName}" th:disabled="${firstName != null}"
+                                                aria-labelledby="contact_us_first_name" name="contact_us_first_name"
+                                                maxlength="30" class="contact_us_text">
+                                        </div>
+                                    </div>
+                                    <div class="frame-63">
+                                        <div class="email-address opensans-bold-white-13px">
+                                            <span class="opensans-bold-midnight-blue-13px">Email Address</span><span
+                                                class="opensans-bold-midnight-blue-13px">:</span>
+                                            <span class="opensans-bold-tamarillo-13px">*</span>
+                                        </div>
+                                        <div class="contact_us_field_div inter-normal-midnight-blue-16px">
+                                            <input type="text" autocomplete="off" id="id_user_email"
+                                                th:value="${loggedOnUser}" th:disabled="${loggedOnUser != null}"
+                                                aria-labelledby="id_user_email" name="id_user_email" maxlength="30"
+                                                class="contact_us_text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="contact_us_header">
+                                    <div class="frame-61">
+                                        <div class="last-name opensans-bold-white-13px">
+                                            <span class="opensans-bold-midnight-blue-13px">Last Name</span><span
+                                                class="opensans-bold-midnight-blue-13px">:</span>
+                                            <span class="opensans-bold-tamarillo-13px">*</span>
+                                        </div>
+                                        <div class="contact_us_field_div inter-normal-midnight-blue-16px">
+                                            <input type="text" autocomplete="off" id="contact_us_lastname"
+                                                th:value="${lastName}" th:disabled="${lastName != null}"
+                                                aria-labelledby="contact_us_lastname" name="contact_us_lastname"
+                                                maxlength="30" class="contact_us_text">
+                                        </div>
+                                    </div>
+                                    <div class="frame-63">
+                                        <div class="organization opensans-bold-white-13px">
+                                            <span class="opensans-bold-midnight-blue-13px">Organization</span><span
+                                                class="opensans-bold-midnight-blue-13px">:</span>
+                                            <span class="opensans-bold-tamarillo-13px">*</span>
+                                        </div>
+                                        <div class="contact_us_field_div inter-normal-midnight-blue-16px">
+                                            <input type="text" autocomplete="off" id="contact_us_org"
+                                                th:value="${organization}" th:disabled="${organization != null}"
+                                                aria-labelledby="contact_us_org" name="contact_us_org" maxlength="30"
+                                                class="contact_us_text">
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+
+                            <div class="typeOfInquiry-group" style="display:block;">
+                                <div class="frame-66">
+                                    <div class="typeofinquiry opensans-bold-white-13px">
+                                        <span class="opensans-bold-midnight-blue-13px">Type of Inquiry</span><span
+                                            class="opensans-bold-midnight-blue-13px">:</span>
+                                        <span class="opensans-bold-tamarillo-13px">*</span>
+                                    </div>
+                                    <div class="typeofinquiry_selections inter-normal-midnight-blue-16px">
+                                        <select class="simple-select2" id="inquiryList" th:value="${typeOfInquiry}"
+                                            name="inquiryList" style="width: 100%" ;>
+                                            <option value="Select">Select from these options</option>
+                                            <option value="UploadModel">I would like permission to upload data/model.
+                                            </option>
+                                            <option value="DeleteModel">I would like permission to delete data/model.
+                                            </option>
+                                            <option value="unsubscribe">I would like to unsubscribe from MoDaC
+                                                notifications.</option>
+                                            <option value="I have a question on a functionality">I have a question on
+                                                functionality.</option>
+                                            <option value="problem">I would like to report a problem.</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div style="display:block;">
+                                <p class="for-specific-question opensans-bold-midnight-blue-13px">
+                                    Questions, Suggestions, and/or Feedback:
+                                </p>
+
+                                <div class="your-text-here inter-normal-midnight-blue-16px">
+                                    <textarea id="contact_us_txtarea" aria-labelledby="contact_us_txtarea"
+                                        placeholder="Enter your text here..." name="contact_us_txtarea" rows="9"
+                                        class="form-control defaultFocus contact_us_txtarea"></textarea>
+                                </div>
+                            </div>
+
+
+
+                            <div class="row row-buffer CaptchaDiv">
+                                <div id="google_recaptcha"></div>
+                            </div>
+
+                            <div class="group">
+                                <div class="valign-text-middle">
+                                    <button class="btn btn-lg btn-primary btn-block" id="btnSubmitEmail">
+                                        <span>Submit</span>
+                                        <span>
+                                        <img class="arrow_right_contact_us"
+                                            th:src='@{/images/contact_us_arrow_beforeSubmit.png}' />
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="clearfix successBlock" style="display: none;">
+                                <div class="col-md-12" style="padding-left: 0px; padding-right: 0px; padding-top: 10px; 
+                                	border-radius: 0px;">
+                                    <div class="alert">
+                                        <h6 class="successMsg" id="contactusMsg" style="text-align: center;">
+                                            Thank you for your inquiry. <br />We are redirecting you to the home page.
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+    </form>
+
+    </div>
+
+</body>
+
+</html>

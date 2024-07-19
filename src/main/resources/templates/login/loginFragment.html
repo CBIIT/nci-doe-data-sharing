@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+     <div class="M-4 p-4 col-md-8 mx-auto" id="loginFragment" role="tabpanel" th:fragment="loginFragment" style="
+    max-width: 800px">
+    
+        <div class="form-row jumbotron pt-2 pb-2 mb-2" id="loginSubTab">
+                 <form role="form" id="userlogin" style="width:100%;"  action="login" method="post">
+                 <input type="hidden" id="siteKey" th:value="${siteKey}"/>
+                  <input type="hidden" id="redirectMsg" th:value="${redirectMsg}"/>
+                        <p style="text-align: center;font-family: latoregular;font-size: 26px;color: #FFFFFF;padding-top: 18px;
+                         padding-bottom: 14px;">LOGIN</p>
+                         
+                         <div class="clearfix successBlockLogin" th:if= "${successMsg!= null}">
+                         <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;padding-top: 10px; border-radius: 0px;">
+                        <div class="alert alert-success" style="text-align: center;">
+                            <h6 class="updateAccessMsg" th:text="${successMsg}"></h6>
+                        </div>
+                    </div>
+                         </div>
+                        <div class="clearfix errorBlockLogin" style="display: none;">
+                    <div class="col-md-12" style="padding-left: 0px; padding-right: 0px; border-radius: 0px;">
+                        <div class="alert alert-danger" style="background-color: #E87B05;">
+                            <h6 class="errorMsgLogin" style="color:#EAF6FF;text-align: center;"></h6>
+                        </div>
+                    </div>
+                </div>
+                
+                    <div class="clearfix" th:if= "${error != null}">
+                    <div class="col-md-12" style="padding-left: 0px; padding-right: 0px; border-radius: 0px;">
+                        <div class="alert alert-danger" style="background-color: #E87B05;">
+                            <h6 style="color:#EAF6FF;text-align: center;" th:utext="${error}"></h6>
+                        </div>
+                    </div>
+                </div>
+                
+                         <hr class="loginHr">
+                    <br>                 
+
+                       <p style="text-align: center;font-size: 13px;color: #EAF6FF;font-family: inter_medium;line-height: 11px;">You can search publicly available data without an account.</p>
+                        <div class="row row-buffer">
+                           
+                            <div class="col-lg-12" style="margin-left:100px;">
+                                <input class="form-control input-lg loginFieldsTextBox" id="username" maxlength="50" name="username" placeholder="Email Address*" type="text" aria-labelledby="username">
+                                <span class="TextField-floatingLabel-qefpP" style="display:none;">Email Address</span>
+                            </div>
+                        </div>
+                        <div class="row row-buffer" style="margin-top:25px;">
+                            
+                            <div class="col-lg-12" style="margin-left:100px;">
+                                <input autocomplete="off" class="form-control input-lg loginFieldsTextBox" id="password" maxlength="20" name="password" placeholder="Password*" type="password" aria-labelledby="password">
+                                     <span class="TextField-floatingLabel-qefpP" style="display:none;">Password</span>
+                            </div>
+                        </div>
+                        <div class="row row-buffer" style="margin-left: 100px;background-color: none;margin-top: 15px;">
+                           <div class="col-lg-5"> <a href="javascript:void(0)" id="forgotPswdLink"
+                           class="btn-link pull-right underlineLinks" 
+                           style="color: #03233C !important;font-family: 'inter_medium';font-size: 13px;margin-left: 45px;">Forgot Password</a></div>
+                           <div class="col-lg-5">  <a id="register-tab" href="javascript:void(0);" class="underlineLinks" 
+                           style="color:#fff!important;font-family: 'inter_medium';font-size: 13px;">Create Account</a></div>
+                        </div>
+    
+    					<div class="row row-buffer">
+                        <div class="col-lg-3"></div>
+                        <div class="col-lg-9">                        
+        				<div id="logincaptchadiv"></div>      				
+      					</div>
+                        </div>
+                     <hr class="loginHr">
+                        <div class="row" style="justify-content: center;padding-top: 30px;">
+                        
+                            <div class="col-xs-3 col-sm-3 col-md-3">
+
+                               <button class="btn btn-lg btn-success btn-block" id="loginButton" 
+                               name="login" value="Sign In">LOGIN</button>
+                            </div>
+                        </div>
+                        <br/>
+                        
+                </form>
+        </div>
+           <div th:replace="login/registration :: registration">Registration tab</div>
+    </div>
+</body>
+</html>

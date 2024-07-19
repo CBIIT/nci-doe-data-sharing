@@ -228,7 +228,7 @@ $(document)
 					
 					$(".backToSearchBtn").click(function(e) {
 						$("#searchFragmentDiv").show();
-						$("#dataSetFragment").hide();
+						$("#assetDetailsFragment").hide();
 						$("#editCollectionFragment").hide();
 					});
 
@@ -247,7 +247,7 @@ $(document)
 					});
 
 					$(".backToStatusTabLink").click(function(e) {
-						location.replace("/tasksTab");
+						location.replace("/statusTab");
 					});
 
 					$('body').on('click', 'a.button.closeBtn', function() {

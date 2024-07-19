@@ -123,9 +123,9 @@
                         </a>
                     </li>
                     <li class="headerprimary-item" th:if="${loggedOnUser != null}">
-                        <a th:href="@{/tasksTab}"  class="header-anchor-link" role="tab">
+                        <a th:href="@{/statusTab}"  class="header-anchor-link" role="tab">
                             <button id="status" class="usa-button headerprimary-button" aria-expanded="false"
-                                data-href="https://modac.cancer.gov/tasksTab" aria-controls="menu-11868"
+                                data-href="https://modac.cancer.gov/statusTab" aria-controls="menu-11868"
                                 data-menu-id="11868">
 
                                 <span>Status</span>
@@ -185,9 +185,9 @@
                                     <div class="dropdown-menu dropdown-container mt-0" style="float:right">
                                         <div class="dropdown-container-block">
 
-                                            <a class="dropdown-item" th:href="@{/myaccount}" id="myaccountTab">Manage
+                                            <a class="dropdown-item" th:href="@{/manageAccount}" id="myaccountTab">Manage
                                                 Account</a>
-                                            <a class="dropdown-item" th:href="@{/resetPassword}"
+                                            <a class="dropdown-item" th:href="@{/changePassword}"
                                                 id="changePswdTab">Change Password</a>
                                         </div>
                                     </div>

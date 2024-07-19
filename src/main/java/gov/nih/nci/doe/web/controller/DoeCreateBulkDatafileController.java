@@ -125,7 +125,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 		}
 
 		model.addAttribute("basePathSelected", basePath);
-		return "upload";
+		return "upload/uploadTab";
 	}
 
 	/**
@@ -314,7 +314,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 				audit.setTaskId(taskId);
 				auditingService.saveAuditInfo(audit);
 
-				return "Your bulk data file registration request has the following task ID: <a href='/tasksTab'>"
+				return "Your bulk data file registration request has the following task ID: <a href='/statusTab'>"
 						+ taskId + "</a>";
 
 			}

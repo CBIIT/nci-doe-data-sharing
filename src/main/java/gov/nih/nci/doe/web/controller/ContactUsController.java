@@ -1,15 +1,21 @@
 package gov.nih.nci.doe.web.controller;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import gov.nih.nci.doe.web.DoeWebException;
 import gov.nih.nci.doe.web.model.ContactUs;
@@ -26,6 +32,17 @@ import gov.nih.nci.doe.web.util.DoeClientUtil;
 @EnableAutoConfiguration
 @RequestMapping("/contactUs")
 public class ContactUsController extends AbstractDoeController {
+
+	@GetMapping
+	public String getContactUs(@RequestParam(value = "typeOfInquiry", required = false) String typeOfInquiry,
+			Model model, HttpSession session, HttpServletRequest request) {
+
+		if (StringUtils.isNotEmpty(typeOfInquiry)) {
+			model.addAttribute("typeOfInquiry", typeOfInquiry);
+		}
+		model.addAttribute("siteKey", siteKey);
+		return "contactus/contactUsTab";
+	}
 
 	@PostMapping
 	public ResponseEntity<?> contactUs(@RequestHeader HttpHeaders headers, @RequestBody ContactUs contactUs)

@@ -71,7 +71,7 @@ public class DoeRetryUploadtaskController extends AbstractDoeController {
 
 				taskManagerService.saveTransfer(responseDTO.getTaskId(), "Upload", null, taskName,
 						getLoggedOnUserInfo(), task != null ? task.getPath() : null);
-				return "Your bulk data file registration request has the following task ID: <a href='/tasksTab'>"
+				return "Your bulk data file registration request has the following task ID: <a href='/statusTab'>"
 						+ responseDTO.getTaskId() + "</a>";
 			}
 

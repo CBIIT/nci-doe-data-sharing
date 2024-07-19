@@ -5,7 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -24,12 +23,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import org.springframework.security.authentication.BadCredentialsException;
 import gov.nih.nci.doe.web.DoeWebException;
-import gov.nih.nci.doe.web.LoginAuthenticationSuccessHandler;
 import gov.nih.nci.doe.web.domain.InferencingTask;
 import gov.nih.nci.doe.web.model.DoeSearch;
-import gov.nih.nci.doe.web.model.DoeUsersModel;
+
 import gov.nih.nci.doe.web.model.PermissionsModel;
 import gov.nih.nci.doe.web.model.SearchList;
 import gov.nih.nci.doe.web.service.DoeAuthorizationService;
@@ -53,46 +50,7 @@ public class HomeController extends AbstractDoeController {
 	public String homePage(HttpSession session, HttpServletRequest request) {
 
 		log.info("home page");
-		return "home";
-
-	}
-
-	@GetMapping(value = "/myaccount")
-	public String getMyAccount(Model model, HttpSession session, HttpServletRequest request) {
-		log.info("get account");
-		String user = getLoggedOnUserInfo();
-		if (StringUtils.isEmpty(user)) {
-			return "redirect:/loginTab";
-		}
-		try {
-			log.info("get user details for : " + user);
-			DoeUsersModel userInfo = authService.getUserInfo(user);
-			model.addAttribute("userInfo", userInfo);
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
-
-		return "myAccount";
-	}
-
-	@PostMapping(value = "user-info")
-	public String updateUserInfo(@Valid DoeUsersModel doeModel, HttpSession session, HttpServletRequest request,
-			HttpServletResponse response) throws DoeWebException {
-
-		log.info("update user info for user " + doeModel.getFirstName());
-		try {
-			String user = getLoggedOnUserInfo();
-			if (StringUtils.isEmpty(user)) {
-				return "redirect:/loginTab";
-			}
-			doeModel.setEmailAddrr(user);
-			authService.saveUserInfo(doeModel);
-
-			return "redirect:/";
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			throw new DoeWebException("Failed to update user info: " + e.getMessage());
-		}
+		return "home/homeTab";
 
 	}
 
@@ -125,14 +83,14 @@ public class HomeController extends AbstractDoeController {
 			}
 			constructAllSearchCriteriaList(session, model);
 
-			return "searchTab";
+			return "search/searchTab";
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			throw new DoeWebException("Failed to render search Tab " + e.getMessage());
 		}
 	}
 
-	@GetMapping(value = "/tasksTab")
+	@GetMapping(value = "/statusTab")
 	public String getTasksTab(Model model, @RequestParam(value = "isPred", required = false) String isPred,
 			HttpSession session, HttpServletRequest request) throws DoeWebException {
 
@@ -150,81 +108,7 @@ public class HomeController extends AbstractDoeController {
 			}
 		}
 
-		return "tasksTab";
-	}
-
-	@GetMapping(value = "/loginTab")
-	public String getLoginTab(Model model, @RequestParam(value = "token", required = false) String token,
-			@RequestParam(value = "email", required = false) String email,
-			@RequestParam(value = "redirectMsg", required = false) Boolean redirectMsg,
-			@RequestParam(value = "error", required = false) String error, HttpServletRequest request)
-			throws DoeWebException {
-
-		try {
-			if (StringUtils.isNotEmpty(token) && StringUtils.isNotEmpty(email)) {
-				String status = authenticateService.confirmRegistration(token, email);
-				if ("SUCCESS".equalsIgnoreCase(status)) {
-					model.addAttribute("successMsg", "Thank you for registering. You may now log in.");
-				}
-			} else if (redirectMsg != null) {
-				model.addAttribute("redirectMsg", true);
-			}
-
-			if (null != error) {
-				Exception message = (Exception) request.getSession().getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
-				if (StringUtils.isNotEmpty(error) && StringUtils.isAlphanumericSpace(error)) {
-					/*
-					 * The only use case when the error is not empty is during google captcha
-					 * verification failed on login authentication success handler.
-					 */
-					model.addAttribute("error", error);
-				} else if (message == null) {
-					model.addAttribute("error",
-							"Unknown error. Contact <a class='modacSupportLink' href='/contactUs'>MoDaC Support</a>.");
-				} else if (message.getClass().isAssignableFrom(BadCredentialsException.class)) {
-					model.addAttribute("error", message.getMessage());
-				}
-			}
-
-			if (error == null) {
-				// use the referer from request header to get the previous url.
-				// the referer will be empty when the url is copied to the browser and the app
-				// is redirected to login page. Also, do not use referer tag when there is an
-				// error message on
-				// login tab
-
-				String referer = request.getHeader("referer");
-				request.getSession().setAttribute(LoginAuthenticationSuccessHandler.REDIRECT_URL_SESSION_ATTRIBUTE_NAME,
-						referer);
-			}
-
-		} catch (Exception e) {
-			throw new DoeWebException("Failed to send registration email" + e.getMessage());
-		}
-
-		model.addAttribute("siteKey", siteKey);
-
-		return "loginTab";
-	}
-
-	@GetMapping(value = "/resetPassword")
-	public String getResetPassword(HttpSession session, HttpServletRequest request) {
-		String user = getLoggedOnUserInfo();
-		if (StringUtils.isEmpty(user)) {
-			return "redirect:/loginTab";
-		}
-		return "resetPassword";
-	}
-
-	@GetMapping(value = "/contactUs")
-	public String getContactUs(@RequestParam(value = "typeOfInquiry", required = false) String typeOfInquiry,
-			Model model, HttpSession session, HttpServletRequest request) {
-
-		if (StringUtils.isNotEmpty(typeOfInquiry)) {
-			model.addAttribute("typeOfInquiry", typeOfInquiry);
-		}
-		model.addAttribute("siteKey", siteKey);
-		return "contactUsTab";
+		return "status/statusTab";
 	}
 
 	@GetMapping(value = "/siteFeedback")
@@ -235,7 +119,7 @@ public class HomeController extends AbstractDoeController {
 
 	@GetMapping(value = "/aboutTab")
 	public String getAboutTab(HttpSession session, HttpServletRequest request) {
-		return "aboutTab";
+		return "about/aboutTab";
 	}
 
 	@GetMapping(value = "/downloadTab")
@@ -349,7 +233,7 @@ public class HomeController extends AbstractDoeController {
 		model.addAttribute("selectedPathsString", selectedPaths);
 		model.addAttribute("downloadAsyncType", downloadAsyncType);
 		model.addAttribute("fileName", fileName);
-		return "downloadTab";
+		return "download/downloadTab";
 	}
 
 	@GetMapping(value = "/metaDataPermissionsList")

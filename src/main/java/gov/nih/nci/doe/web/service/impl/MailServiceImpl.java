@@ -317,7 +317,7 @@ public class MailServiceImpl implements MailService {
 			params.put(TO, to.toArray(new String[0]));
 			params.put("dateTime", notification.getCompletedDate());
 			params.put("taskId", notification.getTaskId());
-			params.put("modac_link", webServerName + "/tasksTab");
+			params.put("modac_link", webServerName + "/statusTab");
 			params.put("resultPath", notification.getResultPath());
 			params.put("inputDatasetPath", notification.getInputDataset());
 			params.put("status", notification.getStatus());
@@ -358,7 +358,7 @@ public class MailServiceImpl implements MailService {
 			params.put("taskId", taskNotification.getTaskId());
 			params.put("status", taskNotification.getStatus());
 			params.put("registrationItems", taskNotification.getRegistrationItems());
-			params.put("modac_link", webServerName + "/tasksTab");
+			params.put("modac_link", webServerName + "/statusTab");
 			params.put("displayStatus", taskNotification.getDisplayStatus());
 			params.put("failureMsg",
 					StringUtils.isNotEmpty(taskNotification.getErrorMsg()) ? "Reason: " + taskNotification.getErrorMsg()
@@ -389,7 +389,7 @@ public class MailServiceImpl implements MailService {
 			params.put("targetPath", taskNotification.getTargetPath());
 			params.put("sourcePath", taskNotification.getSourcePath());
 			params.put("destinationType", taskNotification.getDestinationType());
-			params.put("modac_link", webServerName + "/tasksTab");
+			params.put("modac_link", webServerName + "/statusTab");
 			params.put("displayStatus", taskNotification.getDisplayStatus());
 			params.put("failureMsg",
 					StringUtils.isNotEmpty(taskNotification.getErrorMsg()) ? "Reason: " + taskNotification.getErrorMsg()

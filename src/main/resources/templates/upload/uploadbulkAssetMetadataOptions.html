@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Title</title>
+</head>
+<body>
+						
+	<div id="bulkAssetOptionsDiv"
+		th:fragment="uploadbulkAssetMetadataOptions" class="form-group col-lg-12 col-md-12">
+						
+						<div class="form-row col-md-12 col-sm-12" id="multipleFoldersUploadDiv"
+							style="margin-left: 5px; margin-top: 10px;display:none;">
+							<label
+								style="color: #C06400; font-family: 'inter_regular'; font-size: 15px; font-weight: 500;">
+								Do you want to upload bulk metadata file:</label>
+							<div class="form-group">
+								<div class="pull-left">
+									<label class="uploadAssetLabels radio-inline"><input
+										type="radio" name="assetUploadType"
+										class="assetBulkRadioButtons"
+										onchange="displayAssetTpeSelection('Yes')" value="Yes">
+										&nbsp;Yes</label>
+								</div>
+							</div>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<div class="form-group">
+								<div class="pull-left" style="margin-left: 15px">
+									<label class="uploadAssetLabels radio-inline"> <input
+										type="radio" name="assetUploadType"
+										class="assetBulkRadioButtons"
+										onchange="displayAssetTpeSelection('No')" value="No">&nbsp;No
+									</label>
+								</div>
+							</div>
+						</div>
+						
+						<div class="form-row col-md-12 col-sm-12" id="uploadCsvFile"
+							style="display: none; margin-left: 7px; margin-bottom: 10px;">
+							<label
+									style="color: #C06400; font-family: 'inter_regular'; font-size: 15px; 
+									font-weight: 500;">
+									Upload bulk metadata file: <input type="file" name="doeMetadataFile"
+								id="doeMetadataFile"
+								accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+                                application/vnd.ms-excel,.xls, .xlsx" /></label>
+						</div>
+						<div class="form-row col-md-12 col-sm-12"
+							id="formAssetSelection" style="display: none;">
+							<div class="form-group col-md-6 col-sm-6">
+								<label
+									style="color: #C06400; font-family: 'inter_regular'; font-size: 15px; font-weight: 500;">Asset
+									Type: <select class="simple-select2" id="assetTypeSelect"
+									name="assetType"
+									style="border: 2px solid #E87B05; color: #C06400; width: 40%"
+									onChange="retrieveAssetTypeDiv(this.options[this.selectedIndex])">
+										<option value="Select">Select</option>
+										<option value="Dataset">Dataset</option>
+										<option value="Model">Model</option>
+								</select>
+								</label>
+							</div>
+							<div class="form-group col-md-12 col-sm-12"
+								id="addMetadataDiv" style="display: none;">
+								<input type="hidden" name="collection_type" value="Asset" />
+								<div class="col-md-3 col-sm-3 addUserMetadaDiv">
+									<button id="addUserMetadataForBulkAssets" type="button"
+										class="btn btn-primary mb-2 mr-2"
+										onclick="addNewMetaDataCollection('assetBulkMetadataTable')">Add
+										Metadata</button>
+								</div>
+
+								<table id="assetBulkMetadataTable"
+									class="table display dt-responsive wrap"
+									style="width: 85%; border: none; border-collapse: separate; border-spacing: 0 1px;">
+									<thead>
+										<tr>
+											<th aria-sort="none" class="sortable" data-sort="text"
+												role="columnheader" scope="col">ATTRIBUTE</th>
+											<th aria-sort="none" class="sortable" data-sort="text"
+												role="columnheader" scope="col">VALUE</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<div class="form-group col-lg-8 col-md-8"
+							style="margin-top: -4px; margin-bottom: 0px; margin-left: 0px;">
+							<input type="button" value="Upload" class="btn"
+								disabled="true" id="registerBulkAssets">
+						</div>
+	</div>					
+</body>
+</html>
