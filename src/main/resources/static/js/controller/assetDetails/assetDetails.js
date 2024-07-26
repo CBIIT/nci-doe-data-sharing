@@ -709,6 +709,7 @@ $('#dataSetTable tbody')
 															var collection_type = "";
 															var fileSize = "";
 															var fileSizeHtml = ""
+															var attrName = "";
 
 															if (value.isFolder == false) {
 																selectHtml = "<input type='checkbox' id='"
@@ -721,6 +722,7 @@ $('#dataSetTable tbody')
 																		+ value.name
 																		+ "</span>";
 																collection_type = "DataObject";
+																attrName = "file_name";
 																fileSize = value.fileSize;
 																fileSizeHtml = "<input type='hidden' class='fileSizeInBytes' value= '" + value.fileSizeInBytes+ "'/> " + fileSize + "";
 															}
@@ -738,6 +740,7 @@ $('#dataSetTable tbody')
 																metadataInfoTitle = "Folder Metadata";
 																copyPathTitle = "Copy Folder Path";
 																collection_type = "Folder";
+																attrName = "collection_name";
 															}
 
 															iconHtml += "&nbsp;&nbsp;&nbsp;<button type='button' style='border: transparent;margin-top: -6px;"
@@ -754,7 +757,7 @@ $('#dataSetTable tbody')
 																	+ value.path
 																	+ "' collection_type = "
 																	+ collection_type
-																	+ " file_name = '"
+																	+ " " + attrName + "  = '"
 																	+ value.name
 																	+ "'"
 																	+ "tabindex='0'"
@@ -1033,6 +1036,7 @@ function renderDataSetPath(data, type, row) {
 	var collection_type = "";
 	var marginLeftCss;
 	var marginRightCss;
+	var attrName = "";
 	if (loggedOnUserInfo) {
 		marginLeftCss = -25
 		marginRightCss = 0
@@ -1045,6 +1049,7 @@ function renderDataSetPath(data, type, row) {
 		title = "Copy Folder Path";
 		metadatatitle = "Folder Metadata";
 		collection_type = "Folder";
+		attrName = "collection_name";
 		html += "<a class='detail-control' data-name = '" + row.name + "'" + "style='float:left;margin-right:"
 				+ marginRightCss + "px;margin-left:" + marginLeftCss + "px;'>"
 				+ "<i class='expand far fa-folder'></i></a>";
@@ -1052,6 +1057,7 @@ function renderDataSetPath(data, type, row) {
 		title = "Copy File Path";
 		metadatatitle = "File Metadata";
 		collection_type = "DataObject";
+		attrName = "file_name";
 	}
 
 	html += row.name + "&nbsp;&nbsp;";
@@ -1067,7 +1073,7 @@ function renderDataSetPath(data, type, row) {
 			+ "style='width:17px;' alt='copy file path'></button>";
 
 	html += "<a class='cil_13_no_color button2a' selected_path='" + row.path + "' collection_type= " + collection_type
-			+ " " + "file_name = '" + row.name + "'" + "tabindex='0'"
+			+ " " + "" + attrName + " = '" + row.name + "'" + "tabindex='0'"
 			+ " data-container='body' data-toggle='popover' data-placement='right' data-trigger='click' "
 			+ "data-popover-content='#a01'><img src='images/infoIcon.svg'"
 			+ "th:src='@{/images/infoIcon.svg}' class='infoMetadata' alt='metadata info' "
