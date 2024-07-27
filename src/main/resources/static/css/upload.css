@@ -401,3 +401,62 @@ input[type="search"] {
 }
 }
 /* End Temp fix */
+
+.registerAssetContainer {
+	padding: 2rem 4rem;
+}
+
+.asset-register-dropdown .select2-container--default .select2-selection--single .select2-selection__arrow b {
+	border-color: #3B6EB4 transparent transparent transparent !important;
+}
+
+.asset-register-dropdown .select2-container span.select2-selection.select2-selection--single {
+    border: 1.5px solid #3B6EB4;
+	border-radius: 8px;
+
+}
+
+.asset-register-dropdown span.select2.select2-container.select2-container--default.select2-container--disabled {
+    opacity: 0.2;
+}
+
+.asset-register-dropdown .select2-container .select2-selection--single .select2-selection__rendered {
+padding-left: 12px;
+padding-top: 2px;
+}
+
+.asset-register-dropdown .select2{
+    color: #083A50;
+    font-size: 16px;
+    height: 40px;
+    width: 100% !important;
+    margin-top: -3px;
+    margin-bottom: 12px;
+}
+
+
+.uploadRadioButtons {
+	margin-right: 10px;
+	accent-color: #004A8A !important;
+    transform: scale(1.6) !important;
+}
+
+
+.uploadAssetLabels {
+	font-family: var(--font-family-inter);
+	color: #353941;
+	font-size: 19px;
+	font-weight: 700;
+	padding-top: 0;
+	padding-bottom: 20px;
+	width: auto;
+	display: block;
+  }
+
+  label.radio-label {
+	display: inline;
+	color: #000;
+	font-family: "Open Sans";
+	font-style: normal;
+	font-weight: 400;
+}

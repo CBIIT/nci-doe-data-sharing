@@ -10,6 +10,35 @@ $(document).ready(
 				invokeAjax('/upload', 'GET', d, postUploadGlobusFunction, postFailureFunction, null, 'text');
 			});
 
+			$(document).ready(function() {
+				$('.simple-select2').select2();
+			});
+
+			$('#registerAssetSelect').on('change', function() {
+				var selectedOption = $("#registerAssetSelect option:selected").text();
+				console.log('selectedOption');
+				console.log(selectedOption);
+				$("#assetType").val(selectedOption);
+				$("#uploadSectionDiv").hide();
+				$("#uploadHeader").hide();
+
+				$("#registerCollectionForm").show()
+				createCollectionDiv('studyList');
+				$("#registerAssetPicker").show();
+
+			});
+
+
+			$('input[type=radio][name=registerAssetRadio]').change(function() {
+                if (this.value == 'Register Asset') {
+                    $('#registerAssetSelect').prop('disabled', false);
+                    $('#uploadAssetSelect').prop('disabled', true);
+                } else if (this.value == 'Upload Asset') {
+                    $('#registerAssetSelect').prop('disabled', true);
+                    $('#uploadAssetSelect').prop('disabled', false);
+                }
+
+            });
 
 });
 
@@ -337,4 +366,13 @@ function resetAssetBulkUploadChoiceOptions() {
 	 $("#uploadCsvFile").hide();
 	 $("#formAssetSelection").hide();
 	 $("#assetTypeSelect").val("Select").trigger("change");
+}
+
+
+function displayEmptyAssetScreen(data) {
+	$("#uploadSectionDiv").hide();
+	$("#uploadHeader").hide();
+	$("#registerCollectionForm").hide();
+	createCollectionDiv('studyList');	
+	$("#registerAssetPicker").show();
 }

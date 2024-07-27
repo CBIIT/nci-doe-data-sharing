@@ -257,6 +257,7 @@ function createCollectionDiv(selectTarget, folderPath) {
 
 	// show create fragment
 	$("#uploadRegisterCollectionFragment").show();
+	$("#registerAssetPicker").hide();
 	$("#uploadSectionDiv").hide();
 	$("#uploadHeader").hide();
 	computeWidthForAssetCollectionName('parentCollectionName');
