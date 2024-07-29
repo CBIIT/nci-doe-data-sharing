@@ -1301,6 +1301,7 @@ th.active .arrow {
 	font-weight: 700;
 	line-height: 48px;
 	padding-left: 32px !important;
+	height: auto !important;
 }
 
 #spinner {
