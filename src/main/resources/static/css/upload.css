@@ -394,7 +394,7 @@ label.radio-label {
 /* This is a temp fix we can fix with js  */
 #userMetaData {
 span.select2.select2-container.select2-container--default {
-    width: 70% !important;
+	width: 70% !important;
 }
 input[type="search"] {
 	width: 70% !important;
@@ -406,7 +406,7 @@ input[type="search"] {
 	padding: 2rem 4rem;
 }
 
-.asset-register-dropdown .select2-container--default .select2-selection--single .select2-selection__arrow b {
+.asset-register-dropdown .select2-container--bootstrap4 .select2-selection--single .select2-selection__arrow b {
 	border-color: #3B6EB4 transparent transparent transparent !important;
 }
 
@@ -416,9 +416,6 @@ input[type="search"] {
 
 }
 
-.asset-register-dropdown span.select2.select2-container.select2-container--default.select2-container--disabled {
-    opacity: 0.2;
-}
 
 .asset-register-dropdown .select2-container .select2-selection--single .select2-selection__rendered {
 padding-left: 12px;
@@ -459,4 +456,17 @@ padding-top: 2px;
 	font-family: "Open Sans";
 	font-style: normal;
 	font-weight: 400;
+}
+
+.asset-register-dropdown span.select2.select2-container.select2-container--bootstrap4.select2-container--disabled {
+    opacity: 0.2;
+}
+
+.select2-container--bootstrap4 .select2-results__option--highlighted[aria-selected] {
+    color: #083A50 !important;
+}
+
+
+.asset-register-dropdown {
+    padding-left: 12px;
 }
