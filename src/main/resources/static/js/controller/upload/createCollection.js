@@ -184,7 +184,7 @@ function retrieveCollectionList(data, status) {
 
 	var parent = data[0].value;
 	if (parent) {
-		$('#parentCollectionLabel').text(parent.toUpperCase() + " COLLECTION NAME");
+		$('#parentCollectionLabel').text(parent.toUpperCase() + " COLLECTION IDENTIFIER");
 	}
 
 	if (collectionType == 'Folder') {
