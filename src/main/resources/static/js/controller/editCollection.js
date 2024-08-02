@@ -163,17 +163,17 @@ function addCollectionMetaDataRows() {
 			.append(
 					'<tr id="addRow'
 							+ rowId
-							+ '"><td><input type="text" style="width:70%;" '
+							+ '"><td><input type="search" placeholder="Required" style="width:70%;" '
 							+ 'name="_addAttrName'
 							+ rowId
 							+ '" aria-label="add new row" id="_addAttrName'
 							+ rowId
-							+ '"></td><td><input type="text" style="width:70%;" id="_addAttrValue'
+							+ '"></td><td><input type="search" placeholder="Required" style="width:70%;" id="_addAttrValue'
 							+ rowId
 							+ '" name="_addAttrValue'
 							+ rowId
 							+ '" >'
-							+ '&nbsp;&nbsp;<img class="pull-right clearMetadata" src="/images/close_metadata_popover.svg" onclick="removeCollectionRow(\'addRow'
+							+ '&nbsp;&nbsp;<img src="images/deleteIcon.svg" th:src="@{/images/deleteIcon.png}" class="metadataIcon" alt="delete metadata" onclick="removeCollectionRow(\'addRow'
 							+ rowId + '\')"></td></tr>');
 }
 
