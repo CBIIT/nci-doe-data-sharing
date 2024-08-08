@@ -329,8 +329,8 @@ function refreshDataTable() {
       dataTableInit(isVisible);
       $("div.toolbar").prepend(
          '<div id="show_search_count"></div><div id="sortingDiv" >' +
-         '<span id="ascSpan"><img src="images/search_ascending.svg"/></span>&nbsp;&nbsp;' +
-         '<span id="descSpan"><img src="images/search_descending.svg"/></span>' +
+         '<span id="ascSpan" data-toggle = "tooltip" title = "Asset Name A-Z" ><img src="images/search_ascending.svg"/></span>&nbsp;&nbsp;' +
+         '<span id="descSpan" data-toggle = "tooltip" title = "Asset Name Z-A"><img src="images/search_descending.svg"/></span>' +
          '</div>');
       $("div.toolbar").after(
          '<div class="col-lg-12 col-md-12 col-sm-12 float-right" style="display:inline-flex;">' +
