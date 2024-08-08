@@ -7,6 +7,7 @@ $(document).ready(
 						
 						var selectedPath = $(this).attr('metadata_path');
 						var collectionId = $(this).attr('collectionId');
+						var folderName = $(this).attr('folder_name');
 						var collectionType = "Folder";
 						
 						$("#editCollectionFragment").show();
@@ -19,6 +20,7 @@ $(document).ready(
 
 						$("#userMetaData tbody").html("");
 						$("#path").val(selectedPath);
+						$("#editUserMetadataFileName").html(folderName);
 						$(".editCollectionSuccess").hide();
 						$(".editCollectionMsg").html("");
 						$(".editCollectionError").hide();

@@ -55,7 +55,7 @@ function contructDataListDiv(data, status) {
 										+ datalist + '\',\'' + value.name + '\')" class="addDeleteUploadLabels">'
 										+ '<img src="/images/Uploads.add.png" class="uploadslogo" alt="register"></a>';
 
-								html += "&nbsp;&nbsp;<span style='border: transparent;' class='btn btn-link btn-sm editFolderMetadata'  metadata_path  = '"
+								html += "&nbsp;&nbsp;<span style='border: transparent;' class='btn btn-link btn-sm editFolderMetadata'  folder_name = '" + value.name + "' metadata_path  = '"
 										+ value.path
 										+ "'"
 										+ "collectionId = '"
@@ -146,7 +146,7 @@ $('#dataListing')
 																			+ ' &nbsp;&nbsp;'
 																			+ '<a href="#" class="uploadDataSet"  title="Upload to Asset Subcollection" style="font-size: 15px;color: #F39530;">'
 																			+ '<i class="fas fa-upload"></i></a>';
-																	html += "&nbsp;&nbsp;<span style='border: transparent;' class='btn btn-link btn-sm editFolderMetadata'  metadata_path  = '"
+																	html += "&nbsp;&nbsp;<span style='border: transparent;' class='btn btn-link btn-sm editFolderMetadata' folder_name = '" + value.name + "' metadata_path  = '"
 																			+ value.path
 																			+ "'"
 																			+ "collectionId = '"
