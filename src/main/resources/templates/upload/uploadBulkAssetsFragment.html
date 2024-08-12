@@ -14,24 +14,26 @@
 		<form class="form-horizontal" id="registerBulkAssetForm" enctype="multipart/form-data" method="POST"
 			style="width: 100%;">
 
-			<div class="form-row" style="margin-left: 100px;">
+			<div class="form-row">
 
 				<!-- globus end point details div -->
 				<div class="form-group col-lg-12 col-md-12" id="globusDetailsDiv" style="display:none;">
 
-					<div class="form-group col-lg-12 col-md-12" style="margin-top: -3px;">
+					<div class="text-center">
 
 						<button type="button" class="btn btn-md btn-link" id="assetSelectionGlobusButton">
-							Select Assets from <img src="images/Uploads-Globus.icon.png"
-								th:src="@{/images/Uploads-Globus.icon.png}" style="width: 20px;" alt="globus"> Globus
-							Endpoint
+							Select Assets from <br />
+							Globus Endpoint
+							<img class="arrowright" src="images/globus-icon.svg" th:src="@{/images/globus-icon.svg}"
+								style=" width: 23px;transform: translate(30px, -10px);" alt="globus">
 						</button>
 						<br />
 					</div>
 
-					<div class="col-md-12 col-sm-12" style="margin-left: 3px; margin-top: 21px;">
-						<div class="form-row" th:if="${bulkUploadCollection !=null and endpoint_id != null}">
-							<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+					<div class="d-flex flex-column col-md-12 col-sm-12 mt-3" style="background: #F3F3F3;">
+						<div class="form-row" th:if="${bulkUploadCollection !=null and endpoint_id != null}"
+							style="display: flex;border-bottom: 1px solid #D2D2D2;margin-top: 0.5rem;height: 45px;">
+							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">GLOBUS
 									ENDPOINT ID </span>
 							</div>
@@ -41,9 +43,10 @@
 							</div>
 						</div>
 
-						<div class="form-row" style="margin-top: -6px;"
+						<div class="form-row"
+							style="display: flex;border-bottom: 1px solid #D2D2D2;margin-top: 0.5rem;height: 45px;"
 							th:if="${bulkUploadCollection !=null and endpoint_path != null}">
-							<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">GLOBUS
 									ENDPOINT PATH </span>
 							</div>
@@ -53,9 +56,10 @@
 							</div>
 						</div>
 
-						<div class="form-row" style="margin-top: -6px;"
+						<div class="form-row"
+							style="display: flex;border-bottom: 1px solid #D2D2D2;margin-top: 0.5rem; height: 45px;"
 							th:if="${bulkUploadCollection!=null and fileNames != null}">
-							<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">SELECTED
 									FILES</span>
 							</div>
@@ -69,9 +73,10 @@
 						</div>
 
 
-						<div class="form-row" style="margin-top: -6px;"
+						<div class="form-row"
+							style="display: flex;border-bottom: 1px solid #D2D2D2;margin-top: 0.5rem;height: 45px;"
 							th:if="${bulkUploadCollection !=null and folderNames != null}">
-							<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">SELECTED
 									FOLDERS</span>
 							</div>
@@ -84,13 +89,13 @@
 							</div>
 						</div>
 
-						<div class="form-row" style="margin-top: -6px;"
+						<div class="form-row" style="display: flex;margin-top: 0.5rem; height: 45px;"
 							th:if="${bulkUploadCollection !=null and endpoint_id != null}">
-							<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">INCLUDE
-									CRITERIA&nbsp; <i class="fas fa-question-circle" data-toggle="tooltip"
+									CRITERIA&nbsp; <img src="images/infoIcon.svg" class="icon" data-toggle="tooltip"
 										data-placement="right"
-										title="Add list of include patterns to match source files in the selected folders. "></i>
+										title="Add list of include patterns to match source files in the selected folders. "></img>
 								</span>
 							</div>
 							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues"
@@ -112,7 +117,7 @@
 					<div class="col-md-12 col-sm-12" style="margin-left: 3px; margin-top: 21px;">
 
 						<div class="form-row">
-							<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">S3 BUCKET</span>
 							</div>
 							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues"
@@ -123,8 +128,8 @@
 							</div>
 						</div>
 
-						<div class="form-row" style="margin-top: -6px;">
-							<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+						<div class="form-row">
+							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields"> S3 (SOURCE) PATH</span>
 							</div>
 							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues"
@@ -136,8 +141,8 @@
 						</div>
 
 
-						<div class="form-row" style="margin-top: -6px;">
-							<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+						<div class="form-row">
+							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">ACCESS KEY&nbsp;
 								</span>
 							</div>
@@ -148,8 +153,8 @@
 							</div>
 						</div>
 
-						<div class="form-row" style="margin-top: -6px;">
-							<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+						<div class="form-row">
+							<div class="form-group col-lg-6 col-md-4 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">SECRET ACCESS KEY&nbsp;
 								</span>
 							</div>
@@ -161,8 +166,8 @@
 							</div>
 						</div>
 
-						<div class="form-row" style="margin-top: -6px;">
-							<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+						<div class="form-row">
+							<div class="form-group col-lg-6 col-md-4 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">REGION&nbsp;
 								</span>
 							</div>
@@ -175,8 +180,8 @@
 						</div>
 
 
-						<div class="form-row" style="margin-top: -6px;">
-							<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
+						<div class="form-row">
+							<div class="form-group col-lg-6 col-md-4 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">INCLUDE
 									CRITERIA&nbsp; <i class="fas fa-question-circle" data-toggle="tooltip"
 										data-placement="right"
@@ -195,6 +200,18 @@
 				</div>
 
 				<!-- end S3 bulk upload div -->
+				<!-- Start Google cloud upload div -->
+				<div id="googleCloudDiv" style="display:none;">
+					<div class="form-group" style="margin-left: 13px">
+						<button type="button" class="btn btn-primary" th:disabled="${authorizedGC != null}"
+							id="cloudUploadAuthlink">Authorize MoDaC to Access
+							Your Google Cloud</button>
+
+					</div>
+
+				</div>
+				<!-- End Google cloud upload div -->
+
 				<!-- common part-->
 				<div th:replace="upload/uploadbulkAssetMetadataOptions :: uploadbulkAssetMetadataOptions"></div>
 

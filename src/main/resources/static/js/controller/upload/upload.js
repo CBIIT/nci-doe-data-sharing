@@ -1,34 +1,34 @@
 $(document).ready(
-		function() {
-		
-			loadUploadTab();
-			$('body').tooltip({
-				selector : '[data-toggle="tooltip"]'
-			});
-			
-			$("#bulkAssetGlobusRadiobtn").click(function(e) {
-						resetAssetsSelection();
-		    });
-		    
-			$(".backToUploadTab").click(function(e) {
-				$("#uploadRegisterCollectionFragment").hide();
-				$("#registerAssetPicker").hide();
-				$("#uploadSectionDiv").show();
-				$("#uploadHeader").show();
-				$("#uploadDataFilesTab").hide();
-				$("#editCollectionFragment").hide();
-				resetSelectionsForBackToUploadTab();
-			});
+	function () {
 
-			$("#btnSelectAssetType").click(function(e) {
-				var assetType = $("#createAssetModal").find("#createAssetCollectionType option:selected").val();
-				$("#assetType").val(assetType);
-				$("#uploadRegisterCollectionFragment").show();
-				$("#uploadSectionDiv").hide();
-				$("#uploadHeader").hide();
-				createCollectionDiv('studyList');
-			});
-});
+		loadUploadTab();
+		$('body').tooltip({
+			selector: '[data-toggle="tooltip"]'
+		});
+
+		$("#bulkAssetGlobusRadiobtn").click(function (e) {
+			resetAssetsSelection();
+		});
+
+		$(".backToUploadTab").click(function (e) {
+			$("#uploadRegisterCollectionFragment").hide();
+			$("#registerAssetPicker").hide();
+			$("#uploadSectionDiv").show();
+			$("#uploadHeader").show();
+			$("#uploadDataFilesTab").hide();
+			$("#editCollectionFragment").hide();
+			resetSelectionsForBackToUploadTab();
+		});
+
+		$("#btnSelectAssetType").click(function (e) {
+			var assetType = $("#createAssetModal").find("#createAssetCollectionType option:selected").val();
+			$("#assetType").val(assetType);
+			$("#uploadRegisterCollectionFragment").show();
+			$("#uploadSectionDiv").hide();
+			$("#uploadHeader").hide();
+			createCollectionDiv('studyList');
+		});
+	});
 
 
 function loadUploadTab() {
@@ -53,8 +53,17 @@ function loadUploadTab() {
 			$("#editStudy").show();
 			$("#bulkAssetGlobusRadiobtn").show();
 			if (bulkUploadCollection) {
-			    $("input[name=selectAsset][value='Register Asset']").click();
-				$("#bulkAssetGlobusRadiobtn").click();			
+				$("input[name=selectAsset][value='Register Asset']").click();
+				$("input[name=assetSelection][value='Register Empty Asset']").click();
+				// Reset registerAssetSelect radio buttons
+				$("input[name=registerAssetRadio][value='Upload Asset']").click();
+				$('#uploadAssetSelect').prop('disabled', false);
+
+               // Ajay Discuss during code review
+				setTimeout(function () {
+					$('#uploadAssetSelect').val('Globus').trigger('change');
+				}, 1000);
+
 				$("#registerBulkAssets").prop("disabled", false);
 
 			}
@@ -86,7 +95,7 @@ function loadUploadTab() {
 					$("#displayGlobusUploadDiv").hide();
 					$("#displayDriveUploadDiv").show();
 					$("#displayCloudUploadDiv").hide();
-				} else if(uploadAsyncType && uploadAsyncType == 'cloud'){
+				} else if (uploadAsyncType && uploadAsyncType == 'cloud') {
 					$("#datafileTypeCloudUpload").prop("checked", true);
 					$("#displayGlobusUploadDiv").hide();
 					$("#displayDriveUploadDiv").hide();
@@ -117,21 +126,21 @@ function addNewMetaDataCollection(tableName) {
 	var rowId = $("#" + tableName + " tbody").length;
 	rowId = rowId + 1;
 	$("#" + tableName + " tbody")
-			.append(
-					'<tr id="addRow'
-							+ rowId
-							+ '"><td><input type="search" placeholder="Required" style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;" '
-							+ 'name="_addAttrName'
-							+ rowId
-							+ '" aria-label="add new row" id="_addAttrName'
-							+ rowId
-							+ '"></td><td><input type="search" placeholder="Required" style="width: 88%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;margin: 6px 0px !important" id="_addAttrValue'
-							+ rowId
-							+ '" name="_addAttrValue'
-							+ rowId
-							+ '" >'
-							+ '&nbsp;&nbsp;<img src="images/deleteIcon.svg" th:src="@{/images/deleteIcon.png}" class="metadataIcon" alt="delete metadata" onclick="removeCollectionRow(\'addRow'
-							+ rowId + '\')"></td></tr>');
+		.append(
+			'<tr id="addRow'
+			+ rowId
+			+ '"><td><input type="search" placeholder="Required" style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;" '
+			+ 'name="_addAttrName'
+			+ rowId
+			+ '" aria-label="add new row" id="_addAttrName'
+			+ rowId
+			+ '"></td><td><input type="search" placeholder="Required" style="width: 88%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;margin: 6px 0px !important" id="_addAttrValue'
+			+ rowId
+			+ '" name="_addAttrValue'
+			+ rowId
+			+ '" >'
+			+ '&nbsp;&nbsp;<img src="images/deleteIcon.svg" th:src="@{/images/deleteIcon.png}" class="metadataIcon" alt="delete metadata" onclick="removeCollectionRow(\'addRow'
+			+ rowId + '\')"></td></tr>');
 
 }
 
@@ -169,7 +178,7 @@ function showSelect(collection, selection) {
 		}
 
 		var params = {
-			selectedPath : seclectedValue,
+			selectedPath: seclectedValue,
 		};
 
 		loadJsonData('/collectionList', $("#studyList"), isEmptyOption, params, null, null, "key", "value");
@@ -189,8 +198,8 @@ function showSelect(collection, selection) {
 		}
 
 		var params = {
-			selectedPath : seclectedValue,
-			refreshNode : 'true'
+			selectedPath: seclectedValue,
+			refreshNode: 'true'
 		};
 		loadJsonData('/collectionList', $("#dataList"), isEmptyOption, params, null, null, "key", "value");
 		resetAssetsSelection(true);
@@ -296,8 +305,8 @@ function resetOnChangeofSelectCollection(selectTarget, selectedValue) {
 function resetAssetsSelection(reset) {
 	if ($("#dataListDiv").is(":visible") || reset) {
 		var data = {
-			id : 'ANY',
-			text : 'Select'
+			id: 'ANY',
+			text: 'Select'
 		};
 		var newOption = new Option(data.text, data.id, true, true);
 		if ($('#dataList').find("option[value='" + data.id + "']").length) {

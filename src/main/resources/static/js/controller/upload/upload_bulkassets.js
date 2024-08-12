@@ -13,9 +13,8 @@ $(document).ready(
 
 		$('#registerAssetSelect').on('change', function () {
 			var selectedOption = $("#registerAssetSelect option:selected").text();
+			$("#assetUploadDiv").hide();
 
-			console.log('selectedOption');
-			console.log(selectedOption);
 			if (selectedOption !== 'Select Asset Type') {
 				$("#assetType").val(selectedOption);
 				$("#uploadSectionDiv").hide();
@@ -27,6 +26,61 @@ $(document).ready(
 			}
 
 		});
+
+		$('#uploadAssetSelect').on('change', function () {
+			var selectedOption = $("#uploadAssetSelect option:selected").text();
+
+
+			$("#registerCollectionForm").hide();
+
+
+			if (selectedOption == 'Upload Assets from Globus Endpoint') {
+				$("#assetUploadDiv").show();
+				$("#assetUploadDiv").addClass('show');
+				$("#globusDetailsDiv").show();
+				$("#S3DetailsDiv").hide();
+				$("#googleCloudDiv").hide();
+
+				var bulkUploadCollection = $("#bulkUploadCollection").val();
+				var folderLength = $("#assetSelectedFolders ul li").length;
+				resetAssetBulkUploadChoiceOptions();
+				if (!bulkUploadCollection) {
+					$("#bulkAssetOptionsDiv").hide();
+				} else {
+					$("#bulkAssetOptionsDiv").show();
+					if (folderLength && folderLength > 1) {
+		
+						$("#multipleFoldersUploadDiv").hide();
+						$("#uploadCsvFile").show();
+						$("#formAssetSelection").hide();
+						$("#addMetadataDiv").hide();
+					} else {
+						$("#multipleFoldersUploadDiv").show();
+						$("#uploadCsvFile").hide();
+					}
+		
+				}
+			} else if (selectedOption == 'Upload Assets from AWS S3') {
+				$("#assetUploadDiv").show();
+				$("#globusDetailsDiv").hide();
+				$("#googleCloudDiv").hide();
+				$("#assetUploadDiv").addClass('show');
+				$("#registerBulkAssets").prop("disabled", false);
+				$("#S3DetailsDiv").show();
+				$("#bulkAssetOptionsDiv").show();
+				$("#uploadCsvFile").hide();
+				$("#multipleFoldersUploadDiv").show();
+				resetAssetBulkUploadChoiceOptions();
+		
+			} else if (selectedOption == 'Upload Assets from Google Cloud') {
+				$("#S3DetailsDiv").hide();
+				$("#globusDetailsDiv").hide();
+				$("#googleCloudDiv").show();
+			}
+	
+
+		});
+
 
 
 		$('input[type=radio][name=registerAssetRadio]').change(function () {
@@ -67,10 +121,10 @@ function constructAssetTypeBulkDiv(data, status) {
 				var placeholderValue = value.mandatory == true ? 'Required' : "";
 				var infoHtml = "";
 				if (value.description) {
-					infoHtml = '<i class="fas fa-info-square" data-toggle="tooltip"'
+					infoHtml = '<img src="images/infoIcon.svg" class="icon" data-toggle="tooltip"'
 						+ 'data-placement="right" title="'
 						+ value.description
-						+ '"></i>';
+						+ '"></img>';
 				}
 
 				if (value.validValues != null && value.attrName != 'asset_type' && value.isVisibleOnUplaodPage != false) {
@@ -116,8 +170,8 @@ function constructAssetTypeBulkDiv(data, status) {
 							.append(
 								'<tr><td>'
 								+ value.displayName
-								+ '&nbsp;&nbsp;<i class="fas fa-info-square" data-toggle="tooltip"'
-								+ 'data-placement="right" title="Please note that this description will be applied to all Assets. You may edit the description of each Asset separately after it is uploaded."></i></td><td>'
+								+ '&nbsp;&nbsp;<img src="images/infoIcon.svg" class="icon" data-toggle="tooltip"'
+								+ 'data-placement="right" title="Please note that this description will be applied to all Assets. You may edit the description of each Asset separately after it is uploaded."></img></td><td>'
 								+ '<textarea rows="4" placeholder ="Required" is_mandatory="'
 								+ value.mandatory
 								+ '" aria-label="value of meta data"  name="zAttrStr_'
