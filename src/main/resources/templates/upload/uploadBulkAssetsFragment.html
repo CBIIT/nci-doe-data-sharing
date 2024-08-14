@@ -201,14 +201,40 @@
 
 				<!-- end S3 bulk upload div -->
 				<!-- Start Google cloud upload div -->
-				<div id="googleCloudDiv" style="display:none;">
-					<div class="form-group" style="margin-left: 13px">
-						<button type="button" class="btn btn-primary" th:disabled="${authorizedGC != null}"
-							id="cloudUploadAuthlink">Authorize MoDaC to Access
-							Your Google Cloud</button>
+				<div class="form-group col-lg-12 col-md-12" id="googleCloudDiv" style="display: none;">
+					<div th:if="${authorizedGC != null}" id="cloudAuthorisedMsg" class="alert-success"
+						style="margin-left: 1rem">
+						<i class="fa fa-check">&nbsp;</i>Access Token Successfully
+						Generated
+					</div>
+					<div class="text-center">
 
+						<button type="button" class="btn btn-md btn-link" id="authorizeGoogleCloud"
+							h:disabled="${authorizedGC != null}">
+							Authorize MoDaC to Access<br />
+							Your Google Cloud
+							<img class="arrowright" th:src='@{/images/white_right_arrow.svg}' style="width: 16px;
+            transform: translate(100px, -12px);" />
+						</button>
 					</div>
 
+					<div th:if="${authorizedGC != null}" class="col-sm-12 column">
+
+						<div>
+							<label for="gcbucketName">Google Cloud Bucket:</label> <input type="text"
+								class="form-control" name="gcbucketName" th:value="${gcbucketName}" id="gcbucketName"
+								placeholder="Enter Google Cloud Bucket Name" />
+
+						</div>
+						<div>
+							<label for="gcPath">Google Cloud Source Path:</label> <input type="text"
+								class="form-control" th:value="${gcPath}" name="gcPath" id="gcPath"
+								placeholder="Enter Google Cloud Source Path" size="40" />
+							<input type="checkbox" name="gcFile" id="gcFile"> Check this if the source path is a file
+							and not a folder.
+
+						</div>
+					</div>
 				</div>
 				<!-- End Google cloud upload div -->
 

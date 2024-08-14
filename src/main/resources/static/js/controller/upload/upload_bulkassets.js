@@ -62,9 +62,9 @@ $(document).ready(
 				}
 			} else if (selectedOption == 'Upload Assets from AWS S3') {
 				$("#assetUploadDiv").show();
+				$("#assetUploadDiv").addClass('show');
 				$("#globusDetailsDiv").hide();
 				$("#googleCloudDiv").hide();
-				$("#assetUploadDiv").addClass('show');
 				$("#registerBulkAssets").prop("disabled", false);
 				$("#S3DetailsDiv").show();
 				$("#bulkAssetOptionsDiv").show();
@@ -73,11 +73,13 @@ $(document).ready(
 				resetAssetBulkUploadChoiceOptions();
 		
 			} else if (selectedOption == 'Upload Assets from Google Cloud') {
+				$("#assetUploadDiv").show();
+				$("#assetUploadDiv").addClass('show');
 				$("#S3DetailsDiv").hide();
 				$("#globusDetailsDiv").hide();
 				$("#googleCloudDiv").show();
+				$("#bulkAssetOptionsDiv").hide();
 			}
-	
 
 		});
 
@@ -92,6 +94,17 @@ $(document).ready(
 				$('#uploadAssetSelect').prop('disabled', false);
 			}
 
+		});
+
+		$("#authorizeGoogleCloud").click(function(e){
+			var d = {};
+			d.programPath = $("#programList").val();
+			d.studyPath = $("#studyList").val();
+			d.dataSetPath = $("#dataList").val();
+			d.uploadPath = $("#bulkDataFilePathCollection").val();
+			d.action = "cloud";
+			invokeAjax('/upload', 'GET', d, postUploadGlobusFunction, postFailureFunction, null, 'text');
+			
 		});
 
 	});

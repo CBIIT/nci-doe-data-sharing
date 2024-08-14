@@ -274,7 +274,8 @@ input#includeCriteria:focus {
 }
 
 #primaryGlobusButton,
-#assetSelectionGlobusButton {
+#assetSelectionGlobusButton,
+#authorizeGoogleCloud {
 	width: 250px;
 	font-size: 14px;
 	font-family: 'inter_regular';
@@ -292,6 +293,11 @@ input#includeCriteria:focus {
     letter-spacing: 0.14px;
     text-transform: uppercase;
 	padding: 4px 32px;
+}
+
+#authorizeGoogleCloud {
+	width: 330px;
+	padding: 7px 32px 0px 32px;
 }
 
 #collectionMetaDataLabel {

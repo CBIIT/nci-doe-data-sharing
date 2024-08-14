@@ -59,10 +59,7 @@ function loadUploadTab() {
 				$("input[name=registerAssetRadio][value='Upload Asset']").click();
 				$('#uploadAssetSelect').prop('disabled', false);
 
-               // Ajay Discuss during code review
-				setTimeout(function () {
-					$('#uploadAssetSelect').val('Globus').trigger('change');
-				}, 1000);
+				$('#uploadAssetSelect').val('Globus').trigger('change');
 
 				$("#registerBulkAssets").prop("disabled", false);
 
