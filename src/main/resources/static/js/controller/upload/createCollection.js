@@ -1,24 +1,6 @@
 $(document).ready(
 	function () {
 
-		$(document).on('change', '#publicAccess', function () {
-			if ($(this).is(":checked")) {
-				$("#accessGroupSelect").next(".select2-container").hide();
-			} else {
-				$("#accessGroupSelect").next(".select2-container").show();
-			}
-
-		});
-
-		$(document).on('change', '#nonPublicAccess', function () {
-			if ($(this).is(":checked")) {
-				$("#accessGroupSelect").next(".select2-container").show();
-			} else {
-				$("#accessGroupSelect").next(".select2-container").hide();
-			}
-
-		});
-
 		$(document).on('keyup', '.identifier_validation', function () {
 			var identifierVal = $(this).val();
 			var pattern = /^[A-Za-z0-9_-]*$/;
@@ -58,16 +40,14 @@ function constructNewCollectionMetaDataSet(data, status) {
 								'<tr><td>'
 								+ value.displayName
 								+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
-								+ '<input type="radio" name="accessRadio" id="publicAccess" checked="false" aria-label="public access" value="public access"/><label class="radio-label">&nbsp;&nbsp;Public&nbsp;&nbsp;</label><input type="radio" name="accessRadio" id="nonPublicAccess" checked="false" aria-label="public access" value="non public access"/><label class="radio-label">&nbsp;&nbsp;Non-public. Provide access group.</label>'
 								+ '<div class="mt-2"><select class="simple-select2" multiple="multiple" id="accessGroupSelect" name="zAttrStr_'
 								+ value.attrName
 								+ '"'
 								+ 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"></select></div>'
 								+ '</td></tr>');
-						loadJsonData('/metaDataPermissionsList', $("#accessGroupSelect"), false, null, null,
+						
+						loadJsonData('/metaDataPermissionsList', $("#accessGroupSelect"), false, null, loadDefaultAccessGroup,
 							null, "key", "value");
-						$("#publicAccess").prop("checked", true);
-
 
 					} else {
 
@@ -335,11 +315,10 @@ function registerCollection() {
 
 	let accessGroupError = true;
 
-	if ($("#nonPublicAccess").is(":checked")) {
-		if ($("#accessGroupSelect").val().length == 0) {
+	if ($("#accessGroupSelect").val().length == 0) {
 			accessGroupError = false;
-		}
 	}
+	
 
 	if (!usermetaDataEntered || !accessGroupError) {
 		validate = false;
@@ -442,4 +421,8 @@ function displaySuccessMsg(data, status) {
 	$(".registerMsgErrorBlock").hide();
 	$(".registerMsg").html("Collection created successfully.");
 	$(".registerMsgBlock").show();
+}
+
+function loadDefaultAccessGroup(data, status) {
+    $("#accessGroupSelect").select2().val(defaultGroup).trigger("change");
 }

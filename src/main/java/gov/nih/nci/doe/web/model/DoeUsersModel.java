@@ -1,5 +1,7 @@
 package gov.nih.nci.doe.web.model;
 
+import gov.nih.nci.doe.web.domain.Group;
+
 public class DoeUsersModel {
 
 	private String firstName;
@@ -11,6 +13,7 @@ public class DoeUsersModel {
 	private Boolean isAdmin;
 	private Boolean isDeletePrivilege;
 	private Boolean isReviewCommiteeMember;
+	private Group defaultGroup;
 
 	public Boolean getIsReviewCommiteeMember() {
 		return isReviewCommiteeMember;
@@ -82,6 +85,14 @@ public class DoeUsersModel {
 
 	public void setProgramName(String programName) {
 		this.programName = programName;
+	}
+
+	public Group getDefaultGroup() {
+		return defaultGroup;
+	}
+
+	public void setDefaultGroup(Group defaultGroup) {
+		this.defaultGroup = defaultGroup;
 	}
 
 }

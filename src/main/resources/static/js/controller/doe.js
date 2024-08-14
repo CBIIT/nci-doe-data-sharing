@@ -120,7 +120,6 @@ function loadJsonData(url, selectTarget, emptyOption, params, successCallback, f
                 
             }
             $select.select2();
-            $("#accessGroupSelect").next(".select2-container").hide();
             if (successCallback) {
                 successCallback(data, status);
             }

@@ -27,6 +27,7 @@ public class DoeUsers {
 	private Boolean isAdmin;
 	private Boolean isDeletePrivilege;
 	private Boolean isReviewCommiteeMember;
+	private Group defaultGroup;
 
 	@Transient
 	private List<String> progNamesList;
@@ -205,7 +206,7 @@ public class DoeUsers {
 	public void setIsDeletePrivilege(Boolean isDeletePrivilege) {
 		this.isDeletePrivilege = isDeletePrivilege;
 	}
-		
+
 	@Basic
 	@Column(name = "IS_REVIEW_COMMITTEE_MEMBER", nullable = true, length = 1)
 	@Type(type = "yes_no")
@@ -225,6 +226,16 @@ public class DoeUsers {
 
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
+	}
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "DEFAULT_GROUP_ID", referencedColumnName = "ID", nullable = false)
+	public Group getDefaultGroup() {
+		return defaultGroup;
+	}
+
+	public void setDefaultGroup(Group defaultGroup) {
+		this.defaultGroup = defaultGroup;
 	}
 
 	@Transient
