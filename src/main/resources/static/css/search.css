@@ -693,6 +693,8 @@ label.filter_checked {
 #sortingDiv {
 	margin-left: auto;
     margin-right: auto;
+    display: flex;
+    gap: 1px;
 }
 
     
