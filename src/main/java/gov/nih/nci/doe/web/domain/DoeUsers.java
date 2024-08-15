@@ -58,6 +58,10 @@ public class DoeUsers {
 			return false;
 		}
 
+		if (defaultGroup != null ? !defaultGroup.equals(that.defaultGroup) : that.defaultGroup != null) {
+			return false;
+		}
+
 		return institution != null ? institution.equals(that.institution) : that.institution == null;
 
 	}
@@ -229,7 +233,7 @@ public class DoeUsers {
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "DEFAULT_GROUP_ID", referencedColumnName = "ID", nullable = false)
+	@JoinColumn(name = "DEFAULT_GROUP_ID", referencedColumnName = "ID", nullable = true)
 	public Group getDefaultGroup() {
 		return defaultGroup;
 	}
@@ -250,8 +254,8 @@ public class DoeUsers {
 
 	@Override
 	public String toString() {
-		return "DoeUsers{" + ", firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' + ", emailAddrr="
-				+ emailAddrr + ", password='" + password + '\'' + ", institution=" + institution + ", lockoutDate="
-				+ institution + ", lockoutCounter=" + institution + '}';
+		return "DoeUsers{" + ", firstName='" + firstName + '\'' + ",  defaultGroup=\" + defaultGroup + ', lastName='"
+				+ lastName + '\'' + ", emailAddrr=" + emailAddrr + ", password='" + password + '\'' + ", institution="
+				+ institution + ", lockoutDate=" + institution + ", lockoutCounter=" + institution + '}';
 	}
 }
