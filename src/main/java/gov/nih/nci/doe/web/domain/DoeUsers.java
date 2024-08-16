@@ -27,6 +27,7 @@ public class DoeUsers {
 	private Boolean isAdmin;
 	private Boolean isDeletePrivilege;
 	private Boolean isReviewCommiteeMember;
+	private Group defaultGroup;
 
 	@Transient
 	private List<String> progNamesList;
@@ -54,6 +55,10 @@ public class DoeUsers {
 			return false;
 		}
 		if (password != null ? !password.equals(that.password) : that.password != null) {
+			return false;
+		}
+
+		if (defaultGroup != null ? !defaultGroup.equals(that.defaultGroup) : that.defaultGroup != null) {
 			return false;
 		}
 
@@ -205,7 +210,7 @@ public class DoeUsers {
 	public void setIsDeletePrivilege(Boolean isDeletePrivilege) {
 		this.isDeletePrivilege = isDeletePrivilege;
 	}
-		
+
 	@Basic
 	@Column(name = "IS_REVIEW_COMMITTEE_MEMBER", nullable = true, length = 1)
 	@Type(type = "yes_no")
@@ -227,6 +232,16 @@ public class DoeUsers {
 		this.uuid = uuid;
 	}
 
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "DEFAULT_GROUP_ID", referencedColumnName = "ID", nullable = true)
+	public Group getDefaultGroup() {
+		return defaultGroup;
+	}
+
+	public void setDefaultGroup(Group defaultGroup) {
+		this.defaultGroup = defaultGroup;
+	}
+
 	@Transient
 	public List<String> getProgNamesList() {
 		return progNamesList;
@@ -239,8 +254,8 @@ public class DoeUsers {
 
 	@Override
 	public String toString() {
-		return "DoeUsers{" + ", firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' + ", emailAddrr="
-				+ emailAddrr + ", password='" + password + '\'' + ", institution=" + institution + ", lockoutDate="
-				+ institution + ", lockoutCounter=" + institution + '}';
+		return "DoeUsers{" + ", firstName='" + firstName + '\'' + ",  defaultGroup=\" + defaultGroup + ', lastName='"
+				+ lastName + '\'' + ", emailAddrr=" + emailAddrr + ", password='" + password + '\'' + ", institution="
+				+ institution + ", lockoutDate=" + institution + ", lockoutCounter=" + institution + '}';
 	}
 }

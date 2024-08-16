@@ -332,6 +332,18 @@ public abstract class AbstractDoeController {
 		return null;
 	}
 
+	@ModelAttribute("defaultGroup")
+	public String getDefaultGroup() {
+		String emailAddr = getLoggedOnUserInfo();
+		if (StringUtils.isNotEmpty(emailAddr)) {
+			DoeUsersModel user = authService.getUserInfo(emailAddr);
+			if (user != null && Boolean.TRUE.equals(user.getIsWrite()) && user.getDefaultGroup() != null) {
+				return user.getDefaultGroup().getGroupName();
+			}
+		}
+		return null;
+	}
+
 	@ModelAttribute("fullName")
 	public String getLoggedOnUserFullName() {
 		String emailAddr = getLoggedOnUserInfo();

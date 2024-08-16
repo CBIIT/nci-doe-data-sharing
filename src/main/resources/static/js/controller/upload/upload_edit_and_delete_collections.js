@@ -20,7 +20,6 @@ $(document).ready(
 
 						$("#userMetaData tbody").html("");
 						$("#path").val(selectedPath);
-						$("#editUserMetadataFileName").html(folderName);
 						$(".editCollectionSuccess").hide();
 						$(".editCollectionMsg").html("");
 						$(".editCollectionError").hide();
@@ -89,7 +88,6 @@ function postSuccessEditCollectionMetadata(data, status) {
 		$(".editCollectionErrorMsg").html("");
 		$("#collectionId").val(data.collectionId);
 		$("#isDataObject").val(false);
-		$("#editUserMetadataFileName").html(data.collectionName);
 
 		if (data && data.permissionRole == 'Owner') {
 			$("#updatePermissions").show();

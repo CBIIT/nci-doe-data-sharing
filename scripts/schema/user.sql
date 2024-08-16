@@ -17,8 +17,13 @@ create table USER_T
     LAST_UPDATED_DATE          DATE,
     IS_ADMIN                   CHAR,
     IS_DELETE                  CHAR,
-    IS_REVIEW_COMMITTEE_MEMBER CHAR
+    IS_REVIEW_COMMITTEE_MEMBER CHAR,
+    DEFAULT_GROUP_ID NUMBER
 )
 /
 
 GRANT INSERT,UPDATE,SELECT ON USER_T TO MODAC_APP_USER;
+
+alter table USER_T
+    add constraint "USER_T_GROUP_T_ID_fk"
+        foreign key (DEFAULT_GROUP_ID) references GROUP_T

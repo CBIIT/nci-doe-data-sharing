@@ -597,7 +597,6 @@ $('#dataSetTable tbody').on('click', '.editFolderMetadata', function() {
 	$(".editCollectionErrorMsg").html("");
 	$("#collectionId").val(collectionId);
 	$("#isDataObject").val(false);
-	$("#editUserMetadataFileName").html(fileName);
 
 	var params1 = {
 		selectedPath : metaDataPath,

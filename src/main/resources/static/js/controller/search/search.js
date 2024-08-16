@@ -485,7 +485,6 @@ function dataTableInit(isVisible) {
             $(".editCollectionErrorMsg").html("");
             $("#collectionId").val(collectionId);
             $("#isDataObject").val(false);
-            $("#editUserMetadataFileName").html(fileName);
             $("#assetType").val(assetType);
 
             if (permissionsRole && permissionsRole == 'Owner') {

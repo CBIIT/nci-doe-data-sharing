@@ -6,7 +6,6 @@ function constructCollectionMetData(metadata, metaDataPath, isDataObject, fileNa
 	$(".editCollectionError").hide();
 	$(".editCollectionErrorMsg").html("");
 	$("#isDataObject").val(isDataObject);
-	$("#editUserMetadataFileName").html(fileName);
 	var data = metadata;
 	$.each(data, function(key, value) {
 		var attrVal = value.value;
@@ -14,7 +13,7 @@ function constructCollectionMetData(metadata, metaDataPath, isDataObject, fileNa
 
 		$("#userMetaData tbody").append(
 				"<tr><td>" + value.displayName  + "</td><td><input type='text' "
-						+ "aria-label='value of meta data' name='zAttrStr_" + value.key + "'" + " style='width:70%;' "
+						+ "aria-label='value of meta data' name='zAttrStr_" + value.key + "'" + " style='width:90%;' "
 						+ "value=\"" + attrValModified + "\">" + "&nbsp;&nbsp;<img class='pull-right clearMetadata' src='/images/close_metadata_popover.svg'></td></tr>");
 
 	});
@@ -52,7 +51,7 @@ function constructEditCollectionMetadata(data, status) {
 							$("#userMetaData tbody").append(
 									"<tr><td>" + value.displayName + "&nbsp;&nbsp;" + infoHtml + "</td><td><input "
 											+ "type='text' disabled='true' " + "aria-label='value of meta data' "
-											+ "name='zAttrStr_" + value.attrName + "' style='width:70%;' value=\""
+											+ "name='zAttrStr_" + value.attrName + "' style='width:90%;' value=\""
 											+ attrValModified + "\"></td></tr>");
 
 						} else if (value.validValues == null && value.isVisible != true && value.attrName.indexOf("access_group") == -1) {
@@ -71,7 +70,7 @@ function constructEditCollectionMetadata(data, status) {
 												+ "&nbsp;&nbsp;" + infoHtml + "</td><td><textarea rows='5'"
 												+ "placeholder='" + placeholderValue + "' is_mandatory='" + isMandatory
 												+ "' " + "aria-label='value of meta data' name='zAttrStr_"
-												+ value.attrName + "' " + "style='width:70%;'>" + attrValModified
+												+ value.attrName + "' " + "style='width:90%;'>" + attrValModified
 												+ "</textarea></td></tr>");
 							} else {
 							
@@ -89,7 +88,7 @@ function constructEditCollectionMetadata(data, status) {
 													+ "placeholder='" + placeholderValue + "' is_mandatory='"
 													+ isMandatory + "' "
 													+ "aria-label='value of meta data' name='zAttrStr_"
-													+ value.attrName + "' style='width:70%;'" + "value=\""
+													+ value.attrName + "' style='width:90%;'" + "value=\""
 													+ attrValModified
 													+ "\">&nbsp;&nbsp;<img class='pull-right clearMetadata' src='/images/close_metadata_popover.svg'></td></tr>");
 
@@ -100,7 +99,7 @@ function constructEditCollectionMetadata(data, status) {
 													+ "placeholder='" + placeholderValue + "' is_mandatory='"
 													+ isMandatory + "' "
 													+ "aria-label='value of meta data' name='zAttrStr_"
-													+ value.attrName + "' style='width:70%;'" + "value=\""
+													+ value.attrName + "' style='width:90%;'" + "value=\""
 													+ attrValModified + "\"></td></tr>");
 								}
 							}
@@ -117,7 +116,7 @@ function constructEditCollectionMetadata(data, status) {
 														+ '<select class="simple-select2" multiple="multiple" placeholder="Required" is_mandatory="'
 														+ value.mandatory + '" id="' + value.attrName
 														+ '" name="zAttrStr_' + value.attrName + '" '
-														+ 'style="width:70%;" value="' + attrVal
+														+ 'style="width:90%;" value="' + attrVal
 														+ '">></select></td></tr>');
 
 							} else {
@@ -127,7 +126,7 @@ function constructEditCollectionMetadata(data, status) {
 												+ value.attrName + "' is_mandatory='" + value.mandatory
 												+ "' onChange='onChangeForMetadata(collectionForm, false, "
 												+ value.controllerAttribute + ",userMetaData, " + value.attrName
-												+ ");'" + "class='simple-select2' style='width:70%;' name='zAttrStr_"
+												+ ");'" + "class='simple-select2' style='width:90%;' name='zAttrStr_"
 												+ value.attrName + "' " + "value=\"" + attrVal
 												+ "\"></select></td></tr>");
 							}
@@ -163,12 +162,12 @@ function addCollectionMetaDataRows() {
 			.append(
 					'<tr id="addRow'
 							+ rowId
-							+ '"><td><input type="search" placeholder="Required" style="width:70%;" '
+							+ '"><td><input type="search" placeholder="Required" style="width:90%;" '
 							+ 'name="_addAttrName'
 							+ rowId
 							+ '" aria-label="add new row" id="_addAttrName'
 							+ rowId
-							+ '"></td><td><input type="search" placeholder="Required" style="width:70%;" id="_addAttrValue'
+							+ '"></td><td><input type="search" placeholder="Required" style="width:90%;" id="_addAttrValue'
 							+ rowId
 							+ '" name="_addAttrValue'
 							+ rowId

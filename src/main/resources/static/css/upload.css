@@ -38,11 +38,6 @@ table#newMetaDataTable tbody tr td {
 		padding: 8px;
 		min-height: 120px;
 	}
-
-	#nonPublicAccess {
-		margin-left: 24px;
-
-	}
 }
 
 table#newMetaDataTable tbody td {
