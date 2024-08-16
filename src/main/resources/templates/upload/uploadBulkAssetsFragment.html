@@ -92,7 +92,7 @@
 						<div class="form-row" style="display: flex;margin-top: 0.5rem; height: 45px;"
 							th:if="${bulkUploadCollection !=null and endpoint_id != null}">
 							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusLabels">
-								<span class="assetGlobusSelectionFields">INCLUDE
+								<span class="assetGlobusSelectionFields ">INCLUDE
 									CRITERIA&nbsp; <img src="images/infoIcon.svg" class="icon" data-toggle="tooltip"
 										data-placement="right"
 										title="Add list of include patterns to match source files in the selected folders. "></img>
@@ -114,9 +114,9 @@
 
 				<div class="form-group col-lg-12 col-md-12" id="S3DetailsDiv" style="display:none;">
 
-					<div class="col-md-12 col-sm-12" style="margin-left: 3px; margin-top: 21px;">
+					<div class="col-md-12 col-sm-12" style="margin-left: 3px; margin-top: 21px;background: #F3F3F3;">
 
-						<div class="form-row">
+						<div  class="d-flex pt-2 pr-3" style="background: #F3F3F3;border-bottom: 1px solid #D2D2D2;">
 							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">S3 BUCKET</span>
 							</div>
@@ -128,7 +128,7 @@
 							</div>
 						</div>
 
-						<div class="form-row">
+						<div  class="d-flex pt-2 pr-3" style="background: #F3F3F3;border-bottom: 1px solid #D2D2D2;">
 							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields"> S3 (SOURCE) PATH</span>
 							</div>
@@ -141,7 +141,7 @@
 						</div>
 
 
-						<div class="form-row">
+						<div  class="d-flex pt-2 pr-3" style="background: #F3F3F3;border-bottom: 1px solid #D2D2D2;">
 							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">ACCESS KEY&nbsp;
 								</span>
@@ -153,7 +153,7 @@
 							</div>
 						</div>
 
-						<div class="form-row">
+						<div  class="d-flex pt-2 pr-3" style="background: #F3F3F3;border-bottom: 1px solid #D2D2D2;">
 							<div class="form-group col-lg-6 col-md-4 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">SECRET ACCESS KEY&nbsp;
 								</span>
@@ -166,7 +166,7 @@
 							</div>
 						</div>
 
-						<div class="form-row">
+						<div  class="d-flex pt-2 pr-3" style="background: #F3F3F3;border-bottom: 1px solid #D2D2D2;">
 							<div class="form-group col-lg-6 col-md-4 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">REGION&nbsp;
 								</span>
@@ -180,7 +180,7 @@
 						</div>
 
 
-						<div class="form-row">
+						<div  class="d-flex pt-2 pr-3" style="background: #F3F3F3;border-bottom: 1px solid #D2D2D2;">
 							<div class="form-group col-lg-6 col-md-4 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">INCLUDE
 									CRITERIA&nbsp; <i class="fas fa-question-circle" data-toggle="tooltip"
@@ -207,7 +207,7 @@
 						<i class="fa fa-check">&nbsp;</i>Access Token Successfully
 						Generated
 					</div>
-					<div class="text-center">
+					<div>
 
 						<button type="button" class="btn btn-md btn-link" id="authorizeGoogleCloud"
 							h:disabled="${authorizedGC != null}">
@@ -217,23 +217,26 @@
             transform: translate(100px, -12px);" />
 						</button>
 					</div>
+					<!-- <div th:if="${authorizedGC != null}" class="col-sm-12 column googleCloudContent mt-5 pt-1"> -->
 
-					<div th:if="${authorizedGC != null}" class="col-sm-12 column">
+					<div class="col-sm-12 column googleCloudContent mt-5 pt-1">
 
-						<div>
-							<label for="gcbucketName">Google Cloud Bucket:</label> <input type="text"
-								class="form-control" name="gcbucketName" th:value="${gcbucketName}" id="gcbucketName"
+						<div class="d-flex pt-2 pr-3" style="background: #F3F3F3;border-bottom: 1px solid #D2D2D2;">
+							<label class="col-md-6 col-lg-6 assetGCLabels" for="gcbucketName">Google Cloud Bucket:</label>
+							 <input type="text"
+								class="col-md-6 col-lg-6 form-control assetGCValue" name="gcbucketName" th:value="${gcbucketName}" id="gcbucketName"
 								placeholder="Enter Google Cloud Bucket Name" />
 
 						</div>
-						<div>
-							<label for="gcPath">Google Cloud Source Path:</label> <input type="text"
-								class="form-control" th:value="${gcPath}" name="gcPath" id="gcPath"
+						<div class="d-flex pt-2 pr-3"  style="background: #F3F3F3;">
+							<label class="col-md-6 col-lg-6 assetGCLabels" for="gcPath">Google Cloud Source Path:</label> 
+							<input type="text"
+								class="col-md-6 col-lg-6 form-control assetGCValue" th:value="${gcPath}" name="gcPath" id="gcPath"
 								placeholder="Enter Google Cloud Source Path" size="40" />
-							<input type="checkbox" name="gcFile" id="gcFile"> Check this if the source path is a file
-							and not a folder.
-
+					
 						</div>
+						<input type="checkbox" name="gcFile" id="gcFile"> Check this if the source path is a file
+							and not a folder.
 					</div>
 				</div>
 				<!-- End Google cloud upload div -->

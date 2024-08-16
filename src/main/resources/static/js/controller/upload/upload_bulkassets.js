@@ -30,11 +30,8 @@ $(document).ready(
 		$('#uploadAssetSelect').on('change', function () {
 			var selectedOption = $("#uploadAssetSelect option:selected").text();
 
-
-			$("#registerCollectionForm").hide();
-
-
 			if (selectedOption == 'Upload Assets from Globus Endpoint') {
+				$("#registerCollectionForm").hide();
 				$("#assetUploadDiv").show();
 				$("#assetUploadDiv").addClass('show');
 				$("#globusDetailsDiv").show();
@@ -61,6 +58,8 @@ $(document).ready(
 		
 				}
 			} else if (selectedOption == 'Upload Assets from AWS S3') {
+				$("#registerCollectionForm").hide();
+
 				$("#assetUploadDiv").show();
 				$("#assetUploadDiv").addClass('show');
 				$("#globusDetailsDiv").hide();
@@ -73,12 +72,17 @@ $(document).ready(
 				resetAssetBulkUploadChoiceOptions();
 		
 			} else if (selectedOption == 'Upload Assets from Google Cloud') {
+				$("#registerCollectionForm").hide();
+
 				$("#assetUploadDiv").show();
 				$("#assetUploadDiv").addClass('show');
 				$("#S3DetailsDiv").hide();
 				$("#globusDetailsDiv").hide();
 				$("#googleCloudDiv").show();
-				$("#bulkAssetOptionsDiv").hide();
+                // Add logic after login
+				// $("#bulkAssetOptionsDiv").show();
+				// $("#multipleFoldersUploadDiv").show();
+
 			}
 
 		});

@@ -225,19 +225,33 @@ table#newMetaDataTable thead tr th:nth-child(2) {
 	padding-bottom: 10px; */
 	/* border: 0.95px solid #898989; */
 	color:#235172;
-	height: 47px;
+	height: 41px;
 	/* padding-left: 10px; */
 	font-family: 'inter_regular';
 	/* margin-right: 10px; */
 }
 
-.assetBulkGlobusValues {
-	border: 0.95px solid #6B7294;
+.assetGCValue, .assetBulkGlobusValues {
+	border: 1px solid #6B7294;
 	padding: 10px;
 	color: #6B7294;
 	font-family: 'inter_regular';
 	height: 37px;
+	border-radius: 8px;
 }
+
+.assetGCLabels {
+   text-transform: uppercase;
+	color:#235172;
+	height: 47px;
+	font-family: 'Open Sans';
+	font-weight: 700;
+}
+
+.assetGCValue, .assetBulkGlobusValues input:focus {
+    outline: none;
+}
+
 
 #pickerUploadLink {
 	color: #E87B05;
@@ -255,10 +269,6 @@ table#newMetaDataTable thead tr th:nth-child(2) {
 
 input#includeCriteria:focus {
 	outline: none;
-}
-
-.assetBulkGlobusValues input:focus {
-    outline: none;
 }
 
 .addUserMetadaDiv {
