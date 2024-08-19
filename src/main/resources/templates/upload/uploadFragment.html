@@ -23,7 +23,7 @@
 					type="hidden" id="uploadAsyncType" th:value="${uploadAsyncType}" />
 				<input type="hidden" id="assetPermissions" /> 
 				<input type="hidden" th:value="${bulkUploadCollection}" id="bulkUploadCollection" />
-				<input type="hidden" th:value="true" id="gcCloudAuthorized" />
+				<input type="hidden" th:value="${authorizedGC != null}" id="gcCloudAuthorized" />
 
 
 				<input
