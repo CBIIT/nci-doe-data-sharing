@@ -28,6 +28,7 @@ $(document).ready(
 		});
 
 		$('#uploadAssetSelect').on('change', function () {
+		
 			var selectedOption = $("#uploadAssetSelect option:selected").text();
 
 			if (selectedOption == 'Upload Assets from Globus Endpoint') {
@@ -46,7 +47,7 @@ $(document).ready(
 				} else {
 					$("#bulkAssetOptionsDiv").show();
 					if (folderLength && folderLength > 1) {
-		
+
 						$("#multipleFoldersUploadDiv").hide();
 						$("#uploadCsvFile").show();
 						$("#formAssetSelection").hide();
@@ -55,7 +56,7 @@ $(document).ready(
 						$("#multipleFoldersUploadDiv").show();
 						$("#uploadCsvFile").hide();
 					}
-		
+
 				}
 			} else if (selectedOption == 'Upload Assets from AWS S3') {
 				$("#registerCollectionForm").hide();
@@ -70,7 +71,7 @@ $(document).ready(
 				$("#uploadCsvFile").hide();
 				$("#multipleFoldersUploadDiv").show();
 				resetAssetBulkUploadChoiceOptions();
-		
+
 			} else if (selectedOption == 'Upload Assets from Google Cloud') {
 				$("#registerCollectionForm").hide();
 
@@ -81,12 +82,12 @@ $(document).ready(
 				$("#googleCloudDiv").show();
 				var gcCloudAuthorized = $("#gcCloudAuthorized").val();
 
-                // Add logic after GC login
-				if (!gcCloudAuthorized) {
+				// Add logic after GC login
+				if (gcCloudAuthorized === "true") {
+					$("#bulkAssetOptionsDiv").show();
+				}
+				else {
 					$("#bulkAssetOptionsDiv").hide();
-				} else {
-					$("#multipleFoldersUploadDiv").show();
-					$("#uploadCsvFile").hide();
 				}
 			}
 
@@ -98,14 +99,27 @@ $(document).ready(
 			if (this.value == 'Create Asset') {
 				$('#registerAssetSelect').prop('disabled', false);
 				$('#uploadAssetSelect').prop('disabled', true);
+
+
+				// Reset uploadAssetSelect selection 
+				$('#uploadAssetSelect').prop('selectedIndex', 0);
+				$('#uploadAssetSelect').val('').trigger('change');
+			    $("#assetUploadDiv").hide();
+
+
 			} else if (this.value == 'Upload Asset') {
 				$('#registerAssetSelect').prop('disabled', true);
 				$('#uploadAssetSelect').prop('disabled', false);
+				// Reset registerAssetSelect selection 
+				$('#registerAssetSelect').prop('selectedIndex', 0);
+				$('#registerAssetSelect').val('').trigger('change');
+				$("#registerCollectionForm").hide()
+
 			}
 
 		});
 
-		$("#authorizeGoogleCloud").click(function(e){
+		$("#authorizeGoogleCloud").click(function (e) {
 			var d = {};
 			d.programPath = $("#programList").val();
 			d.studyPath = $("#studyList").val();
@@ -113,7 +127,7 @@ $(document).ready(
 			d.uploadPath = $("#bulkDataFilePathCollection").val();
 			d.action = "cloud";
 			invokeAjax('/upload', 'GET', d, postUploadGlobusFunction, postFailureFunction, null, 'text');
-			
+
 		});
 
 	});

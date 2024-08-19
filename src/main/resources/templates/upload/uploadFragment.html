@@ -136,22 +136,23 @@
 							<div class="form-group col-lg-4 col-md-4"
 								style="margin-left: 70px;">
 								<div class="pull-left" style="margin-left: 15px">
-									<label class="uploadLabels radio-inline"><input
-										type="radio" name="selectAsset" class="registeRadioButtons"
-										onclick="showSelect('subAsset')" value="Register Asset">&nbsp;&nbsp;
+									<label for="assetSelection" class="uploadSubLabels radio-inline"><input
+										type="radio" name="assetSelection" data-backdrop="static" 
+										data-keyboard="false" value="Register Asset"
+										onchange="displayEmptyAssetScreen('emptyAsset')">&nbsp;&nbsp;
 										Register Asset</label>
 								</div>
 								<div id="showSubAssetSelectionDiv"
 									style="display: none; margin-left: 23px;">
 
 									<!-- Register Empty Asset -->
-								<div class="form-group col-lg-12 col-md-12">
+								<!-- <div class="form-group col-lg-12 col-md-12">
 									<label for="assetSelection" class="uploadSubLabels radio-inline"><input
 										type="radio" name="assetSelection" data-backdrop="static" 
 										data-keyboard="false" value="Register Empty Asset"
 										onchange="displayEmptyAssetScreen('emptyAsset')">&nbsp;&nbsp;
 										Register Empty Asset</label>
-								</div>
+								</div> -->
 								<!-- End Register Empty Asset -->
 
 									<!-- <div class="form-group col-lg-12 col-md-12">

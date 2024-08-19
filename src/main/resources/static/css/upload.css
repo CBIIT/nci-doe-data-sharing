@@ -100,7 +100,6 @@ table#newMetaDataTable thead tr th:nth-child(2) {
 	width: 12px;
 }
 
-#registerBulkAssets,
 #registerBulkDataFileBtn {
 	margin-top: auto;
     font-family: var(--font-family-inter);
@@ -124,6 +123,7 @@ table#newMetaDataTable thead tr th:nth-child(2) {
     text-transform: uppercase;
 }
 
+#registerBulkAssets,
 #registerCollectionBtn {
 	margin-top: auto;
 	font-family: var(--font-family-inter);
@@ -145,6 +145,12 @@ table#newMetaDataTable thead tr th:nth-child(2) {
 	line-height: 60%;
 	letter-spacing: 0.14px;
 	text-transform: uppercase;
+}
+
+#registerBulkAssets {
+    min-height: 42px;
+    min-width: 233px;
+    padding-top: 8px;
 }
 
 #cancelRegisterBtn {
