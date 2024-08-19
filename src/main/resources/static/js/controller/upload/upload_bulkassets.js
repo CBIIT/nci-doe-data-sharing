@@ -79,10 +79,15 @@ $(document).ready(
 				$("#S3DetailsDiv").hide();
 				$("#globusDetailsDiv").hide();
 				$("#googleCloudDiv").show();
-                // Add logic after login
-				// $("#bulkAssetOptionsDiv").show();
-				// $("#multipleFoldersUploadDiv").show();
+				var gcCloudAuthorized = $("#gcCloudAuthorized").val();
 
+                // Add logic after GC login
+				if (!gcCloudAuthorized) {
+					$("#bulkAssetOptionsDiv").hide();
+				} else {
+					$("#multipleFoldersUploadDiv").show();
+					$("#uploadCsvFile").hide();
+				}
 			}
 
 		});
@@ -90,7 +95,7 @@ $(document).ready(
 
 
 		$('input[type=radio][name=registerAssetRadio]').change(function () {
-			if (this.value == 'Register Asset') {
+			if (this.value == 'Create Asset') {
 				$('#registerAssetSelect').prop('disabled', false);
 				$('#uploadAssetSelect').prop('disabled', true);
 			} else if (this.value == 'Upload Asset') {

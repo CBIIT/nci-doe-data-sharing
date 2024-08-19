@@ -37,6 +37,8 @@ function loadUploadTab() {
 	var stu = $("#studyPath").val();
 	var data = $("#datafilePath").val();
 	var bulkUploadCollection = $("#bulkUploadCollection").val();
+	var gcCloudAuthorized = $("#gcCloudAuthorized").val();
+
 	var uploadPath = $("#uploadPath").val();
 
 	if (program) {
@@ -60,6 +62,19 @@ function loadUploadTab() {
 				$('#uploadAssetSelect').prop('disabled', false);
 
 				$('#uploadAssetSelect').val('Globus').trigger('change');
+
+				$("#registerBulkAssets").prop("disabled", false);
+
+			}
+
+			if (gcCloudAuthorized) {
+				$("input[name=selectAsset][value='Register Asset']").click();
+				$("input[name=assetSelection][value='Register Empty Asset']").click();
+				// Reset registerAssetSelect radio buttons
+				$("input[name=registerAssetRadio][value='Upload Asset']").click();
+				$('#uploadAssetSelect').prop('disabled', false);
+
+				$('#uploadAssetSelect').val('GoogleCloud').trigger('change');
 
 				$("#registerBulkAssets").prop("disabled", false);
 
