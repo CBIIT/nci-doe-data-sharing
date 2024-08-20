@@ -100,18 +100,30 @@ table#newMetaDataTable thead tr th:nth-child(2) {
 	width: 12px;
 }
 
-#registerBulkAssets,
 #registerBulkDataFileBtn {
-	margin-top: 5px;
-	background-color: #E66F05;
-	color: #fff;
-	border-radius: 14px;
-	width: 100px;
-	font-family: 'inter_regular';
-	font-size: 15px;
-	letter-spacing: 0.5px;
+	margin-top: auto;
+    font-family: var(--font-family-inter);
+    min-height: 32px;
+    min-width: 120px;
+    max-width: 300px;
+    font-weight: 500;
+    line-height: 5px;
+    background-color: #2c4088 !important;
+    border-radius: 65px;
+    box-shadow: 0px 4px 50px #ffffff8c;
+    padding-left: 2rem;
+    text-align: left;
+    padding-top: 4px;
+    margin-bottom: 0.2rem;
+    color: #FFF;
+    font-size: 14px;
+    font-style: normal;
+    line-height: 60%;
+    letter-spacing: 0.14px;
+    text-transform: uppercase;
 }
 
+#registerBulkAssets,
 #registerCollectionBtn {
 	margin-top: auto;
 	font-family: var(--font-family-inter);
@@ -135,6 +147,12 @@ table#newMetaDataTable thead tr th:nth-child(2) {
 	text-transform: uppercase;
 }
 
+#registerBulkAssets {
+    min-height: 42px;
+    min-width: 233px;
+    padding-top: 8px;
+}
+
 #cancelRegisterBtn {
 	margin-top: auto;
 	font-family: var(--font-family-inter);
@@ -142,7 +160,7 @@ table#newMetaDataTable thead tr th:nth-child(2) {
 	width: 193px;
 	font-weight: 600;
 	line-height: 5px;
-	background-color: #506FA6 !important;
+	background-color: #2c4088 !important;
 	border-radius: 65px;
 	box-shadow: 0px 4px 50px #ffffff8c;
 	padding-left: 2rem;
@@ -192,29 +210,49 @@ table#newMetaDataTable thead tr th:nth-child(2) {
 }
 
 .assetGlobusSelectionFields {
-	color: #fff;
-	font-size: 13px;
-	letter-spacing: 0.5px;
-	margin-left: 10px;
+	color: #235172;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    margin-left: 10px;
+    font-family: 'Open Sans';
+    font-weight: 700;
+	position: absolute;
+    margin: 8px;
 }
 
 .assetBulkGlobusLabels {
-	background-color: #194F85;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	border: 0.95px solid #898989;
-	height: 47px;
-	padding-left: 10px;
+	/* background-color: #194F85; */
+	/* padding-top: 10px;
+	padding-bottom: 10px; */
+	/* border: 0.95px solid #898989; */
+	color:#235172;
+	height: 41px;
+	/* padding-left: 10px; */
 	font-family: 'inter_regular';
-	margin-right: 10px;
+	/* margin-right: 10px; */
 }
 
-.assetBulkGlobusValues {
-	border: 0.95px solid #898989;
+.assetGCValue, .assetBulkGlobusValues {
+	border: 1px solid #6B7294;
 	padding: 10px;
-	color: #000000;
+	color: #6B7294;
 	font-family: 'inter_regular';
+	height: 37px;
+	border-radius: 8px;
 }
+
+.assetGCLabels {
+   text-transform: uppercase;
+	color:#235172;
+	height: 47px;
+	font-family: 'Open Sans';
+	font-weight: 700;
+}
+
+.assetGCValue, .assetBulkGlobusValues input:focus {
+    outline: none;
+}
+
 
 #pickerUploadLink {
 	color: #E87B05;
@@ -222,20 +260,16 @@ table#newMetaDataTable thead tr th:nth-child(2) {
 }
 
 .bulkAssetTextbox {
-	width: 100%;
-	border-radius: 9px;
-	border-color: transparent;
-	height: 29px;
 	padding-left: 10px;
-	font-family: 'inter_regular';
+    font-family: 'inter_regular';
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #6B7294;
+    height: 36px;	
 }
 
 input#includeCriteria:focus {
 	outline: none;
-}
-
-.assetBulkGlobusValues input:focus {
-    outline: none;
 }
 
 .addUserMetadaDiv {
@@ -251,13 +285,30 @@ input#includeCriteria:focus {
 }
 
 #primaryGlobusButton,
-#assetSelectionGlobusButton {
-	background-color: #E66F05;
-	color: #fff !important;
-	border-radius: 15px;
-	width: 326px;
-	font-size: 15px;
+#assetSelectionGlobusButton,
+#authorizeGoogleCloud {
+	width: 250px;
+	font-size: 14px;
 	font-family: 'inter_regular';
+	background-color: #2c4088 !important;
+    border-radius: 65px;
+    box-shadow: 0px 4px 50px #ffffff8c;
+    padding-left: 2rem;
+    text-align: left;
+    padding-top: 12px;
+    margin-bottom: 0.2rem;
+    color: #FFF !important;
+    font-size: 14px;
+    font-style: normal;
+    line-height: 110%;
+    letter-spacing: 0.14px;
+    text-transform: uppercase;
+	padding: 4px 32px;
+}
+
+#authorizeGoogleCloud {
+	width: 330px;
+	padding: 7px 32px 0px 32px;
 }
 
 #collectionMetaDataLabel {
@@ -271,10 +322,23 @@ table#globusDetailsDiv td {
 }
 
 table#assetBulkMetadataTable tbody tr td {
-	background-color: #E0F0F4 !important;
-	padding: 5px;
-	padding-left: 14px;
-	font-family: 'latoregular';
+	background-color: #EEF4F6;
+	color: #235172;
+    font-family: "Open Sans";
+    font-size: 13px;
+    font-style: normal;
+    padding: 16px 12px !important;
+	border-bottom: 2.5px solid white;
+}
+
+table#assetBulkMetadataTable tbody tr td:first-child {
+    padding: 16px 12px !important;
+	font-weight: 600;
+	text-transform: uppercase;
+}
+
+table#assetBulkMetadataTable tbody tr td:nth-child(2) {
+	padding: 8px 12px !important;
 }
 
 table#assetBulkMetadataTable thead tr th {
@@ -445,6 +509,15 @@ padding-top: 2px;
 	display: block;
   }
 
+  .uploadAssetRadioLabels {
+	font-family: 'Open Sans';
+	color: #353941;
+	font-size: 16px;
+	font-weight: 400;
+	padding-top: 0;
+  }
+  
+
   label.radio-label {
 	display: inline;
 	color: #000;
@@ -464,4 +537,13 @@ padding-top: 2px;
 
 .asset-register-dropdown {
     padding-left: 12px;
+}
+
+#formAssetSelection .select2-container span.select2-selection.select2-selection--single {
+	border: 1.5px solid #3B6EB4;
+    border-radius: 8px;
+}
+
+#formAssetSelection .select2-container--bootstrap4 .select2-selection--single .select2-selection__arrow b {
+    border-color: #3B6EB4 transparent transparent transparent !important;
 }

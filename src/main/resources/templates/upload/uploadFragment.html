@@ -21,8 +21,12 @@
 				<input type="hidden" th:value="${uploadPath}" id="uploadPath" /> <input
 					type="hidden" th:value="${studyPath}" id="studyPath" /> <input
 					type="hidden" id="uploadAsyncType" th:value="${uploadAsyncType}" />
-				<input type="hidden" id="assetPermissions" /> <input type="hidden"
-					th:value="${bulkUploadCollection}" id="bulkUploadCollection" /> <input
+				<input type="hidden" id="assetPermissions" /> 
+				<input type="hidden" th:value="${bulkUploadCollection}" id="bulkUploadCollection" />
+				<input type="hidden" th:value="${authorizedGC != null}" id="gcCloudAuthorized" />
+
+
+				<input
 					type="hidden" id="showUploadDataFilesTab"
 					th:value="${authorized != null or endpoint_id != null or authorizedGC != null}" />
 
@@ -132,22 +136,23 @@
 							<div class="form-group col-lg-4 col-md-4"
 								style="margin-left: 70px;">
 								<div class="pull-left" style="margin-left: 15px">
-									<label class="uploadLabels radio-inline"><input
-										type="radio" name="selectAsset" class="registeRadioButtons"
-										onclick="showSelect('subAsset')" value="Register Asset">&nbsp;&nbsp;
+									<label for="assetSelection" class="uploadLabels radio-inline"><input
+										type="radio" name="assetSelection" data-backdrop="static" 
+										data-keyboard="false" value="Register Asset"
+										onchange="displayEmptyAssetScreen('emptyAsset')">&nbsp;&nbsp;
 										Register Asset</label>
 								</div>
 								<div id="showSubAssetSelectionDiv"
 									style="display: none; margin-left: 23px;">
 
 									<!-- Register Empty Asset -->
-								<div class="form-group col-lg-12 col-md-12">
+								<!-- <div class="form-group col-lg-12 col-md-12">
 									<label for="assetSelection" class="uploadSubLabels radio-inline"><input
 										type="radio" name="assetSelection" data-backdrop="static" 
 										data-keyboard="false" value="Register Empty Asset"
 										onchange="displayEmptyAssetScreen('emptyAsset')">&nbsp;&nbsp;
 										Register Empty Asset</label>
-								</div>
+								</div> -->
 								<!-- End Register Empty Asset -->
 
 									<!-- <div class="form-group col-lg-12 col-md-12">
@@ -158,7 +163,7 @@
 											onchange="displayBulkAssetSelection('emptyAsset')">&nbsp;&nbsp;
 											Register Empty Asset</label>
 									</div> -->
-									<div class="form-group col-lg-12 col-md-12">
+									<!-- <div class="form-group col-lg-12 col-md-12">
 										<label for="bulkAssetGlobusRadiobtn" class="uploadSubLabels radio-inline"
 											style="margin-top: -10px;"><input type="radio"
 											name="assetSelection" onchange="displayBulkAssetSelection('Globus')"
@@ -176,7 +181,7 @@
 											value="S3">&nbsp;&nbsp; Upload Assets
 											from AWS S3</label>
 
-									</div>
+									</div> -->
 								</div>
 							</div>
 							&nbsp;&nbsp;
@@ -213,9 +218,9 @@
 
                      <!-- bulk asset upload div -->
                      
-                     <div
+                     <!-- <div
 			          th:replace="upload/uploadBulkAssetsFragment :: uploadBulkAssetsFragment"></div>
-			
+			 -->
                      <!-- End bulk asset upload div -->
                      				
 						</div>

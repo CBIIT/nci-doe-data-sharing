@@ -240,6 +240,7 @@ function createCollectionDiv(selectTarget, folderPath) {
 	$("#registerAssetPicker").hide();
 	$("#uploadSectionDiv").hide();
 	$("#uploadHeader").hide();
+	$("#assetUploadDiv").hide();
 	computeWidthForAssetCollectionName('parentCollectionName');
 
 }
