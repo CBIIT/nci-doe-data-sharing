@@ -17,6 +17,7 @@ $(document).ready(
 			$("#uploadHeader").show();
 			$("#uploadDataFilesTab").hide();
 			$("#editCollectionFragment").hide();
+			$('#registerCollectionForm').show();
 			resetSelectionsForBackToUploadTab();
 		});
 
