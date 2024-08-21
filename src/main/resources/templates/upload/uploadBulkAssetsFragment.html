@@ -203,10 +203,9 @@
 				<!-- Start Google cloud upload div -->
 				<div class="form-group col-lg-12 col-md-12" id="googleCloudDiv" style="display: none;">
 
-					<div class="display: flex">
-
+					<div class="d-flex">
 						<button type="button" class="btn btn-md btn-link" id="authorizeGoogleCloud"
-							h:disabled="${authorizedGC != null}">
+							th:disabled="${authorizedGC != null}">
 							Authorize MoDaC to Access<br />
 							Your Google Cloud
 							<img class="arrowright" th:src='@{/images/white_right_arrow.svg}' style="width: 16px;
