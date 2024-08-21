@@ -41,7 +41,9 @@ $(document).ready(
 				var bulkUploadCollection = $("#bulkUploadCollection").val();
 				var folderLength = $("#assetSelectedFolders ul li").length;
 				resetAssetBulkUploadChoiceOptions();
-				if (!bulkUploadCollection) {
+				var uploadAsyncType = $("#uploadAsyncType").val();
+
+				if (!bulkUploadCollection || uploadAsyncType !== '') {
 					$("#bulkAssetOptionsDiv").hide();
 				} else {
 					$("#bulkAssetOptionsDiv").show();

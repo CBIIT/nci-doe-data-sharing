@@ -462,7 +462,7 @@ input[type="search"] {
 /* End Temp fix */
 
 .registerAssetContainer {
-	padding: 2rem 4rem;
+	padding: 2rem 4rem 1rem 4rem;
 }
 
 .asset-register-dropdown .select2-container--bootstrap4 .select2-selection--single .select2-selection__arrow b {
