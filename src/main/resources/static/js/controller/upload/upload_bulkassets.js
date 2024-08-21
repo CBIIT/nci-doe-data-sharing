@@ -6,7 +6,6 @@ $(document).ready(
 			d.programPath = $("#programList").val();
 			d.studyPath = $("#studyList").val();
 			d.uploadType = "assetBulkUpload";
-
 			invokeAjax('/upload', 'GET', d, postUploadGlobusFunction, postFailureFunction, null, 'text');
 		});
 
@@ -123,12 +122,12 @@ $(document).ready(
 			var d = {};
 			d.programPath = $("#programList").val();
 			d.studyPath = $("#studyList").val();
-			d.dataSetPath = $("#dataList").val();
-			d.uploadPath = $("#bulkDataFilePathCollection").val();
+			d.uploadType = "assetBulkUpload";
 			d.action = "cloud";
 			invokeAjax('/upload', 'GET', d, postUploadGlobusFunction, postFailureFunction, null, 'text');
 
 		});
+		
 
 	});
 

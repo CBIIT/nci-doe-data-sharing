@@ -55,31 +55,23 @@ function loadUploadTab() {
 			$("#deleteStudy").show();
 			$("#editStudy").show();
 			$("#bulkAssetGlobusRadiobtn").show();
+			
 			if (bulkUploadCollection) {
-				// $("input[name=selectAsset][value='Register Asset']").click();
 				$("input[name=assetSelection][value='Register Asset']").click();
 				// Reset registerAssetSelect radio buttons
 				$("input[name=registerAssetRadio][value='Upload Asset']").click();
 				$('#uploadAssetSelect').prop('disabled', false);
-
-				$('#uploadAssetSelect').val('Globus').trigger('change');
-
 				$("#registerBulkAssets").prop("disabled", false);
-
+				
+				if (gcCloudAuthorized === "true") {
+				   $('#uploadAssetSelect').val('GoogleCloud').trigger('change');
+				} else  {
+				   $('#uploadAssetSelect').val('Globus').trigger('change');	
+				}
+				
 			}
 
-			if (gcCloudAuthorized === "true") {
-				//$("input[name=selectAsset][value='Register Asset']").click();
-				$("input[name=assetSelection][value='Register Asset']").click();
-				// Reset registerAssetSelect radio buttons
-				$("input[name=registerAssetRadio][value='Upload Asset']").click();
-				$('#uploadAssetSelect').prop('disabled', false);
-
-				$('#uploadAssetSelect').val('GoogleCloud').trigger('change');
-
-				$("#registerBulkAssets").prop("disabled", false);
-
-			}
+			
 			if (data) {
 				if (!bulkUploadCollection) {
 					showSelect('Asset', stu);
