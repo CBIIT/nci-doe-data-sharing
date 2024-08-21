@@ -38,12 +38,11 @@ $(document).ready(
 				$("#S3DetailsDiv").hide();
 				$("#googleCloudDiv").hide();
 
-				var bulkUploadCollection = $("#bulkUploadCollection").val();
 				var folderLength = $("#assetSelectedFolders ul li").length;
 				resetAssetBulkUploadChoiceOptions();
-				var uploadAsyncType = $("#uploadAsyncType").val();
+				var globusEndpointId = $("#globusEndpointId").val();
 
-				if (!bulkUploadCollection || uploadAsyncType !== '') {
+				if (!globusEndpointId) {
 					$("#bulkAssetOptionsDiv").hide();
 				} else {
 					$("#bulkAssetOptionsDiv").show();
@@ -75,7 +74,6 @@ $(document).ready(
 
 			} else if (selectedOption == 'Upload Assets from Google Cloud') {
 				$("#registerCollectionForm").hide();
-
 				$("#assetUploadDiv").show();
 				$("#assetUploadDiv").addClass('show');
 				$("#S3DetailsDiv").hide();
@@ -86,9 +84,13 @@ $(document).ready(
 				// Add logic after GC login
 				if (gcCloudAuthorized === "true") {
 					$("#bulkAssetOptionsDiv").show();
+					$("#uploadCsvFile").hide();
+				    $("#multipleFoldersUploadDiv").show();
 				}
 				else {
 					$("#bulkAssetOptionsDiv").hide();
+					$("#uploadCsvFile").hide();
+					$("#multipleFoldersUploadDiv").hide();
 				}
 			}
 
