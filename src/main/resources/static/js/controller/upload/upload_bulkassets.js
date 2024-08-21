@@ -86,6 +86,7 @@ $(document).ready(
 					$("#bulkAssetOptionsDiv").show();
 					$("#uploadCsvFile").hide();
 				    $("#multipleFoldersUploadDiv").show();
+				    $("#registerBulkAssets").prop("disabled", false);
 				}
 				else {
 					$("#bulkAssetOptionsDiv").hide();
@@ -238,7 +239,7 @@ function registerBulkAssets() {
 		studyPath = $("#studyList").val();
 	}
 	$("#registerBulkAssetForm").attr('bulkDatafilePath', studyPath);
-	var uploadType = $('input[name="assetSelection"]:checked').val();
+	var uploadType = $("#uploadAssetSelect option:selected").val();
 	$("#registerBulkAssetForm").attr('uploadType', uploadType);
 	var form = $('#registerBulkAssetForm')[0];
 	var data = new FormData(form);
@@ -306,6 +307,18 @@ function registerBulkAssets() {
 	} else if (uploadType == 'S3') {
 
 		$('#S3DetailsDiv input[type="search"]').each(function () {
+			var ismandatory = $(this).attr('is_mandatory');
+			if ($(this).is(":visible") && !$(this).val() && ismandatory && ismandatory != "false") {
+				isValidated = false;
+			}
+		});
+
+		if (!isValidated) {
+			errorMsg = "Enter all the required fields."
+		}
+	} else if (uploadType == 'googleCloud') {
+
+		$('#googleCloudDiv input[type="search"]').each(function () {
 			var ismandatory = $(this).attr('is_mandatory');
 			if ($(this).is(":visible") && !$(this).val() && ismandatory && ismandatory != "false") {
 				isValidated = false;

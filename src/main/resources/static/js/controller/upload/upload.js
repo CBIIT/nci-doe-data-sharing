@@ -64,9 +64,9 @@ function loadUploadTab() {
 				$("#registerBulkAssets").prop("disabled", false);
 				
 				if (uploadAsyncType && uploadAsyncType == "cloud") {
-				   $('#uploadAssetSelect').val('GoogleCloud').trigger('change');
+				   $('#uploadAssetSelect').val('googleCloud').trigger('change');
 				} else  {
-				   $('#uploadAssetSelect').val('Globus').trigger('change');	
+				   $('#uploadAssetSelect').val('globus').trigger('change');	
 				}
 				
 			}
@@ -210,7 +210,6 @@ function showSelect(collection, selection) {
 		$("#showSelectAssetDiv").show();
 		$("#showSubAssetSelectionDiv").hide();
 		$("#assetUploadDiv").removeClass('show');
-		$('input[name="assetSelection"]').prop('checked', false);
 	} else if (collection == 'subAsset') {
 		$("#showSubAssetSelectionDiv").show();
 		$("#showSelectAssetDiv").hide();
@@ -279,7 +278,6 @@ function resetOnChangeofSelectCollection(selectTarget, selectedValue) {
 			$("#showSelectAssetDiv").hide();
 			$("#showSubAssetSelectionDiv").hide();
 			$("input[name=selectAsset]").prop("checked", false);
-			$('input[name="assetSelection"]').prop('checked', false);
 
 		} else {
 			$("#studyListDiv").show();
