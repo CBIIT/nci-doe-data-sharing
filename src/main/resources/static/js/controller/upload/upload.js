@@ -39,8 +39,8 @@ function loadUploadTab() {
 	var data = $("#datafilePath").val();
 	var bulkUploadCollection = $("#bulkUploadCollection").val();
 	var gcCloudAuthorized = $("#gcCloudAuthorized").val();
-
 	var uploadPath = $("#uploadPath").val();
+	var uploadAsyncType = $("#uploadAsyncType").val();
 
 	if (program) {
 		$("input[name=selectProgram][value='Select Program']").prop("checked", true);
@@ -63,7 +63,7 @@ function loadUploadTab() {
 				$('#uploadAssetSelect').prop('disabled', false);
 				$("#registerBulkAssets").prop("disabled", false);
 				
-				if (gcCloudAuthorized === "true") {
+				if (uploadAsyncType && uploadAsyncType == "cloud") {
 				   $('#uploadAssetSelect').val('GoogleCloud').trigger('change');
 				} else  {
 				   $('#uploadAssetSelect').val('Globus').trigger('change');	
@@ -94,7 +94,6 @@ function loadUploadTab() {
 					$("#registerBulkDataFileBtn").prop("disabled", true);
 				}
 
-				var uploadAsyncType = $("#uploadAsyncType").val();
 				if (uploadAsyncType && uploadAsyncType == 'drive') {
 					$("#datafileTypeDriveUpload").prop("checked", true);
 					$("#displayGlobusUploadDiv").hide();
