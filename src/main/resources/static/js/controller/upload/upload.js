@@ -59,7 +59,7 @@ function loadUploadTab() {
 			if (bulkUploadCollection) {
 				$("input[name=assetSelection][value='Register Asset']").click();
 				// Reset registerAssetSelect radio buttons
-				$("input[name=registerAssetRadio][value='Upload Asset']").click();
+				$("input[name=selectAsset][value='Upload Asset']").click();
 				$('#uploadAssetSelect').prop('disabled', false);
 				$("#registerBulkAssets").prop("disabled", false);
 				
