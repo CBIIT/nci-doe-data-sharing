@@ -222,7 +222,7 @@
 							<label class="col-md-6 col-lg-6 assetGCLabels" for="gcbucketName">Google Cloud
 								Bucket:</label>
 							<input type="search" class="col-md-6 col-lg-6 form-control assetGCValue" name="gcbucketName"
-								th:value="${gcbucketName}" id="gcbucketName"
+								th:value="${gcbucketName}" id="gcbucketName" is_mandatory="true"
 								placeholder="Enter Google Cloud Bucket Name" />
 
 						</div>
@@ -230,7 +230,7 @@
 							<label class="col-md-6 col-lg-6 assetGCLabels" for="gcPath">Google Cloud Source
 								Path:</label>
 							<input type="search" class="col-md-6 col-lg-6 form-control assetGCValue" th:value="${gcPath}"
-								name="gcPath" id="gcPath" placeholder="Enter Google Cloud Source Path" size="40" />
+								name="gcPath" id="gcPath" is_mandatory="true" placeholder="Enter Google Cloud Source Path" size="40" />
 
 						</div>
 					</div>

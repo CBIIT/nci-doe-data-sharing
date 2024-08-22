@@ -248,7 +248,8 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				files.add(file);
 			}
 			dto.getDataObjectRegistrationItems().addAll(files);
-		} else if (StringUtils.equals(bulkType, DoeAuthorizationService.GOOGLE_CLOUD_TYPE) && gcPath != null) {
+		} else if (StringUtils.equals(bulkType, DoeAuthorizationService.GOOGLE_CLOUD_TYPE) && gcPath != null
+				&& isGcFile) {
 			// Upload File From Google Cloud Storage
 			List<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO> files = new ArrayList<gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO>();
 			gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO file = new gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectRegistrationItemDTO();
