@@ -64,7 +64,7 @@ function loadUploadTab() {
 				$("#registerBulkAssets").prop("disabled", false);
 				
 				if (uploadAsyncType && uploadAsyncType == "cloud") {
-				   $('#uploadAssetSelect').val('googleCloud').trigger('change');
+				   $('#uploadAssetSelect').val('cloud').trigger('change');
 				} else  {
 				   $('#uploadAssetSelect').val('globus').trigger('change');	
 				}
