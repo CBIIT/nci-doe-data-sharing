@@ -396,6 +396,11 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			entryAccessGrp.setAttribute("access_group");
 			entryAccessGrp.setValue(accessGrp);
 			entries.add(entryAccessGrp);
+		} else {
+			HpcMetadataEntry entryAccessGrp = new HpcMetadataEntry();
+			entryAccessGrp.setAttribute("access_group");
+			entryAccessGrp.setValue(getDefaultGroup());
+			entries.add(entryAccessGrp);
 		}
 
 		while (params.hasMoreElements()) {
