@@ -316,7 +316,7 @@ function registerBulkAssets() {
 		if (!isValidated) {
 			errorMsg = "Enter all the required fields."
 		}
-	} else if (uploadType == 'googleCloud') {
+	} else if (uploadType == 'cloud') {
 
 		$('#googleCloudDiv input[type="search"]').each(function () {
 			var ismandatory = $(this).attr('is_mandatory');
