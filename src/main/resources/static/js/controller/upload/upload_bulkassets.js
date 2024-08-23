@@ -349,10 +349,13 @@ function registerBulkAssets() {
 	}
 
 	if (errorMsg) {
-		/* display the error message in a popup */
-		bootbox.dialog({
-			message: errorMsg
-		});
+		$(".registerMsg").html("");
+		$(".registerMsgBlock").hide();
+		$(".registerErrorMsg").html(errorMsg);
+		$(".registerMsgErrorBlock").show();
+		$('body,html').animate({
+				scrollTop : 0
+		}, 500);
 
 	} else if (isValidated) {
 
@@ -384,12 +387,25 @@ function registerBulkAssets() {
 				if (!msg) {
 					msg = "Error in bulk upload";
 				}
-				bootbox.dialog({
-					message: msg,
-					onEscape: function () {
-						location.replace("/addbulk");
-					}
-				});
+				
+				if (msg && msg.indexOf("Your bulk data file registration request has the following task ID") != -1) {
+					$(".registerMsgErrorBlock").hide();
+					$(".registerErrorMsg").html("");
+					$(".registerMsg").html(msg);
+					$(".registerMsgBlock").show();
+				} else {
+					console.log('ERROR: ', msg);
+					$(".registerMsg").html("");
+					$(".registerMsgBlock").hide();
+					$(".registerErrorMsg").html(error);
+					$(".registerMsgErrorBlock").show();
+				}
+				
+				$('body,html').animate({
+						scrollTop : 0
+				}, 500);
+
+				
 			},
 			error: function (e) {
 				$("#spinner").hide();
@@ -401,12 +417,14 @@ function registerBulkAssets() {
 				} else {
 					error = e;
 				}
-				bootbox.dialog({
-					message: error,
-					onEscape: function () {
-						location.replace("/addbulk");
-					}
-				});
+				
+				$(".registerMsg").html("");
+				$(".registerMsgBlock").hide();
+				$(".registerErrorMsg").html(error);
+				$(".registerMsgErrorBlock").show();
+				$('body,html').animate({
+					scrollTop: 0
+				}, 500);
 
 			}
 		});
