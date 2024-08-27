@@ -397,7 +397,7 @@ function registerBulkAssets() {
 					console.log('ERROR: ', msg);
 					$(".registerMsg").html("");
 					$(".registerMsgBlock").hide();
-					$(".registerErrorMsg").html(error);
+					$(".registerErrorMsg").html(msg);
 					$(".registerMsgErrorBlock").show();
 				}
 				
