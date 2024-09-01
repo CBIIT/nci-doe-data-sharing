@@ -73,6 +73,8 @@ import org.springframework.http.MediaType;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
+import javax.ws.rs.core.MultivaluedMap;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 public class DoeClientUtil {
 
@@ -432,14 +434,22 @@ public class DoeClientUtil {
 
 		log.info("validate google catpcha token for response: " + response);
 		try {
+
 			UriComponentsBuilder ucBuilder = UriComponentsBuilder
 					.fromHttpUrl("https://www.google.com/recaptcha/api/siteverify");
-			ucBuilder.queryParam("secret", secretKey);
-			ucBuilder.queryParam("response", response);
+			// Create a MultivaluedMap to pass parameters as form data
+			MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
+			formData.add("secret", secretKey);
+			formData.add("response", response);
+
 			String requestUrl = ucBuilder.build().encode().toUri().toURL().toExternalForm();
+
 			WebClient client = DoeClientUtil.getWebClient(requestUrl);
 
-			Response restResponse = client.invoke("POST", null);
+			client.type("application/x-www-form-urlencoded");
+
+			Response restResponse = client.invoke("POST", formData);
+
 			if (restResponse.getStatus() == 200) {
 
 				MappingJsonFactory factory = new MappingJsonFactory();
@@ -452,6 +462,7 @@ public class DoeClientUtil {
 				String errorMessage = getErrorMessage(restResponse);
 				throw new DoeWebException(errorMessage, restResponse.getStatus());
 			}
+
 		} catch (Exception e) {
 			log.error("Error in validating captcha.");
 			throw new DoeWebException(e);
