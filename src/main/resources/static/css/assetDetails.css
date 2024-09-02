@@ -256,6 +256,21 @@ table#assetDetailsDiv tbody tr:last-child {
     margin-bottom: 62px;
 }
 
+.hero-text-left {
+	position: absolute;
+    left: 57px;
+    transform: translateY(-50%);
+    padding: 20px;
+}
+
+.hero-text-center {
+	position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    padding: 20px;
+}
+
 table#userMetaData input[type="text"], table#userMetaData input[type="search"]  {
     background-color: var(--white);
     border: 1px solid;
