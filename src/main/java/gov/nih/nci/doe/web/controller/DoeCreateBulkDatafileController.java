@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -391,31 +392,33 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			entries.add(entryCollectionType);
 		}
 
-		if (StringUtils.isNotEmpty(accessGrp)) {
-
-			HpcMetadataEntry entryAccessGrp = new HpcMetadataEntry();
-			entryAccessGrp.setAttribute("access_group");
-			entryAccessGrp.setValue(accessGrp);
-			entries.add(entryAccessGrp);
-		} else if (StringUtils.isNotEmpty(getDefaultGroup())) {
-			HpcMetadataEntry entryAccessGrp = new HpcMetadataEntry();
-			entryAccessGrp.setAttribute("access_group");
-			entryAccessGrp.setValue(getDefaultGroup());
-			entries.add(entryAccessGrp);
-
-		}
-
 		while (params.hasMoreElements()) {
 			String paramName = params.nextElement();
 			if (paramName.startsWith("zAttrStr_")) {
 
-				HpcMetadataEntry entry1 = new HpcMetadataEntry();
+				HpcMetadataEntry form_metadataEntry = new HpcMetadataEntry();
 				String attrName = paramName.substring("zAttrStr_".length());
 				String[] attrValue = request.getParameterValues(paramName);
-				entry1.setAttribute(attrName);
-				entry1.setValue(attrValue[0].trim());
-				if (StringUtils.isNotEmpty(entry1.getValue())) {
-					entries.add(entry1);
+
+				form_metadataEntry.setAttribute(attrName);
+				if ("access_group".equalsIgnoreCase(attrName) && StringUtils.isNotEmpty(accessGrp)) {
+					// overriding the user provided access group with the parent access group since
+					// it should be restricted to
+					// parent access group
+					attrValue[0] = accessGrp;
+
+				}
+
+				if (attrValue != null && attrValue.length > 1) {
+					String combinedAttrVal = Stream.of(attrValue).filter(s -> s != null && !s.isEmpty())
+							.collect(Collectors.joining(","));
+					form_metadataEntry.setValue(combinedAttrVal);
+				} else {
+					form_metadataEntry.setValue(attrValue[0].trim());
+				}
+
+				if (StringUtils.isNotEmpty(form_metadataEntry.getValue())) {
+					entries.add(form_metadataEntry);
 				}
 
 			} else if (paramName.startsWith("_addAttrName")) {

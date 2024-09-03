@@ -63,9 +63,19 @@ public class DoeExcelUtil {
 			path = replaceTokens(path, tokens);
 			if (metadata.containsKey("collection_type") && metadata.get("collection_type").equalsIgnoreCase("Asset")) {
 
+				// overriding the user provided access group with the parent access group since
+				// it should be restricted to
+				// parent access group, else the user provided access group will be taken
+				// if user did not provide one, the default access group will be added
+				// if no default group is assigned and the access group metadata is empty, the
+				// task will fail
+
+				String userAccessGrp = metadata.containsKey("access_group")
+						&& !metadata.get("access_group").equalsIgnoreCase("public") ? metadata.get("access_group")
+								: null;
 				if (StringUtils.isNotEmpty(accessGrps)) {
 					metadata.put("access_group", accessGrps);
-				} else if (StringUtils.isNotEmpty(defaultGrp)) {
+				} else if (StringUtils.isEmpty(userAccessGrp) && StringUtils.isNotEmpty(defaultGrp)) {
 					metadata.put("access_group", defaultGrp);
 
 				}
