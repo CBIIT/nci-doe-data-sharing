@@ -205,7 +205,7 @@ function updatePermissionsFunction() {
 		collectionId : $("#collectionId").val(),
 		path : $("#path").val()
 	};
-	invokeAjax('/metaDataPermissionsList', 'POST', params, postSuccessUpdatePermissions, null,
+    invokeAjax('/metaDataPermissionsList', 'POST', params, postSuccessUpdatePermissions, null,
 			'application/x-www-form-urlencoded; charset=UTF-8', 'text');
 }
 
@@ -218,12 +218,17 @@ function postSuccessUpdatePermissions(data, status) {
 function editAccessPermissions(collectionId, metadata_path, msg, selectedCollection, collectionName) {
 
 	var parentAccessGroups;
+	var curationStatus;
 	$.each(msg, function(key, value) {
 		if (value.key.indexOf("selectedEntry") != -1) {
 			$("#updateAccessPermissionsModal").find("#accessGroups").val(value.value);
 		}
 		if (value.key.indexOf("parentAccessGroups") != -1) {
 			parentAccessGroups = value.value;
+		}
+		
+		if (value.key.indexOf("curationStatus") != -1) {
+			curationStatus = value.value;
 		}
 
 	});
@@ -235,11 +240,12 @@ function editAccessPermissions(collectionId, metadata_path, msg, selectedCollect
 	$("#updateAccessPermissionsModal").find("#metadata_path").val(metadata_path);
 	$("#updateAccessPermissionsModal").find("#selectedCollection").val(selectedCollection);
 	$("#updateAccessPermissionsModal").find("#selectedCollectionName").text(collectionName);
+	$("#updateAccessPermissionsModal").find("#assetCurationStatus").val(curationStatus);
 	$("#updateAccessPermissionsModal").modal('show');
 
 	var isUpdate = false;
 	if (selectedCollection == "Program"
-			|| (selectedCollection == "Study" || selectedCollection == "Asset" && "public" == parentAccessGroups)) {
+			|| ((selectedCollection == "Study" || selectedCollection == "Asset") && "public" == parentAccessGroups)) {
 		isUpdate = true;
 	}
 
@@ -263,18 +269,28 @@ function editAccessPermissions(collectionId, metadata_path, msg, selectedCollect
 }
 
 function postSuccessAccessPermissions(data, status) {
+
 	var accessGrp = $("#updateAccessPermissionsModal").find("#accessGroups").val();
+	var curationStatus = $("#updateAccessPermissionsModal").find("#assetCurationStatus").val();
 	var accessGrpList = accessGrp.split(",");
-	$("#updateAccessPermissionsModal").find("#publicCheckBox").show();
+	
 	$("#updateAccessPermissionsModal").find("#infoTxtForAccessGroups").html("");
 
-	if (accessGrp == 'public') {
+    // If the collection access group is already public, do not check for curation status
+    // If the collection access group is not public, then check if update is allowed which means
+    // the parent collection access group is not restricted and the collection is allowed to be made public
+    // second condition is, for asset collection, check the curated status, if status is verified, show the
+    // public checkbox
+    
+    if (accessGrp == 'public') {
 		$("#updateAccessPermissionsModal").find("#updateAccessGroupsList").next(".select2-container").hide();
 		$("#updateAccessPermissionsModal").find("#updateAccessGroupsList").val("").trigger('change');
+		$("#updateAccessPermissionsModal").find("#publicCheckBox").show();
 		$("#updateAccessPermissionsModal").find("#editPublicAccess").prop("checked", true);
 
 	} else {
 		$("#updateAccessPermissionsModal").find("#updateAccessGroupsList").next(".select2-container").show();
+		$("#updateAccessPermissionsModal").find("#publicCheckBox").show();
 		$("#updateAccessPermissionsModal").find("#editPublicAccess").prop("checked", false);
 		if (!data) {
 			$("#updateAccessPermissionsModal")
@@ -284,7 +300,15 @@ function postSuccessAccessPermissions(data, status) {
 									+ "title='This collection inherits access status from the parent collection' data-toggle='tooltip' data-placement='right'></i>");
 			// $("#updateAccessPermissionsModal").find("#editPublicAccess").prop("disabled",true);
 			$("#updateAccessPermissionsModal").find("#publicCheckBox").hide();
-		}
+		} else if(curationStatus && curationStatus != "Verified") {
+            $("#updateAccessPermissionsModal")
+					.find("#infoTxtForAccessGroups")
+					.html(
+							"<i class='fas fa-question-circle' "
+									+ "title='This collection curation status is unverified' data-toggle='tooltip' data-placement='right'></i>");
+			
+		    $("#updateAccessPermissionsModal").find("#publicCheckBox").hide();
+       }
 	}
 
 	for (var i = 0; i < accessGrpList.length; i++) {

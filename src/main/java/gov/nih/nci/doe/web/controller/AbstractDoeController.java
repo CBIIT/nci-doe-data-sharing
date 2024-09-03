@@ -751,13 +751,16 @@ public abstract class AbstractDoeController {
 		return new ResponseEntity<>(keyValueBeanResults, null, HttpStatus.OK);
 	}
 
-	public ResponseEntity<?> getCollectionAccessGroups(String selectedPath, String levelName) throws DoeWebException {
+	public ResponseEntity<?> getCollectionAccessGroups(HttpSession session, String selectedPath, String levelName)
+			throws DoeWebException {
 
 		log.info("get Access Groups for path: " + selectedPath);
 		List<KeyValueBean> entryList = new ArrayList<KeyValueBean>();
 
 		try {
 			if (selectedPath != null) {
+				String authToken = (String) session.getAttribute("hpcUserToken");
+
 				List<String> accessGrpList = accessGroupsService.getGroupsByCollectionPath(selectedPath);
 				if (CollectionUtils.isNotEmpty(accessGrpList)) {
 					entryList.add(new KeyValueBean("selectedEntry", String.join(",", accessGrpList)));
@@ -777,6 +780,22 @@ public abstract class AbstractDoeController {
 						entryList.add(new KeyValueBean("parentAccessGroups", String.join(",", parentGrpAccessGrpList)));
 					} else {
 						entryList.add(new KeyValueBean("parentAccessGroups", "public"));
+					}
+				}
+
+				if (levelName.equalsIgnoreCase("Asset")) {
+					// get curated status of the asset
+					// Get collection
+					HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL, selectedPath,
+							false);
+					if (collections != null && collections.getCollections() != null
+							&& !collections.getCollections().isEmpty()) {
+						HpcCollectionDTO collection = collections.getCollections().get(0);
+						String curatedStatus = getAttributeValue("curation_status",
+								collection.getMetadataEntries().getSelfMetadataEntries(), null);
+						if (StringUtils.isNotEmpty(curatedStatus)) {
+							entryList.add(new KeyValueBean("curationStatus", curatedStatus));
+						}
 					}
 				}
 			}

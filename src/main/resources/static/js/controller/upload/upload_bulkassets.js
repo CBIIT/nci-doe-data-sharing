@@ -166,6 +166,24 @@ function constructAssetTypeBulkDiv(data, status) {
 						+ value.description
 						+ '"></img>';
 				}
+				
+				if (value.attrName == 'access_group') {
+
+						$("#assetBulkMetadataTable tbody")
+							.append(
+								'<tr><td>'
+								+ value.displayName
+								+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
+								+ '<div class="mt-2"><select class="simple-select2" multiple="multiple" id="bulkAccessGrpSelect" name="zAttrStr_'
+								+ value.attrName
+								+ '"'
+								+ 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"></select></div>'
+								+ '</td></tr>');
+						
+						loadJsonData('/metaDataPermissionsList', $("#bulkAccessGrpSelect"), false, null, loadDefaultBulkAccessGrp,
+							null, "key", "value");
+
+					}
 
 				if (value.validValues != null && value.attrName != 'asset_type' && value.isVisibleOnUplaodPage != false) {
 
@@ -204,7 +222,7 @@ function constructAssetTypeBulkDiv(data, status) {
 					}
 
 				} else if (value.attrName && value.attrName != 'asset_type'
-					&& value.attrName != 'access_group' && value.isVisibleOnUplaodPage != false) {
+					       && value.isVisibleOnUplaodPage != false) {
 					if (value.attrName == 'description') {
 						$("#assetBulkMetadataTable tbody")
 							.append(
@@ -513,4 +531,8 @@ function displayEmptyAssetScreen(data) {
 	$('#uploadAssetSelect').prop('disabled', true);
 	$('#uploadAssetSelect').val('').trigger('change');
 
+}
+
+function loadDefaultBulkAccessGrp(data, status) {
+    $("#bulkAccessGrpSelect").select2().val(defaultGroup).trigger("change");
 }

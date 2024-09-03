@@ -271,7 +271,7 @@ public class HomeController extends AbstractDoeController {
 			@RequestParam(value = "levelName") String levelName, HttpSession session, HttpServletRequest request,
 			HttpServletResponse response) throws DoeWebException {
 		log.info("get collection access groups");
-		return getCollectionAccessGroups(selectedPath, levelName);
+		return getCollectionAccessGroups(session, selectedPath, levelName);
 	}
 
 	@GetMapping(value = "/getFilterList")
