@@ -199,7 +199,8 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 
 			// when bulk metadata file is provided
 			HashMap<HpcBulkMetadataEntries, Map<String, String>> doeBulkMetadataEntries = DoeExcelUtil
-					.parseBulkMatadataEntries(doeMetadataFile, accessGroups, doeDataFileModel.getPath().trim());
+					.parseBulkMatadataEntries(doeMetadataFile, accessGroups, doeDataFileModel.getPath().trim(),
+							getDefaultGroup());
 
 			if (doeBulkMetadataEntries != null) {
 				entries = doeBulkMetadataEntries.keySet().stream().findFirst().get();

@@ -27,27 +27,27 @@ import gov.nih.nci.hpc.domain.metadata.HpcBulkMetadataEntry;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
 
 public class DoeExcelUtil {
-	public static final String METADATA_SHEET = "Metadata";
-	public static final String TOKENS_SHEET = "Tokens";
 
-	public static HashMap<HpcBulkMetadataEntries, Map<String, String>> parseBulkMatadataEntries(MultipartFile metadataFile, String accessGrps,
-			String collectionPath) throws IOException, DoeWebException {
+	public static HashMap<HpcBulkMetadataEntries, Map<String, String>> parseBulkMatadataEntries(
+			MultipartFile metadataFile, String accessGrps, String collectionPath, String defaultGrp)
+			throws IOException, DoeWebException {
 		HashMap<HpcBulkMetadataEntries, Map<String, String>> entries = null;
 		if (metadataFile == null || metadataFile.getName().isEmpty() || metadataFile.getOriginalFilename().isEmpty())
 			return null;
 
-		Sheet tokenSheet = getWorkbookSheet(metadataFile, TOKENS_SHEET);
-		Map<String, String> tokens = getTokensMap(tokenSheet);
-		Sheet metadataSheet = getWorkbookSheet(metadataFile, METADATA_SHEET);
+		Sheet metadataSheet = getWorkbookSheet(metadataFile);
+		Map<String, String> tokens = getTokensMap(metadataSheet);
+
 		Map<String, Map<String, String>> metadataMap = getMetadataMap(metadataSheet);
-		entries = buildHpcBulkMetadataEntries(metadataMap, tokens, accessGrps, collectionPath);
+		entries = buildHpcBulkMetadataEntries(metadataMap, tokens, accessGrps, collectionPath, defaultGrp);
 
 		return entries;
 	}
 
-	private static HashMap<HpcBulkMetadataEntries, Map<String, String>> buildHpcBulkMetadataEntries(Map<String, Map<String, String>> metadataMap,
-			Map<String, String> tokens, String accessGrps, String collectionPath) {
-		
+	private static HashMap<HpcBulkMetadataEntries, Map<String, String>> buildHpcBulkMetadataEntries(
+			Map<String, Map<String, String>> metadataMap, Map<String, String> tokens, String accessGrps,
+			String collectionPath, String defaultGrp) {
+
 		HashMap<HpcBulkMetadataEntries, Map<String, String>> list = new HashMap<HpcBulkMetadataEntries, Map<String, String>>();
 		HpcBulkMetadataEntries entries = new HpcBulkMetadataEntries();
 		Map<String, String> assetIdentiferMapping = new HashMap<String, String>();
@@ -65,15 +65,18 @@ public class DoeExcelUtil {
 
 				if (StringUtils.isNotEmpty(accessGrps)) {
 					metadata.put("access_group", accessGrps);
+				} else if (StringUtils.isNotEmpty(defaultGrp)) {
+					metadata.put("access_group", defaultGrp);
+
 				}
 
 				if (metadata.containsKey("asset_identifier")
 						&& StringUtils.isNotEmpty(metadata.get("asset_identifier"))) {
 					String assetIdentifier = metadata.get("asset_identifier");
-					
+
 					// set path from asset_identifier metadata
 					metadataEntry.setPath(collectionPath + "/" + assetIdentifier);
-					assetIdentiferMapping.put(path,assetIdentifier);
+					assetIdentiferMapping.put(path, assetIdentifier);
 				}
 
 			} else {
@@ -110,7 +113,7 @@ public class DoeExcelUtil {
 	}
 
 	@SuppressWarnings("resource")
-	private static Sheet getWorkbookSheet(MultipartFile metadataFile, String sheetName) throws IOException {
+	private static Sheet getWorkbookSheet(MultipartFile metadataFile) throws IOException {
 		Workbook workbook = new XSSFWorkbook(metadataFile.getInputStream());
 		Sheet dataSheet = workbook.getSheetAt(0);
 		return dataSheet;
@@ -119,7 +122,7 @@ public class DoeExcelUtil {
 	private static List<String> getHeader(Sheet metadataSheet) throws DoeWebException {
 		List<String> header = new ArrayList<String>();
 		Row firstRow = metadataSheet.getRow(metadataSheet.getFirstRowNum());
-		// List<String> attrNames = new ArrayList<String>();
+
 		Iterator<Cell> cellIterator = firstRow.iterator();
 		while (cellIterator.hasNext()) {
 			Cell currentCell = cellIterator.next();
