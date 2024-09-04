@@ -325,7 +325,7 @@ function registerCollection() {
 	if (!usermetaDataEntered || !accessGroupError) {
 		validate = false;
 		if (!accessGroupError) {
-			$(".registerErrorMsg").append("<div>Select the Non-public access group.</div");
+			$(".registerErrorMsg").append("<div>Select the access group.</div");
 		}
 		if (!usermetaDataEntered) {
 			$(".registerErrorMsg").append("Enter values for all required metadata.");
