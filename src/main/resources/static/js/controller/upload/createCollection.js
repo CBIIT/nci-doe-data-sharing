@@ -89,7 +89,8 @@ function constructNewCollectionMetaDataSet(data, status) {
 						+ ");' style='width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;' id='" + value.attrName + "' name='zAttrStr_"
 						+ value.attrName + "' value='" + value.attrValue + "'></select></td></tr>");
 
-					var $select = $("#" + value.attrName);
+					
+					var $select = $("#newMetaDataTable select[id='" + value.attrName + "']");
 
 					if (value.attrValue) {
 						$select.append($('<option></option>').attr('value', value.attrValue).text(
