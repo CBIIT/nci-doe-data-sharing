@@ -193,6 +193,9 @@ function registerBulkDataFile() {
 					console.log('ERROR: ', e);
 					$(".uploadBulkDataError").show();
 					$(".uploadBulkDataErrorMsg").html(e);
+					$('body,html').animate({
+							scrollTop : 0
+					}, 500);
 				}
 			});
 		}
@@ -262,6 +265,9 @@ function registerBulkDataFile() {
 							}
 							$(".uploadBulkDataError").show();
 							$(".uploadBulkDataErrorMsg").html(e);
+							$('body,html').animate({
+							scrollTop : 0
+							}, 500);
 						}
 					});
 		}

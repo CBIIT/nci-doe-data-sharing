@@ -45,8 +45,10 @@ $(document)
 						    
 						    if((fileSize && fileSize < 2147483648) || !fileSize) {
 						    	$("#syncRadioSet").show();
+						    	
 						    } else  {
 						     	$("#syncRadioSet").hide();
+						     	$("#SyncDiv").hide();
 						    }
 							
 							$(".selectedFilesListDisplay").append("<p>" + selectedPathsString + "</p>");

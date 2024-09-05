@@ -7,7 +7,7 @@
 <body>
 
 	<div class="form-row jumbotron pt-2 pb-2 mb-2" id="downloadFragment"
-		th:fragment="downloadFragment" style="font-size: 13px;">
+		th:fragment="downloadFragment" style="font-size: 13px;margin: 30px auto;background-color: transparent;">
 
 		<input type="hidden" th:value="${assetIdentifier}"
 			id="assetIdentifier" /> <input type="hidden"
@@ -16,48 +16,65 @@
 			
 			<input
 			type="hidden" th:value="${fileSize}" id="fileSize" />
+		
 
-		<div class="col-lg-12 col-md-12 col-sm-12 float-right">
+      <div class="col-sm-2">
+		 <div class="col-lg-12 col-md-12 col-sm-12 float-right" style="margin-top:-16px;">
+		
 			<div class="controls controls-row mt-4"
 				th:if="${returnToSearch eq 'true'}">
-				<a class="float-left mb-2 mr-2" id="backtoSearch"><img
-					src="images/BackSearch-icon.png" data-toggle="tooltip"
+				<a class="float-left mb-2 mr-2 d-flex" id="backtoSearch"><img
+					src="/images/backToUpload.svg" data-toggle="tooltip"
 					title="Back to Search Results"
-					th:src="@{/images/BackSearch-icon.png}" style="width: 50px;"
-					alt="back to search"> &nbsp;&nbsp;<span class="backToSearch">Back
-						to Search Results</span></a>
+					th:src="@{/images/backToUpload.svg}" style="width: 40px;"
+					alt="back to search"> &nbsp;&nbsp;<span class="backToSearch">BACK
+						TO <br /> SEARCH RESULTS</span></a>
 			</div>
 
 			<div class="controls controls-row mt-4"
 				th:if="${returnToSearch eq 'false' and (returnToStatus == null or returnToStatus == '')}">
-				<a class="float-left mb-2 mr-2 backtoAssetFromDwnldBtn"> <img
-					src="images/BackSearch-icon.png" data-toggle="tooltip"
+				<a class="float-left mb-2 mr-2 backtoAssetFromDwnldBtn d-flex"> <img
+					src="images/backToUpload.svg" data-toggle="tooltip"
 					title="Back to Asset Details"
-					th:src="@{/images/BackSearch-icon.png}" style="width: 50px;"
+					th:src="@{/images/backToUpload.svg}" style="width: 40px;"
 					alt="back to asset details"> &nbsp;&nbsp;<span
-					class="backToSearch">Back to Asset Details</span></a>
+					class="backToSearch">BACK TO <br /> ASSET DETAILS</span></a>
 			</div>
 
 			<div class="controls controls-row mt-4"
 				th:if="${returnToStatus eq 'true'}">
-				<a class="float-left mb-2 mr-2 backToStatusTabLink"> <img
-					src="images/BackSearch-icon.png" data-toggle="tooltip"
-					title="Back to Status Tab" th:src="@{/images/BackSearch-icon.png}"
-					style="width: 50px;" alt="Back to Status Tab"> &nbsp;&nbsp;<span
-					class="backToStatusTab">Back to Status Tab</span></a>
+				<a class="float-left mb-2 mr-2 backToStatusTabLink d-flex"> <img
+					src="images/backToUpload.svg" data-toggle="tooltip"
+					title="Back to Status Tab" th:src="@{/images/backToUpload.svg}"
+					style="width: 40px;" alt="Back to Status Tab"> &nbsp;&nbsp;<span
+					class="backToStatusTab">BACK TO <br /> STATUS TAB</span></a>
 			</div>
 
+		  </div>
 		</div>
 
+		<div class="col-lg-10 col-md-10 col-sm-10 alert alert-danger errorBlock" role="alert" 
+		id="message" style="display: none;margin-left: -10px;">
+            <div class="col-md-12">
+              <h6 class="downloadErrorMsg"></h6>
+            </div>
+          </div>
 
+		<div class="col-lg-10 col-md-10 col-sm-10 alert alert-success messageBlock"
+			id="successBlockDownload" style="display: none;margin-left: -10px;">
+			<div class="col-md-12">
+				<h6 class="downloadSuccessMsg"></h6>
+			</div>
+		</div>
+		
 		<div class="col-lg-12 col-md-12 col-sm-12 float-right"
-			style="margin-left: 6px;">
+			style="margin-left: 16px;margin-top: 20px;">
 			<p style="font-size: 20px; font-weight: 500;">Download</p>
 		</div>
 
 		<input type="hidden" th:value="${selectedPathsString}"
 			id="selectedPathsString" />
-		<div class="col-md-12 col-sm-12" style="margin-left: -10px;">
+		<div class="col-md-12 col-sm-12">
 			<div class="col-md-12 col-sm-12">
 				<input type="hidden" name="asyncSearchType" id="asyncSearchType"
 					th:value="${asyncSearchType}" /> <input type="hidden"
@@ -80,25 +97,6 @@
 					asynchronously to a Globus endpoint location, an S3 bucket, or
 					Google Drive.</span>
 
-				<div class="clearfix errorBlock pull-left" id="message"
-					style="display: none;">
-					<div class="col-md-12"
-						style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
-						<div class="alert alert-danger">
-							<h6 class="downloadErrorMsg"></h6>
-						</div>
-					</div>
-				</div>
-
-				<div class="clearfix messageBlock pull-left"
-					id="successBlockDownload" style="display: none;">
-					<div class="col-md-12"
-						style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
-						<div class="alert alert-success">
-							<h6 class="downloadSuccessMsg"></h6>
-						</div>
-					</div>
-				</div>
 
 				<div class="selectedFilesDiv pull-left"
 					style="display: none; border: 1px solid; font-size: 14px; margin-top: 10px; overflow-wrap: break-word;">

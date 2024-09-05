@@ -373,11 +373,18 @@ bg-primary {
 	font-family: 'inter_regular';
 }
 
-.backToStatusTab,
-.backToUpload {
+.backToStatusTab, .backToUpload, .backToSearch, .backToStatusTab {
 	color: #E66F05;
 	font-family: 'inter_medium';
 	font-size: 17px;
+}
+
+.backToSearch, .backToStatusTab {
+	width: 120px;
+    font-size: 12px;
+    padding-top: 6px;
+    margin-left: 4px;
+    line-height: 14px;
 }
 
 
@@ -969,6 +976,33 @@ span.select2-selection.select2-selection--multiple {
 .alert {
 	margin-bottom: 0px;
 	border-radius: 0px;
+}
+.alert-success {
+    font-family: 'Open Sans';
+    font-size: 17px;
+    font-weight: 600;
+    text-align: center;
+    background: #006649;
+    color: #FFFFFF;
+    border: none;
+}
+
+.alert-danger {
+	font-family: 'Open Sans';
+    font-size: 17px;
+    font-weight: 600;
+    text-align: center;
+    background: #9E002B;
+    color: #FFFFFF;
+    border: none;
+}
+
+.alert-success h6, .alert-danger h6 {
+	font-size:17px;
+}
+
+.alert-success h6 a {
+	color: #FFFFFF;
 }
 
 .disabled {

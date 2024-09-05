@@ -474,15 +474,6 @@ form#contact-us-form label {
   margin-top: 2px;
 }
 
-
-.errorBlock {
-  padding-left: 0px;
-  padding-right: 0px;
-  padding-top: 10px;
-  border-radius: 0px;
-  padding-bottom: 22px;
-}
-
 .arrow_right_contact_us {
   transform: translate(88px, -2px);
   height: 35px;

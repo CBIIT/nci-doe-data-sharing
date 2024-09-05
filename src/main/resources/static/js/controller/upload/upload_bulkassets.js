@@ -169,9 +169,8 @@ function constructAssetTypeBulkDiv(data, status) {
 						+ 'data-placement="right" title="'
 						+ value.description
 						+ '"></img>';
-				}
-				
-				if (value.attrName == 'access_group') {
+				} 
+				 if (value.attrName == 'access_group') {
 
 						$("#assetBulkMetadataTable tbody")
 							.append(
@@ -187,9 +186,7 @@ function constructAssetTypeBulkDiv(data, status) {
 						loadJsonData('/metaDataPermissionsList', $("#bulkAccessGrpSelect"), false, null, loadDefaultBulkAccessGrp,
 							null, "key", "value");
 
-					}
-
-				if (value.validValues != null && value.attrName != 'asset_type' && value.isVisibleOnUplaodPage != false) {
+				} else if (value.validValues != null && value.attrName != 'asset_type' && value.isVisibleOnUplaodPage != false) {
 
 					$("#assetBulkMetadataTable tbody")
 						.append(

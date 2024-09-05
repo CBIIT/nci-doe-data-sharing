@@ -46,7 +46,7 @@ public class DoeExcelUtil {
 
 	private static HashMap<HpcBulkMetadataEntries, Map<String, String>> buildHpcBulkMetadataEntries(
 			Map<String, Map<String, String>> metadataMap, Map<String, String> tokens, String accessGrps,
-			String collectionPath, String defaultGrp) {
+			String collectionPath, String defaultGrp) throws DoeWebException {
 
 		HashMap<HpcBulkMetadataEntries, Map<String, String>> list = new HashMap<HpcBulkMetadataEntries, Map<String, String>>();
 		HpcBulkMetadataEntries entries = new HpcBulkMetadataEntries();
@@ -70,14 +70,16 @@ public class DoeExcelUtil {
 				// if no default group is assigned and the access group metadata is empty, the
 				// task will fail
 
-				String userAccessGrp = metadata.containsKey("access_group")
-						&& !metadata.get("access_group").equalsIgnoreCase("public") ? metadata.get("access_group")
-								: null;
+				String userAccessGrp = metadata.containsKey("access_group") ? metadata.get("access_group") : null;
+
+				if (StringUtils.isNotEmpty(userAccessGrp) && "public".equalsIgnoreCase(userAccessGrp)) {
+					throw new DoeWebException("Access group cannot be public");
+				}
+
 				if (StringUtils.isNotEmpty(accessGrps)) {
 					metadata.put("access_group", accessGrps);
 				} else if (StringUtils.isEmpty(userAccessGrp) && StringUtils.isNotEmpty(defaultGrp)) {
 					metadata.put("access_group", defaultGrp);
-
 				}
 
 				if (metadata.containsKey("asset_identifier")
