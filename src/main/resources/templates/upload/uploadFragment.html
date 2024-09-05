@@ -1,220 +1,202 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<meta charset="UTF-8">
-<title>Title</title>
+	<meta charset="UTF-8">
+	<title>Title</title>
 </head>
+
 <body>
-	<div id="uploadTab" role="tabpanel"
-		th:fragment="uploadFragment">
-		<div class="col-md-4 col-sm-4" id="uploadHeader" style="margin: 84px 84px 0px 84px">
-			<p >Upload
-				Data</p>
+	<div id="uploadTab" role="tabpanel" th:fragment="uploadFragment">
+		<div id="uploadHeader">
+			<p>Upload</p>
 		</div>
 
-		<div id="uploadSectionDiv" class="form-row jumbotron pt-2 pb-2 mb-2" style="margin: 0px 84px 84px 84px">
+
+		<div id="uploadSectionDiv" class="form-row jumbotron">
 			<div class="form-row col-md-12 col-sm-12" id="uploadSubFragmentTab">
 
 				<input type="hidden" th:value="${basePathSelected}" id="basePath" />
 				<input type="hidden" th:value="${datafilePath}" id="datafilePath" />
 				<input type="hidden" th:value="${programPath}" id="programPath" />
-				<input type="hidden" th:value="${uploadPath}" id="uploadPath" /> <input
-					type="hidden" th:value="${studyPath}" id="studyPath" /> <input
-					type="hidden" id="uploadAsyncType" th:value="${uploadAsyncType}" />
-				<input type="hidden" id="assetPermissions" /> 
+				<input type="hidden" th:value="${uploadPath}" id="uploadPath" /> <input type="hidden"
+					th:value="${studyPath}" id="studyPath" /> <input type="hidden" id="uploadAsyncType"
+					th:value="${uploadAsyncType}" />
+				<input type="hidden" id="assetPermissions" />
 				<input type="hidden" th:value="${bulkUploadCollection}" id="bulkUploadCollection" />
 				<input type="hidden" th:value="${authorizedGC != null}" id="gcCloudAuthorized" />
-				<input type ="hidden" th:value="${endpoint_id}" id="globusEndpointId"/>
+				<input type="hidden" th:value="${endpoint_id}" id="globusEndpointId" />
 
 
-				<input
-					type="hidden" id="showUploadDataFilesTab"
+				<input type="hidden" id="showUploadDataFilesTab"
 					th:value="${authorized != null or endpoint_id != null or authorizedGC != null}" />
 
 				<div class="col-md-12 col-sm-12">
 					<div class="form-group">
-						<div
-							class="form-row jumbotron pt-2 pb-2 mb-2 col-lg-10 col-md-10 registerDiv">
-							<div class="form-group col-lg-4 col-md-4"
-								style="margin-left: 70px;">
-								<div class="pull-left" style="margin-left: 15px">
-									<label class="uploadLabels radio-inline"><input
-										type="radio" name="selectProgram" class="registeRadioButtons"
-										onclick="createCollectionDiv('basePath')"
-										value="Register Program">&nbsp;&nbsp; Register Program</label>
+						<div class="form-row jumbotron registerDiv">
+							<div class="form-group">
+								<div class="form-heading">
+									Program
 								</div>
 							</div>
-							&nbsp;&nbsp;
 
-							<div class="form-group col-lg-6 col-md-6">
-								<div class="pull-left" style="margin-left: 15px">
-									<label for="selectProgram" class="uploadLabels radio-inline"><input
-										type="radio" name="selectProgram" class="registeRadioButtons"
-										onclick="showSelect('Program')" value="Select Program">&nbsp;&nbsp;
-										Select Program</label>
+							<div class="form-group">
+								<div class="pull-left" style="margin-top: 6px; margin-left: 15px">
+									<label class="uploadLabels radio-inline"><input type="radio" name="selectProgram"
+											class="registeRadioButtons" onclick="createCollectionDiv('basePath')"
+											value="Register Program">&nbsp;&nbsp; Register Program</label>
 								</div>
-								<div id="showSelectProgramDiv">
-									<select class="simple-select2" id="programList"
-										name="programList" style="width: 100%"
-										onchange="retrieveCollections('programList', this.options[this.selectedIndex],'onChange');">
-									</select>
+								<div class="d-flex">
+									<div class="pull-left" style="margin-left: 15px">
+										<label for="selectProgram" class="uploadLabels radio-inline" onclick="showSelect('Program')"><input type="radio"
+												name="selectProgram" class="registeRadioButtons"
+												 value="Select Program">&nbsp;&nbsp;
+											Select Program</label>
+									</div>
+									<div id="showSelectProgramDiv" style="min-width: 400px;margin-top: 0;">
+										<select class="simple-select2" id="programList" name="programList"
+											style="width: 100%"
+											onchange="retrieveCollections('programList', this.options[this.selectedIndex],'onChange');">
+										</select>
 
-									<div class="col-md-2 col-lg-2 col-sm-2"></div>
-									<div style="padding-top: 10px;">
-										<a href="#" style="display: none;"
-											class="addDeleteUploadLabels" id="deleteProgram"
-											onclick="functionDelete('programList','Program')"> <img
-											src="images/Uploads.delete.png"
-											th:src="@{/images/Uploads.delete.png}" class="uploadslogo"
-											alt="delete"> Delete Program
-										</a> &nbsp;&nbsp; <a href="#" style="display: none;"
-											class="addDeleteUploadLabels" id="editProgram"
-											onclick="functionEditCollection('programList','Program')"> <img
-											src="images/Search_EditMetaData.svg"
-											th:src="@{/images/Search_EditMetaData.svg}"
-											class="uploadslogo" alt="delete"> Edit Program
-										</a>
+										<div class="col-md-2 col-lg-2 col-sm-2"></div>
+										
+									</div>
+									<div class="form-group" style="padding: 0 18px">
 
+										<img src="/images/deleteOrange.svg"
+												th:src="@{/images/deleteOrange.svg}" style="display: none;" class="addDeleteUploadLabels"
+												id="deleteProgram" onclick="functionDelete('programList','Program')"
+												alt="delete">
+										<img src="images/Search_EditMetaData.svg"
+										th:src="@{/images/Search_EditMetaData.svg}" style="display: none; padding-left: 18px;" class="addDeleteUploadLabels"
+												id="editProgram" onclick="functionEditCollection('programList','Program')"
+												alt="edit">
 									</div>
 								</div>
 							</div>
 
 						</div>
-						<div
-							class="form-row jumbotron pt-2 pb-2 mb-2 col-lg-10 col-md-10 registerDiv"
-							id="studyListDiv" style="display: none;">
+						<div class="form-row jumbotron registerDiv disable-pointer-events" id="studyListDiv">
 
-							<div class="form-group col-lg-4 col-md-4"
-								style="margin-left: 70px;">
-								<div class="pull-left" style="margin-left: 15px">
-									<label class="uploadLabels radio-inline"><input
-										type="radio" name="selectStudy" class="registeRadioButtons"
-										onclick="createCollectionDiv('programList')"
-										value="Register Study">&nbsp;&nbsp; Register Study</label>
+							<div class="form-group">
+								<div class="form-heading">
+									Study
 								</div>
 							</div>
-							&nbsp;&nbsp;
 
-							<div class="form-group col-lg-6 col-md-6">
-								<div class="pull-left" style="margin-left: 15px">
-									<label for="selectStudy" class="uploadLabels radio-inline"><input
-										type="radio" name="selectStudy" class="registeRadioButtons"
-										onclick="showSelect('Study')" value="Select Study">&nbsp;&nbsp;
+							<div class="form-group">
+								<div class="pull-left" style="margin-top: 6px;margin-left: 15px">
+									<label class="uploadLabels radio-inline"><input type="radio" name="selectStudy"
+											class="registeRadioButtons" onclick="createCollectionDiv('programList')"
+											value="Register Study">&nbsp;&nbsp; Register Study</label>
+								</div>
+
+
+								<div class="d-flex">
+								<div class="pull-left" style="margin-left: 15px" onclick="showSelect('Study')">
+									<label for="selectStudy" class="uploadLabels radio-inline" style="width: 180px;"><input type="radio"
+											name="selectStudy" class="registeRadioButtons" 
+											value="Select Study">&nbsp;&nbsp;
 										Select Study</label>
 								</div>
-								<div id="showSelectStudyDiv">
-									<select class="simple-select2" id="studyList" aria-labelledby="studyList" name="studyList"
-										style="width: 100%"
+								<div id="showSelectStudyDiv" style="min-width: 400px; margin-top: 0;">
+									<select class="simple-select2" id="studyList" aria-labelledby="studyList"
+										name="studyList" style="width: 100%"
 										onchange="retrieveCollections('studyList', this.options[this.selectedIndex],'onChange');">
 									</select>
+								</div>
+								<div class="form-group" style="padding: 0 18px">
 
+									<img src="/images/deleteOrange.svg"
+											th:src="@{/images/deleteOrange.svg}" style="display: none;" class="addDeleteUploadLabels"
+											id="deleteStudy"  onclick="functionDelete('studyList','Study')"
+											alt="delete">
+									<img src="images/Search_EditMetaData.svg"
+									th:src="@{/images/Search_EditMetaData.svg}" style="display: none; padding-left: 18px;" class="addDeleteUploadLabels"
+											id="editStudy" onclick="functionEditCollection('studyList','Study')"
+											alt="edit">
+								</div>
+							</div>
+							</div>
+						</div>
 
-									<div style="padding-top: 10px;">
-										<a href="#" style="display: none;" id="deleteStudy"
-											class="addDeleteUploadLabels"
-											onclick="functionDelete('studyList','Study')"> <img
-											src="images/Uploads.delete.png"
-											th:src="@{/images/Uploads.delete.png}" class="uploadslogo"
-											alt="delete"> Delete Study
-										</a>&nbsp;&nbsp; <a href="#" style="display: none;"
-											class="addDeleteUploadLabels" id="editStudy"
-											onclick="functionEditCollection('studyList','Study')"> <img
-											src="images/Search_EditMetaData.svg"
-											th:src="@{/images/Search_EditMetaData.svg}"
-											class="uploadslogo" alt="delete"> Edit Study
-										</a>
+						<div class="form-row jumbotron registerDiv disable-pointer-events" id="dataSetListDiv">
 
-									</div>
+							<div class="form-group">
+								<div class="form-heading">
+									Asset
 								</div>
 							</div>
 
-						</div>
+							<div class="form-group">
 
-						<div
-							class="form-row jumbotron pt-2 pb-2 mb-2 col-lg-10 col-md-10 registerDiv"
-							id="dataSetListDiv" style="display: none;">
-
-							<div class="form-group col-lg-4 col-md-4"
-								style="margin-left: 70px;">
-								<div class="pull-left" style="margin-left: 15px">
-									<label for="assetSelection" class="uploadLabels radio-inline"><input
-										type="radio" name="selectAsset" data-backdrop="static" 
-										data-keyboard="false" value="Register Asset"  class="registeRadioButtons"
-										onchange="displayEmptyAssetScreen('emptyAsset')">&nbsp;&nbsp;
+								<div class="pull-left" style="margin-top: 6px;margin-left: 15px">
+									<label for="assetSelection" class="uploadLabels radio-inline" onclick="displayEmptyAssetScreen('emptyAsset')"><input type="radio"
+											name="selectAsset" data-backdrop="static" data-keyboard="false"
+											value="Register Asset" class="registeRadioButtons"
+											>&nbsp;&nbsp;
 										Register Asset</label>
 								</div>
-							</div>
-							&nbsp;&nbsp;
-
-							<div class="form-group col-lg-6 col-md-6">
+								<div class="d-flex">
 								<div class="pull-left" style="margin-left: 15px">
-									<label for="selectAsset" class="uploadLabels radio-inline"><input
-										type="radio" name="selectAsset" class="registeRadioButtons"
-										onclick="showSelect('Asset')" value="Select Asset">&nbsp;&nbsp;
+									<label for="selectAsset" class="uploadLabels radio-inline"  onclick="showSelect('Asset')" style="width: 180px;"><input type="radio"
+											name="selectAsset" class="registeRadioButtons"
+											value="Select Asset">&nbsp;&nbsp;
 										Select Asset</label>
 								</div>
-								<div id="showSelectAssetDiv">
-									<select class="simple-select2" id="dataList" aria-labelledby="dataList" name="dataList"
-										style="width: 100%"
+								<div id="showSelectAssetDiv" style="min-width: 400px;margin-top: 0;">
+									<select class="simple-select2" id="dataList" aria-labelledby="dataList"
+										name="dataList" style="width: 100%"
 										onchange="retrieveCollections('dataList', this.options[this.selectedIndex],'onChange');">
 									</select>
-									<div style="padding-top: 10px;">
-										<a href="#" style="display: none;"
-											class="addDeleteUploadLabels" id="deleteDataSet"
-											onclick="functionDelete('dataList','Asset')"> <img
-											src="images/Uploads.delete.png"
-											th:src="@{/images/Uploads.delete.png}" class="uploadslogo"
-											alt="delete"> Delete Asset
-										</a> &nbsp;&nbsp;<a href="#" style="display: none;"
-											class="addDeleteUploadLabels" id="editAsset"
-											onclick="functionEditCollection('dataList','Asset')"> <img
-											src="images/Search_EditMetaData.svg"
-											th:src="@{/images/Search_EditMetaData.svg}"
-											class="uploadslogo" alt="delete"> Edit Asset
-										</a>
-									</div>
+								</div>
+								<div class="form-group" style="padding: 0 18px">
+
+									<img src="/images/deleteOrange.svg"
+											th:src="@{/images/deleteOrange.svg}" style="display: none;" class="addDeleteUploadLabels"
+											id="deleteDataSet"  onclick="functionDelete('dataList','Asset')"
+											alt="delete">
+									<img src="images/Search_EditMetaData.svg"
+									th:src="@{/images/Search_EditMetaData.svg}" style="display: none; padding-left: 18px;" class="addDeleteUploadLabels"
+											id="editAsset" onclick="functionEditCollection('dataList','Asset')"
+											alt="edit">
 								</div>
 							</div>
+							</div>
 
-                     <!-- bulk asset upload div -->
-                     
-                     <!-- <div
+							<!-- bulk asset upload div -->
+
+							<!-- <div
 			          th:replace="upload/uploadBulkAssetsFragment :: uploadBulkAssetsFragment"></div>
 			 -->
-                     <!-- End bulk asset upload div -->
-                     				
+							<!-- End bulk asset upload div -->
+
 						</div>
 
 
-						<div
-							class="form-row jumbotron pt-2 pb-2 mb-2 col-lg-10 col-md-10 registerDiv"
-							id="uploadAndRegisterFiles" style="display: none;">
+						<div class="form-row jumbotron registerDiv" id="uploadAndRegisterFiles" style="display: none;">
 
-							<div class="form-group col-lg-5 col-md-5"
-								style="margin-top: 10px; padding-left: 88px;">
-
-								<a href="#" id="addBulkDataFiles" class="addDeleteUploadLabels"
-									data-toggle="tooltip"> <i class="fas fa-upload"></i>&nbsp;&nbsp;
-									Upload to Asset
-								</a>
-							</div>
-
-							<div class="form-group col-lg-5 col-md-5"
-								style="margin-top: 10px;">
-								<a href="javascript:void(0)" id="registerFolder"
-									data-toggle="tooltip" class="addDeleteUploadLabels"
-									onclick="createCollectionDiv('dataList')"><img
-									src="images/Uploads.add.png"
-									th:src="@{/images/Uploads.add.png}" class="uploadslogo"
-									alt="register">&nbsp;&nbsp;&nbsp; Register Asset
-									Subcollection </a>
-							</div>
+							<div class="d-flex justify-content-center w-100">
+								<div>
+								<button id="addBulkDataFiles" type="button" class="btn btn-primary mb-2 mr-5 ">Upload Files <br/>to Asset
+									<img class="arrowright" th:src='@{/images/uploadIcon.svg}' style="width: 22px;
+								transform: translate(68px, -12px);" />
+								  </button>		
+								  </div>
+								  <div>				
+								  <button id="registerFolder" type="button" class="btn btn-primary mb-2 mr-2 " onclick="createCollectionDiv('dataList')">Register Asset<br/>
+									Subcollection
+									<img class="arrowright" th:src='@{/images/add.svg}' style="width: 22px;
+								transform: translate(28px, -12px);" />
+								  </button>			
+								</div>				  </div>
 						</div>
 
 
 
 						<div class="form-row col-md-12 col-sm-12" id="dataListDiv"
-							style="display: none; margin-top: 30px;">
+							style="display: none;">
 							<div class="form-group col-lg-10 col-md-12"
 								style="height: fit-content; font-size: 19px; background-color: #FFFFFF; border-radius: 15px;">
 								<p
@@ -232,14 +214,13 @@
 			</div>
 		</div>
 
-		<div
-			th:replace="fragments/editCollectionFragment :: editCollectionFragment"></div>
+		<div th:replace="fragments/editCollectionFragment :: editCollectionFragment"></div>
 
 		<div th:replace="upload/uploadDataFiles :: uploadDataFiles">Upload
 			files</div>
-		<div
-		th:replace="upload/uploadRegisterCollectionFragment :: uploadRegisterCollectionFragment">Create
-		collection Fragment</div>
+		<div th:replace="upload/uploadRegisterCollectionFragment :: uploadRegisterCollectionFragment">Create
+			collection Fragment</div>
 	</div>
 </body>
+
 </html>
