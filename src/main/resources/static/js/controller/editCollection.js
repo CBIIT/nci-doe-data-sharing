@@ -425,6 +425,9 @@ function updateMetaDataCollection() {
 				$(".editCollectionMsg").html(msg);
 				$(".editCollectionError").hide();
 				$(".editCollectionErrorMsg").html("");
+				$('body,html').animate({
+				scrollTop: 0
+				}, 500);
 
 			},
 			error : function(e) {
@@ -435,6 +438,9 @@ function updateMetaDataCollection() {
 				$(".editCollectionMsg").html("");
 				$(".editCollectionError").show();
 				$(".editCollectionErrorMsg").html(e.responseText);
+				$('body,html').animate({
+				scrollTop: 0
+				}, 500);
 			}
 		});
 	}

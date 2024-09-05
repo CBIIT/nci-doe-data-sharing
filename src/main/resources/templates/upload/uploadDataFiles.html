@@ -8,75 +8,65 @@
 
 	<div class="form-row jumbotron pt-2 pb-2 mb-2" id="uploadDataFilesTab"
 		th:fragment="uploadDataFiles"
-		style="display: none; font-size: 13px; background-color: transparent; max-width: 1440px; margin: 84px auto;">
+		style="display: none; font-size: 13px; background-color: transparent; max-width: 1440px; margin: 40px auto;">
 
+    <div class="container">
+      <div class="row">
+    	 <div class="col-sm-2">
+	          <div class="col-lg-12 col-md-12 col-sm-12 float-right" style="margin-top: -16px;margin-left: 1.5rem;">
+	            <div class="controls controls-row mt-4">
+	              <a class="float-left mb-2 mr-2 backToUploadTab d-flex">
+	                <img src="/images/backToUpload.svg" th:src="@{/images/backToUpload.svg}" data-toggle="tooltip"
+	                  title="Back to Upload Tab" style="width:40px;" alt="back to Upload"> &nbsp;&nbsp;<span
+	                  class="backToUpload"
+	                  style="width: 120px;font-size: 12px;padding-top: 6px;margin-left: 4px; line-height: 14px;">
+	                  BACK TO <br /> UPLOAD TAB</span></a>
+	             </div>
+	             
+             </div>
+        </div>
+         
+      <div class="col-sm-10">
+
+		<div class="alert alert-success registerBulkDataFileSuccess"
+			style="display: none; margin-bottom:10px; margin-left: 12px;">				
+				<h6 class="registerBulkDataFile"></h6>
+				
+		</div>
+
+		<div class="alert alert-danger uploadBulkDataError" role="alert" 
+		style="display: none; margin-bottom: 10px; margin-left: 12px;">
+				<h6 class="uploadBulkDataErrorMsg"></h6>
+		</div>
+
+		<input type="hidden" id="bulkDataFilePathCollection" name="bulkDataFilePathCollection" />
+		
 		<div class="col-lg-12 col-md-12 col-sm-12 float-right"
-			style="margin-top: -16px; margin-left: 1.5rem;">
-			<div class="controls controls-row mt-4">
-				<a class="float-left mb-2 mr-2 backToUploadTab d-flex"> <img
-					src="/images/backToUpload.svg"
-					th:src="@{/images/backToUpload.svg}" data-toggle="tooltip"
-					title="Back to Upload Tab" style="width: 50px;" alt="back to Upload">
-					&nbsp;&nbsp;<span class="backToUpload" style="width: 120px;font-size: 12px;padding-top: 2px;margin-left: 4px;">Back to Upload Tab</span></a>
-			</div>
-		</div>
-
-		<div class="col-md-10 col-sm-10 clearfix registerBulkDataFileSuccess"
-			style="display: none; margin-left: 22px;">
-			<div class="col-md-12"
-				style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
-				<div class="alert alert-success">
-					<h6 class="registerBulkDataFile"></h6>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-md-10 col-sm-10" style="margin-left: 22px;">
-			<div class="alert alert-danger uploadBulkDataError" role="alert"
-				style="display: none; margin-bottom: 10px;">
-				<div class="col-md-12"
-					style="padding-left: 0px; padding-right: 0px; padding-top: 10px; border-radius: 0px;">
-					<h6 class="uploadBulkDataErrorMsg"></h6>
-				</div>
-			</div>
-
-		</div>
-
-		<input type="hidden" id="bulkDataFilePathCollection"
-			name="bulkDataFilePathCollection" />
-		<div class="col-lg-12 col-md-12 col-sm-12 float-right"
-			style="font-size: 20px; font-weight: 500; font-family: latoregular; color: #242525; margin-left: 31px; margin-top: 16px;">
+			style="font-size: 20px; font-weight: 500; font-family: latoregular; color: #242525; margin-left: 31px;">
 			<p style="font-size: 20px; font-weight: 500; margin-left: -4px;">
 				<span> Upload Files/Subcollections</span>
 			</p>
-			<hr
-				style="height: 8px; background-color: #194F85; margin-left: -4px; width: 94.5%;">
+			<hr style="height: 8px; background-color: #194F85; margin-left: -4px; width: 94.5%;">
 		</div>
 
-		<div class="col-md-12 col-sm-12">
-			<div class="col-md-12 col-sm-12">
+		
+		<div class="form-row col-md-12 col-sm-12" style="margin-top: 44px;">
 
-				<div class="form-row" style="margin-top: 79px; font-size: 65px;">
-
-					<div class="form-group col-lg-2 col-md-2 labelEditCollection"
-						style="margin-top: -62px; margin-left: 16px">
-						<span>Collection Path</span>
-
-					</div>
-					<div class="form-group col-lg-10 col-md-10 labelEditCollection "
-						style="background-color: transparent; margin-top: -62px; margin-left: -16px; display: flex;">
-
-						<input type="text" disabled id="uploadCollectionPath"
-							class="parentCollectionName" />
-					</div>
-				</div>
-
+			<div class="form-group col-lg-2 col-md-2 labelEditCollection"
+				<span>Collection Path</span>
 
 			</div>
+			<div class="form-group col-lg-10 col-md-10 labelEditCollection "
+				style="background-color: transparent; margin-left: -16px; display: flex;">
+
+				<input type="text" disabled id="uploadCollectionPath"
+					class="parentCollectionName" />
+			</div>
 		</div>
+			
 
 		<div class="form-row col-md-12 col-sm-12"
-			style="margin-left: 35px; margin-top: 20px;">
+			style="margin-top: 20px;">
 			<div class="form-group">
 				<div class="pull-left">
 					<label class="uploadLabels radio-inline"><input
@@ -330,6 +320,10 @@
 			<input type="button" value="Upload" disabled="true" class="btn"
 				id="registerBulkDataFileBtn">
 		</div>
+	 </div>
 	</div>
+	</div>
+	</div>
+	
 </body>
 </html>
