@@ -45,13 +45,16 @@ function loadUploadTab() {
 	if (program) {
 		$("input[name=selectProgram][value='Select Program']").prop("checked", true);
 		showSelect('Program', 'true');
-		$("#studyListDiv").show();
+		// $("#studyListDiv").show();
+		$("#studyListDiv").removeClass("disable-pointer-events");
 		$("#deleteProgram").show();
 		$("#editProgram").show();
 		if (stu) {
 			$("input[name=selectStudy][value='Select Study']").prop("checked", true);
 			showSelect('Study', program);
-			$("#dataSetListDiv").show();
+			// $("#dataSetListDiv").show();
+			$("#dataSetListDiv").removeClass("disable-pointer-events");
+
 			$("#deleteStudy").show();
 			$("#editStudy").show();
 			$("#bulkAssetGlobusRadiobtn").show();
@@ -248,18 +251,26 @@ function resetOnChangeofSelectCollection(selectTarget, selectedValue) {
 		$("#uploadAndRegisterFiles").hide();
 		$("#bulkAssetGlobusRadiobtn").hide();
 		if (selectedValue && selectedValue != 'ANY') {
-			$("#studyListDiv").show();
+			// $("#studyListDiv").show();
+			$("#studyListDiv").removeClass("disable-pointer-events");
+
 			$("#deleteStudy").hide();
 			$("#editStudy").hide();
 			$("#deleteProgram").show();
 			$("#editProgram").show();
-			$("#dataSetListDiv").hide();
+			// $("#dataSetListDiv").hide();
+			$("#dataSetListDiv").addClass("disable-pointer-events");
+
 			$("#dataListDiv").hide();
 			$("#showSelectStudyDiv").hide();
 			$("input[name=selectStudy][value='Select Study']").prop("checked", false);
 		} else {
-			$("#studyListDiv").hide();
-			$("#dataSetListDiv").hide();
+			// $("#studyListDiv").hide();
+			$("#studyListDiv").addClass("disable-pointer-events");
+
+			// $("#dataSetListDiv").hide();
+			$("#dataSetListDiv").addClass("disable-pointer-events");
+
 			$("#dataListDiv").hide();
 			$("#deleteProgram").hide();
 			$("#editProgram").hide();
@@ -268,8 +279,12 @@ function resetOnChangeofSelectCollection(selectTarget, selectedValue) {
 		$("#uploadAndRegisterFiles").hide();
 		$("#dataListDiv").hide();
 		if (selectedValue && selectedValue != 'ANY') {
-			$("#studyListDiv").show();
-			$("#dataSetListDiv").show();
+			// $("#studyListDiv").show();
+			$("#studyListDiv").removeClass("disable-pointer-events");
+
+			// $("#dataSetListDiv").show();
+			$("#dataSetListDiv").removeClass("disable-pointer-events");
+
 			$("#deleteStudy").show();
 			$("#editStudy").show();
 			$("#bulkAssetGlobusRadiobtn").show();
@@ -280,14 +295,20 @@ function resetOnChangeofSelectCollection(selectTarget, selectedValue) {
 			$("input[name=selectAsset]").prop("checked", false);
 
 		} else {
-			$("#studyListDiv").show();
-			$("#dataSetListDiv").hide();
+			// $("#studyListDiv").show();
+			$("#studyListDiv").removeClass("disable-pointer-events");
+
+			// $("#dataSetListDiv").hide();
+			$("#dataSetListDiv").addClass("disable-pointer-events");
+
 			$("#deleteStudy").hide();
 			$("#editStudy").hide();
 			$("#bulkAssetGlobusRadiobtn").hide();
 		}
 	} else if (selectTarget == 'dataList') {
-		$("#studyListDiv").show();
+		// $("#studyListDiv").show();
+		$("#studyListDiv").removeClass("disable-pointer-events");
+
 		if (selectedValue && selectedValue != 'ANY') {
 			$("#uploadAndRegisterFiles").show();
 			constructAssetFileAndFoldersDiv(selectedValue);

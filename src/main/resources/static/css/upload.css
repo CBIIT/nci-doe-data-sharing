@@ -104,7 +104,9 @@ table#newMetaDataTable thead tr th:nth-child(2) {
 #dataSetListDiv {
 	border-bottom: none;
 }
-
+#uploadAndRegisterFiles {
+	border-bottom: 3px solid #B5C5E5;
+}
 .uploadslogo {
 	width: 12px;
 }
@@ -162,7 +164,7 @@ table#newMetaDataTable thead tr th:nth-child(2) {
 	padding-top: 8px;
 }
 
-#cancelRegisterBtn {
+#registerFolder, #addBulkDataFiles, #cancelRegisterBtn {
 	margin-top: auto;
 	font-family: var(--font-family-inter);
 	height: 41px;
@@ -183,6 +185,16 @@ table#newMetaDataTable thead tr th:nth-child(2) {
 	letter-spacing: 0.14px;
 	text-transform: uppercase;
 	min-height: 50px;
+}
+#registerFolder{
+width: 220px;
+height: 52px;
+} 
+#addBulkDataFiles{
+	width: 220px;
+	height: 52px;
+
+
 }
 
 .parentCollectionName,
