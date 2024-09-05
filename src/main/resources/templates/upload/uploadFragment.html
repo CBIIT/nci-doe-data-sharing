@@ -48,9 +48,9 @@
 								</div>
 								<div class="d-flex">
 									<div class="pull-left" style="margin-left: 15px">
-										<label for="selectProgram" class="uploadLabels radio-inline"><input type="radio"
+										<label for="selectProgram" class="uploadLabels radio-inline" onclick="showSelect('Program')"><input type="radio"
 												name="selectProgram" class="registeRadioButtons"
-												onclick="showSelect('Program')" value="Select Program">&nbsp;&nbsp;
+												 value="Select Program">&nbsp;&nbsp;
 											Select Program</label>
 									</div>
 									<div id="showSelectProgramDiv" style="min-width: 400px;margin-top: 0;">
@@ -94,9 +94,9 @@
 
 
 								<div class="d-flex">
-								<div class="pull-left" style="margin-left: 15px">
+								<div class="pull-left" style="margin-left: 15px" onclick="showSelect('Study')">
 									<label for="selectStudy" class="uploadLabels radio-inline" style="width: 180px;"><input type="radio"
-											name="selectStudy" class="registeRadioButtons" onclick="showSelect('Study')"
+											name="selectStudy" class="registeRadioButtons" 
 											value="Select Study">&nbsp;&nbsp;
 										Select Study</label>
 								</div>
@@ -132,16 +132,16 @@
 							<div class="form-group">
 
 								<div class="pull-left" style="margin-top: 6px;margin-left: 15px">
-									<label for="assetSelection" class="uploadLabels radio-inline"><input type="radio"
+									<label for="assetSelection" class="uploadLabels radio-inline" onclick="displayEmptyAssetScreen('emptyAsset')"><input type="radio"
 											name="selectAsset" data-backdrop="static" data-keyboard="false"
 											value="Register Asset" class="registeRadioButtons"
-											onchange="displayEmptyAssetScreen('emptyAsset')">&nbsp;&nbsp;
+											>&nbsp;&nbsp;
 										Register Asset</label>
 								</div>
 								<div class="d-flex">
 								<div class="pull-left" style="margin-left: 15px">
-									<label for="selectAsset" class="uploadLabels radio-inline" style="width: 180px;"><input type="radio"
-											name="selectAsset" class="registeRadioButtons" onclick="showSelect('Asset')"
+									<label for="selectAsset" class="uploadLabels radio-inline"  onclick="showSelect('Asset')" style="width: 180px;"><input type="radio"
+											name="selectAsset" class="registeRadioButtons"
 											value="Select Asset">&nbsp;&nbsp;
 										Select Asset</label>
 								</div>
@@ -178,21 +178,25 @@
 						<div class="form-row jumbotron registerDiv" id="uploadAndRegisterFiles" style="display: none;">
 
 							<div class="d-flex justify-content-center w-100">
+								<div>
 								<button id="addBulkDataFiles" type="button" class="btn btn-primary mb-2 mr-5 ">Upload Files <br/>to Asset
 									<img class="arrowright" th:src='@{/images/uploadIcon.svg}' style="width: 22px;
 								transform: translate(68px, -12px);" />
-								  </button>							
-								  <button id="registerFolder" type="button" class="btn btn-primary mb-2 mr-2 ">Register Asset<br/>
+								  </button>		
+								  </div>
+								  <div>				
+								  <button id="registerFolder" type="button" class="btn btn-primary mb-2 mr-2 " onclick="createCollectionDiv('dataList')">Register Asset<br/>
 									Subcollection
 									<img class="arrowright" th:src='@{/images/add.svg}' style="width: 22px;
 								transform: translate(28px, -12px);" />
-								  </button>							  </div>
+								  </button>			
+								</div>				  </div>
 						</div>
 
 
 
 						<div class="form-row col-md-12 col-sm-12" id="dataListDiv"
-							style="display: none; margin-top: 30px;">
+							style="display: none;">
 							<div class="form-group col-lg-10 col-md-12"
 								style="height: fit-content; font-size: 19px; background-color: #FFFFFF; border-radius: 15px;">
 								<p

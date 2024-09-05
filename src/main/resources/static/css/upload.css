@@ -1,5 +1,7 @@
 .select2-container--default .select2-selection--single .select2-selection__arrow b {
-	border-color: #E87B05 transparent transparent transparent !important;
+	border-color: #3B6EB4 transparent transparent transparent !important;
+	border-width: 8px 6px 0 6px;
+	margin-left: -12px;
 }
 
 table#newMetaDataTableForSingleFile tbody tr td {
@@ -105,7 +107,12 @@ table#newMetaDataTable thead tr th:nth-child(2) {
 	border-bottom: none;
 }
 #uploadAndRegisterFiles {
-	border-bottom: 3px solid #B5C5E5;
+	border-bottom: none;
+}
+
+#dataListDiv{
+	padding-top: 30px;
+	border-top: 3px solid #B5C5E5;
 }
 .uploadslogo {
 	width: 12px;
@@ -517,6 +524,9 @@ label.radio-label {
 
 .asset-register-dropdown .select2-container--bootstrap4 .select2-selection--single .select2-selection__arrow b {
 	border-color: #3B6EB4 transparent transparent transparent !important;
+	border-width: 8px 6px 0 6px;
+	margin-left: -12px;
+	margin-top: -6px;
 }
 
 .asset-register-dropdown .select2-container span.select2-selection.select2-selection--single {

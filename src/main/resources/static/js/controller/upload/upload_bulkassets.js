@@ -8,7 +8,11 @@ $(document).ready(
 			d.uploadType = "assetBulkUpload";
 			invokeAjax('/upload', 'GET', d, postUploadGlobusFunction, postFailureFunction, null, 'text');
 		});
+		
 
+		// $("#registerAssetSelect").select2({
+		// 	minimumResultsForSearch: Infinity
+		// });
 
 		$('#registerAssetSelect').on('change', function () {
 			var selectedOption = $("#registerAssetSelect option:selected").text();
