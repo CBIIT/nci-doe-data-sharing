@@ -93,7 +93,16 @@ table#newMetaDataTable thead tr th:nth-child(2) {
 }
 
 .registeRadioButtons {
-	transform: scale(1.25);
+	transform: scale(1.75);
+	accent-color: #004A8B;
+}
+
+.uploadLabels .registeRadioButtons {
+	margin-right: 10px;
+}
+
+#dataSetListDiv {
+	border-bottom: none;
 }
 
 .uploadslogo {
@@ -102,25 +111,25 @@ table#newMetaDataTable thead tr th:nth-child(2) {
 
 #registerBulkDataFileBtn {
 	margin-top: auto;
-    font-family: var(--font-family-inter);
-    min-height: 32px;
-    min-width: 120px;
-    max-width: 300px;
-    font-weight: 500;
-    line-height: 5px;
-    background-color: #2c4088 !important;
-    border-radius: 65px;
-    box-shadow: 0px 4px 50px #ffffff8c;
-    padding-left: 2rem;
-    text-align: left;
-    padding-top: 4px;
-    margin-bottom: 0.2rem;
-    color: #FFF;
-    font-size: 14px;
-    font-style: normal;
-    line-height: 60%;
-    letter-spacing: 0.14px;
-    text-transform: uppercase;
+	font-family: var(--font-family-inter);
+	min-height: 32px;
+	min-width: 120px;
+	max-width: 300px;
+	font-weight: 500;
+	line-height: 5px;
+	background-color: #2c4088 !important;
+	border-radius: 65px;
+	box-shadow: 0px 4px 50px #ffffff8c;
+	padding-left: 2rem;
+	text-align: left;
+	padding-top: 4px;
+	margin-bottom: 0.2rem;
+	color: #FFF;
+	font-size: 14px;
+	font-style: normal;
+	line-height: 60%;
+	letter-spacing: 0.14px;
+	text-transform: uppercase;
 }
 
 #registerBulkAssets,
@@ -148,9 +157,9 @@ table#newMetaDataTable thead tr th:nth-child(2) {
 }
 
 #registerBulkAssets {
-    min-height: 42px;
-    min-width: 233px;
-    padding-top: 8px;
+	min-height: 42px;
+	min-width: 233px;
+	padding-top: 8px;
 }
 
 #cancelRegisterBtn {
@@ -196,10 +205,14 @@ table#newMetaDataTable thead tr th:nth-child(2) {
 }
 
 .uploadLabels {
-	color: #a85300;
-	font-family: 'inter_regular';
-	font-weight: 200;
-	font-size: 17px;
+	font-family: var(--font-family-inter);
+	color: #353941;
+	font-size: 19px;
+	font-weight: 700;
+	padding-top: 0;
+	padding-bottom: 20px;
+	width: auto;
+	display: block;
 }
 
 .uploadSubLabels {
@@ -211,13 +224,13 @@ table#newMetaDataTable thead tr th:nth-child(2) {
 
 .assetGlobusSelectionFields {
 	color: #235172;
-    font-size: 13px;
-    letter-spacing: 0.5px;
-    margin-left: 10px;
-    font-family: 'Open Sans';
-    font-weight: 700;
+	font-size: 13px;
+	letter-spacing: 0.5px;
+	margin-left: 10px;
+	font-family: 'Open Sans';
+	font-weight: 700;
 	position: absolute;
-    margin: 8px;
+	margin: 8px;
 }
 
 .assetBulkGlobusLabels {
@@ -225,14 +238,15 @@ table#newMetaDataTable thead tr th:nth-child(2) {
 	/* padding-top: 10px;
 	padding-bottom: 10px; */
 	/* border: 0.95px solid #898989; */
-	color:#235172;
+	color: #235172;
 	height: 41px;
 	/* padding-left: 10px; */
 	font-family: 'inter_regular';
 	/* margin-right: 10px; */
 }
 
-.assetGCValue, .assetBulkGlobusValues {
+.assetGCValue,
+.assetBulkGlobusValues {
 	border: 1px solid #6B7294;
 	padding: 10px;
 	color: #6B7294;
@@ -242,15 +256,16 @@ table#newMetaDataTable thead tr th:nth-child(2) {
 }
 
 .assetGCLabels {
-   text-transform: uppercase;
-	color:#235172;
+	text-transform: uppercase;
+	color: #235172;
 	height: 47px;
 	font-family: 'Open Sans';
 	font-weight: 700;
 }
 
-.assetGCValue, .assetBulkGlobusValues input:focus {
-    outline: none;
+.assetGCValue,
+.assetBulkGlobusValues input:focus {
+	outline: none;
 }
 
 
@@ -261,11 +276,11 @@ table#newMetaDataTable thead tr th:nth-child(2) {
 
 .bulkAssetTextbox {
 	padding-left: 10px;
-    font-family: 'inter_regular';
-    width: 100%;
-    border-radius: 8px;
-    border: 1px solid #6B7294;
-    height: 36px;	
+	font-family: 'inter_regular';
+	width: 100%;
+	border-radius: 8px;
+	border: 1px solid #6B7294;
+	height: 36px;
 }
 
 input#includeCriteria:focus {
@@ -291,18 +306,18 @@ input#includeCriteria:focus {
 	font-size: 14px;
 	font-family: 'inter_regular';
 	background-color: #2c4088 !important;
-    border-radius: 65px;
-    box-shadow: 0px 4px 50px #ffffff8c;
-    padding-left: 2rem;
-    text-align: left;
-    padding-top: 12px;
-    margin-bottom: 0.2rem;
-    color: #FFF !important;
-    font-size: 14px;
-    font-style: normal;
-    line-height: 110%;
-    letter-spacing: 0.14px;
-    text-transform: uppercase;
+	border-radius: 65px;
+	box-shadow: 0px 4px 50px #ffffff8c;
+	padding-left: 2rem;
+	text-align: left;
+	padding-top: 12px;
+	margin-bottom: 0.2rem;
+	color: #FFF !important;
+	font-size: 14px;
+	font-style: normal;
+	line-height: 110%;
+	letter-spacing: 0.14px;
+	text-transform: uppercase;
 	padding: 4px 32px;
 }
 
@@ -324,15 +339,15 @@ table#globusDetailsDiv td {
 table#assetBulkMetadataTable tbody tr td {
 	background-color: #EEF4F6;
 	color: #235172;
-    font-family: "Open Sans";
-    font-size: 13px;
-    font-style: normal;
-    padding: 16px 12px !important;
+	font-family: "Open Sans";
+	font-size: 13px;
+	font-style: normal;
+	padding: 16px 12px !important;
 	border-bottom: 2.5px solid white;
 }
 
 table#assetBulkMetadataTable tbody tr td:first-child {
-    padding: 16px 12px !important;
+	padding: 16px 12px !important;
 	font-weight: 600;
 	text-transform: uppercase;
 }
@@ -352,31 +367,51 @@ table#assetBulkMetadataTable thead tr th {
 }
 
 #uploadHeader {
-	/* margin-top: 84px;  */
-	padding-bottom: -16px;
-	height: 50px;
-	width: 430px;
-	background-color: #E66F05;
+	font-size: 38px;
+	text-align: center;
+	font-weight: 300;
+	background: linear-gradient(90deg, #015694 18.75%, #707AAD 50.93%, #C57908 89.72%);
+	min-height: 136px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	color: #fff;
 }
 
-#uploadHeader p {
-	font-size: 20px;
-	font-family: latoregular;
-	font-size: 25px;
-	padding-top: 5px;
-}
 
 #uploadSectionDiv {
-	border: 1px solid #AD5A00;
-	background-color: #FFFFFF;
-	/* margin-bottom: 84px !important; */
+	border: none;
+	max-width: 1006px;
+	margin: 40px auto;
+	box-shadow: 2px 10px 30px 0px #0000004D;
+	border-radius: 20px;
+	background: #fff;
+	padding: 0;
 }
 
 #uploadSubFragmentTab {
-	margin-top: 20px;
-	margin-left: 100px;
+	margin: 0;
+	padding: 0;
+	display: block;
 }
+
+
+.registerDiv .form-group {
+	margin: 0;
+}
+
+.registerDiv .form-group:first-child {
+	margin-bottom: auto;
+	flex-basis: 120px;
+}
+
+.registerDiv .form-group .form-heading {
+	font-family: var(--font-family-poppins);
+	font-size: 25px;
+	font-weight: 500;
+	color: #004A8B;
+}
+
 
 #showSelectProgramDiv,
 #showSelectStudyDiv,
@@ -396,7 +431,8 @@ table#assetBulkMetadataTable thead tr th {
 		font-weight: 400;
 	}
 }
-td{
+
+td {
 	.select2-container--default .select2-selection--multiple .select2-selection__rendered li {
 		color: black;
 		padding: 5px;
@@ -452,13 +488,15 @@ label.radio-label {
 
 /* This is a temp fix we can fix with js  */
 #userMetaData {
-span.select2.select2-container.select2-container--default {
-	width: 70% !important;
+	span.select2.select2-container.select2-container--default {
+		width: 70% !important;
+	}
+
+	input[type="search"] {
+		width: 70% !important;
+	}
 }
-input[type="search"] {
-	width: 70% !important;
-}
-}
+
 /* End Temp fix */
 
 .registerAssetContainer {
@@ -470,31 +508,58 @@ input[type="search"] {
 }
 
 .asset-register-dropdown .select2-container span.select2-selection.select2-selection--single {
-    border: 1.5px solid #3B6EB4;
+	border: 1.5px solid #3B6EB4;
 	border-radius: 8px;
 
 }
 
 
 .asset-register-dropdown .select2-container .select2-selection--single .select2-selection__rendered {
-padding-left: 12px;
-padding-top: 2px;
+	padding-left: 12px;
+	padding-top: 2px;
 }
 
-.asset-register-dropdown .select2{
-    color: #083A50;
-    font-size: 16px;
-    height: 40px;
-    width: 100% !important;
-    margin-top: -3px;
-    margin-bottom: 12px;
+.asset-register-dropdown .select2 {
+	color: #083A50;
+	font-size: 16px;
+	height: 40px;
+	width: 100% !important;
+	margin-top: -3px;
+	margin-bottom: 12px;
+}
+
+
+
+.registerDiv .select2-container--bootstrap4 .select2-selection--single .select2-selection__arrow b {
+	border-color: #3B6EB4 transparent transparent transparent !important;
+}
+
+.registerDiv .select2-container span.select2-selection.select2-selection--single {
+	border: 1.5px solid #3B6EB4;
+	border-radius: 8px;
+
+}
+
+
+.registerDiv .select2-container .select2-selection--single .select2-selection__rendered {
+	padding-left: 12px;
+	padding-top: 2px;
+}
+
+.registerDiv .select2 {
+	color: #083A50;
+	font-size: 16px;
+	height: 40px;
+	width: 100% !important;
+	margin-top: -3px;
+	margin-bottom: 12px;
 }
 
 
 .uploadRadioButtons {
 	margin-right: 10px;
 	accent-color: #004A8A !important;
-    transform: scale(1.6) !important;
+	transform: scale(1.6) !important;
 }
 
 
@@ -507,18 +572,18 @@ padding-top: 2px;
 	padding-bottom: 20px;
 	width: auto;
 	display: block;
-  }
+}
 
-  .uploadAssetRadioLabels {
+.uploadAssetRadioLabels {
 	font-family: 'Open Sans';
 	color: #353941;
 	font-size: 16px;
 	font-weight: 400;
 	padding-top: 0;
-  }
-  
+}
 
-  label.radio-label {
+
+label.radio-label {
 	display: inline;
 	color: #000;
 	font-family: "Open Sans";
@@ -527,23 +592,28 @@ padding-top: 2px;
 }
 
 .asset-register-dropdown span.select2.select2-container.select2-container--bootstrap4.select2-container--disabled {
-    opacity: 0.2;
+	opacity: 0.2;
 }
 
 .select2-container--bootstrap4 .select2-results__option--highlighted[aria-selected] {
-    color: #083A50 !important;
+	color: #083A50 !important;
 }
 
 
 .asset-register-dropdown {
-    padding-left: 12px;
+	padding-left: 12px;
 }
 
 #formAssetSelection .select2-container span.select2-selection.select2-selection--single {
 	border: 1.5px solid #3B6EB4;
-    border-radius: 8px;
+	border-radius: 8px;
 }
 
 #formAssetSelection .select2-container--bootstrap4 .select2-selection--single .select2-selection__arrow b {
-    border-color: #3B6EB4 transparent transparent transparent !important;
+	border-color: #3B6EB4 transparent transparent transparent !important;
+}
+
+.disable-pointer-events {
+    pointer-events: none;
+	opacity: 0.2;
 }
