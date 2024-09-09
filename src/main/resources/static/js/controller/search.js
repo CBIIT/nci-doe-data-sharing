@@ -267,7 +267,7 @@ function populateSearchCriteria(searchType) {
       attrNames.push("ANY");
       attrValues.push('%' + attributeVal.trim() + '%');
       levelValues.push("ANY");
-      isExcludeParentMetadata.push(true);
+      isExcludeParentMetadata.push(false);
       rowIds.push(2);
       operators.push("LIKE");
       iskeyWordSearch.push(true);
