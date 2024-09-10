@@ -19,25 +19,27 @@
 				<!-- globus end point details div -->
 				<div class="form-group col-lg-12 col-md-12" id="globusDetailsDiv" style="display:none;">
 
-					<div class="text-center">
-
+					<div class="d-flex">
+						<div class="col-4"></div>
+						<div class="col-8">
 						<button type="button" class="btn btn-md btn-link" id="assetSelectionGlobusButton">
 							Select Assets from <br />
 							Globus Endpoint
 							<img class="arrowright" src="images/globus-icon.svg" th:src="@{/images/globus-icon.svg}"
 								style=" width: 23px;transform: translate(30px, -10px);" alt="globus">
 						</button>
+					</div>
 						<br />
 					</div>
 
 					<div class="d-flex flex-column col-md-12 col-sm-12 mt-3" style="background: #F3F3F3;">
 						<div class="form-row" th:if="${bulkUploadCollection !=null and endpoint_id != null}"
 							style="display: flex;border-bottom: 1px solid #D2D2D2;margin-top: 0.5rem;height: 45px;">
-							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusLabels">
+							<div class="form-group col-4 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">GLOBUS
 									ENDPOINT ID </span>
 							</div>
-							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues">
+							<div class="form-group col-8 assetBulkGlobusValues">
 								<span id="assetGlobusEndpointId" th:text="${endpoint_id}"
 									style="font-weight: normal; padding-left: 10px;"></span>
 							</div>
@@ -46,11 +48,11 @@
 						<div class="form-row"
 							style="display: flex;border-bottom: 1px solid #D2D2D2;margin-top: 0.5rem;height: 45px;"
 							th:if="${bulkUploadCollection !=null and endpoint_path != null}">
-							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusLabels">
+							<div class="form-group col-4 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">GLOBUS
 									ENDPOINT PATH </span>
 							</div>
-							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues">
+							<div class="form-group col-8 assetBulkGlobusValues">
 								<span id="assetGlobusEndpointPath" th:text="${endpoint_path}"
 									style="font-weight: normal; padding-left: 10px;"></span>
 							</div>
@@ -59,11 +61,11 @@
 						<div class="form-row"
 							style="display: flex;border-bottom: 1px solid #D2D2D2;margin-top: 0.5rem; height: 45px;"
 							th:if="${bulkUploadCollection!=null and fileNames != null}">
-							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusLabels">
+							<div class="form-group col-4 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">SELECTED
 									FILES</span>
 							</div>
-							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues" id="assetSelectedFiles">
+							<div class="form-group col-8 assetBulkGlobusValues" id="assetSelectedFiles">
 								<ul>
 									<li th:each="fileName:${fileNames}" th:text="${fileName}"></li>
 								</ul>
@@ -76,11 +78,11 @@
 						<div class="form-row"
 							style="display: flex;border-bottom: 1px solid #D2D2D2;margin-top: 0.5rem;min-height: 45px; height: auto;"
 							th:if="${bulkUploadCollection !=null and folderNames != null}">
-							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusLabels">
+							<div class="form-group col-4 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">SELECTED
 									FOLDERS</span>
 							</div>
-							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues" id="assetSelectedFolders"  style="height: auto;">
+							<div class="form-group col-8 assetBulkGlobusValues" id="assetSelectedFolders"  style="height: auto;">
 								<ul>
 									<li th:each="folderName:${folderNames}" th:text="${folderName}"></li>
 								</ul>
@@ -91,14 +93,14 @@
 
 						<div class="form-row" style="display: flex;margin-top: 0.5rem; height: 45px;"
 							th:if="${bulkUploadCollection !=null and endpoint_id != null}">
-							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusLabels">
+							<div class="form-group col-4 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields ">INCLUDE
 									CRITERIA&nbsp; <img src="images/infoIcon.svg" class="icon" data-toggle="tooltip"
 										data-placement="right"
 										title="Add list of include patterns to match source files in the selected folders. "></img>
 								</span>
 							</div>
-							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues"
+							<div class="form-group col-8 assetBulkGlobusValues"
 								style="background-color: #fff;">
 								<input type="text" name="includeCriteria" placeholder="Enter criteria"
 									id="includeCriteria"
@@ -117,10 +119,10 @@
 					<div class="col-md-12 col-sm-12" style="margin-left: 3px; margin-top: 21px;background: #F3F3F3;">
 
 						<div class="d-flex pt-2 pr-3" style="background: #F3F3F3;border-bottom: 1px solid #D2D2D2;">
-							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusLabels">
+							<div class="form-group col-4 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">S3 BUCKET</span>
 							</div>
-							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues"
+							<div class="form-group col-8 assetBulkGlobusValues"
 								style="background-color: #fff;">
 								<input type="search" name="bucketName" is_mandatory="true"
 									placeholder="Enter S3 Bucket Name"
@@ -129,10 +131,10 @@
 						</div>
 
 						<div class="d-flex pt-2 pr-3" style="background: #F3F3F3;border-bottom: 1px solid #D2D2D2;">
-							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusLabels">
+							<div class="form-group col-4 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields"> S3 (SOURCE) PATH</span>
 							</div>
-							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues"
+							<div class="form-group col-8 assetBulkGlobusValues"
 								style="background-color: #fff;">
 								<input type="search" name="s3Path" is_mandatory="true"
 									placeholder="Enter S3 (Source) Path"
@@ -142,11 +144,11 @@
 
 
 						<div class="d-flex pt-2 pr-3" style="background: #F3F3F3;border-bottom: 1px solid #D2D2D2;">
-							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusLabels">
+							<div class="form-group col-4 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">ACCESS KEY&nbsp;
 								</span>
 							</div>
-							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues"
+							<div class="form-group col-8 assetBulkGlobusValues"
 								style="background-color: #fff;">
 								<input type="search" name="accessKey" is_mandatory="true" placeholder="Enter Access Key"
 									style="width: 100%; border: none; background-color: transparent; padding-left: 10px;">
@@ -154,11 +156,11 @@
 						</div>
 
 						<div class="d-flex pt-2 pr-3" style="background: #F3F3F3;border-bottom: 1px solid #D2D2D2;">
-							<div class="form-group col-lg-6 col-md-4 assetBulkGlobusLabels">
+							<div class="form-group col-4 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">SECRET ACCESS KEY&nbsp;
 								</span>
 							</div>
-							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues"
+							<div class="form-group col-8 assetBulkGlobusValues"
 								style="background-color: #fff;">
 								<input type="password" name="secretKey" is_mandatory="true"
 									placeholder="Enter Secret Access Key"
@@ -167,11 +169,11 @@
 						</div>
 
 						<div class="d-flex pt-2 pr-3" style="background: #F3F3F3;border-bottom: 1px solid #D2D2D2;">
-							<div class="form-group col-lg-6 col-md-4 assetBulkGlobusLabels">
+							<div class="form-group col-4 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">REGION&nbsp;
 								</span>
 							</div>
-							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues"
+							<div class="form-group col-8 assetBulkGlobusValues"
 								style="background-color: #fff;">
 								<input type="search" name="region" is_mandatory="true"
 									placeholder="Enter Region (for Example us-east-1)"
@@ -181,14 +183,14 @@
 
 
 						<div class="d-flex pt-2 pr-3" style="background: #F3F3F3;border-bottom: 1px solid #D2D2D2;">
-							<div class="form-group col-lg-6 col-md-4 assetBulkGlobusLabels">
+							<div class="form-group col-4 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">INCLUDE
 									CRITERIA&nbsp; <i class="fas fa-question-circle" data-toggle="tooltip"
 										data-placement="right"
 										title="Add list of include patterns to match source files in the selected folders. "></i>
 								</span>
 							</div>
-							<div class="form-group col-lg-6 col-md-6 assetBulkGlobusValues"
+							<div class="form-group col-8 assetBulkGlobusValues"
 								style="background-color: #fff;">
 								<input type="search" name="includeCriteria" is_mandatory="false"
 									placeholder="Enter criteria" id="includeCriteria"
@@ -204,32 +206,36 @@
 				<div class="form-group col-lg-12 col-md-12" id="googleCloudDiv" style="display: none;">
 
 					<div class="d-flex">
+						<div class="col-4"></div>
 						<button type="button" class="btn btn-md btn-link" id="authorizeGoogleCloud"
-							th:disabled="${authorizedGC != null}">
+							th:disabled="${authorizedGC != null}" style="margin-left: 16px;">
 							Authorize MoDaC to Access<br />
 							Your Google Cloud
 							<img class="arrowright" th:src='@{/images/white_right_arrow.svg}' style="width: 16px;
             transform: translate(100px, -12px);" />
 						</button>
-						<div th:if="${authorizedGC != null}" id="cloudAuthorisedMsg"
-							 class="mx-3 mt-3">
+					</div>
+					<div class="d-flex">
+						<div class="col-4"></div>
+					<div th:if="${authorizedGC != null}" id="cloudAuthorisedMsg"
+							 class="mx-3 mt-3 col-12">
 							<i class="fa fa-check">&nbsp;</i>Access Token Successfully
 							Generated
 						</div>
 					</div>
 					<div th:if="${authorizedGC != null}" class="col-sm-12 column googleCloudContent mt-4 mb-4 pt-1">
 						<div class="d-flex pt-2 pr-3" style="background: #F3F3F3;border-bottom: 1px solid #D2D2D2;">
-							<label class="col-md-6 col-lg-6 assetGCLabels" for="gcbucketName">Google Cloud
+							<label class="col-4 assetGCLabels" for="gcbucketName">Google Cloud
 								Bucket:</label>
-							<input type="search" class="col-md-6 col-lg-6 form-control assetGCValue" name="gcbucketName"
+							<input type="search" class="col-8 form-control assetGCValue" name="gcbucketName"
 								th:value="${gcbucketName}" id="gcbucketName" is_mandatory="true"
 								placeholder="Enter Google Cloud Bucket Name" />
 
 						</div>
 						<div class="d-flex pt-2 pr-3" style="background: #F3F3F3;">
-							<label class="col-md-6 col-lg-6 assetGCLabels" for="gcPath">Google Cloud Source
+							<label class="col-4 assetGCLabels" for="gcPath">Google Cloud Source
 								Path:</label>
-							<input type="search" class="col-md-6 col-lg-6 form-control assetGCValue" th:value="${gcPath}"
+							<input type="search" class="col-8 form-control assetGCValue" th:value="${gcPath}"
 								name="gcPath" id="gcPath" is_mandatory="true" placeholder="Enter Google Cloud Source Path" size="40" />
 
 						</div>

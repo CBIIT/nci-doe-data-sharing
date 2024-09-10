@@ -50,7 +50,7 @@
 
           <div id="registerAssetPicker" class="registerAssetContainer" style="display: none;">
             <div class="d-flex">
-              <div class="flex-fill">
+              <div class="flex-fill col-4">
                 <label class="uploadAssetLabels radio-inline">
                   <input type="radio" name="registerAssetRadio" class="uploadRadioButtons" value="Create Asset">
                   Create Asset
@@ -60,15 +60,15 @@
                   Upload Asset</label>
               </div>
 
-              <div class="flex-fill">
-                <div class="asset-register-dropdown">
+              <div class="flex-fill col-8 p-0">
+                <div class="asset-register-dropdown p-0">
                   <select class="simple-select2" id="registerAssetSelect" disabled>
                     <option value="" disabled selected>Select Asset Type</option>
                     <option value="Dataset">Dataset</option>
                     <option value="Model">Model</option>
                   </select>
                 </div>
-                <div class="asset-register-dropdown">
+                <div class="asset-register-dropdown p-0">
                   <select class="simple-select2" id="uploadAssetSelect" disabled>
                     <option value="" disabled selected>Select Upload Type</option>
                     <option value="globus">Upload Assets from Globus Endpoint</option>

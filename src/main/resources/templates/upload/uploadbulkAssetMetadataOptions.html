@@ -12,7 +12,7 @@
 
 		<div class="form-row col-md-12 col-sm-12" id="multipleFoldersUploadDiv"
 			style="margin-left: 5px; margin-top: 10px;display:none;">
-			<div class="col-6" style="color: #235172; font-family: 'Open Sans'; font-size: 13px; font-weight: 700;">
+			<div class="col-4" style="color: #235172; font-family: 'Open Sans'; font-size: 13px; font-weight: 700; padding: 0; margin-left:0.5rem;margin-bottom: 1rem;">
 				Do you want to upload bulk metadata file:</div>
 			<div class="form-group" >
 				<div class="pull-left">
@@ -32,18 +32,18 @@
 		</div>
 
 		<div class="form-row col-md-12 col-sm-12" id="uploadCsvFile"
-			style="display: none; margin-left: 7px; margin-bottom: 10px;">
+			style="display: none; margin-left: 12px; margin-bottom: 10px;">
 			<label style="color: #235172; font-family: 'Open Sans'; font-size: 13px; font-weight: 700;">
-				Upload bulk metadata file: <input type="file" style="margin-left: 12rem;" name="doeMetadataFile"
+				Upload bulk metadata file: <input type="file" style="margin-left: 7rem;" name="doeMetadataFile"
 					id="doeMetadataFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
                                 application/vnd.ms-excel,.xls, .xlsx" /></label>
 		</div>
 		<div class="form-row col-md-12 col-sm-12" id="formAssetSelection" style="display: none;">
 			<div class="form-group" style="width: 100%;">
-				<label class="col-md-6 col-sm-6" style="color: #235172;font-family: 'Open Sans';font-size: 13px;font-weight: 700;    padding-left: 6px;">Asset
+				<label class="col-4" style="color: #235172;font-family: 'Open Sans';font-size: 13px;font-weight: 700;    padding-left: 16px;">Asset
 					Type:
 				</label>
-				<select class="simple-select2 col-md-6 col-sm-6" id="assetTypeSelect" name="assetType"
+				<select class="simple-select2 col-8" id="assetTypeSelect" name="assetType"
 					style="border: 2px solid #E87B05; color: #C06400; width: 40%"
 					onChange="retrieveAssetTypeDiv(this.options[this.selectedIndex])">
 					<option value="Select">Select</option>
@@ -72,22 +72,21 @@
 					<tbody>
 					</tbody>
 				</table>
-				<div style="height: 38px;
-            margin-left: 18px;">
+				<div style="height: 38px;">
                     <a id="addNewMetaData" class="mb-2 mr-2" style="
             color: #000;
             /* font-variant-numeric: lining-nums tabular-nums; */
             font-family: Inter;
             font-size: 16px;
             font-style: normal;
-            margin-left: 16px !important;
+            margin-left: 12px !important;
             font-weight: 100;" onclick="addNewMetaDataCollection('assetBulkMetadataTable')"><img src="/images/addIcon.svg" 
             class="metadataIcon" alt="add metadata">&nbsp;Add Metadata</a>
                   </div>
 			</div>
 		</div>
 
-		<div class="form-group col-lg-8 col-md-8" style="margin-bottom: 0px; margin-left: 0px;">
+		<div class="form-group col-lg-8 col-md-8" style="margin-bottom: 0px; margin-left: 18px;">
 			<button id="registerBulkAssets" type="button" disabled="true" class="btn btn-primary mb-2 mr-2 ">Upload
 				<img class="arrowright" th:src='@{/images/white_right_arrow.svg}' style="width: 16px;
 			transform: translate(108px, -2px);" />

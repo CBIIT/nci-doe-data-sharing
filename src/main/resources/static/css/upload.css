@@ -369,6 +369,7 @@ table#assetBulkMetadataTable tbody tr td:first-child {
 	padding: 16px 12px !important;
 	font-weight: 600;
 	text-transform: uppercase;
+	width: 33.33%;
 }
 
 table#assetBulkMetadataTable tbody tr td:nth-child(2) {
@@ -529,6 +530,13 @@ label.radio-label {
 	margin-top: -6px;
 }
 
+#formAssetSelection .select2-container--bootstrap4 .select2-selection--single .select2-selection__arrow b {
+	border-color: #3B6EB4 transparent transparent transparent !important;
+	border-width: 8px 6px 0 6px;
+	margin-left: -12px;
+	margin-top: -6px;
+}
+
 .asset-register-dropdown .select2-container span.select2-selection.select2-selection--single {
 	border: 1.5px solid #3B6EB4;
 	border-radius: 8px;
@@ -638,4 +646,8 @@ label.radio-label {
 .disable-pointer-events {
     pointer-events: none;
 	opacity: 0.2;
+}
+
+.select2-container--bootstrap4 .select2-results__option--highlighted[aria-selected]:hover {
+  background: #F3F3F3 !important;
 }
