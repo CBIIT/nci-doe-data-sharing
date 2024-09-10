@@ -78,7 +78,7 @@ public class DoeCreateDatafileController extends DoeCreateCollectionDataFileCont
 			if (!parentPath.isEmpty()) {
 				HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, collectionServiceURL,
 						parentPath, true);
-				Boolean isValidPermissions = verifyCollectionPermissions(parentPath, parentCollectionDto);
+				Boolean isValidPermissions = verifyCollectionPermissions(session, parentPath, parentCollectionDto);
 				if (Boolean.FALSE.equals(isValidPermissions)) {
 					return "Insufficient privileges to add data files.";
 				}

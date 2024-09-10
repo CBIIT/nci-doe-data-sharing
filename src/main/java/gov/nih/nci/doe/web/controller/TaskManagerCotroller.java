@@ -70,7 +70,7 @@ public class TaskManagerCotroller extends AbstractDoeController {
 			}
 			List<TaskManager> results = new ArrayList<TaskManager>();
 
-			if (Boolean.TRUE.equals(getIsAdmin()) && "true".equalsIgnoreCase(showAll)) {
+			if (Boolean.TRUE.equals(getIsAdmin(session)) && "true".equalsIgnoreCase(showAll)) {
 				results = taskManagerService.getAlltasks();
 			} else {
 				results = taskManagerService.getAllByUserId(userId);

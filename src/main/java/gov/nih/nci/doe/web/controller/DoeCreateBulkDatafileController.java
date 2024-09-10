@@ -182,7 +182,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			if (StringUtils.isNotEmpty(dataFilePath)) {
 				HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, collectionServiceURL,
 						dataFilePath, true);
-				Boolean isValidPermissions = verifyCollectionPermissions(dataFilePath, parentCollectionDto);
+				Boolean isValidPermissions = verifyCollectionPermissions(session, dataFilePath, parentCollectionDto);
 				if (Boolean.FALSE.equals(isValidPermissions)) {
 					return "Insufficient privileges to register data files.";
 				}
@@ -201,7 +201,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			// when bulk metadata file is provided
 			HashMap<HpcBulkMetadataEntries, Map<String, String>> doeBulkMetadataEntries = DoeExcelUtil
 					.parseBulkMatadataEntries(doeMetadataFile, accessGroups, doeDataFileModel.getPath().trim(),
-							getDefaultGroup());
+							getDefaultGroup(session));
 
 			if (doeBulkMetadataEntries != null) {
 				entries = doeBulkMetadataEntries.keySet().stream().findFirst().get();

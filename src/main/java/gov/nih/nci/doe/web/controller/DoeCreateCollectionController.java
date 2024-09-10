@@ -259,7 +259,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 				if (!parentPath.equalsIgnoreCase(basePath)) {
 					HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
 							parentPath, true);
-					Boolean isValidPermissions = verifyCollectionPermissions(parentPath, parentCollectionDto);
+					Boolean isValidPermissions = verifyCollectionPermissions(session, parentPath, parentCollectionDto);
 					if (Boolean.FALSE.equals(isValidPermissions)) {
 						return "Insufficient privileges to create collection";
 					}
@@ -327,9 +327,9 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 					audit.setPath(doeCollection.getPath());
 					auditingService.saveAuditInfo(audit);
 				}
-				
-				//remove the session attribute 
-				
+
+				// remove the session attribute
+
 				session.removeAttribute("validValuesList");
 
 				return "Collection is created!";

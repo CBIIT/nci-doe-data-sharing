@@ -86,13 +86,13 @@ public class DeleteCollectionController extends AbstractDoeController {
 					role = "Owner";
 				}
 			} else {
-				List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(userInfo)
+				List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(session, userInfo)
 						.getBody();
 				role = getPermissionRole(userInfo, collection.getCollection().getCollectionId(),
 						loggedOnUserPermissions);
 			}
 			if ("Owner".equalsIgnoreCase(role)
-					|| (Boolean.TRUE.equals(getIsDelete()) && "Group User".equalsIgnoreCase(role))) {
+					|| (Boolean.TRUE.equals(getIsDelete(session)) && "Group User".equalsIgnoreCase(role))) {
 
 				String deleted = DoeClientUtil.deleteCollection(authToken, serviceURL, collPath);
 				if (StringUtils.isNotEmpty(deleted) && deleted.equalsIgnoreCase("SUCCESS")) {

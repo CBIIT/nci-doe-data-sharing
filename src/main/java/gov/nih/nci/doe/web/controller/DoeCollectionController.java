@@ -126,12 +126,12 @@ public class DoeCollectionController extends DoeCreateCollectionDataFileControll
 			HpcCollectionListDTO collectionDto = DoeClientUtil.getCollection(authToken, serviceURL, selectedPath, true);
 			if (Boolean.TRUE.equals(verifyAtAssetLevel)) {
 
-				return new ResponseEntity<>(verifyCollectionPermissions(selectedPath, collectionDto), HttpStatus.OK);
+				return new ResponseEntity<>(verifyCollectionPermissions(session, selectedPath, collectionDto), HttpStatus.OK);
 
 			} else {
 				EditCollectionsModel editPermModel = new EditCollectionsModel();
 
-				List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(null)
+				List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(session, null)
 						.getBody();
 				String permissionRole = getPermissionRoleByCollectionPath(user, selectedPath, loggedOnUserPermissions);
 				editPermModel.setPermissionRole(permissionRole);

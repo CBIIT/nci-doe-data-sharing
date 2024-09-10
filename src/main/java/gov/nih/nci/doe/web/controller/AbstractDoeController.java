@@ -243,40 +243,107 @@ public abstract class AbstractDoeController {
 		return null;
 	}
 
-	@ModelAttribute("isAdmin")
-	public Boolean getIsAdmin() {
+	@ModelAttribute("user")
+	public DoeUsersModel getUser(HttpSession session) {
 		String emailAddr = getLoggedOnUserInfo();
-		if (!StringUtils.isEmpty(emailAddr)) {
-			DoeUsersModel user = authenticateService.getUserInfo(emailAddr);
-			if (user != null && Boolean.TRUE.equals(user.getIsAdmin())) {
-				return true;
+		if (StringUtils.isNotEmpty(emailAddr)) {
+			DoeUsersModel user = (DoeUsersModel) session.getAttribute("doeUserModel");
+			if (user == null) {
+				user = authService.getUserInfo(emailAddr);
+				session.setAttribute("doeUserModel", user);
 			}
+			return user;
+		}
+		return null;
+	}
+
+	@ModelAttribute("isAdmin")
+	public Boolean getIsAdmin(HttpSession session) {
+		DoeUsersModel user = getUser(session);
+
+		if (user != null && Boolean.TRUE.equals(user.getIsAdmin())) {
+			return true;
 		}
 
 		return false;
+
 	}
 
 	@ModelAttribute("isDelete")
-	public Boolean getIsDelete() {
-		String emailAddr = getLoggedOnUserInfo();
-		if (!StringUtils.isEmpty(emailAddr)) {
-			DoeUsersModel user = authenticateService.getUserInfo(emailAddr);
-			if (user != null && Boolean.TRUE.equals(user.getIsDeletePrivilege())) {
-				return true;
-			}
+	public Boolean getIsDelete(HttpSession session) {
+		DoeUsersModel user = getUser(session);
+		if (user != null && Boolean.TRUE.equals(user.getIsDeletePrivilege())) {
+			return true;
 		}
 
 		return false;
 	}
 
 	@ModelAttribute("isReviewCommitteeMember")
-	public Boolean getIsReviewCommiteeMember() {
-		String emailAddr = getLoggedOnUserInfo();
-		if (!StringUtils.isEmpty(emailAddr)) {
-			DoeUsersModel user = authenticateService.getUserInfo(emailAddr);
-			if (user != null && Boolean.TRUE.equals(user.getIsReviewCommiteeMember())) {
-				return true;
-			}
+	public Boolean getIsReviewCommiteeMember(HttpSession session) {
+		DoeUsersModel user = getUser(session);
+		if (user != null && Boolean.TRUE.equals(user.getIsReviewCommiteeMember())) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@ModelAttribute("firstName")
+	public String getLoggedOnUserFirstName(HttpSession session) {
+		DoeUsersModel user = getUser(session);
+		if (user != null) {
+			return user.getFirstName();
+		}
+
+		return null;
+	}
+
+	@ModelAttribute("lastName")
+	public String getLoggedOnUserLastName(HttpSession session) {
+		DoeUsersModel user = getUser(session);
+		if (user != null) {
+			return user.getLastName();
+		}
+
+		return null;
+	}
+
+	@ModelAttribute("organization")
+	public String getLoggedOnUserOrg(HttpSession session) {
+		DoeUsersModel user = getUser(session);
+		if (user != null) {
+			return user.getInstitution();
+		}
+
+		return null;
+	}
+
+	@ModelAttribute("defaultGroup")
+	public String getDefaultGroup(HttpSession session) {
+		DoeUsersModel user = getUser(session);
+		if (user != null && Boolean.TRUE.equals(user.getIsWrite()) && user.getDefaultGroup() != null) {
+			return user.getDefaultGroup().getGroupName();
+		}
+		return null;
+
+	}
+
+	@ModelAttribute("fullName")
+	public String getLoggedOnUserFullName(HttpSession session) {
+		DoeUsersModel user = getUser(session);
+		if (user != null) {
+			return user.getFirstName() + " " + user.getLastName();
+		}
+
+		return null;
+	}
+
+	@ModelAttribute("isUploader")
+	public Boolean getIsUploader(HttpSession session) {
+		DoeUsersModel user = getUser(session);
+		if (user != null && Boolean.TRUE.equals(user.getIsWrite())) {
+			return true;
 		}
 
 		return false;
@@ -294,79 +361,6 @@ public abstract class AbstractDoeController {
 	@ModelAttribute("showApiDocs")
 	public boolean getShowApiDocs() {
 		return showApiDocs;
-	}
-
-	@ModelAttribute("firstName")
-	public String getLoggedOnUserFirstName() {
-		String emailAddr = getLoggedOnUserInfo();
-		if (StringUtils.isNotEmpty(emailAddr)) {
-			DoeUsersModel user = authService.getUserInfo(emailAddr);
-			if (user != null) {
-				return user.getFirstName();
-			}
-		}
-		return null;
-	}
-
-	@ModelAttribute("lastName")
-	public String getLoggedOnUserLastName() {
-		String emailAddr = getLoggedOnUserInfo();
-		if (StringUtils.isNotEmpty(emailAddr)) {
-			DoeUsersModel user = authService.getUserInfo(emailAddr);
-			if (user != null) {
-				return user.getLastName();
-			}
-		}
-		return null;
-	}
-
-	@ModelAttribute("organization")
-	public String getLoggedOnUserOrg() {
-		String emailAddr = getLoggedOnUserInfo();
-		if (StringUtils.isNotEmpty(emailAddr)) {
-			DoeUsersModel user = authService.getUserInfo(emailAddr);
-			if (user != null) {
-				return user.getInstitution();
-			}
-		}
-		return null;
-	}
-
-	@ModelAttribute("defaultGroup")
-	public String getDefaultGroup() {
-		String emailAddr = getLoggedOnUserInfo();
-		if (StringUtils.isNotEmpty(emailAddr)) {
-			DoeUsersModel user = authService.getUserInfo(emailAddr);
-			if (user != null && Boolean.TRUE.equals(user.getIsWrite()) && user.getDefaultGroup() != null) {
-				return user.getDefaultGroup().getGroupName();
-			}
-		}
-		return null;
-	}
-
-	@ModelAttribute("fullName")
-	public String getLoggedOnUserFullName() {
-		String emailAddr = getLoggedOnUserInfo();
-		if (StringUtils.isNotEmpty(emailAddr)) {
-			DoeUsersModel user = authService.getUserInfo(emailAddr);
-			if (user != null) {
-				return user.getFirstName() + " " + user.getLastName();
-			}
-		}
-		return null;
-	}
-
-	@ModelAttribute("isUploader")
-	public Boolean getIsUploader() {
-		String emailAddr = getLoggedOnUserInfo();
-		if (!StringUtils.isEmpty(emailAddr)) {
-			DoeUsersModel user = authenticateService.getUserInfo(emailAddr);
-			if (user != null && Boolean.TRUE.equals(user.getIsWrite())) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	public List<KeyValueBean> getUserMetadata(List<HpcMetadataEntry> list, String levelName, List<String> systemAttrs,
@@ -596,7 +590,7 @@ public abstract class AbstractDoeController {
 		return entryList;
 	}
 
-	public ResponseEntity<?> getMetaDataPermissionsList(String loggedOnUser) {
+	public ResponseEntity<?> getMetaDataPermissionsList(HttpSession session, String loggedOnUser) {
 
 		log.info("get meta data permissions list");
 		if (StringUtils.isEmpty(loggedOnUser)) {
@@ -605,7 +599,7 @@ public abstract class AbstractDoeController {
 		List<KeyValueBean> keyValueBeanResults = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(loggedOnUser)) {
-			DoeUsersModel user = authenticateService.getUserInfo(loggedOnUser);
+			DoeUsersModel user = getUser(session);
 
 			if (user != null && !StringUtils.isEmpty(user.getProgramName())) {
 				List<String> progList = Arrays.asList(user.getProgramName().split(","));
@@ -616,7 +610,7 @@ public abstract class AbstractDoeController {
 		return new ResponseEntity<>(keyValueBeanResults, null, HttpStatus.OK);
 	}
 
-	public List<String> getLoggedOnUserGroups(String loggedOnUser) {
+	public List<String> getLoggedOnUserGroups(HttpSession session, String loggedOnUser) {
 
 		log.info("get meta data permissions list");
 		if (StringUtils.isEmpty(loggedOnUser)) {
@@ -625,7 +619,7 @@ public abstract class AbstractDoeController {
 		List<String> grpList = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(loggedOnUser)) {
-			DoeUsersModel user = authenticateService.getUserInfo(loggedOnUser);
+			DoeUsersModel user = getUser(session);
 
 			if (user != null && !StringUtils.isEmpty(user.getProgramName())) {
 				grpList = Arrays.asList(user.getProgramName().split(","));
@@ -805,10 +799,10 @@ public abstract class AbstractDoeController {
 		return new ResponseEntity<>(entryList, HttpStatus.OK);
 	}
 
-	public HpcCompoundMetadataQueryDTO constructCriteria(DoeSearch search) {
+	public HpcCompoundMetadataQueryDTO constructCriteria(HttpSession session, DoeSearch search) {
 		HpcCompoundMetadataQueryDTO dto = new HpcCompoundMetadataQueryDTO();
 		dto.setTotalCount(true);
-		HpcCompoundMetadataQuery query = buildSimpleSearch(search);
+		HpcCompoundMetadataQuery query = buildSimpleSearch(session, search);
 		dto.setCompoundQuery(query);
 		dto.setDetailedResponse(search.isDetailed());
 		dto.setCompoundQueryType(HpcCompoundMetadataQueryType.COLLECTION);
@@ -818,7 +812,7 @@ public abstract class AbstractDoeController {
 	}
 
 	@SuppressWarnings("unchecked")
-	private HpcCompoundMetadataQuery buildSimpleSearch(DoeSearch search) {
+	private HpcCompoundMetadataQuery buildSimpleSearch(HttpSession session, DoeSearch search) {
 
 		log.info("build simple search criteria: " + search);
 		HpcCompoundMetadataQuery query = new HpcCompoundMetadataQuery();
@@ -854,7 +848,8 @@ public abstract class AbstractDoeController {
 		}
 
 		// add criteria for access group public and other prog names for logged on user.
-		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(null).getBody();
+		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(session, null)
+				.getBody();
 
 		HpcCompoundMetadataQuery query1 = new HpcCompoundMetadataQuery();
 		query1.setOperator(HpcCompoundMetadataQueryOperator.OR);
@@ -969,7 +964,7 @@ public abstract class AbstractDoeController {
 		String authToken = (String) session.getAttribute("hpcUserToken");
 		search.setDetailed(true);
 
-		HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search);
+		HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(session, search);
 		Response restResponse = DoeClientUtil.getCollectionSearchQuery(authToken, compoundCollectionSearchServiceURL,
 				compoundQuery);
 
@@ -1021,7 +1016,7 @@ public abstract class AbstractDoeController {
 		search.setIsExcludeParentMetadata(isExcludeParentMetadata);
 		search.setDetailed(true);
 
-		HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search);
+		HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(session, search);
 		Response restResponse = DoeClientUtil.getCollectionSearchQuery(authToken, compoundCollectionSearchServiceURL,
 				compoundQuery);
 
@@ -1137,7 +1132,7 @@ public abstract class AbstractDoeController {
 	public List<KeyValueBean> getPathsForSearch(DoeSearch search, HttpSession session) throws DoeWebException {
 		log.info("get paths by filtering from the required search criteria");
 
-		HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search);
+		HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(session, search);
 		compoundQuery.setDetailedResponse(true);
 		log.info("search compund query" + compoundQuery);
 		String authToken = (String) session.getAttribute("hpcUserToken");

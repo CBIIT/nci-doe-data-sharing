@@ -921,7 +921,8 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 	}
 
 	@SuppressWarnings("unchecked")
-	public Boolean verifyCollectionPermissions(String parentPath, HpcCollectionListDTO parentCollectionDto) {
+	public Boolean verifyCollectionPermissions(HttpSession session, String parentPath,
+			HpcCollectionListDTO parentCollectionDto) {
 
 		log.info("verify collection permissions for : " + parentPath);
 		Integer parentCollectionId = null;
@@ -929,7 +930,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				&& parentCollectionDto.getCollections() != null
 				&& !CollectionUtils.isEmpty(parentCollectionDto.getCollections())) {
 			HpcCollectionDTO collection = parentCollectionDto.getCollections().get(0);
-			List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(null)
+			List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(session, null)
 					.getBody();
 
 			/**

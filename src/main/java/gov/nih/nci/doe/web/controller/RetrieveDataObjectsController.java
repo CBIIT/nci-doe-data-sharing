@@ -186,13 +186,15 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<MoDaCPredictionsResults> processGeneratedPredDataObjects(String path) throws IOException {
+	private List<MoDaCPredictionsResults> processGeneratedPredDataObjects(HttpSession session, String path)
+			throws IOException {
 
 		List<MoDaCPredictionsResults> returnResults = new ArrayList<MoDaCPredictionsResults>();
 
 		String userId = getLoggedOnUserInfo();
 		List<String> loggedOnUserPermList = new ArrayList<String>();
-		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(userId).getBody();
+		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(session, userId)
+				.getBody();
 		loggedOnUserPermissions.stream().forEach(e -> loggedOnUserPermList.add(e.getKey()));
 		List<String> grpsList = LambdaUtils.map(loggedOnUserPermissions, KeyValueBean::getKey);
 
@@ -300,7 +302,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 
 			if (type.equalsIgnoreCase("Prediction_Files")) {
 
-				modelAnalysisFiles = processGeneratedPredDataObjects(path);
+				modelAnalysisFiles = processGeneratedPredDataObjects(session, path);
 				return new ResponseEntity<>(modelAnalysisFiles, HttpStatus.OK);
 
 			} else {

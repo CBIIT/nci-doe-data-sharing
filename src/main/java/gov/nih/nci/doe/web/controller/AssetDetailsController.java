@@ -71,7 +71,7 @@ public class AssetDetailsController extends AbstractDoeController {
 		log.info("authToken: " + authToken);
 		String user = getLoggedOnUserInfo();
 		log.info("asset details for user: " + user);
-		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(user).getBody();
+		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(session, user).getBody();
 		DoeSearch search = new DoeSearch();
 
 		if (StringUtils.isNotEmpty(dmeDataId)) {
@@ -115,7 +115,7 @@ public class AssetDetailsController extends AbstractDoeController {
 		}
 
 		try {
-			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search);
+			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(session, search);
 			compoundQuery.setDetailedResponse(true);
 			log.info("search compund query" + compoundQuery);
 
@@ -208,7 +208,7 @@ public class AssetDetailsController extends AbstractDoeController {
 				model.addAttribute("assetLink", webServerName + "/assetDetails?dme_data_id=" + dme_Data_Id);
 
 				ModelInfo modelInfo = modelInfoService.getModelInfo(collection.getCollection().getCollectionName());
-				if (Boolean.TRUE.equals(getIsUploader())
+				if (Boolean.TRUE.equals(getIsUploader(session))
 						&& ((isModelDeployed != null && isModelDeployed.equalsIgnoreCase("Yes"))
 								|| "Yes".equalsIgnoreCase(isReferenceDataset))) {
 

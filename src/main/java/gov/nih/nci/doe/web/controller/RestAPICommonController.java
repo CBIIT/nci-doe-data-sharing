@@ -177,7 +177,7 @@ public class RestAPICommonController extends AbstractDoeController {
 
 		// verify group or owner permissions on the collection path
 		if ("public".equalsIgnoreCase(accessGrp)
-				|| Boolean.TRUE.equals(hasCollectionPermissions(doeLogin, parentPath, collectionDto))) {
+				|| Boolean.TRUE.equals(hasCollectionPermissions(session, doeLogin, parentPath, collectionDto))) {
 			isPermissions = true;
 		}
 
@@ -302,7 +302,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
 
 		if ("public".equalsIgnoreCase(accessGrp)
-				|| Boolean.TRUE.equals(hasCollectionPermissions(doeLogin, path, collectionDto))) {
+				|| Boolean.TRUE.equals(hasCollectionPermissions(session, doeLogin, path, collectionDto))) {
 			isPermissions = true;
 		}
 
@@ -380,7 +380,7 @@ public class RestAPICommonController extends AbstractDoeController {
 
 		// verify group or owner permissions on the collection path
 		if ("public".equalsIgnoreCase(accessGrp)
-				|| Boolean.TRUE.equals(hasCollectionPermissions(doeLogin, parentPath, collectionDto))) {
+				|| Boolean.TRUE.equals(hasCollectionPermissions(session, doeLogin, parentPath, collectionDto))) {
 			isPermissions = true;
 		}
 
@@ -451,7 +451,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
 
 		if ("public".equalsIgnoreCase(accessGrp)
-				|| Boolean.TRUE.equals(hasCollectionPermissions(doeLogin, parentPath, collectionDto))) {
+				|| Boolean.TRUE.equals(hasCollectionPermissions(session, doeLogin, parentPath, collectionDto))) {
 			isPermissions = true;
 		}
 
@@ -545,7 +545,7 @@ public class RestAPICommonController extends AbstractDoeController {
 			String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
 
 			if ("public".equalsIgnoreCase(accessGrp)
-					|| Boolean.TRUE.equals(hasCollectionPermissions(doeLogin, path, collectionDto))) {
+					|| Boolean.TRUE.equals(hasCollectionPermissions(session, doeLogin, path, collectionDto))) {
 				isPermissions = true;
 			}
 
@@ -600,7 +600,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		String accessGrp = getAttributeValue("access_group", result.getMetadataEntries().getSelfMetadataEntries());
 
 		if ("public".equalsIgnoreCase(accessGrp)
-				|| Boolean.TRUE.equals(hasCollectionPermissions(doeLogin, path, collectionDto))) {
+				|| Boolean.TRUE.equals(hasCollectionPermissions(session, doeLogin, path, collectionDto))) {
 			isPermissions = true;
 		}
 
@@ -656,7 +656,8 @@ public class RestAPICommonController extends AbstractDoeController {
 				if (!parentPath.equalsIgnoreCase(basePathTrimmed)) {
 					HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
 							parentPath, true);
-					Boolean isValidPermissions = hasCollectionPermissions(doeLogin, parentPath, parentCollectionDto);
+					Boolean isValidPermissions = hasCollectionPermissions(session, doeLogin, parentPath,
+							parentCollectionDto);
 					if (Boolean.FALSE.equals(isValidPermissions)) {
 						throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
 					}
@@ -746,7 +747,8 @@ public class RestAPICommonController extends AbstractDoeController {
 			if (!parentPath.isEmpty()) {
 				HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
 						parentPath, true);
-				Boolean isValidPermissions = hasCollectionPermissions(doeLogin, parentPath, parentCollectionDto);
+				Boolean isValidPermissions = hasCollectionPermissions(session, doeLogin, parentPath,
+						parentCollectionDto);
 				if (Boolean.FALSE.equals(isValidPermissions)) {
 					throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
 				}
@@ -804,7 +806,7 @@ public class RestAPICommonController extends AbstractDoeController {
 			if (StringUtils.isNotEmpty(path)) {
 				HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, serviceURL, path,
 						true);
-				isValidPermissions = hasCollectionPermissions(doeLogin, path, parentCollectionDto);
+				isValidPermissions = hasCollectionPermissions(session, doeLogin, path, parentCollectionDto);
 				if (Boolean.FALSE.equals(isValidPermissions)) {
 					throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
 				}
@@ -823,12 +825,14 @@ public class RestAPICommonController extends AbstractDoeController {
 						String parentPath = assetPath.substring(0, assetPath.lastIndexOf('/'));
 						HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
 								parentPath, true);
-						isValidPermissions = hasCollectionPermissions(doeLogin, parentPath, parentCollectionDto);
+						isValidPermissions = hasCollectionPermissions(session, doeLogin, parentPath,
+								parentCollectionDto);
 					} else {
 						// this is for data objects upload, check permissions at asset level
 						HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
 								assetPath, true);
-						isValidPermissions = hasCollectionPermissions(doeLogin, assetPath, parentCollectionDto);
+						isValidPermissions = hasCollectionPermissions(session, doeLogin, assetPath,
+								parentCollectionDto);
 					}
 					if (Boolean.FALSE.equals(isValidPermissions)) {
 						throw new DoeWebException("Invalid Permissions", HttpServletResponse.SC_BAD_REQUEST);
@@ -1598,7 +1602,7 @@ public class RestAPICommonController extends AbstractDoeController {
 	}
 
 	@SuppressWarnings("unchecked")
-	private Boolean hasCollectionPermissions(String loggedOnUser, String parentPath,
+	private Boolean hasCollectionPermissions(HttpSession session, String loggedOnUser, String parentPath,
 			HpcCollectionListDTO parentCollectionDto) {
 
 		log.info("has collection permssions for " + loggedOnUser + " path: " + parentPath);
@@ -1606,7 +1610,7 @@ public class RestAPICommonController extends AbstractDoeController {
 		List<KeyValueBean> keyValueBeanResults = new ArrayList<>();
 		if (!StringUtils.isEmpty(loggedOnUser)) {
 			// get logged on user prog list to keyvaluebean list
-			keyValueBeanResults = (List<KeyValueBean>) getMetaDataPermissionsList(loggedOnUser).getBody();
+			keyValueBeanResults = (List<KeyValueBean>) getMetaDataPermissionsList(session, loggedOnUser).getBody();
 
 		}
 
