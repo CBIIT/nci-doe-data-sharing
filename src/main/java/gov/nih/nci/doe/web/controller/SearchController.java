@@ -100,6 +100,7 @@ public class SearchController extends AbstractDoeController {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private List<DoeSearchResult> processCollectionResults(HttpSession session, Response restResponse, DoeSearch search)
 			throws IOException {
 
@@ -121,8 +122,13 @@ public class SearchController extends AbstractDoeController {
 		if (StringUtils.isNotEmpty(user)) {
 			List<String> loggedOnUsergrpList = getLoggedOnUserGroups(session, user);
 
-			permissionMap = metaDataPermissionService.getAllMetadataPermissionsForLoggedOnUser(user,
-					loggedOnUsergrpList);
+			permissionMap = (HashMap<Integer, CollectionPermissions>) session.getAttribute("permissionMap");
+			if (permissionMap == null) {
+				permissionMap = metaDataPermissionService.getAllMetadataPermissionsForLoggedOnUser(user,
+						loggedOnUsergrpList);
+
+				session.setAttribute("permissionMap", permissionMap);
+			}
 		}
 
 		for (HpcCollectionDTO result : searchResults) {
