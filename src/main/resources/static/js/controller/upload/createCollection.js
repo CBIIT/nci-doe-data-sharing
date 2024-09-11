@@ -317,19 +317,14 @@ function registerCollection() {
 
 	let accessGroupError = true;
 
-	if ($("#accessGroupSelect").val().length == 0) {
+	if ($("#accessGroupSelect").is(":visible")  && $("#accessGroupSelect").val().length == 0) {
 			accessGroupError = false;
 	}
 	
 
 	if (!usermetaDataEntered || !accessGroupError) {
 		validate = false;
-		if (!accessGroupError) {
-			$(".registerErrorMsg").append("<div>Select the access group.</div");
-		}
-		if (!usermetaDataEntered) {
-			$(".registerErrorMsg").append("Enter values for all required metadata.");
-		}
+		$(".registerErrorMsg").append("Enter values for all required metadata.");
 		$(".registerMsgErrorBlock").show();
 		$('body,html').animate({
 			scrollTop: 0
@@ -425,6 +420,8 @@ function displaySuccessMsg(data, status) {
 	$(".registerMsgBlock").show();
 }
 
-function loadDefaultAccessGroup(data, status) {
-    $("#accessGroupSelect").select2().val(defaultGroup).trigger("change");
+function loadDefaultAccessGroup(data, status) {    
+    $("#accessGroupSelect").select2({
+   		 placeholder: "Required"
+	}).val(defaultGroup).trigger("change");
 }
