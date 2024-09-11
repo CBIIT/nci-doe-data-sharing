@@ -386,12 +386,12 @@ function postSuccessRegisterCollection(data, collectionType) {
 				selectedPath: $("#basePath").val(),
 				refreshNode: 'true'
 			};
-			loadJsonData('/collectionList', $("#instituteList"), true, params, displaySuccessMsg, null, "key",
+			loadJsonData('/collectionList', $("#programList"), true, params, displaySuccessMsg, null, "key",
 				"value");
-			resetOnChangeofSelectCollection("instituteList", null);
+			resetOnChangeofSelectCollection("programList", null);
 		} else if (collectionType == 'Study') {
 			var params = {
-				selectedPath: $("#instituteList").val(),
+				selectedPath: $("#programList").val(),
 				refreshNode: 'true'
 			};
 			loadJsonData('/collectionList', $("#studyList"), true, params, displaySuccessMsg, null, "key", "value");
