@@ -131,7 +131,7 @@ public abstract class AbstractDoeController {
 	public AuditingService auditingService;
 
 	@Autowired
-	LookUpService lookUpService;
+	public LookUpService lookUpService;
 
 	@Autowired
 	public MailService mailService;
@@ -363,8 +363,8 @@ public abstract class AbstractDoeController {
 		return showApiDocs;
 	}
 
-	public List<KeyValueBean> getUserMetadata(List<HpcMetadataEntry> list, String levelName, List<String> systemAttrs,
-			Boolean isVisible) {
+	public List<KeyValueBean> getUserMetadata(HttpSession session, List<HpcMetadataEntry> list, String levelName,
+			List<String> systemAttrs, Boolean isVisible) {
 
 		log.info("get user metadata for level: " + levelName);
 		List<KeyValueBean> entryList = new ArrayList<KeyValueBean>();
@@ -372,7 +372,7 @@ public abstract class AbstractDoeController {
 		for (HpcMetadataEntry entry : list) {
 			if (systemAttrs != null && !systemAttrs.contains(entry.getAttribute()) && (levelName == null
 					|| (levelName != null && levelName.equalsIgnoreCase(entry.getLevelLabel())))) {
-				LookUp lookUpVal = lookUpService.getLookUpByLevelAndName(levelName, entry.getAttribute());
+				LookUp lookUpVal = lookUpService.getLookUpByLevelAndName(session, levelName, entry.getAttribute());
 				KeyValueBean k = null;
 				// this is a temporary fix to escape json.stringify error with single and double
 				// quotes
@@ -540,7 +540,8 @@ public abstract class AbstractDoeController {
 						HpcCollectionDTO collection = collections.getCollections().get(0);
 						for (HpcMetadataEntry entry : collection.getMetadataEntries().getSelfMetadataEntries()) {
 							if (!systemAttrs.contains(entry.getAttribute())) {
-								LookUp val = lookUpService.getLookUpByLevelAndName(levelName, entry.getAttribute());
+								LookUp val = lookUpService.getLookUpByLevelAndName(session, levelName,
+										entry.getAttribute());
 								KeyValueBean k = null;
 								if (val != null) {
 									k = new KeyValueBean(entry.getAttribute(), val.getDisplayName(), entry.getValue(),
@@ -562,10 +563,11 @@ public abstract class AbstractDoeController {
 					if (datafiles != null && datafiles.getDataObject() != null) {
 						for (HpcMetadataEntry entry : datafiles.getMetadataEntries().getSelfMetadataEntries()
 								.getUserMetadataEntries()) {
-							String attrName = lookUpService.getDisplayName(levelName, entry.getAttribute());
+							LookUp val = lookUpService.getLookUpByLevelAndName(session, levelName,
+									entry.getAttribute());
 							KeyValueBean k = null;
-							if (!StringUtils.isEmpty(attrName)) {
-								k = new KeyValueBean(entry.getAttribute(), attrName, entry.getValue());
+							if (val != null) {
+								k = new KeyValueBean(entry.getAttribute(), val.getDisplayName(), entry.getValue());
 							} else {
 								k = new KeyValueBean(entry.getAttribute(), entry.getAttribute(), entry.getValue());
 							}
@@ -817,7 +819,7 @@ public abstract class AbstractDoeController {
 		log.info("build simple search criteria: " + search);
 		HpcCompoundMetadataQuery query = new HpcCompoundMetadataQuery();
 		query.setOperator(HpcCompoundMetadataQueryOperator.AND);
-		Map<String, HpcMetadataQuery> queriesMap = getQueries(search);
+		Map<String, HpcMetadataQuery> queriesMap = getQueries(session, search);
 
 		Map<String, List<HpcMetadataQuery>> attrNamesMap = new HashMap<String, List<HpcMetadataQuery>>();
 
@@ -890,7 +892,7 @@ public abstract class AbstractDoeController {
 
 	}
 
-	public Map<String, HpcMetadataQuery> getQueries(DoeSearch search) {
+	public Map<String, HpcMetadataQuery> getQueries(HttpSession session, DoeSearch search) {
 		Map<String, HpcMetadataQuery> queries = new HashMap<String, HpcMetadataQuery>();
 
 		for (int i = 0; i < search.getAttrName().length; i++) {
@@ -901,7 +903,7 @@ public abstract class AbstractDoeController {
 			String level = null;
 			boolean selfMetadata = search.getIsExcludeParentMetadata()[i];
 
-			LookUp val = lookUpService.getLookUpByDisplayName(attrName);
+			LookUp val = lookUpService.getLookUpByDisplayName(session, attrName);
 
 			if (val != null) {
 				level = val.getLevelName();
@@ -979,7 +981,7 @@ public abstract class AbstractDoeController {
 			HpcCollectionListDTO collections = parser.readValueAs(HpcCollectionListDTO.class);
 			List<HpcCollectionDTO> searchFilterResults = collections.getCollections();
 
-			LookUp value = lookUpService.getLookUpByDisplayName(search.getSearchName());
+			LookUp value = lookUpService.getLookUpByDisplayName(session, search.getSearchName());
 			if (value != null) {
 				SearchList filterList = retrieveSearchFilterLists(session, searchFilterResults, value.getAttrName(),
 						value.getLevelName(), value.getDisplayName());
@@ -1332,4 +1334,5 @@ public abstract class AbstractDoeController {
 		inference.setIsReferenceAsset(Boolean.TRUE);
 		return taskId;
 	}
+
 }

@@ -183,7 +183,7 @@ public class AssetDetailsController extends AbstractDoeController {
 						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
 
 				// display all self metadata with is_visible not false in Look up table
-				List<KeyValueBean> selfMetadata = getUserMetadata(
+				List<KeyValueBean> selfMetadata = getUserMetadata(session,
 						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset", systemAttrs, Boolean.TRUE);
 
 				if (StringUtils.isNotEmpty(returnToSearch)) {

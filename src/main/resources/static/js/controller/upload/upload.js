@@ -20,15 +20,6 @@ $(document).ready(
 			$('#registerCollectionForm').show();
 			resetSelectionsForBackToUploadTab();
 		});
-
-		$("#btnSelectAssetType").click(function (e) {
-			var assetType = $("#createAssetModal").find("#createAssetCollectionType option:selected").val();
-			$("#assetType").val(assetType);
-			$("#uploadRegisterCollectionFragment").show();
-			$("#uploadSectionDiv").hide();
-			$("#uploadHeader").hide();
-			createCollectionDiv('studyList');
-		});
 	});
 
 

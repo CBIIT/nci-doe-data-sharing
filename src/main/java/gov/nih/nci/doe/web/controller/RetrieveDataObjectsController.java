@@ -122,7 +122,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 				dataObjectAsyncServiceURL, selectedPath, false, false);
 
 		if (datafiles != null && datafiles.getDataObject() != null) {
-			dataResult = getAssetFile(datafiles, systemAttrs);
+			dataResult = getAssetFile(session, datafiles, systemAttrs);
 		}
 
 		return new ResponseEntity<>(dataResult, HttpStatus.OK);
@@ -335,14 +335,14 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 		return new ResponseEntity<>(dataResults, HttpStatus.NO_CONTENT);
 	}
 
-	private DoeDatafileSearchResultDetailed getAssetFile(gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectDTO result,
-			List<String> systemAttrs) {
+	private DoeDatafileSearchResultDetailed getAssetFile(HttpSession session,
+			gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectDTO result, List<String> systemAttrs) {
 
 		DoeDatafileSearchResultDetailed returnResult = new DoeDatafileSearchResultDetailed();
 
 		returnResult.setSelfMetadata(
-				getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries().getUserMetadataEntries(), null,
-						systemAttrs, null));
+				getUserMetadata(session, result.getMetadataEntries().getSelfMetadataEntries().getUserMetadataEntries(),
+						null, systemAttrs, null));
 		returnResult.setSystemMetadata(getSystemMetaData(
 				result.getMetadataEntries().getSelfMetadataEntries().getSystemMetadataEntries(), null, systemAttrs));
 

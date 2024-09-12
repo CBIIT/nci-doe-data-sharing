@@ -2,18 +2,15 @@ package gov.nih.nci.doe.web.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import gov.nih.nci.doe.web.domain.LookUp;
 
 public interface LookUpService {
 
-	
-	public String getDisplayName(String levelName, String attrName);
-	
 	List<LookUp> getAllDisplayNames();
-	
-	LookUp getLookUpByDisplayName(String displayName);
-	
-	LookUp getLookUpByAttrName(String attrName);
-	
-	LookUp getLookUpByLevelAndName(String levelName, String attrName);
+
+	LookUp getLookUpByDisplayName(HttpSession session, String displayName);
+
+	LookUp getLookUpByLevelAndName(HttpSession session, String levelName, String attrName);
 }

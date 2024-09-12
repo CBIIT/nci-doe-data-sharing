@@ -515,35 +515,6 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 
 	}
 
-	protected List<String> getCollectionTypes(List<HpcMetadataValidationRule> rules) {
-
-		log.info("get collection Types: " + rules);
-		List<String> collectionTypesSet = new ArrayList<String>();
-		for (HpcMetadataValidationRule rule : rules) {
-			if (rule.getMandatory() && rule.getAttribute().equals("collection_type"))
-				collectionTypesSet.addAll(rule.getValidValues());
-		}
-		return collectionTypesSet;
-	}
-
-	protected List<String> getSubCollectionTypes(String collectionType, HpcDataHierarchy dataHierarchy) {
-
-		log.info("get sub collection types" + collectionType + " dataHierarchy : " + dataHierarchy);
-		List<String> types = new ArrayList<String>();
-		if (dataHierarchy == null || dataHierarchy.getSubCollectionsHierarchies() == null)
-			return types;
-		if (dataHierarchy.getCollectionType().equals(collectionType)) {
-			List<HpcDataHierarchy> subs = dataHierarchy.getSubCollectionsHierarchies();
-			for (HpcDataHierarchy sub : subs)
-				types.add(sub.getCollectionType());
-		} else {
-			List<HpcDataHierarchy> subs = dataHierarchy.getSubCollectionsHierarchies();
-			for (HpcDataHierarchy sub : subs)
-				return getSubCollectionTypes(collectionType, sub);
-		}
-
-		return types;
-	}
 
 	protected List<DoeMetadataAttrEntry> getControlAttributes(HttpServletRequest request, HttpSession session,
 			String basePath, String collectionType, String controllerAttribute) throws DoeWebException {
@@ -651,7 +622,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 
 			log.info("user defined attrnames :" + userDefinedAttrNames);
 			for (DoeMetadataAttrEntry x : cachedEntries) {
-				LookUp lookUpVal = lookUpService.getLookUpByLevelAndName(collectionType, x.getAttrName());
+				LookUp lookUpVal = lookUpService.getLookUpByLevelAndName(session, collectionType, x.getAttrName());
 				if (userDefinedAttrNames.contains(x.getAttrName())) {
 					if (lookUpVal != null) {
 						x.setDisplayName(lookUpVal.getDisplayName());
@@ -744,7 +715,7 @@ public abstract class DoeCreateCollectionDataFileController extends AbstractDoeC
 				if (StringUtils.isNotEmpty(rule.getDefaultValue())) {
 					entry.setDefaultValue(rule.getDefaultValue());
 				}
-				LookUp val = lookUpService.getLookUpByLevelAndName(collectionType, rule.getAttribute());
+				LookUp val = lookUpService.getLookUpByLevelAndName(session, collectionType, rule.getAttribute());
 				if (val != null) {
 					entry.setDisplayName(val.getDisplayName());
 					entry.setIsEditable(val.getIsEditable());

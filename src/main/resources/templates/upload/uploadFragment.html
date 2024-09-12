@@ -43,7 +43,7 @@
 							<div class="form-group">
 								<div class="pull-left" style="margin-top: 6px; margin-left: 15px">
 									<label class="uploadLabels radio-inline"><input type="radio" name="selectProgram"
-											class="registeRadioButtons" onclick="createCollectionDiv('basePath')"
+											class="registeRadioButtons" onclick="createCollectionDiv('Program', '', 'basePath')"
 											value="Register Program">&nbsp;&nbsp; Register Program</label>
 								</div>
 								<div class="d-flex">
@@ -88,7 +88,7 @@
 							<div class="form-group">
 								<div class="pull-left" style="margin-top: 6px;margin-left: 15px">
 									<label class="uploadLabels radio-inline"><input type="radio" name="selectStudy"
-											class="registeRadioButtons" onclick="createCollectionDiv('programList')"
+											class="registeRadioButtons" onclick="createCollectionDiv('Study', 'Program', 'programList')"
 											value="Register Study">&nbsp;&nbsp; Register Study</label>
 								</div>
 
@@ -185,7 +185,8 @@
 								  </button>		
 								  </div>
 								  <div>				
-								  <button id="registerFolder" type="button" class="btn btn-primary mb-2 mr-2 " onclick="createCollectionDiv('dataList')">Register Asset<br/>
+								  <button id="registerFolder" type="button" class="btn btn-primary mb-2 mr-2 " 
+								  onclick="createCollectionDiv('Folder', 'Asset', 'dataList')">Register Asset<br/>
 									Subcollection
 									<img class="arrowright" th:src='@{/images/add.svg}' style="width: 22px;
 								transform: translate(28px, -12px);" />

@@ -24,7 +24,7 @@ $(document).ready(
 				$("#uploadHeader").hide();
 
 				$("#registerCollectionForm").show()
-				createCollectionDiv('studyList');
+				createCollectionDiv('Asset', 'Study', 'studyList');
 				$("#registerAssetPicker").show();
 			}
 
@@ -516,7 +516,7 @@ function displayEmptyAssetScreen(data) {
 	$("#uploadSectionDiv").hide();
 	$("#uploadHeader").hide();
 	$("#registerCollectionForm").hide();
-	createCollectionDiv('studyList');
+	createCollectionDiv('Asset', 'Study', 'studyList');
 	$("#registerAssetPicker").show();
 
 	// Reset registerAssetSelect radio buttons

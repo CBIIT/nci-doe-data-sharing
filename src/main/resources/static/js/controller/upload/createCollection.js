@@ -149,61 +149,10 @@ function constructNewCollectionMetaDataSet(data, status) {
 }
 
 
-function retrieveCollectionList(data, status) {
-	var assetType = $("#assetType").val();
-	var collectionType;
-	var parentAccessGrp;
-	var displayCollectionType;
-	$.each(data, function (key, val) {
-		if (val.key == "parentAccessGroup")
-			parentAccessGrp = val.value;
-	});
-
-	if (!collectionType) {
-		collectionType = data[0].key;
-	}
-
-	var parent = data[0].value;
-	if (parent) {
-		$('#parentCollectionLabel').text(parent.toUpperCase() + " COLLECTION IDENTIFIER");
-	}
-
-	if (collectionType == 'Folder') {
-		displayCollectionType = 'Asset Subcollection';
-		$(".folderDiv").show();
-	} else {
-		displayCollectionType = collectionType;
-		$(".folderDiv").hide();
-	}
-	$("#parentCollectionType").val(parent);
-	$("#parentAccessGroup").val(parentAccessGrp);
-	$("#collectionType").val(collectionType);
-	// Tp get the button stylings
-	$("#registerCollectionBtn").attr("class", "btn btn-primary mb-2 mr-2 register" + collectionType)
-	$("#registerCollectionBtn").html("Register " + "<br>" + displayCollectionType + `<img class="arrowright"
-	src='/images/white_right_arrow.svg' style="width: 16px;
-	transform: translate(64px, -8px);"/>`);
-	$("#collectionMetaDataLabel").text(displayCollectionType + " Metadata");
-	$("#registerModalTitle").html("Register " + displayCollectionType);
-	$("#addNewMetaData")
-		.html(
-			"<img src='images/addIcon.svg' th:src='@{/images/addIcon.png}' class='metadataIcon' alt='add metadata'>&nbsp;Add Metadata");
-	var collectionPath = $("#collectionPath").val();
-
-	if (collectionType && collectionPath) {
-		var params = {
-			selectedPath: collectionPath,
-			collectionType: collectionType,
-			controllerValue: assetType,
-			controllerAttribute: 'asset_type'
-		};
-		invokeAjax('/addCollection', 'GET', params, constructNewCollectionMetaDataSet, null, null, null);
-	}
-}
-
-function createCollectionDiv(selectTarget, folderPath) {
+function createCollectionDiv(collectionType, parentCollectionType, selectTarget, folderPath) {
 
 	var selectedIndexPathVal = $("#" + selectTarget).val();
+	var displayCollectionType;
 	var parentName = $("#" + selectTarget + " option:selected").text();
 	if (folderPath) {
 		selectedIndexPathVal += "/" + folderPath;
@@ -229,10 +178,39 @@ function createCollectionDiv(selectTarget, folderPath) {
 	$(".registerMsgBlock").hide();
 	$(".registerMsgErrorBlock").hide();
 	$(".registerErrorMsg").html("");
+	
+	
+	$('#parentCollectionLabel').text(parentCollectionType.toUpperCase() + " COLLECTION IDENTIFIER");
+	
+
+	if (collectionType == 'Folder') {
+		displayCollectionType = 'Asset Subcollection';
+		$(".folderDiv").show();
+	} else {
+		displayCollectionType = collectionType;
+		$(".folderDiv").hide();
+	}
+	$("#parentCollectionType").val(parentCollectionType);
+	
+	$("#collectionType").val(collectionType);
+	
+	// Tp get the button stylings
+	$("#registerCollectionBtn").attr("class", "btn btn-primary mb-2 mr-2 register" + collectionType)
+	$("#registerCollectionBtn").html("Register " + "<br>" + displayCollectionType + `<img class="arrowright"
+	src='/images/white_right_arrow.svg' style="width: 16px;
+	transform: translate(64px, -8px);"/>`);
+	$("#collectionMetaDataLabel").text(displayCollectionType + " Metadata");
+	$("#registerModalTitle").html("Register " + displayCollectionType);
+	
+	$("#addNewMetaData")
+		.html(
+			"<img src='images/addIcon.svg' th:src='@{/images/addIcon.png}' class='metadataIcon' alt='add metadata'>&nbsp;Add Metadata");
+	
 	var params = {
 		parent: selectedIndexPathVal
 	};
-	invokeAjax('/addCollection/collectionTypes', 'GET', params, retrieveCollectionList, null, null, null);
+	
+	invokeAjax('/addCollection/parentAccessGroup', 'GET', params, retrieveCollectionList, null, null, null);
 	// loadJson for permissions list
 	loadJsonData('/metaDataPermissionsList', $("#metaDataPermissionsList"), false, null, null, null, "key", "value");
 
@@ -244,6 +222,32 @@ function createCollectionDiv(selectTarget, folderPath) {
 	$("#assetUploadDiv").hide();
 	computeWidthForAssetCollectionName('parentCollectionName');
 
+}
+
+
+
+function retrieveCollectionList(data, status) {
+	var parentAccessGrp;	
+	$.each(data, function (key, val) {
+		if (val.key == "parentAccessGroup")
+			parentAccessGrp = val.value;
+	});
+
+	$("#parentAccessGroup").val(parentAccessGrp);
+
+	var collectionPath = $("#collectionPath").val();
+	var collectionType = $("#collectionType").val();
+	var assetType = $("#assetType").val();
+	
+	if (collectionType && collectionPath) {
+		var params = {
+			selectedPath: collectionPath,
+			collectionType: collectionType,
+			controllerValue: assetType,
+			controllerAttribute: 'asset_type'
+		};
+		invokeAjax('/addCollection', 'GET', params, constructNewCollectionMetaDataSet, null, null, null);
+	}
 }
 
 function computeWidthForAssetCollectionName(ele) {
