@@ -10,10 +10,6 @@ $(document).ready(
 		});
 		
 
-		// $("#registerAssetSelect").select2({
-		// 	minimumResultsForSearch: Infinity
-		// });
-
 		$('#registerAssetSelect').on('change', function () {
 			var selectedOption = $("#registerAssetSelect option:selected").text();
 			$("#assetUploadDiv").hide();
@@ -516,7 +512,19 @@ function displayEmptyAssetScreen(data) {
 	$("#uploadSectionDiv").hide();
 	$("#uploadHeader").hide();
 	$("#registerCollectionForm").hide();
-	createCollectionDiv('Asset', 'Study', 'studyList');
+	
+	// show create fragment
+	$(".registerMsg").html("");
+	$(".registerMsgBlock").hide();
+	$(".registerMsgErrorBlock").hide();
+	$(".registerErrorMsg").html("");
+	$("#uploadRegisterCollectionFragment").show();
+	$("#registerAssetPicker").hide();
+	$("#uploadSectionDiv").hide();
+	$("#uploadHeader").hide();
+	$("#assetUploadDiv").hide();
+	
+	
 	$("#registerAssetPicker").show();
 
 	// Reset registerAssetSelect radio buttons
