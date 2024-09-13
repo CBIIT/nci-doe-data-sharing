@@ -291,11 +291,11 @@ function resetOnChangeofSelectCollection(selectTarget, selectedValue) {
 			$("#bulkAssetGlobusRadiobtn").show();
 			$("#deleteDataSet").hide();
 			$("#editAsset").hide();
-			$("#showSelectAssetDiv").hide();
+			//$("#showSelectAssetDiv").hide();
 			$("#showSubAssetSelectionDiv").hide();
 			//$("input[name=selectAsset]").prop("checked", false);
-			$("#showSelectAssetDiv").show();
 			$("input[name=selectAsset]").prop("checked", true);
+			$("#showSelectAssetDiv").show();
 		    $("input[name=selectAsset][value='Select Asset']").click();
 			//$("input[name=selectAsset][value='Select Asset']").prop("checked", true);
 			//showSelect('Asset',selectedValue);
@@ -311,8 +311,9 @@ function resetOnChangeofSelectCollection(selectTarget, selectedValue) {
 			$("#editStudy").hide();
 			$("#bulkAssetGlobusRadiobtn").hide();
 
-			$("#showSelectAssetDiv").show();
-		    $("input[name=selectAsset][value='Select Asset']").click();
+			// $("input[name=selectAsset]").prop("checked", true);
+			// $("#showSelectAssetDiv").show();
+		    // $("input[name=selectAsset][value='Select Asset']").click();
 
 		}
 	} else if (selectTarget == 'dataList') {
