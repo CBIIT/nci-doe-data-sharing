@@ -291,33 +291,23 @@ function resetOnChangeofSelectCollection(selectTarget, selectedValue) {
 			$("#bulkAssetGlobusRadiobtn").show();
 			$("#deleteDataSet").hide();
 			$("#editAsset").hide();
-			//$("#showSelectAssetDiv").hide();
 			$("#showSubAssetSelectionDiv").hide();
-			//$("input[name=selectAsset]").prop("checked", false);
 			$("input[name=selectAsset]").prop("checked", true);
 			$("#showSelectAssetDiv").show();
 		    $("input[name=selectAsset][value='Select Asset']").click();
-			//$("input[name=selectAsset][value='Select Asset']").prop("checked", true);
-			//showSelect('Asset',selectedValue);
+	
 
 		} else {
-			// $("#studyListDiv").show();
 			$("#studyListDiv").removeClass("disable-pointer-events");
 
-			// $("#dataSetListDiv").hide();
 			$("#dataSetListDiv").addClass("disable-pointer-events");
 
 			$("#deleteStudy").hide();
 			$("#editStudy").hide();
 			$("#bulkAssetGlobusRadiobtn").hide();
 
-			// $("input[name=selectAsset]").prop("checked", true);
-			// $("#showSelectAssetDiv").show();
-		    // $("input[name=selectAsset][value='Select Asset']").click();
-
 		}
 	} else if (selectTarget == 'dataList') {
-		// $("#studyListDiv").show();
 		$("#studyListDiv").removeClass("disable-pointer-events");
 
 		if (selectedValue && selectedValue != 'ANY') {
