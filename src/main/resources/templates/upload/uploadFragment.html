@@ -48,9 +48,9 @@
 								</div>
 								<div class="d-flex">
 									<div class="pull-left" style="margin-left: 15px">
-										<label for="selectProgram" class="uploadLabels radio-inline" onclick="showSelect('Program')"><input type="radio"
+										<label for="selectProgram" class="uploadLabels radio-inline" ><input type="radio"
 												name="selectProgram" class="registeRadioButtons"
-												 value="Select Program">&nbsp;&nbsp;
+												 value="Select Program" onclick="showSelect('Program')">&nbsp;&nbsp;
 											Select Program</label>
 									</div>
 									<div id="showSelectProgramDiv" style="min-width: 400px;margin-top: 0;">
@@ -65,11 +65,11 @@
 									<div class="form-group" style="padding: 0 18px">
 
 										<img src="/images/deleteOrange.svg"
-												th:src="@{/images/deleteOrange.svg}" style="display: none;" class="addDeleteUploadLabels"
+												th:src="@{/images/deleteOrange.svg}" style="display: none;" class="addDeleteUploadLabels" data-toggle='tooltip' title='Delete Program'
 												id="deleteProgram" onclick="functionDelete('programList','Program')"
 												alt="delete">
 										<img src="images/Search_EditMetaData.svg"
-										th:src="@{/images/Search_EditMetaData.svg}" style="display: none; padding-left: 18px;" class="addDeleteUploadLabels"
+										th:src="@{/images/Search_EditMetaData.svg}" style="display: none; padding-left: 18px;" class="addDeleteUploadLabels" data-toggle='tooltip' title='Edit Program'
 												id="editProgram" onclick="functionEditCollection('programList','Program')"
 												alt="edit">
 									</div>
@@ -94,10 +94,10 @@
 
 
 								<div class="d-flex">
-								<div class="pull-left" style="margin-left: 15px" onclick="showSelect('Study')">
+								<div class="pull-left" style="margin-left: 15px">
 									<label for="selectStudy" class="uploadLabels radio-inline" style="width: 180px;"><input type="radio"
 											name="selectStudy" class="registeRadioButtons" 
-											value="Select Study">&nbsp;&nbsp;
+											value="Select Study" onclick="showSelect('Study')">&nbsp;&nbsp;
 										Select Study</label>
 								</div>
 								<div id="showSelectStudyDiv" style="min-width: 400px; margin-top: 0;">
@@ -109,11 +109,11 @@
 								<div class="form-group" style="padding: 0 18px">
 
 									<img src="/images/deleteOrange.svg"
-											th:src="@{/images/deleteOrange.svg}" style="display: none;" class="addDeleteUploadLabels"
+											th:src="@{/images/deleteOrange.svg}" style="display: none;" class="addDeleteUploadLabels" data-toggle='tooltip' title='Delete Study'
 											id="deleteStudy"  onclick="functionDelete('studyList','Study')"
 											alt="delete">
 									<img src="images/Search_EditMetaData.svg"
-									th:src="@{/images/Search_EditMetaData.svg}" style="display: none; padding-left: 18px;" class="addDeleteUploadLabels"
+									th:src="@{/images/Search_EditMetaData.svg}" style="display: none; padding-left: 18px;" class="addDeleteUploadLabels"  data-toggle='tooltip' title='Edit Study'
 											id="editStudy" onclick="functionEditCollection('studyList','Study')"
 											alt="edit">
 								</div>
@@ -132,17 +132,17 @@
 							<div class="form-group">
 
 								<div class="pull-left" style="margin-top: 6px;margin-left: 15px">
-									<label for="assetSelection" class="uploadLabels radio-inline" onclick="displayEmptyAssetScreen('emptyAsset')"><input type="radio"
+									<label for="assetSelection" class="uploadLabels radio-inline" ><input type="radio"
 											name="selectAsset" data-backdrop="static" data-keyboard="false"
-											value="Register Asset" class="registeRadioButtons"
+											value="Register Asset" class="registeRadioButtons" onclick="displayEmptyAssetScreen('emptyAsset')"
 											>&nbsp;&nbsp;
 										Register Asset</label>
 								</div>
 								<div class="d-flex">
 								<div class="pull-left" style="margin-left: 15px">
-									<label for="selectAsset" class="uploadLabels radio-inline"  onclick="showSelect('Asset')" style="width: 180px;"><input type="radio"
+									<label for="selectAsset" class="uploadLabels radio-inline"  style="width: 180px;"><input type="radio"
 											name="selectAsset" class="registeRadioButtons"
-											value="Select Asset">&nbsp;&nbsp;
+											value="Select Asset" onclick="showSelect('Asset')">&nbsp;&nbsp;
 										Select Asset</label>
 								</div>
 								<div id="showSelectAssetDiv" style="min-width: 400px;margin-top: 0;">
@@ -153,12 +153,12 @@
 								</div>
 								<div class="form-group" style="padding: 0 18px">
 
-									<img src="/images/deleteOrange.svg"
+									<img src="/images/deleteOrange.svg"  data-toggle='tooltip' title='Delete Asset'
 											th:src="@{/images/deleteOrange.svg}" style="display: none;" class="addDeleteUploadLabels"
 											id="deleteDataSet"  onclick="functionDelete('dataList','Asset')"
 											alt="delete">
 									<img src="images/Search_EditMetaData.svg"
-									th:src="@{/images/Search_EditMetaData.svg}" style="display: none; padding-left: 18px;" class="addDeleteUploadLabels"
+									th:src="@{/images/Search_EditMetaData.svg}" style="display: none; padding-left: 18px;" class="addDeleteUploadLabels"  data-toggle='tooltip' title='Edit Asset'
 											id="editAsset" onclick="functionEditCollection('dataList','Asset')"
 											alt="edit">
 								</div>

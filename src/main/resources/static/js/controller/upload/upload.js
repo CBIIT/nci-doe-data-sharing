@@ -116,6 +116,10 @@ function loadUploadTab() {
 			computeWidthForCollectionPath('uploadCollectionPath');
 		}
 	}
+	else {
+		$("input[name=selectProgram][value='Select Program']").prop("checked", true);
+		showSelect('Program');
+	}
 
 }
 
@@ -222,14 +226,14 @@ function resetSelectionsForBackToUploadTab() {
 			$("input[name=selectProgram][value='Select Program']").click();
 		}
 	}
-	if ($("input[name=selectStudy]").is(":visible")) {
+	if ($("input[name=selectStudy]").is(":visible")  && !($("#studyListDiv").hasClass("disable-pointer-events"))) {
 		if ($("#studyList").is(":visible")) {
 			$("input[name=selectStudy][value='Select Study']").prop("checked", true);
 		} else {
 			$("input[name=selectStudy][value='Select Study']").click();
 		}
 	}
-	if ($("input[name=selectAsset]").is(":visible")) {
+	if ($("input[name=selectAsset]").is(":visible")  && !($("#dataSetListDiv").hasClass("disable-pointer-events"))) {
 		$("input[name=selectAsset][value='Select Asset']").prop("checked", true);
 		if (!$("#dataList").is(":visible")) {
 			showSelect('Asset');
@@ -244,6 +248,9 @@ function resetOnChangeofSelectCollection(selectTarget, selectedValue) {
 		if (selectedValue && selectedValue != 'ANY') {
 			// $("#studyListDiv").show();
 			$("#studyListDiv").removeClass("disable-pointer-events");
+		
+			$("#showSelectStudyDiv").show();
+			$("input[name=selectStudy][value='Select Study']").click();
 
 			$("#deleteStudy").hide();
 			$("#editStudy").hide();
@@ -251,10 +258,12 @@ function resetOnChangeofSelectCollection(selectTarget, selectedValue) {
 			$("#editProgram").show();
 			// $("#dataSetListDiv").hide();
 			$("#dataSetListDiv").addClass("disable-pointer-events");
+			$("#showSelectAssetDiv").show();
+			$("input[name=selectAsset][value='Select Asset']").click();
 
 			$("#dataListDiv").hide();
-			$("#showSelectStudyDiv").hide();
-			$("input[name=selectStudy][value='Select Study']").prop("checked", false);
+			//$("#showSelectStudyDiv").hide();
+			//$("input[name=selectStudy][value='Select Study']").prop("checked", false);
 		} else {
 			// $("#studyListDiv").hide();
 			$("#studyListDiv").addClass("disable-pointer-events");
@@ -269,6 +278,7 @@ function resetOnChangeofSelectCollection(selectTarget, selectedValue) {
 	} else if (selectTarget == 'studyList') {
 		$("#uploadAndRegisterFiles").hide();
 		$("#dataListDiv").hide();
+		 
 		if (selectedValue && selectedValue != 'ANY') {
 			// $("#studyListDiv").show();
 			$("#studyListDiv").removeClass("disable-pointer-events");
@@ -283,7 +293,12 @@ function resetOnChangeofSelectCollection(selectTarget, selectedValue) {
 			$("#editAsset").hide();
 			$("#showSelectAssetDiv").hide();
 			$("#showSubAssetSelectionDiv").hide();
-			$("input[name=selectAsset]").prop("checked", false);
+			//$("input[name=selectAsset]").prop("checked", false);
+			$("#showSelectAssetDiv").show();
+			$("input[name=selectAsset]").prop("checked", true);
+		    $("input[name=selectAsset][value='Select Asset']").click();
+			//$("input[name=selectAsset][value='Select Asset']").prop("checked", true);
+			//showSelect('Asset',selectedValue);
 
 		} else {
 			// $("#studyListDiv").show();
@@ -295,6 +310,10 @@ function resetOnChangeofSelectCollection(selectTarget, selectedValue) {
 			$("#deleteStudy").hide();
 			$("#editStudy").hide();
 			$("#bulkAssetGlobusRadiobtn").hide();
+
+			$("#showSelectAssetDiv").show();
+		    $("input[name=selectAsset][value='Select Asset']").click();
+
 		}
 	} else if (selectTarget == 'dataList') {
 		// $("#studyListDiv").show();
