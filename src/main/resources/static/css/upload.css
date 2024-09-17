@@ -664,3 +664,9 @@ ul#select2-uploadAssetSelect-results, ul#select2-registerAssetSelect-results {
     line-height: 112%;
     letter-spacing: -0.16px;
 }
+
+#formAssetSelection {
+	.select2-container{
+		margin-left: 12px;
+	}
+}

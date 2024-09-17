@@ -34,7 +34,7 @@
 
 					<div class="d-flex flex-column col-md-12 col-sm-12 mt-3" style="background: #F3F3F3;">
 						<div class="form-row" th:if="${bulkUploadCollection !=null and endpoint_id != null}"
-							style="display: flex;border-bottom: 1px solid #D2D2D2;margin-top: 0.5rem;height: 45px;">
+							style="display: flex;border-bottom: 1px solid #D2D2D2;margin: 0.5rem 6px 0.5rem 1rem;height: 45px;">
 							<div class="form-group col-4 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">GLOBUS
 									ENDPOINT ID </span>
@@ -46,7 +46,7 @@
 						</div>
 
 						<div class="form-row"
-							style="display: flex;border-bottom: 1px solid #D2D2D2;margin-top: 0.5rem;height: 45px;"
+							style="display: flex;border-bottom: 1px solid #D2D2D2;margin: 0.5rem 6px 0.5rem 1rem;height: 45px;"
 							th:if="${bulkUploadCollection !=null and endpoint_path != null}">
 							<div class="form-group col-4 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">GLOBUS
@@ -59,7 +59,7 @@
 						</div>
 
 						<div class="form-row"
-							style="display: flex;border-bottom: 1px solid #D2D2D2;margin-top: 0.5rem; height: 45px;"
+							style="display: flex;border-bottom: 1px solid #D2D2D2;margin: 0.5rem 6px 0.5rem 1rem; height: 45px;"
 							th:if="${bulkUploadCollection!=null and fileNames != null}">
 							<div class="form-group col-4 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">SELECTED
@@ -76,7 +76,7 @@
 
 
 						<div class="form-row"
-							style="display: flex;border-bottom: 1px solid #D2D2D2;margin-top: 0.5rem;min-height: 45px; height: auto;"
+							style="display: flex;border-bottom: 1px solid #D2D2D2;margin: 0.5rem 6px 0.5rem 1rem;min-height: 45px; height: auto;"
 							th:if="${bulkUploadCollection !=null and folderNames != null}">
 							<div class="form-group col-4 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">SELECTED
@@ -91,7 +91,7 @@
 							</div>
 						</div>
 
-						<div class="form-row" style="display: flex;margin-top: 0.5rem; height: 45px;"
+						<div class="form-row" style="display: flex;margin: 0.5rem 6px 0.5rem 1rem; height: 45px;"
 							th:if="${bulkUploadCollection !=null and endpoint_id != null}">
 							<div class="form-group col-4 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields ">INCLUDE
@@ -123,7 +123,7 @@
 								<span class="assetGlobusSelectionFields">S3 BUCKET</span>
 							</div>
 							<div class="form-group col-8 assetBulkGlobusValues"
-								style="background-color: #fff;">
+								style="background-color: #fff;margin-left:10px">
 								<input type="search" name="bucketName" is_mandatory="true"
 									placeholder="Enter S3 Bucket Name"
 									style="width: 100%; border: none; background-color: transparent; padding-left: 10px;">
@@ -135,7 +135,7 @@
 								<span class="assetGlobusSelectionFields"> S3 (SOURCE) PATH</span>
 							</div>
 							<div class="form-group col-8 assetBulkGlobusValues"
-								style="background-color: #fff;">
+								style="background-color: #fff;margin-left:10px">
 								<input type="search" name="s3Path" is_mandatory="true"
 									placeholder="Enter S3 (Source) Path"
 									style="width: 100%; border: none; background-color: transparent; padding-left: 10px;">
@@ -149,7 +149,7 @@
 								</span>
 							</div>
 							<div class="form-group col-8 assetBulkGlobusValues"
-								style="background-color: #fff;">
+								style="background-color: #fff;margin-left:10px">
 								<input type="search" name="accessKey" is_mandatory="true" placeholder="Enter Access Key"
 									style="width: 100%; border: none; background-color: transparent; padding-left: 10px;">
 							</div>
@@ -161,7 +161,7 @@
 								</span>
 							</div>
 							<div class="form-group col-8 assetBulkGlobusValues"
-								style="background-color: #fff;">
+								style="background-color: #fff;margin-left:10px">
 								<input type="password" name="secretKey" is_mandatory="true"
 									placeholder="Enter Secret Access Key"
 									style="width: 100%; border: none; background-color: transparent; padding-left: 10px;">
@@ -174,7 +174,7 @@
 								</span>
 							</div>
 							<div class="form-group col-8 assetBulkGlobusValues"
-								style="background-color: #fff;">
+								style="background-color: #fff;margin-left:10px">
 								<input type="search" name="region" is_mandatory="true"
 									placeholder="Enter Region (for Example us-east-1)"
 									style="width: 100%; border: none; background-color: transparent; padding-left: 10px;">
@@ -191,7 +191,7 @@
 								</span>
 							</div>
 							<div class="form-group col-8 assetBulkGlobusValues"
-								style="background-color: #fff;">
+								style="background-color: #fff;margin-left:10px">
 								<input type="search" name="includeCriteria" is_mandatory="false"
 									placeholder="Enter criteria" id="includeCriteria"
 									style="width: 100%; border: none; background-color: transparent; padding-left: 10px;">
