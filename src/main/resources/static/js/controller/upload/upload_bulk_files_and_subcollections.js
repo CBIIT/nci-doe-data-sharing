@@ -114,7 +114,10 @@ function openBulkDataRegistration(folderPath) {
 }
 
 function clearRegisterDataDiv() {
-	$('input[name=datafileTypeUpload]').prop('checked', false);
+
+	$('#uploadFilesSelect').prop('selectedIndex', 0);
+	$('#uploadFilesSelect').val('').trigger('change');
+
 	$("#doeDataFile").val("");
 	$("#newMetaDataTableForSingleFile tbody").html("");
 	$("#singleFileDataUploadSection").hide();

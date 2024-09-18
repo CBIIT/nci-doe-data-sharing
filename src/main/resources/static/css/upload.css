@@ -678,7 +678,8 @@ label.radio-label {
 	color: #000;
 }
 
-ul#select2-uploadAssetSelect-results, ul#select2-registerAssetSelect-results {
+ul#select2-uploadAssetSelect-results, ul#select2-registerAssetSelect-results,
+ul#select2-uploadFilesSelect-results{
     background-color: #EBF2F6 !important;
     color: #000;
     font-variant-numeric: lining-nums tabular-nums;
