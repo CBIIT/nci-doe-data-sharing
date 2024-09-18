@@ -674,5 +674,24 @@ label.radio-label {
 }
 
 .select2-container--bootstrap4 .select2-results__option--highlighted[aria-selected]:hover {
-  background: #F3F3F3 !important;
+	background-color: #c8d4dc !important;
+	color: #000;
+}
+
+ul#select2-uploadAssetSelect-results, ul#select2-registerAssetSelect-results {
+    background-color: #EBF2F6 !important;
+    color: #000;
+    font-variant-numeric: lining-nums tabular-nums;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 112%;
+    letter-spacing: -0.16px;
+}
+
+#formAssetSelection {
+	.select2-container{
+		margin-left: 12px;
+	}
 }
