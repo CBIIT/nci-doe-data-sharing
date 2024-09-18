@@ -87,23 +87,7 @@ function loadUploadTab() {
 					$("#registerBulkDataFileBtn").prop("disabled", true);
 				}
 				if(uploadAsyncType) {
-					$("#uploadFilesSelect").val(uploadAsyncType);
-				}
-
-				if (uploadAsyncType && uploadAsyncType == 'drive') {				
-					$("#displayGlobusUploadDiv").hide();
-					$("#displayDriveUploadDiv").show();
-					$("#displayCloudUploadDiv").hide();
-				} else if (uploadAsyncType && uploadAsyncType == 'cloud') {
-					
-					$("#displayGlobusUploadDiv").hide();
-					$("#displayDriveUploadDiv").hide();
-					$("#displayCloudUploadDiv").show();
-					$("#registerBulkDataFileBtn").prop("disabled", false);
-				} else {					
-					$("#displayGlobusUploadDiv").show();
-					$("#displayDriveUploadDiv").hide();
-					$("#displayCloudUploadDiv").hide();
+					$("#uploadFilesSelect").val(uploadAsyncType).trigger("change");
 				}
 			}
 		}

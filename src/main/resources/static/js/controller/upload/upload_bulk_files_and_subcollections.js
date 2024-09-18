@@ -323,7 +323,6 @@ function displayDataFileSection() {
 		$("#registerBulkDataFileBtn").prop("disabled", false);
 
 	} else if (value == 'drive') {
-		$("#driveUploadAuthlink").prop("disabled",false);
 		$("#singleFileDataUploadSection").hide();
 		$("#bulkFileUploadSection").show();
 		$("#displayGlobusUploadDiv").hide();
@@ -333,13 +332,11 @@ function displayDataFileSection() {
 		$("#displayDriveUploadDiv").show();
 		$("#displayCloudUploadDiv").hide();
 		$("#driveDiv").hide();
-		$("#driveAuthorisedMsg").hide();
 		$("#cloudAuthorisedMsg").hide();
 		$("#fileNamesDiv").html("");
 		$("#folderNamesDiv").html("");
 		$("#registerBulkDataFileBtn").prop("disabled", true);
 	} else if (value == 'cloud') {
-		$("#cloudUploadAuthlink").prop("disabled",false);
 		$("#singleFileDataUploadSection").hide();
 		$("#bulkFileUploadSection").show();
 		$("#displayGlobusUploadDiv").hide();
@@ -350,7 +347,6 @@ function displayDataFileSection() {
 		$("#displayCloudUploadDiv").show();
 		$("#driveDiv").hide();
 		$("#driveAuthorisedMsg").hide();
-		$("#cloudAuthorisedMsg").hide();
 		$("#fileNamesDiv").html("");
 		$("#folderNamesDiv").html("");
 		$("#registerBulkDataFileBtn").prop("disabled", true);
