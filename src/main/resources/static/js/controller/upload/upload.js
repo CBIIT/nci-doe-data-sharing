@@ -76,7 +76,6 @@ function loadUploadTab() {
 				constructAssetFileAndFoldersDiv(data);
 				$("#uploadAndRegisterFiles").show();
 				$("#uploadDataFilesTab").show();
-				$('input[name=datafileTypeUpload]:checked').val();
 				$("#bulkFileUploadSection").show();
 				$("#registerFileBtnsDiv").show();
 				$("#bulkDataFilePathCollection").val(uploadPath);
@@ -87,20 +86,21 @@ function loadUploadTab() {
 				} else {
 					$("#registerBulkDataFileBtn").prop("disabled", true);
 				}
+				if(uploadAsyncType) {
+					$("#uploadFilesSelect").val(uploadAsyncType);
+				}
 
-				if (uploadAsyncType && uploadAsyncType == 'drive') {
-					$("#datafileTypeDriveUpload").prop("checked", true);
+				if (uploadAsyncType && uploadAsyncType == 'drive') {				
 					$("#displayGlobusUploadDiv").hide();
 					$("#displayDriveUploadDiv").show();
 					$("#displayCloudUploadDiv").hide();
 				} else if (uploadAsyncType && uploadAsyncType == 'cloud') {
-					$("#datafileTypeCloudUpload").prop("checked", true);
+					
 					$("#displayGlobusUploadDiv").hide();
 					$("#displayDriveUploadDiv").hide();
 					$("#displayCloudUploadDiv").show();
 					$("#registerBulkDataFileBtn").prop("disabled", false);
-				} else {
-					$("#datafileTypeGlobusUpload").prop("checked", true);
+				} else {					
 					$("#displayGlobusUploadDiv").show();
 					$("#displayDriveUploadDiv").hide();
 					$("#displayCloudUploadDiv").hide();

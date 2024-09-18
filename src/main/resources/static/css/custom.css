@@ -364,13 +364,21 @@ bg-primary {
 }
 
 
-#addNewMetaDataForSingleDataFile,
 #addUserMetadataForBulkAssets,
 #btnUpdateAccessGroup,
 #btnUpdatePermissions,
 #btnPredictionAccessGrp {
 	background-color: #E66F05 !important;
 	font-family: 'inter_regular';
+}
+
+#addNewMetaDataForSingleDataFile {
+	   color: #000;
+	   font-family: Inter;
+	   font-size: 16px;
+	   font-style: normal;
+	   margin-left: 16px !important;
+	   font-weight: 100;
 }
 
 .backToStatusTab, .backToUpload, .backToSearch, .backToStatusTab {
@@ -518,14 +526,15 @@ table.dataTable thead .sorting_desc_disabled:before {
 #doeDataFile::file-selector-button {
 	margin-right: 15px;
 	box-sizing: border-box;
-	height: 36px;
-	width: 146px;
-	border: 2px solid #E87B05;
+	height: 41px;
+	width: 126px;
+	border: 1px solid var(--Grays-Gray-3, #8B98AF);
+    background: #FFF;
 	background-color: #FFFFFF;
-	border-radius: 15px;
-	color: #000000;
+	border-radius: 65px;
+	color: var(--Grays-Gray-6, #646464);
 	font-family: 'inter_regular';
-	font-size: 15px;
+	font-size: 16px;
 	font-weight: 500;
 }
 

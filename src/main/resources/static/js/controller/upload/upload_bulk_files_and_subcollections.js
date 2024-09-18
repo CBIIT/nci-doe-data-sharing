@@ -128,7 +128,7 @@ function clearRegisterDataDiv() {
 }
 
 function registerBulkDataFile() {
-	var uploadType = $('input[name=datafileTypeUpload]:checked').val();
+	var uploadType = $("#uploadFilesSelect").val();
 	var usermetaDataEntered = true;
 
 	if (uploadType == 'singleData') {
@@ -202,7 +202,7 @@ function registerBulkDataFile() {
 
 	} else {
 		var dataFilePath = $("#bulkDataFilePathCollection").val();
-		var bulkUploadType = $('input[name=datafileTypeUpload]:checked').val();
+		var bulkUploadType = $("#uploadFilesSelect").val();
 		var validate = true;
 		$('form#registerBulkDataForm input[type="search"]').each(function() {
 			if ($(this).is(":visible") && !$(this).val()) {
@@ -283,11 +283,12 @@ function appendFileName($this) {
 
 }
 
-function displayDataFileSection(value) {
+function displayDataFileSection() {
 	$(".registerBulkDataFileSuccess").hide();
 	$(".registerBulkDataFile").html("");
 	$("#registerFileBtnsDiv").show();
-
+	var value = $("#uploadFilesSelect").val();
+	
 	if (value == 'singleData') {
 		$("#singleFileDataUploadSection").show();
 		$("#bulkFileUploadSection").hide();
