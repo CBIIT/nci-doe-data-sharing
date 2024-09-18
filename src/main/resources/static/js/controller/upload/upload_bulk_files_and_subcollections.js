@@ -335,7 +335,7 @@ function displayDataFileSection() {
 		$("#driveDiv").hide();
 		$("#fileNamesDiv").html("");
 		$("#folderNamesDiv").html("");
-		
+		$("#registerBulkDataFileBtn").prop("disabled", false);
 		
 	} else if (value == 'cloud') {
 		$("#singleFileDataUploadSection").hide();
