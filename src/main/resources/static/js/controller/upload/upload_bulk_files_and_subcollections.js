@@ -291,6 +291,7 @@ function displayDataFileSection() {
 	$(".registerBulkDataFile").html("");
 	$("#registerFileBtnsDiv").show();
 	var value = $("#uploadFilesSelect").val();
+	var authorizedGC = $("#authorizedGC").val();
 	
 	if (value == 'singleData') {
 		$("#singleFileDataUploadSection").show();
@@ -332,10 +333,10 @@ function displayDataFileSection() {
 		$("#displayDriveUploadDiv").show();
 		$("#displayCloudUploadDiv").hide();
 		$("#driveDiv").hide();
-		$("#cloudAuthorisedMsg").hide();
 		$("#fileNamesDiv").html("");
 		$("#folderNamesDiv").html("");
-		$("#registerBulkDataFileBtn").prop("disabled", true);
+		
+		
 	} else if (value == 'cloud') {
 		$("#singleFileDataUploadSection").hide();
 		$("#bulkFileUploadSection").show();
@@ -346,10 +347,14 @@ function displayDataFileSection() {
 		$("#displayDriveUploadDiv").hide();
 		$("#displayCloudUploadDiv").show();
 		$("#driveDiv").hide();
-		$("#driveAuthorisedMsg").hide();
 		$("#fileNamesDiv").html("");
 		$("#folderNamesDiv").html("");
-		$("#registerBulkDataFileBtn").prop("disabled", true);
+		if(authorizedGC) {
+			$("#registerBulkDataFileBtn").prop("disabled", false);
+		} else {
+			$("#registerBulkDataFileBtn").prop("disabled", true);
+		}
+		
 	}
 
 }
