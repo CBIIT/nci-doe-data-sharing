@@ -241,14 +241,12 @@
 										<img class="arrowright" src="/images/white_right_arrow.svg" style="width: 16px;
             							transform: translate(100px, -12px);">
 									</button>
-								</div>
-								
-								<div class="d-flex">
-									
-								<div th:if="${authorized != null}" id="driveAuthorisedMsg" class="col-4">
+									<div th:if="${authorized != null}" style="margin-top: 10px;margin-left: 25px;" id="driveAuthorisedMsg" class="col-4">
 									<i class="fa fa-check">&nbsp;</i>Access Token Successfully Generated
 									</div>
 								</div>
+								
+								
 								
 								<div class="d-flex" id="driveDiv" th:if="${authorized != null}">	
 										<button type="button" class="btn btn-md btn-link"
@@ -310,16 +308,12 @@
 										<img class="arrowright" src="/images/white_right_arrow.svg" style="width: 16px;
             							transform: translate(100px, -12px);">
 									</button>
-								</div>
-								
-								<div class="d-flex">
 									
-								<div th:if="${authorizedGC != null}" id="cloudAuthorisedMsg" class="col-4">
+									<div th:if="${authorizedGC != null}" style="margin-top: 10px;margin-left: 25px;" id="cloudAuthorisedMsg" class="col-4">
 									<i class="fa fa-check">&nbsp;</i>Access Token Successfully Generated
 									</div>
 								</div>
-		
-								
+												
 							<div th:if="${authorizedGC != null}" class="col-sm-12 column googleCloudContent mt-4 pt-1" style="margin-left:-15px">
 								<div class="d-flex pt-2 pr-3" style="background: #EEF4F6">
 								<div class="form-group col-lg-6 col-md-6 assetBulkGlobusLabels">
