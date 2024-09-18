@@ -246,31 +246,26 @@ function resetOnChangeofSelectCollection(selectTarget, selectedValue) {
 		$("#uploadAndRegisterFiles").hide();
 		$("#bulkAssetGlobusRadiobtn").hide();
 		if (selectedValue && selectedValue != 'ANY') {
-			// $("#studyListDiv").show();
+			// Enable Study div and hide Study select
 			$("#studyListDiv").removeClass("disable-pointer-events");
-		
-			$("#showSelectStudyDiv").show();
-			$("input[name=selectStudy][value='Select Study']").click();
+			$("input[name=selectStudy][value='Select Study']").prop("checked", false);
+			$("#showSelectStudyDiv").hide();
 
 			$("#deleteStudy").hide();
 			$("#editStudy").hide();
 			$("#deleteProgram").show();
 			$("#editProgram").show();
-			// $("#dataSetListDiv").hide();
-			$("#dataSetListDiv").addClass("disable-pointer-events");
-			$("#showSelectAssetDiv").show();
-			$("input[name=selectAsset][value='Select Asset']").click();
 
+			// Enable Asset and hide Asset select
+			$("#dataSetListDiv").addClass("disable-pointer-events");
+			$("#showSelectAssetDiv").hide();
 			$("#dataListDiv").hide();
-			//$("#showSelectStudyDiv").hide();
-			//$("input[name=selectStudy][value='Select Study']").prop("checked", false);
+			$("input[name=selectAsset][value='Select Asset']").prop("checked", false);
 		} else {
-			// $("#studyListDiv").hide();
 			$("#studyListDiv").addClass("disable-pointer-events");
-
-			// $("#dataSetListDiv").hide();
+			$("input[name=selectStudy][value='Select Study']").prop("checked", false);
 			$("#dataSetListDiv").addClass("disable-pointer-events");
-
+			$("input[name=selectAsset]").prop("checked", false);
 			$("#dataListDiv").hide();
 			$("#deleteProgram").hide();
 			$("#editProgram").hide();
@@ -280,28 +275,23 @@ function resetOnChangeofSelectCollection(selectTarget, selectedValue) {
 		$("#dataListDiv").hide();
 		 
 		if (selectedValue && selectedValue != 'ANY') {
-			// $("#studyListDiv").show();
 			$("#studyListDiv").removeClass("disable-pointer-events");
-
-			// $("#dataSetListDiv").show();
-			$("#dataSetListDiv").removeClass("disable-pointer-events");
-
 			$("#deleteStudy").show();
 			$("#editStudy").show();
 			$("#bulkAssetGlobusRadiobtn").show();
+
+			$("#dataSetListDiv").removeClass("disable-pointer-events");
 			$("#deleteDataSet").hide();
 			$("#editAsset").hide();
 			$("#showSubAssetSelectionDiv").hide();
-			$("input[name=selectAsset]").prop("checked", true);
-			$("#showSelectAssetDiv").show();
-		    $("input[name=selectAsset][value='Select Asset']").click();
+			$("input[name=selectAsset]").prop("checked", false);
+			$("#showSelectAssetDiv").hide();
 	
 
 		} else {
 			$("#studyListDiv").removeClass("disable-pointer-events");
-
 			$("#dataSetListDiv").addClass("disable-pointer-events");
-
+			$("input[name=selectAsset]").prop("checked", false);
 			$("#deleteStudy").hide();
 			$("#editStudy").hide();
 			$("#bulkAssetGlobusRadiobtn").hide();
