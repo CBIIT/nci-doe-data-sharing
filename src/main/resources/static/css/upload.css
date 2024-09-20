@@ -404,6 +404,17 @@ input#includeCriteria:focus {
     padding-left: 17px;
 }
 
+#driveAuthorisedMsg, #cloudAuthorisedMsg {
+	margin-top: 10px;
+    margin-left: 25px;
+    color: #152868;
+    font-family: 'inter_regular';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+}
+
 .googledrive_labels {
 	color: #152868;
 	font-family: 'inter_regular';

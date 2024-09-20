@@ -62,11 +62,11 @@ function populateSelection(fileId) {
 								 + '<span class="assetGlobusSelectionFields" style="padding-left: 10px;padding-top: 5px;">SELECTED FILES'
 								 + '</span>'
 								 + '</div>'
-								 + '<div class="form-group col-lg-6 col-md-6" id="googledriveFilesContent" style="margin-top: 10px;margin-left: 3px;"></div>';
+								 + '<div class="form-group col-lg-6 col-md-6" id="googledriveFilesContent" style="margin-top: 10px;margin-left: 17px;"></div>';
 		var folderNamesDivHtml = '<br /><div class="form-group col-4 assetBulkGlobusLabels">'
 								 + ' <span class="assetGlobusSelectionFields" style="padding-left: 10px;padding-top: 5px;">SELECTED FOLDERS'
 								 + '</span></div>'
-								 + '<div class="form-group col-lg-6 col-md-6" id="googledriveFolderContent" style="margin-top: 10px;margin-left: 3px;"></div>';				 
+								 + '<div class="form-group col-lg-6 col-md-6" id="googledriveFolderContent" style="margin-top: 10px;margin-left: 17px;"></div>';				 
 								 
 		$("#fileNamesDiv").html(filesNamesDivHtml);
 		$("#folderNamesDiv").html(folderNamesDivHtml);

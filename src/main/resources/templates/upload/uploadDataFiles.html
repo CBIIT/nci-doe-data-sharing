@@ -29,13 +29,13 @@
       <div class="col-sm-10">
 
 		<div class="alert alert-success registerBulkDataFileSuccess"
-			style="display: none; margin-bottom:10px; margin-left: 12px;">				
+			style="display: none; margin-bottom:10px; margin-left: 15px;margin-right: 80px;">				
 				<h6 class="registerBulkDataFile"></h6>
 				
 		</div>
 
 		<div class="alert alert-danger uploadBulkDataError" role="alert" 
-		style="display: none; margin-bottom: 10px; margin-left: 12px;">
+		style="display: none; margin-bottom: 10px; margin-left: 15px;margin-right: 80px;">
 				<h6 class="uploadBulkDataErrorMsg"></h6>
 		</div>
 
@@ -68,10 +68,10 @@
 				<span> Upload Options</span>
 		</div>	
 		
-       <div class="form-group col-lg-6 col-md-6 registerFilesAndSubCollectionsOptions" style="margin-left:-85px;">
+       <div class="form-group col-lg-6 col-md-6 registerFilesAndSubCollectionsOptions" style="margin-left:-80px;">
               <div class="flex-fill">
                 <div class="asset-files-dropdown">
-                  <select class="simple-select2" style="width: 485px; !important" id="uploadFilesSelect" name="datafileTypeUpload" onchange="displayDataFileSection()">
+                  <select class="simple-select2" style="width: 480px; !important" id="uploadFilesSelect" name="datafileTypeUpload" onchange="displayDataFileSection()">
                     <option value="" disabled selected>Select Upload Type</option>
                     <option value="singleData">Local System</option>
                     <option value="globus">Transfer from Globus Endpoint</option>
@@ -244,7 +244,7 @@
 										<img class="arrowright" src="/images/white_right_arrow.svg" style="width: 16px;
             							transform: translate(180px, -27px);">
 									</button>
-									<div th:if="${authorized != null}" style="margin-top: 10px;margin-left: 25px;" id="driveAuthorisedMsg" class="col-4">
+									<div th:if="${authorized != null}" style="margin-top: 10px;margin-left: 25px;" id="driveAuthorisedMsg" class="col-5">
 									<i class="fa fa-check">&nbsp;</i>Access Token Successfully Generated
 									</div>
 								</div>
@@ -262,16 +262,11 @@
 								
 															
 								<div class="form-row" id="fileNamesDiv" 
-								th:style="${fileNames != null ? 'display: flex;background-color: #EEF4F6;
-								margin-top: 0.5rem;height: 45px;' : 'display:none'}"> 
-
+								th:style="${fileNames != null ? 'display: flex;' : 'display:none'}"> 
 								</div>	
 									
 								<div class="form-row" id="folderNamesDiv"
-								  th:style="${folderNames != null ? 'display: flex;
-								 margin-top: 4px;background-color: #EEF4F6;margin-top: 0.5rem;height: 45px;' : 
-								  'display:none'}">
-	
+								  th:style="${folderNames != null ? 'display: flex;' : 'display:none'}">	
 								</div>
 							</div>
 
@@ -285,16 +280,16 @@
             							transform: translate(180px, -27px);">
 									</button>
 									
-									<div th:if="${authorizedGC != null}" style="margin-top: 10px;margin-left: 25px;" id="cloudAuthorisedMsg" class="col-4">
+									<div th:if="${authorizedGC != null}" style="margin-top: 10px;margin-left: 25px;" id="cloudAuthorisedMsg" class="col-5">
 									<i class="fa fa-check">&nbsp;</i>Access Token Successfully Generated
 									</div>
 								</div>
 												
 							<div th:if="${authorizedGC != null}" class="col-sm-12 column googleCloudContent" style="margin-left:-15px;margin-top: 48px;max-width: 850px;">
 								<div class="d-flex pt-2 pr-3" style="background: #EEF4F6">
-								<div class="form-group col-lg-5 col-md-5 assetBulkGlobusLabels">
+								<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">GOOGLE CLOUD BUCKET</span></div>
-								<div class="form-group col-lg-7 col-md-7 uploadToAssetBulkValues" style="background-color: #fff;margin-left: -39px;">	
+								<div class="form-group col-lg-8 col-md-8 uploadToAssetBulkValues" style="background-color: #fff;margin-left: 22px;max-width: 480px;">	
 									<input type="search" name="gcbucketName" style="width: 100%;border: none;
     									background-color: transparent;padding-left: 10px;margin-bottom: 6px;"
 										th:value="${gcbucketName}" id="gcbucketName"
@@ -303,10 +298,10 @@
 		
 								</div>
 								<div class="d-flex pt-2 pr-3" style="background: #EEF4F6;margin-top:3px;padding-bottom: 2.5rem;">
-								<div class="form-group col-lg-5 col-md-5 assetBulkGlobusLabels">
+								<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
 									<span class="assetGlobusSelectionFields">GOOGLE CLOUD SOURCE PATH</span></div>
 									
-								  <div class="form-group col-lg-7 col-md-7 uploadToAssetBulkValues" style="background-color: #fff;margin-left: -39px;">
+								  <div class="form-group col-lg-8 col-md-8 uploadToAssetBulkValues" style="background-color: #fff;margin-left: 22px;max-width: 480px;">
 									<input type="search" th:value="${gcPath}" style="width: 100%;border: none;
     									background-color: transparent;padding-left: 10px;margin-bottom: 6px;"
 										name="gcPath" id="gcPath" placeholder="Enter Google Cloud Source Path" size="40" />
@@ -321,11 +316,11 @@
 								
 								<div class="d-flex pt-2 pr-3" style="background: #EEF4F6;">
 									
-									<div class="form-group col-lg-5 col-md-5 assetBulkGlobusLabels">
+									<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
 										<span class="assetGlobusSelectionFields" style="padding-left: 1px;">S3 BUCKET</span> </div>
 									
-									<div class="form-group col-lg-7 col-md-7 uploadToAssetBulkValues"
-									style="background-color: #fff;margin-left: -33px;">
+									<div class="form-group col-lg-8 col-md-8 uploadToAssetBulkValues"
+									style="background-color: #fff;margin-left: 23px;max-width: 480px;">
 									   <input type="search"
 										 name="bucketName" id="bucketName"
 										placeholder="Enter S3 Bucket Name" 
@@ -335,10 +330,10 @@
 								</div>
 								
 						   <div class="d-flex pt-2 pr-3" style="background: #EEF4F6;padding-bottom: 2.5rem;margin-top: 3px;">
-							   <div class="form-group col-lg-5 col-md-5 assetBulkGlobusLabels">
+							   <div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
 									<span class="assetGlobusSelectionFields" style="padding-left: 1px;">S3 (SOURCE) PATH</span></div>
-								<div class="form-group col-lg-7 col-md-7 uploadToAssetBulkValues"
-								style="background-color: #fff;margin-left: -33px;">
+								<div class="form-group col-lg-8 col-md-8 uploadToAssetBulkValues"
+								style="background-color: #fff;margin-left: 23px;max-width: 480px;">
 									 <input
 										type="search" name="s3Path" id="s3Path"
 										placeholder="Enter S3 (Source) Path" 
@@ -349,12 +344,12 @@
 							</div>
 								
 							<div class="d-flex pt-2 pr-3" style="background: #EEF4F6;margin-top: 3px;">
-							    <div class="form-group col-lg-5 col-md-5 assetBulkGlobusLabels">
+							    <div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
 								
 									<span class="assetGlobusSelectionFields" style="padding-left: 1px;">ACCESS KEY&nbsp;
 								    </span>  </div>
-								<div class="form-group col-lg-7 col-md-7 uploadToAssetBulkValues"
-								        style="background-color: #fff;margin-left: -33px;">	
+								<div class="form-group col-lg-8 col-md-8 uploadToAssetBulkValues"
+								        style="background-color: #fff;margin-left: 23px;max-width: 480px;">	
 									<input type="search"
 										 name="accessKey" id="accessKey"
 										placeholder="Enter Access Key"
@@ -363,12 +358,12 @@
 							 </div>
 							 
 							<div class="d-flex pt-2 pr-3" style="background: #EEF4F6;margin-top: 3px;">
-								<div class="form-group col-lg-5 col-md-5 assetBulkGlobusLabels">
+								<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
 									<span class="assetGlobusSelectionFields" style="padding-left: 1px;">SECRET ACCESS KEY&nbsp;
 									</span>
 								</div>
-								<div class="form-group col-lg-7 col-md-7 uploadToAssetBulkValues"
-								style="background-color: #fff;margin-left: -33px;">
+								<div class="form-group col-lg-8 col-md-8 uploadToAssetBulkValues"
+								style="background-color: #fff;margin-left: 23px;max-width: 480px;">
 									 <input
 										type="password" name="secretKey"
 										id="secretKey" placeholder="Enter Secret Access Key" 
@@ -377,12 +372,12 @@
 							</div>
 								
 							<div class="d-flex pt-2 pr-3" style="background: #EEF4F6;margin-top: 3px;">
-								<div class="form-group col-lg-5 col-md-5 assetBulkGlobusLabels">
+								<div class="form-group col-lg-4 col-md-4 assetBulkGlobusLabels">
 									<span class="assetGlobusSelectionFields" style="padding-left: 1px;">REGION&nbsp;
 									</span>
 								</div>
-								<div class="form-group col-lg-7 col-md-7 uploadToAssetBulkValues"
-								style="background-color: #fff;margin-left: -33px;">
+								<div class="form-group col-lg-8 col-md-8 uploadToAssetBulkValues"
+								style="background-color: #fff;margin-left: 23px;max-width: 480px;">
 									 <input type="search"
 										 name="region" id="region"
 										placeholder="Enter Region (for Example us-east-1)" 
