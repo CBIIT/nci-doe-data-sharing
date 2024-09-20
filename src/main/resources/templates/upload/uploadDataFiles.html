@@ -8,7 +8,7 @@
 
 	<div class="form-row jumbotron pt-2 pb-2 mb-2" id="uploadDataFilesTab"
 		th:fragment="uploadDataFiles"
-		style="display: none; font-size: 13px; background-color: transparent; max-width: 1440px; margin: 28px auto;">
+		style="display: none; font-size: 13px; background-color: transparent; max-width: 1440px; margin: 28px auto;margin-bottom: 76px !important;">
 
     <div class="container">
       <div class="row">
@@ -58,17 +58,17 @@
 			<div class="form-group col-lg-8 col-md-8 labelEditCollection"
 				style="background-color: transparent; margin-left: -16px; display: flex;">
 				<input type="text" disabled id="uploadCollectionPath"
-					class="parentCollectionName" style="width:100%;padding-left: 0px;"/>
+					class="parentCollectionName" style="width:100%;padding-left: 0px;padding-right: 15px;"/>
 			</div>
 		</div>
 		
 	<div class="form-row col-md-12 col-sm-12" style="margin-top:28px;margin-left: -4px;">
 		
-		<div class="form-group col-lg-3 col-md-3 uploadAssetLabels">
+		<div class="form-group col-lg-5 col-md-5 uploadAssetLabels">
 				<span> Upload Options</span>
 		</div>	
 		
-       <div class="form-group col-lg-9 col-md-9 registerFilesAndSubCollectionsOptions" style="margin-left:-3rem">
+       <div class="form-group col-lg-6 col-md-6 registerFilesAndSubCollectionsOptions" style="margin-left:-85px;">
               <div class="flex-fill">
                 <div class="asset-files-dropdown">
                   <select class="simple-select2" style="width: 485px; !important" id="uploadFilesSelect" name="datafileTypeUpload" onchange="displayDataFileSection()">
@@ -103,13 +103,14 @@
 							<div class="form-group col-lg-12 col-md-12">
 
 								<span style="font-family: 'inter_regular';font-weight: 400;color: #235172;
-    								font-size: 16px;">Data Source</span><br/>
-								<input type="file"
-									aria-label="doe data file" name="doeDataFile" id="doeDataFile">
-									<span>
+    								font-size: 16px;">Data Source</span><span style="margin-left: 14px;">
 									
 									<img src="images/infoIcon.svg" class="icon" data-toggle="tooltip" 
-									data-placement="right" title="Max File Size: 2 GB">									
+									data-placement="right" title="Max File Size: 2 GB">	
+    								<br/>
+								<input type="file"
+									aria-label="doe data file" name="doeDataFile" id="doeDataFile">
+																	
 										
 								</span>	</div>
 							
@@ -132,7 +133,7 @@
 								<tbody>
 								</tbody>
 							</table>
-							<div style="height: 38px;margin-left: -40px;padding-top: 15px;">
+							<div style="height: 38px;margin-left: -13px;">
 			                    <a id="addNewMetaDataForSingleDataFile" class="mb-2 mr-2" 
 			                    onclick="addNewMetaDataCollection('newMetaDataTableForSingleFile')">
 			                    <img src="/images/addIcon.svg" class="metadataIcon" alt="add metadata">&nbsp;Add Metadata</a>
@@ -163,7 +164,7 @@
 										id="primaryGlobusButton">
 										Select from <img src="images/Uploads-Globus.icon.png"
 											th:src="@{/images/Uploads-Globus.icon.png}"
-											style="width: 26px;transform: translate(75px, 6px);" alt="globus"> Globus Endpoint
+											style="width: 26px;transform: translate(57px, 6px);" alt="globus"> Globus Endpoint
 									</button>
 								
 								
@@ -239,9 +240,9 @@
 								
 								<div class="d-flex">	
 										<button type="button" class="btn btn-md btn-link"
-										id="driveUploadAuthlink" th:disabled="${authorized != null}" onClick="return refreshAttributes('Drive')">Authorize MoDaC to Access<br>Your Google Drive
+										id="driveUploadAuthlink" th:disabled="${authorized != null}" onClick="return refreshAttributes('Drive')">Authorize MoDaC to Access Google Drive
 										<img class="arrowright" src="/images/white_right_arrow.svg" style="width: 16px;
-            							transform: translate(100px, -12px);">
+            							transform: translate(180px, -27px);">
 									</button>
 									<div th:if="${authorized != null}" style="margin-top: 10px;margin-left: 25px;" id="driveAuthorisedMsg" class="col-4">
 									<i class="fa fa-check">&nbsp;</i>Access Token Successfully Generated
@@ -252,9 +253,9 @@
 								
 								<div class="d-flex" id="driveDiv" style="margin-top: 14px;" th:if="${authorized != null}">	
 										<button type="button" class="btn btn-md btn-link"
-										id="pickerUploadLink">SELECT FROM<br> GOOGLE DRIVE
+										id="pickerUploadLink">SELECT FROM GOOGLE DRIVE
 										<img class="arrowright" src="/images/white_right_arrow.svg" style="width: 16px;
-            							transform: translate(142px, -12px);">
+            							transform: translate(136px, -13px);">
 									</button>
 								</div>
 								
@@ -279,9 +280,9 @@
 								
 								<div class="d-flex">								
 									<button type="button" class="btn btn-md btn-link" th:disabled="${authorizedGC != null}" 
-										id="cloudUploadAuthlink">Authorize MoDaC to Access<br>Your Google Cloud
+										id="cloudUploadAuthlink">Authorize MoDaC to Access Google Cloud
 										<img class="arrowright" src="/images/white_right_arrow.svg" style="width: 16px;
-            							transform: translate(100px, -12px);">
+            							transform: translate(180px, -27px);">
 									</button>
 									
 									<div th:if="${authorizedGC != null}" style="margin-top: 10px;margin-left: 25px;" id="cloudAuthorisedMsg" class="col-4">
@@ -324,7 +325,7 @@
 										<span class="assetGlobusSelectionFields" style="padding-left: 1px;">S3 BUCKET</span> </div>
 									
 									<div class="form-group col-lg-7 col-md-7 uploadToAssetBulkValues"
-									style="background-color: #fff;margin-left: -41px;">
+									style="background-color: #fff;margin-left: -33px;">
 									   <input type="search"
 										 name="bucketName" id="bucketName"
 										placeholder="Enter S3 Bucket Name" 
@@ -337,7 +338,7 @@
 							   <div class="form-group col-lg-5 col-md-5 assetBulkGlobusLabels">
 									<span class="assetGlobusSelectionFields" style="padding-left: 1px;">S3 (SOURCE) PATH</span></div>
 								<div class="form-group col-lg-7 col-md-7 uploadToAssetBulkValues"
-								style="background-color: #fff;margin-left: -41px;">
+								style="background-color: #fff;margin-left: -33px;">
 									 <input
 										type="search" name="s3Path" id="s3Path"
 										placeholder="Enter S3 (Source) Path" 
@@ -353,7 +354,7 @@
 									<span class="assetGlobusSelectionFields" style="padding-left: 1px;">ACCESS KEY&nbsp;
 								    </span>  </div>
 								<div class="form-group col-lg-7 col-md-7 uploadToAssetBulkValues"
-								        style="background-color: #fff;margin-left: -41px;">	
+								        style="background-color: #fff;margin-left: -33px;">	
 									<input type="search"
 										 name="accessKey" id="accessKey"
 										placeholder="Enter Access Key"
@@ -367,7 +368,7 @@
 									</span>
 								</div>
 								<div class="form-group col-lg-7 col-md-7 uploadToAssetBulkValues"
-								style="background-color: #fff;margin-left: -41px;">
+								style="background-color: #fff;margin-left: -33px;">
 									 <input
 										type="password" name="secretKey"
 										id="secretKey" placeholder="Enter Secret Access Key" 
@@ -381,7 +382,7 @@
 									</span>
 								</div>
 								<div class="form-group col-lg-7 col-md-7 uploadToAssetBulkValues"
-								style="background-color: #fff;margin-left: -41px;">
+								style="background-color: #fff;margin-left: -33px;">
 									 <input type="search"
 										 name="region" id="region"
 										placeholder="Enter Region (for Example us-east-1)" 
