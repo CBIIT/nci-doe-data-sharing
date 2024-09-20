@@ -88,6 +88,8 @@ function loadUploadTab() {
 				}
 				if(uploadAsyncType) {
 					$("#uploadFilesSelect").val(uploadAsyncType).trigger("change");
+				} else {
+					$("#uploadFilesSelect").val("globus").trigger("change");
 				}
 			}
 		}

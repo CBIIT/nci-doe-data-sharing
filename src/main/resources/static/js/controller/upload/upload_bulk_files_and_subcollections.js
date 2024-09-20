@@ -292,6 +292,7 @@ function displayDataFileSection() {
 	$("#registerFileBtnsDiv").show();
 	var value = $("#uploadFilesSelect").val();
 	var authorizedGC = $("#authorizedGC").val();
+	var endpoint_id = $("#endpoint_id").val();
 	
 	if (value == 'singleData') {
 		$("#singleFileDataUploadSection").show();
@@ -308,10 +309,16 @@ function displayDataFileSection() {
 		$("#folderNamesDiv").show();
 		$("#displayDriveUploadDiv").hide();
 		$("#displayCloudUploadDiv").hide();
-		$("#registerBulkDataFileBtn").prop("disabled", true);
-		$("#fileNamesDiv").html("");
-		$("#folderNamesDiv").html("");
-		$("#globusEndPointInformation").html("");
+		
+		if(endpoint_id) {
+			$("#registerBulkDataFileBtn").prop("disabled", false);
+		} else  {
+			$("#globusEndPointInformation").html("");			
+			$("#fileNamesDiv").html("");
+			$("#folderNamesDiv").html("");
+			$("#registerBulkDataFileBtn").prop("disabled", true);
+		}
+		
 	} else if (value == 's3') {
 		$("#singleFileDataUploadSection").hide();
 		$("#bulkFileUploadSection").show();

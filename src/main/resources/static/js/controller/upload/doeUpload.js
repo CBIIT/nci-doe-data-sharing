@@ -57,20 +57,42 @@ function populateSelection(fileId) {
 		var request = gapi.client.drive.files.get({
 			'fileId' : fileId
 		});
-		$("#fileNamesDiv").html('<label for="fileName"><b>Selected Files:</b></label>');
-		$("#folderNamesDiv").html('<br /><label for="folderName"><b>Selected Folders:</b></label>');
+		
+		var filesNamesDivHtml = '<div class="form-group col-4 assetBulkGlobusLabels">'
+								 + '<span class="assetGlobusSelectionFields" style="padding-left: 10px;">SELECTED FILES'
+								 + '</span>'
+								 + '</div>'
+								 + '<div class="form-group col-lg-6 col-md-6" id="googledriveFilesContent" style="margin-top: 9px;margin-left: 3px;"></div>';
+		var folderNamesDivHtml = '<br /><div class="form-group col-4 assetBulkGlobusLabels">'
+								 + ' <span class="assetGlobusSelectionFields" style="padding-left: 10px;">SELECTED FOLDERS'
+								 + '</span></div>'
+								 + '<div class="form-group col-lg-6 col-md-6" id="googledriveFolderContent" style="margin-top: 9px;margin-left: 3px;"></div>';				 
+								 
+		$("#fileNamesDiv").html(filesNamesDivHtml);
+		$("#folderNamesDiv").html(folderNamesDivHtml);
+		$("#fileNamesDiv").css({   
+		    "margin-top": "45px", 
+		    "background" : "#EEF4F6",
+		    "display": "none"         
+		});
+		$("#folderNamesDiv").css({   
+		    "margin-top": "3px",
+		    "background" : "#EEF4F6" ,
+		    "display": "none"        
+		});
+		
 		request.execute(function(resp) {
 			if (resp.mimeType == 'application/vnd.google-apps.folder') {
 				console.log('Folder: ' + resp.name);
-				var folderHtml = '<div><label id="' + resp.id + '_label"></label><input type="hidden" id="' + resp.id + '" name="folderNames"></div>'
-				+ '<input type="hidden" name="folderIds" value="' + resp.id + '">';
-				$("#folderNamesDiv").append(folderHtml);
+				var folderHtml = '<span class="googledrive_labels" id="' + resp.id + '_label"></span><input type="hidden" id="' + resp.id + '" name="folderNames">'
+				+ '<input type="hidden" name="folderIds" value="' + resp.id + '"><br/>';
+				$("#googledriveFolderContent").append(folderHtml);
 				$("#folderNamesDiv").show();
 			} else {
 				console.log('File: ' + resp.name);
-				var fileHtml = '<div><label id="' + resp.id + '_label"></label><input type="hidden" id="' + resp.id + '" name="fileNames"></div>'
-				+ '<input type="hidden" name="fileIds" value="' + resp.id + '">';
-				$("#fileNamesDiv").append(fileHtml);
+				var fileHtml = '<span class="googledrive_labels" id="' + resp.id + '_label"></span><input type="hidden" id="' + resp.id + '" name="fileNames">'
+				+ '<input type="hidden" name="fileIds" value="' + resp.id + '"><br/>';
+				$("#googledriveFilesContent").append(fileHtml);
 				$("#fileNamesDiv").show();
 			}
 			$("#registerBulkDataFileBtn").prop("disabled",false);
