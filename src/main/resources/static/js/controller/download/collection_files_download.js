@@ -28,12 +28,6 @@ $(document)
 						if (selectedPaths.length == 1) {
 							$("#destinationPathId").val(selectedPaths);
 						}
-
-						$("#informationalText")
-								.html(
-										"This page allows you to download the "
-												+ "selected data files "
-												+ "asynchronously to a Globus endpoint location, an S3 bucket, or Google Drive.");
 					} else if (selectedPathsString && downloadType
 							&& (downloadType == 'data_object' || downloadType == 'datafiles')) {
 
@@ -58,11 +52,6 @@ $(document)
 							$("#cloudPath").val(downloadFileName);
 							$("#downloadS3Path").val(downloadFileName);
 							$("#endPointLocation").val(downloadFileName);
-							$("#informationalText")
-									.html(
-											"This page allows you to download the "
-													+ "selected data file either synchronously to your computer or asynchronously "
-													+ "to Globus endpoint location, an S3 bucket, or Google Drive.");
 							if (asyncSearchType) {
 								$("input[name=searchType][value=" + asyncSearchType + "]").click();
 							} else {
@@ -75,11 +64,6 @@ $(document)
 							if (asyncSearchType) {
 								$("input[name=searchType][value=" + asyncSearchType + "]").click();
 							}
-							$("#informationalText")
-									.html(
-											"This page allows you to download the "
-													+ "selected data files "
-													+ "asynchronously to a Globus endpoint location, an S3 bucket, or Google Drive.");
 
 							var selectedPaths = selectedPathsString.split(',');
 							$("#selectedFilesList").val(selectedPaths);

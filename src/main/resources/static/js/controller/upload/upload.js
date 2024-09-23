@@ -247,6 +247,8 @@ function resetOnChangeofSelectCollection(selectTarget, selectedValue) {
 			$("#showSelectAssetDiv").hide();
 			$("#dataListDiv").hide();
 			$("input[name=selectAsset][value='Select Asset']").prop("checked", false);
+			$("#deleteDataSet").hide();
+			$("#editAsset").hide();
 		} else {
 			$("#studyListDiv").addClass("disable-pointer-events");
 			$("input[name=selectStudy][value='Select Study']").prop("checked", false);

@@ -38,7 +38,10 @@ $(document).ready(
 				$("#S3DetailsDiv").hide();
 				$("#googleCloudDiv").hide();
 
-				var folderLength = $("#assetSelectedFolders ul li").length;
+				var folderLength = $("#assetSelectedFolders ul li").length ;
+				var selectedAssetFiles = $("#assetSelectedFiles ul li").length;
+
+				
 				resetAssetBulkUploadChoiceOptions();
 				var globusEndpointId = $("#globusEndpointId").val();
 
@@ -57,6 +60,12 @@ $(document).ready(
 						$("#uploadCsvFile").hide();
 					}
 
+					if(folderLength == 0  && selectedAssetFiles == 0 ){
+						$(".registerErrorMsg").html("Select Folders from Globus");
+		                $(".registerMsgErrorBlock").show();
+						$("#registerBulkAssets").hide();
+						$("#assetGlobusEndpointId").hide();
+					}
 				}
 			} else if (selectedOption == 'Upload Assets from AWS S3') {
 				$("#registerCollectionForm").hide();
