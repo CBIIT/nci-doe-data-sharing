@@ -213,13 +213,20 @@ function registerBulkDataFile() {
 			}
 		});
 
+		var globusFolderLength = $("#globusEndPointInformation #fileNamesDiv ul li").length ;
+		var globusFilesLength = $("#globusEndPointInformation #folderNamesDiv ul li").length;
+		
 		if ((bulkUploadType == 's3' || bulkUploadType == 'cloud') && !validate) {
 			$(".uploadBulkDataError").show();
 			$(".uploadBulkDataErrorMsg").html("Enter all the required fields.")
 		} else if (bulkUploadType == 'globus' && !$("#globusEndPointInformation").length) {
 			$(".uploadBulkDataError").show();
 			$(".uploadBulkDataErrorMsg").html("Select globus end point information.")
-		} else if (bulkUploadType == 'drive' && (!$("#fileNamesDiv").length || !$("#folderNamesDiv").length)) {
+		} else if (bulkUploadType == 'globus' && $("#globusEndPointInformation").length && (globusFolderLength  == 0 && globusFilesLength == 0)) {
+			$(".uploadBulkDataError").show();
+			$(".uploadBulkDataErrorMsg").html("Select files or folders from globus.")
+		} 
+		else if (bulkUploadType == 'drive' && (!$("#fileNamesDiv").length || !$("#folderNamesDiv").length)) {
 			$(".uploadBulkDataError").show();
 			$(".uploadBulkDataErrorMsg").html("Select google drive information.")
 		}  else if (dataFilePath) {
@@ -305,8 +312,6 @@ function displayDataFileSection() {
 		$("#bulkFileUploadSection").show();
 		$("#displayGlobusUploadDiv").show();
 		$("#displayS3UploadDiv").hide();
-		$("#fileNamesDiv").show();
-		$("#folderNamesDiv").show();
 		$("#displayDriveUploadDiv").hide();
 		$("#displayCloudUploadDiv").hide();
 		
