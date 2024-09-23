@@ -59,13 +59,13 @@
 						</div>
 
 						<div class="form-row"
-							style="display: flex;border-bottom: 1px solid #D2D2D2;margin: 0.5rem 6px 0.5rem 1rem; height: 45px;"
+							style="display: flex;border-bottom: 1px solid #D2D2D2;margin: 0.5rem 6px 0.5rem 1rem;"
 							th:if="${bulkUploadCollection!=null and fileNames != null}">
 							<div class="form-group col-4 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">SELECTED
 									FILES</span>
 							</div>
-							<div class="form-group col-8 assetBulkGlobusValues" id="assetSelectedFiles">
+							<div class="form-group col-8 assetBulkGlobusValues" id="assetSelectedFiles" style="height: auto;">
 								<ul>
 									<li th:each="fileName:${fileNames}" th:text="${fileName}"></li>
 								</ul>
@@ -76,7 +76,7 @@
 
 
 						<div class="form-row"
-							style="display: flex;border-bottom: 1px solid #D2D2D2;margin: 0.5rem 6px 0.5rem 1rem;min-height: 45px; height: auto;"
+							style="display: flex;border-bottom: 1px solid #D2D2D2;margin: 0.5rem 6px 0.5rem 1rem;"
 							th:if="${bulkUploadCollection !=null and folderNames != null}">
 							<div class="form-group col-4 assetBulkGlobusLabels">
 								<span class="assetGlobusSelectionFields">SELECTED

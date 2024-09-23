@@ -60,8 +60,8 @@ $(document).ready(
 						$("#uploadCsvFile").hide();
 					}
 
-					if(folderLength == 0  && selectedAssetFiles == 0 ){
-						$(".registerErrorMsg").html("Select Folders from Globus");
+					if(folderLength == 0  || selectedAssetFiles != 0 ){
+						$(".registerErrorMsg").html("Select Folders only from Globus");
 		                $(".registerMsgErrorBlock").show();
 						$("#registerBulkAssets").hide();
 						$("#assetGlobusEndpointId").hide();
@@ -79,6 +79,7 @@ $(document).ready(
 				$("#bulkAssetOptionsDiv").show();
 				$("#uploadCsvFile").hide();
 				$("#multipleFoldersUploadDiv").show();
+				$("#registerBulkAssets").show()
 				resetAssetBulkUploadChoiceOptions();
 
 			} else if (selectedOption == 'Upload Assets from Google Cloud') {
