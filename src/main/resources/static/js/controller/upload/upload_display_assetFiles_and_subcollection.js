@@ -51,7 +51,7 @@ function contructDataListDiv(data, status) {
 										+ value.name
 										+ ' &nbsp;&nbsp;'
 										+ '<a href="#" class="uploadDataSet" title="Upload to Asset Subcollection" style="font-size: 15px;color: #F39530;"><i class="fas fa-upload">'
-										+ '</i></a> &nbsp;&nbsp;<a href="#" title="Register Subcollection" onclick="createCollectionDiv(\''
+										+ '</i></a> &nbsp;&nbsp;<a href="#" title="Register Subcollection" onclick="createCollectionDiv(\'Folder\', \'Asset\', \''
 										+ datalist + '\',\'' + value.name + '\')" class="addDeleteUploadLabels">'
 										+ '<img src="/images/Uploads.add.png" class="uploadslogo" alt="register"></a>';
 
@@ -135,7 +135,7 @@ $('#dataListing')
 															if (value.isFolder == false) {
 																html += '<li>' + value.name + '</ol>';
 															} else {
-																if (assetPermissions && assetPermissions == 'true') {
+																if (assetPermissions && assetPermissions == 'true') {									
 																	html += '<li><a class="detail-control" data-name = '
 																			+ name
 																			+ "/"
