@@ -79,7 +79,7 @@
 						th:value="${fileName}" />
 				</form>
 				<div class="selectedFilesDiv pull-left d-flex"
-					style="display: none; border: 1px solid; font-size: 14px; margin-top: 18px; margin-bottom: 48px; overflow-wrap: break-word;background: #EEF4F6;">
+					style="display: none; border: 1px solid; font-size: 14px; margin-top: 18px; margin-bottom: 18px; overflow-wrap: break-word;background: #EEF4F6;">
 					<div class="d-flex p-3">
 						<div class="col-5">
 							<span style="color: #235172;
@@ -100,34 +100,6 @@
 							<input type="hidden" name="selectedFilesList" id="selectedFilesList" />
 						</div>
 					</div>
-				</div>
-
-				<div class="form-row" th:if="${downloadAsyncType == 'collection'}">
-					<label style="color: #353941;font-family: Inter;font-size: 19px;font-weight: 700;letter-spacing: 0.19px;">Destination Hierarchy</label>
-					<div class="form-group">
-						<div class="pull-left">
-							<label class="radio-inline"><input type="radio" name="downloadToDestination"
-									value="downloadToDestination" checked="checked">
-								&nbsp;&nbsp; Download to Specified Folder &nbsp;&nbsp;</label>
-						</div>
-					</div>
-
-					<div class="form-group">
-						<div class="pull-left">
-							<label class="radio-inline"><input type="radio" name="downloadToDestination"
-									value="createCollectionFolder">
-								&nbsp;&nbsp; Create Parent Folder &nbsp;&nbsp;</label>
-						</div>
-					</div>
-
-					<div class="form-group">
-						<div class="pull-left">
-							<label class="radio-inline"><input type="radio" name="downloadToDestination"
-									value="createFullPath">
-								&nbsp;&nbsp; Create Full Path</label>
-						</div>
-					</div>
-
 				</div>
 
 				<div class="form-row">
@@ -166,20 +138,21 @@
 						</div>
 					</div>
 
-					<div class="form-group" id="AsyncDiv" style="display: none">
-						<div class="col-sm-12 column">
-							<span> To download to Globus, write access should be
-								provided to the targeted Globus endpoint. Refer to <a
-									href="https://wiki.nci.nih.gov/display/MoDaCdoc/Preparing+to+Use+Globus"
-									target="_blank" title="Link to help document (opens in new tab or window)">Preparing
-									to Use Globus</a> for instructions.<span> <label for="endPointName">Globus Endpoint
+					<div class="form-group ml-3" id="AsyncDiv" style="display: none">
+						<span> To download to Globus, write access should be
+							provided to the targeted Globus endpoint. Refer to <a
+								href="https://wiki.nci.nih.gov/display/MoDaCdoc/Preparing+to+Use+Globus"
+								target="_blank" title="Link to help document (opens in new tab or window)">Preparing
+								to Use Globus</a> for instructions.<span>
+						<div class="col-sm-12 column customstyle">
+							 <label for="endPointName">Globus Endpoint
 										UUID: <a id="downloadGlobuslink" href="#">Obtain from Globus
 											(Optional)</a></label> <input type="hidden" name="actionType"
 										id="actionType" /> <input type="text" class="form-control" name="endPointName"
 										th:value="${endPointName}" id="endPointName"
 										placeholder="Enter Globus Endpoint UUID" />
 						</div>
-						<div class="col-sm-12 column">
+						<div class="col-sm-12 column customstyle">
 							<label for="endPointLocation">Globus Endpoint
 								(Destination) Path:</label> <input type="text" class="form-control"
 								name="endPointLocation" id="endPointLocation" th:value="${endPointLocation}"
@@ -187,52 +160,59 @@
 						</div>
 					</div>
 
-					<div class="form-row col-md-9 col-sm-9 ml-auto" id="SyncDiv">
-						<div class="col-sm-12 column" style="margin-left: -380px;">
+					<div class="form-group" id="SyncDiv">
+						<div class="col-sm-12 column customstyle" style="margin-left: -380px;">
 							<label for="downloadFileNameVal">Download File Name:</label> <input type="text"
 								class="form-control" th:value="${fileName}" id="downloadFileNameVal" size="45"
 								name="downloadFileNameVal" placeholder="Enter Download file Name" />
 						</div>
 					</div>
 
-					<div class="form-row col-md-12 col-sm-12" id="s3Div" style="display: none">
-						<div class="col-sm-12 column">
+					<div class="form-group col-12" id="s3Div" style="display: none">
+						<div class="col-sm-12 column customstyle">
 							<label for="downloadBucketName">S3 Bucket:</label> <input type="text" class="form-control"
 								name="downloadBucketName" id="downloadBucketName" placeholder="Enter S3 Bucket Name" />
 						</div>
-						<div class="col-sm-12 column">
+						<div class="col-sm-12 column customstyle">
 							<label for="downloadS3Path">S3 (Destination) Path:</label> <input type="text"
 								class="form-control" name="downloadS3Path" id="downloadS3Path"
 								placeholder="Enter S3 (Destination) Path" size="40" />
 						</div>
-						<div class="col-sm-12 column">
+						<div class="col-sm-12 column customstyle">
 							<label for="downloadAccessKey">Access Key:</label> <input type="text" class="form-control"
 								name="downloadAccessKey" id="downloadAccessKey" placeholder="Enter Access Key"
 								size="40" />
 						</div>
-						<div class="col-sm-12 column">
+						<div class="col-sm-12 column customstyle">
 							<label for="downloadSecretKey">Secret Access Key:</label> <input type="password"
 								autocomplete="secret-access-key" class="form-control" name="downloadSecretKey"
 								id="downloadSecretKey" placeholder="Enter Secret Access Key" size="40" />
 						</div>
-						<div class="col-sm-12 column">
+						<div class="col-sm-12 column customstyle">
 							<label for="downloadRegion">Region:</label> <input type="text" class="form-control"
 								name="downloadRegion" id="downloadRegion"
 								placeholder="Enter Region (for Example us-east-1)" size="40" />
 						</div>
 					</div>
 
-					<div class="form-row col-md-12 col-sm-12" id="driveDiv" style="display: none;">
-						<div class="col-sm-12 column">
-							<a class="btn btn-primary" id="driveAuthlink" href="#">
-								Authorize MoDaC to Access Your Google Drive</a>
+					<div class="form-group col-12" id="driveDiv" style="display: none;">
+						<div class="col-sm-12 column ">
+							<!-- <a class="btn btn-primary" id="driveAuthlink" href="#">
+								Authorize MoDaC to Access Your Google Drive</a> -->
+
+								<button type="button" class="btn btn-md btn-link" id="driveAuthlink">
+									Authorize MoDaC to Access<br>
+									Your Google Drive
+									<img class="arrowright" src="/images/white_right_arrow.svg" style="width: 16px;
+					transform: translate(100px, -12px);">
+								</button>
 						</div>
 						<div th:if="${authorized != null}" class="alert-success">
 							<i class="fa fa-check">&nbsp;</i>Access Token Successfully
 							Generated
 						</div>
 						<br>
-						<div class="col-sm-12 column">
+						<div class="col-sm-12 column customstyle">
 							<label for="drivePath">Google Drive (Destination) Path:</label> <a
 								th:if="${authorized != null}" id="pickerLink" style="cursor: pointer; color: #007aff;">
 								Select from Google
@@ -241,22 +221,26 @@
 						</div>
 					</div>
 
-					<div class="form-row col-md-12 col-sm-12" id="googleCloudDiv" style="display: none;">
-						<div class="col-sm-12 column">
-							<a class="btn btn-primary" id="googleCloudAuthlink" href="#">
-								Authorize MoDaC to Access Your Google Cloud</a>
+					<div class="form-group col-12" id="googleCloudDiv" style="display: none;">
+						<div class="col-sm-12 column ">
+								<button type="button" class="btn btn-md btn-link" id="googleCloudAuthlink">
+									Authorize MoDaC to Access<br>
+									Your Google Cloud
+									<img class="arrowright" src="/images/white_right_arrow.svg" style="width: 16px;
+					transform: translate(100px, -12px);">
+								</button>
 						</div>
 						<div th:if="${authorizedGC != null}" class="alert-success">
 							<i class="fa fa-check">&nbsp;</i>Access Token Successfully
 							Generated
 						</div>
 						<br>
-						<div class="col-sm-12 column">
+						<div class="col-sm-12 column customstyle">
 							<label for="cloudBucketName">Google Cloud Bucket</label> <input type="text"
 								class="form-control" name="cloudBucketName" id="cloudBucketName"
 								placeholder="Enter Google Cloud Bucket" size="40" value="">
 						</div>
-						<div class="col-sm-12 column">
+						<div class="col-sm-12 column customstyle">
 							<label for="cloudPath">Google Cloud (Destination) Path:</label> <input type="text"
 								class="form-control" name="cloudPath" id="cloudPath"
 								placeholder="Enter Google Cloud (Destination) Path" size="40" value="">
@@ -265,9 +249,36 @@
 
 				</div>
 
+				<div class="form-row" th:if="${downloadAsyncType == 'collection'}">
+					<label style="color: #353941;font-family: Inter;font-size: 19px;font-weight: 700;letter-spacing: 0.19px;">Destination Location</label>
+					<div class="form-group">
+						<div class="pull-left ml-3">
+							<label class="radio-inline"><input type="radio" name="downloadToDestination"
+									value="downloadToDestination" checked="checked">
+								&nbsp;&nbsp;  Download to Specified Folder &nbsp;&nbsp;</label>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="pull-left">
+							<label class="radio-inline"><input type="radio" name="downloadToDestination"
+									value="createCollectionFolder">
+								&nbsp;&nbsp; Create Asset Folder &nbsp;&nbsp;</label>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="pull-left">
+							<label class="radio-inline"><input type="radio" name="downloadToDestination"
+									value="createFullPath">
+								&nbsp;&nbsp; Replicate Full Source Path</label>
+						</div>
+					</div>
+
+				</div>
 			</div>
 
-			<div class="col-md-12 col-sm-12 form-group" style="margin-top: 35px; margin-bottom: 15px; padding: 5px;">
+			<div class="col-md-12 col-sm-12 form-group" style="margin-left: 32px;margin-top: 35px; margin-bottom: 15px; padding: 5px;">
 				<!-- <input type="button" value="Download" class="btn btn-primary float-right mr-4 mb-4" id="download-btn"> -->
 
 				<button id="download-btn" type="button" class="btn btn-primary mb-2 mr-2" style="margin-top: auto;font-family: Inter;min-height: 48px;min-width: 218px;max-width: 300px;font-weight: 600;line-height: 5px;background-color: #2c4088 !important;border-radius: 65px;box-shadow: 0px 4px 50px #ffffff8c;padding-left: 2rem;text-align: left;padding-top: 12px;margin-bottom: 0.2rem;color: #FFF;font-size: 14px;font-style: normal;line-height: 60%;letter-spacing: 0.14px;text-transform: uppercase;">

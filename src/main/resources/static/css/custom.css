@@ -1436,3 +1436,45 @@ th.active .arrow {
 	margin-left: 18px;
 	margin-right: 11px;
 }
+
+#downloadFragment .radio-inline {
+	font-weight: 400;
+}
+
+#downloadFragment input[type=checkbox], input[type=radio] {
+	accent-color: #004A8B;
+}
+
+#downloadFragment label {
+	padding-top: 6px;
+}
+
+
+.customstyle {
+	display: flex !important;
+    flex-direction: row;
+    flex-wrap: nowrap;
+	margin-bottom: 0.25rem;
+	padding: 0.5rem 2rem;
+	background: #EEF4F6;
+}
+
+#driveAuthlink, #googleCloudAuthlink {
+	font-family: 'inter_regular';
+    background-color: #2c4088 !important;
+    border-radius: 65px;
+    box-shadow: 0px 4px 50px #ffffff8c;
+    padding-left: 2rem;
+    text-align: left;
+    padding-top: 12px;
+    margin-bottom: 0.2rem;
+    color: #FFF !important;
+    font-size: 14px;
+    font-style: normal;
+    line-height: 110%;
+    letter-spacing: 0.14px;
+    text-transform: uppercase;
+	width: 330px;
+    padding: 7px 32px 0px 32px;
+	margin-top: 1rem;
+}

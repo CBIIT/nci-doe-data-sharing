@@ -776,3 +776,9 @@ ul#select2-uploadFilesSelect-results{
 		margin-left: 12px;
 	}
 }
+
+#assetBulkMetadataTable {
+    .select2-container {
+        margin-left: 0;
+    }
+}
