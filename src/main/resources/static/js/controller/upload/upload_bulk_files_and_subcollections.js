@@ -108,8 +108,7 @@ function openBulkDataRegistration(folderPath) {
 	$(".registerBulkDataFile").html("");
 	$(".uploadBulkDataError").hide();
 	$(".uploadBulkDataErrorMsg").html("");
-	$("#uploadCollectionPath").val(datafilePath);
-	computeWidthForCollectionPath('uploadCollectionPath');
+	$("#uploadCollectionPath").text(datafilePath);
 	clearRegisterDataDiv();
 }
 

@@ -162,7 +162,7 @@ function createCollectionDiv(collectionType, parentCollectionType, selectTarget,
 		$(".parentCollectionDiv").hide();
 	} else {
 		$(".parentCollectionDiv").show();
-		$("#parentCollectionName").val(parentName);
+		$("#parentCollectionName").text(parentName);
 	}
 	if (selectTarget == 'dataList') {
 		$(".permissionsLabel").hide();
@@ -220,7 +220,6 @@ function createCollectionDiv(collectionType, parentCollectionType, selectTarget,
 	$("#uploadSectionDiv").hide();
 	$("#uploadHeader").hide();
 	$("#assetUploadDiv").hide();
-	computeWidthForAssetCollectionName('parentCollectionName');
 
 }
 
