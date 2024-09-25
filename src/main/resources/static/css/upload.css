@@ -428,6 +428,7 @@ input#includeCriteria:focus {
 	font-style: normal;
 	font-weight: 400;
 	line-height: 150%;
+	word-wrap: break-word;
 }
 #collectionMetaDataLabel {
 	color: #1C3D5D;

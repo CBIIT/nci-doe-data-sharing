@@ -60,10 +60,10 @@ public class LoginController extends AbstractDoeController {
 				// login tab
 
 				String referer = request.getHeader("referer");
-				if (StringUtils.isNotEmpty(referer) && !referer.contains("loginTab")) {
-					request.getSession().setAttribute(
-							LoginAuthenticationSuccessHandler.REDIRECT_URL_SESSION_ATTRIBUTE_NAME, referer);
-				}
+
+				request.getSession().setAttribute(LoginAuthenticationSuccessHandler.REDIRECT_URL_SESSION_ATTRIBUTE_NAME,
+						referer);
+
 			}
 
 		} catch (Exception e) {
@@ -71,6 +71,15 @@ public class LoginController extends AbstractDoeController {
 		}
 
 		model.addAttribute("siteKey", siteKey);
+
+		/*
+		 * If user is logged on, but still tries to access the login page, redirect to
+		 * the home page
+		 */
+		String user = getLoggedOnUserInfo();
+		if (StringUtils.isNotEmpty(user)) {
+			return "redirect:/";
+		}
 
 		return "login/loginTab";
 	}
