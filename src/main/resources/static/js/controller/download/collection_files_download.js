@@ -69,7 +69,7 @@ $(document)
 							$("#selectedFilesList").val(selectedPaths);
 
 							$.each(selectedPaths, function(index, value) {
-								$(".selectedFilesListDisplay").append("<p><input type='checkbox' class='checkboxMultipleDwnlodPaths' checked='true' value="+value+"> &nbsp;&nbsp;" + value + "</p>");
+								$(".selectedFilesListDisplay").append("<p style='display:flex;'><input type='checkbox' class='checkboxMultipleDwnlodPaths' checked='true' value="+value+"> &nbsp;&nbsp; <span class='multipledownloadText'>" + value + "</span></p>");
 							});
 							$(".selectedFilesDiv").show();
 

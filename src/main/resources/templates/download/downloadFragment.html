@@ -80,7 +80,7 @@
 				</form>
 				<div class="selectedFilesDiv pull-left d-flex"
 					style="display: none; border: 1px solid; font-size: 14px; margin-top: 18px; margin-bottom: 18px; overflow-wrap: break-word;background: #EEF4F6;">
-					<div class="d-flex p-3">
+					<div class="d-flex p-3 w-100">
 						<div class="col-5">
 							<span style="color: #235172;
 
@@ -146,15 +146,14 @@
 								to Use Globus</a> for instructions.<span>
 						<div class="col-sm-12 column customstyle">
 							 <label for="endPointName">Globus Endpoint
-										UUID: <a id="downloadGlobuslink" href="#">Obtain from Globus
+										UUID <a id="downloadGlobuslink" href="#">Obtain from Globus
 											(Optional)</a></label> <input type="hidden" name="actionType"
 										id="actionType" /> <input type="text" class="form-control" name="endPointName"
 										th:value="${endPointName}" id="endPointName"
 										placeholder="Enter Globus Endpoint UUID" />
 						</div>
 						<div class="col-sm-12 column customstyle">
-							<label for="endPointLocation">Globus Endpoint
-								(Destination) Path:</label> <input type="text" class="form-control"
+							<label for="endPointLocation">Endpoint Path</label> <input type="text" class="form-control"
 								name="endPointLocation" id="endPointLocation" th:value="${endPointLocation}"
 								placeholder="Enter Globus Endpoint Path" size="40" />
 						</div>
@@ -162,7 +161,7 @@
 
 					<div class="form-group col-12" id="SyncDiv">
 						<div class="col-sm-12 column customstyle">
-							<label for="downloadFileNameVal">Download File Name:</label> <input type="text"
+							<label for="downloadFileNameVal">Download File Name</label> <input type="text"
 								class="form-control" th:value="${fileName}" id="downloadFileNameVal" size="45"
 								name="downloadFileNameVal" placeholder="Enter Download file Name" />
 						</div>
@@ -170,26 +169,26 @@
 
 					<div class="form-group col-12" id="s3Div" style="display: none">
 						<div class="col-sm-12 column customstyle">
-							<label for="downloadBucketName">S3 Bucket:</label> <input type="text" class="form-control"
+							<label for="downloadBucketName">S3 Bucket</label> <input type="text" class="form-control"
 								name="downloadBucketName" id="downloadBucketName" placeholder="Enter S3 Bucket Name" />
 						</div>
 						<div class="col-sm-12 column customstyle">
-							<label for="downloadS3Path">S3 (Destination) Path:</label> <input type="text"
+							<label for="downloadS3Path">Endpoint Path</label> <input type="text"
 								class="form-control" name="downloadS3Path" id="downloadS3Path"
-								placeholder="Enter S3 (Destination) Path" size="40" />
+								placeholder="Enter Endpoint Path" size="40" />
 						</div>
 						<div class="col-sm-12 column customstyle">
-							<label for="downloadAccessKey">Access Key:</label> <input type="text" class="form-control"
+							<label for="downloadAccessKey">Access Key</label> <input type="text" class="form-control"
 								name="downloadAccessKey" id="downloadAccessKey" placeholder="Enter Access Key"
 								size="40" />
 						</div>
 						<div class="col-sm-12 column customstyle">
-							<label for="downloadSecretKey">Secret Access Key:</label> <input type="password"
+							<label for="downloadSecretKey">Secret Access Key</label> <input type="password"
 								autocomplete="secret-access-key" class="form-control" name="downloadSecretKey"
 								id="downloadSecretKey" placeholder="Enter Secret Access Key" size="40" />
 						</div>
 						<div class="col-sm-12 column customstyle">
-							<label for="downloadRegion">Region:</label> <input type="text" class="form-control"
+							<label for="downloadRegion">Region</label> <input type="text" class="form-control"
 								name="downloadRegion" id="downloadRegion"
 								placeholder="Enter Region (for Example us-east-1)" size="40" />
 						</div>
@@ -207,17 +206,17 @@
 					transform: translate(100px, -12px);">
 								</button>
 						</div>
-						<div th:if="${authorized != null}" class="alert-success">
+						<div th:if="${authorized != null}" style="margin-left: 32px;">
 							<i class="fa fa-check">&nbsp;</i>Access Token Successfully
 							Generated
 						</div>
 						<br>
 						<div class="col-sm-12 column customstyle">
-							<label for="drivePath">Google Drive (Destination) Path:</label> <a
-								th:if="${authorized != null}" id="pickerLink" style="cursor: pointer; color: #007aff;">
+							<label for="drivePath">Endpoint Path <a
+								th:if="${authorized != null}" id="pickerLink" style="cursor: pointer; color: #007aff;display: block;">
 								Select from Google
-								Drive</a> <input type="text" class="form-control" name="drivePath" id="drivePath"
-								placeholder="Enter Google Drive (Destination) Path" size="40" value="">
+								Drive</a> </label> <input type="text" class="form-control" name="drivePath" id="drivePath"
+								placeholder="Enter Endpoint Path" size="40" value="">
 						</div>
 					</div>
 
@@ -230,7 +229,7 @@
 					transform: translate(100px, -12px);">
 								</button>
 						</div>
-						<div th:if="${authorizedGC != null}" class="alert-success">
+						<div th:if="${authorizedGC != null}" style="margin-left: 32px;">
 							<i class="fa fa-check">&nbsp;</i>Access Token Successfully
 							Generated
 						</div>
@@ -241,9 +240,9 @@
 								placeholder="Enter Google Cloud Bucket" size="40" value="">
 						</div>
 						<div class="col-sm-12 column customstyle">
-							<label for="cloudPath">Google Cloud (Destination) Path:</label> <input type="text"
+							<label for="cloudPath">Endpoint Path</label> <input type="text"
 								class="form-control" name="cloudPath" id="cloudPath"
-								placeholder="Enter Google Cloud (Destination) Path" size="40" value="">
+								placeholder="Enter Endpoint Path" size="40" value="">
 						</div>
 					</div>
 
