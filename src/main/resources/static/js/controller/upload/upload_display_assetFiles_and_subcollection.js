@@ -52,7 +52,7 @@ function contructDataListDiv(data, status) {
 										+ ' &nbsp;&nbsp;'
 										+ '<a href="#" class="uploadDataSet" title="Upload to Asset Subcollection" style="font-size: 15px;color: #F39530;"><i class="fas fa-upload">'
 										+ '</i></a> &nbsp;&nbsp;<a href="#" title="Register Subcollection" onclick="createCollectionDiv(\'Folder\', \'Asset\', \''
-										+ datalist + '\',\'' + value.name + '\')" class="addDeleteUploadLabels">'
+										+ datalist + '\',\'' + value.path + '\')" class="addDeleteUploadLabels">'
 										+ '<img src="/images/Uploads.add.png" class="uploadslogo" alt="register"></a>';
 
 								html += "&nbsp;&nbsp;<span style='border: transparent;' class='btn btn-link btn-sm editFolderMetadata'  folder_name = '" + value.name + "' metadata_path  = '"
@@ -135,7 +135,8 @@ $('#dataListing')
 															if (value.isFolder == false) {
 																html += '<li>' + value.name + '</ol>';
 															} else {
-																if (assetPermissions && assetPermissions == 'true') {									
+																if (assetPermissions && assetPermissions == 'true') {	
+																	var datalist = "dataList";							
 																	html += '<li><a class="detail-control" data-name = '
 																			+ name
 																			+ "/"
@@ -146,6 +147,11 @@ $('#dataListing')
 																			+ ' &nbsp;&nbsp;'
 																			+ '<a href="#" class="uploadDataSet"  title="Upload to Asset Subcollection" style="font-size: 15px;color: #F39530;">'
 																			+ '<i class="fas fa-upload"></i></a>';
+																	
+																	html += '&nbsp;&nbsp;<a href="#" title="Register Subcollection" onclick="createCollectionDiv(\'Folder\', \'Folder\', \''
+																			+ datalist + '\',\'' + value.path + '\')" class="addDeleteUploadLabels">'
+																			+ '<img src="/images/Uploads.add.png" class="uploadslogo" alt="register"></a>';
+																			
 																	html += "&nbsp;&nbsp;<span style='border: transparent;' class='btn btn-link btn-sm editFolderMetadata' folder_name = '" + value.name + "' metadata_path  = '"
 																			+ value.path
 																			+ "'"

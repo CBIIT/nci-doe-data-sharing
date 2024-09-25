@@ -60,8 +60,10 @@ public class LoginController extends AbstractDoeController {
 				// login tab
 
 				String referer = request.getHeader("referer");
-				request.getSession().setAttribute(LoginAuthenticationSuccessHandler.REDIRECT_URL_SESSION_ATTRIBUTE_NAME,
-						referer);
+				if (StringUtils.isNotEmpty(referer) && !referer.contains("loginTab")) {
+					request.getSession().setAttribute(
+							LoginAuthenticationSuccessHandler.REDIRECT_URL_SESSION_ATTRIBUTE_NAME, referer);
+				}
 			}
 
 		} catch (Exception e) {

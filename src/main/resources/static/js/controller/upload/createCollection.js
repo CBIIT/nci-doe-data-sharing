@@ -155,8 +155,9 @@ function createCollectionDiv(collectionType, parentCollectionType, selectTarget,
 	var displayCollectionType;
 	var parentName = $("#" + selectTarget + " option:selected").text();
 	if (folderPath) {
-		selectedIndexPathVal += "/" + folderPath;
-		parentName = folderPath;
+		selectedIndexPathVal = folderPath;
+		var folderParentPath = selectedIndexPathVal.split('/').at(-2);
+		parentName = folderParentPath;
 	}
 	if (selectTarget == 'basePath') {
 		$(".parentCollectionDiv").hide();
