@@ -61,7 +61,7 @@ $(document).ready(
 					}
 
 					if(folderLength == 0  || selectedAssetFiles != 0 ){
-						$(".registerErrorMsg").html("Select Folders only from Globus");
+						$(".registerErrorMsg").html("Select Only Folders from Globus");
 		                $(".registerMsgErrorBlock").show();
 						$("#registerBulkAssets").hide();
 						$("#assetGlobusEndpointId").hide();
