@@ -125,7 +125,7 @@ public abstract class AbstractDoeController {
 	public MetaDataPermissionsService metaDataPermissionService;
 
 	@Autowired
-	AccessGroupsService accessGroupsService;
+	public AccessGroupsService accessGroupsService;
 
 	@Autowired
 	public AuditingService auditingService;

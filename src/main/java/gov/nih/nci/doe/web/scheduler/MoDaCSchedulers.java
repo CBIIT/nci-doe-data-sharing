@@ -634,9 +634,26 @@ public class MoDaCSchedulers extends AbstractDoeController {
 									&& CollectionUtils.isNotEmpty(collectionDto.getCollections())) {
 								// collection exists
 								log.info("updating collection Id for path:" + collection.getCollectionPath());
-								collection.setCollectionId(
-										collectionDto.getCollections().get(0).getCollection().getCollectionId());
+								HpcCollectionDTO savedCollectionDto = collectionDto.getCollections().get(0);
+								Integer collectionId = savedCollectionDto.getCollection().getCollectionId();
+
+								collection.setCollectionId(collectionId);
 								metaDataPermissionsRepository.saveAndFlush(collection);
+
+								String userID = collection.getUser() != null ? collection.getUser().getEmailAddrr()
+										: null;
+
+								// store the access_group metadata in MoDaC DB
+								HpcMetadataEntry selectedEntry = savedCollectionDto.getMetadataEntries()
+										.getSelfMetadataEntries().stream()
+										.filter(e -> e.getAttribute().equalsIgnoreCase("access_group")).findAny()
+										.orElse(null);
+
+								if (selectedEntry != null) {
+									accessGroupsService.saveAccessGroups(collectionId,
+											savedCollectionDto.getCollection().getAbsolutePath(),
+											selectedEntry.getValue(), userID);
+								}
 							} else {
 								// delete the row in collection_permissions table since collection does not
 								// exist
