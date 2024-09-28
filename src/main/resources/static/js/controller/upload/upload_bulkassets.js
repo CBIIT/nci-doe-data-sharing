@@ -183,7 +183,7 @@ function constructAssetTypeBulkDiv(data, status) {
 								'<tr><td>'
 								+ value.displayName
 								+ '&nbsp;&nbsp;' + infoHtml + '</td><td>'
-								+ '<div class="mt-2"><select class="simple-select2" multiple="multiple" id="bulkAccessGrpSelect" name="zAttrStr_'
+								+ '<div class="mt-2"><select class="simple-select2" is_mandatory="' + value.mandatory + '" multiple="multiple" id="bulkAccessGrpSelect" name="zAttrStr_'
 								+ value.attrName
 								+ '"'
 								+ 'style="width: 95%; border-radius: 8px;border: 1px solid #6B7294;height: 36px;"></select></div>'
@@ -553,5 +553,8 @@ function displayEmptyAssetScreen(data) {
 }
 
 function loadDefaultBulkAccessGrp(data, status) {
-    $("#bulkAccessGrpSelect").select2().val(defaultGroup).trigger("change");
+ 	$("#bulkAccessGrpSelect").select2({
+   		 placeholder: "Required"
+	}).val(defaultGroup).trigger("change");
+    
 }
