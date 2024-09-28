@@ -62,7 +62,9 @@ public class LoginAuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
 
 			} else {
 				Object redirectURLObject = request.getSession().getAttribute(REDIRECT_URL_SESSION_ATTRIBUTE_NAME);
-				targetUrl = redirectURLObject != null ? redirectURLObject.toString() : "/";
+				targetUrl = redirectURLObject != null && !redirectURLObject.toString().contains("/loginTab")
+						? redirectURLObject.toString()
+						: "/";
 				log.info("The previous Url is: " + targetUrl);
 			}
 			setDefaultTargetUrl(targetUrl);

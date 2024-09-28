@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -125,7 +126,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 		}
 
 		model.addAttribute("basePathSelected", basePath);
-		return "upload";
+		return "upload/uploadTab";
 	}
 
 	/**
@@ -181,7 +182,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			if (StringUtils.isNotEmpty(dataFilePath)) {
 				HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, collectionServiceURL,
 						dataFilePath, true);
-				Boolean isValidPermissions = verifyCollectionPermissions(dataFilePath, parentCollectionDto);
+				Boolean isValidPermissions = verifyCollectionPermissions(session, dataFilePath, parentCollectionDto);
 				if (Boolean.FALSE.equals(isValidPermissions)) {
 					return "Insufficient privileges to register data files.";
 				}
@@ -199,7 +200,8 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 
 			// when bulk metadata file is provided
 			HashMap<HpcBulkMetadataEntries, Map<String, String>> doeBulkMetadataEntries = DoeExcelUtil
-					.parseBulkMatadataEntries(doeMetadataFile, accessGroups, doeDataFileModel.getPath().trim());
+					.parseBulkMatadataEntries(doeMetadataFile, accessGroups, doeDataFileModel.getPath().trim(),
+							getDefaultGroup(session));
 
 			if (doeBulkMetadataEntries != null) {
 				entries = doeBulkMetadataEntries.keySet().stream().findFirst().get();
@@ -314,7 +316,7 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 				audit.setTaskId(taskId);
 				auditingService.saveAuditInfo(audit);
 
-				return "Your bulk data file registration request has the following task ID: <a href='/tasksTab'>"
+				return "Your bulk data file registration request has the following task ID: <a href='/statusTab'>"
 						+ taskId + "</a>";
 
 			}
@@ -335,21 +337,32 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 		HpcBulkMetadataEntries entryList = new HpcBulkMetadataEntries();
 
 		List<String> globusEndpointFolders = (List<String>) session.getAttribute("GlobusEndpointFolders");
+		List<String> googleDriveFolderIds = (List<String>) session.getAttribute("folderIds");
 		String s3Path = (String) request.getParameter("s3Path");
+		String gcPath = (String) request.getParameter("gcPath");
+		gcPath = (gcPath != null ? gcPath.trim() : null);
 		List<HpcBulkMetadataEntry> pathMetadataEntries = new ArrayList<HpcBulkMetadataEntry>();
 		String assetIdentifier = request.getParameter("zAttrStr_asset_identifier");
+		List<String> folderNames = new ArrayList<String>();
+
 		if ("globus".equalsIgnoreCase(bulkType) && CollectionUtils.isNotEmpty(globusEndpointFolders)) {
-			for (String folderName : globusEndpointFolders) {
+			folderNames = globusEndpointFolders;
+		} else if ("drive".equalsIgnoreCase(bulkType) && CollectionUtils.isNotEmpty(googleDriveFolderIds)) {
 
-				pathMetadataEntries = getAssetMetadataAttributes(pathMetadataEntries, assetIdentifier, request,
-						collectionPath, folderName, accessGrp);
-
-			}
+			folderNames = googleDriveFolderIds;
 		} else if ("S3".equalsIgnoreCase(bulkType) && s3Path != null) {
-			pathMetadataEntries = getAssetMetadataAttributes(pathMetadataEntries, assetIdentifier, request,
-					collectionPath, s3Path, accessGrp);
+			folderNames.add(s3Path);
+
+		} else if ("cloud".equalsIgnoreCase(bulkType) && gcPath != null) {
+			folderNames.add(gcPath);
 		}
 
+		if (CollectionUtils.isNotEmpty(folderNames)) {
+			for (String folderName : folderNames) {
+				pathMetadataEntries = getAssetMetadataAttributes(pathMetadataEntries, assetIdentifier, request,
+						collectionPath, folderName, accessGrp);
+			}
+		}
 		entryList.getPathsMetadataEntries().addAll(pathMetadataEntries);
 		return entryList;
 	}
@@ -379,25 +392,33 @@ public class DoeCreateBulkDatafileController extends DoeCreateCollectionDataFile
 			entries.add(entryCollectionType);
 		}
 
-		if (StringUtils.isNotEmpty(accessGrp)) {
-
-			HpcMetadataEntry entryAccessGrp = new HpcMetadataEntry();
-			entryAccessGrp.setAttribute("access_group");
-			entryAccessGrp.setValue(accessGrp);
-			entries.add(entryAccessGrp);
-		}
-
 		while (params.hasMoreElements()) {
 			String paramName = params.nextElement();
 			if (paramName.startsWith("zAttrStr_")) {
 
-				HpcMetadataEntry entry1 = new HpcMetadataEntry();
+				HpcMetadataEntry form_metadataEntry = new HpcMetadataEntry();
 				String attrName = paramName.substring("zAttrStr_".length());
 				String[] attrValue = request.getParameterValues(paramName);
-				entry1.setAttribute(attrName);
-				entry1.setValue(attrValue[0].trim());
-				if (StringUtils.isNotEmpty(entry1.getValue())) {
-					entries.add(entry1);
+
+				form_metadataEntry.setAttribute(attrName);
+				if ("access_group".equalsIgnoreCase(attrName) && StringUtils.isNotEmpty(accessGrp)) {
+					// overriding the user provided access group with the parent access group since
+					// it should be restricted to
+					// parent access group
+					attrValue[0] = accessGrp;
+
+				}
+
+				if (attrValue != null && attrValue.length > 1) {
+					String combinedAttrVal = Stream.of(attrValue).filter(s -> s != null && !s.isEmpty())
+							.collect(Collectors.joining(","));
+					form_metadataEntry.setValue(combinedAttrVal);
+				} else {
+					form_metadataEntry.setValue(attrValue[0].trim());
+				}
+
+				if (StringUtils.isNotEmpty(form_metadataEntry.getValue())) {
+					entries.add(form_metadataEntry);
 				}
 
 			} else if (paramName.startsWith("_addAttrName")) {

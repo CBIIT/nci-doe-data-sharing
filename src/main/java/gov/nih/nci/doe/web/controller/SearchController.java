@@ -71,7 +71,7 @@ public class SearchController extends AbstractDoeController {
 		List<DoeSearchResult> results = new ArrayList<>();
 
 		try {
-			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search);
+			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(session, search);
 			compoundQuery.setDetailedResponse(true);
 			log.info("search compund query" + compoundQuery);
 
@@ -86,7 +86,7 @@ public class SearchController extends AbstractDoeController {
 				String searchQuery = gson.toJson(search);
 				session.setAttribute("searchQuery", searchQuery);
 				log.info("Search query" + search);
-				results = processCollectionResults(restResponse, search);
+				results = processCollectionResults(session, restResponse, search);
 				return new ResponseEntity<>(results, HttpStatus.OK);
 
 			} else if (restResponse.getStatus() == 204) {
@@ -100,7 +100,9 @@ public class SearchController extends AbstractDoeController {
 
 	}
 
-	private List<DoeSearchResult> processCollectionResults(Response restResponse, DoeSearch search) throws IOException {
+	@SuppressWarnings("unchecked")
+	private List<DoeSearchResult> processCollectionResults(HttpSession session, Response restResponse, DoeSearch search)
+			throws IOException {
 
 		log.info("process collection results for rendering the search results table");
 		ObjectMapper mapper = new ObjectMapper();
@@ -118,10 +120,15 @@ public class SearchController extends AbstractDoeController {
 		HashMap<Integer, CollectionPermissions> permissionMap = new HashMap<Integer, CollectionPermissions>();
 
 		if (StringUtils.isNotEmpty(user)) {
-			List<String> loggedOnUsergrpList = getLoggedOnUserGroups(user);
+			List<String> loggedOnUsergrpList = getLoggedOnUserGroups(session, user);
 
-			permissionMap = metaDataPermissionService.getAllMetadataPermissionsForLoggedOnUser(user,
-					loggedOnUsergrpList);
+			permissionMap = (HashMap<Integer, CollectionPermissions>) session.getAttribute("permissionMap");
+			if (permissionMap == null) {
+				permissionMap = metaDataPermissionService.getAllMetadataPermissionsForLoggedOnUser(user,
+						loggedOnUsergrpList);
+
+				session.setAttribute("permissionMap", permissionMap);
+			}
 		}
 
 		for (HpcCollectionDTO result : searchResults) {
@@ -157,7 +164,7 @@ public class SearchController extends AbstractDoeController {
 			returnResult.setDataSetName(getAttributeValue("asset_name", selfMetadatEntries, "Asset"));
 			returnResult.setDataSetDescription(getAttributeValue("description", selfMetadatEntries, "Asset"));
 			returnResult.setStudyPath(studyPath);
-			returnResult.setInstitutePath(programPath);
+			returnResult.setProgramPath(programPath);
 
 			returnResult.setDataSetdmeDataId(webServerName + "/searchTab?dme_data_id="
 					+ getAttributeValue("dme_data_id", selfMetadatEntries, "Asset"));

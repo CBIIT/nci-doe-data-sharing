@@ -42,7 +42,7 @@ public class UploadController extends AbstractDoeController {
 		session.removeAttribute("GlobusEndpointFiles");
 		session.removeAttribute("GlobusEndpointFolders");
 		session.setAttribute("datafilePath", uploadCollectionModel.getDataSetPath());
-		session.setAttribute("institutePath", uploadCollectionModel.getInstitutionPath());
+		session.setAttribute("programPath", uploadCollectionModel.getProgramPath());
 		session.setAttribute("studyPath", uploadCollectionModel.getStudyPath());
 		session.setAttribute("uploadPath", uploadCollectionModel.getUploadPath());
 		session.setAttribute("actionType", uploadCollectionModel.getAction());

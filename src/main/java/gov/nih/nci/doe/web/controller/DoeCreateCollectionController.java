@@ -3,8 +3,6 @@ package gov.nih.nci.doe.web.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,12 +30,10 @@ import gov.nih.nci.doe.web.model.DoeMetadataAttrEntry;
 import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataEntry;
-import gov.nih.nci.hpc.domain.metadata.HpcMetadataValidationRule;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionListDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcCollectionRegistrationDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementModelDTO;
-import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementRulesDTO;
 
 /**
  *
@@ -50,85 +46,20 @@ import gov.nih.nci.hpc.dto.datamanagement.HpcDataManagementRulesDTO;
 @RequestMapping("/addCollection")
 public class DoeCreateCollectionController extends DoeCreateCollectionDataFileController {
 
-	@GetMapping(value = "/collectionTypes", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/parentAccessGroup", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<KeyValueBean>> populateCollectionTypes(HttpSession session,
 			@RequestParam(value = "parent") String parent, Model model) throws DoeWebException {
 
 		log.info("collection types for: " + parent);
-		String authToken = (String) session.getAttribute("writeAccessUserToken");
+		List<KeyValueBean> results = new ArrayList<KeyValueBean>();
 
-		HpcDataManagementModelDTO modelDTO = (HpcDataManagementModelDTO) session.getAttribute("userDOCModel");
-		if (modelDTO == null) {
-			modelDTO = DoeClientUtil.getDOCModel(authToken, hpcModelURL);
-			session.setAttribute("userDOCModel", modelDTO);
+		List<String> accessGrpList = accessGroupsService.getGroupsByCollectionPath(parent);
+		if (CollectionUtils.isNotEmpty(accessGrpList)) {
+			results.add(new KeyValueBean("parentAccessGroup", String.join(",", accessGrpList)));
+		} else {
+			// if no access groups exist, the collection access group is public
+			results.add(new KeyValueBean("parentAccessGroup", "public"));
 		}
-
-		HpcDataManagementRulesDTO basePathRules = DoeClientUtil.getBasePathManagementRules(modelDTO, basePath);
-		String collectionType = null;
-		Set<String> collectionTypesSet = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
-		List<KeyValueBean> results = new ArrayList<>();
-		HpcCollectionListDTO collections = null;
-		HpcCollectionDTO collection = null;
-
-		if (parent != null && "basePath".equalsIgnoreCase(parent)) {
-			parent = basePath;
-		}
-		if (parent != null && !parent.isEmpty()) {
-			collections = DoeClientUtil.getCollection(authToken, serviceURL, parent, false);
-			if (collections != null && collections.getCollections() != null
-					&& !CollectionUtils.isEmpty(collections.getCollections())) {
-				collection = collections.getCollections().get(0);
-			}
-		}
-		if (basePathRules != null) {
-			List<HpcMetadataValidationRule> rules = basePathRules.getCollectionMetadataValidationRules();
-			// Parent name is given
-			if (parent != null) {
-				if (collection != null) {
-					if (collection.getMetadataEntries() == null) {
-						if (basePathRules.getDataHierarchy() != null)
-							collectionTypesSet.add(basePathRules.getDataHierarchy().getCollectionType());
-						else
-							collectionTypesSet.add("Folder");
-					} else {
-						for (HpcMetadataEntry entry : collection.getMetadataEntries().getSelfMetadataEntries()) {
-							if (entry.getAttribute().equals("collection_type")) {
-								collectionType = entry.getValue();
-								break;
-							}
-						}
-					}
-				} else {
-					for (String type : getCollectionTypes(rules))
-						collectionTypesSet.add(type);
-				}
-
-				if (collectionType != null) {
-					List<String> subCollections = getSubCollectionTypes(collectionType,
-							basePathRules.getDataHierarchy());
-					if ((subCollections == null || subCollections.isEmpty()) && !rules.isEmpty())
-						throw new DoeWebException("Adding a subcollection is not allowed with: " + parent);
-					for (String type : subCollections)
-						collectionTypesSet.add(type);
-				}
-			}
-
-			if (collectionType == null && collectionTypesSet.isEmpty()) {
-				for (HpcMetadataValidationRule validationrule : rules) {
-					if (validationrule.getMandatory() && validationrule.getAttribute().equals("collection_type")) {
-						for (String type : validationrule.getValidValues())
-							collectionTypesSet.add(type);
-					}
-				}
-			}
-		}
-		final String collectionTypeVal = collectionType;
-		HpcMetadataEntry entry = (collection != null && collection.getMetadataEntries() != null)
-				? collection.getMetadataEntries().getSelfMetadataEntries().stream()
-						.filter(e -> e.getAttribute().equalsIgnoreCase("access_group")).findAny().orElse(null)
-				: null;
-		collectionTypesSet.stream().forEach(e -> results.add(new KeyValueBean(e, collectionTypeVal)));
-		results.add(new KeyValueBean("parentAccessGroup", entry != null ? entry.getValue() : ""));
 
 		return new ResponseEntity<>(results, HttpStatus.OK);
 	}
@@ -259,7 +190,7 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 				if (!parentPath.equalsIgnoreCase(basePath)) {
 					HpcCollectionListDTO parentCollectionDto = DoeClientUtil.getCollection(authToken, serviceURL,
 							parentPath, true);
-					Boolean isValidPermissions = verifyCollectionPermissions(parentPath, parentCollectionDto);
+					Boolean isValidPermissions = verifyCollectionPermissions(session, parentPath, parentCollectionDto);
 					if (Boolean.FALSE.equals(isValidPermissions)) {
 						return "Insufficient privileges to create collection";
 					}
@@ -327,9 +258,9 @@ public class DoeCreateCollectionController extends DoeCreateCollectionDataFileCo
 					audit.setPath(doeCollection.getPath());
 					auditingService.saveAuditInfo(audit);
 				}
-				
-				//remove the session attribute 
-				
+
+				// remove the session attribute
+
 				session.removeAttribute("validValuesList");
 
 				return "Collection is created!";

@@ -11,13 +11,24 @@
     margin-left: auto;
 }
 
-.registerDiv {
+/* .registerDiv {
 	border: 1px solid #AD5A00;
 	background-color: #FFFFFF;
 	border-radius: 7px !important;
 	color: #F8F6F6;
 	margin-bottom: 14px !important;
-}
+} */
+
+.registerDiv {
+	border: none;
+	border-bottom: 1px solid #C4CCD3;
+	border-radius: 0 !important;
+	background-color: transparent;
+	gap: 30px;
+	padding: 30px 30px 16px 30px;
+	margin-bottom: 0px;
+	/* align-items: flex-end; */
+  }
 #loginSubTab {
 	width: 680px;
 	margin-top: 50px;

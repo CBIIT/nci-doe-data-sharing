@@ -155,7 +155,7 @@ public class DoeDownloadFilesController extends AbstractDoeController {
 			downloadDTO = DoeClientUtil.downloadFiles(authToken, downloadServiceURL, dto);
 			if (downloadDTO != null) {
 				String taskId = downloadDTO.getTaskId();
-				result.setMessage("Download request successful. Task ID: <a href='/tasksTab'>" + taskId + "</a>");
+				result.setMessage("Download request successful. Task ID: <a href='/statusTab'>" + taskId + "</a>");
 				if (loggedOnUser != null) {
 					taskManagerService.saveTransfer(taskId, "Download", downloadFile.getSearchType(),
 							name != null ? name : downloadType, getLoggedOnUserInfo(), downloadFile.getSelectedPaths());

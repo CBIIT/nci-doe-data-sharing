@@ -5,19 +5,19 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>gov.nih.nci.doe</groupId>
 	<artifactId>web-doe</artifactId>
-	<version>2.6.0</version>
+	<version>2.7.0</version>
 	<packaging>war</packaging>
 	<name>DOE Web Application</name>
 	<description>Department Of Energy</description>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.3.0.RELEASE</version>
+		<version>2.3.12.RELEASE</version>
 		<relativePath />
 		<!-- lookup parent from repository -->
 	</parent>
 	<properties>
-		<api.version>3.3.0</api.version>
+		<api.version>3.5.0</api.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<start-class>gov.nih.nci.doe.web.DoeWebApplication</start-class>
 		<resources.basedir>src/main/resources</resources.basedir>
@@ -30,7 +30,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
-		 <dependency>
+		<dependency>
         <groupId>org.springframework</groupId>
         	<artifactId>spring-core</artifactId>
         	<version>5.2.23.RELEASE</version>
@@ -38,9 +38,14 @@
    		  <dependency>
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-core</artifactId>
-        <version>5.5.7</version>
+        <version>5.7.12</version>
     	</dependency>
-		<dependency>
+    	<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-crypto</artifactId>
+		    <version>5.7.12</version>
+		</dependency>
+    	<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
@@ -83,19 +88,10 @@
 			<version>0.2</version>
 		</dependency>
 		<dependency>
-			<groupId>com.jcraft</groupId>
-			<artifactId>jsch</artifactId>
-			<version>0.1.55</version>
-		</dependency>
-		<dependency>
 			<groupId>com.oracle</groupId>
 			<artifactId>ojdbc6</artifactId>
 			<version>11.2.0.4</version>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.zaxxer</groupId>
-			<artifactId>HikariCP</artifactId>
 		</dependency>
 		<!-- Spring Security -->
 		<dependency>
@@ -125,16 +121,6 @@
 			<artifactId>spring-integration-http</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-java-sdk-s3</artifactId>
-			<version>1.12.455</version>
-		</dependency>
-		<dependency>
-			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-java-sdk-secretsmanager</artifactId>
-			<version>1.12.455</version>
-		</dependency>
-		<dependency>
 			<groupId>org.passay</groupId>
 			<artifactId>passay</artifactId>
 			<version>1.2.0</version>
@@ -142,12 +128,12 @@
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcpkix-jdk15on</artifactId>
-			<version>1.68</version>
+			<version>1.70</version>
 		</dependency>
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-jdk15on</artifactId>
-			<version>1.68</version>
+			<version>1.70</version>
 		</dependency>
 		<dependency>
 			<groupId>org.globusonline</groupId>

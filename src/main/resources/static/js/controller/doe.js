@@ -105,7 +105,7 @@ function loadJsonData(url, selectTarget, emptyOption, params, successCallback, f
                 $select.append($('<option></option>').attr('value', "ANY").text("Select"));
             }
 
-            var prog = $("#institutePath").val();
+            var prog = $("#programPath").val();
         	var study= $("#studyPath").val();
         	var asset = $("#datafilePath").val();
         	
@@ -120,7 +120,6 @@ function loadJsonData(url, selectTarget, emptyOption, params, successCallback, f
                 
             }
             $select.select2();
-            $("#accessGroupSelect").next(".select2-container").hide();
             if (successCallback) {
                 successCallback(data, status);
             }

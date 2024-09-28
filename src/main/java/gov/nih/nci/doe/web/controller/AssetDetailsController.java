@@ -71,7 +71,7 @@ public class AssetDetailsController extends AbstractDoeController {
 		log.info("authToken: " + authToken);
 		String user = getLoggedOnUserInfo();
 		log.info("asset details for user: " + user);
-		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(user).getBody();
+		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(session, user).getBody();
 		DoeSearch search = new DoeSearch();
 
 		if (StringUtils.isNotEmpty(dmeDataId)) {
@@ -115,7 +115,7 @@ public class AssetDetailsController extends AbstractDoeController {
 		}
 
 		try {
-			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search);
+			HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(session, search);
 			compoundQuery.setDetailedResponse(true);
 			log.info("search compund query" + compoundQuery);
 
@@ -151,7 +151,10 @@ public class AssetDetailsController extends AbstractDoeController {
 				String assetPermission = getPermissionRole(user, collection.getCollection().getCollectionId(),
 						loggedOnUserPermissions);
 
-				/* get the latest access group from MoDaC database instead of the materialized view */
+				/*
+				 * get the latest access group from MoDaC database instead of the materialized
+				 * view
+				 */
 				List<String> accessGrpList = accessGroupsService
 						.getGroupsByCollectionPath(collection.getCollection().getCollectionName());
 
@@ -180,7 +183,7 @@ public class AssetDetailsController extends AbstractDoeController {
 						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset");
 
 				// display all self metadata with is_visible not false in Look up table
-				List<KeyValueBean> selfMetadata = getUserMetadata(
+				List<KeyValueBean> selfMetadata = getUserMetadata(session,
 						collection.getMetadataEntries().getSelfMetadataEntries(), "Asset", systemAttrs, Boolean.TRUE);
 
 				if (StringUtils.isNotEmpty(returnToSearch)) {
@@ -190,7 +193,8 @@ public class AssetDetailsController extends AbstractDoeController {
 				model.addAttribute("assetType", assetType);
 				model.addAttribute("dme_Data_Id", dme_Data_Id);
 				model.addAttribute("asset_Identifier", asset_Identifier);
-				model.addAttribute("accessGrp", CollectionUtils.isNotEmpty(accessGrpList) ? String.join(",", accessGrpList) : "public");
+				model.addAttribute("accessGrp",
+						CollectionUtils.isNotEmpty(accessGrpList) ? String.join(",", accessGrpList) : "public");
 				model.addAttribute("assetName", assetName);
 				model.addAttribute("assetMetadata", selfMetadata);
 				model.addAttribute("studyName", studyName);
@@ -204,7 +208,7 @@ public class AssetDetailsController extends AbstractDoeController {
 				model.addAttribute("assetLink", webServerName + "/assetDetails?dme_data_id=" + dme_Data_Id);
 
 				ModelInfo modelInfo = modelInfoService.getModelInfo(collection.getCollection().getCollectionName());
-				if (Boolean.TRUE.equals(getIsUploader())
+				if (Boolean.TRUE.equals(getIsUploader(session))
 						&& ((isModelDeployed != null && isModelDeployed.equalsIgnoreCase("Yes"))
 								|| "Yes".equalsIgnoreCase(isReferenceDataset))) {
 
@@ -239,7 +243,7 @@ public class AssetDetailsController extends AbstractDoeController {
 		} catch (Exception e) {
 			throw new DoeWebException(e.getMessage());
 		}
-		return "assetDetails";
+		return "assetDetails/assetDetailsTab";
 
 	}
 

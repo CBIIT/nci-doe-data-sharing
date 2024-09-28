@@ -125,13 +125,13 @@ public abstract class AbstractDoeController {
 	public MetaDataPermissionsService metaDataPermissionService;
 
 	@Autowired
-	AccessGroupsService accessGroupsService;
+	public AccessGroupsService accessGroupsService;
 
 	@Autowired
 	public AuditingService auditingService;
 
 	@Autowired
-	LookUpService lookUpService;
+	public LookUpService lookUpService;
 
 	@Autowired
 	public MailService mailService;
@@ -243,40 +243,107 @@ public abstract class AbstractDoeController {
 		return null;
 	}
 
-	@ModelAttribute("isAdmin")
-	public Boolean getIsAdmin() {
+	@ModelAttribute("user")
+	public DoeUsersModel getUser(HttpSession session) {
 		String emailAddr = getLoggedOnUserInfo();
-		if (!StringUtils.isEmpty(emailAddr)) {
-			DoeUsersModel user = authenticateService.getUserInfo(emailAddr);
-			if (user != null && Boolean.TRUE.equals(user.getIsAdmin())) {
-				return true;
+		if (StringUtils.isNotEmpty(emailAddr)) {
+			DoeUsersModel user = (DoeUsersModel) session.getAttribute("doeUserModel");
+			if (user == null) {
+				user = authService.getUserInfo(emailAddr);
+				session.setAttribute("doeUserModel", user);
 			}
+			return user;
+		}
+		return null;
+	}
+
+	@ModelAttribute("isAdmin")
+	public Boolean getIsAdmin(HttpSession session) {
+		DoeUsersModel user = getUser(session);
+
+		if (user != null && Boolean.TRUE.equals(user.getIsAdmin())) {
+			return true;
 		}
 
 		return false;
+
 	}
 
 	@ModelAttribute("isDelete")
-	public Boolean getIsDelete() {
-		String emailAddr = getLoggedOnUserInfo();
-		if (!StringUtils.isEmpty(emailAddr)) {
-			DoeUsersModel user = authenticateService.getUserInfo(emailAddr);
-			if (user != null && Boolean.TRUE.equals(user.getIsDeletePrivilege())) {
-				return true;
-			}
+	public Boolean getIsDelete(HttpSession session) {
+		DoeUsersModel user = getUser(session);
+		if (user != null && Boolean.TRUE.equals(user.getIsDeletePrivilege())) {
+			return true;
 		}
 
 		return false;
 	}
 
 	@ModelAttribute("isReviewCommitteeMember")
-	public Boolean getIsReviewCommiteeMember() {
-		String emailAddr = getLoggedOnUserInfo();
-		if (!StringUtils.isEmpty(emailAddr)) {
-			DoeUsersModel user = authenticateService.getUserInfo(emailAddr);
-			if (user != null && Boolean.TRUE.equals(user.getIsReviewCommiteeMember())) {
-				return true;
-			}
+	public Boolean getIsReviewCommiteeMember(HttpSession session) {
+		DoeUsersModel user = getUser(session);
+		if (user != null && Boolean.TRUE.equals(user.getIsReviewCommiteeMember())) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@ModelAttribute("firstName")
+	public String getLoggedOnUserFirstName(HttpSession session) {
+		DoeUsersModel user = getUser(session);
+		if (user != null) {
+			return user.getFirstName();
+		}
+
+		return null;
+	}
+
+	@ModelAttribute("lastName")
+	public String getLoggedOnUserLastName(HttpSession session) {
+		DoeUsersModel user = getUser(session);
+		if (user != null) {
+			return user.getLastName();
+		}
+
+		return null;
+	}
+
+	@ModelAttribute("organization")
+	public String getLoggedOnUserOrg(HttpSession session) {
+		DoeUsersModel user = getUser(session);
+		if (user != null) {
+			return user.getInstitution();
+		}
+
+		return null;
+	}
+
+	@ModelAttribute("defaultGroup")
+	public String getDefaultGroup(HttpSession session) {
+		DoeUsersModel user = getUser(session);
+		if (user != null && Boolean.TRUE.equals(user.getIsWrite()) && user.getDefaultGroup() != null) {
+			return user.getDefaultGroup().getGroupName();
+		}
+		return null;
+
+	}
+
+	@ModelAttribute("fullName")
+	public String getLoggedOnUserFullName(HttpSession session) {
+		DoeUsersModel user = getUser(session);
+		if (user != null) {
+			return user.getFirstName() + " " + user.getLastName();
+		}
+
+		return null;
+	}
+
+	@ModelAttribute("isUploader")
+	public Boolean getIsUploader(HttpSession session) {
+		DoeUsersModel user = getUser(session);
+		if (user != null && Boolean.TRUE.equals(user.getIsWrite())) {
+			return true;
 		}
 
 		return false;
@@ -296,69 +363,8 @@ public abstract class AbstractDoeController {
 		return showApiDocs;
 	}
 
-	@ModelAttribute("firstName")
-	public String getLoggedOnUserFirstName() {
-		String emailAddr = getLoggedOnUserInfo();
-		if (StringUtils.isNotEmpty(emailAddr)) {
-			DoeUsersModel user = authService.getUserInfo(emailAddr);
-			if (user != null) {
-				return user.getFirstName();
-			}
-		}
-		return null;
-	}
-
-	@ModelAttribute("lastName")
-	public String getLoggedOnUserLastName() {
-		String emailAddr = getLoggedOnUserInfo();
-		if (StringUtils.isNotEmpty(emailAddr)) {
-			DoeUsersModel user = authService.getUserInfo(emailAddr);
-			if (user != null) {
-				return user.getLastName();
-			}
-		}
-		return null;
-	}
-
-	@ModelAttribute("organization")
-	public String getLoggedOnUserOrg() {
-		String emailAddr = getLoggedOnUserInfo();
-		if (StringUtils.isNotEmpty(emailAddr)) {
-			DoeUsersModel user = authService.getUserInfo(emailAddr);
-			if (user != null) {
-				return user.getInstitution();
-			}
-		}
-		return null;
-	}
-
-	@ModelAttribute("fullName")
-	public String getLoggedOnUserFullName() {
-		String emailAddr = getLoggedOnUserInfo();
-		if (StringUtils.isNotEmpty(emailAddr)) {
-			DoeUsersModel user = authService.getUserInfo(emailAddr);
-			if (user != null) {
-				return user.getFirstName() + " " + user.getLastName();
-			}
-		}
-		return null;
-	}
-
-	@ModelAttribute("isUploader")
-	public Boolean getIsUploader() {
-		String emailAddr = getLoggedOnUserInfo();
-		if (!StringUtils.isEmpty(emailAddr)) {
-			DoeUsersModel user = authenticateService.getUserInfo(emailAddr);
-			if (user != null && Boolean.TRUE.equals(user.getIsWrite())) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	public List<KeyValueBean> getUserMetadata(List<HpcMetadataEntry> list, String levelName, List<String> systemAttrs,
-			Boolean isVisible) {
+	public List<KeyValueBean> getUserMetadata(HttpSession session, List<HpcMetadataEntry> list, String levelName,
+			List<String> systemAttrs, Boolean isVisible) {
 
 		log.info("get user metadata for level: " + levelName);
 		List<KeyValueBean> entryList = new ArrayList<KeyValueBean>();
@@ -366,7 +372,7 @@ public abstract class AbstractDoeController {
 		for (HpcMetadataEntry entry : list) {
 			if (systemAttrs != null && !systemAttrs.contains(entry.getAttribute()) && (levelName == null
 					|| (levelName != null && levelName.equalsIgnoreCase(entry.getLevelLabel())))) {
-				LookUp lookUpVal = lookUpService.getLookUpByLevelAndName(levelName, entry.getAttribute());
+				LookUp lookUpVal = lookUpService.getLookUpByLevelAndName(session, levelName, entry.getAttribute());
 				KeyValueBean k = null;
 				// this is a temporary fix to escape json.stringify error with single and double
 				// quotes
@@ -534,7 +540,8 @@ public abstract class AbstractDoeController {
 						HpcCollectionDTO collection = collections.getCollections().get(0);
 						for (HpcMetadataEntry entry : collection.getMetadataEntries().getSelfMetadataEntries()) {
 							if (!systemAttrs.contains(entry.getAttribute())) {
-								LookUp val = lookUpService.getLookUpByLevelAndName(levelName, entry.getAttribute());
+								LookUp val = lookUpService.getLookUpByLevelAndName(session, levelName,
+										entry.getAttribute());
 								KeyValueBean k = null;
 								if (val != null) {
 									k = new KeyValueBean(entry.getAttribute(), val.getDisplayName(), entry.getValue(),
@@ -556,10 +563,11 @@ public abstract class AbstractDoeController {
 					if (datafiles != null && datafiles.getDataObject() != null) {
 						for (HpcMetadataEntry entry : datafiles.getMetadataEntries().getSelfMetadataEntries()
 								.getUserMetadataEntries()) {
-							String attrName = lookUpService.getDisplayName(levelName, entry.getAttribute());
+							LookUp val = lookUpService.getLookUpByLevelAndName(session, levelName,
+									entry.getAttribute());
 							KeyValueBean k = null;
-							if (!StringUtils.isEmpty(attrName)) {
-								k = new KeyValueBean(entry.getAttribute(), attrName, entry.getValue());
+							if (val != null) {
+								k = new KeyValueBean(entry.getAttribute(), val.getDisplayName(), entry.getValue());
 							} else {
 								k = new KeyValueBean(entry.getAttribute(), entry.getAttribute(), entry.getValue());
 							}
@@ -584,7 +592,7 @@ public abstract class AbstractDoeController {
 		return entryList;
 	}
 
-	public ResponseEntity<?> getMetaDataPermissionsList(String loggedOnUser) {
+	public ResponseEntity<?> getMetaDataPermissionsList(HttpSession session, String loggedOnUser) {
 
 		log.info("get meta data permissions list");
 		if (StringUtils.isEmpty(loggedOnUser)) {
@@ -593,7 +601,7 @@ public abstract class AbstractDoeController {
 		List<KeyValueBean> keyValueBeanResults = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(loggedOnUser)) {
-			DoeUsersModel user = authenticateService.getUserInfo(loggedOnUser);
+			DoeUsersModel user = getUser(session);
 
 			if (user != null && !StringUtils.isEmpty(user.getProgramName())) {
 				List<String> progList = Arrays.asList(user.getProgramName().split(","));
@@ -604,7 +612,7 @@ public abstract class AbstractDoeController {
 		return new ResponseEntity<>(keyValueBeanResults, null, HttpStatus.OK);
 	}
 
-	public List<String> getLoggedOnUserGroups(String loggedOnUser) {
+	public List<String> getLoggedOnUserGroups(HttpSession session, String loggedOnUser) {
 
 		log.info("get meta data permissions list");
 		if (StringUtils.isEmpty(loggedOnUser)) {
@@ -613,7 +621,7 @@ public abstract class AbstractDoeController {
 		List<String> grpList = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(loggedOnUser)) {
-			DoeUsersModel user = authenticateService.getUserInfo(loggedOnUser);
+			DoeUsersModel user = getUser(session);
 
 			if (user != null && !StringUtils.isEmpty(user.getProgramName())) {
 				grpList = Arrays.asList(user.getProgramName().split(","));
@@ -739,13 +747,16 @@ public abstract class AbstractDoeController {
 		return new ResponseEntity<>(keyValueBeanResults, null, HttpStatus.OK);
 	}
 
-	public ResponseEntity<?> getCollectionAccessGroups(String selectedPath, String levelName) throws DoeWebException {
+	public ResponseEntity<?> getCollectionAccessGroups(HttpSession session, String selectedPath, String levelName)
+			throws DoeWebException {
 
 		log.info("get Access Groups for path: " + selectedPath);
 		List<KeyValueBean> entryList = new ArrayList<KeyValueBean>();
 
 		try {
 			if (selectedPath != null) {
+				String authToken = (String) session.getAttribute("hpcUserToken");
+
 				List<String> accessGrpList = accessGroupsService.getGroupsByCollectionPath(selectedPath);
 				if (CollectionUtils.isNotEmpty(accessGrpList)) {
 					entryList.add(new KeyValueBean("selectedEntry", String.join(",", accessGrpList)));
@@ -767,6 +778,22 @@ public abstract class AbstractDoeController {
 						entryList.add(new KeyValueBean("parentAccessGroups", "public"));
 					}
 				}
+
+				if (levelName.equalsIgnoreCase("Asset")) {
+					// get curated status of the asset
+					// Get collection
+					HpcCollectionListDTO collections = DoeClientUtil.getCollection(authToken, serviceURL, selectedPath,
+							false);
+					if (collections != null && collections.getCollections() != null
+							&& !collections.getCollections().isEmpty()) {
+						HpcCollectionDTO collection = collections.getCollections().get(0);
+						String curatedStatus = getAttributeValue("curation_status",
+								collection.getMetadataEntries().getSelfMetadataEntries(), null);
+						if (StringUtils.isNotEmpty(curatedStatus)) {
+							entryList.add(new KeyValueBean("curationStatus", curatedStatus));
+						}
+					}
+				}
 			}
 		} catch (Exception e) {
 			throw new DoeWebException(e.getMessage());
@@ -774,10 +801,10 @@ public abstract class AbstractDoeController {
 		return new ResponseEntity<>(entryList, HttpStatus.OK);
 	}
 
-	public HpcCompoundMetadataQueryDTO constructCriteria(DoeSearch search) {
+	public HpcCompoundMetadataQueryDTO constructCriteria(HttpSession session, DoeSearch search) {
 		HpcCompoundMetadataQueryDTO dto = new HpcCompoundMetadataQueryDTO();
 		dto.setTotalCount(true);
-		HpcCompoundMetadataQuery query = buildSimpleSearch(search);
+		HpcCompoundMetadataQuery query = buildSimpleSearch(session, search);
 		dto.setCompoundQuery(query);
 		dto.setDetailedResponse(search.isDetailed());
 		dto.setCompoundQueryType(HpcCompoundMetadataQueryType.COLLECTION);
@@ -787,12 +814,12 @@ public abstract class AbstractDoeController {
 	}
 
 	@SuppressWarnings("unchecked")
-	private HpcCompoundMetadataQuery buildSimpleSearch(DoeSearch search) {
+	private HpcCompoundMetadataQuery buildSimpleSearch(HttpSession session, DoeSearch search) {
 
 		log.info("build simple search criteria: " + search);
 		HpcCompoundMetadataQuery query = new HpcCompoundMetadataQuery();
 		query.setOperator(HpcCompoundMetadataQueryOperator.AND);
-		Map<String, HpcMetadataQuery> queriesMap = getQueries(search);
+		Map<String, HpcMetadataQuery> queriesMap = getQueries(session, search);
 
 		Map<String, List<HpcMetadataQuery>> attrNamesMap = new HashMap<String, List<HpcMetadataQuery>>();
 
@@ -823,7 +850,8 @@ public abstract class AbstractDoeController {
 		}
 
 		// add criteria for access group public and other prog names for logged on user.
-		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(null).getBody();
+		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(session, null)
+				.getBody();
 
 		HpcCompoundMetadataQuery query1 = new HpcCompoundMetadataQuery();
 		query1.setOperator(HpcCompoundMetadataQueryOperator.OR);
@@ -864,7 +892,7 @@ public abstract class AbstractDoeController {
 
 	}
 
-	public Map<String, HpcMetadataQuery> getQueries(DoeSearch search) {
+	public Map<String, HpcMetadataQuery> getQueries(HttpSession session, DoeSearch search) {
 		Map<String, HpcMetadataQuery> queries = new HashMap<String, HpcMetadataQuery>();
 
 		for (int i = 0; i < search.getAttrName().length; i++) {
@@ -875,7 +903,7 @@ public abstract class AbstractDoeController {
 			String level = null;
 			boolean selfMetadata = search.getIsExcludeParentMetadata()[i];
 
-			LookUp val = lookUpService.getLookUpByDisplayName(attrName);
+			LookUp val = lookUpService.getLookUpByDisplayName(session, attrName);
 
 			if (val != null) {
 				level = val.getLevelName();
@@ -935,11 +963,10 @@ public abstract class AbstractDoeController {
 			throws DoeWebException, IOException {
 
 		log.info("construct filter crietria for : " + search);
-		// List<SearchList> searchList = new ArrayList<>();
 		String authToken = (String) session.getAttribute("hpcUserToken");
 		search.setDetailed(true);
 
-		HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search);
+		HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(session, search);
 		Response restResponse = DoeClientUtil.getCollectionSearchQuery(authToken, compoundCollectionSearchServiceURL,
 				compoundQuery);
 
@@ -954,7 +981,7 @@ public abstract class AbstractDoeController {
 			HpcCollectionListDTO collections = parser.readValueAs(HpcCollectionListDTO.class);
 			List<HpcCollectionDTO> searchFilterResults = collections.getCollections();
 
-			LookUp value = lookUpService.getLookUpByDisplayName(search.getSearchName());
+			LookUp value = lookUpService.getLookUpByDisplayName(session, search.getSearchName());
 			if (value != null) {
 				SearchList filterList = retrieveSearchFilterLists(session, searchFilterResults, value.getAttrName(),
 						value.getLevelName(), value.getDisplayName());
@@ -991,7 +1018,7 @@ public abstract class AbstractDoeController {
 		search.setIsExcludeParentMetadata(isExcludeParentMetadata);
 		search.setDetailed(true);
 
-		HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search);
+		HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(session, search);
 		Response restResponse = DoeClientUtil.getCollectionSearchQuery(authToken, compoundCollectionSearchServiceURL,
 				compoundQuery);
 
@@ -1012,7 +1039,7 @@ public abstract class AbstractDoeController {
 				searchList.add(filterList);
 
 			}
-			model.addAttribute("browseList", searchList);
+			model.addAttribute("searchList", searchList);
 		}
 
 	}
@@ -1107,7 +1134,7 @@ public abstract class AbstractDoeController {
 	public List<KeyValueBean> getPathsForSearch(DoeSearch search, HttpSession session) throws DoeWebException {
 		log.info("get paths by filtering from the required search criteria");
 
-		HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(search);
+		HpcCompoundMetadataQueryDTO compoundQuery = constructCriteria(session, search);
 		compoundQuery.setDetailedResponse(true);
 		log.info("search compund query" + compoundQuery);
 		String authToken = (String) session.getAttribute("hpcUserToken");
@@ -1307,4 +1334,5 @@ public abstract class AbstractDoeController {
 		inference.setIsReferenceAsset(Boolean.TRUE);
 		return taskId;
 	}
+
 }

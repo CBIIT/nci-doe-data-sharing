@@ -1,26 +1,36 @@
 .select2-container--default .select2-selection--single .select2-selection__arrow b {
-	border-color: #E87B05 transparent transparent transparent !important;
+	border-color: #3B6EB4 transparent transparent transparent !important;
+	border-width: 8px 6px 0 6px;
+	margin-left: -12px;
 }
 
-table#newMetaDataTableForSingleFile tbody tr td {
-	background-color: #E0F0F4;
-}
 
-table#newMetaDataTableForSingleFile thead tr th {
-	background-color: #194F85;
-	color: #fff;
-
-}
 
 .btn-primary {
 	background-color: #194F85 !important;
+}
+
+table#newMetaDataTableForSingleFile {
+	border: none;
+	margin-left: -25px;
+    margin-top: 35px;
+}
+
+#doeDataFile {
+    margin-top: 12px;
+    color: #A8B1B6;
+    font-family: 'inter_regular';
+    font-size: 16px;
+    font-style: normal;
+    color: #152868;
+	font-size: 16px;
 }
 
 table#newMetaDataTable tbody tr td {
 	background-color: #EEF4F6;
 	color: #235172;
 	font-family: "Open Sans";
-	font-size: 13px;
+	font-size: 16px;
 	font-style: normal;
 	padding: 16px 32px !important;
 
@@ -38,29 +48,49 @@ table#newMetaDataTable tbody tr td {
 		padding: 8px;
 		min-height: 120px;
 	}
+}
 
-	#nonPublicAccess {
-		margin-left: 24px;
 
+table#newMetaDataTableForSingleFile tbody tr td {
+	background-color: #EEF4F6;
+	color: #235172;
+	font-family: "Open Sans";
+	font-size: 16px;
+	font-style: normal;
+	padding: 16px 26px !important;
+
+	input {
+		padding: 0 10px;
+
+	}
+
+	input[type="radio"] {
+		margin-top: 10px;
+		accent-color: #004A8B;
+	}
+
+	textarea {
+		padding: 8px;
+		min-height: 120px;
 	}
 }
 
-table#newMetaDataTable tbody td {
-	border-bottom: 4px solid white;
+table#newMetaDataTable tbody td,  table#newMetaDataTableForSingleFile tbody td{
+	border-bottom: 3px solid white;
 	border-top: none;
 }
 
-table#newMetaDataTable tbody tr td:first-child {
+table#newMetaDataTable tbody tr td:first-child, table#newMetaDataTableForSingleFile tbody tr td:first-child {
 	text-transform: uppercase;
 	font-weight: 600;
 }
 
 
-table#newMetaDataTable tbody tr td:nth-child(2) {
+table#newMetaDataTable tbody tr td:nth-child(2), table#newMetaDataTableForSingleFile tbody tr td:nth-child(2) {
 	padding: 8px 0px !important;
 }
 
-table#newMetaDataTable thead tr th {
+table#newMetaDataTable thead tr th, table#newMetaDataTableForSingleFile thead tr th {
 	background-color: #194F85;
 	letter-spacing: 0.5px;
 	color: #FFF;
@@ -71,7 +101,7 @@ table#newMetaDataTable thead tr th {
 	width: 50%;
 }
 
-table#newMetaDataTable thead tr th:nth-child(2) {
+table#newMetaDataTable thead tr th:nth-child(2), table#newMetaDataTableForSingleFile thead tr th:nth-child(2) {
 	padding: 2px 0px;
 }
 
@@ -98,26 +128,54 @@ table#newMetaDataTable thead tr th:nth-child(2) {
 }
 
 .registeRadioButtons {
-	transform: scale(1.25);
+	transform: scale(1.75);
+	accent-color: #004A8B;
 }
 
+.uploadLabels .registeRadioButtons {
+	margin-right: 10px;
+}
+
+#dataSetListDiv {
+	border-bottom: none;
+}
+#uploadAndRegisterFiles {
+	border-bottom: none;
+}
+
+#dataListDiv{
+	padding-top: 30px;
+	border-top: 3px solid #B5C5E5;
+}
 .uploadslogo {
 	width: 12px;
 }
 
-#registerBulkAssets,
 #registerBulkDataFileBtn {
-	margin-top: 5px;
-	background-color: #E66F05;
-	color: #fff;
-	border-radius: 14px;
-	width: 100px;
-	font-family: 'inter_regular';
-	font-size: 15px;
-	letter-spacing: 0.5px;
+	margin-top: auto;
+	font-family: var(--font-family-inter);
+	min-height: 32px;
+	min-width: 120px;
+	max-width: 300px;
+	font-weight: 500;
+	line-height: 5px;
+	background-color: #2c4088 !important;
+	border-radius: 65px;
+	box-shadow: 0px 4px 50px #ffffff8c;
+	padding-left: 2rem;
+	text-align: left;
+	padding-top: 4px;
+	margin-bottom: 0.2rem;
+	color: #FFF;
+	font-size: 14px;
+	font-style: normal;
+	line-height: 60%;
+	letter-spacing: 0.14px;
+	text-transform: uppercase;
 }
 
-#registerCollectionBtn {
+#registerBulkAssets,
+#registerCollectionBtn, #registerBulkDataFileBtn {
 	margin-top: auto;
 	font-family: var(--font-family-inter);
 	min-height: 48px;
@@ -140,14 +198,20 @@ table#newMetaDataTable thead tr th:nth-child(2) {
 	text-transform: uppercase;
 }
 
-#cancelRegisterBtn {
+#registerBulkAssets, #registerBulkDataFileBtn {
+	min-height: 42px;
+	min-width: 233px;
+	padding-top: 8px;
+}
+
+#registerFolder, #addBulkDataFiles, #cancelRegisterBtn {
 	margin-top: auto;
 	font-family: var(--font-family-inter);
 	height: 41px;
 	width: 193px;
 	font-weight: 600;
 	line-height: 5px;
-	background-color: #506FA6 !important;
+	background-color: #2c4088 !important;
 	border-radius: 65px;
 	box-shadow: 0px 4px 50px #ffffff8c;
 	padding-left: 2rem;
@@ -162,31 +226,47 @@ table#newMetaDataTable thead tr th:nth-child(2) {
 	text-transform: uppercase;
 	min-height: 50px;
 }
+#registerFolder{
+width: 220px;
+height: 52px;
+} 
+#addBulkDataFiles{
+	width: 220px;
+	height: 52px;
+
+
+}
 
 .parentCollectionName,
 #folder_name {
-	/*width: 130%;*/
-	height: 46px;
 	padding-left: 25px;
-	border: none;
-	background-color: transparent;
 	color: #000;
-	/* flex: 1; */
+	color: #152868;
+	font-family: 'inter_regular';
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 400;
 }
 
-#driveUploadAuthlink,
-#cloudUploadAuthlink {
-	background-color: #E66F05 !important;
-	color: #fff !important;
-	border-radius: 15px;
-	width: 300px;
+#uploadCollectionPath,#parentCollectionName {
+	width:100%;
+	padding-left: 0px;
+	padding-right: 15px;
+	word-wrap: break-word;
+	line-height: 1.5;
+	display: inline-block;
+	padding-top: 14px;
 }
 
 .uploadLabels {
-	color: #a85300;
-	font-family: 'inter_regular';
-	font-weight: 200;
-	font-size: 17px;
+	font-family: var(--font-family-inter);
+	color: #353941;
+	font-size: 19px;
+	font-weight: 700;
+	padding-top: 0;
+	padding-bottom: 20px;
+	width: auto;
+	display: block;
 }
 
 .uploadSubLabels {
@@ -197,50 +277,78 @@ table#newMetaDataTable thead tr th:nth-child(2) {
 }
 
 .assetGlobusSelectionFields {
-	color: #fff;
+	color: #235172;
 	font-size: 13px;
 	letter-spacing: 0.5px;
 	margin-left: 10px;
+	font-family: 'Open Sans';
+	font-weight: 700;
+	position: absolute;
+	margin: 8px;
 }
 
 .assetBulkGlobusLabels {
-	background-color: #194F85;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	border: 0.95px solid #898989;
-	height: 47px;
-	padding-left: 10px;
+	/* background-color: #194F85; */
+	/* padding-top: 10px;
+	padding-bottom: 10px; */
+	/* border: 0.95px solid #898989; */
+	color: #235172;
+	height: 41px;
+	/* padding-left: 10px; */
 	font-family: 'inter_regular';
-	margin-right: 10px;
+	/* margin-right: 10px; */
 }
 
+.assetGCValue,
 .assetBulkGlobusValues {
-	border: 0.95px solid #898989;
+	border: 1px solid #6B7294;
 	padding: 10px;
-	color: #000000;
+	color: #6B7294;
 	font-family: 'inter_regular';
+	height: 37px;
+	border-radius: 8px;
 }
 
-#pickerUploadLink {
-	color: #E87B05;
-	margin-left: 1.1rem;
+.uploadToAssetBulkValues {
+	border-radius: 8px;
+	border: 1px solid #6B7294;
+    background: #FFF;
+    color: #A8B1B6;
+	font-family: 'inter_regular';
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 400;
+	padding: 10px;
+	height:37px;
+	line-height: 17px;
 }
+
+.assetGCLabels {
+	text-transform: uppercase;
+	color: #235172;
+	height: 47px;
+	font-family: 'Open Sans';
+	font-weight: 700;
+}
+
+.assetGCValue,
+.assetBulkGlobusValues input:focus,
+.uploadToAssetBulkValues input:focus {
+	outline: none;
+}
+
 
 .bulkAssetTextbox {
-	width: 100%;
-	border-radius: 9px;
-	border-color: transparent;
-	height: 29px;
 	padding-left: 10px;
 	font-family: 'inter_regular';
+	width: 100%;
+	border-radius: 8px;
+	border: 1px solid #6B7294;
+	height: 36px;
 }
 
 input#includeCriteria:focus {
 	outline: none;
-}
-
-.assetBulkGlobusValues input:focus {
-    outline: none;
 }
 
 .addUserMetadaDiv {
@@ -256,15 +364,72 @@ input#includeCriteria:focus {
 }
 
 #primaryGlobusButton,
-#assetSelectionGlobusButton {
-	background-color: #E66F05;
-	color: #fff !important;
-	border-radius: 15px;
-	width: 326px;
-	font-size: 15px;
+#assetSelectionGlobusButton,
+#authorizeGoogleCloud,#driveUploadAuthlink,
+#cloudUploadAuthlink,#pickerUploadLink {
+	width: 250px;
 	font-family: 'inter_regular';
+	background-color: #2c4088 !important;
+	border-radius: 65px;
+	box-shadow: 0px 4px 50px #ffffff8c;
+	padding-left: 2rem;
+	text-align: left;
+	padding-top: 12px;
+	margin-bottom: 0.2rem;
+	color: #FFF !important;
+	font-size: 14px;
+	font-style: normal;
+	line-height: 110%;
+	letter-spacing: 0.14px;
+	text-transform: uppercase;
+	padding: 4px 32px;
+}
+#primaryGlobusButton {
+	width: 233px;
+    height: 41px;
+    line-height: 60%;
+    padding-top: 2px;
 }
 
+
+#authorizeGoogleCloud,#driveUploadAuthlink,#cloudUploadAuthlink,#pickerUploadLink {
+	width: 330px;
+	padding: 7px 32px 0px 32px;
+}
+
+#driveUploadAuthlink:disabled, #cloudUploadAuthlink:disabled{
+    background: #B4B4B4 !important;
+    box-shadow: 0px 4px 50px 0px rgba(255, 255, 255, 0.55);
+}
+
+#driveUploadAuthlink, #pickerUploadLink, #cloudUploadAuthlink {
+	width: 233px;
+    height: 41px;
+    line-height: 15.4px;
+    padding-top: 4px;
+    padding-left: 17px;
+}
+
+#driveAuthorisedMsg, #cloudAuthorisedMsg {
+	margin-top: 10px;
+    margin-left: 25px;
+    color: #152868;
+    font-family: 'inter_regular';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+}
+
+.googledrive_labels {
+	color: #152868;
+	font-family: 'inter_regular';
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 150%;
+	word-wrap: break-word;
+}
 #collectionMetaDataLabel {
 	color: #1C3D5D;
 	font-family: latoregular;
@@ -276,10 +441,24 @@ table#globusDetailsDiv td {
 }
 
 table#assetBulkMetadataTable tbody tr td {
-	background-color: #E0F0F4 !important;
-	padding: 5px;
-	padding-left: 14px;
-	font-family: 'latoregular';
+	background-color: #EEF4F6;
+	color: #235172;
+	font-family: "Open Sans";
+	font-size: 13px;
+	font-style: normal;
+	padding: 16px 12px !important;
+	border-bottom: 2.5px solid white;
+}
+
+table#assetBulkMetadataTable tbody tr td:first-child {
+	padding: 16px 12px !important;
+	font-weight: 600;
+	text-transform: uppercase;
+	width: 33.33%;
+}
+
+table#assetBulkMetadataTable tbody tr td:nth-child(2) {
+	padding: 8px 12px !important;
 }
 
 table#assetBulkMetadataTable thead tr th {
@@ -293,31 +472,51 @@ table#assetBulkMetadataTable thead tr th {
 }
 
 #uploadHeader {
-	/* margin-top: 84px;  */
-	padding-bottom: -16px;
-	height: 50px;
-	width: 430px;
-	background-color: #E66F05;
+	font-size: 38px;
+	text-align: center;
+	font-weight: 300;
+	background: linear-gradient(90deg, #015694 18.75%, #707AAD 50.93%, #C57908 89.72%);
+	min-height: 136px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	color: #fff;
 }
 
-#uploadHeader p {
-	font-size: 20px;
-	font-family: latoregular;
-	font-size: 25px;
-	padding-top: 5px;
-}
 
 #uploadSectionDiv {
-	border: 1px solid #AD5A00;
-	background-color: #FFFFFF;
-	/* margin-bottom: 84px !important; */
+	border: none;
+	max-width: 1006px;
+	margin: 40px auto;
+	box-shadow: 2px 10px 30px 0px #0000004D;
+	border-radius: 20px;
+	background: #fff;
+	padding: 0;
 }
 
 #uploadSubFragmentTab {
-	margin-top: 20px;
-	margin-left: 100px;
+	margin: 0;
+	padding: 0;
+	display: block;
 }
+
+
+.registerDiv .form-group {
+	margin: 0;
+}
+
+.registerDiv .form-group:first-child {
+	margin-bottom: auto;
+	flex-basis: 120px;
+}
+
+.registerDiv .form-group .form-heading {
+	font-family: var(--font-family-poppins);
+	font-size: 25px;
+	font-weight: 500;
+	color: #004A8B;
+}
+
 
 #showSelectProgramDiv,
 #showSelectStudyDiv,
@@ -337,7 +536,8 @@ table#assetBulkMetadataTable thead tr th {
 		font-weight: 400;
 	}
 }
-td{
+
+td {
 	.select2-container--default .select2-selection--multiple .select2-selection__rendered li {
 		color: black;
 		padding: 5px;
@@ -393,11 +593,193 @@ label.radio-label {
 
 /* This is a temp fix we can fix with js  */
 #userMetaData {
-span.select2.select2-container.select2-container--default {
-    width: 70% !important;
+	span.select2.select2-container.select2-container--default {
+		width: 70% !important;
+	}
+
+	input[type="search"] {
+		width: 70% !important;
+	}
 }
-input[type="search"] {
-	width: 70% !important;
-}
-}
+
 /* End Temp fix */
+
+.registerAssetContainer {
+	padding: 2rem 4rem 1rem 4rem;
+}
+
+.asset-register-dropdown .select2-container--bootstrap4 .select2-selection--single .select2-selection__arrow b,
+.registerFilesAndSubCollectionsOptions .select2-container--bootstrap4 .select2-selection--single .select2-selection__arrow b
+ {
+	border-color: #3B6EB4 transparent transparent transparent !important;
+	border-width: 8px 6px 0 6px;
+	margin-left: -12px;
+	margin-top: -6px;
+}
+
+#formAssetSelection .select2-container--bootstrap4 .select2-selection--single .select2-selection__arrow b {
+	border-color: #3B6EB4 transparent transparent transparent !important;
+	border-width: 8px 6px 0 6px;
+	margin-left: -12px;
+	margin-top: -6px;
+}
+
+.asset-register-dropdown .select2-container span.select2-selection.select2-selection--single,
+.registerFilesAndSubCollectionsOptions .select2-container span.select2-selection.select2-selection--single
+ {
+	border: 1.5px solid #3B6EB4;
+	border-radius: 8px;
+	color: #083A50;
+    font-family: 'inter_regular';
+}
+
+
+.asset-register-dropdown .select2-container .select2-selection--single .select2-selection__rendered {
+	padding-left: 12px;
+	padding-top: 2px;
+}
+
+.asset-register-dropdown .select2 {
+	color: #083A50;
+	font-size: 16px;
+	height: 40px;
+	width: 100% !important;
+	margin-top: -3px;
+	margin-bottom: 12px;
+}
+ .registerFilesAndSubCollectionsOptions .select2 {
+ 	color: #083A50;
+	font-size: 16px;
+	height: 40px;
+	margin-top: -3px;
+	margin-bottom: 12px;
+ }
+
+.asset-files-dropdown select2 {
+	color: #083A50;
+	font-size: 16px;
+	height: 40px;
+	margin-top: -3px;
+	margin-bottom: 12px;
+}
+
+
+
+.registerDiv .select2-container--bootstrap4 .select2-selection--single .select2-selection__arrow b {
+	border-color: #3B6EB4 transparent transparent transparent !important;
+}
+
+.registerDiv .select2-container span.select2-selection.select2-selection--single {
+	border: 1.5px solid #3B6EB4;
+	border-radius: 8px;
+
+}
+
+
+.registerDiv .select2-container .select2-selection--single .select2-selection__rendered {
+	padding-left: 12px;
+	padding-top: 2px;
+}
+
+.registerDiv .select2 {
+	color: #083A50;
+	font-size: 16px;
+	height: 40px;
+	width: 100% !important;
+	margin-top: -3px;
+	margin-bottom: 12px;
+}
+
+
+.uploadRadioButtons {
+	margin-right: 10px;
+	accent-color: #004A8A !important;
+	transform: scale(1.6) !important;
+}
+
+
+.uploadAssetLabels {
+	font-family: var(--font-family-inter);
+	color: #353941;
+	font-size: 19px;
+	font-weight: 700;
+	padding-top: 0;
+	padding-bottom: 20px;
+	width: auto;
+	display: block;
+	letter-spacing: 0.19px;
+}
+
+.uploadAssetRadioLabels {
+	font-family: 'Open Sans';
+	color: #353941;
+	font-size: 16px;
+	font-weight: 400;
+	padding-top: 0;
+}
+
+
+label.radio-label {
+	display: inline;
+	color: #000;
+	font-family: "Open Sans";
+	font-style: normal;
+	font-weight: 400;
+}
+
+.asset-register-dropdown span.select2.select2-container.select2-container--bootstrap4.select2-container--disabled {
+	opacity: 0.2;
+}
+
+.select2-container--bootstrap4 .select2-results__option--highlighted[aria-selected] {
+	color: #083A50 !important;
+}
+
+
+.asset-register-dropdown {
+	padding-left: 12px;
+}
+
+#formAssetSelection .select2-container span.select2-selection.select2-selection--single {
+	border: 1.5px solid #3B6EB4;
+	border-radius: 8px;
+}
+
+#formAssetSelection .select2-container--bootstrap4 .select2-selection--single .select2-selection__arrow b {
+	border-color: #3B6EB4 transparent transparent transparent !important;
+}
+
+.disable-pointer-events {
+    pointer-events: none;
+	opacity: 0.2;
+}
+
+.select2-container--bootstrap4 .select2-results__option--highlighted[aria-selected]:hover {
+	background-color: #c8d4dc !important;
+	color: #000;
+}
+
+ul#select2-uploadAssetSelect-results, ul#select2-registerAssetSelect-results,
+ul#select2-uploadFilesSelect-results{
+    background-color: #EBF2F6 !important;
+    color: #000;
+    font-variant-numeric: lining-nums tabular-nums;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 112%;
+    letter-spacing: -0.16px;
+}
+
+#formAssetSelection {
+	.select2-container{
+		margin-left: 12px;
+	}
+}
+
+#assetBulkMetadataTable {
+    .select2-container {
+        margin-left: 0;
+    }
+}

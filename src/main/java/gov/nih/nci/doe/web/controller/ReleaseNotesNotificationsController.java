@@ -33,7 +33,7 @@ public class ReleaseNotesNotificationsController extends AbstractDoeController {
 		try {
 
 			// This API can only be used by admins
-			if (Boolean.TRUE.equals(getIsAdmin())) {
+			if (Boolean.TRUE.equals(getIsAdmin(session))) {
 
 				String mailUrl = mailService.sendReleaseNotesNotificationEmail(webServerName, getLoggedOnUserInfo());
 

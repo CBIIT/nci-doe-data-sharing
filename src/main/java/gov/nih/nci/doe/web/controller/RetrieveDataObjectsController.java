@@ -122,7 +122,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 				dataObjectAsyncServiceURL, selectedPath, false, false);
 
 		if (datafiles != null && datafiles.getDataObject() != null) {
-			dataResult = getAssetFile(datafiles, systemAttrs);
+			dataResult = getAssetFile(session, datafiles, systemAttrs);
 		}
 
 		return new ResponseEntity<>(dataResult, HttpStatus.OK);
@@ -186,13 +186,15 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<MoDaCPredictionsResults> processGeneratedPredDataObjects(String path) throws IOException {
+	private List<MoDaCPredictionsResults> processGeneratedPredDataObjects(HttpSession session, String path)
+			throws IOException {
 
 		List<MoDaCPredictionsResults> returnResults = new ArrayList<MoDaCPredictionsResults>();
 
 		String userId = getLoggedOnUserInfo();
 		List<String> loggedOnUserPermList = new ArrayList<String>();
-		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(userId).getBody();
+		List<KeyValueBean> loggedOnUserPermissions = (List<KeyValueBean>) getMetaDataPermissionsList(session, userId)
+				.getBody();
 		loggedOnUserPermissions.stream().forEach(e -> loggedOnUserPermList.add(e.getKey()));
 		List<String> grpsList = LambdaUtils.map(loggedOnUserPermissions, KeyValueBean::getKey);
 
@@ -300,7 +302,7 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 
 			if (type.equalsIgnoreCase("Prediction_Files")) {
 
-				modelAnalysisFiles = processGeneratedPredDataObjects(path);
+				modelAnalysisFiles = processGeneratedPredDataObjects(session, path);
 				return new ResponseEntity<>(modelAnalysisFiles, HttpStatus.OK);
 
 			} else {
@@ -333,14 +335,14 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 		return new ResponseEntity<>(dataResults, HttpStatus.NO_CONTENT);
 	}
 
-	private DoeDatafileSearchResultDetailed getAssetFile(gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectDTO result,
-			List<String> systemAttrs) {
+	private DoeDatafileSearchResultDetailed getAssetFile(HttpSession session,
+			gov.nih.nci.hpc.dto.datamanagement.v2.HpcDataObjectDTO result, List<String> systemAttrs) {
 
 		DoeDatafileSearchResultDetailed returnResult = new DoeDatafileSearchResultDetailed();
 
 		returnResult.setSelfMetadata(
-				getUserMetadata(result.getMetadataEntries().getSelfMetadataEntries().getUserMetadataEntries(), null,
-						systemAttrs, null));
+				getUserMetadata(session, result.getMetadataEntries().getSelfMetadataEntries().getUserMetadataEntries(),
+						null, systemAttrs, null));
 		returnResult.setSystemMetadata(getSystemMetaData(
 				result.getMetadataEntries().getSelfMetadataEntries().getSystemMetadataEntries(), null, systemAttrs));
 

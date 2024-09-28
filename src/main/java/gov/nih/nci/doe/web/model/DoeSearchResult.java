@@ -9,7 +9,7 @@ public class DoeSearchResult {
 	private String studyName;
 	private String programName;
 	private String studyPath;
-	private String institutePath;
+	private String programPath;
 	private String dataSetPermissionRole;
 	private String studyPermissionRole;
 	private String programPermissionRole;
@@ -136,12 +136,12 @@ public class DoeSearchResult {
 		this.studyPath = studyPath;
 	}
 
-	public String getInstitutePath() {
-		return institutePath;
+	public String getProgramPath() {
+		return programPath;
 	}
 
-	public void setInstitutePath(String institutePath) {
-		this.institutePath = institutePath;
+	public void setProgramPath(String programPath) {
+		this.programPath = programPath;
 	}
 
 	public String getDataSetPermissionRole() {

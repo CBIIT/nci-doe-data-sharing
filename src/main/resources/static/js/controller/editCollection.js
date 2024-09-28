@@ -6,7 +6,6 @@ function constructCollectionMetData(metadata, metaDataPath, isDataObject, fileNa
 	$(".editCollectionError").hide();
 	$(".editCollectionErrorMsg").html("");
 	$("#isDataObject").val(isDataObject);
-	$("#editUserMetadataFileName").html(fileName);
 	var data = metadata;
 	$.each(data, function(key, value) {
 		var attrVal = value.value;
@@ -14,7 +13,7 @@ function constructCollectionMetData(metadata, metaDataPath, isDataObject, fileNa
 
 		$("#userMetaData tbody").append(
 				"<tr><td>" + value.displayName  + "</td><td><input type='text' "
-						+ "aria-label='value of meta data' name='zAttrStr_" + value.key + "'" + " style='width:70%;' "
+						+ "aria-label='value of meta data' name='zAttrStr_" + value.key + "'" + " style='width:90%;' "
 						+ "value=\"" + attrValModified + "\">" + "&nbsp;&nbsp;<img class='pull-right clearMetadata' src='/images/close_metadata_popover.svg'></td></tr>");
 
 	});
@@ -52,7 +51,7 @@ function constructEditCollectionMetadata(data, status) {
 							$("#userMetaData tbody").append(
 									"<tr><td>" + value.displayName + "&nbsp;&nbsp;" + infoHtml + "</td><td><input "
 											+ "type='text' disabled='true' " + "aria-label='value of meta data' "
-											+ "name='zAttrStr_" + value.attrName + "' style='width:70%;' value=\""
+											+ "name='zAttrStr_" + value.attrName + "' style='width:90%;' value=\""
 											+ attrValModified + "\"></td></tr>");
 
 						} else if (value.validValues == null && value.isVisible != true && value.attrName.indexOf("access_group") == -1) {
@@ -71,7 +70,7 @@ function constructEditCollectionMetadata(data, status) {
 												+ "&nbsp;&nbsp;" + infoHtml + "</td><td><textarea rows='5'"
 												+ "placeholder='" + placeholderValue + "' is_mandatory='" + isMandatory
 												+ "' " + "aria-label='value of meta data' name='zAttrStr_"
-												+ value.attrName + "' " + "style='width:70%;'>" + attrValModified
+												+ value.attrName + "' " + "style='width:90%;'>" + attrValModified
 												+ "</textarea></td></tr>");
 							} else {
 							
@@ -89,7 +88,7 @@ function constructEditCollectionMetadata(data, status) {
 													+ "placeholder='" + placeholderValue + "' is_mandatory='"
 													+ isMandatory + "' "
 													+ "aria-label='value of meta data' name='zAttrStr_"
-													+ value.attrName + "' style='width:70%;'" + "value=\""
+													+ value.attrName + "' style='width:90%;'" + "value=\""
 													+ attrValModified
 													+ "\">&nbsp;&nbsp;<img class='pull-right clearMetadata' src='/images/close_metadata_popover.svg'></td></tr>");
 
@@ -100,7 +99,7 @@ function constructEditCollectionMetadata(data, status) {
 													+ "placeholder='" + placeholderValue + "' is_mandatory='"
 													+ isMandatory + "' "
 													+ "aria-label='value of meta data' name='zAttrStr_"
-													+ value.attrName + "' style='width:70%;'" + "value=\""
+													+ value.attrName + "' style='width:90%;'" + "value=\""
 													+ attrValModified + "\"></td></tr>");
 								}
 							}
@@ -117,7 +116,7 @@ function constructEditCollectionMetadata(data, status) {
 														+ '<select class="simple-select2" multiple="multiple" placeholder="Required" is_mandatory="'
 														+ value.mandatory + '" id="' + value.attrName
 														+ '" name="zAttrStr_' + value.attrName + '" '
-														+ 'style="width:70%;" value="' + attrVal
+														+ 'style="width:90%;" value="' + attrVal
 														+ '">></select></td></tr>');
 
 							} else {
@@ -127,7 +126,7 @@ function constructEditCollectionMetadata(data, status) {
 												+ value.attrName + "' is_mandatory='" + value.mandatory
 												+ "' onChange='onChangeForMetadata(collectionForm, false, "
 												+ value.controllerAttribute + ",userMetaData, " + value.attrName
-												+ ");'" + "class='simple-select2' style='width:70%;' name='zAttrStr_"
+												+ ");'" + "class='simple-select2' style='width:90%;' name='zAttrStr_"
 												+ value.attrName + "' " + "value=\"" + attrVal
 												+ "\"></select></td></tr>");
 							}
@@ -163,17 +162,17 @@ function addCollectionMetaDataRows() {
 			.append(
 					'<tr id="addRow'
 							+ rowId
-							+ '"><td><input type="text" style="width:70%;" '
+							+ '"><td><input type="search" placeholder="Required" style="width:90%;" '
 							+ 'name="_addAttrName'
 							+ rowId
 							+ '" aria-label="add new row" id="_addAttrName'
 							+ rowId
-							+ '"></td><td><input type="text" style="width:70%;" id="_addAttrValue'
+							+ '"></td><td><input type="search" placeholder="Required" style="width:90%;" id="_addAttrValue'
 							+ rowId
 							+ '" name="_addAttrValue'
 							+ rowId
 							+ '" >'
-							+ '&nbsp;&nbsp;<img class="pull-right clearMetadata" src="/images/close_metadata_popover.svg" onclick="removeCollectionRow(\'addRow'
+							+ '&nbsp;&nbsp;<img src="images/deleteIcon.svg" th:src="@{/images/deleteIcon.png}" class="metadataIcon" alt="delete metadata" onclick="removeCollectionRow(\'addRow'
 							+ rowId + '\')"></td></tr>');
 }
 
@@ -206,7 +205,7 @@ function updatePermissionsFunction() {
 		collectionId : $("#collectionId").val(),
 		path : $("#path").val()
 	};
-	invokeAjax('/metaDataPermissionsList', 'POST', params, postSuccessUpdatePermissions, null,
+    invokeAjax('/metaDataPermissionsList', 'POST', params, postSuccessUpdatePermissions, null,
 			'application/x-www-form-urlencoded; charset=UTF-8', 'text');
 }
 
@@ -219,12 +218,17 @@ function postSuccessUpdatePermissions(data, status) {
 function editAccessPermissions(collectionId, metadata_path, msg, selectedCollection, collectionName) {
 
 	var parentAccessGroups;
+	var curationStatus;
 	$.each(msg, function(key, value) {
 		if (value.key.indexOf("selectedEntry") != -1) {
 			$("#updateAccessPermissionsModal").find("#accessGroups").val(value.value);
 		}
 		if (value.key.indexOf("parentAccessGroups") != -1) {
 			parentAccessGroups = value.value;
+		}
+		
+		if (value.key.indexOf("curationStatus") != -1) {
+			curationStatus = value.value;
 		}
 
 	});
@@ -236,11 +240,12 @@ function editAccessPermissions(collectionId, metadata_path, msg, selectedCollect
 	$("#updateAccessPermissionsModal").find("#metadata_path").val(metadata_path);
 	$("#updateAccessPermissionsModal").find("#selectedCollection").val(selectedCollection);
 	$("#updateAccessPermissionsModal").find("#selectedCollectionName").text(collectionName);
+	$("#updateAccessPermissionsModal").find("#assetCurationStatus").val(curationStatus);
 	$("#updateAccessPermissionsModal").modal('show');
 
 	var isUpdate = false;
 	if (selectedCollection == "Program"
-			|| (selectedCollection == "Study" || selectedCollection == "Asset" && "public" == parentAccessGroups)) {
+			|| ((selectedCollection == "Study" || selectedCollection == "Asset") && "public" == parentAccessGroups)) {
 		isUpdate = true;
 	}
 
@@ -264,18 +269,28 @@ function editAccessPermissions(collectionId, metadata_path, msg, selectedCollect
 }
 
 function postSuccessAccessPermissions(data, status) {
+
 	var accessGrp = $("#updateAccessPermissionsModal").find("#accessGroups").val();
+	var curationStatus = $("#updateAccessPermissionsModal").find("#assetCurationStatus").val();
 	var accessGrpList = accessGrp.split(",");
-	$("#updateAccessPermissionsModal").find("#publicCheckBox").show();
+	
 	$("#updateAccessPermissionsModal").find("#infoTxtForAccessGroups").html("");
 
-	if (accessGrp == 'public') {
+    // If the collection access group is already public, do not check for curation status
+    // If the collection access group is not public, then check if update is allowed which means
+    // the parent collection access group is not restricted and the collection is allowed to be made public
+    // second condition is, for asset collection, check the curated status, if status is verified, show the
+    // public checkbox
+    
+    if (accessGrp == 'public') {
 		$("#updateAccessPermissionsModal").find("#updateAccessGroupsList").next(".select2-container").hide();
 		$("#updateAccessPermissionsModal").find("#updateAccessGroupsList").val("").trigger('change');
+		$("#updateAccessPermissionsModal").find("#publicCheckBox").show();
 		$("#updateAccessPermissionsModal").find("#editPublicAccess").prop("checked", true);
 
 	} else {
 		$("#updateAccessPermissionsModal").find("#updateAccessGroupsList").next(".select2-container").show();
+		$("#updateAccessPermissionsModal").find("#publicCheckBox").show();
 		$("#updateAccessPermissionsModal").find("#editPublicAccess").prop("checked", false);
 		if (!data) {
 			$("#updateAccessPermissionsModal")
@@ -285,7 +300,15 @@ function postSuccessAccessPermissions(data, status) {
 									+ "title='This collection inherits access status from the parent collection' data-toggle='tooltip' data-placement='right'></i>");
 			// $("#updateAccessPermissionsModal").find("#editPublicAccess").prop("disabled",true);
 			$("#updateAccessPermissionsModal").find("#publicCheckBox").hide();
-		}
+		} else if(curationStatus && curationStatus != "Verified") {
+            $("#updateAccessPermissionsModal")
+					.find("#infoTxtForAccessGroups")
+					.html(
+							"<i class='fas fa-question-circle' "
+									+ "title='This collection curation status is unverified' data-toggle='tooltip' data-placement='right'></i>");
+			
+		    $("#updateAccessPermissionsModal").find("#publicCheckBox").hide();
+       }
 	}
 
 	for (var i = 0; i < accessGrpList.length; i++) {
@@ -402,6 +425,9 @@ function updateMetaDataCollection() {
 				$(".editCollectionMsg").html(msg);
 				$(".editCollectionError").hide();
 				$(".editCollectionErrorMsg").html("");
+				$('body,html').animate({
+				scrollTop: 0
+				}, 500);
 
 			},
 			error : function(e) {
@@ -412,6 +438,9 @@ function updateMetaDataCollection() {
 				$(".editCollectionMsg").html("");
 				$(".editCollectionError").show();
 				$(".editCollectionErrorMsg").html(e.responseText);
+				$('body,html').animate({
+				scrollTop: 0
+				}, 500);
 			}
 		});
 	}
