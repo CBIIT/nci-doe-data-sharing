@@ -882,11 +882,18 @@ public abstract class AbstractDoeController {
 
 		query1.getQueries().addAll(queries1);
 
-		// perform and operation of query and query1
+		// create path like query
+		HpcMetadataQuery pathQuery = new HpcMetadataQuery();
+		pathQuery.setAttribute("path");
+		pathQuery.setOperator(HpcMetadataQueryOperator.PATH_LIKE);
+		pathQuery.setValue(StringUtils.stripStart(basePath, "/") + "%");
+	
+		// perform and operation of query and query1 and pathQuery
 		HpcCompoundMetadataQuery query2 = new HpcCompoundMetadataQuery();
 		query2.setOperator(HpcCompoundMetadataQueryOperator.AND);
 		query2.getCompoundQueries().add(query1);
 		query2.getCompoundQueries().add(query);
+		query2.getQueries().add(pathQuery);
 
 		return query2;
 
