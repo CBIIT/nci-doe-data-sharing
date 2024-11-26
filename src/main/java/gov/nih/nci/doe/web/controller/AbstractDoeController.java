@@ -602,7 +602,9 @@ public abstract class AbstractDoeController {
 
 		if (!StringUtils.isEmpty(loggedOnUser)) {
 			DoeUsersModel user = getUser(session);
-
+			if (user == null) {
+				user = authenticateService.getUserInfo(loggedOnUser);
+			}
 			if (user != null && !StringUtils.isEmpty(user.getProgramName())) {
 				List<String> progList = Arrays.asList(user.getProgramName().split(","));
 				progList.stream().forEach(e -> keyValueBeanResults.add(new KeyValueBean(e, e)));
@@ -622,6 +624,9 @@ public abstract class AbstractDoeController {
 
 		if (!StringUtils.isEmpty(loggedOnUser)) {
 			DoeUsersModel user = getUser(session);
+			if (user == null) {
+				user = authenticateService.getUserInfo(loggedOnUser);
+			}
 
 			if (user != null && !StringUtils.isEmpty(user.getProgramName())) {
 				grpList = Arrays.asList(user.getProgramName().split(","));
@@ -887,7 +892,7 @@ public abstract class AbstractDoeController {
 		pathQuery.setAttribute("path");
 		pathQuery.setOperator(HpcMetadataQueryOperator.PATH_LIKE);
 		pathQuery.setValue(StringUtils.stripStart(basePath, "/") + "%");
-	
+
 		// perform and operation of query and query1 and pathQuery
 		HpcCompoundMetadataQuery query2 = new HpcCompoundMetadataQuery();
 		query2.setOperator(HpcCompoundMetadataQueryOperator.AND);
