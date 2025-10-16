@@ -28,11 +28,8 @@
         class="maintenance-alert-banner"
         aria-label="Maintenance alert">
         <div class="maintenance-alert">
-            <div class="maintenance-alert-header">
-                Urgent Announcement
-            </div>
             <div class="maintenance-alert-body">
-                <span th:text="${downtimeMessage}"></span>
+                <span th:utext="${downtimeMessage}"></span>
             </div>
         </div>
     </section>
