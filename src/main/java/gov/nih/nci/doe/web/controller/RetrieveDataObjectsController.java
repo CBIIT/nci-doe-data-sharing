@@ -3,6 +3,7 @@ package gov.nih.nci.doe.web.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
 
@@ -30,6 +31,7 @@ import com.fasterxml.jackson.databind.MappingJsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.introspect.AnnotationIntrospectorPair;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
 
@@ -44,6 +46,7 @@ import gov.nih.nci.doe.web.model.DoeDatafileSearchResultDetailed;
 import gov.nih.nci.doe.web.model.DoeUsersModel;
 import gov.nih.nci.doe.web.model.KeyValueBean;
 import gov.nih.nci.doe.web.model.MoDaCPredictionsResults;
+import gov.nih.nci.doe.web.util.CalendarDeserializer;
 import gov.nih.nci.doe.web.util.DoeClientUtil;
 import gov.nih.nci.doe.web.util.LambdaUtils;
 import gov.nih.nci.hpc.domain.datamanagement.HpcCollectionListingEntry;
@@ -141,6 +144,9 @@ public class RetrieveDataObjectsController extends AbstractDoeController {
 		mapper.setAnnotationIntrospector(intr);
 		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		SimpleModule module = new SimpleModule();
+        module.addDeserializer(Calendar.class, new CalendarDeserializer());
+        mapper.registerModule(module);
 		MappingJsonFactory factory = new MappingJsonFactory(mapper);
 		JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
 

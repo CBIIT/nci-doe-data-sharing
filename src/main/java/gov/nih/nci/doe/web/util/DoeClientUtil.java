@@ -8,7 +8,9 @@ import com.fasterxml.jackson.databind.MappingJsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.introspect.AnnotationIntrospectorPair;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import gov.nih.nci.doe.web.DoeWebException;
@@ -45,6 +47,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,7 +69,6 @@ import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.ext.multipart.ContentDisposition;
 import org.apache.cxf.jaxrs.ext.multipart.MultipartBody;
 import org.apache.cxf.transport.http.HTTPConduit;
-import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -87,11 +89,16 @@ public class DoeClientUtil {
 	public static WebClient getWebClient(String url) {
 
 		log.debug("get web client for url " + url);
-		WebClient client = WebClient.create(url, Collections.singletonList(new JacksonJsonProvider()));
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        
+		WebClient client = WebClient.create(url, Collections.singletonList(new JacksonJsonProvider(objectMapper)));
 
 		ClientConfiguration clientConfig = WebClient.getConfig(client);
 		clientConfig.getRequestContext().put("support.type.as.multipart", "true");
 		configureWebClientConduit(clientConfig);
+		client.type(MediaType.APPLICATION_JSON_VALUE);
 
 		return client;
 	}
@@ -300,6 +307,9 @@ public class DoeClientUtil {
 						new JacksonAnnotationIntrospector());
 				mapper.setAnnotationIntrospector(intr);
 				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+				SimpleModule module = new SimpleModule();
+	            module.addDeserializer(Calendar.class, new CalendarDeserializer());
+	            mapper.registerModule(module);
 
 				MappingJsonFactory factory = new MappingJsonFactory(mapper);
 				JsonParser parser = factory.createParser((InputStream) restResponse.getEntity());
