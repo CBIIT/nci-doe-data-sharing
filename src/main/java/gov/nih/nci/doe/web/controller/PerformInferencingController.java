@@ -60,12 +60,22 @@ public class PerformInferencingController extends AbstractDoeController {
 	private String dataObjectServiceURL;
 
 	/*
+	 * Only authenticated users with the uploader (write) role may run inferencing
+	 */
+	private void requireUploader(HttpSession session) throws DoeWebException {
+		if (StringUtils.isEmpty(getLoggedOnUserInfo()) || !Boolean.TRUE.equals(getIsUploader(session))) {
+			throw new DoeWebException("Uploader access required", HttpServletResponse.SC_FORBIDDEN);
+		}
+	}
+
+	/*
 	 * Get all reference data sets for an asset path
 	 */
 	@GetMapping(value = "/getReferenceDatasets")
 	public ResponseEntity<?> getReferenceDatasets(@RequestParam(value = "assetPath") String assetPath,
 			HttpSession session, @RequestHeader HttpHeaders headers) throws DoeWebException {
 
+		requireUploader(session);
 		log.info("get reference datasets list" + assetPath);
 		List<KeyValueBean> referenceDatasetList = getAllReferenceDatasetListForAssetPath(assetPath, session);
 
@@ -78,6 +88,7 @@ public class PerformInferencingController extends AbstractDoeController {
 			HttpServletRequest request, @RequestParam(value = "userId") String userId)
 			throws DoeWebException, JsonParseException, IOException {
 
+	    requireUploader(session);
 		log.info("get all evaluation tasks for user: " + userId);
 		List<InferencingTask> getAllInferencingTasks = inferencingTaskService.getAllTaskByUserId(userId);
 		if (CollectionUtils.isNotEmpty(getAllInferencingTasks)) {
@@ -128,6 +139,7 @@ public class PerformInferencingController extends AbstractDoeController {
 			HttpServletRequest request, HttpServletResponse response, @Valid InferencingTaskModel inference)
 			throws Exception {
 
+		requireUploader(session);
 		log.info("perform model analysis for reference dataset");
 
 		String applicableModelNamesList = inference.getApplicableModelNamesList();
@@ -214,12 +226,18 @@ public class PerformInferencingController extends AbstractDoeController {
 			@RequestHeader HttpHeaders headers, HttpServletRequest request, @Valid InferencingTaskModel inference)
 			throws Exception, IOException {
 
+		requireUploader(session);
 		log.info("perform evaluation for test dataset: " + uploadTestInferFile.getOriginalFilename());
-		String outputFileName = uploadTestOutputFile != null ? uploadTestOutputFile.getOriginalFilename() : null;
+		String outputFileName = uploadTestOutputFile != null
+				? sanitizeFileName(uploadTestOutputFile.getOriginalFilename())
+				: null;
 
 		log.info("user provided output file to evaluate model :" + outputFileName);
 
 		String user = getLoggedOnUserInfo();
+		if (StringUtils.isEmpty(user)) {
+			throw new DoeWebException("Authentication required", HttpServletResponse.SC_UNAUTHORIZED);
+		}
 		String referenceDatasets = inference.getReferenceDatasetList();
 		String testInputPath = inference.getTestInputPath();
 		try {
@@ -321,7 +339,7 @@ public class PerformInferencingController extends AbstractDoeController {
 				if (StringUtils.isNotEmpty(outputFileName)) {
 
 					inference.setOutcomeFileName(outputFileName);
-					Files.copy(uploadTestOutputFile.getInputStream(), Paths.get(uploadPath + outputFileName),
+					Files.copy(uploadTestOutputFile.getInputStream(), resolveUploadTarget(outputFileName),
 							StandardCopyOption.REPLACE_EXISTING);
 				}
 
@@ -336,7 +354,7 @@ public class PerformInferencingController extends AbstractDoeController {
 				inferencingTaskService.saveInferenceTask(inference);
 
 				// copy the test dataset file to /mnt/DMEDataStage/MoDaC_Inferencing/ mount
-				Files.copy(uploadTestInferFile.getInputStream(), Paths.get(uploadPath + testInputName),
+				Files.copy(uploadTestInferFile.getInputStream(), resolveUploadTarget(testInputName),
 						StandardCopyOption.REPLACE_EXISTING);
 
 				return "Evaluate task submitted. Your task id is: <a href='/statusTab?isPred=true'>" + taskId + "<a>";

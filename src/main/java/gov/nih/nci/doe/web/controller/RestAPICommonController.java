@@ -1558,15 +1558,15 @@ public class RestAPICommonController extends AbstractDoeController {
 				// check if the file name is already used for inferencing for the same user and
 				// same model path and is not in failed status
 				if (Boolean.TRUE.equals(inferencingTaskService.checkifFileExistsForUser(doeLogin, modelPath,
-						inputFile.getOriginalFilename()))) {
+						sanitizeFileName(inputFile.getOriginalFilename())))) {
 
 					throw new DoeWebException("Input file name already exists", HttpServletResponse.SC_BAD_REQUEST);
 				}
 
 				if (outcomeFile != null) {
 
-					inference.setOutcomeFileName(outcomeFile.getOriginalFilename());
-					Files.copy(outcomeFile.getInputStream(), Paths.get(uploadPath + outcomeFile.getOriginalFilename()),
+					inference.setOutcomeFileName(sanitizeFileName(outcomeFile.getOriginalFilename()));
+					Files.copy(outcomeFile.getInputStream(), resolveUploadTarget(outcomeFile.getOriginalFilename()),
 							StandardCopyOption.REPLACE_EXISTING);
 				}
 
@@ -1576,13 +1576,13 @@ public class RestAPICommonController extends AbstractDoeController {
 				inference.setTaskId(taskId);
 				inference.setResultPath(resultPath);
 				inference.setAssetPath(modelPath);
-				inference.setTestInputPath(modelPath + "/" + inputFile.getOriginalFilename());
+				inference.setTestInputPath(modelPath + "/" + sanitizeFileName(inputFile.getOriginalFilename()));
 				inference.setUserId(doeLogin);
 
 				inferencingTaskService.saveInferenceTask(inference);
 
 				// copy the test dataset file to mount
-				Files.copy(inputFile.getInputStream(), Paths.get(uploadPath + inputFile.getOriginalFilename()),
+				Files.copy(inputFile.getInputStream(), resolveUploadTarget(inputFile.getOriginalFilename()),
 						StandardCopyOption.REPLACE_EXISTING);
 				taskIdList.add(taskId);
 

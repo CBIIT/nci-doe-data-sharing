@@ -3,6 +3,8 @@ package gov.nih.nci.doe.web.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
@@ -1193,6 +1195,42 @@ public abstract class AbstractDoeController {
 
 	}
 
+	/**
+	 * Strips any directory component (both '/' and '\') from a client supplied file
+	 * name so that only the last path segment is kept. Returns null for null input.
+	 */
+	protected static String sanitizeFileName(String rawName) {
+		if (rawName == null) {
+			return null;
+		}
+		String normalized = rawName.replace('\\', '/');
+		return normalized.substring(normalized.lastIndexOf('/') + 1).trim();
+	}
+
+	/**
+	 * Resolves a client supplied file name to a path inside the configured upload
+	 * directory. The name is reduced to its basename and the resulting path is
+	 * verified to be contained in the upload directory; otherwise the request is
+	 * rejected.
+	 */
+	protected Path resolveUploadTarget(String rawName) throws DoeWebException {
+		String baseName = sanitizeFileName(rawName);
+		if (StringUtils.isEmpty(baseName) || ".".equals(baseName) || "..".equals(baseName)
+				|| baseName.indexOf('\0') >= 0) {
+			throw new DoeWebException("Invalid file name", HttpServletResponse.SC_BAD_REQUEST);
+		}
+		try {
+			Path uploadDir = Paths.get(uploadPath).toAbsolutePath().normalize();
+			Path target = uploadDir.resolve(baseName).normalize();
+			if (!target.startsWith(uploadDir) || target.equals(uploadDir)) {
+				throw new DoeWebException("Invalid file name", HttpServletResponse.SC_BAD_REQUEST);
+			}
+			return target;
+		} catch (InvalidPathException e) {
+			throw new DoeWebException("Invalid file name", HttpServletResponse.SC_BAD_REQUEST);
+		}
+	}
+
 	public String uploadFileToMount(HttpSession session, String fileName, String filePath)
 			throws DoeWebException, IOException {
 
@@ -1215,7 +1253,7 @@ public abstract class AbstractDoeController {
 				WebClient client = DoeClientUtil.getWebClient(dataObject.getDownloadRequestURL());
 				Response restResponseForModelFileCopy = client.invoke("GET", null);
 
-				Files.copy((InputStream) restResponseForModelFileCopy.getEntity(), Paths.get(uploadPath + fileName),
+				Files.copy((InputStream) restResponseForModelFileCopy.getEntity(), resolveUploadTarget(fileName),
 						StandardCopyOption.REPLACE_EXISTING);
 				return "SUCCESS";
 

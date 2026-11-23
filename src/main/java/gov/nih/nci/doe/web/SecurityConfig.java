@@ -33,7 +33,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
-		http.authorizeRequests().antMatchers("/register").permitAll().and().formLogin().failureUrl("/loginTab?error")
+		http.authorizeRequests().antMatchers("/register").permitAll().antMatchers("/performInferencing/**")
+				.authenticated().and().formLogin().failureUrl("/loginTab?error")
 				.successHandler(successHandler).loginPage("/login").permitAll().and().csrf().disable();
 
 	}
