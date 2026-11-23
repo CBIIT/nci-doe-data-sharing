@@ -1204,7 +1204,7 @@ public abstract class AbstractDoeController {
 			return null;
 		}
 		String normalized = rawName.replace('\\', '/');
-		return normalized.substring(normalized.lastIndexOf('/') + 1).trim();
+		return normalized.substring(normalized.lastIndexOf('/') + 1);
 	}
 
 	/**
